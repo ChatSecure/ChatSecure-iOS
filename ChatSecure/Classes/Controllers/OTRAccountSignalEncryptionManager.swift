@@ -104,7 +104,7 @@ extension OTRAccountSignalEncryptionManager {
         return try sessionCipher.decryptCiphertext(cipherText)
     }
     
-    //TODO: How do you know where to start?
+    
     public func generatePreKeys(start:UInt, count:UInt) -> [SignalPreKey]? {
         guard let preKeys = self.keyHelper()?.generatePreKeysWithStartingPreKeyId(start, count: count) else {
             return nil

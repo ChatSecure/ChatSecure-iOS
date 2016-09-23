@@ -23,6 +23,7 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
     public let accountKey:String
     public let databaseConnection:YapDatabaseConnection
     public weak var delegate:OTRSignalStorageManagerDelegate?
+    public let preKeyCount:Int = 100
     
     
     public init(accountKey:String, databaseConnection:YapDatabaseConnection, delegate:OTRSignalStorageManagerDelegate?) {
@@ -120,34 +121,52 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return preKeys
     }
     
-//    public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
-//        var bundle:OTROMEMOBundleOutgoing? = nil
-//        self.databaseConnection.readWithBlock { (transaction) in
-//            
-//            do {
-//                guard let identityKeyPair = OTRAccountSignalIdentity.fetchObjectWithUniqueID(self.accountKey, transaction: transaction),
-//                    let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObjectWithUniqueID(self.accountKey, transaction: transaction) else {
-//                        return
-//                }
-//                let signedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
-//                
-//                let publicIdentityKey = identityKeyPair.identityKeyPair.publicKey
-//                
-//                
-//                let simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
-//                
-//                
-//                bundle = OTROMEMOBundleOutgoing(bundle: simpleBundle, preKeys: <#T##[UInt32 : NSData]#>)
-//                
-//            } catch {
-//                return
-//            }
-//            
-//            
-//            
-//        }
-//        return bundle
-//    }
+    public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
+        var bundle:OTROMEMOBundleOutgoing? = nil
+        self.databaseConnection.readWithBlock { (transaction) in
+            
+            do {
+                guard let identityKeyPair = OTRAccountSignalIdentity.fetchObjectWithUniqueID(self.accountKey, transaction: transaction),
+                    let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObjectWithUniqueID(self.accountKey, transaction: transaction) else {
+                        return
+                }
+                let signedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
+                
+                let publicIdentityKey = identityKeyPair.identityKeyPair.publicKey
+                
+                
+                let simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
+                
+                
+                let preKeys = self.fetchAllPreKeys(false)
+                
+                var preKeyDict = [UInt32: NSData]()
+                preKeys.forEach({ (preKey) in
+                    guard let data = preKey.keyData else {
+                        return
+                    }
+                    do {
+                        let signalPreKey = try SignalPreKey(serializedData: data)
+                        
+                        preKeyDict.updateValue(signalPreKey.keyPair().publicKey, forKey: preKey.keyId)
+                    } catch {
+                        
+                    }
+                    
+                })
+                
+                
+                bundle = OTROMEMOBundleOutgoing(bundle: simpleBundle, preKeys: preKeyDict)
+                
+            } catch {
+                return
+            }
+            
+            
+            
+        }
+        return bundle
+    }
     
     //MARK: SignalSessionStore
     public func sessionRecordForAddress(address: SignalAddress) -> NSData? {

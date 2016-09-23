@@ -97,12 +97,34 @@ extension OTROMEMOSignalCoordinator { //OMEMOStorageDelegate
 
     // not sure why we need this yet??
     //Always returns most complete bundle with correct count of prekeys
-//    public func fetchMyBundle() -> OMEMOBundle {
-//        
-//        guard let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() else {
-//            let outgoingBundle = self.signalEncryptionManager.generateOutgoingBundle()
-//        }
-//    }
+    public func fetchMyBundle() -> OMEMOBundle {
+        
+        let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() ?? self.signalEncryptionManager.generateOutgoingBundle()!
+        
+        var preKeys = bundle.preKeys
+        
+        let keysToGenerate = preKeys.count - 100
+        
+        //Check if we don't have all the prekeys we need
+        if (keysToGenerate > 0) {
+            var start:UInt = 0
+            if let maxId = self.signalEncryptionManager.storage.currentMaxPreKeyId() {
+                start = UInt(maxId) + 1
+            }
+            
+            let newPreKeys = self.signalEncryptionManager.generatePreKeys(start, count: UInt(keysToGenerate))
+            newPreKeys?.forEach({ (preKey) in
+                preKeys.updateValue(preKey.keyPair().publicKey, forKey: preKey.preKeyId())
+            })
+        }
+        
+        var preKeysObjC = [NSNumber:NSData]()
+        preKeys.forEach { (id,data) in
+            preKeysObjC.updateValue(data, forKey: NSNumber(unsignedInt: id))
+        }
+        
+        return OMEMOBundle(deviceId: NSNumber(unsignedInt:bundle.bundle.deviceId), identityKey: bundle.bundle.publicIdentityKey, signedPreKey: bundle.bundle.signedPublicPreKey, signedPreKeyId: NSNumber(unsignedInt: bundle.bundle.signedPreKeyId), signedPreKeySignature: bundle.bundle.signedPreKeySignature, preKeys: preKeysObjC)
+    }
     
     public func myDeviceId() -> NSNumber {
         return NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
