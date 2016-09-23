@@ -310,14 +310,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppBuddyManager activate:self.xmppStream];
     
     //OMEMO
-    //FIXME
-//    self.omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:<#(nonnull id<OMEMOStorageDelegate>)#>];
-//    self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection];
-//    [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-//    [self.xmppCapabilities addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-//    [self.xmppStream addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-//
-//    [self.omemoModule activate:self.xmppStream];
+    self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection];
+    self.omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator];
+    [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+
+    [self.omemoModule activate:self.xmppStream];
 }
 
 - (void)teardownStream
