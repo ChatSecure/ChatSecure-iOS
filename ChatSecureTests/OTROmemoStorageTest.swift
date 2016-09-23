@@ -14,6 +14,7 @@ class OTROmemoStorageTest: XCTestCase {
     var databaseManager:OTRDatabaseManager!
     var omemoStorage:OTROMEMOStorageManager!
     var signalStorage:OTRSignalStorageManager!
+    var signalCoordinator:OTROMEMOSignalCoordinator!
     var accountKey:String!
     var accountCollection:String!
     let initialDevices:[NSNumber] = [1,2,3]
@@ -50,6 +51,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.databaseManager.setupDatabaseWithName(name, withMediaStorage: false)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection)
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection, delegate: nil)
+        self.signalCoordinator = OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection)
         
         databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
             account.saveWithTransaction(transaction)
@@ -154,4 +156,64 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertEqual(allRemainingPrekeys.count, 2)
     }
     
+    func testOurBundleStorage() {
+        self.setupDatabase(#function)
+        let firstFetch = self.signalCoordinator.fetchMyBundle()
+        XCTAssertNotNil(firstFetch)
+        
+        var firstPreKeyFetch = [UInt32:NSData]()
+        firstFetch.preKeys.forEach { (preKey) in
+            firstPreKeyFetch.updateValue(preKey.publicKey, forKey: preKey.preKeyId)
+        }
+        
+        //Remove some pre keys
+        self.signalStorage.deletePreKeyWithId(22)
+        self.signalStorage.deletePreKeyWithId(25)
+        
+        //Fetch again
+        let secondFetch = self.signalCoordinator.fetchMyBundle()
+        XCTAssertNotNil(secondFetch)
+        
+        var secondPreKeyFetch = [UInt32:NSData]()
+        secondFetch.preKeys.forEach { (preKey) in
+            secondPreKeyFetch.updateValue(preKey.publicKey, forKey: preKey.preKeyId)
+        }
+        
+        XCTAssertEqual(firstFetch.deviceId, secondFetch.deviceId,"Should be the same device id")
+        XCTAssertEqual(firstFetch.identityKey, secondFetch.identityKey,"Same Identity Key")
+        XCTAssertEqual(firstFetch.signedPreKey.signature, secondFetch.signedPreKey.signature,"Same signature")
+        XCTAssertEqual(firstFetch.signedPreKey.preKeyId, secondFetch.signedPreKey.preKeyId,"Same prekey Id")
+        XCTAssertEqual(firstFetch.signedPreKey.publicKey, secondFetch.signedPreKey.publicKey,"Same prekey public key")
+        //Checking Pre Keys
+        
+        let firstIdArray = Array(firstPreKeyFetch.keys).sort()
+        let secondIdArray = Array(secondPreKeyFetch.keys).sort()
+        //The two deleted keys should not show up in the second key fetch
+        XCTAssertFalse(secondIdArray.contains(22),"Should not contain this key id")
+        XCTAssertFalse(secondIdArray.contains(25),"Should not contain this key id")
+        // Both times it should fetch 100 keys
+        XCTAssertEqual(firstIdArray.count, 100,"Should have fetched 100 keys")
+        XCTAssertEqual(secondIdArray.count, 100,"Should have fetched 100 keys")
+        XCTAssertEqual(firstIdArray.first!, 1,"Should start with id 1")
+        XCTAssertEqual(secondIdArray.first!, 1,"Should start with id 1")
+        XCTAssertEqual(firstIdArray.last!, 100,"Should end with id 100")
+        XCTAssertEqual(secondIdArray.last!, 102,"Should start with id 1")
+        
+        //Make sure all the data is the same as previous attempt
+        secondPreKeyFetch.forEach { (id,secondData) in
+            if let firstData = firstPreKeyFetch[id] {
+                XCTAssertEqual(firstData, secondData,"Public key information should be the same")
+            } else {
+                //These should not be in the first set because they were created after we deleted two keys
+                let excluded:Set<UInt32> = Set([101,102])
+                XCTAssertTrue(excluded.contains(id))
+            }
+        }
+        
+        //Double check to make sure that the key information is there or not there depending on added and removed keys.
+        XCTAssertNil(self.signalStorage.loadPreKeyWithId(22))
+        XCTAssertNil(self.signalStorage.loadPreKeyWithId(25))
+        XCTAssertNotNil(self.signalStorage.loadPreKeyWithId(101))
+        XCTAssertNotNil(self.signalStorage.loadPreKeyWithId(102))
+    }
 }

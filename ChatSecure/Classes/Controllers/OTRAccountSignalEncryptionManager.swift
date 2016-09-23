@@ -66,7 +66,7 @@ extension OTRAccountSignalEncryptionManager {
         
         let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
         let deviceId = self.registrationId
-        guard let preKeys = self.generatePreKeys(0, count: 100) else {
+        guard let preKeys = self.generatePreKeys(1, count: 100) else {
             return nil
         }
         

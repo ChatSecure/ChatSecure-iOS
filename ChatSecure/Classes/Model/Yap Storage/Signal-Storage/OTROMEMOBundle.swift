@@ -6,7 +6,7 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 public struct OTROMEMOBundle {
     let deviceId:UInt32

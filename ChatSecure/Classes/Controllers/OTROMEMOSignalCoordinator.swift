@@ -103,7 +103,7 @@ extension OTROMEMOSignalCoordinator { //OMEMOStorageDelegate
         
         var preKeys = bundle.preKeys
         
-        let keysToGenerate = preKeys.count - 100
+        let keysToGenerate = 100 - preKeys.count
         
         //Check if we don't have all the prekeys we need
         if (keysToGenerate > 0) {
@@ -118,12 +118,14 @@ extension OTROMEMOSignalCoordinator { //OMEMOStorageDelegate
             })
         }
         
-        var preKeysObjC = [NSNumber:NSData]()
+        var preKeysArray = [OMEMOPreKey]()
         preKeys.forEach { (id,data) in
-            preKeysObjC.updateValue(data, forKey: NSNumber(unsignedInt: id))
+            let omemoPreKey = OMEMOPreKey(preKeyId: id, publicKey: data)
+            preKeysArray.append(omemoPreKey)
         }
         
-        return OMEMOBundle(deviceId: NSNumber(unsignedInt:bundle.bundle.deviceId), identityKey: bundle.bundle.publicIdentityKey, signedPreKey: bundle.bundle.signedPublicPreKey, signedPreKeyId: NSNumber(unsignedInt: bundle.bundle.signedPreKeyId), signedPreKeySignature: bundle.bundle.signedPreKeySignature, preKeys: preKeysObjC)
+        let omemoSignedPreKey = OMEMOSignedPreKey(preKeyId: bundle.bundle.signedPreKeyId, publicKey: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature)
+        return OMEMOBundle(deviceId: bundle.bundle.deviceId, identityKey: bundle.bundle.publicIdentityKey, signedPreKey: omemoSignedPreKey, preKeys: preKeysArray)
     }
     
     public func myDeviceId() -> NSNumber {
@@ -159,25 +161,25 @@ extension OTROMEMOSignalCoordinator:XMPPStreamDelegate {
 //        sender.sendElement(deviceGetIQ);
     }
     
-    public func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
-        guard let _ = message.elementForName("event", xmlns: XMLNS_PUBSUB_EVENT) else {
-            return
-        }
-        if (sender.myJID.isEqualToJID(message.from(), options: XMPPJIDCompareBare)) {
-            //This is our own PEP
-            if var deviceList = message.omemo_deviceList() {
-                let deviceNumber = NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
-                if !deviceList.contains(deviceNumber) {
-                    //Need to add device
-                    deviceList.append(deviceNumber)
-                    self.omemoModule?.publishDeviceIds(deviceList)
-                    
-                }
-            }
-        } else {
-            //This is someone elses PEP
-        }
-    }
+//    public func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
+//        guard let _ = message.elementForName("event", xmlns: XMLNS_PUBSUB_EVENT) else {
+//            return
+//        }
+//        if (sender.myJID.isEqualToJID(message.from(), options: XMPPJIDCompareBare)) {
+//            //This is our own PEP
+//            if var deviceList = message.omemo_deviceList() {
+//                let deviceNumber = NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
+//                if !deviceList.contains(deviceNumber) {
+//                    //Need to add device
+//                    deviceList.append(deviceNumber)
+//                    self.omemoModule?.publishDeviceIds(deviceList)
+//                    
+//                }
+//            }
+//        } else {
+//            //This is someone elses PEP
+//        }
+//    }
 }
 
 extension OTROMEMOSignalCoordinator:XMPPCapabilitiesDelegate {

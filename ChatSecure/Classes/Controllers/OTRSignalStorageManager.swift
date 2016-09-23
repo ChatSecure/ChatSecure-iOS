@@ -122,9 +122,9 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
     }
     
     public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
-        var bundle:OTROMEMOBundleOutgoing? = nil
+        var simpleBundle:OTROMEMOBundle? = nil
+        //Fetch and create the base bundle
         self.databaseConnection.readWithBlock { (transaction) in
-            
             do {
                 guard let identityKeyPair = OTRAccountSignalIdentity.fetchObjectWithUniqueID(self.accountKey, transaction: transaction),
                     let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObjectWithUniqueID(self.accountKey, transaction: transaction) else {
@@ -133,39 +133,36 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
                 let signedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
                 
                 let publicIdentityKey = identityKeyPair.identityKeyPair.publicKey
-                
-                
-                let simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
-                
-                
-                let preKeys = self.fetchAllPreKeys(false)
-                
-                var preKeyDict = [UInt32: NSData]()
-                preKeys.forEach({ (preKey) in
-                    guard let data = preKey.keyData else {
-                        return
-                    }
-                    do {
-                        let signalPreKey = try SignalPreKey(serializedData: data)
-                        
-                        preKeyDict.updateValue(signalPreKey.keyPair().publicKey, forKey: preKey.keyId)
-                    } catch {
-                        
-                    }
-                    
-                })
-                
-                
-                bundle = OTROMEMOBundleOutgoing(bundle: simpleBundle, preKeys: preKeyDict)
-                
+                simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
             } catch {
+                
+            }
+        }
+        
+        guard let bundle = simpleBundle else  {
+            return nil
+        }
+        
+        //Gather pieces of outgoing bundle
+        let preKeys = self.fetchAllPreKeys(false)
+        
+        var preKeyDict = [UInt32: NSData]()
+        preKeys.forEach({ (preKey) in
+            guard let data = preKey.keyData else {
                 return
             }
+            do {
+                let signalPreKey = try SignalPreKey(serializedData: data)
+                
+                preKeyDict.updateValue(signalPreKey.keyPair().publicKey, forKey: preKey.keyId)
+            } catch {
+                
+            }
             
-            
-            
-        }
-        return bundle
+        })
+        
+        
+        return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
     }
     
     //MARK: SignalSessionStore
