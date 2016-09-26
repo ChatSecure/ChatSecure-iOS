@@ -29,10 +29,9 @@
 @class PushController;
 @class PushOTRListener;
 @protocol OTRThreadOwner;
-#import <HockeySDK_Source/HockeySDK.h>
 
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
