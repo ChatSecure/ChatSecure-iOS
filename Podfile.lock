@@ -29,13 +29,13 @@ PODS:
   - CocoaAsyncSocket (7.5.1):
     - CocoaAsyncSocket/GCD (= 7.5.1)
   - CocoaAsyncSocket/GCD (7.5.1)
-  - CocoaLumberjack (2.2.0):
-    - CocoaLumberjack/Default (= 2.2.0)
-    - CocoaLumberjack/Extensions (= 2.2.0)
-  - CocoaLumberjack/Core (2.2.0)
-  - CocoaLumberjack/Default (2.2.0):
+  - CocoaLumberjack (2.3.0):
+    - CocoaLumberjack/Default (= 2.3.0)
+    - CocoaLumberjack/Extensions (= 2.3.0)
+  - CocoaLumberjack/Core (2.3.0)
+  - CocoaLumberjack/Default (2.3.0):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.2.0):
+  - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
   - CPAProxy (1.1.0):
     - CocoaAsyncSocket
@@ -56,11 +56,11 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
-  - JVFloatLabeledTextField (1.1.0)
+  - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.1.2):
     - KissXML/Core (= 5.1.2)
   - KissXML/Core (5.1.2)
-  - KVOController (1.1.0)
+  - KVOController (1.2.0)
   - libsqlfs/common (1.3)
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
@@ -87,8 +87,8 @@ PODS:
   - ProxyKit/common (1.1.0):
     - CocoaAsyncSocket (~> 7.4)
     - CocoaLumberjack (~> 2.2)
-  - PureLayout (3.0.1)
-  - QRCodeReaderViewController (4.0.1)
+  - PureLayout (3.0.2)
+  - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
   - SAMKeychain (1.5.1)
   - SQLCipher (3.4.0):
@@ -100,9 +100,9 @@ PODS:
     - SQLCipher/common
   - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
-  - uservoice-iphone-sdk (3.2.7)
+  - uservoice-iphone-sdk (3.2.9)
   - VTAcknowledgementsViewController (0.17)
-  - XLForm (3.1.1)
+  - XLForm (3.2.0)
   - XMPPFramework (3.7.0):
     - XMPPFramework/All (= 3.7.0)
   - XMPPFramework/All (3.7.0):
@@ -331,7 +331,7 @@ DEPENDENCIES:
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `071109901100334ad54ae704b4c644b6bb89ad21`)
-  - CocoaLumberjack (~> 2.0)
+  - CocoaLumberjack (~> 2.3.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
@@ -401,9 +401,6 @@ CHECKOUT OPTIONS:
   JSQMessagesViewController:
     :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController
-  libsqlfs:
-    :commit: 9d897141d62c26748c41dd791e79e1234fea271e
-    :git: https://github.com/ChatSecure/libsqlfs
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -413,7 +410,7 @@ SPEC CHECKSUMS:
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: fe8577fd81ff76b1f303dcd51a350fb0c964a6d0
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
-  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
   GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
@@ -423,9 +420,9 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
-  JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
+  JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
-  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libsqlfs: 54d2a3159625746e6b4aeea109a8d591bdc5fd00
   Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
@@ -435,20 +432,20 @@ SPEC CHECKSUMS:
   OTRKit: c38c29e73b6e0794a11a0b661f8faec2410fd518
   ParkedTextField: 72d02a5fdadc089ff25efac04ea21dcc5a2467d3
   ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
-  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  QRCodeReaderViewController: 6538745c8f4ffa9407a26bd7f9489ea01739e7b0
+  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
+  QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
   SQLCipher: 5edce62bad2091ed65a422927fedee15149ad04c
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
+  uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
-  XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
+  XLForm: 2250b4e96ab8ffa5f3355838c79edd90de451782
   XMPPFramework: bf1218e824424ed82cd5f5983f2c25c59dbb4245
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: dc7a0cd572353ee917d7b98efa82287a89e1583c
+PODFILE CHECKSUM: 2809ccc3c1094c39c67bffcb7b53cc359830dce4
 
 COCOAPODS: 1.1.0.rc.2
