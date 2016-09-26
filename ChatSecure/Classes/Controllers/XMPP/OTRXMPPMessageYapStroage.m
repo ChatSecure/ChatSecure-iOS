@@ -110,7 +110,7 @@
                     [[OTRKit sharedInstance] initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
                 }
                 // Suppress error messages for now...
-                [message saveWithTransaction:transaction];
+                // [message saveWithTransaction:transaction];
                 return;
             }
             
