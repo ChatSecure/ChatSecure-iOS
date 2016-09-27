@@ -59,13 +59,14 @@
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
+#import <HockeySDK_Source/HockeySDK.h>
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
 #endif
 
-@interface OTRAppDelegate ()
+@interface OTRAppDelegate () <BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;

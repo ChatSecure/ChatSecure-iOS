@@ -23,7 +23,7 @@ abstract_target 'ChatSecureCorePods' do
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
-  pod "CocoaLumberjack", '~> 2.0'
+  pod "CocoaLumberjack", '~> 2.3.0'
   pod "HockeySDK-Source", '~> 3.7'
   pod 'MBProgressHUD', '~> 0.9'
   pod "SAMKeychain", '~> 1.5'
