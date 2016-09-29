@@ -10,12 +10,6 @@ import UIKit
 import XMPPFramework
 import YapDatabase
 
-let kPepPrefix = "urn:xmpp:omemo:0"
-let kPepDeviceList = kPepPrefix+":devicelist"
-let kPepDeviceListNotify = kPepDeviceList+"+notify"
-let kePepBundles = kPepPrefix+":bundles"
-
-
 /** 
  * This is the glue between XMPP/OMEMO and Signal
  */
@@ -32,6 +26,7 @@ let kePepBundles = kPepPrefix+":bundles"
         }
     }
     let workQueue:dispatch_queue_t
+    let preKeyCount:UInt = 100
     
     @objc public init(accountYapKey:String,  databaseConnection:YapDatabaseConnection) {
         self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
@@ -49,17 +44,6 @@ let kePepBundles = kPepPrefix+":bundles"
     }
 
 }
-
-//extension OTROMEMOSignalCoordinator:OMEMODelegate {
-//    
-//    /**
-//     * In order to determine whether a given contact has devices that support OMEMO, the devicelist node in PEP is consulted. Devices MUST subscribe to 'urn:xmpp:omemo:0:devicelist' via PEP, so that they are informed whenever their contacts add a new device. They MUST cache the most up-to-date version of the devicelist.
-//     */
-//    public func omemo(omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], fromJID: XMPPJID, message: XMPPMessage) {
-//        //print("device List Update \(deviceIds) \(fromJID) \(message)")
-//        //print("\n")
-//    }
-//}
 
 extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     
@@ -96,13 +80,15 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     }
 
     //Always returns most complete bundle with correct count of prekeys
-    public func fetchMyBundle() -> OMEMOBundle {
+    public func fetchMyBundle() -> OMEMOBundle? {
         
-        let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() ?? self.signalEncryptionManager.generateOutgoingBundle()!
+        guard let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() ?? self.signalEncryptionManager.generateOutgoingBundle(self.preKeyCount) else {
+            return nil
+        }
         
         var preKeys = bundle.preKeys
         
-        let keysToGenerate = 100 - preKeys.count
+        let keysToGenerate = Int(self.preKeyCount) - preKeys.count
         
         //Check if we don't have all the prekeys we need
         if (keysToGenerate > 0) {

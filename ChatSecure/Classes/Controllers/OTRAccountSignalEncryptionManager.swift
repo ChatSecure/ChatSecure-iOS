@@ -57,7 +57,7 @@ extension OTRAccountSignalEncryptionManager {
     /** 
      * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
      */
-    public func generateOutgoingBundle() -> OTROMEMOBundleOutgoing? {
+    public func generateOutgoingBundle(preKeyCount:UInt) -> OTROMEMOBundleOutgoing? {
         
         guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
             return nil
@@ -66,7 +66,7 @@ extension OTRAccountSignalEncryptionManager {
         
         let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
         let deviceId = self.registrationId
-        guard let preKeys = self.generatePreKeys(1, count: 100) else {
+        guard let preKeys = self.generatePreKeys(1, count: preKeyCount) else {
             return nil
         }
         
