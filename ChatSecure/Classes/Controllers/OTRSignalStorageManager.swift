@@ -16,22 +16,31 @@ public protocol OTRSignalStorageManagerDelegate: class {
 }
 
 /**
- * This class implements the SignalStore protocol. One OTRSignalStorageManager should be created per account key.
- * This interfaces to the yap database 
+ * This class implements the SignalStore protocol. One OTRSignalStorageManager should be created per account key/collection.
  */
-public class OTRSignalStorageManager: NSObject, SignalStore {
+public class OTRSignalStorageManager: NSObject {
     public let accountKey:String
     public let databaseConnection:YapDatabaseConnection
     public weak var delegate:OTRSignalStorageManagerDelegate?
-    public let preKeyCount:Int = 100
     
-    
+    /**
+     Create a Signal Store Manager for each account.
+     
+     - parameter accountKey: The yap key for the parent account.
+     - parameter databaseConnection: The yap connection to use internally
+     - parameter delegate: An object that handles OTRSignalStorageManagerDelegate
+     */
     public init(accountKey:String, databaseConnection:YapDatabaseConnection, delegate:OTRSignalStorageManagerDelegate?) {
         self.accountKey = accountKey
         self.databaseConnection = databaseConnection
         self.delegate = delegate
     }
     
+    /** 
+     Convenience function to create a new OTRAccountSignalIdentity and save it to yap
+     
+     - returns: an OTRAccountSignalIdentity that is already saved to the database
+     */
     private func generateNewIdenityKeyPair() -> OTRAccountSignalIdentity {
         // Might be a better way to guarantee we have an OTRAccountSignalIdentity
         let identityKeyPair = (self.delegate?.generateNewIdenityKeyPairForAccountKey(self.accountKey))!
@@ -45,6 +54,11 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
     
     //MARK: Database Utilities
     
+    /**
+     Fetches the OTRAccountSignalIdentity for the account key from this class.
+     
+     returns: An OTRAccountSignalIdentity or nil if none was created and stored.
+     */
     private func accountSignalIdentity() -> OTRAccountSignalIdentity? {
         var identityKeyPair:OTRAccountSignalIdentity? = nil
         self.databaseConnection.readWithBlock { (transaction) in
@@ -62,7 +76,13 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return true
     }
     
-    /** Save a bunch of pre keys in one database transaction */
+    /** 
+     Save a bunch of pre keys in one database transaction
+     
+     - parameters preKeys: The array of pre-keys to be stored
+     
+     - return: Whether the storage was successufl
+     */
     public func storeSignalPreKeys(preKeys:[SignalPreKey]) -> Bool {
         
         if preKeys.count == 0 {
@@ -86,6 +106,12 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return success
     }
     
+    /**
+     Returns the current max pre-key id for this account. This includes both deleted and existing pre-keys. This is fairly quick as it uses a secondary index and
+     aggregate function MAX(OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName) WHERE OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName =?, self.accountKey
+     
+     returns: The current max in the yap database. If there are no pre-keys then returns none.
+    */
     internal func currentMaxPreKeyId() ->  UInt32? {
         var maxId:UInt32?
         self.databaseConnection.readWithBlock { (transaction) in
@@ -100,6 +126,13 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return maxId
     }
     
+    /**
+     Fetch all pre-keys for this class's account. This can include deleted pre-keys which are OTRSignalPreKey witout any keyData.
+     
+     - parameter includeDeleted: If deleted pre-keys are included in the result
+     
+     - return: An array of OTRSignalPreKey(s). If ther eare no pre-keys then the array will be empty.
+     */
     internal func fetchAllPreKeys(includeDeleted:Bool) -> [OTRSignalPreKey] {
         var preKeys = [OTRSignalPreKey]()
         self.databaseConnection.readWithBlock { (transaction) in
@@ -121,6 +154,11 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return preKeys
     }
     
+    /**
+     This fetches the associated account's bundle from yap. If any piece of the bundle is missing it returns nil.
+     
+     - return: A complete outgoing bundle.
+     */
     public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
         var simpleBundle:OTROMEMOBundle? = nil
         //Fetch and create the base bundle
@@ -158,12 +196,13 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
             } catch {
                 
             }
-            
         })
-        
         
         return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
     }
+}
+//MARK: SignalStore
+extension OTRSignalStorageManager: SignalStore {
     
     //MARK: SignalSessionStore
     public func sessionRecordForAddress(address: SignalAddress) -> NSData? {
@@ -316,9 +355,10 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         
         if let result = self.accountSignalIdentity() {
             return result.registrationId;
+        } else {
+            //Generate new registration ID?
+            return self.generateNewIdenityKeyPair().registrationId
         }
-        //Generate new registration ID?
-        return self.generateNewIdenityKeyPair().registrationId
     }
     
     public func saveIdentity(name: String, identityKey: NSData?) -> Bool {

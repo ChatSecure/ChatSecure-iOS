@@ -23,6 +23,7 @@ class OTROmemoStorageTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
+        // Clear any existing databases in the test yap directory.
         let databaseDirectory = OTRTestDatabaseManager.yapDatabaseDirectory()
         do {
             let contents = try NSFileManager().contentsOfDirectoryAtPath(databaseDirectory)
@@ -40,6 +41,10 @@ class OTROmemoStorageTest: XCTestCase {
         super.tearDown()
     }
     
+    /** 
+     * This creates teh necessary database and signal managers. Also creates an account which is required for all the above objects
+     *
+     */
     func setupDatabase(name:String) {
         let account = TestXMPPAccount()
         self.accountKey = account.uniqueId
@@ -51,13 +56,17 @@ class OTROmemoStorageTest: XCTestCase {
         self.databaseManager.setupDatabaseWithName(name, withMediaStorage: false)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection)
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection, delegate: nil)
-        self.signalCoordinator = OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection)
+        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection)
         
         databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
             account.saveWithTransaction(transaction)
         }
     }
     
+    /**
+     * Store the inital device list.
+     * Ensure the correct trust level is set and that it's attached to the correct account.
+     */
     func storeInitialDevices() {
         self.omemoStorage.storeOurDevices(self.initialDevices)
         let firstStoredDevices = omemoStorage.getDevicesForOurAccount()
@@ -74,6 +83,11 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertEqual(difference.count, 0)
     }
     
+    
+    /**
+     * Store the second device list. This should override the inital device list and remove devie 3 and add device 4 and 5.
+     * Checks to make sure the trust level is set correctly.
+     */
     func storeSecondDeviceList() {
         //Now simulate getting a new set of devices where one was removed and two were added.
         
@@ -111,6 +125,9 @@ class OTROmemoStorageTest: XCTestCase {
         self.storeSecondDeviceList()
     }
     
+    /**
+     * Do the above test and then remove all devices and ensure there are no devices left.
+     */
     func testOmemoRemoveDevices() {
         self.setupDatabase(#function)
         self.storeInitialDevices()
@@ -122,6 +139,11 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertEqual(thirdStoredDevices.count, 0)
     }
     
+    /**
+     * 1. Check to make sure there are no pre-keys currently stored.
+     * 2. Add 3 preKeys and check that the current max is correct.
+     * 3. Delete a pre-key and check that values are correct
+     */
     func testPreKeyStorage() {
         self.setupDatabase(#function)
         
@@ -134,6 +156,8 @@ class OTROmemoStorageTest: XCTestCase {
         keyIds.forEach { (id) in
             self.signalStorage.storePreKey(NSData(), preKeyId: id)
         }
+        
+        XCTAssertEqual(self.signalStorage.currentMaxPreKeyId(),100)
         
         // Delete a prekey. In this case it's the max id but that shouldn't matter either.
         self.signalStorage.deletePreKeyWithId(100)
@@ -156,9 +180,14 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertEqual(allRemainingPrekeys.count, 2)
     }
     
+    /**
+     * 1. Test generating a bundle like on first launch.
+     * 2. Remove a few pre keys. This simulates what will happen when the signal library uses up some pre keys from incoming bundle messages
+     * 3. Fetch our own bundle again. This time it should all come from the database and the only new information is two new pre-keys to replace teh ones deleted
+     */
     func testOurBundleStorage() {
         self.setupDatabase(#function)
-        let firstFetch = self.signalCoordinator.fetchMyBundle()
+        let firstFetch = self.signalCoordinator.fetchMyBundle()!
         XCTAssertNotNil(firstFetch)
         
         var firstPreKeyFetch = [UInt32:NSData]()
@@ -171,7 +200,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.signalStorage.deletePreKeyWithId(25)
         
         //Fetch again
-        let secondFetch = self.signalCoordinator.fetchMyBundle()
+        let secondFetch = self.signalCoordinator.fetchMyBundle()!
         XCTAssertNotNil(secondFetch)
         
         var secondPreKeyFetch = [UInt32:NSData]()

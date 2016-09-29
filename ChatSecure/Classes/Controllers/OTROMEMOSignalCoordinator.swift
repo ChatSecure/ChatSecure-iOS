@@ -25,16 +25,22 @@ import YapDatabase
             return omemoModule?.xmppStream.myJID
         }
     }
-    let workQueue:dispatch_queue_t
     let preKeyCount:UInt = 100
-    
-    @objc public init(accountYapKey:String,  databaseConnection:YapDatabaseConnection) {
-        self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
+    /**
+     Create a OTROMEMOSignalCoordinator for an account. 
+     
+     - parameter accountYapKey: The accounts unique yap key
+     - parameter databaseConnection: A yap database connection on which all operations will be completed on
+ `  */
+    @objc public required init(accountYapKey:String,  databaseConnection:YapDatabaseConnection) throws {
+        try self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection(), databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
-        self.workQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-work-queue", DISPATCH_QUEUE_SERIAL)
     }
     
+    /**
+     Checks that a jid matches our own JID using XMPPJIDCompareBare
+     */
     private func isOurJID(jid:XMPPJID) -> Bool {
         guard let ourJID = self.myJID else {
             return false;
@@ -72,7 +78,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         } else {
             devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare())
         }
-        
+        //Convert from devices array to NSNumber array.
         return (devices?.map({ (device) -> NSNumber in
             return device.deviceId
         })) ?? [NSNumber]()

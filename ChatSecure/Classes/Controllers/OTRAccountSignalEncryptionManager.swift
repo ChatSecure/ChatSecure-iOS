@@ -10,13 +10,17 @@ import UIKit
 import SignalProtocol_ObjC
 import YapDatabase
 
-/* Performs any Signal operations: creating bundle, decryption, encryption. Use one OTRAccountSignalEncryptionManager per account**/
+public enum SignalEncryptionError:ErrorType {
+    case UnableToCreateSignalContext
+}
+
+/* Performs any Signal operations: creating bundle, decryption, encryption. Use one OTRAccountSignalEncryptionManager per account **/
 public class OTRAccountSignalEncryptionManager {
     
     let storage:OTRSignalStorageManager
-    let signalContext:SignalContext
+    var signalContext:SignalContext
     
-    //Don't think this is used for anything? Looks like in Conversations they use 0.
+    //In OMEMO world the registration ID is used as the device id and all devices have registration ID of 0.
     public var registrationId:UInt32 {
         get {
             return self.storage.getLocalRegistrationId()
@@ -29,10 +33,13 @@ public class OTRAccountSignalEncryptionManager {
         }
     }
     
-    init(accountKey:String, databaseConnection:YapDatabaseConnection) {
+    init(accountKey:String, databaseConnection:YapDatabaseConnection) throws {
         self.storage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseConnection, delegate: nil)
         let signalStorage = SignalStorage(signalStore: self.storage)
-        self.signalContext = SignalContext(storage: signalStorage)!
+        guard let context = SignalContext(storage: signalStorage) else {
+            throw SignalEncryptionError.UnableToCreateSignalContext
+        }
+        self.signalContext = context
         self.storage.delegate = self
     }
 }

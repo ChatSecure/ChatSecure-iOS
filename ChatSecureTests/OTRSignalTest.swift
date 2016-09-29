@@ -53,10 +53,10 @@ class OTRSignalTest: XCTestCase {
             otherAccount.saveWithTransaction(transaction)
         }
         
-        let ourEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: ourAccount.uniqueId, databaseConnection: ourDatabaseConnection)
-        let ourOutgoingBundle = ourEncryptionManager.generateOutgoingBundle()
+        let ourEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: ourAccount.uniqueId, databaseConnection: ourDatabaseConnection)
+        let ourOutgoingBundle = ourEncryptionManager.generateOutgoingBundle(10)
         
-        let otherEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
+        let otherEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
         
         XCTAssertNotNil(ourOutgoingBundle,"Created our bundle")
         //At this point int 'real' world we could post or outgoing bundle to OMEMO
