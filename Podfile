@@ -58,7 +58,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
-  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/3f30f3d50d1a85305df3ff5f047b3dd379f12e73/SignalProtocolC.podspec'
+  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec'
   # CocoaPods 1.0 cannot compile C files anymore so we rename .c to .m.
   # Waiting for fix https://github.com/CocoaPods/CocoaPods/pull/5844
   pod 'libsqlfs/SQLCipher', :podspec => 'Podspecs/libsqlfs.podspec'

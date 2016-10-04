@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SignalProtocol_ObjC
+import SignalProtocolObjC
 import YapDatabase
 
 public protocol OTRSignalStorageManagerDelegate: class {
