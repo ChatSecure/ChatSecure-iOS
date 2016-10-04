@@ -18,6 +18,7 @@ import YapDatabase
     public let signalEncryptionManager:OTRAccountSignalEncryptionManager
     public let omemoStorageManager:OTROMEMOStorageManager
     public let accountYapKey:String
+    public let databaseConnection:YapDatabaseConnection
     public weak var omemoModule:OMEMOModule?
     public weak var omemoModuleQueue:dispatch_queue_t?
     private var myJID:XMPPJID? {
@@ -36,6 +37,7 @@ import YapDatabase
         try self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection(), databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
+        self.databaseConnection = databaseConnection
     }
     
     /**
@@ -48,7 +50,72 @@ import YapDatabase
         
         return jid.isEqualToJID(ourJID, options: XMPPJIDCompareBare)
     }
+}
 
+extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
+    
+    public func omemo(omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, failedToPublishDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], fromJID: XMPPJID, incomingElement: DDXMLElement) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, failedToFetchDeviceIdsForJID fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, failedToPublishBundle bundle: OMEMOBundle, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+        
+    }
+    public func omemo(omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: gl_uint32_t, fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [NSNumber : NSData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
+        let rid = NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
+        
+        guard let ourEncryptedKeyData = keyData[rid], let encryptedPayload = payload else {
+            return
+        }
+        do {
+            let unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(ourEncryptedKeyData, name: fromJID.bare(), deviceId: senderDeviceId)
+            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedPayload, key: unencryptedKeyData, iv: iv) else {
+                return
+            }
+            let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
+            self.databaseConnection.readWriteWithBlock({ (transaction) in
+                
+                guard let buddy = OTRBuddy.fetchBuddyWithUsername(fromJID.bare(), withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
+                    return
+                }
+                let databaseMessage = OTRMessage()
+                databaseMessage.incoming = true
+                databaseMessage.text = messageString
+                databaseMessage.buddyUniqueId = buddy.uniqueId
+                databaseMessage.transportedSecurely = true
+                databaseMessage.messageId = message.elementID()
+                
+                databaseMessage.saveWithTransaction(transaction)
+            })
+        } catch {
+            return
+        }
+        
+    }
 }
 
 extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {

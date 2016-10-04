@@ -20,8 +20,10 @@ NSUInteger const OTRDefaultPasswordLength = 100;
 
 + (NSData *)randomDataWithLength:(NSUInteger)length {
     NSMutableData* passphraseData = [NSMutableData dataWithLength:length];
-    SecRandomCopyBytes(kSecRandomDefault, length, [passphraseData mutableBytes]);
-    return passphraseData;
+    if (SecRandomCopyBytes(kSecRandomDefault, length, [passphraseData mutableBytes]) == 0) {
+        return [passphraseData copy];
+    };
+    return nil;
 }
 
 @end
