@@ -188,20 +188,13 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
         if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
             cell.accessoryType = UITableViewCellAccessoryDetailButton;
+            if ([cell isKindOfClass:XLFormTextFieldCell.class]) {
+                [[(XLFormTextFieldCell*)cell textField] setSecureTextEntry:!self.showPasswordsAsText];
+            }
+
         }
     }
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
-    XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
-    if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
-        XLFormBaseCell *xlCell = [desc cellForFormController:self];
-        if (xlCell != nil && [cell isKindOfClass:XLFormTextFieldCell.class]) {
-            [[(XLFormTextFieldCell*)cell textField] setSecureTextEntry:!self.showPasswordsAsText];
-        }
-    }
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
