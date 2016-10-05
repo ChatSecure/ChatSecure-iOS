@@ -27,6 +27,7 @@ import YapDatabase
         }
     }
     let preKeyCount:UInt = 100
+    private var outStandingDeviceBundleRequests:[String: () -> Void]
     /**
      Create a OTROMEMOSignalCoordinator for an account. 
      
@@ -38,6 +39,7 @@ import YapDatabase
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection(), databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
         self.databaseConnection = databaseConnection
+        self.outStandingDeviceBundleRequests = [:]
     }
     
     /**
@@ -49,6 +51,53 @@ import YapDatabase
         }
         
         return jid.isEqualToJID(ourJID, options: XMPPJIDCompareBare)
+    }
+    
+    /**
+     Check if a buddy supports OMEMO. This checks if we've seen devices for this buddy.
+     
+     - parameter buddyYapKey: The yap key of the buddy.
+     
+     - returns: True if there are devices and the buddy supports OMEMO otherwise false.
+     */
+    public func buddySupportsOMEMO(buddyYapKey:String) -> Bool {
+        return self.omemoStorageManager.getDevicesForParentYapKey(buddyYapKey, yapCollection: OTRBuddy.collection()).count > 0
+    }
+    
+    public func prepareSessionWithBuddy(buddyYapKey:String, completion:() -> Void) {
+        var devices:[OTROMEMODevice]? = nil
+        var username:String? = nil
+        self.databaseConnection.readWithBlock { (transaction) in
+            let dev = self.omemoStorageManager.getDevicesForParentYapKey(buddyYapKey, yapCollection: OTRBuddy.collection(),transaction: transaction)
+            if (dev.count == 0) {
+                //No devices so we can't go any further.
+                return
+            }
+            devices = dev
+            username = OTRBuddy.fetchObjectWithUniqueID(buddyYapKey, transaction: transaction)?.username
+        }
+        
+        guard let devs = devices, buddyUsername = username else {
+            return
+        }
+        
+        
+        let group = dispatch_group_create()
+        for device in devs {
+            if !self.signalEncryptionManager.sessionRecordExistsForUsername(buddyUsername, deviceId: device.deviceId.intValue) {
+                //No session for this buddy and device combo. We need to fetch the bundle.
+                
+                let elementId = NSUUID().UUIDString
+                
+                self.outStandingDeviceBundleRequests[elementId] = {
+                    
+                }
+                self.omemoModule?.fetchBundleForDeviceId(device.deviceId.unsignedIntValue, jid: XMPPJID.jidWithString(buddyUsername), elementId: elementId)
+            }
+        }
+        
+        
+        
     }
 }
 
@@ -98,7 +147,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
             self.databaseConnection.readWriteWithBlock({ (transaction) in
-                
+                // TODO: check if it's our jid and handle as an outgoing message from another device
                 guard let buddy = OTRBuddy.fetchBuddyWithUsername(fromJID.bare(), withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }

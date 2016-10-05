@@ -41,7 +41,7 @@ public class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    private func getDevicesForParentYapKey(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> [OTROMEMODevice] {
+    internal func getDevicesForParentYapKey(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> [OTROMEMODevice] {
         return OTROMEMODevice.allDeviceIdsForParentKey(yapKey, collection: yapCollection, transaction: transaction)
     }
     
