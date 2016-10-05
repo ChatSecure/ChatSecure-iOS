@@ -49,7 +49,12 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         //Username is limited to 30 characters and passwords are limited to 100
         var username = NSUUID().UUIDString
         username = username.substringToIndex(username.startIndex.advancedBy(30))
-        var password = OTRPasswordGenerator.passwordWithLength(100)
+        guard var password = OTRPasswordGenerator.passwordWithLength(100) else {
+            self.callbackQueue.addOperationWithBlock({ () -> Void in
+                completion(success: false, error: nil)
+            })
+            return;
+        }
         password = password.substringToIndex(password.startIndex.advancedBy(100))
         
         self.apiClient.registerNewUser(username, password: password, email: nil) {[weak self] (account, error) -> Void in
