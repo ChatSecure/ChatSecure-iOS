@@ -153,7 +153,10 @@ public class OTROMEMOStorageManager {
      */
     public func storeBuddyDevices(devices:[NSNumber], buddyUsername:String) {
         self.databaseConnection.readWriteWithBlock { (transaction) in
-            let buddy = OTRBuddy.fetchBuddyWithUsername(buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction)
+            //TODO: Create buddy if none
+            guard let buddy = OTRBuddy.fetchBuddyWithUsername(buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction) else {
+                return
+            }
             self.storeDevices(devices, parentYapKey: buddy.uniqueId, parentYapCollection: OTRBuddy.collection(), transaction: transaction)
         }
     }

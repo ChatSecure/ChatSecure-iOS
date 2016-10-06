@@ -50,8 +50,11 @@ extension OTRAccountSignalEncryptionManager {
     }
     
     public func generateRandomSignedPreKey() -> SignalSignedPreKey? {
-        //TODO: Find unused prekey id incremented?
-        guard let signedPreKey = self.keyHelper()?.generateSignedPreKeyWithIdentity(self.identityKeyPair, signedPreKeyId: arc4random()),
+        
+        guard let preKeyId = self.keyHelper()?.generateRegistrationId() else {
+            return nil
+        }
+        guard let signedPreKey = self.keyHelper()?.generateSignedPreKeyWithIdentity(self.identityKeyPair, signedPreKeyId:preKeyId),
             let data = signedPreKey.serializedData() else {
             return nil
         }
