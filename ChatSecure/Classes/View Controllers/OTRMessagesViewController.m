@@ -960,7 +960,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
             buddy.lastMessageDate = message.date;
             [buddy saveWithTransaction:transaction];
         } completionBlock:^{
-            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
+            
+            //Temporary if this buddy supports OMEMO then force it to send that way. Otherwise use the old OTRKit method
+            if ([self.xmppManager.omemoSignalCoordinator buddySupportsOMEMO:message.buddyUniqueId]) {
+                [self.xmppManager.omemoSignalCoordinator encryptAndSendMessage:message.text buddyYapKey:message.buddyUniqueId messageId:message.messageId completion:^(BOOL success, NSError * _Nullable error) {
+                    
+                }];
+            } else {
+                [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message]
+            }
         }];
         
     } else {

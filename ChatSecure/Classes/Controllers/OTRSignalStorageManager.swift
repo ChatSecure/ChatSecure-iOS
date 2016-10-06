@@ -361,35 +361,14 @@ extension OTRSignalStorageManager: SignalStore {
         }
     }
     
+    // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
     public func saveIdentity(name: String, identityKey: NSData?) -> Bool {
-        let yapKey = OTRSignalIdentityKey.uniqueKeyFromAccountKey(self.accountKey, name: name)
-        self.databaseConnection.readWriteWithBlock { (transaction) in
-            if let data = identityKey {
-                //Save to database
-                guard let identityKey = OTRSignalIdentityKey(accountKey: self.accountKey, name: name, identityKey: data) else {
-                    return
-                }
-                identityKey.saveWithTransaction(transaction)
-            } else {
-                //Remove from database
-                transaction.removeObjectForKey(yapKey, inCollection: OTRSignalIdentityKey.collection())
-            }
-        }
         return true
     }
     
+    // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
     public func isTrustedIdentity(name: String, identityKey: NSData) -> Bool {
-        let yapKey = OTRSignalIdentityKey.uniqueKeyFromAccountKey(self.accountKey, name: name)
-        var idenittyKey:OTRSignalIdentityKey? = nil
-        self.databaseConnection.readWithBlock { (transaction) in
-            idenittyKey = OTRSignalIdentityKey.fetchObjectWithUniqueID(yapKey, transaction: transaction)
-        }
-        
-        guard let data = idenittyKey?.identityKey else {
-            return true
-        }
-        
-        return data.isEqualToData(identityKey)
+       return true
     }
     
     //MARK: SignalSenderKeyStore

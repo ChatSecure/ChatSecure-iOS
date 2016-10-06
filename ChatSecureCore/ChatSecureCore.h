@@ -56,7 +56,6 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 
 //Signal Models
 #import "OTRAccountSignalIdentity.h"
-#import "OTRSignalIdentityKey.h"
 #import "OTRSignalSenderKey.h"
 #import "OTRSignalPreKey.h"
 #import "OTRSignalSignedPreKey.h"

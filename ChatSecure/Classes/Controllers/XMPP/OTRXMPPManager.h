@@ -78,6 +78,7 @@ extern NSString *const OTRXMPPLoginErrorKey;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property (nonatomic, readonly) OTRXMPPRoomManager *roomManager;
+@property (nonatomic, strong) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property BOOL didSecure;
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
