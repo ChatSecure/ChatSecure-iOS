@@ -967,7 +967,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     
                 }];
             } else {
-                [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message]
+                [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
             }
         }];
         
