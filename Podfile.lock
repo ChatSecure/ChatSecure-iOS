@@ -446,7 +446,7 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
-  SignalProtocolC: a7e7f639a66dc9c0ffd14b418369081abd558d22
+  SignalProtocolC: 693289d20b8991b1d2588740cf48010d3d1ef4f4
   SQLCipher: 5edce62bad2091ed65a422927fedee15149ad04c
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
