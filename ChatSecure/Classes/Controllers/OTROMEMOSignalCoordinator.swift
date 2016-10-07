@@ -219,7 +219,7 @@ import YapDatabase
                 
                 //Make sure we have encrypted the symetric key to someone
                 if (keyDataDict.count > 0) {
-                    self.omemoModule?.sendKeyData(keyDataDict, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: payload, elementId: messageId)
+                    self.omemoModule?.sendKeyData(keyDataDict, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: payload?.data, elementId: messageId)
                     dispatch_async(self.callbackQueue, {
                         completion(true,nil)
                     })
@@ -312,7 +312,11 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
         do {
             let unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(ourEncryptedKeyData, name: fromJID.bare(), deviceId: senderDeviceId)
-            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedPayload, key: unencryptedKeyData, iv: iv) else {
+            let aesGcmBlockLength = 16
+            let keyData = unencryptedKeyData.subdataWithRange(NSMakeRange(0, unencryptedKeyData.length - aesGcmBlockLength))
+            let tag = unencryptedKeyData.subdataWithRange(NSMakeRange(unencryptedKeyData.length, aesGcmBlockLength))
+            
+            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedPayload, key: keyData, iv: iv, authTag: tag) else {
                 return
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
