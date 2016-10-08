@@ -16,7 +16,7 @@
 @end
 
 @implementation OTRXMPPTorManager
-
+@synthesize account = _account;
 @synthesize xmppStream = _xmppStream;
 
 - (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated

@@ -35,6 +35,6 @@
 @property (nonatomic, copy, readonly) NSString *qrString;
 @property (nonatomic, weak) id<OTRQRCodeViewControllerDelegate> delegate;
 
-- (instancetype) initWithQRString:(NSString*)qrString NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithQRString:(NSString*)qrString;
 
 @end

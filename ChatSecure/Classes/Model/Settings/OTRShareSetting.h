@@ -15,7 +15,7 @@
 
 @class OTRShareSetting;
 
-@protocol OTRShareSettingDelegate <NSObject>
+@protocol OTRShareSettingDelegate <OTRSettingDelegate>
 
 - (void)didSelectShareSetting:(OTRShareSetting *)shareSetting;
 

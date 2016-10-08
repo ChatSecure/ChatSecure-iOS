@@ -32,6 +32,7 @@
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActivityViewController+ChatSecure.h"
 @import OTRAssets;
+@import XLForm;
 #import "OTRLanguageManager.h"
 
 static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";

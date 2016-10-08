@@ -10,7 +10,8 @@
 #import "OTRIntSettingViewController.h"
 
 @implementation OTRIntSetting
-
+@synthesize delegate = _delegate;
+@synthesize defaultValue = _defaultValue;
 @synthesize intValue, minValue, maxValue, numValues;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey

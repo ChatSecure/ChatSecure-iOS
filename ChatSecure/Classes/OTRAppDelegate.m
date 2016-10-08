@@ -61,6 +61,8 @@
 #import "OTRMessagesViewController.h"
 #import <HockeySDK_Source/HockeySDK.h>
 @import OTRAssets;
+@import OTRKit;
+#import "OTRPushTLVHandlerProtocols.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -548,7 +550,9 @@
 - (PushController *)pushController{
     if (!_pushController) {
         NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
-        OTRPushTLVHandler *tlvHandler = [OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
+        // Casting here because it's easier than figuring out the
+        // non-modular include spaghetti mess
+        id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)[OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
         _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
 
     }

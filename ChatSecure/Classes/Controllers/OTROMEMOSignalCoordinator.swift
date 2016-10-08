@@ -282,7 +282,11 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
         
         dispatch_async(self.workQueue) {
-            
+            let elementId = outgoingIq.elementID()
+            if (bundle.preKeys.count == 0) {
+                self.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+                return
+            }
             //Create incoming bundle from OMEMOBundle
             let innerBundle = OTROMEMOBundle(deviceId: bundle.deviceId, publicIdentityKey: bundle.identityKey, signedPublicPreKey: bundle.signedPreKey.publicKey, signedPreKeyId: bundle.signedPreKey.preKeyId, signedPreKeySignature: bundle.signedPreKey.signature)
             //Select random pre key to use
@@ -291,7 +295,6 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
             self.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
-            let elementId = outgoingIq.elementID()
             self.callAndRemoveOutstandingBundleBlock(elementId, success: true)
         }
         
