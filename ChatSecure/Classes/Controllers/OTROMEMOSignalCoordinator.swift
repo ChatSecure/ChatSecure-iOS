@@ -204,13 +204,14 @@ import YapDatabase
                 let devices = buddyDevices + ourDevices
                 //Grab devices for this account
                 
-                var keyDataDict = [NSNumber:NSData]()
+                var keyDataArray: [OMEMOKeyData] = []
                 // Encrypt to all devices (ours and theirs) except this device
                 for device in devices where device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId {
                     if (device.trustLevel == .TrustLevelTrustedTofu || device.trustLevel == .TrustLevelUntrustedNew) {
                         do {
                             let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: buddy.username, deviceId: device.deviceId.unsignedIntValue)
-                            keyDataDict[device.deviceId] = encryptedKeyData.data
+                            let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+                            keyDataArray.append(keyData)
                         } catch {
                             //Don't need to handle the error here just push forward adn keep on trying to encrypt the key
                         }
@@ -218,8 +219,8 @@ import YapDatabase
                 }
                 
                 //Make sure we have encrypted the symetric key to someone
-                if (keyDataDict.count > 0) {
-                    self.omemoModule?.sendKeyData(keyDataDict, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: payload?.data, elementId: messageId)
+                if (keyDataArray.count > 0) {
+                    self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: payload?.data, elementId: messageId)
                     dispatch_async(self.callbackQueue, {
                         completion(true,nil)
                     })
@@ -307,10 +308,16 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
     }
     
-    public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [NSNumber : NSData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
-        let rid = NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
+    public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
+        let rid = self.signalEncryptionManager.registrationId
         
-        guard let ourEncryptedKeyData = keyData[rid], let encryptedPayload = payload else {
+        var ourKeyData: NSData? = nil
+        for key in keyData {
+            if key.deviceId == rid {
+                ourKeyData = key.data
+            }
+        }
+        guard let ourEncryptedKeyData = ourKeyData, let encryptedPayload = payload else {
             return
         }
         do {
