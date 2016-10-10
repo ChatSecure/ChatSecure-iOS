@@ -182,7 +182,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
     XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING placeHolder:XMPP_USERNAME_EXAMPLE_STRING value:value];
     usernameDescriptor.value = value;
     usernameDescriptor.required = YES;
-    [usernameDescriptor addValidator:[XLFormValidator emailValidatorLong]];
+    [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
     return usernameDescriptor;
 }
 
