@@ -8,7 +8,7 @@
 
 #import "OTRXMPPError.h"
 
-#import "NSXMLElement+XMPP.h"
+@import XMPPFramework;
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>

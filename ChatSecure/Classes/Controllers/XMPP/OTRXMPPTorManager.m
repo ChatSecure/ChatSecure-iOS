@@ -8,7 +8,7 @@
 
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
-#import "XMPPStream.h"
+@import XMPPFramework;
 #import "OTRXMPPTorAccount.h"
 
 @interface OTRXMPPTorManager()

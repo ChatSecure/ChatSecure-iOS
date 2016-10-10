@@ -46,14 +46,13 @@
 @import YapDatabase;
 
 #import "OTRCertificatePinning.h"
-#import "NSData+XMPP.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRDatabaseUnlockViewController.h"
 #import "OTRMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
-#import "XMPPURI.h"
+@import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"

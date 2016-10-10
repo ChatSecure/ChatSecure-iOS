@@ -7,7 +7,7 @@
 //
 
 #import "OTRXLFormCreator.h"
-#import "XLForm.h"
+@import XLForm;
 #import "OTRXMPPAccount.h"
 @import OTRAssets;
 #import "XMPPServerInfoCell.h"

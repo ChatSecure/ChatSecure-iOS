@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XMPPRoom.h"
+@import XMPPFramework;
 #import "YapDatabaseConnection.h"
 #import "OTRMessage.h"
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPStream.h"
+@import XMPPFramework;
 
 @interface OTRXMPPProxyStream : XMPPStream
 

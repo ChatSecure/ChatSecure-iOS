@@ -23,19 +23,8 @@
 #import "OTRXMPPManager.h"
 
 #import "GCDAsyncSocket.h"
-#import "XMPP.h"
-#import "XMPPReconnect.h"
-#import "XMPPCapabilitiesCoreDataStorage.h"
-#import "XMPPRosterCoreDataStorage.h"
-#import "XMPPvCardAvatarModule.h"
-#import "XMPPMessage+XEP_0184.h"
-#import "XMPPMessage+XEP_0085.h"
-#import "XMPPMessage+XEP_0280.h"
-#import "NSXMLElement+XEP_0203.h"
-#import "XMPPvCardTemp.h"
-#import "XMPPMessageDeliveryReceipts.h"
+@import XMPPFramework;
 #import "OTRYapDatabaseRosterStorage.h"
-#import "OMEMOModule.h"
 
 #import "OTRLog.h"
 
@@ -45,7 +34,6 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
-#import "XMPPXOAuth2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
@@ -58,17 +46,13 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
 #import "OTRNotificationController.h"
-#import "XMPPStreamManagement.h"
 #import "OTRStreamManagementYapStorage.h"
-#import "XMPPMessageCarbons.h"
 #import "OTRXMPPMessageYapStroage.h"
 #import "OTRKit.h"
 #import "OTRXMPPRoomManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPBuddyManager.h"
 @import OTRAssets;
-#import "XMPPIQ+XEP_0357.h"
-#import "XMPPJID.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";

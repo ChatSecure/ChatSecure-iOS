@@ -10,8 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "XMPPJID.h"
-#import "XMPPvCardTemp.h"
+@import XMPPFramework;
 
 @interface OTRvCardYapDatabaseStorage ()
 

@@ -7,11 +7,7 @@
 //
 
 #import "OTRXMPPMessageYapStroage.h"
-#import "XMPPStream.h"
-#import "XMPPMessage+XEP_0085.h"
-#import "XMPPMessage+XEP_0184.h"
-#import "XMPPMessage+XEP_0280.h"
-#import "NSXMLElement+XEP_0203.h"
+@import XMPPFramework;
 #import "OTRLog.h"
 @import OTRKit;
 #import "OTRXMPPBuddy.h"

@@ -7,8 +7,7 @@
 //
 
 #import "OTRXMPPBuddy.h"
-#import "XMPPvCardTemp.h"
-#import "NSData+XMPP.h"
+@import XMPPFramework;
 
 @interface OTRXMPPBuddy ()
 

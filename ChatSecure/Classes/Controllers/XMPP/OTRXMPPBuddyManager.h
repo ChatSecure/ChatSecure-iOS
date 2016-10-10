@@ -6,7 +6,7 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPModule.h"
+@import XMPPFramework;
 
 @class YapDatabaseConnection;
 @protocol OTRProtocol;

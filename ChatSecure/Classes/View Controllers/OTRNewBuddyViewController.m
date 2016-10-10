@@ -21,7 +21,7 @@
 
 #import "QRCodeReaderViewController.h"
 #import "QRCodeReader.h"
-#import "XMPPURI.h"
+@import XMPPFramework;
 #import "OTRLanguageManager.h"
 #import "NSURL+ChatSecure.h"
 

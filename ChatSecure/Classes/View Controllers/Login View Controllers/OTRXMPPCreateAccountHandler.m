@@ -8,12 +8,12 @@
 
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRXMPPManager.h"
-#import "XLForm.h"
+@import XLForm;
 #import "OTRXLFormCreator.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "XMPPServerInfoCell.h"
-#import "XMPPJID.h"
+@import XMPPFramework;
 #import "OTRXMPPManager.h"
 #import "OTRXMPPServerInfo.h"
 #import "OTRPasswordGenerator.h"

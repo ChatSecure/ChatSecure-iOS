@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "XLFormBaseCell.h"
+@import XLForm;
 #import "OTRXMPPServerInfo.h"
 
 extern NSString *const kOTRFormRowDescriptorTypeXMPPServer;

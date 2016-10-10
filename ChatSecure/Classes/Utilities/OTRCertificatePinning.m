@@ -11,14 +11,13 @@
 #import "SAMKeychainQuery.h"
 #import "GCDAsyncSocket.h"
 #import "AFSecurityPolicy.h"
-#import "XMPPStream.h"
-#import "XMPPJID.h"
+@import XMPPFramework;
+
 
 #import <CommonCrypto/CommonDigest.h>
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
-#import "XMPPStream.h"
 
 
 ///////////////////////////////////////////////
