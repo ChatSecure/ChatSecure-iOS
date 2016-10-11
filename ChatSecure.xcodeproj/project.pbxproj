@@ -35,11 +35,13 @@
 		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; };
 		63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */; };
 		63564E101BBB1C5200EB4CA6 /* PushStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */; };
+		635E51A91DA82A4E002B70AB /* OTROMEMOTestModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */; };
+		635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */; };
 		635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCC831D1B5116008F903C /* OTRStringTests.swift */; };
 		635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		6361B78A1D4C268900EDD9EC /* OTROMEMOBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */; };
-		63634CE91DA704AA00B0BAE8 /* OTROMEMOStreamTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63634CE81DA704AA00B0BAE8 /* OTROMEMOStreamTest.swift */; };
+		63634CE91DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */; };
 		63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */; };
 		63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */; };
 		636767E91D83562700432B48 /* TestXMPPAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636767E81D83562700432B48 /* TestXMPPAccount.swift */; };
@@ -741,9 +743,11 @@
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
 		63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushOTRListener.swift; sourceTree = "<group>"; };
 		63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushStorage.swift; sourceTree = "<group>"; };
+		635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOTestModule.swift; sourceTree = "<group>"; };
+		635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRTestDatabase.swift; sourceTree = "<group>"; };
 		635FCC831D1B5116008F903C /* OTRStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStringTests.swift; sourceTree = "<group>"; };
 		6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTROMEMOBundle.swift; path = "Signal-Storage/OTROMEMOBundle.swift"; sourceTree = "<group>"; };
-		63634CE81DA704AA00B0BAE8 /* OTROMEMOStreamTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOStreamTest.swift; sourceTree = "<group>"; };
+		63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOIntegrationTest.swift; sourceTree = "<group>"; };
 		63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+ChatSecure.swift"; sourceTree = "<group>"; };
 		63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+ChatSecure.swift"; sourceTree = "<group>"; };
 		636767E81D83562700432B48 /* TestXMPPAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestXMPPAccount.swift; sourceTree = "<group>"; };
@@ -1477,7 +1481,9 @@
 				63B578631D51600300D80ED3 /* OTRSignalTest.swift */,
 				636767E81D83562700432B48 /* TestXMPPAccount.swift */,
 				639120921D8CA1E200F4100E /* OTROmemoStorageTest.swift */,
-				63634CE81DA704AA00B0BAE8 /* OTROMEMOStreamTest.swift */,
+				63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */,
+				635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */,
+				635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 				63F614DA1BB214640083A06A /* ChatSecureTests-Bridging-Header.h */,
 			);
@@ -2260,12 +2266,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				636767E91D83562700432B48 /* TestXMPPAccount.swift in Sources */,
+				635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */,
 				63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */,
 				63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */,
 				639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
+				635E51A91DA82A4E002B70AB /* OTROMEMOTestModule.swift in Sources */,
 				635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */,
-				63634CE91DA704AA00B0BAE8 /* OTROMEMOStreamTest.swift in Sources */,
+				63634CE91DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift in Sources */,
 				635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */,
 				63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */,
 			);

@@ -23,17 +23,7 @@ class OTROmemoStorageTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        // Clear any existing databases in the test yap directory.
-        let databaseDirectory = OTRTestDatabaseManager.yapDatabaseDirectory()
-        do {
-            let contents = try NSFileManager().contentsOfDirectoryAtPath(databaseDirectory)
-            try contents.forEach { (path) in
-                let fullPath = (databaseDirectory as NSString).stringByAppendingPathComponent(path)
-                try NSFileManager().removeItemAtPath(fullPath)
-            }
-        } catch {
-            
-        }
+        NSFileManager.defaultManager().clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
     }
     
     override func tearDown() {
