@@ -61,8 +61,8 @@ PODS:
     - KissXML/Core (= 5.1.2)
   - KissXML/Core (5.1.2)
   - KVOController (1.2.0)
-  - libsqlfs/common (1.3)
-  - libsqlfs/SQLCipher (1.3):
+  - libsqlfs/common (1.3.2)
+  - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (~> 3.4.0)
   - Mantle (2.0.7):
@@ -344,7 +344,7 @@ DEPENDENCIES:
   - JTSImageViewController (~> 1.4)
   - JVFloatLabeledTextField (~> 1.0)
   - KVOController (~> 1.0)
-  - libsqlfs/SQLCipher (from `Podspecs/libsqlfs.podspec`)
+  - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
   - Mantle (~> 2.0)
   - MBProgressHUD (~> 0.9)
   - MWFeedParser (~> 1.0)
@@ -359,7 +359,6 @@ DEPENDENCIES:
   - SAMKeychain (~> 1.5)
   - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
   - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec`)
-  - SQLCipher (from `Podspecs/SQLCipher.podspec.json`)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
@@ -387,7 +386,8 @@ EXTERNAL SOURCES:
     :branch: 7.2.0-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   libsqlfs:
-    :podspec: Podspecs/libsqlfs.podspec
+    :branch: podspec-fix
+    :git: https://github.com/ChatSecure/libsqlfs.git
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
@@ -398,8 +398,6 @@ EXTERNAL SOURCES:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
   SignalProtocolC:
     :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec
-  SQLCipher:
-    :podspec: Podspecs/SQLCipher.podspec.json
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
@@ -410,6 +408,9 @@ CHECKOUT OPTIONS:
   JSQMessagesViewController:
     :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController
+  libsqlfs:
+    :commit: 317d21a1e43e28396a62a462a8213a5f33678c2c
+    :git: https://github.com/ChatSecure/libsqlfs.git
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -432,7 +433,7 @@ SPEC CHECKSUMS:
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
-  libsqlfs: 54d2a3159625746e6b4aeea109a8d591bdc5fd00
+  libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
@@ -447,7 +448,7 @@ SPEC CHECKSUMS:
   SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
   SignalProtocolC: 693289d20b8991b1d2588740cf48010d3d1ef4f4
-  SQLCipher: 5edce62bad2091ed65a422927fedee15149ad04c
+  SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
@@ -457,6 +458,6 @@ SPEC CHECKSUMS:
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: 9b0ecdb803db0fa0da8fde32d408ae784b74f840
+PODFILE CHECKSUM: 46343234fb94d6ddc4d69199177ef1395b00e902
 
-COCOAPODS: 1.1.0.rc.2
+COCOAPODS: 1.1.0.rc.3

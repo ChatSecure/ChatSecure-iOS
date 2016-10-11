@@ -6,7 +6,6 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
-      # config.build_settings['SWIFT_VERSION'] = '2.3'
     end
   end
 end
@@ -58,20 +57,17 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ZXingObjC', '~> 3.0'
 
   pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec'
-  # CocoaPods 1.0 cannot compile C files anymore so we rename .c to .m.
-  # Waiting for fix https://github.com/CocoaPods/CocoaPods/pull/5844
-  pod 'libsqlfs/SQLCipher', :podspec => 'Podspecs/libsqlfs.podspec'
-  pod 'SQLCipher', :podspec => 'Podspecs/SQLCipher.podspec.json'
+  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
 
   # Local Podspecs
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Forks
-  pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
 
   # Submodules
+  pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
   pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
