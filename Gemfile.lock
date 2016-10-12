@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/chrisballinger/CocoaPods.git
-  revision: 35a3aed3a2cbdc97e1ef1e02bf40cd6548db7f45
+  revision: 5daa50fdfbd84eb62685890d016c8c5c1feef25d
   branch: c-pod-fix
   specs:
     cocoapods (1.1.0.rc.3)

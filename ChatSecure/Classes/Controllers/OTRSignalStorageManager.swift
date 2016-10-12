@@ -362,12 +362,13 @@ extension OTRSignalStorageManager: SignalStore {
     }
     
     // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
-    public func saveIdentity(name: String, identityKey: NSData?) -> Bool {
+    public func saveIdentity(address: SignalAddress, identityKey: NSData?) -> Bool {
+        // TODO -
         return true
     }
     
     // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
-    public func isTrustedIdentity(name: String, identityKey: NSData) -> Bool {
+    public func isTrustedIdentity(address: SignalAddress, identityKey: NSData) -> Bool {
        return true
     }
     

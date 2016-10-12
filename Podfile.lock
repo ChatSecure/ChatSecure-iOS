@@ -358,7 +358,7 @@ DEPENDENCIES:
   - Reachability (~> 3)
   - SAMKeychain (~> 1.5)
   - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
-  - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec`)
+  - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec`)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
@@ -397,7 +397,7 @@ EXTERNAL SOURCES:
   SignalProtocol-ObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
   SignalProtocolC:
-    :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec
+    :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
@@ -447,7 +447,7 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
-  SignalProtocolC: a7e7f639a66dc9c0ffd14b418369081abd558d22
+  SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
@@ -458,6 +458,6 @@ SPEC CHECKSUMS:
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: 46343234fb94d6ddc4d69199177ef1395b00e902
+PODFILE CHECKSUM: 9e1dc5527bffcef03e7bcca525f7f96c08944b36
 
 COCOAPODS: 1.1.0.rc.3

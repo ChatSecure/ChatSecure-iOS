@@ -56,7 +56,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
-  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/62477d36650a4e31d494046082310180217a0d29/SignalProtocolC.podspec'
+  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
 
   # Local Podspecs
