@@ -30,7 +30,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         NSFileManager.defaultManager().clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
     }
     
-    /** Create two user accounts and save each other as buddies*/
+    /** Create two user accounts and save each other as buddies */
     func setupTwoAccounts(name:String) {
         let aliceName = "\(name)-alice"
         let bobName = "\(name)-bob"
@@ -42,6 +42,13 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.omemoModule?.thisUser = bobUser
     }
     
+    /** 
+     Setup up use rwith name and a buddy with name 
+     Creates:
+     1. A database for the user.
+     2. An account and buddy for the suesr.
+     3. An OTROMEMOSignalCoordinator to do all the signal functionality.
+     */
     func setupUserWithName(name:String, buddyName:String) -> TestUser {
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(name)
         let account = TestXMPPAccount()
@@ -59,6 +66,11 @@ class OTROMEMOIntegrationTest: XCTestCase {
         return TestUser(account: account,buddy:buddy, databaseManager: databaseManager, signalOMEMOCoordinator: signalOMEMOCoordinator)
     }
     
+    /**
+     1. Setup two accounts
+     2. Authenticate the stream. Should receive devices for our buddy.
+     3. Check that we support OMEMO for that buddy. ✔︎
+     */
     func testDeviceSetup() {
         self.setupTwoAccounts(#function)
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
@@ -66,6 +78,13 @@ class OTROMEMOIntegrationTest: XCTestCase {
         XCTAssertTrue(buddySupport,"Buddy has OMEMO support")
     }
     
+    /**
+     1. Setup two accounts
+     2. Authenticate the stream. Should receive devices for our buddy.
+     3. Send a message to the buddy. This should trigger fetching the buddy's bundle to create a session.
+     4. Ensure that encryption when correctly. ✔︎
+     5. Ensure that that alice received the message. ✔︎
+    */
     func testFetchingBundleSetup() {
         self.setupTwoAccounts(#function)
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
@@ -90,11 +109,5 @@ class OTROMEMOIntegrationTest: XCTestCase {
             })
         })
         XCTAssertTrue(messageFound,"Found message")
-    }
-    
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 }

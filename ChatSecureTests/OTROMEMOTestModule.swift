@@ -22,6 +22,7 @@ class OTROMEMOTestModule: OMEMOModule {
         }
     }
     
+    /** Manually called after all the otherUser and thisUser are setup */
     override func xmppStreamDidAuthenticate(sender: XMPPStream!) {
         
         let bundle = otherUser.signalOMEMOCoordinator.fetchMyBundle()
@@ -35,10 +36,12 @@ class OTROMEMOTestModule: OMEMOModule {
         self.omemoStorage.storeDeviceIds([NSNumber(unsignedInt: (thisUser.signalOMEMOCoordinator.fetchMyBundle()?.deviceId)!)], forJID: ourJID)
     }
     
+    /** When fetching a bundle for device and jid we return that device given to us in the other user struct*/
     override func fetchBundleForDeviceId(deviceId: gl_uint32_t, jid: XMPPJID, elementId: String?) {
         dispatch_async(self.moduleQueue) { 
             if self.otherUser.signalOMEMOCoordinator.fetchMyBundle()?.deviceId == deviceId {
                 let multicastDelegate = self.valueForKey("multicastDelegate")!
+                //Empty responses so not nil and have correct elementID.
                 let response = XMPPIQ(type: "get", to: nil, elementID: elementId, child: nil)
                 let outgoing = XMPPIQ(type: "get", to: nil, elementID: elementId, child: nil)
                 multicastDelegate.omemo!(self, fetchedBundle: self.otherUser.signalOMEMOCoordinator.fetchMyBundle()!, fromJID: jid, responseIq: response, outgoingIq: outgoing)
@@ -46,6 +49,7 @@ class OTROMEMOTestModule: OMEMOModule {
         }
     }
     
+    /** When we send key data we automtically route that data to the other user to decrypto*/
     override func sendKeyData(keyData: [OMEMOKeyData], iv: NSData, toJID: XMPPJID, payload: NSData?, elementId: String?) {
         let dummyMessage = XMPPMessage()
         self.otherUser.signalOMEMOCoordinator.omemo(self, receivedKeyData: keyData, iv: iv, senderDeviceId: (thisUser.signalOMEMOCoordinator.fetchMyBundle()?.deviceId)!, fromJID: XMPPJID.jidWithString(thisUser.account.username), payload: payload, message: dummyMessage)
