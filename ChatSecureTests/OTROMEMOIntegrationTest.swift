@@ -59,14 +59,39 @@ class OTROMEMOIntegrationTest: XCTestCase {
         return TestUser(account: account,buddy:buddy, databaseManager: databaseManager, signalOMEMOCoordinator: signalOMEMOCoordinator)
     }
     
-    func testBundleSetup() {
+    func testDeviceSetup() {
         self.setupTwoAccounts(#function)
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
         let buddySupport = self.bobUser!.signalOMEMOCoordinator.buddySupportsOMEMO(self.bobUser!.buddy.uniqueId)
         XCTAssertTrue(buddySupport,"Buddy has OMEMO support")
-        
-        
     }
+    
+    func testFetchingBundleSetup() {
+        self.setupTwoAccounts(#function)
+        self.omemoModule?.xmppStreamDidAuthenticate(nil)
+        let expectation = self.expectationWithDescription("Sending Message")
+        let messageText = "This is message from Bob to Alice"
+        self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(messageText, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
+            
+            XCTAssertTrue(success,"Able to send message")
+            XCTAssertNil(error,"Error Sending \(error)")
+            
+            expectation.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(120, handler: nil)
+        
+        var messageFound = false
+        self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
+            transaction.enumerateKeysAndObjectsInCollection(OTRMessage.collection(), usingBlock: { (key, object, stop) in
+                let message = object as! OTRMessage
+                XCTAssertEqual(message.text, messageText)
+                messageFound = true
+            })
+        })
+        XCTAssertTrue(messageFound,"Found message")
+    }
+    
     
     func testExample() {
         // This is an example of a functional test case.

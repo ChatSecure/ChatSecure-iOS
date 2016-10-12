@@ -110,13 +110,7 @@ import YapDatabase
                 return
             }
             devices = dev
-            if let object = transaction.objectForKey(yapKey, inCollection: yapCollection) {
-                if object is OTRAccount {
-                    user = object.username
-                } else if object is OTRBuddy {
-                    user = object.username
-                }
-            }
+            user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
         guard let devs = devices, let username = user else {
@@ -153,6 +147,17 @@ import YapDatabase
                 completion(finalSuccess)
             }
         }
+    }
+    
+    private func fetchUsername(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> String? {
+        if let object = transaction.objectForKey(yapKey, inCollection: yapCollection) {
+            if object is OTRAccount {
+                return object.username
+            } else if object is OTRBuddy {
+                return object.username
+            }
+        }
+        return nil
     }
     
     /**
@@ -209,9 +214,16 @@ import YapDatabase
                 for device in devices where device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId {
                     if (device.trustLevel == .TrustLevelTrustedTofu || device.trustLevel == .TrustLevelUntrustedNew) {
                         do {
-                            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: buddy.username, deviceId: device.deviceId.unsignedIntValue)
-                            let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
-                            keyDataArray.append(keyData)
+                            //We need to get the username of the device. This could be the buddy username or our account username
+                            var user:String? = nil
+                            self.databaseConnection.readWithBlock({ (transaction) in
+                                user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
+                            })
+                            if let username = user {
+                                let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: username, deviceId: device.deviceId.unsignedIntValue)
+                                let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+                                keyDataArray.append(keyData)
+                            }
                         } catch {
                             //Don't need to handle the error here just push forward adn keep on trying to encrypt the key
                         }
@@ -220,7 +232,13 @@ import YapDatabase
                 
                 //Make sure we have encrypted the symetric key to someone
                 if (keyDataArray.count > 0) {
-                    self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: payload?.data, elementId: messageId)
+                    guard let payloadData = payload?.data, let authTag = payload?.authTag else {
+                        return
+                    }
+                    let finalPayload = NSMutableData()
+                    finalPayload.appendData(payloadData)
+                    finalPayload.appendData(authTag)
+                    self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: finalPayload, elementId: messageId)
                     dispatch_async(self.callbackQueue, {
                         completion(true,nil)
                     })
@@ -309,24 +327,36 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
-        let rid = self.signalEncryptionManager.registrationId
-        
-        var ourKeyData: NSData? = nil
-        for key in keyData {
-            if key.deviceId == rid {
-                ourKeyData = key.data
-            }
-        }
-        guard let ourEncryptedKeyData = ourKeyData, let encryptedPayload = payload else {
+        let aesGcmBlockLength = 16
+        guard let encryptedPayload = payload where encryptedPayload.length > aesGcmBlockLength else {
             return
         }
+        
+        let rid = self.signalEncryptionManager.registrationId
+        
+        //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
+        var unencryptedKeyData:NSData?
+        for key in keyData {
+            if key.deviceId == rid {
+                let keyData = key.data
+                do {
+                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
+                    // have successfully decripted the AES key. We should break and use it to decrypt the payload
+                    break
+                } catch {
+                    return
+                }
+            }
+        }
+        guard let aesKey = unencryptedKeyData else {
+            return
+        }
+        
+        let encryptedBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
+        let tag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
+        
         do {
-            let unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(ourEncryptedKeyData, name: fromJID.bare(), deviceId: senderDeviceId)
-            let aesGcmBlockLength = 16
-            let keyData = unencryptedKeyData.subdataWithRange(NSMakeRange(0, unencryptedKeyData.length - aesGcmBlockLength))
-            let tag = unencryptedKeyData.subdataWithRange(NSMakeRange(unencryptedKeyData.length, aesGcmBlockLength))
-            
-            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedPayload, key: keyData, iv: iv, authTag: tag) else {
+            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {
                 return
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
@@ -347,7 +377,6 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         } catch {
             return
         }
-        
     }
 }
 

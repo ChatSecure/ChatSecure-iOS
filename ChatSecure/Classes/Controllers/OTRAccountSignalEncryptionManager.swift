@@ -94,7 +94,7 @@ extension OTRAccountSignalEncryptionManager {
      */
     public func consumeIncomingBundle(name:String, bundle:OTROMEMOBundleIncoming) {
         let deviceId = Int32(bundle.bundle.deviceId)
-        let incomingAddress = SignalAddress(name: name, deviceId: deviceId)
+        let incomingAddress = SignalAddress(name: name.lowercaseString, deviceId: deviceId)
         let sessionBuilder = SignalSessionBuilder(address: incomingAddress, context: self.signalContext)
         let preKeyBundle = SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature, identityKey: bundle.bundle.publicIdentityKey)
         
@@ -102,13 +102,13 @@ extension OTRAccountSignalEncryptionManager {
     }
     
     public func encryptToAddress(data:NSData, name:String, deviceId:UInt32) throws -> SignalCiphertext {
-        let address = SignalAddress(name: name, deviceId: Int32(deviceId))
+        let address = SignalAddress(name: name.lowercaseString, deviceId: Int32(deviceId))
         let sessionCipher = SignalSessionCipher(address: address, context: self.signalContext)
         return try sessionCipher.encryptData(data)
     }
     
     public func decryptFromAddress(data:NSData, name:String, deviceId:UInt32) throws -> NSData {
-        let address = SignalAddress(name: name, deviceId: Int32(deviceId))
+        let address = SignalAddress(name: name.lowercaseString, deviceId: Int32(deviceId))
         let sessionCipher = SignalSessionCipher(address: address, context: self.signalContext)
         let cipherText = SignalCiphertext(data: data, type: .Unknown)
         return try sessionCipher.decryptCiphertext(cipherText)
@@ -126,7 +126,7 @@ extension OTRAccountSignalEncryptionManager {
     }
     
     public func sessionRecordExistsForUsername(username:String, deviceId:Int32) -> Bool {
-        let address = SignalAddress(name: username, deviceId: deviceId)
+        let address = SignalAddress(name: username.lowercaseString, deviceId: deviceId)
         return self.storage.sessionRecordExistsForAddress(address)
     }
 }
