@@ -79,7 +79,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(120, handler: nil)
+        self.waitForExpectationsWithTimeout(10, handler: nil)
         
         var messageFound = false
         self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
