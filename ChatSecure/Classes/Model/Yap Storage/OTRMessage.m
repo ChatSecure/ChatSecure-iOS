@@ -29,6 +29,10 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     .mediaItem = @"mediaItem"
 };
 
+@interface OTRMessage()
+@property (nonatomic) BOOL transportedSecurely;
+@end
+
 
 @implementation OTRMessage
 
@@ -78,6 +82,14 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
 #pragma - mark OTRMessage Protocol methods
 
+- (OTRMessageSecurity) messageSecurity {
+    // Migrate legacy property
+    if (self.transportedSecurely) {
+        return OTRMessageSecurityOTR;
+    }
+    return _messageSecurity;
+}
+
 - (NSString *)messageKey {
     return self.uniqueId;
 }
@@ -106,10 +118,6 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
 - (NSError *)messageError {
     return self.error;
-}
-
-- (BOOL)transportedSecurely {
-    return self.transportedSecurely;
 }
 
 - (BOOL)messageRead {

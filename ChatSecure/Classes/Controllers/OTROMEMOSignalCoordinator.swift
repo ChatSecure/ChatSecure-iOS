@@ -369,7 +369,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 databaseMessage.incoming = true
                 databaseMessage.text = messageString
                 databaseMessage.buddyUniqueId = buddy.uniqueId
-                databaseMessage.transportedSecurely = true
+                databaseMessage.messageSecurity = .OMEMO
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)

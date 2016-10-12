@@ -52,8 +52,8 @@ extension PushMessage: OTRMessageProtocol {
         return self.error
     }
     
-    public func transportedSecurely() -> Bool {
-        return false
+    public func messageSecurity() -> OTRMessageSecurity {
+        return .Plaintext
     }
     
     public func messageRead() -> Bool {

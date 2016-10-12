@@ -23,6 +23,13 @@ extern const struct OTRMessageAttributes {
     __unsafe_unretained NSString *mediaItem;
 } OTRMessageAttributes;
 
+typedef NS_ENUM(NSUInteger, OTRMessageSecurity) {
+    OTRMessageSecurityPlaintext,
+    OTRMessageSecurityOTR,
+    OTRMessageSecurityOMEMO
+};
+
+
 @protocol OTRMessageProtocol <NSObject>
 @required
 
@@ -38,7 +45,7 @@ extern const struct OTRMessageAttributes {
 
 - (NSError *)messageError;
 
-- (BOOL)transportedSecurely;
+- (OTRMessageSecurity)messageSecurity;
 
 - (BOOL)messageRead;
 
@@ -61,7 +68,7 @@ extern const struct OTRMessageAttributes {
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
-@property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
+@property (nonatomic) OTRMessageSecurity messageSecurity;
 
 @property (nonatomic, strong) NSString *mediaItemUniqueId;
 @property (nonatomic, strong) NSString *buddyUniqueId;

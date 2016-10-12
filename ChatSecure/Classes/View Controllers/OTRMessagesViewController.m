@@ -949,7 +949,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         message.buddyUniqueId = self.threadKey;
         message.text = text;
         message.read = YES;
-        message.transportedSecurely = NO;
+        message.messageSecurity = OTRMessageSecurityPlaintext;
         
         __weak __typeof__(self) weakSelf = self;
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -964,7 +964,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
             //Temporary if this buddy supports OMEMO then force it to send that way. Otherwise use the old OTRKit method
             if ([self.xmppManager.omemoSignalCoordinator buddySupportsOMEMO:message.buddyUniqueId]) {
                 [self.xmppManager.omemoSignalCoordinator encryptAndSendMessage:message.text buddyYapKey:message.buddyUniqueId messageId:message.messageId completion:^(BOOL success, NSError * _Nullable error) {
-                    
+                    if (success) {
+                        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                            OTRMessage *msg = [OTRMessage fetchObjectWithUniqueID:message.uniqueId transaction:transaction];
+                            if (msg) {
+                                msg = [msg copy];
+                                msg.messageSecurity = OTRMessageSecurityOMEMO;
+                                [msg saveWithTransaction:transaction];
+                            }
+                        }];
+                    }
                 }];
             } else {
                 [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
@@ -1037,7 +1046,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             message.incoming = NO;
             message.buddyUniqueId = self.buddy.uniqueId;
             message.mediaItemUniqueId = imageItem.uniqueId;
-            message.transportedSecurely = YES;
+            message.messageSecurity = OTRMessageSecurityOTR;
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -1076,7 +1085,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.incoming = NO;
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.buddy.uniqueId;
-    message.transportedSecurely = YES;
+    message.messageSecurity = OTRMessageSecurityOTR;
     
     NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
@@ -1277,8 +1286,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     ////// Lock Icon //////
     NSString *lockString = nil;
-    if (message.transportedSecurely) {
+    if (message.messageSecurity == OTRMessageSecurityOTR) {
         lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+    } else if (message.messageSecurity == OTRMessageSecurityOMEMO) {
+        lockString = [NSString stringWithFormat:@"%@ OMEMO ",[NSString fa_stringForFontAwesomeIcon:FALock]];
     }
     else {
         lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];

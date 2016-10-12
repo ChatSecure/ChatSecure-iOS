@@ -224,7 +224,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         else if ([encodedMessage length]) {
             if (wasEncrypted) {
-                message.transportedSecurely = YES;
+                message.messageSecurity = OTRMessageSecurityOTR;
             }
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -269,7 +269,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         originalMessage.text = decodedMessage;
         
         if (wasEncrypted) {
-            originalMessage.transportedSecurely = YES;
+            originalMessage.messageSecurity = OTRMessageSecurityOTR;
         }
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
@@ -549,7 +549,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //Create placeholder for updating progress
     
     OTRMessage *newMessage = [((OTRMessage *)transfer.tag) copy];
-    newMessage.transportedSecurely = YES;
+    newMessage.messageSecurity = OTRMessageSecurityOTR;
     newMessage.text = nil;
     
     NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
