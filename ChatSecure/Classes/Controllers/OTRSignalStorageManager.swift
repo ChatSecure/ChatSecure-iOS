@@ -200,6 +200,41 @@ public class OTRSignalStorageManager: NSObject {
         
         return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
     }
+    
+    private func fetchDeviceForSignalAddress(signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OTROMEMODevice? {
+        guard let parentEntry = self.parentKeyAndCollectionForSignalAddress(signalAddress, transaction: transaction) else {
+            return nil
+        }
+        
+        let deviceNumber = NSNumber(int: signalAddress.deviceId)
+        let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: parentEntry.key, parentCollection: parentEntry.collection)
+        guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
+            return nil
+        }
+        return device
+    }
+    
+    private func parentKeyAndCollectionForSignalAddress(signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OTRDatabaseEntry? {
+        var parentKey:String? = nil
+        var parentCollection:String? = nil
+        
+        let ourAccount = OTRAccount.fetchObjectWithUniqueID(self.accountKey, transaction: transaction)
+        if ourAccount?.username == signalAddress.name {
+            
+            parentKey = self.accountKey
+            parentCollection = OTRAccount.collection()
+            
+        } else if let buddy = OTRBuddy.fetchBuddyWithUsername(signalAddress.name, withAccountUniqueId: self.accountKey, transaction: transaction) {
+            parentKey = buddy.uniqueId
+            parentCollection = OTRBuddy.collection()
+        }
+        
+        guard let key = parentKey, let collection = parentCollection else {
+            return nil
+        }
+        
+        return OTRDatabaseEntry(key: key, collection: collection)
+    }
 }
 //MARK: SignalStore
 extension OTRSignalStorageManager: SignalStore {
@@ -361,15 +396,62 @@ extension OTRSignalStorageManager: SignalStore {
         }
     }
     
-    // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
+    
     public func saveIdentity(address: SignalAddress, identityKey: NSData?) -> Bool {
-        // TODO -
-        return true
+        var result = false
+        self.databaseConnection.readWriteWithBlock { (transaction) in
+            if let device = self.fetchDeviceForSignalAddress(address, transaction: transaction) {
+                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey) {
+                    newDevice.saveWithTransaction(transaction)
+                    result = true
+                }
+            } else if let parentEntry = self.parentKeyAndCollectionForSignalAddress(address, transaction: transaction) {
+                
+                //See if we have any devices
+                var hasDevices = false
+                OTROMEMODevice.enumerateDevicesForParentKey(parentEntry.key, collection: parentEntry.collection, transaction: transaction, usingBlock: { (device, stop) in
+                    hasDevices = true
+                    stop.memory = true
+                })
+                
+                var trustLevel:OMEMODeviceTrustLevel = .TrustLevelUntrustedNew
+                if (hasDevices) {
+                    //This is the first time we're seeing a device list for this account/buddy so it should be saved as TOFU
+                    trustLevel = .TrustLevelTrustedTofu
+                }
+                let deviceIdNumber = NSNumber(int: address.deviceId)
+                if let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey) {
+                    newDevice.saveWithTransaction(transaction)
+                    result = true
+                }
+            }
+        }
+        return result
     }
     
-    // This is handled somewhere else in ChatSecure. We trust per device not for each identity name
+    
+    // We always return true here because we want Signal to always encrypt and decrypt messages. We deal with trust elsewhere.
     public func isTrustedIdentity(address: SignalAddress, identityKey: NSData) -> Bool {
-       return true
+//        var result = false
+//        self.databaseConnection.readWriteWithBlock { (transaction) in
+//            guard let device = self.fetchDeviceForSignalAddress(address, transaction: transaction) else {
+//                return
+//            }
+//            
+//            // Device has to be previously trusted by user or Tofu
+//            if (device.trustLevel == .TrustLevelTrustedTofu || device.trustLevel == .TrustLevelTrustedUser) {
+//                
+//                // If there is data stored then it needs to be equal otherwise no key stored yet so trust it since first time seing it.
+//                if let storedKeyData = device.publicIdentityKeyData {
+//                    result = storedKeyData.isEqualToData(identityKey)
+//                } else {
+//                    result = true
+//                }
+//            }
+//            
+//        }
+//        return result
+        return true
     }
     
     //MARK: SignalSenderKeyStore

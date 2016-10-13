@@ -42,7 +42,11 @@ public class OTROMEMOStorageManager {
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
     internal func getDevicesForParentYapKey(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> [OTROMEMODevice] {
-        return OTROMEMODevice.allDeviceIdsForParentKey(yapKey, collection: yapCollection, transaction: transaction)
+        var deviceArray = [OTROMEMODevice]()
+        OTROMEMODevice.enumerateDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction, usingBlock: { (device, stop) in
+            deviceArray.append(device)
+        })
+        return deviceArray
     }
     
     /**
@@ -97,7 +101,7 @@ public class OTROMEMOStorageManager {
      */
     private func storeDevices(devices:[NSNumber], parentYapKey:String, parentYapCollection:String, transaction:YapDatabaseReadWriteTransaction) {
         
-        let previouslyStoredDevices = OTROMEMODevice.allDeviceIdsForParentKey(parentYapKey, collection:parentYapCollection, transaction: transaction)
+        let previouslyStoredDevices = self.getDevicesForParentYapKey(parentYapKey, yapCollection: parentYapCollection, transaction: transaction)
         let previouslyStoredDevicesIds = previouslyStoredDevices.map({ (device) -> NSNumber in
             return device.deviceId
         })
@@ -127,7 +131,7 @@ public class OTROMEMOStorageManager {
                     trustLevel = .TrustLevelTrustedTofu
                 }
                 
-                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection)
+                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil)
                 newDevice?.saveWithTransaction(transaction)
             })
             

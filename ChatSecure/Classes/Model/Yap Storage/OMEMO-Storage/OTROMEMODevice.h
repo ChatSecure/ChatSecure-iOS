@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) NSNumber *deviceId;
 
+@property (nonatomic, strong, readonly, nullable) NSData *publicIdentityKeyData;
+
 // First Time seing device list all trusted
 // Any new devices after that are not trusted and require user input
 @property (nonatomic, readonly) OMEMODeviceTrustLevel trustLevel;
@@ -35,12 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
 /** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
 - (BOOL) isTrusted;
 
-- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection;
+- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData;
 
 
-+ (NSArray <OTROMEMODevice *>*)allDeviceIdsForParentKey:(NSString *)key
-                                             collection:(NSString *)collection
-                                            transaction:(YapDatabaseReadTransaction *)transaction;
++ (void)enumerateDevicesForParentKey:(NSString *)key
+                          collection:(NSString *)collection
+                         transaction:(YapDatabaseReadTransaction *)transaction
+                          usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block;
+
++ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key
+                                           collection:(NSString *)collection
+                                          transaction:(YapDatabaseReadTransaction *)transaction;
 
 + (NSString *)yapKeyWithDeviceId:(NSNumber *)deviceId
                        parentKey:(NSString *)parentKey

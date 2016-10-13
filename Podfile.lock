@@ -90,7 +90,7 @@ PODS:
   - PureLayout (3.0.2)
   - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
-  - SAMKeychain (1.5.1)
+  - SAMKeychain (1.5.2)
   - SignalProtocol-ObjC (0.1.0):
     - SignalProtocolC (~> 0.1.0)
   - SignalProtocolC (0.1.0)
@@ -445,7 +445,7 @@ SPEC CHECKSUMS:
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
+  SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
   SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff

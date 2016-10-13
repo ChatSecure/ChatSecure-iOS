@@ -11,13 +11,14 @@
 
 @implementation OTROMEMODevice
 
-- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection
+- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData
 {
     if (self = [super init]) {
         _deviceId = deviceId;
         _parentKey = parentKey;
         _parentCollection = parentCollection;
         _trustLevel = trustLevel;
+        publicIdentityKeyData = publicIdentityKeyData;
     }
     return self;
 }
@@ -31,21 +32,27 @@
     return _trustLevel == OMEMOTrustLevelTrustedTofu || _trustLevel == OMEMOTrustLevelTrustedUser;
 }
 
-+ (NSArray <OTROMEMODevice*>*)allDeviceIdsForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction {
-    
++ (void)enumerateDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block
+{
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameOmemoDeviceEdgeName];
     
-    NSMutableArray <OTROMEMODevice*>*deviceArray = [[NSMutableArray alloc] init];
     [((YapDatabaseRelationshipTransaction *)[transaction ext:extensionName]) enumerateEdgesWithName:edgeName destinationKey:key collection:collection usingBlock:^(YapDatabaseRelationshipEdge * _Nonnull edge, BOOL * _Nonnull stop) {
         
         id possibleDevice = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         if (possibleDevice != nil && [possibleDevice isKindOfClass:[OTROMEMODevice class] ]) {
             OTROMEMODevice *device = possibleDevice;
-            [deviceArray addObject:device];
+            block(device,stop);
         }
     }];
-    return deviceArray;
+}
+
++ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction {
+    __block NSMutableArray <OTROMEMODevice *>*devices = [[NSMutableArray alloc] init];
+    [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
+        [devices addObject:device];
+    }];
+    return devices;
 }
 
 #pragma MARK YapDatabaseRelationshipNode Methods

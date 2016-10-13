@@ -400,8 +400,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRAccount *account = [self account];
     OTRBuddy *buddy = [self buddy];
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        yourDevices = [OTROMEMODevice allDeviceIdsForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
-        theirDevices = [OTROMEMODevice allDeviceIdsForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
+        yourDevices = [OTROMEMODevice allDevicesForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
+        theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
     }];
     
     void (^processBlock)(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) = ^(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

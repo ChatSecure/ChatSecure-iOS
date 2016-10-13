@@ -225,7 +225,7 @@ import YapDatabase
                                 keyDataArray.append(keyData)
                             }
                         } catch {
-                            //Don't need to handle the error here just push forward adn keep on trying to encrypt the key
+                            //Don't need to handle the error here just push forward and keep on trying to encrypt the key
                         }
                     }
                 }

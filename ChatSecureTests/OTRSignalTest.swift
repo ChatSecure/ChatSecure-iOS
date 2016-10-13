@@ -47,6 +47,25 @@ class OTRSignalTest: XCTestCase {
         
         let otherEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
         
+        otherDatabaseConnection.readWriteWithBlock { (transaction) in
+            let buddy = OTRBuddy()
+            buddy.accountUniqueId = otherAccount.uniqueId
+            buddy.username = ourAccount.username
+            buddy.saveWithTransaction(transaction)
+            
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil)
+            device!.saveWithTransaction(transaction)
+        }
+        ourDatabaseConnection.readWriteWithBlock { (transaction) in
+            let buddy = OTRBuddy()
+            buddy.accountUniqueId = ourAccount.uniqueId
+            buddy.username = otherAccount.username
+            buddy.saveWithTransaction(transaction)
+            
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil)
+            device!.saveWithTransaction(transaction)
+        }
+        
         XCTAssertNotNil(ourOutgoingBundle,"Created our bundle")
         //At this point int 'real' world we could post or outgoing bundle to OMEMO
         
@@ -63,7 +82,6 @@ class OTRSignalTest: XCTestCase {
         print("\(encryptedData.data)")
         
         // In the real world this encrypted data would be sent over the wire
-        // How does device id get over?
         let decryptedData = try! ourEncryptionManager.decryptFromAddress(encryptedData.data, name: otherAccount.username, deviceId: otherEncryptionManager.registrationId)
         let secondString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as! String
         
