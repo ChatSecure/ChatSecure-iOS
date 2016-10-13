@@ -236,7 +236,7 @@ import YapDatabase
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
                     dispatch_async(self.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
+                        let error = NSError.chatSecureError(OTROMEMOError.NoDevicesForBuddy, userInfo: nil)
                         completion(false,error)
                     })
                     return
@@ -270,7 +270,7 @@ import YapDatabase
                     return
                 } else {
                     dispatch_async(self.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.noDevices, userInfo: nil)
+                        let error = NSError.chatSecureError(OTROMEMOError.NoDevices, userInfo: nil)
                         completion(false,error)
                     })
                     return
