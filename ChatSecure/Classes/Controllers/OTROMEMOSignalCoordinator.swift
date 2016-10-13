@@ -167,7 +167,19 @@ import YapDatabase
         self.prepareSession(self.accountYapKey, yapCollection: OTRAccount.collection(), completion: completion)
     }
     
-    /** 
+    private func encryptPayloadWithSignalForDevice(device:OTROMEMODevice, payload:NSData) throws -> OMEMOKeyData? {
+        var user:String? = nil
+        self.databaseConnection.readWithBlock({ (transaction) in
+            user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
+        })
+        if let username = user {
+            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(payload, name: username, deviceId: device.deviceId.unsignedIntValue)
+            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+        }
+        return nil
+    }
+    
+    /**
      Gathers necessary information to encrypt a message to the buddy and all this accounts devices that are trusted. Then sends the payload via OMEMOModule
      
      - parameter messageBody: The boddy of the message
@@ -201,11 +213,28 @@ import YapDatabase
                 //Create the encrypted payload
                 let payload = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData)
                 
-                //Get our Buddy's device that are trusted
-                let buddyDevices = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection()).filter({ (device) -> Bool in
+                
+                // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
+                let encryptClosure:(OTROMEMODevice) -> (OMEMOKeyData?) = { device in
+                    do {
+                        return try self.encryptPayloadWithSignalForDevice(device, payload: keyData)
+                    } catch {
+                        return nil
+                    }
+                }
+                
+                /**
+                 1. Get all devices for this buddy.
+                 2. Filter only devices that are trusted.
+                 3. encrypt to those devices.
+                 4. Remove optional values
+                */
+                let buddyKeyDataArray = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection()).filter({ (device) -> Bool in
                     return device.isTrusted()
-                })
-                if (buddyDevices.count == 0) {
+                }).map(encryptClosure).flatMap{ $0 }
+                
+                // Stop here if we were not able to encrypt to any of the buddies
+                if (buddyKeyDataArray.count == 0) {
                     dispatch_async(self.callbackQueue, {
                         let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
                         completion(false,error)
@@ -213,35 +242,18 @@ import YapDatabase
                     return
                 }
                 
-                //Get our Devices. Exlude this device. No point in encrypting to ourselves.
-                let ourDevices = self.omemoStorageManager.getDevicesForOurAccount().filter({ (device) -> Bool in
-                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId
-                })
+                /**
+                 1. Get all devices for this this account.
+                 2. Filter only devices that are trusted and not ourselves.
+                 3. encrypt to those devices.
+                 4. Remove optional values
+                 */
+                let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount().filter({ (device) -> Bool in
+                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId && device.isTrusted()
+                }).map(encryptClosure).flatMap{ $0 }
                 
-                // Combine teh two arrays for all devices
-                let devices = buddyDevices + ourDevices
-                //Grab devices for this account
-                
-                var keyDataArray: [OMEMOKeyData] = []
-                // Encrypt to all devices (ours and theirs) except this device
-                // TODO do our devices and the devices seperately to know if we were able to encrypt to any of the buddy devices.
-                for device in devices {
-                    
-                    do {
-                        //We need to get the username of the device. This could be the buddy username or our account username
-                        var user:String? = nil
-                        self.databaseConnection.readWithBlock({ (transaction) in
-                            user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
-                        })
-                        if let username = user {
-                            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: username, deviceId: device.deviceId.unsignedIntValue)
-                            let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
-                            keyDataArray.append(keyData)
-                        }
-                    } catch {
-                        //Don't need to handle the error here just push forward and keep on trying to encrypt the key
-                    }
-                }
+                // Combine teh two arrays for all key data
+                let keyDataArray = ourDevicesKeyData + buddyKeyDataArray
                 
                 //Make sure we have encrypted the symetric key to someone
                 if (keyDataArray.count > 0) {
