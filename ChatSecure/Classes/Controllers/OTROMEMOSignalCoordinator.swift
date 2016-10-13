@@ -201,32 +201,45 @@ import YapDatabase
                 //Create the encrypted payload
                 let payload = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData)
                 
-                //Get our Buddy's device
-                let buddyDevices = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection())
-                //Get our Devices
-                let ourDevices = self.omemoStorageManager.getDevicesForOurAccount()
+                //Get our Buddy's device that are trusted
+                let buddyDevices = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection()).filter({ (device) -> Bool in
+                    return device.isTrusted()
+                })
+                if (buddyDevices.count == 0) {
+                    dispatch_async(self.callbackQueue, {
+                        let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
+                        completion(false,error)
+                    })
+                    return
+                }
+                
+                //Get our Devices. Exlude this device. No point in encrypting to ourselves.
+                let ourDevices = self.omemoStorageManager.getDevicesForOurAccount().filter({ (device) -> Bool in
+                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId
+                })
+                
                 // Combine teh two arrays for all devices
                 let devices = buddyDevices + ourDevices
                 //Grab devices for this account
                 
                 var keyDataArray: [OMEMOKeyData] = []
                 // Encrypt to all devices (ours and theirs) except this device
-                for device in devices where device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId {
-                    if (device.trustLevel == .TrustLevelTrustedTofu || device.trustLevel == .TrustLevelUntrustedNew) {
-                        do {
-                            //We need to get the username of the device. This could be the buddy username or our account username
-                            var user:String? = nil
-                            self.databaseConnection.readWithBlock({ (transaction) in
-                                user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
-                            })
-                            if let username = user {
-                                let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: username, deviceId: device.deviceId.unsignedIntValue)
-                                let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
-                                keyDataArray.append(keyData)
-                            }
-                        } catch {
-                            //Don't need to handle the error here just push forward and keep on trying to encrypt the key
+                // TODO do our devices and the devices seperately to know if we were able to encrypt to any of the buddy devices.
+                for device in devices {
+                    
+                    do {
+                        //We need to get the username of the device. This could be the buddy username or our account username
+                        var user:String? = nil
+                        self.databaseConnection.readWithBlock({ (transaction) in
+                            user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
+                        })
+                        if let username = user {
+                            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(keyData, name: username, deviceId: device.deviceId.unsignedIntValue)
+                            let keyData = OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+                            keyDataArray.append(keyData)
                         }
+                    } catch {
+                        //Don't need to handle the error here just push forward and keep on trying to encrypt the key
                     }
                 }
                 
@@ -245,7 +258,8 @@ import YapDatabase
                     return
                 } else {
                     dispatch_async(self.callbackQueue, {
-                        completion(false,nil)
+                        let error = NSError.chatSecureError(OTROMEMOError.noDevices, userInfo: nil)
+                        completion(false,error)
                     })
                     return
                 }

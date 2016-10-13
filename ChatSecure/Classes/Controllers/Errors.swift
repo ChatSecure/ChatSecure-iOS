@@ -103,3 +103,31 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
         return nil
     }
 }
+
+@objc public enum OTROMEMOError: Int {
+    case UnkownError       = 1100
+    case noDevicesForBuddy = 1101
+    case noDevices         = 1102
+}
+
+extension OTROMEMOError: ChatSecureErrorProtocol {
+    public func code() -> Int {
+        return self.rawValue
+    }
+    
+    public func localizedDescription() -> String {
+        switch self {
+        case .UnkownError:
+            return "Unkown Error"
+        case .noDevicesForBuddy:
+            return "Could not find any trusted devices for buddy"
+        case .noDevices:
+            return "Could not encrypt to any buddies"
+        }
+    }
+    
+    
+    public func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
+    }
+}
