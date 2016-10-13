@@ -53,7 +53,7 @@ class OTRSignalTest: XCTestCase {
             buddy.username = ourAccount.username
             buddy.saveWithTransaction(transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil)
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
             device!.saveWithTransaction(transaction)
         }
         ourDatabaseConnection.readWriteWithBlock { (transaction) in
@@ -62,7 +62,7 @@ class OTRSignalTest: XCTestCase {
             buddy.username = otherAccount.username
             buddy.saveWithTransaction(transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil)
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
             device!.saveWithTransaction(transaction)
         }
         
@@ -86,6 +86,7 @@ class OTRSignalTest: XCTestCase {
         let secondString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as! String
         
         XCTAssertEqual(firstString, secondString,"Equal Strings")
+    
     }
     
 }

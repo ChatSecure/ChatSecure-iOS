@@ -399,6 +399,16 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)
+                
+                //Update device last received message
+                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
+                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
+                guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
+                    return
+                }
+                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastReceivedMessageDate: NSDate()) {
+                    newDevice.saveWithTransaction(transaction)
+                }
             })
         } catch {
             return

@@ -107,6 +107,12 @@ class OTROMEMOIntegrationTest: XCTestCase {
                 XCTAssertEqual(message.text, messageText)
                 messageFound = true
             })
+            
+            transaction.enumerateKeysAndObjectsInCollection(OTROMEMODevice.collection(), usingBlock: { (key, object, stop) in
+                let device = object as! OTROMEMODevice
+                XCTAssertNotNil(device.lastReceivedMessageDate)
+            })
+            
         })
         XCTAssertTrue(messageFound,"Found message")
     }
