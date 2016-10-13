@@ -393,35 +393,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (void) infoButtonPressed:(id)sender {
-    NSMutableString *message = [NSMutableString string];
     
-    __block NSArray <OTROMEMODevice *> *yourDevices = @[];
+    __block NSArray <OTROMEMODevice *> *ourDevices = @[];
     __block NSArray <OTROMEMODevice *> *theirDevices = @[];
     OTRAccount *account = [self account];
     OTRBuddy *buddy = [self buddy];
+    
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        yourDevices = [OTROMEMODevice allDevicesForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
+        ourDevices = [OTROMEMODevice allDevicesForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
         theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
     }];
     
-    void (^processBlock)(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) = ^(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj.isTrusted) {
-            [message appendString:@"✅"];
-        } else {
-            [message appendString:@"🚫"];
-        }
-        [message appendFormat:@" %@ %@\n", obj.deviceId, @"hex"];
-    };
-    
-    [message appendString:NSLocalizedString(@"Your Devices:\n", nil)];
-    [yourDevices enumerateObjectsUsingBlock:processBlock];
-    [message appendString:NSLocalizedString(@"\nTheir Devices:\n", nil)];
-    [theirDevices enumerateObjectsUsingBlock:processBlock];
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"⚠️ OMEMO Debug ⚠️", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
-    [alert addAction:ok];
-    [self presentViewController:alert animated:YES completion:nil];
+    XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForOurDevices:ourDevices theirDevices:theirDevices];
+    OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithForm:form style:UITableViewStyleGrouped];
+    UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
+    [self presentViewController:verifyNav animated:YES completion:nil];
 }
 
 - (void)setupLockButton
