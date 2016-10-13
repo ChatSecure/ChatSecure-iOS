@@ -26,6 +26,10 @@
     return [[self class] yapKeyWithDeviceId:self.deviceId parentKey:self.parentKey parentCollection:self.parentCollection];
 }
 
+/** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
+- (BOOL) isTrusted {
+    return _trustLevel == OMEMOTrustLevelTrustedTofu || _trustLevel == OMEMOTrustLevelTrustedUser;
+}
 
 + (NSArray <OTROMEMODevice*>*)allDeviceIdsForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction {
     

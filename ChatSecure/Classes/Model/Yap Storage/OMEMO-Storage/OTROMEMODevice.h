@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Any new devices after that are not trusted and require user input
 @property (nonatomic, readonly) OMEMODeviceTrustLevel trustLevel;
 
+/** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
+- (BOOL) isTrusted;
+
 - (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection;
 
 

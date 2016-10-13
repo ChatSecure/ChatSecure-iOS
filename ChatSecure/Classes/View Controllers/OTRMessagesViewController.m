@@ -112,7 +112,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
     ////// Lock Button //////
-    [self setupLockButton];
+    //[self setupLockButton];
+    
+    // Info Button
+#warning OMEMO Debug
+    [self setupInfoButton];
     
      ////// TitleView //////
     self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
@@ -381,6 +385,44 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 #pragma - mark lockButton Methods
+
+- (void)setupInfoButton {
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+}
+
+- (void) infoButtonPressed:(id)sender {
+    NSMutableString *message = [NSMutableString string];
+    
+    __block NSArray <OTROMEMODevice *> *yourDevices = @[];
+    __block NSArray <OTROMEMODevice *> *theirDevices = @[];
+    OTRAccount *account = [self account];
+    OTRBuddy *buddy = [self buddy];
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        yourDevices = [OTROMEMODevice allDeviceIdsForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
+        theirDevices = [OTROMEMODevice allDeviceIdsForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
+    }];
+    
+    void (^processBlock)(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) = ^(OTROMEMODevice * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.isTrusted) {
+            [message appendString:@"✅"];
+        } else {
+            [message appendString:@"🚫"];
+        }
+        [message appendFormat:@" %@ %@\n", obj.deviceId, @"hex"];
+    };
+    
+    [message appendString:NSLocalizedString(@"Your Devices:\n", nil)];
+    [yourDevices enumerateObjectsUsingBlock:processBlock];
+    [message appendString:NSLocalizedString(@"\nTheir Devices:\n", nil)];
+    [theirDevices enumerateObjectsUsingBlock:processBlock];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"⚠️ OMEMO Debug ⚠️", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (void)setupLockButton
 {
