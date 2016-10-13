@@ -415,7 +415,7 @@ extension OTRSignalStorageManager: SignalStore {
                 })
                 
                 var trustLevel:OMEMODeviceTrustLevel = .TrustLevelUntrustedNew
-                if (hasDevices) {
+                if (!hasDevices) {
                     //This is the first time we're seeing a device list for this account/buddy so it should be saved as TOFU
                     trustLevel = .TrustLevelTrustedTofu
                 }
