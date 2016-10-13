@@ -401,7 +401,7 @@ extension OTRSignalStorageManager: SignalStore {
         var result = false
         self.databaseConnection.readWriteWithBlock { (transaction) in
             if let device = self.fetchDeviceForSignalAddress(address, transaction: transaction) {
-                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey) {
+                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey, lastReceivedMessageDate:device.lastReceivedMessageDate) {
                     newDevice.saveWithTransaction(transaction)
                     result = true
                 }
@@ -420,7 +420,7 @@ extension OTRSignalStorageManager: SignalStore {
                     trustLevel = .TrustLevelTrustedTofu
                 }
                 let deviceIdNumber = NSNumber(int: address.deviceId)
-                if let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey) {
+                if let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey, lastReceivedMessageDate:nil) {
                     newDevice.saveWithTransaction(transaction)
                     result = true
                 }

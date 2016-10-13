@@ -11,14 +11,15 @@
 
 @implementation OTROMEMODevice
 
-- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData
+- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData lastReceivedMessageDate:(nullable NSDate *)lastReceivedMessageDate
 {
     if (self = [super init]) {
         _deviceId = deviceId;
         _parentKey = parentKey;
         _parentCollection = parentCollection;
         _trustLevel = trustLevel;
-        publicIdentityKeyData = publicIdentityKeyData;
+        _publicIdentityKeyData = publicIdentityKeyData;
+        _lastReceivedMessageDate = lastReceivedMessageDate;
     }
     return self;
 }

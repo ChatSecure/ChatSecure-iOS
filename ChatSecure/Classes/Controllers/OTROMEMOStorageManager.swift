@@ -131,7 +131,7 @@ public class OTROMEMOStorageManager {
                     trustLevel = .TrustLevelTrustedTofu
                 }
                 
-                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil)
+                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
                 newDevice?.saveWithTransaction(transaction)
             })
             

@@ -236,7 +236,7 @@ import YapDatabase
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
                     dispatch_async(self.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
+                        let error = NSError.chatSecureError(OTROMEMOError.NoDevicesForBuddy, userInfo: nil)
                         completion(false,error)
                     })
                     return
@@ -270,7 +270,7 @@ import YapDatabase
                     return
                 } else {
                     dispatch_async(self.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.noDevices, userInfo: nil)
+                        let error = NSError.chatSecureError(OTROMEMOError.NoDevices, userInfo: nil)
                         completion(false,error)
                     })
                     return
@@ -399,6 +399,16 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)
+                
+                //Update device last received message
+                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
+                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
+                guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
+                    return
+                }
+                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastReceivedMessageDate: NSDate()) {
+                    newDevice.saveWithTransaction(transaction)
+                }
             })
         } catch {
             return
