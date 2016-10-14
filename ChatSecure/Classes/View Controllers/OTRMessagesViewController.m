@@ -15,7 +15,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMessage+JSQMessageData.h"
-#import "JSQMessages.h"
+@import JSQMessagesViewController;
 #import "OTRProtocolManager.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPManager.h"
@@ -404,8 +404,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
     }];
     
+    // Make a "thisDevice" because it isn't necessarily stored automatically
     OMEMOBundle *myBundle = [self.xmppManager.omemoSignalCoordinator fetchMyBundle];
-    OTROMEMODevice *thisDevice = [[OTROMEMODevice alloc] initWithDeviceId:@(myBundle.deviceId) trustLevel:OMEMOTrustLevelTrustedUser parentKey:account.uniqueId parentCollection:[account.class collection] publicIdentityKeyData:myBundle.identityKey lastReceivedMessageDate:[NSDate date]];
+    OTROMEMODevice *thisDevice = [[OTROMEMODevice alloc] initWithDeviceId:@(myBundle.deviceId) trustLevel:OMEMOTrustLevelTrustedUser parentKey:account.uniqueId parentCollection:[account.class collection] publicIdentityKeyData:myBundle.identityKey lastSeenDate:[NSDate date]];
     
     XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForThisDevice:thisDevice ourDevices:ourDevices theirDevices:theirDevices];
     OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithConnection:self.databaseConnection form:form];

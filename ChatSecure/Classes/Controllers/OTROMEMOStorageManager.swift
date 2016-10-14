@@ -118,21 +118,28 @@ public class OTROMEMOStorageManager {
             let devicesToRemove:Set<NSNumber> = previouslyStoredDevicesIdSet.subtract(newDeviceSet)
             let devicesToAdd:Set<NSNumber> = newDeviceSet.subtract(previouslyStoredDevicesIdSet)
             
+            // Instead of fulling removing devices, mark them as removed for historical purposes
+            // TODO - add way to let user remove devices manually
             devicesToRemove.forEach({ (deviceId) in
                 let deviceKey = OTROMEMODevice.yapKeyWithDeviceId(deviceId, parentKey: parentYapKey, parentCollection: parentYapCollection)
-                transaction.removeObjectForKey(deviceKey, inCollection: OTROMEMODevice.collection())
+                guard var device = transaction.objectForKey(deviceKey, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice else {
+                    return
+                }
+                device = device.copy() as! OTROMEMODevice
+                device.trustLevel = .Removed
+                transaction.setObject(device, forKey: device.uniqueId, inCollection: OTROMEMODevice.collection())
             })
             
             devicesToAdd.forEach({ (deviceId) in
                 
-                var trustLevel:OMEMODeviceTrustLevel = .TrustLevelUntrustedNew
+                var trustLevel = OMEMOTrustLevel.UntrustedNew
                 if (previouslyStoredDevices.count == 0) {
                     //This is the first time we're seeing a device list for this account/buddy so it should be saved as TOFU
-                    trustLevel = .TrustLevelTrustedTofu
+                    trustLevel = .TrustedTofu
                 }
                 
-                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
-                newDevice?.saveWithTransaction(transaction)
+                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil, lastSeenDate:NSDate())
+                newDevice.saveWithTransaction(transaction)
             })
             
         }

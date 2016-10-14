@@ -8,7 +8,6 @@
 
 import UIKit
 import XLForm
-import XMPPFramework
 import YapDatabase
 
 public class OMEMODeviceVerificationViewController: XLFormViewController {
@@ -26,8 +25,10 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
     }
 
     public override func viewDidLoad() {
-        super.viewDidLoad()
+        // gotta register cell before super
+        OMEMODeviceFingerprintCell.registerCellClass(OMEMODeviceFingerprintCell.defaultRowDescriptorType())
 
+        super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
         // Do any additional setup after loading the view.
     }
@@ -38,16 +39,14 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
     }
     
     public func doneButtonPressed(sender: AnyObject?) {
-        for (key, value) in form.formValues() {
+        for (_, value) in form.formValues() {
+            guard let viewedDevice = value as? OTROMEMODevice else {
+                continue
+            }
             connection?.asyncReadWriteWithBlock({ (t: YapDatabaseReadWriteTransaction) in
-                if var device = t.objectForKey(key as! String, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
+                if var device = t.objectForKey(viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
                     device = device.copy() as! OTROMEMODevice
-                    let trust = value.boolValue!.boolValue
-                    if (trust) {
-                        device.trustLevel = .TrustLevelTrustedUser
-                    } else {
-                        device.trustLevel = .TrustLevelUntrusted
-                    }
+                    device.trustLevel = viewedDevice.trustLevel
                     device.saveWithTransaction(t)
                 }
             })
@@ -55,15 +54,6 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     public static func formDescriptorForThisDevice(thisDevice: OTROMEMODevice, ourDevices: [OTROMEMODevice], theirDevices: [OTROMEMODevice]) -> XLFormDescriptor {
         let form = XLFormDescriptor(title: NSLocalizedString("Verify Devices", comment: ""))
@@ -75,20 +65,22 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
             return device.uniqueId != thisDevice.uniqueId
         })
         
+        // TODO - Sort ourDevices and theirDevices by lastSeen
+        
         let addDevicesToSection: ([OTROMEMODevice], XLFormSectionDescriptor) -> Void = { devices, section in
             for device in devices {
-                guard let key = device.publicIdentityKeyData else {
+                guard let _ = device.publicIdentityKeyData else {
                     continue
                 }
-                //let key = device.publicIdentityKeyData
-                let hex = key.xmpp_hexStringValue()
-                let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: XLFormRowDescriptorTypeBooleanSwitch, title: hex)
-                row.value = device.isTrusted()
-                let action = XLFormAction()
-                action.formBlock = { _ in
-                    print("changed device: \(device)")
+                let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType()) 
+                row.value = device.copy()
+                
+                // Removed devices cannot be re-trusted but are stored
+                // for historical purposes
+                if device.trustLevel == .Removed {
+                    row.disabled = true
                 }
-                row.action = action
+                
                 section.addFormRow(row)
             }
         }

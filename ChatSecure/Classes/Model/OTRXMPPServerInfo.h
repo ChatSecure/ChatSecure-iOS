@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "Mantle.h"
+@import Mantle;
 #import <UIKit/UIKit.h>
 
 /*

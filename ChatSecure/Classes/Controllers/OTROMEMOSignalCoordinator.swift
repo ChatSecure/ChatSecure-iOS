@@ -406,9 +406,8 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
                     return
                 }
-                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastReceivedMessageDate: NSDate()) {
-                    newDevice.saveWithTransaction(transaction)
-                }
+                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: NSDate())
+                newDevice.saveWithTransaction(transaction)
             })
         } catch {
             return

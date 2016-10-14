@@ -51,6 +51,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'Reachability', '~> 3'
   pod 'XLForm', '~> 3.1'
   #pod 'ParkedTextField', '~> 0.2'
+  pod 'FormatterKit/TimeIntervalFormatter'
 
   # QR Codes
   pod 'QRCodeReaderViewController', '~> 4.0'

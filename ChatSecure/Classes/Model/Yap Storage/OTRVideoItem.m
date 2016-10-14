@@ -8,12 +8,11 @@
 
 #import "OTRVideoItem.h"
 #import "OTRImages.h"
-#import "JSQMessagesMediaViewBubbleImageMasker.h"
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRMessage.h"
-#import "UIImage+JSQMessages.h"
-#import "PureLayout.h"
+@import JSQMessagesViewController;
+@import PureLayout;
 #import "OTRMediaServer.h"
 
 @import AVFoundation;

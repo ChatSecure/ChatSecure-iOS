@@ -11,7 +11,7 @@
 
 @implementation OTROMEMODevice
 
-- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMODeviceTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData lastReceivedMessageDate:(nullable NSDate *)lastReceivedMessageDate
+- (instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMOTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData lastSeenDate:(nullable NSDate *)lastSeenDate
 {
     if (self = [super init]) {
         _deviceId = deviceId;
@@ -19,7 +19,9 @@
         _parentCollection = parentCollection;
         _trustLevel = trustLevel;
         _publicIdentityKeyData = publicIdentityKeyData;
-        _lastReceivedMessageDate = lastReceivedMessageDate;
+        if (!_lastSeenDate) {
+            _lastSeenDate = [NSDate date];
+        }
     }
     return self;
 }
@@ -28,9 +30,22 @@
     return [[self class] yapKeyWithDeviceId:self.deviceId parentKey:self.parentKey parentCollection:self.parentCollection];
 }
 
-/** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
+/** (OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser) && !isExpired */
 - (BOOL) isTrusted {
-    return _trustLevel == OMEMOTrustLevelTrustedTofu || _trustLevel == OMEMOTrustLevelTrustedUser;
+    return (_trustLevel == OMEMOTrustLevelTrustedTofu || _trustLevel == OMEMOTrustLevelTrustedUser) && ![self isExpired];
+}
+
+/** if lastSeenDate is > 30 days */
+- (BOOL) isExpired {
+    if (!self.lastSeenDate) {
+        return YES;
+    }
+    NSTimeInterval span = [[NSDate date] timeIntervalSinceDate:self.lastSeenDate];
+    NSTimeInterval thirtyDays = 86400 * 30;
+    if (span > thirtyDays) {
+        return YES;
+    }
+    return NO;
 }
 
 + (void)enumerateDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block

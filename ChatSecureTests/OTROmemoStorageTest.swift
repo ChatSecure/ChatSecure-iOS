@@ -62,7 +62,7 @@ class OTROmemoStorageTest: XCTestCase {
         let firstStoredDevices = omemoStorage.getDevicesForOurAccount()
         XCTAssertEqual(firstStoredDevices.count, 3)
         firstStoredDevices.forEach { (device) in
-            XCTAssertEqual(device.trustLevel, OMEMODeviceTrustLevel.TrustLevelTrustedTofu)
+            XCTAssert(device.trustLevel == .TrustedTofu)
             XCTAssertEqual(device.parentKey, self.accountKey)
             XCTAssertEqual(device.parentCollection, self.accountCollection)
         }
@@ -92,9 +92,9 @@ class OTROmemoStorageTest: XCTestCase {
             case 4:
                 fallthrough
             case 5:
-                XCTAssertEqual(device.trustLevel, OMEMODeviceTrustLevel.TrustLevelUntrustedNew)
+                XCTAssert(device.trustLevel == .UntrustedNew)
             default:
-                XCTAssertEqual(device.trustLevel, OMEMODeviceTrustLevel.TrustLevelTrustedTofu)
+                XCTAssert(device.trustLevel == .TrustedTofu)
             }
         }
         let secondStoredDeviceId = secondStoredDevices.map { (device) -> NSNumber in

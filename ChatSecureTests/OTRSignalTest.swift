@@ -53,8 +53,8 @@ class OTRSignalTest: XCTestCase {
             buddy.username = ourAccount.username
             buddy.saveWithTransaction(transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
-            device!.saveWithTransaction(transaction)
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
+            device.saveWithTransaction(transaction)
         }
         ourDatabaseConnection.readWriteWithBlock { (transaction) in
             let buddy = OTRBuddy()
@@ -62,8 +62,8 @@ class OTRSignalTest: XCTestCase {
             buddy.username = otherAccount.username
             buddy.saveWithTransaction(transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustLevelTrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastReceivedMessageDate:nil)
-            device!.saveWithTransaction(transaction)
+            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
+            device.saveWithTransaction(transaction)
         }
         
         XCTAssertNotNil(ourOutgoingBundle,"Created our bundle")

@@ -401,10 +401,9 @@ extension OTRSignalStorageManager: SignalStore {
         var result = false
         self.databaseConnection.readWriteWithBlock { (transaction) in
             if let device = self.fetchDeviceForSignalAddress(address, transaction: transaction) {
-                if let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey, lastReceivedMessageDate:device.lastReceivedMessageDate) {
-                    newDevice.saveWithTransaction(transaction)
-                    result = true
-                }
+                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey, lastSeenDate:device.lastSeenDate)
+                newDevice.saveWithTransaction(transaction)
+                result = true
             } else if let parentEntry = self.parentKeyAndCollectionForSignalAddress(address, transaction: transaction) {
                 
                 //See if we have any devices
@@ -414,16 +413,15 @@ extension OTRSignalStorageManager: SignalStore {
                     stop.memory = true
                 })
                 
-                var trustLevel:OMEMODeviceTrustLevel = .TrustLevelUntrustedNew
+                var trustLevel = OMEMOTrustLevel.UntrustedNew
                 if (!hasDevices) {
                     //This is the first time we're seeing a device list for this account/buddy so it should be saved as TOFU
-                    trustLevel = .TrustLevelTrustedTofu
+                    trustLevel = .TrustedTofu
                 }
                 let deviceIdNumber = NSNumber(int: address.deviceId)
-                if let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey, lastReceivedMessageDate:nil) {
-                    newDevice.saveWithTransaction(transaction)
-                    result = true
-                }
+                let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey, lastSeenDate:NSDate())
+                newDevice.saveWithTransaction(transaction)
+                result = true
             }
         }
         return result

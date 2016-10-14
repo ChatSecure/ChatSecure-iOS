@@ -12,11 +12,13 @@
 /*
  *
  */
-typedef NS_ENUM(NSUInteger, OMEMODeviceTrustLevel) {
+typedef NS_ENUM(NSUInteger, OMEMOTrustLevel) {
     OMEMOTrustLevelUntrustedNew = 0,
     OMEMOTrustLevelUntrusted    = 1,
     OMEMOTrustLevelTrustedTofu  = 2,
-    OMEMOTrustLevelTrustedUser  = 3
+    OMEMOTrustLevelTrustedUser  = 3,
+    /** If the device has been removed from the server */
+    OMEMOTrustLevelRemoved  = 4,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -32,19 +34,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 // First Time seing device list all trusted
 // Any new devices after that are not trusted and require user input
-@property (nonatomic, readwrite) OMEMODeviceTrustLevel trustLevel;
+@property (nonatomic, readwrite) OMEMOTrustLevel trustLevel;
 
-@property (nonatomic, strong, readwrite, nullable) NSDate *lastReceivedMessageDate;
+@property (nonatomic, strong, readwrite) NSDate *lastSeenDate;
 
-/** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
+/** (OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser) && !isExpired */
 - (BOOL) isTrusted;
 
-- (nullable instancetype) initWithDeviceId:(NSNumber *)deviceId
-                                trustLevel:(OMEMODeviceTrustLevel)trustLevel
+/** if lastSeenDate is > 30 days */
+- (BOOL) isExpired;
+
+/** if lastSeenDate is nil, it is set to NSDate.date */
+- (instancetype) initWithDeviceId:(NSNumber *)deviceId
+                                trustLevel:(OMEMOTrustLevel)trustLevel
                                  parentKey:(NSString *)parentKey
                           parentCollection:(NSString *)parentCollection
                      publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData
-                   lastReceivedMessageDate:(nullable NSDate *)lastReceivedMessageDate;
+                            lastSeenDate:(nullable NSDate *)lastSeenDate;
 
 
 + (void)enumerateDevicesForParentKey:(NSString *)key

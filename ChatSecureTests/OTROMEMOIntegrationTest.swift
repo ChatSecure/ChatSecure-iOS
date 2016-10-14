@@ -110,7 +110,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             
             transaction.enumerateKeysAndObjectsInCollection(OTROMEMODevice.collection(), usingBlock: { (key, object, stop) in
                 let device = object as! OTROMEMODevice
-                XCTAssertNotNil(device.lastReceivedMessageDate)
+                XCTAssertNotNil(device.lastSeenDate)
             })
             
         })

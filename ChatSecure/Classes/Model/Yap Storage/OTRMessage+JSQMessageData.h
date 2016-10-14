@@ -7,7 +7,7 @@
 //
 
 #import "OTRMessage.h"
-#import "JSQMessageData.h"
+@import JSQMessagesViewController;
 
 @interface OTRMessage (JSQMessageData) <JSQMessageData>
 
