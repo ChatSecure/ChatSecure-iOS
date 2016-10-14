@@ -404,8 +404,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
     }];
     
-    XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForOurDevices:ourDevices theirDevices:theirDevices];
-    OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithForm:form style:UITableViewStyleGrouped];
+    OMEMOBundle *myBundle = [self.xmppManager.omemoSignalCoordinator fetchMyBundle];
+    OTROMEMODevice *thisDevice = [[OTROMEMODevice alloc] initWithDeviceId:@(myBundle.deviceId) trustLevel:OMEMOTrustLevelTrustedUser parentKey:account.uniqueId parentCollection:[account.class collection] publicIdentityKeyData:myBundle.identityKey lastReceivedMessageDate:[NSDate date]];
+    
+    XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForThisDevice:thisDevice ourDevices:ourDevices theirDevices:theirDevices];
+    OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithConnection:self.databaseConnection form:form];
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     [self presentViewController:verifyNav animated:YES completion:nil];
 }
@@ -998,6 +1001,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             if (msg) {
                                 msg = [msg copy];
                                 msg.messageSecurity = OTRMessageSecurityOMEMO;
+                                [msg saveWithTransaction:transaction];
+                            }
+                        }];
+                    } else {
+                        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                            OTRMessage *msg = [OTRMessage fetchObjectWithUniqueID:message.uniqueId transaction:transaction];
+                            if (msg) {
+                                msg = [msg copy];
+                                msg.error = error;
                                 [msg saveWithTransaction:transaction];
                             }
                         }];

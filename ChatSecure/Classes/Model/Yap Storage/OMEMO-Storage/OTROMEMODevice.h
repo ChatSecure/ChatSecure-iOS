@@ -28,13 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) NSNumber *deviceId;
 
-@property (nonatomic, strong, readonly, nullable) NSData *publicIdentityKeyData;
+@property (nonatomic, strong, readwrite, nullable) NSData *publicIdentityKeyData;
 
 // First Time seing device list all trusted
 // Any new devices after that are not trusted and require user input
-@property (nonatomic, readonly) OMEMODeviceTrustLevel trustLevel;
+@property (nonatomic, readwrite) OMEMODeviceTrustLevel trustLevel;
 
-@property (nonatomic, strong, readonly, nullable) NSDate *lastReceivedMessageDate;
+@property (nonatomic, strong, readwrite, nullable) NSDate *lastReceivedMessageDate;
 
 /** OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser */
 - (BOOL) isTrusted;
