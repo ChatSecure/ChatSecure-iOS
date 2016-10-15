@@ -411,6 +411,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForThisDevice:thisDevice ourDevices:ourDevices theirDevices:theirDevices];
     OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithConnection:self.databaseConnection form:form];
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
+    verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];
 }
 

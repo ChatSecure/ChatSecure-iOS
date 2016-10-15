@@ -24,7 +24,12 @@ private extension String {
     }
 }
 
-//private extension TTT
+public extension NSData {
+    /// hex, split every 8 bytes by a space
+    public func humanReadableFingerprint() -> String {
+        return self.xmpp_hexStringValue().splitEvery(8).joinWithSeparator(" ")
+    }
+}
 
 public extension XLFormBaseCell {
     
@@ -65,18 +70,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         
         // we've already filtered out devices w/o public keys
         // so publicIdentityKeyData should never be nil
-        
-        var fingerprintData = NSData()
-        
-        if (device.publicIdentityKeyData!.length == 32) {
-            fingerprintData = device.publicIdentityKeyData!
-        } else if (device.publicIdentityKeyData!.length == 33) {
-            // why is there an extra 0x05 at the front?
-            // maybe blame libsignal-protocol-c library
-            fingerprintData = device.publicIdentityKeyData!.subdataWithRange(NSMakeRange(1, 32))
-        }
-        
-        let fingerprint = fingerprintData.xmpp_hexStringValue().splitEvery(8).joinWithSeparator(" ")
+        let fingerprint = device.humanReadableFingerprint
         
         fingerprintLabel.text = fingerprint
         let interval = -NSDate().timeIntervalSinceDate(device.lastSeenDate)

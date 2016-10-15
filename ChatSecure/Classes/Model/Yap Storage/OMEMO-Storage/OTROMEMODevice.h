@@ -32,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readwrite, nullable) NSData *publicIdentityKeyData;
 
+/** returns hex value of publicIdentityKeyData, str. separated by spaces every 8 bytes */
+@property (nonatomic, strong, readonly) NSString *humanReadableFingerprint;
+
 // First Time seing device list all trusted
 // Any new devices after that are not trusted and require user input
 @property (nonatomic, readwrite) OMEMOTrustLevel trustLevel;

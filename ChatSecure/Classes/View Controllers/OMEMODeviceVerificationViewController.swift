@@ -94,7 +94,7 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
                 row.disabled = true
             }
         }
-        
+    
         for section in [thisSection, ourSection, theirSection] {
             if section.formRows.count > 0 {
                 form.addFormSection(section)
@@ -102,6 +102,27 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
         }
         
         return form
+    }
+    
+    // MARK: - UITableViewDelegate
+    
+    public override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        guard let cell = self.tableView(tableView, cellForRowAtIndexPath: indexPath) as? OMEMODeviceFingerprintCell else {
+            return
+        }
+        guard let device = cell.rowDescriptor.value as? OTROMEMODevice else {
+            return
+        }
+        let fingerprint = device.humanReadableFingerprint
+        
+        let activityViewController = UIActivityViewController(activityItems: [fingerprint], applicationActivities: nil)
+        if let ppc = activityViewController.popoverPresentationController {
+            ppc.sourceView = cell
+            ppc.sourceRect = cell.frame
+        }
+        presentViewController(activityViewController, animated: true, completion: nil)
     }
 
 }

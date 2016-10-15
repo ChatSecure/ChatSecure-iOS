@@ -48,6 +48,22 @@
     return NO;
 }
 
+- (NSString*) humanReadableFingerprint {
+    if (!self.publicIdentityKeyData) {
+        return @"";
+    }
+    NSData *fingerprintData = [NSData data];
+    if (self.publicIdentityKeyData.length == 32) {
+        fingerprintData = self.publicIdentityKeyData;
+    } else if (self.publicIdentityKeyData.length >= 33) {
+        // why is there an extra 0x05 at the front?
+        // maybe blame libsignal-protocol-c library
+        fingerprintData = [self.publicIdentityKeyData subdataWithRange:NSMakeRange(1, 32)];
+    }
+    NSString *fingerprint = [fingerprintData humanReadableFingerprint];
+    return fingerprint;
+}
+
 + (void)enumerateDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block
 {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
