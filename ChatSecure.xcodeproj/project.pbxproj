@@ -266,7 +266,7 @@
 		D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */ = {isa = PBXBuildFile; fileRef = 637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB471BA79A7200CD8331 /* OTRvCardYapDatabaseStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105391A16D1A300C17BAE /* OTRXMPPProxyStream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1688,6 +1688,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */,
 				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
 				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
 				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
@@ -1753,7 +1754,6 @@
 				D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */,
 				D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */,
-				D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */,
 				D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */,
 				D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */,
 				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,

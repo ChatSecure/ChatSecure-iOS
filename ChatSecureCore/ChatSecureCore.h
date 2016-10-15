@@ -15,6 +15,7 @@ FOUNDATION_EXPORT double ChatSecureCoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 
 #import "OTRAccount.h"
+#import "OTRXMPPManager.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRXLFormCreator.h"

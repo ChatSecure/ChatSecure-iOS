@@ -26,15 +26,13 @@
 
 #import "OTRBuddy.h"
 #import "OTRMessage.h"
-@import XMPPFramework;
 #import "OTRProtocol.h"
-#import "OTRXMPPBudyTimers.h"
-#import "OTRCertificatePinning.h"
-#import "OTRXMPPError.h"
 #import "OTRConstants.h"
-#import <ChatSecureCore/ChatSecureCore-swift.h>
+//#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager, OTRXMPPRoomManager;
+@class OTROMEMOSignalCoordinator;
+@protocol OTRCertificatePinningDelegate;
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
@@ -59,7 +57,7 @@ extern NSString *const OTRXMPPNewLoginStatusKey;
 extern NSString *const OTRXMPPLoginErrorKey;
 
 
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPReconnect *xmppReconnect;
@@ -69,7 +67,6 @@ extern NSString *const OTRXMPPLoginErrorKey;
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property (nonatomic, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property BOOL didSecure;

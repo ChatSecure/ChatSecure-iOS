@@ -386,12 +386,12 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 return
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
+            let databaseMessage = OTRMessage()
             self.databaseConnection.readWriteWithBlock({ (transaction) in
                 // TODO: check if it's our jid and handle as an outgoing message from another device
                 guard let buddy = OTRBuddy.fetchBuddyWithUsername(fromJID.bare(), withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
-                let databaseMessage = OTRMessage()
                 databaseMessage.incoming = true
                 databaseMessage.text = messageString
                 databaseMessage.buddyUniqueId = buddy.uniqueId
@@ -399,6 +399,10 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)
+                
+                // Should we be using the date of the xmpp message?
+                buddy.lastMessageDate = NSDate()
+                buddy.saveWithTransaction(transaction)
                 
                 //Update device last received message
                 let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
@@ -408,7 +412,23 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 }
                 let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: NSDate())
                 newDevice.saveWithTransaction(transaction)
+                
+                // Send delivery receipt
+                guard let account = OTRAccount.fetchObjectWithUniqueID(buddy.accountUniqueId, transaction: transaction) else {
+                    return
+                }
+                guard let protocolManager = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
+                    return
+                }
+                protocolManager.sendDeliveryReceiptForMessage(databaseMessage)
             })
+            // Display local notification
+            if let _ = databaseMessage.text {
+                let messageCopy = databaseMessage.copy() as! OTRMessage
+                dispatch_async(dispatch_get_main_queue(), { 
+                    UIApplication.sharedApplication().showLocalNotification(messageCopy)
+                })
+            }
         } catch {
             return
         }

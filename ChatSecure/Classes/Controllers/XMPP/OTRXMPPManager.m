@@ -52,12 +52,13 @@
 #import "OTRXMPPRoomManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPBuddyManager.h"
+#import "OTRXMPPBudyTimers.h"
+#import "OTRCertificatePinning.h"
+#import "OTRXMPPError.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
-
-static NSString *const kOTRXMPPErrorDomain = @"kOTRXMPPErrorDomain";
 
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
@@ -69,8 +70,7 @@ NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
 NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 
-@interface OTRXMPPManager()
-
+@interface OTRXMPPManager() <OTRCertificatePinningDelegate>
 @property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
 
 @property (nonatomic, strong) XMPPStream *xmppStream;

@@ -10,6 +10,7 @@
 #import "OTRTorManager.h"
 @import XMPPFramework;
 #import "OTRXMPPTorAccount.h"
+#import "OTRXMPPError.h"
 
 @interface OTRXMPPTorManager()
 @property (nonatomic, strong) OTRXMPPTorAccount *account;
