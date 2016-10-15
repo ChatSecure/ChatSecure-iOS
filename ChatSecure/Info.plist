@@ -35,7 +35,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>40</string>
+	<string>41</string>
 	<key>FacebookAppID</key>
 	<string>447241325394334</string>
 	<key>FacebookDisplayName</key>
@@ -59,8 +59,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Access to the camera is required to send photos and scan QR codes.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Access to the microphone is needed to send voice messages.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to the photo library is required to send your existing photos.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome.ttf</string>
