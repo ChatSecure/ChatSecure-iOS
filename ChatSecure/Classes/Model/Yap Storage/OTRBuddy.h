@@ -60,17 +60,17 @@ extern const struct OTRBuddyAttributes {
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
-+ (instancetype)fetchBuddyForUsername:(NSString *)username
-                          accountName:(NSString *)accountName
-                          transaction:(YapDatabaseReadTransaction *)transaction;
++ (nullable instancetype)fetchBuddyForUsername:(nonnull NSString *)username
+                          accountName:(nonnull NSString *)accountName
+                          transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
-+ (instancetype)fetchBuddyWithUsername:(NSString *)username
-                   withAccountUniqueId:(NSString *)accountUniqueId
-                           transaction:(YapDatabaseReadTransaction *)transaction;
++ (nullable instancetype)fetchBuddyWithUsername:(nonnull NSString *)username
+                   withAccountUniqueId:(nonnull NSString *)accountUniqueId
+                           transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 
-+ (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-+ (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
++ (void)resetAllChatStatesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
++ (void)resetAllBuddyStatusesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 
 
 

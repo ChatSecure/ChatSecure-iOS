@@ -306,7 +306,7 @@
 		D93DDB8F1BA79A9100CD8331 /* OTRBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CA1A16D1A300C17BAE /* OTRBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB911BA79A9200CD8331 /* OTRMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CE1A16D1A300C17BAE /* OTRMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Private, ); }; };

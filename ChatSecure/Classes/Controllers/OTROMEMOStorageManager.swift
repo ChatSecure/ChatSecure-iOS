@@ -85,8 +85,9 @@ public class OTROMEMOStorageManager {
     public func getDevicesForBuddy(username:String) -> [OTROMEMODevice] {
         var result:[OTROMEMODevice]?
         self.databaseConnection.readWithBlock { (transaction) in
-            let buddy = OTRBuddy.fetchBuddyWithUsername(username, withAccountUniqueId: self.accountKey, transaction: transaction)
-            result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), transaction: transaction)
+            if let buddy = OTRBuddy.fetchBuddyWithUsername(username, withAccountUniqueId: self.accountKey, transaction: transaction) {
+                result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), transaction: transaction)
+            }
         }
         return result ?? [OTROMEMODevice]();
     }
@@ -164,11 +165,20 @@ public class OTROMEMOStorageManager {
      */
     public func storeBuddyDevices(devices:[NSNumber], buddyUsername:String) {
         self.databaseConnection.readWriteWithBlock { (transaction) in
-            //TODO: Create buddy if none
-            guard let buddy = OTRBuddy.fetchBuddyWithUsername(buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction) else {
-                return
+            // Fetch the buddy from the database.
+            var buddy = OTRBuddy.fetchBuddyWithUsername(buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction)
+            // If this is teh first launch the buddy will not be in the buddy list becuase the roster comes in after device list from PEP.
+            // So we create a buddy witht the minimial information we have in order to save the device list.
+            if (buddy == nil) {
+                buddy = OTRXMPPBuddy()
+                buddy?.username = buddyUsername
+                buddy?.accountUniqueId = self.accountKey
+                buddy?.saveWithTransaction(transaction)
             }
-            self.storeDevices(devices, parentYapKey: buddy.uniqueId, parentYapCollection: OTRBuddy.collection(), transaction: transaction)
+            if let bud = buddy {
+                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: OTRBuddy.collection(), transaction: transaction)
+            }
+            
         }
     }
 }
