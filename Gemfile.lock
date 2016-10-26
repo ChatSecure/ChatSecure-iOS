@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/chrisballinger/CocoaPods.git
-  revision: 8a6b818f33eda95e7ef6651c80f4cee3b6b995f0
-  ref: 8a6b818f33eda95e7ef6651c80f4cee3b6b995f0
+  revision: bc3a7e5f1ebd1b3aad63435e22e029c885ba160b
+  ref: bc3a7e5f1ebd1b3aad63435e22e029c885ba160b
   specs:
     cocoapods (1.1.1)
       activesupport (>= 4.0.2, < 5)
