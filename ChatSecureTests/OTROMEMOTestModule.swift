@@ -45,6 +45,7 @@ class OTROMEMOTestModule: OMEMOModule {
                 let response = XMPPIQ(type: "get", to: nil, elementID: elementId, child: nil)
                 let outgoing = XMPPIQ(type: "get", to: nil, elementID: elementId, child: nil)
                 multicastDelegate.omemo!(self, fetchedBundle: self.otherUser.signalOMEMOCoordinator.fetchMyBundle()!, fromJID: jid, responseIq: response, outgoingIq: outgoing)
+                
             }
         }
     }
@@ -53,5 +54,13 @@ class OTROMEMOTestModule: OMEMOModule {
     override func sendKeyData(keyData: [OMEMOKeyData], iv: NSData, toJID: XMPPJID, payload: NSData?, elementId: String?) {
         let dummyMessage = XMPPMessage()
         self.otherUser.signalOMEMOCoordinator.omemo(self, receivedKeyData: keyData, iv: iv, senderDeviceId: (thisUser.signalOMEMOCoordinator.fetchMyBundle()?.deviceId)!, fromJID: XMPPJID.jidWithString(thisUser.account.username), payload: payload, message: dummyMessage)
+    }
+    
+    override func removeDeviceIds(deviceIds: [NSNumber], elementId: String?) {
+        dispatch_async(self.moduleQueue) {
+            let multicastDelegate = self.valueForKey("multicastDelegate")!
+            let element = XMPPIQ(type: "resutl", to: self.xmppStream.myJID, elementID: elementId)
+            multicastDelegate.omemo!(self, deviceListUpdate: [NSNumber](), fromJID:self.xmppStream.myJID, incomingElement:element)
+        }
     }
 }

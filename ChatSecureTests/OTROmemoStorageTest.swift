@@ -94,7 +94,7 @@ class OTROmemoStorageTest: XCTestCase {
             case 5:
                 XCTAssert(device.trustLevel == .UntrustedNew)
             default:
-                XCTAssert(device.trustLevel == .TrustedTofu)
+                XCTAssert(device.trustLevel == .TrustedTofu,"Device \(device.deviceId) Should be Tofu")
             }
         }
         let secondStoredDeviceId = secondStoredDevices.map { (device) -> NSNumber in
@@ -109,7 +109,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.storeInitialDevices()
     }
     
-    func testOmemoSecondDeviesStorage() {
+    func testOmemoSecondDeviceStorage() {
         self.setupDatabase(#function)
         self.storeInitialDevices()
         self.storeSecondDeviceList()

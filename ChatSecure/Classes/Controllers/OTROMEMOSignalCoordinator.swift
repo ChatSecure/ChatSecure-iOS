@@ -29,7 +29,7 @@ import YapDatabase
         }
     }
     let preKeyCount:UInt = 100
-    private var outstandingDeviceBundleRequests:[String: (Bool) -> Void]
+    private var outstandingXMPPStanzaResponseBlocks:[String: (Bool) -> Void]
     /**
      Create a OTROMEMOSignalCoordinator for an account. 
      
@@ -41,7 +41,7 @@ import YapDatabase
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection(), databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
         self.databaseConnection = databaseConnection
-        self.outstandingDeviceBundleRequests = [:]
+        self.outstandingXMPPStanzaResponseBlocks = [:]
         self.callbackQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-callback", DISPATCH_QUEUE_SERIAL)
         self.workQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-work", DISPATCH_QUEUE_SERIAL)
     }
@@ -60,11 +60,11 @@ import YapDatabase
     /** Always call on internal work queue */
     private func callAndRemoveOutstandingBundleBlock(elementId:String,success:Bool) {
         
-        guard let outstandingBlock = self.outstandingDeviceBundleRequests[elementId] else {
+        guard let outstandingBlock = self.outstandingXMPPStanzaResponseBlocks[elementId] else {
             return
         }
         outstandingBlock(success)
-        self.outstandingDeviceBundleRequests.removeValueForKey(elementId)
+        self.outstandingXMPPStanzaResponseBlocks.removeValueForKey(elementId)
     }
     
     /**
@@ -120,18 +120,22 @@ import YapDatabase
             return
         }
         var finalSuccess = true
-        dispatch_async(self.workQueue) { 
+        dispatch_async(self.workQueue) { [weak self] in
+            guard let strongself = self else {
+                return
+            }
+            
             let group = dispatch_group_create()
             //For each device Check if we have a session. If not then we need to fetch it from their XMPP server.
-            for device in devs where device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId {
-                if !self.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.intValue) {
+            for device in devs where device.deviceId.unsignedIntValue != self?.signalEncryptionManager.registrationId {
+                if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.intValue) {
                     //No session for this buddy and device combo. We need to fetch the bundle.
                     
                     let elementId = NSUUID().UUIDString
                     
                     dispatch_group_enter(group)
                     // Hold on to a closure so that when we get the call back from OMEMOModule we can call this closure.
-                    self.outstandingDeviceBundleRequests[elementId] = { success in
+                    strongself.outstandingXMPPStanzaResponseBlocks[elementId] = { success in
                         if (!success) {
                             finalSuccess = false
                         }
@@ -139,12 +143,15 @@ import YapDatabase
                         dispatch_group_leave(group)
                     }
                     //Fetch the bundle
-                    self.omemoModule?.fetchBundleForDeviceId(device.deviceId.unsignedIntValue, jid: XMPPJID.jidWithString(username), elementId: elementId)
+                    strongself.omemoModule?.fetchBundleForDeviceId(device.deviceId.unsignedIntValue, jid: XMPPJID.jidWithString(username), elementId: elementId)
                 }
             }
             
-            dispatch_group_notify(group, self.callbackQueue) {
-                completion(finalSuccess)
+            if let cQueue = self?.callbackQueue {
+                dispatch_group_notify(group, cQueue) {
+                    completion(finalSuccess)
+                }
+
             }
         }
     }
@@ -200,7 +207,7 @@ import YapDatabase
         self.prepareSessionWithOurDevices(prepareCompletion)
         //Even if something went wrong fetching bundles we should push ahead. We may have sessions that can be used.
         
-        dispatch_group_notify(group, self.workQueue) { 
+        dispatch_group_notify(group, self.workQueue) {
             var bud:OTRBuddy? = nil
             self.databaseConnection.readWithBlock { (transaction) in
                 bud = OTRBuddy.fetchObjectWithUniqueID(buddyYapKey, transaction: transaction)
@@ -285,6 +292,41 @@ import YapDatabase
             
         }
     }
+    
+    /**
+     Remove a device from the yap store and from the XMPP server.
+     
+     - parameter deviceId: The OMEMO device id
+    */
+    public func removeDevice(deviceIds:[NSNumber], completion:((Bool) -> Void)) {
+        
+        dispatch_async(self.workQueue) { [weak self] in
+            if let module = self?.omemoModule {
+                let elementId = NSUUID().UUIDString
+                
+                self?.outstandingXMPPStanzaResponseBlocks[elementId] = { [weak self] success in
+                    
+                    if(success) {
+                        guard let pKey = self?.accountYapKey else {
+                            return
+                        }
+                        
+                        self?.databaseConnection.readWriteWithBlock({ (transaction) in
+                            for did in deviceIds {
+                                let yapKey = OTROMEMODevice.yapKeyWithDeviceId(did, parentKey: pKey, parentCollection: OTRAccount.collection())
+                                transaction.removeObjectForKey(yapKey, inCollection: OTROMEMODevice.collection())
+                            }
+                        })
+                    }
+                    
+                    completion(success)
+                }
+                module.removeDeviceIds(deviceIds, elementId: elementId)
+            }
+        }
+        
+        
+    }
 }
 
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
@@ -297,8 +339,13 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         //print("failedToPublishDeviceIds: \(errorIq)")
     }
     
-    public func omemo(omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], fromJID: XMPPJID, incomingElement: DDXMLElement) {
+    public func omemo(omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], fromJID: XMPPJID, incomingElement: XMPPElement) {
         //print("deviceListUpdate: \(fromJID) \(deviceIds)")
+        dispatch_async(self.workQueue) { [weak self] in
+            if let eid = incomingElement.elementID() {
+                self?.callAndRemoveOutstandingBundleBlock(eid, success: true)
+            }
+        }
     }
     
     public func omemo(omemo: OMEMOModule, failedToFetchDeviceIdsForJID fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
@@ -326,10 +373,10 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             return;
         }
         
-        dispatch_async(self.workQueue) {
+        dispatch_async(self.workQueue) { [weak self] in
             let elementId = outgoingIq.elementID()
             if (bundle.preKeys.count == 0) {
-                self.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+                self?.callAndRemoveOutstandingBundleBlock(elementId, success: false)
                 return
             }
             //Create incoming bundle from OMEMOBundle
@@ -339,16 +386,32 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             let preKey = bundle.preKeys[index]
             let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
-            self.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
-            self.callAndRemoveOutstandingBundleBlock(elementId, success: true)
+            self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
+            self?.callAndRemoveOutstandingBundleBlock(elementId, success: true)
         }
         
     }
     public func omemo(omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: gl_uint32_t, fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
-        dispatch_async(self.workQueue) {
+        dispatch_async(self.workQueue) { [weak self] in
             let elementId = outgoingIq.elementID()
-            self.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+            self?.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+        }
+    }
+    
+    public func omemo(omem: OMEMOModule, removedBundleId bundleId: gl_uint32_t, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, failedToRemoveBundleId bundleId: gl_uint32_t, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+        
+    }
+    
+    public func omemo(omemo: OMEMOModule, failedToRemoveDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, elementId: String?) {
+        dispatch_async(self.workQueue) { [weak self] in
+            if let eid = elementId {
+                self?.callAndRemoveOutstandingBundleBlock(eid, success: false)
+            }
         }
     }
     

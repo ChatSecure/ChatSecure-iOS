@@ -25,7 +25,7 @@ public extension NSError {
             additionalDictionary.forEach { tempUserInfo.updateValue($1, forKey: $0) }
         }
         
-        return NSError(domain: kOTRErrorDomain, code: error.code(), userInfo: userInfo)
+        return NSError(domain: kOTRErrorDomain, code: error.code(), userInfo: tempUserInfo)
     }
 }
 

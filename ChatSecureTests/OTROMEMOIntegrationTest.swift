@@ -82,7 +82,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
      1. Setup two accounts
      2. Authenticate the stream. Should receive devices for our buddy.
      3. Send a message to the buddy. This should trigger fetching the buddy's bundle to create a session.
-     4. Ensure that encryption when correctly. ✔︎
+     4. Ensure that encryption went correctly. ✔︎
      5. Ensure that that alice received the message. ✔︎
     */
     func testFetchingBundleSetup() {
@@ -98,7 +98,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(10, handler: nil)
+        self.waitForExpectationsWithTimeout(30, handler: nil)
         
         var messageFound = false
         self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
@@ -115,5 +115,30 @@ class OTROMEMOIntegrationTest: XCTestCase {
             
         })
         XCTAssertTrue(messageFound,"Found message")
+    }
+    
+    func testRemoveDevice() {
+        self.setupTwoAccounts(#function)
+        self.omemoModule?.xmppStreamDidAuthenticate(nil)
+        let expectation = self.expectationWithDescription("Remove Devices")
+        let deviceNumber = NSNumber(int:5)
+        
+        self.bobUser?.databaseManager.readWriteDatabaseConnection.readWriteWithBlock({ (transaction) in
+            let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
+            device.saveWithTransaction(transaction)
+        })
+        self.bobUser?.signalOMEMOCoordinator.removeDevice([deviceNumber], completion: { (result) in
+            XCTAssertTrue(result)
+            self.bobUser!.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
+                let yapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
+                let device = OTROMEMODevice.fetchObjectWithUniqueID(yapKey, transaction: transaction)
+                XCTAssertNil(device)
+            })
+            
+             expectation.fulfill()
+        })
+        
+        self.waitForExpectationsWithTimeout(10, handler: nil)
+        
     }
 }
