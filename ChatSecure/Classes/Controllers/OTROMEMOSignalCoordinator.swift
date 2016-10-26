@@ -75,7 +75,7 @@ import YapDatabase
      - returns: True if there are devices and the buddy supports OMEMO otherwise false.
      */
     public func buddySupportsOMEMO(buddyYapKey:String) -> Bool {
-        return self.omemoStorageManager.getDevicesForParentYapKey(buddyYapKey, yapCollection: OTRBuddy.collection()).count > 0
+        return self.omemoStorageManager.getDevicesForParentYapKey(buddyYapKey, yapCollection: OTRBuddy.collection(), trusted: true).count > 0
     }
     
     /** 
@@ -101,7 +101,7 @@ import YapDatabase
         
         //Get all the devices ID's for this buddy as well as their username for use with signal and XMPPFramework.
         self.databaseConnection.readWithBlock { (transaction) in
-            let dev = self.omemoStorageManager.getDevicesForParentYapKey(yapKey, yapCollection: yapCollection,transaction: transaction)
+            let dev = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction)
             if (dev.count == 0) {
                 //No devices so we can't go any further.
                 dispatch_async(self.callbackQueue, { 
@@ -236,9 +236,7 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection()).filter({ (device) -> Bool in
-                    return device.isTrusted()
-                }).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
@@ -255,8 +253,8 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                  */
-                let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount().filter({ (device) -> Bool in
-                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId && device.isTrusted()
+                let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount(true).filter({ (device) -> Bool in
+                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId
                 }).map(encryptClosure).flatMap{ $0 }
                 
                 // Combine teh two arrays for all key data
@@ -520,10 +518,10 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     public func fetchDeviceIdsForJID(jid: XMPPJID) -> [NSNumber] {
         var devices:[OTROMEMODevice]?
         if self.isOurJID(jid) {
-            devices = self.omemoStorageManager.getDevicesForOurAccount()
+            devices = self.omemoStorageManager.getDevicesForOurAccount(nil)
             
         } else {
-            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare())
+            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare(), trusted:nil)
         }
         //Convert from devices array to NSNumber array.
         return (devices?.map({ (device) -> NSNumber in

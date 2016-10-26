@@ -84,7 +84,17 @@
     [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
         [devices addObject:device];
     }];
-    return devices;
+    return [devices copy];
+}
+
++ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection trusted:(BOOL)trusted transaction:(YapDatabaseReadTransaction *)transaction {
+    __block NSMutableArray <OTROMEMODevice *>*devices = [[NSMutableArray alloc] init];
+    [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
+        if (device.isTrusted == trusted) {
+            [devices addObject:device];
+        }
+    }];
+    return [devices copy];
 }
 
 #pragma MARK YapDatabaseRelationshipNode Methods

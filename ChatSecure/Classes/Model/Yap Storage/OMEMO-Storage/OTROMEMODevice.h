@@ -65,6 +65,11 @@ NS_ASSUME_NONNULL_BEGIN
                                            collection:(NSString *)collection
                                           transaction:(YapDatabaseReadTransaction *)transaction;
 
++ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key
+                                           collection:(NSString *)collection
+                                              trusted:(BOOL)trusted
+                                          transaction:(YapDatabaseReadTransaction *)transaction;
+
 + (NSString *)yapKeyWithDeviceId:(NSNumber *)deviceId
                        parentKey:(NSString *)parentKey
                 parentCollection:(NSString *)parentCollection;

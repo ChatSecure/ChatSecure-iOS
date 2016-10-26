@@ -33,23 +33,6 @@ public class OTROMEMOStorageManager {
     }
     
     /**
-     Retrievs all the devices for a given yap key and collection. Could be either for a buddy or an account.
-     
-     - parameter yapKey: The yap key for the account or buddy
-     - parameter yapCollection: The yap collection for the account or buddy
-     - parameter transaction: The transaction to use to do the look up with 
-     
-     - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
-     */
-    internal func getDevicesForParentYapKey(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> [OTROMEMODevice] {
-        var deviceArray = [OTROMEMODevice]()
-        OTROMEMODevice.enumerateDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction, usingBlock: { (device, stop) in
-            deviceArray.append(device)
-        })
-        return deviceArray
-    }
-    
-    /**
      Convenience method that uses the class database connection.
      Retrievs all the devices for a given yap key and collection. Could be either for a buddy or an account.
      
@@ -58,10 +41,14 @@ public class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      **/
-    public func getDevicesForParentYapKey(yapKey:String, yapCollection:String) -> [OTROMEMODevice] {
+    public func getDevicesForParentYapKey(yapKey:String, yapCollection:String, trusted:Bool?) -> [OTROMEMODevice] {
         var result:[OTROMEMODevice]?
         self.databaseConnection.readWithBlock { (transaction) in
-            result = self.getDevicesForParentYapKey(yapKey, yapCollection: yapCollection, transaction: transaction)
+            if let trust = trusted {
+                result = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, trusted: trust, transaction: transaction)
+            } else {
+                result = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction)
+            }
         }
         return result ?? [OTROMEMODevice]();
     }
@@ -71,8 +58,8 @@ public class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    public func getDevicesForOurAccount() -> [OTROMEMODevice] {
-        return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection)
+    public func getDevicesForOurAccount(trusted:Bool?) -> [OTROMEMODevice] {
+        return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection, trusted: trusted)
     }
     
     /**
@@ -82,11 +69,15 @@ public class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    public func getDevicesForBuddy(username:String) -> [OTROMEMODevice] {
+    public func getDevicesForBuddy(username:String, trusted:Bool?) -> [OTROMEMODevice] {
         var result:[OTROMEMODevice]?
         self.databaseConnection.readWithBlock { (transaction) in
             if let buddy = OTRBuddy.fetchBuddyWithUsername(username, withAccountUniqueId: self.accountKey, transaction: transaction) {
-                result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), transaction: transaction)
+                if let trust = trusted {
+                    result = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: OTRBuddy.collection(), trusted: trust, transaction: transaction)
+                } else {
+                    result = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: OTRBuddy.collection(), transaction: transaction)
+                }
             }
         }
         return result ?? [OTROMEMODevice]();
@@ -102,7 +93,7 @@ public class OTROMEMOStorageManager {
      */
     private func storeDevices(devices:[NSNumber], parentYapKey:String, parentYapCollection:String, transaction:YapDatabaseReadWriteTransaction) {
         
-        let previouslyStoredDevices = self.getDevicesForParentYapKey(parentYapKey, yapCollection: parentYapCollection, transaction: transaction)
+        let previouslyStoredDevices = OTROMEMODevice.allDevicesForParentKey(parentYapKey, collection: parentYapCollection, transaction: transaction)
         let previouslyStoredDevicesIds = previouslyStoredDevices.map({ (device) -> NSNumber in
             return device.deviceId
         })
