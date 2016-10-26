@@ -8,15 +8,19 @@ git:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-    - bundle install # We need a pre-release CocoaPods version "1.1.0.rc.1"
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
-    - git submodule update --init --recursive
+  - xcrun instruments -w '237D7619-4A4E-4624-8925-67A42A8A690A' || true # xcodebuild exited with 65. WTF Apple https://github.com/travis-ci/travis-ci/issues/6675
+  - sleep 15
+  - bundle install # We need a pre-release CocoaPods version
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
+  - git submodule update --init --recursive
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
   - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
-  - git clone https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies.git
+  - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
+  - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
+  - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
