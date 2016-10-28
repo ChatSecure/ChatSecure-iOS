@@ -508,6 +508,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (!self.account || !self.rightBarButtonItem) {
         return;
     }
+    //TODO: Probably not the best way to set the message security. This should be improved by picking better defaults and the buddy info view controller
+    BOOL supportsOMEMO = [self.xmppManager.omemoSignalCoordinator buddySupportsOMEMO:self.threadKey];
+    if (supportsOMEMO) {
+        self.state.messageSecurity = OTRMessageSecurityOMEMO;
+        return;
+    }
+    
     [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
         if( isGeneratingKey) {
             [self addLockSpinner];
@@ -1335,15 +1342,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             return [[NSAttributedString alloc] initWithString:waitingString attributes:iconAttributes];
             
         } else {
-            ////// Lock Icon //////
-            NSString *lockString = nil;
-            if (message.messageSecurity == OTRMessageSecurityOTR) {
-                lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
-            }
-            else {
-                lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
-            }
-            
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
             
             //Delivery icon
