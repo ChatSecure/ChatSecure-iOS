@@ -192,6 +192,7 @@ import YapDatabase
      - parameter messageBody: The boddy of the message
      - parameter buddyYapKey: The unique buddy yap key. Used for looking up the username and devices 
      - parameter messageId: The preffered XMPP element Id to be used.
+     - parameter completion: The completion block is called after all the necessary omemo preperation has completed and sendKeyData:iv:toJID:payload:elementId: is invoked
      */
     public func encryptAndSendMessage(messageBody:String, buddyYapKey:String, messageId:String?, completion:(Bool,NSError?) -> Void) {
         // Gather bundles for buddy and account here

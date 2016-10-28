@@ -223,7 +223,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol:OTRProtocol = self.protocolManager?.protocolForAccount(account) else {
+        guard let accountProtocol = self.protocolManager?.protocolForAccount(account) as? OTRXMPPManager else {
             completion(success: false, retryTimeout: -1)
             return
         }
@@ -239,28 +239,47 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus() == .Connected) {
-            //Get necessary objects for OTRKit
             
-            //We're connected now we need to check encryption requirements
-            OTRKit.sharedInstance().messageStateForUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString(), completion: { (messageState) in
-                
-                // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
-                if ((message.messageSecurity == .OTR && messageState == .Encrypted) || message.messageSecurity == .Plaintext) {
-                    guard let text = message.text else {
-                        return
-                    }
-                    self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-                    OTRKit.sharedInstance().encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
-                } else {
-                    //We need to initate an OTR session
+            //Make sure we have some text to send
+            guard let text = message.text else {
+                return
+            }
+            
+            //Get necessary objects for OTRKit
+            if (message.messageSecurity == .OMEMO) {
+                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
+                accountProtocol.omemoSignalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
+                    //TODO: Update message with error object
                     
-                    //Timeout at some point waiting for OTR session
-                    let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
-                    self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,messageSecurity:message.messageSecurity, timer:timer, completion: completion)
-                    OTRKit.sharedInstance().initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
-                }
-                
-            })
+                    if (!success) {
+                        //Something went wrong getting ready to send the message
+                        if let messageInfo = self?.popWaitingMessage(message.uniqueId, messageCollection: message.dynamicType.collection()) {
+                            messageInfo.completion(success: success, retryTimeout: -1)
+                        }
+                    }
+                })
+            } else if (message.messageSecurity == .OTR || message.messageSecurity == .Plaintext) {
+                //We're connected now we need to check encryption requirements
+                OTRKit.sharedInstance().messageStateForUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString(), completion: { (messageState) in
+                    
+                    // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
+                    if ((message.messageSecurity == .OTR && messageState == .Encrypted) || message.messageSecurity == .Plaintext) {
+                        
+                        self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
+                        OTRKit.sharedInstance().encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
+                    } else {
+                        //We need to initate an OTR session
+                        
+                        //Timeout at some point waiting for OTR session
+                        let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
+                        self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,messageSecurity:message.messageSecurity, timer:timer, completion: completion)
+                        OTRKit.sharedInstance().initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
+                    }
+                    
+                })
+            }
+            
+            
             
             
         } else if (account.autologin == true) {
