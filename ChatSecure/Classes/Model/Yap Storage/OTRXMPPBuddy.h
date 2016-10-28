@@ -7,15 +7,11 @@
 //
 
 #import "OTRBuddy.h"
+#import "OTRvCard.h"
 
 @class XMPPvCardTemp;
 
-@interface OTRXMPPBuddy : OTRBuddy
-
-@property (nonatomic, strong) XMPPvCardTemp *vCardTemp;
-@property (nonatomic, strong) NSDate *lastUpdatedvCardTemp;
-@property (nonatomic, getter =  isWaitingForvCardTempFetch) BOOL waitingForvCardTempFetch;
-@property (nonatomic, strong) NSString *photoHash;
+@interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
 
 /** This is for outgoing subscription requests */
 @property (nonatomic, getter = isPendingApproval) BOOL pendingApproval;

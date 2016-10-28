@@ -52,8 +52,8 @@ extension PushMessage: OTRMessageProtocol {
         return self.error
     }
     
-    public func transportedSecurely() -> Bool {
-        return false
+    public func messageSecurity() -> OTRMessageSecurity {
+        return .Plaintext
     }
     
     public func messageRead() -> Bool {
@@ -95,12 +95,11 @@ extension PushMessage: YapDatabaseRelationshipNode {
 extension PushMessage {
     func account() -> OTRAccount? {
         var account:OTRAccount? = nil
-        guard let key = self.buddyKey else {
-            return nil
-        }
         OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection .readWithBlock { (transaction) -> Void in
-            if let buddy = OTRBuddy.fetchObjectWithUniqueID(key, transaction: transaction) {
-                account = buddy.accountWithTransaction(transaction)
+            if let buddyKey = self.buddyKey {
+                if let buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction) {
+                    account = buddy.accountWithTransaction(transaction)
+                }
             }
         }
         return account

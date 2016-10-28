@@ -9,6 +9,7 @@
 import UIKit
 import XLForm
 import ParkedTextField
+import OTRAssets
 
 public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
     public func isValid(row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
@@ -30,8 +31,6 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var usernameField: ParkedTextField!
     
-    public static let kOTRFormRowDescriptorTypeUsername = "kOTRFormRowDescriptorTypeUsername"
-    
     deinit {
         self.usernameField.delegate = nil
     }
@@ -44,9 +43,7 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     override public class func initialize() {
         // Register xib
-        XLFormViewController.cellClassesForRowDescriptorTypes()
-            .setObject("OTRResources.bundle/OTRUsernameCell",
-                forKey: OTRUsernameCell.kOTRFormRowDescriptorTypeUsername)
+        registerCellClass(defaultRowDescriptorType())
     }
     
     // MARK: XLFormBaseCell overrides

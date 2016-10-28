@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 @import UIKit;
-@import HockeySDK_Source;
 
 @class OTRTheme;
 @class OTRSettingsViewController;
@@ -32,7 +31,7 @@
 @protocol OTRThreadOwner;
 
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;

@@ -58,6 +58,7 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 - (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated;
 
 - (void) disconnect;
+- (void) disconnectSocketOnly:(BOOL)socketOnly;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
 
 - (void) removeBuddies:(NSArray *)buddies;

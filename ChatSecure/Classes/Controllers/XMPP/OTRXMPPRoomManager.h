@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XMPPModule.h"
+@import XMPPFramework;
 @class XMPPJID, YapDatabaseConnection;
 
 @interface OTRXMPPRoomManager : XMPPModule

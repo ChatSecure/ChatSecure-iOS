@@ -10,6 +10,7 @@
 @import OTRAssets;
 
 @implementation OTRDonateSetting
+@synthesize delegate = _delegate;
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription
 {

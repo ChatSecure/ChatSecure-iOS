@@ -8,7 +8,7 @@
 
 #import "OTRXMPPError.h"
 
-#import "NSXMLElement+XMPP.h"
+@import XMPPFramework;
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -89,6 +89,8 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
         case kSecTrustResultRecoverableTrustFailure : return @"Rejected Certificate";
         case kSecTrustResultFatalTrustFailure :return @"Bad Certificate";
         case kSecTrustResultOtherError: return @"Error evaluating certificate";
+        case kSecTrustResultProceed: return @"Proceed";
+        default: return @"Unknown";
     }
     return nil;
 }

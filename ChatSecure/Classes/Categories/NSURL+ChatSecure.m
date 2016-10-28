@@ -8,7 +8,7 @@
 
 #import "NSURL+ChatSecure.h"
 #import "OTRConstants.h"
-#import "XMPPJID.h"
+@import XMPPFramework;
 @import OTRAssets;
 
 @implementation NSURL (ChatSecure)

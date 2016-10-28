@@ -11,6 +11,8 @@
 #import "OTRListSettingValue.h"
 
 @implementation OTRListSetting
+@synthesize delegate = _delegate;
+@synthesize defaultValue = _defaultValue;
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {

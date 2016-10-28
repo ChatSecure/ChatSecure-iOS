@@ -21,6 +21,7 @@
 #import "OTRLanguageManager.h"
 
 @import OTRAssets;
+@import XLForm;
 
 @interface OTRBuddyViewController ()
 

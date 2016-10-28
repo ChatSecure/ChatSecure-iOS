@@ -14,6 +14,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 @implementation XMPPServerInfoCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     self.onionImageView.layer.minificationFilter = kCAFilterTrilinear;
     self.logoImageView.layer.minificationFilter = kCAFilterTrilinear;

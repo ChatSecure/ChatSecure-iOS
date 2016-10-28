@@ -6,7 +6,6 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 #import "OTRYapDatabaseObject.h"
-@import YapTaskQueue;
 
 /**
  * This class represents a send action. The way it works is at the same time or after a OTRMessage 
@@ -15,7 +14,7 @@
  *
  * Todo: add yap relationship edge so that it is deleted if the message is deleted.
  */
-@interface OTRYapMessageSendAction : OTRYapDatabaseObject <YapTaskQueueAction>
+@interface OTRYapMessageSendAction : OTRYapDatabaseObject
 
 @property (nonatomic, strong, nonnull) NSString *messageKey;
 @property (nonatomic, strong, nonnull) NSString *messageCollection;

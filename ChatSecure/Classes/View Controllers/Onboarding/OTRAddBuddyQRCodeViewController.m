@@ -11,7 +11,7 @@
 #import "PureLayout.h"
 #import "OTRQRCodeReaderDelegate.h"
 #import "OTRQRCodeViewController.h"
-#import "XMPPURI.h"
+@import XMPPFramework;
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
 #import "NSURL+ChatSecure.h"

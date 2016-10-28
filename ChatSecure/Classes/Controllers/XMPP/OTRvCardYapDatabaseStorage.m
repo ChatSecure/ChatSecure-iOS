@@ -10,8 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "XMPPJID.h"
-#import "XMPPvCardTemp.h"
+@import XMPPFramework;
 
 @interface OTRvCardYapDatabaseStorage ()
 
@@ -38,7 +37,6 @@
     return [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
 }
 
-
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream;
 {
     __block OTRXMPPBuddy *buddy = nil;
@@ -48,17 +46,38 @@
     return buddy;
 }
 
+
+- (OTRXMPPAccount*)accountWithStream:(XMPPStream*)stream {
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
+    }];
+    return account;
+}
+
 #pragma - mark XMPPvCardAvatarStorage Methods
 
 - (NSData *)photoDataForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    return [self buddyWithJID:jid xmppStream:stream].avatarData;
+    NSData *photoData = nil;
+    if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+        photoData = [self accountWithStream:stream].avatarData;
+    } else {
+        photoData = [self buddyWithJID:jid xmppStream:stream].avatarData;
+    }
+    return photoData;
     
 }
 
 - (NSString *)photoHashForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    return [self buddyWithJID:jid xmppStream:stream].photoHash;
+    NSString *photoHash = nil;
+    if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+        photoHash = [self accountWithStream:stream].photoHash;
+    } else {
+        photoHash = [self buddyWithJID:jid xmppStream:stream].photoHash;
+    }
+    return photoHash;
 }
 
 /**
@@ -68,10 +87,14 @@
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-        buddy.vCardTemp = nil;
-        
-        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        id<OTRvCard> vCard = nil;
+        if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+            vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
+        } else {
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
+        }
+        vCard.vCardTemp = nil;
+        [vCard saveWithTransaction:transaction];
     }];
 }
 
@@ -101,8 +124,13 @@
  **/
 - (XMPPvCardTemp *)vCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
-    return buddy.vCardTemp;
+    XMPPvCardTemp *vCardTemp = nil;
+    if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+        vCardTemp = [self accountWithStream:stream].vCardTemp;
+    } else {
+        vCardTemp = [self buddyWithJID:jid xmppStream:stream].vCardTemp;
+    }
+    return vCardTemp;
 }
 
 /**
@@ -111,20 +139,16 @@
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-        
+        id<OTRvCard> vCard = nil;
         if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
-            //this is the self buddy
-            OTRXMPPAccount *account = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
-            account.avatarData = vCardTemp.photo;
-            [account saveWithTransaction:transaction];
+            vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
+        } else {
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         }
-        
-        buddy.vCardTemp = vCardTemp;
-        buddy.waitingForvCardTempFetch = NO;
-        buddy.lastUpdatedvCardTemp = [NSDate date];
-        
-        [buddy saveWithTransaction:transaction];
+        vCard.vCardTemp = vCardTemp;
+        vCard.waitingForvCardTempFetch = NO;
+        vCard.lastUpdatedvCardTemp = [NSDate date];
+        [vCard saveWithTransaction:transaction];
     }];
     
 }
@@ -138,7 +162,7 @@
         return nil;
     }
     
-    return [self buddyWithJID:stream.myJID xmppStream:stream].vCardTemp;
+    return [self accountWithStream:stream].vCardTemp;
 }
 
 /**
@@ -151,28 +175,24 @@
     if (![stream isAuthenticated]) {
         return NO;
     }
+    
     __block BOOL result = NO;
     
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        OTRXMPPBuddy * buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-        if (!buddy.isWaitingForvCardTempFetch) {
-            
-            buddy.waitingForvCardTempFetch = YES;
-            buddy.lastUpdatedvCardTemp = [NSDate date];
-            
-            result = YES;
-        }
-        else if ([buddy.lastUpdatedvCardTemp timeIntervalSinceNow] <= -10) {
-            
-            buddy.lastUpdatedvCardTemp = [NSDate date];
-            
-            result = YES;
+        id<OTRvCard> vCard = nil;
+        if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+            vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
+        } else {
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         }
         
-        
-        if (result) {
-            [buddy saveWithTransaction:transaction];
+        if (vCard.waitingForvCardTempFetch) {
+            result = NO;
+        } else if ([vCard.lastUpdatedvCardTemp timeIntervalSinceNow] <= -24*60*60 ||
+                   !vCard.vCardTemp) {
+            vCard.waitingForvCardTempFetch = YES;
+            [vCard saveWithTransaction:transaction];
+            result = YES;
         }
     }];
     

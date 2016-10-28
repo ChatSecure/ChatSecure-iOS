@@ -74,7 +74,7 @@
                 }
                 
                 message.read = YES;
-                message.transportedSecurely = YES;
+                message.messageSecurity = OTRMessageSecurityOTR;
                 buddy.lastMessageDate = message.date;
                 
                 [message saveWithTransaction:transaction];

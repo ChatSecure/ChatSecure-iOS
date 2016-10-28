@@ -31,7 +31,7 @@
 - (instancetype) initWithHeaderLabel:(TTTAttributedLabel*)headerLabel {
     NSString *plistPath = [[self class] defaultAcknowledgementsPlistPath];
     if (!plistPath) {
-        plistPath = [[NSBundle mainBundle] pathForResource:@"Pods-ChatSecureCore-acknowledgements" ofType:@"plist"];
+        plistPath = [[NSBundle mainBundle] pathForResource:@"Pods-ChatSecureCorePods-ChatSecure-acknowledgements" ofType:@"plist"];
     }
     if (self = [super initWithAcknowledgementsPlistPath:plistPath]) {
         self.headerText = headerLabel.text;

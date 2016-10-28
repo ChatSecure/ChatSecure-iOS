@@ -8,13 +8,13 @@
 
 #import "OTRXMPPLoginHandler.h"
 #import "OTRXMPPManager.h"
-#import "XLForm.h"
+@import XLForm;
 #import "OTRXLFormCreator.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "XMPPJID.h"
+@import XMPPFramework;
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRTorManager.h"
@@ -150,6 +150,7 @@
     }
     account.username = jid.bare;
     account.resource = jid.resource;
+    account.displayName = nickname;
     
     // Use server's .onion if possible, else use FQDN
     if (account.accountType == OTRAccountTypeXMPPTor) {

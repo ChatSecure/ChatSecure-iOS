@@ -7,7 +7,7 @@
 //
 
 #import "OTRStreamManagementYapStorage.h"
-#import "XMPPStreamManagement.h"
+@import XMPPFramework;
 #import "YapDatabaseConnection.h"
 #import "OTRStreamManagementStorageObject.h"
 

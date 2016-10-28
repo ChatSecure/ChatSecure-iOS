@@ -10,7 +10,7 @@
 #import "XMPPServerInfoCell.h"
 #import "OTRImages.h"
 @import OTRAssets;
-#import "XLFormTextFieldCell.h"
+@import XLForm;
 #import "OTRXMPPServerInfo.h"
 #import "OTRLanguageManager.h"
 

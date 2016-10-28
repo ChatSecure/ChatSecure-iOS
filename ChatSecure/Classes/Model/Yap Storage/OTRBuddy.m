@@ -212,7 +212,7 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
         // Checking buddy class is a hotfix for issue #472
         if (buddy &&
             [buddy isKindOfClass:[OTRBuddy class]] &&
-            [buddy.username isEqualToString:username]) {
+            [buddy.username.lowercaseString isEqualToString:username.lowercaseString]) {
             *stop = YES;
             finalBuddy = buddy;
         }

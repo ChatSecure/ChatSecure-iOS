@@ -8,15 +8,16 @@
 
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
-#import "XMPPStream.h"
+@import XMPPFramework;
 #import "OTRXMPPTorAccount.h"
+#import "OTRXMPPError.h"
 
 @interface OTRXMPPTorManager()
 @property (nonatomic, strong) OTRXMPPTorAccount *account;
 @end
 
 @implementation OTRXMPPTorManager
-
+@synthesize account = _account;
 @synthesize xmppStream = _xmppStream;
 
 - (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated

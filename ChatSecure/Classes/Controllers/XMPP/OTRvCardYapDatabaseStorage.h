@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "XMPPvCardTempModule.h"
-#import "XMPPvCardAvatarModule.h"
+@import XMPPFramework;
 
 @interface OTRvCardYapDatabaseStorage : NSObject <XMPPvCardAvatarStorage,XMPPvCardTempModuleStorage>
 

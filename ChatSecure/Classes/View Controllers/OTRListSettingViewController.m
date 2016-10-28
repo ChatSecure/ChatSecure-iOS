@@ -18,6 +18,7 @@
 @end
 
 @implementation OTRListSettingViewController
+@synthesize otrSetting = _otrSetting;
 
 -(void) viewDidLoad
 {

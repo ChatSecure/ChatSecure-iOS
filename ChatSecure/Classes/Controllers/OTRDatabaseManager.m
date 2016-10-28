@@ -11,7 +11,7 @@
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
 #import "OTRDatabaseView.h"
-#import <SSKeychain/SSKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
@@ -26,11 +26,15 @@
 @import YapDatabase.YapDatabaseSearchResultsView;
 @import YapTaskQueue;
 #import "OTRLanguageManager.h"
+#import "OTRSignalSession.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName = @"OTRYapDatabseMessageIdSecondaryIndex";
 NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
 NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
+NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDatabaseSignalSessionSecondaryIndexColumnName";
+NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName";
+NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName";
 
 @interface OTRDatabaseManager ()
 
@@ -43,14 +47,17 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
 @end
 
 @implementation OTRDatabaseManager
-
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+    return [self setupDatabaseWithName:databaseName withMediaStorage:YES];
+}
+
+- (BOOL) setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage {
     BOOL success = NO;
     if ([self setupYapDatabaseWithName:databaseName] )
     {
         success = YES;
     }
-    if (success) success = [self setupSecureMediaStorage];
+    if (success && withMediaStorage) success = [self setupSecureMediaStorage];
     
     NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
     //Enumerate all files in yap database directory and exclude from backup
@@ -174,6 +181,9 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:OTRYapDatabaseSignalSessionSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -193,9 +203,28 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
                 [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName];
             }
         }
+        
+        if ([object isKindOfClass:[OTRSignalSession class]]) {
+            OTRSignalSession *session = (OTRSignalSession *)object;
+            if ([session.name length]) {
+                NSString *value = [NSString stringWithFormat:@"%@-%@",session.accountKey, session.name];
+                [dict setObject:value forKey:OTRYapDatabaseSignalSessionSecondaryIndexColumnName];
+            }
+        }
+        
+        if ([object isKindOfClass:[OTRSignalPreKey class]]) {
+            OTRSignalPreKey *preKey = (OTRSignalPreKey *)object;
+            NSNumber *keyId = @(preKey.keyId);
+            if (keyId) {
+                [dict setObject:keyId forKey:OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName];
+            }
+            if (preKey.accountKey) {
+                [dict setObject:preKey.accountKey forKey:OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName];
+            }
+        }
     }];
     
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1"];
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"2"];
     
     return secondaryIndex;
 }
@@ -242,9 +271,9 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
 {
     if (rememeber) {
         self.inMemoryPassphrase = nil;
-        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
+        [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
     } else {
-        [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
 }
@@ -260,7 +289,7 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
         return self.inMemoryPassphrase;
     }
     else {
-        return [SSKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        return [SAMKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
     }
     
 }

@@ -1,5 +1,5 @@
+osx_image: xcode8
 language: objective-c
-osx_image: xcode7.3
 
 # Handle git submodules yourself
 # http://stackoverflow.com/a/24600210/805882
@@ -8,20 +8,28 @@ git:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
-    - git submodule update --init --recursive
+  - xcrun instruments -w '237D7619-4A4E-4624-8925-67A42A8A690A' || true # xcodebuild exited with 65. WTF Apple https://github.com/travis-ci/travis-ci/issues/6675
+  - sleep 15
+  - bundle install # We need a pre-release CocoaPods version
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
+  - git submodule update --init --recursive
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
   - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
-  - export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
-  - bash ./Submodules/CPAProxy/scripts/build-all.sh
-  - bash ./Submodules/OTRKit/scripts/build-all.sh
+  - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
+  - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
+  - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
-#  - gem install cocoapods --no-rdoc --no-ri # Need Cocoapods >= 0.34.1
   - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # https://github.com/CocoaPods/CocoaPods/issues/3850
-  - pod install
+  - bundle exec pod repo update --silent
+  - bundle exec pod install
+  - bundle exec pod update libsqlfs SQLCipher --no-repo-update # Waiting for CocoaPods fix https://github.com/CocoaPods/CocoaPods/pull/5844
 script:
-  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -arch i386 test
+  - set -o pipefail
+  - xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination 'name=iPhone 6' test | xcpretty -c

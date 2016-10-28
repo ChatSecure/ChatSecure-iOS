@@ -18,6 +18,9 @@
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName;
 
 @interface OTRDatabaseManager : NSObject
 
@@ -38,6 +41,7 @@ extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
  @return whether setup was successful
  */
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage;
 
 - (YapDatabaseConnection *)newConnection;
 
@@ -50,7 +54,9 @@ extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
 
 + (BOOL)existsYapDatabase;
 
++ (NSString *)yapDatabaseDirectory;
 + (NSString *)yapDatabasePathWithName:(NSString *)name;
+
 
 + (instancetype)sharedInstance;
 

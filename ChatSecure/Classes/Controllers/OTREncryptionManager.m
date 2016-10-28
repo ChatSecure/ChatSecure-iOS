@@ -145,6 +145,34 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     });
 }
 
+- (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection {
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        id databaseObject = [transaction objectForKey:buddyKey inCollection:collection];
+        if ([databaseObject isKindOfClass:[OTRBuddy class]]) {
+            buddy = databaseObject;
+            account = [buddy accountWithTransaction:transaction];
+        }
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+        
+        if (buddy.status == OTRThreadStatusOffline) {
+            //If the buddy if offline then don't try to start the session up
+            return;
+        }
+        
+        [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
+            if ([activeFingerprint count] > 0) {
+                [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+                    if (messageState != OTRKitMessageStateEncrypted) {
+                        [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+                    }
+                }];
+            }
+        }];
+    }];
+}
+
 
 #pragma mark OTRKitDelegate methods
 
@@ -196,7 +224,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         else if ([encodedMessage length]) {
             if (wasEncrypted) {
-                message.transportedSecurely = YES;
+                message.messageSecurity = OTRMessageSecurityOTR;
             }
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -241,7 +269,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         originalMessage.text = decodedMessage;
         
         if (wasEncrypted) {
-            originalMessage.transportedSecurely = YES;
+            originalMessage.messageSecurity = OTRMessageSecurityOTR;
         }
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
@@ -270,6 +298,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
+        if(!buddy) {
+            // We couldn't find the budy. This is very strange and shouldn't happen.
+            return;
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@([[self class] convertEncryptionState:messageState])}];
     }];
 }
@@ -340,6 +373,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 message.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
                 [message saveWithTransaction:transaction];
             }];
+            // Inject message to recipient indicating error
+            NSString *errorString = [NSString stringWithFormat:@"OTR Error: %@", [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription];
+            [self otrKit:self.otrKit injectMessage:errorString username:username accountName:accountName protocol:protocol tag:tag];
             // automatically renegotiate a new session when there's an error
             [self.otrKit initiateEncryptionWithUsername:username accountName:accountName protocol:protocol];
         }
@@ -392,7 +428,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSInteger code = 200 + event;
     NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING];
     if (string.length) {
-        [description appendFormat:@"\n\n%@", string];
+        [description appendFormat:@"\n\n%@: %@", string, eventString];
     }
     NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:description} mutableCopy];
     if ([eventString length]) {
@@ -513,7 +549,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //Create placeholder for updating progress
     
     OTRMessage *newMessage = [((OTRMessage *)transfer.tag) copy];
-    newMessage.transportedSecurely = YES;
+    newMessage.messageSecurity = OTRMessageSecurityOTR;
     newMessage.text = nil;
     
     NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];

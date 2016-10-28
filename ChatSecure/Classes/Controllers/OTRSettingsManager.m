@@ -75,12 +75,6 @@
     
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
     
-    OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING
-                                                                         description:DISCONNECTION_WARNING_DESC_STRING
-                                                                         settingsKey:kOTRSettingKeyShowDisconnectionWarning];
-    showDisconnectionWarning.defaultValue = @(NO);
-    [newSettingsDictionary setObject:showDisconnectionWarning forKey:kOTRSettingKeyShowDisconnectionWarning];
-    
     OTRBoolSetting *opportunisticOtrSetting = [[OTRBoolSetting alloc] initWithTitle:OPPORTUNISTIC_OTR_SETTING_TITLE
                                                                         description:OPPORTUNISTIC_OTR_SETTING_DESCRIPTION
                                                                         settingsKey:kOTRSettingKeyOpportunisticOtr];
@@ -110,7 +104,7 @@
     NSArray * securitySettings;
     
     
-    chatSettings = [NSArray arrayWithObjects:deletedDisconnectedConversations, showDisconnectionWarning, nil];
+    chatSettings = [NSArray arrayWithObjects:deletedDisconnectedConversations, nil];
     
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [self.settingsGroups addObject:chatSettingsGroup];

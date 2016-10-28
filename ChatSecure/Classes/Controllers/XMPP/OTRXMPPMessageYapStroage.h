@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPModule.h"
+@import XMPPFramework;
 #import "YapDatabaseConnection.h"
 @class XMPPMessage;
 

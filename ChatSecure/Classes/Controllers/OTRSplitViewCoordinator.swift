@@ -41,6 +41,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
         }
         if let b = buddy {
+            OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSessionForBuddyKey(b.threadIdentifier(), collection: b.threadCollection())
             self.enterConversationWithThread(b, sender: nil)
         }
     }
@@ -69,6 +70,8 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         guard let mVC = messagesViewController, navController = appDelegate?.messagesNavigationController else {
             return
         }
+        
+        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSessionForBuddyKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
         
         //Set nav controller root view controller to mVC and then show detail with nav controller
         

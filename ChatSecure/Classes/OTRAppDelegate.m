@@ -36,7 +36,7 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-#import <SSKeychain/SSKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
@@ -46,29 +46,33 @@
 @import YapDatabase;
 
 #import "OTRCertificatePinning.h"
-#import "NSData+XMPP.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRDatabaseUnlockViewController.h"
 #import "OTRMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
-#import "XMPPURI.h"
+@import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
+#import <HockeySDK_Source/HockeySDK.h>
 @import OTRAssets;
+@import OTRKit;
+#import "OTRPushTLVHandlerProtocols.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
 #endif
 
-@interface OTRAppDelegate ()
+@interface OTRAppDelegate () <BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
+
+@property (nonatomic, strong) NSTimer *fetchTimer;
 
 @end
 
@@ -86,7 +90,7 @@
     _theme = [[[self themeClass] alloc] init];
     [self.theme setupGlobalTheme];
     
-    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+    [SAMKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
     
     UIViewController *rootViewController = nil;
     
@@ -158,9 +162,15 @@
     }];
     
     [self autoLoginFromBackground:NO];
+    [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     
     [self removeFacebookAccounts];
-        
+    
+    // For disabling screen dimming while plugged in
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateDidChange:) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+    [self batteryStateDidChange:nil];
+    
     return YES;
 }
 
@@ -294,8 +304,9 @@
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            DDLogInfo(@"Background task expired");
-            if (self.backgroundTimer) 
+            DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
+            [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
+            if (self.backgroundTimer)
             {
                 [self.backgroundTimer invalidate];
                 self.backgroundTimer = nil;
@@ -306,39 +317,14 @@
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
     });
 }
                                 
 - (void) timerUpdate:(NSTimer*)timer {
     UIApplication *application = [UIApplication sharedApplication];
-
-    DDLogInfo(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
-    
-    if ([application backgroundTimeRemaining] < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning]) 
-    {
-        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
-        if (localNotif) {
-            localNotif.alertBody = EXPIRATION_STRING;
-            localNotif.alertAction = OK_STRING;
-            localNotif.soundName = UILocalNotificationDefaultSoundName;
-            [application presentLocalNotificationNow:localNotif];
-        }
-        self.didShowDisconnectionWarning = YES;
-    }
-    if ([application backgroundTimeRemaining] < 15)
-    {
-        // Clean up here
-        [self.backgroundTimer invalidate];
-        self.backgroundTimer = nil;
-        
-        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [application endBackgroundTask:self.backgroundTask];
-            self.backgroundTask = UIBackgroundTaskInvalid;
-        });
-    }
+    NSTimeInterval timeRemaining = application.backgroundTimeRemaining;
+    DDLogVerbose(@"Timer update, background time left: %f", timeRemaining);
 }
 
 /** Doesn't stop autoLogin if previous crash when it's a background launch */
@@ -362,6 +348,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [self batteryStateDidChange:nil];
     
     DDLogInfo(@"Application became active");
     
@@ -377,6 +364,19 @@
     }
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     application.applicationIconBadgeNumber = 0;
+    
+    if (self.fetchTimer) {
+        if (self.fetchTimer.isValid) {
+            NSDictionary *userInfo = self.fetchTimer.userInfo;
+            void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
+            // We should probbaly return accurate fetch results
+            if (completion) {
+                completion(UIBackgroundFetchResultNewData);
+            }
+            [self.fetchTimer invalidate];
+        }
+        self.fetchTimer = nil;
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -394,23 +394,35 @@
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 
+-(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [self autoLoginFromBackground:YES];
+    
+    self.fetchTimer = [NSTimer scheduledTimerWithTimeInterval:28.5 target:self selector:@selector(fetchTimerUpdate:) userInfo:@{@"completion": completionHandler} repeats:NO];
+}
+
+- (void) fetchTimerUpdate:(NSTimer*)timer {
+    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
+    NSDictionary *userInfo = timer.userInfo;
+    void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // We should probbaly return accurate fetch results
+        if (completion) {
+            completion(UIBackgroundFetchResultNewData);
+        }
+    });
+    self.fetchTimer = nil;
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [self autoLoginFromBackground:YES];
-
+    [self application:application performFetchWithCompletionHandler:completionHandler];
+    
     [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
         // Only show notification if buddy lookup succeeds
         if (buddy) {
             [application showLocalNotificationForKnockFrom:buddy];
         }
     }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            completionHandler(UIBackgroundFetchResultNewData);
-        });
-    });
 }
 
 - (BOOL) application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
@@ -522,12 +534,24 @@
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
+// To improve usability, keep the app open when you're plugged in
+- (void) batteryStateDidChange:(NSNotification*)notification {
+    UIDeviceBatteryState currentState = [[UIDevice currentDevice] batteryState];
+    if (currentState == UIDeviceBatteryStateCharging || currentState == UIDeviceBatteryStateFull) {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    } else {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    }
+}
+
 #pragma - mark Getters and Setters
 
 - (PushController *)pushController{
     if (!_pushController) {
         NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
-        OTRPushTLVHandler *tlvHandler = [OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
+        // Casting here because it's easier than figuring out the
+        // non-modular include spaghetti mess
+        id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)[OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
         _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
 
     }

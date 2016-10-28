@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "XMPPRoster.h"
+@import XMPPFramework;
 
 @interface OTRYapDatabaseRosterStorage : NSObject <XMPPRosterStorage>
 

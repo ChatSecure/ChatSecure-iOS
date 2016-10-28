@@ -23,54 +23,54 @@ typedef NS_ENUM(int, OTRChatState) {
 @class OTRAccount, OTRMessage;
 
 extern const struct OTRBuddyAttributes {
-	__unsafe_unretained NSString *username;
-	__unsafe_unretained NSString *displayName;
-	__unsafe_unretained NSString *composingMessageString;
-	__unsafe_unretained NSString *statusMessage;
-	__unsafe_unretained NSString *chatState;
-    __unsafe_unretained NSString *lastSentChatState;
-    __unsafe_unretained NSString *status;
-    __unsafe_unretained NSString *lastMessageDate;
-    __unsafe_unretained NSString *avatarData;
-    __unsafe_unretained NSString *encryptionStatus;
+	__unsafe_unretained NSString * _Nonnull username;
+	__unsafe_unretained NSString * _Nonnull displayName;
+	__unsafe_unretained NSString * _Nonnull composingMessageString;
+	__unsafe_unretained NSString * _Nonnull statusMessage;
+	__unsafe_unretained NSString * _Nonnull chatState;
+    __unsafe_unretained NSString * _Nonnull lastSentChatState;
+    __unsafe_unretained NSString * _Nonnull status;
+    __unsafe_unretained NSString * _Nonnull lastMessageDate;
+    __unsafe_unretained NSString * _Nonnull avatarData;
+    __unsafe_unretained NSString * _Nonnull encryptionStatus;
 } OTRBuddyAttributes;
 
 @interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner>
 
-@property (nonatomic, strong) NSString *username;
-@property (nonatomic, strong) NSString *displayName;
-@property (nonatomic, strong) NSString *composingMessageString;
-@property (nonatomic, strong) NSString *statusMessage;
+@property (nonatomic, strong, nonnull) NSString *username;
+@property (nonatomic, strong, nullable) NSString *displayName;
+@property (nonatomic, strong, nullable) NSString *composingMessageString;
+@property (nonatomic, strong, nullable) NSString *statusMessage;
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRThreadStatus status;
 
 /** the date last message was received for buddy. also used by incoming/outgoing subscription requests to force buddy to appear in conversation view */
-@property (nonatomic, strong) NSDate *lastMessageDate;
+@property (nonatomic, strong, nullable) NSDate *lastMessageDate;
 
 /**
  * Setting this value does a comparison of against the previously value
  * to invalidate the OTRImages cache.
  */
-@property (nonatomic, strong) NSData *avatarData;
+@property (nonatomic, strong, nullable) NSData *avatarData;
 
-@property (nonatomic, strong) NSString *accountUniqueId;
+@property (nonatomic, strong, nonnull) NSString *accountUniqueId;
 
-- (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
-- (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
-- (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction;
+- (nullable OTRMessage *)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (void)updateLastMessageDateWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
-+ (instancetype)fetchBuddyForUsername:(NSString *)username
-                          accountName:(NSString *)accountName
-                          transaction:(YapDatabaseReadTransaction *)transaction;
++ (nullable instancetype)fetchBuddyForUsername:(nonnull NSString *)username
+                          accountName:(nonnull NSString *)accountName
+                          transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
-+ (instancetype)fetchBuddyWithUsername:(NSString *)username
-                   withAccountUniqueId:(NSString *)accountUniqueId
-                           transaction:(YapDatabaseReadTransaction *)transaction;
++ (nullable instancetype)fetchBuddyWithUsername:(nonnull NSString *)username
+                   withAccountUniqueId:(nonnull NSString *)accountUniqueId
+                           transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 
-+ (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-+ (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
++ (void)resetAllChatStatesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
++ (void)resetAllBuddyStatusesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 
 
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPModule.h"
+@import XMPPFramework;
 
 @class AFSecurityPolicy;
 

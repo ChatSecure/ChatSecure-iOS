@@ -15,6 +15,7 @@ FOUNDATION_EXPORT double ChatSecureCoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 
 #import "OTRAccount.h"
+#import "OTRXMPPManager.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRXLFormCreator.h"
@@ -46,6 +47,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRComposeViewController.h"
 #import "OTRThreadOwner.h"
 #import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
 #import "OTRLanguageManager.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"
@@ -54,3 +56,13 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRYapMessageSendAction.h"
 #import "OTRBuddyInfoCell.h"
 #import "NSString+ChatSecure.h"
+
+//Signal Models
+#import "OTRAccountSignalIdentity.h"
+#import "OTRSignalSenderKey.h"
+#import "OTRSignalPreKey.h"
+#import "OTRSignalSignedPreKey.h"
+#import "OTRSignalSession.h"
+
+//OMEMO Models
+#import "OTROMEMODevice.h"

@@ -22,25 +22,17 @@
 
 @import Foundation;
 @import UIKit;
+@import XMPPFramework;
 
 #import "OTRBuddy.h"
 #import "OTRMessage.h"
-#import "XMPPFramework.h"
-#import "XMPPReconnect.h"
-#import "XMPPRoster.h"
-#import "XMPPCoreDataStorage.h"
-#import "XMPPRosterCoreDataStorage.h"
-#import "XMPPvCardCoreDataStorage.h"
-#import "XMPPCapabilities.h"
-#import "XMPPCapabilitiesCoreDataStorage.h"
 #import "OTRProtocol.h"
-#import "OTRXMPPBudyTimers.h"
-#import "OTRCertificatePinning.h"
-#import "OTRXMPPError.h"
 #import "OTRConstants.h"
-#import <ChatSecureCore/ChatSecureCore-swift.h>
+//#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager, OTRXMPPRoomManager;
+@class OTROMEMOSignalCoordinator;
+@protocol OTRCertificatePinningDelegate;
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
@@ -65,7 +57,7 @@ extern NSString *const OTRXMPPNewLoginStatusKey;
 extern NSString *const OTRXMPPLoginErrorKey;
 
 
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPReconnect *xmppReconnect;
@@ -75,12 +67,11 @@ extern NSString *const OTRXMPPLoginErrorKey;
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property (nonatomic, readonly) OTRXMPPRoomManager *roomManager;
+@property (nonatomic, strong) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property BOOL didSecure;
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
-@property (nonatomic, strong, readonly) NSString *accountUniqueId;
 @property (nonatomic, weak) id <PushControllerProtocol> pushController;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;

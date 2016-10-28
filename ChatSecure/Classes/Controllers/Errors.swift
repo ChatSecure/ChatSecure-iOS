@@ -25,7 +25,7 @@ public extension NSError {
             additionalDictionary.forEach { tempUserInfo.updateValue($1, forKey: $0) }
         }
         
-        return NSError(domain: kOTRErrorDomain, code: error.code(), userInfo: userInfo)
+        return NSError(domain: kOTRErrorDomain, code: error.code(), userInfo: tempUserInfo)
     }
 }
 
@@ -125,6 +125,34 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
             return "Server policy violation"
         }
     }
+    
+    public func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
+    }
+}
+
+@objc public enum OTROMEMOError: Int {
+    case UnknownError      = 1100
+    case NoDevicesForBuddy = 1101
+    case NoDevices         = 1102
+}
+
+extension OTROMEMOError: ChatSecureErrorProtocol {
+    public func code() -> Int {
+        return self.rawValue
+    }
+    
+    public func localizedDescription() -> String {
+        switch self {
+        case .UnknownError:
+            return "Unknown Error"
+        case .NoDevicesForBuddy:
+            return "Could not find any trusted devices for buddy and encrypt a message to them"
+        case .NoDevices:
+            return "Could not encrypt to any buddies"
+        }
+    }
+    
     
     public func additionalUserInfo() -> [String : AnyObject]? {
         return nil

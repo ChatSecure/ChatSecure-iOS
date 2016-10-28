@@ -9,7 +9,6 @@
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2SignIn.h"
-#import "OTRSecrets.h"
 @import OTRAssets;
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
@@ -71,8 +70,9 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
     if ([tokenDictionary count]) {
         auth = [[GTMOAuth2Authentication alloc] init];
         [auth setParameters:[tokenDictionary mutableCopy]];
+    } else {
+        return nil;
     }
-    NSParameterAssert(auth != nil);
     auth.clientID = [OTRBranding googleAppId];
     auth.clientSecret = [OTRSecrets googleAppSecret];
     auth.scope = [OTRBranding googleAppScope];

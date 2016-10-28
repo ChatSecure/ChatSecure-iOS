@@ -10,6 +10,7 @@
 
 @import OTRKit;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRButtonView : UIView
 
 @property (nonnull, strong) NSLayoutConstraint *topLayoutConstraint;
@@ -19,3 +20,4 @@
 + (CGFloat )heightForTitle:(NSString *)title width:(CGFloat)width buttons:(NSArray *)buttons;
 
 @end
+NS_ASSUME_NONNULL_END

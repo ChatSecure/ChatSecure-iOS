@@ -87,8 +87,8 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         return nil
     }
     
-    public func transportedSecurely() -> Bool {
-        return false;
+    public func messageSecurity() -> OTRMessageSecurity {
+        return .Plaintext;
     }
     
     public func remoteMessageId() -> String? {

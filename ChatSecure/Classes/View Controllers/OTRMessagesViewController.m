@@ -15,7 +15,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMessage+JSQMessageData.h"
-#import "JSQMessages.h"
+@import JSQMessagesViewController;
 #import "OTRProtocolManager.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPManager.h"
@@ -113,7 +113,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
     ////// Lock Button //////
-    [self setupLockButton];
+    //[self setupLockButton];
+    
+    // Info Button
+#warning OMEMO Debug
+    [self setupInfoButton];
     
      ////// TitleView //////
     self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
@@ -275,6 +279,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
     [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
     [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
     [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     [self.collectionView reloadData];
 }
@@ -313,7 +318,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
         
         // Update Buddy Status
+        BOOL previousState = self.state.isThreadOnline;
         self.state.isThreadOnline = buddy.status != OTRThreadStatusOffline;
+        
+        // Auto-inititate OTR when contact comes online
+        if (!previousState && self.state.isThreadOnline) {
+            [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
+        }
         [self didUpdateState];
         
         //Update Buddy knock status
@@ -391,6 +402,35 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 #pragma - mark lockButton Methods
+
+- (void)setupInfoButton {
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+}
+
+- (void) infoButtonPressed:(id)sender {
+    
+    __block NSArray <OTROMEMODevice *> *ourDevices = @[];
+    __block NSArray <OTROMEMODevice *> *theirDevices = @[];
+    OTRAccount *account = [self account];
+    OTRBuddy *buddy = [self buddy];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        ourDevices = [OTROMEMODevice allDevicesForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
+        theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
+    }];
+    
+    // Make a "thisDevice" because it isn't necessarily stored automatically
+    OMEMOBundle *myBundle = [self.xmppManager.omemoSignalCoordinator fetchMyBundle];
+    OTROMEMODevice *thisDevice = [[OTROMEMODevice alloc] initWithDeviceId:@(myBundle.deviceId) trustLevel:OMEMOTrustLevelTrustedUser parentKey:account.uniqueId parentCollection:[account.class collection] publicIdentityKeyData:myBundle.identityKey lastSeenDate:[NSDate date]];
+    
+    XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForThisDevice:thisDevice ourDevices:ourDevices theirDevices:theirDevices];
+    OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithConnection:self.databaseConnection form:form];
+    UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
+    verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:verifyNav animated:YES completion:nil];
+}
 
 - (void)setupLockButton
 {
@@ -493,7 +533,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
                         self.lockButton.lockStatus = OTRLockStatusUnlocked;
                     }
                     
-                    self.state.isEncrypted = messageState == OTRKitMessageStateEncrypted;
+                    if (messageState == OTRKitMessageStateEncrypted) {
+                        self.state.messageSecurity = OTRMessageSecurityOTR;
+                    }
                     [self didUpdateState];
                     
                 } completionQueue:nil];
@@ -953,16 +995,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.definesPresentationContext = YES;
     
     //1. Create new message database object
-    
-    // Possibly better to requery OTRKit?
-    BOOL sendEncrypted = self.state.isEncrypted;
-    
     __block OTRMessage *message = [[OTRMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     message.text = text;
     message.read = YES;
-    message.transportedSecurely = NO;
-    message.sendEncrypted = sendEncrypted;
+    message.messageSecurity = self.state.messageSecurity;
     
     //2. Create send message task
     __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
@@ -974,7 +1011,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [message saveWithTransaction:transaction];
         [sendingAction saveWithTransaction:transaction];
         
-        //update buddy
+        //Update buddy
         OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
         buddy.composingMessageString = nil;
         buddy.lastMessageDate = message.date;
@@ -983,10 +1020,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     } completionQueue:dispatch_get_main_queue() completionBlock:^{
         [weakSelf finishSendingMessage];
     }];
-    
-    return;
-    
-    //4. that's it the queue should find the sending action and get the message off
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -1042,7 +1075,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             message.incoming = NO;
             message.buddyUniqueId = self.buddy.uniqueId;
             message.mediaItemUniqueId = imageItem.uniqueId;
-            message.transportedSecurely = YES;
+            message.messageSecurity = OTRMessageSecurityOTR;
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -1081,7 +1114,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.incoming = NO;
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.buddy.uniqueId;
-    message.transportedSecurely = YES;
+    message.messageSecurity = OTRMessageSecurityOTR;
     
     NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
@@ -1126,7 +1159,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
         
+        NSData *data = nil;
         if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
+            long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil][NSFileSize] longLongValue];
+            if (fileSize < 1024 * 1024 * 1) {
+                // Smaller than 1Mb
+                data = [NSData dataWithContentsOfFile:url.path];
+            }
             NSError *err = nil;
             [[NSFileManager defaultManager] removeItemAtPath:url.path error:&err];
             if (err) {
@@ -1140,7 +1179,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [audioItem saveWithTransaction:transaction];
         }];
         
-        [self sendMediaItem:audioItem data:nil tag:message];        
+        [self sendMediaItem:audioItem data:data tag:message];
     }];
 }
 
@@ -1273,8 +1312,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
     
-    // If OTR message than it's one ot one and we have a lot of information about the message
-    // Otherwise group message and we don't annotate the cell
+    
+    ////// Lock Icon //////
+    NSString *lockString = nil;
+    if (message.messageSecurity == OTRMessageSecurityOTR) {
+        lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+    } else if (message.messageSecurity == OTRMessageSecurityOMEMO) {
+        lockString = [NSString stringWithFormat:@"%@ OMEMO ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+    }
+    else {
+        lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
+    }
+    
+    ////// Delivered Icon //////
     if([message isKindOfClass:[OTRMessage class]]) {
         OTRMessage *msg = (OTRMessage *)message;
         if(!msg.dateSent && !msg.isIncoming && ![msg isMediaMessage]) {
@@ -1287,7 +1337,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         } else {
             ////// Lock Icon //////
             NSString *lockString = nil;
-            if (message.transportedSecurely) {
+            if (message.messageSecurity == OTRMessageSecurityOTR) {
                 lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
             }
             else {

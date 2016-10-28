@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XMPPStreamManagement.h"
+@import XMPPFramework;
 
 @class YapDatabaseConnection;
 
