@@ -80,7 +80,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if DEBUG
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+#endif
     
     [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:[OTRSecrets hockeyBetaIdentifier]
                                                          liveIdentifier:[OTRSecrets hockeyLiveIdentifier]
