@@ -14,6 +14,7 @@
 #define errSSLPeerAuthCompletedString [OTRLanguageManager translatedString: @"Peer cert is valid, or was ignored if verification disabled"]
 #define PASSWORD_STRING [OTRLanguageManager translatedString: @"Password"]
 #define ADVANCED_STRING [OTRLanguageManager translatedString: @"Advanced"]
+#define RESEND_STRING [OTRLanguageManager translatedString: @"Resend"]
 #define OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING [OTRLanguageManager translatedString: @"Our policy requires encryption but we are trying to send an unencrypted message out."]
 #define VERSION_STRING [OTRLanguageManager translatedString: @"Version"]
 #define ENTER_GROUP_NAME_STRING [OTRLanguageManager translatedString: @"Enter a group name"]
