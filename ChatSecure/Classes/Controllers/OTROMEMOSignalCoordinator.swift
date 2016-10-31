@@ -101,15 +101,7 @@ import YapDatabase
         
         //Get all the devices ID's for this buddy as well as their username for use with signal and XMPPFramework.
         self.databaseConnection.readWithBlock { (transaction) in
-            let dev = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction)
-            if (dev.count == 0) {
-                //No devices so we can't go any further.
-                dispatch_async(self.callbackQueue, { 
-                    completion(false)
-                })
-                return
-            }
-            devices = dev
+            devices = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction)
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
@@ -119,6 +111,7 @@ import YapDatabase
             })
             return
         }
+        
         var finalSuccess = true
         dispatch_async(self.workQueue) { [weak self] in
             guard let strongself = self else {
@@ -208,9 +201,13 @@ import YapDatabase
         self.prepareSessionWithOurDevices(prepareCompletion)
         //Even if something went wrong fetching bundles we should push ahead. We may have sessions that can be used.
         
-        dispatch_group_notify(group, self.workQueue) {
+        dispatch_group_notify(group, self.workQueue) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            //Strong self work here
             var bud:OTRBuddy? = nil
-            self.databaseConnection.readWithBlock { (transaction) in
+            strongSelf.databaseConnection.readWithBlock { (transaction) in
                 bud = OTRBuddy.fetchObjectWithUniqueID(buddyYapKey, transaction: transaction)
             }
             
@@ -225,7 +222,7 @@ import YapDatabase
                 // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
                 let encryptClosure:(OTROMEMODevice) -> (OMEMOKeyData?) = { device in
                     do {
-                        return try self.encryptPayloadWithSignalForDevice(device, payload: keyData)
+                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: keyData)
                     } catch {
                         return nil
                     }
@@ -237,11 +234,11 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = self.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
-                    dispatch_async(self.callbackQueue, {
+                    dispatch_async(strongSelf.callbackQueue, {
                         let error = NSError.chatSecureError(OTROMEMOError.NoDevicesForBuddy, userInfo: nil)
                         completion(false,error)
                     })
@@ -254,8 +251,8 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                  */
-                let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount(true).filter({ (device) -> Bool in
-                    return device.deviceId.unsignedIntValue != self.signalEncryptionManager.registrationId
+                let ourDevicesKeyData = strongSelf.omemoStorageManager.getDevicesForOurAccount(true).filter({ (device) -> Bool in
+                    return device.deviceId.unsignedIntValue != strongSelf.signalEncryptionManager.registrationId
                 }).map(encryptClosure).flatMap{ $0 }
                 
                 // Combine teh two arrays for all key data
@@ -269,13 +266,13 @@ import YapDatabase
                     let finalPayload = NSMutableData()
                     finalPayload.appendData(payloadData)
                     finalPayload.appendData(authTag)
-                    self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: finalPayload, elementId: messageId)
-                    dispatch_async(self.callbackQueue, {
+                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: finalPayload, elementId: messageId)
+                    dispatch_async(strongSelf.callbackQueue, {
                         completion(true,nil)
                     })
                     return
                 } else {
-                    dispatch_async(self.callbackQueue, {
+                    dispatch_async(strongSelf.callbackQueue, {
                         let error = NSError.chatSecureError(OTROMEMOError.NoDevices, userInfo: nil)
                         completion(false,error)
                     })
@@ -283,7 +280,7 @@ import YapDatabase
                 }
             } catch let err as NSError {
                 //This should only happen if we had an error encrypting the payload
-                dispatch_async(self.callbackQueue, {
+                dispatch_async(strongSelf.callbackQueue, {
                     completion(false,err)
                 })
                 return
