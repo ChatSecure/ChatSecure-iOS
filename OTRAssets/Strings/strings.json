@@ -1018,5 +1018,9 @@
     "ENTER_GROUP_NAME_STRING": {
         "comment": "The placeholder text for the text field to enter a group chat name or label",
         "string": "Enter a group name"
+    },
+    "RESEND_STRING": {
+        "comment": "Label for button to resend message.",
+        "string": "Resend"
     }
 }

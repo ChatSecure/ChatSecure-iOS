@@ -385,9 +385,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             OTRMessage *msg = (OTRMessage *)message;
-            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:@"Resend" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:RESEND_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    OTRMessage *dbMessage = [transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]];
+                    OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
                     OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:[message date]];
                     [sendingAction saveWithTransaction:transaction];

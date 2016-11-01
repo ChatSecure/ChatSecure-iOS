@@ -132,6 +132,14 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         }
     }
     
+    /** 
+     * Remove a waiting message info from the outstaning message dictionary. After the message info is removed the completion block should be called.
+     * This ensures that the outstandingMessages dictionary is accessed from the correct queue.
+     * 
+     * - parameter messageKey: The yap database messsage key.
+     * - parameter messageCollection: The yap database message key.
+     * - returns: The OutstandingMessageInfo if one exists. Removed from the waiting dictioanry.
+     */
     private func popWaitingMessage(messageKey:String,messageCollection:String) -> OutstandingMessageInfo? {
         var messageInfo:OutstandingMessageInfo? = nil
         let key = "\(messageKey)\(messageCollection)"
@@ -249,11 +257,22 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             if (message.messageSecurity == .OMEMO) {
                 self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
                 accountProtocol.omemoSignalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
-                    //TODO: Update message with error object
+                    guard let strongSelf = self else {
+                        return
+                    }
                     
-                    if (!success) {
+                    if (success == false) {
                         //Something went wrong getting ready to send the message
-                        if let messageInfo = self?.popWaitingMessage(message.uniqueId, messageCollection: message.dynamicType.collection()) {
+                        //Save error object to message
+                        strongSelf.databaseConnection.readWriteWithBlock({ (transaction) in
+                            guard let message = OTRMessage.fetchObjectWithUniqueID(message.uniqueId, transaction: transaction)?.copy() as? OTRMessage else {
+                                return
+                            }
+                            message.error = error
+                            message.saveWithTransaction(transaction)
+                        })
+                        
+                        if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: message.dynamicType.collection()) {
                             messageInfo.completion(success: success, retryTimeout: -1)
                         }
                     }
