@@ -65,20 +65,6 @@ public class UserProfileViewController: XLFormViewController {
         yourProfileRow.value = account
         yourProfileSection.addFormRow(yourProfileRow)
         
-        let theirProfilesSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Profile", comment: ""))
-        for buddy in buddies {
-            let buddyRow = XLFormRowDescriptor(tag: buddy.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
-            buddyRow.value = buddy
-            theirProfilesSection.addFormRow(buddyRow)
-        }
-        
-        if theirProfilesSection.formRows.count > 0 {
-            form.addFormSection(theirProfilesSection)
-        }
-        
-        form.addFormSection(yourProfileSection)
-
-        
         guard let xmpp = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
             return form
         }
@@ -90,10 +76,6 @@ public class UserProfileViewController: XLFormViewController {
         connection.readWithBlock { (transaction: YapDatabaseReadTransaction) in
             ourDevices = OTROMEMODevice.allDevicesForParentKey(account.uniqueId, collection: account.dynamicType.collection(), transaction: transaction)
         }
-        
-        
-        let thisSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("This Device", comment: ""))
-        let ourSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Our Other Devices", comment: ""))
 
         
         let ourFilteredDevices = ourDevices.filter({ (device: OTROMEMODevice) -> Bool in
@@ -116,19 +98,31 @@ public class UserProfileViewController: XLFormViewController {
                     row.disabled = true
                 }
                 
+                // Don't allow editing of your own device
+                if device.uniqueId == thisDevice.uniqueId {
+                    row.disabled = true
+                }
+                
                 section.addFormRow(row)
             }
         }
         
         
-        addDevicesToSection([thisDevice], thisSection)
-        addDevicesToSection(ourFilteredDevices, ourSection)
+        form.addFormSection(yourProfileSection)
+        
+        var allMyDevices: [OTROMEMODevice] = []
+        allMyDevices.append(thisDevice)
+        allMyDevices.appendContentsOf(ourFilteredDevices)
+        addDevicesToSection(allMyDevices, yourProfileSection)
         
         var theirSections: [XLFormSectionDescriptor] = []
         
         // Add section for each buddy's device
         for buddy in buddies {
             let theirSection = XLFormSectionDescriptor.formSectionWithTitle(buddy.username)
+            let buddyRow = XLFormRowDescriptor(tag: buddy.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
+            buddyRow.value = buddy
+            theirSection.addFormRow(buddyRow)
             var theirDevices: [OTROMEMODevice] = []
             connection.readWithBlock({ (transaction: YapDatabaseReadTransaction) in
                 theirDevices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
@@ -136,17 +130,10 @@ public class UserProfileViewController: XLFormViewController {
             addDevicesToSection(theirDevices, theirSection)
             theirSections.append(theirSection)
         }
-        
-        // Don't allow changing your own device trust level
-        for row in thisSection.formRows {
-            if let row = row as? XLFormRowDescriptor {
-                row.disabled = true
-            }
-        }
+ 
         
         var sectionsToAdd: [XLFormSectionDescriptor] = []
-        sectionsToAdd.append(thisSection)
-        sectionsToAdd.append(ourSection)
+        sectionsToAdd.append(yourProfileSection)
         sectionsToAdd.appendContentsOf(theirSections)
     
         for section in sectionsToAdd {
