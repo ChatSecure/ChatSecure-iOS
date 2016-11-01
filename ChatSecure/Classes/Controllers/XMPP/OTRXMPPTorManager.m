@@ -12,13 +12,16 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPError.h"
 
+
+@interface OTRXMPPManager(Private)
+// private internal methods for override
+- (void)setupStream;
+@end
+
 @interface OTRXMPPTorManager()
-@property (nonatomic, strong) OTRXMPPTorAccount *account;
 @end
 
 @implementation OTRXMPPTorManager
-@synthesize account = _account;
-@synthesize xmppStream = _xmppStream;
 
 - (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
 {
@@ -36,16 +39,13 @@
     [self connectWithPassword:password userInitiated:NO];
 }
 
--(XMPPStream *)xmppStream
-{
-    if (!_xmppStream) {
-        _xmppStream = [super xmppStream];
-        NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
-        NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
-        [_xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
-        [_xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
-    }
-    return _xmppStream;
+// override
+- (void) setupStream {
+    [super setupStream];
+    NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
+    NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
+    [self.xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+    [self.xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
 }
 
 - (NSString *)accountDomainWithError:(NSError**)error;
