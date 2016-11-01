@@ -10,7 +10,7 @@ import UIKit
 import XLForm
 import YapDatabase
 
-public class OMEMODeviceVerificationViewController: XLFormViewController {
+public class UserProfileViewController: XLFormViewController {
     
     public var connection: YapDatabaseConnection?
     
@@ -27,6 +27,7 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
     public override func viewDidLoad() {
         // gotta register cell before super
         OMEMODeviceFingerprintCell.registerCellClass(OMEMODeviceFingerprintCell.defaultRowDescriptorType())
+        UserInfoProfileCell.registerCellClass(UserInfoProfileCell.defaultRowDescriptorType())
 
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
@@ -55,11 +56,45 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
     }
 
     
-    public static func formDescriptorForThisDevice(thisDevice: OTROMEMODevice, ourDevices: [OTROMEMODevice], theirDevices: [OTROMEMODevice]) -> XLFormDescriptor {
-        let form = XLFormDescriptor(title: NSLocalizedString("Verify Devices", comment: ""))
+    public static func profileFormDescriptorForAccount(account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
+        let form = XLFormDescriptor(title: NSLocalizedString("Profile", comment: ""))
+        
+        
+        let yourProfileSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Me", comment: ""))
+        let yourProfileRow = XLFormRowDescriptor(tag: account.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
+        yourProfileRow.value = account
+        yourProfileSection.addFormRow(yourProfileRow)
+        
+        let theirProfilesSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Profile", comment: ""))
+        for buddy in buddies {
+            let buddyRow = XLFormRowDescriptor(tag: buddy.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
+            buddyRow.value = buddy
+            theirProfilesSection.addFormRow(buddyRow)
+        }
+        
+        if theirProfilesSection.formRows.count > 0 {
+            form.addFormSection(theirProfilesSection)
+        }
+        
+        form.addFormSection(yourProfileSection)
+
+        
+        guard let xmpp = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
+            return form
+        }
+        guard let myBundle = xmpp.omemoSignalCoordinator.fetchMyBundle() else {
+            return form
+        }
+        let thisDevice = OTROMEMODevice(deviceId: NSNumber(unsignedInt: myBundle.deviceId), trustLevel: .TrustedUser, parentKey: account.uniqueId, parentCollection: account.dynamicType.collection(), publicIdentityKeyData: myBundle.identityKey, lastSeenDate: NSDate())
+        var ourDevices: [OTROMEMODevice] = []
+        connection.readWithBlock { (transaction: YapDatabaseReadTransaction) in
+            ourDevices = OTROMEMODevice.allDevicesForParentKey(account.uniqueId, collection: account.dynamicType.collection(), transaction: transaction)
+        }
+        
+        
         let thisSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("This Device", comment: ""))
         let ourSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Our Other Devices", comment: ""))
-        let theirSection = XLFormSectionDescriptor.formSectionWithTitle(NSLocalizedString("Their Devices", comment: ""))
+
         
         let ourFilteredDevices = ourDevices.filter({ (device: OTROMEMODevice) -> Bool in
             return device.uniqueId != thisDevice.uniqueId
@@ -85,17 +120,36 @@ public class OMEMODeviceVerificationViewController: XLFormViewController {
             }
         }
         
+        
         addDevicesToSection([thisDevice], thisSection)
         addDevicesToSection(ourFilteredDevices, ourSection)
-        addDevicesToSection(theirDevices, theirSection)
         
+        var theirSections: [XLFormSectionDescriptor] = []
+        
+        // Add section for each buddy's device
+        for buddy in buddies {
+            let theirSection = XLFormSectionDescriptor.formSectionWithTitle(buddy.username)
+            var theirDevices: [OTROMEMODevice] = []
+            connection.readWithBlock({ (transaction: YapDatabaseReadTransaction) in
+                theirDevices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
+            })
+            addDevicesToSection(theirDevices, theirSection)
+            theirSections.append(theirSection)
+        }
+        
+        // Don't allow changing your own device trust level
         for row in thisSection.formRows {
             if let row = row as? XLFormRowDescriptor {
                 row.disabled = true
             }
         }
+        
+        var sectionsToAdd: [XLFormSectionDescriptor] = []
+        sectionsToAdd.append(thisSection)
+        sectionsToAdd.append(ourSection)
+        sectionsToAdd.appendContentsOf(theirSections)
     
-        for section in [thisSection, ourSection, theirSection] {
+        for section in sectionsToAdd {
             if section.formRows.count > 0 {
                 form.addFormSection(section)
             }

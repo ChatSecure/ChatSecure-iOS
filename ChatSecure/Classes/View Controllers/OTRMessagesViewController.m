@@ -410,23 +410,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (void) infoButtonPressed:(id)sender {
-    
-    __block NSArray <OTROMEMODevice *> *ourDevices = @[];
-    __block NSArray <OTROMEMODevice *> *theirDevices = @[];
     OTRAccount *account = [self account];
     OTRBuddy *buddy = [self buddy];
     
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        ourDevices = [OTROMEMODevice allDevicesForParentKey:account.uniqueId collection:[account.class collection] transaction:transaction];
-        theirDevices = [OTROMEMODevice allDevicesForParentKey:buddy.uniqueId collection:[buddy.class collection] transaction:transaction];
-    }];
-    
-    // Make a "thisDevice" because it isn't necessarily stored automatically
-    OMEMOBundle *myBundle = [self.xmppManager.omemoSignalCoordinator fetchMyBundle];
-    OTROMEMODevice *thisDevice = [[OTROMEMODevice alloc] initWithDeviceId:@(myBundle.deviceId) trustLevel:OMEMOTrustLevelTrustedUser parentKey:account.uniqueId parentCollection:[account.class collection] publicIdentityKeyData:myBundle.identityKey lastSeenDate:[NSDate date]];
-    
-    XLFormDescriptor *form = [OMEMODeviceVerificationViewController formDescriptorForThisDevice:thisDevice ourDevices:ourDevices theirDevices:theirDevices];
-    OMEMODeviceVerificationViewController *verify = [[OMEMODeviceVerificationViewController alloc] initWithConnection:self.databaseConnection form:form];
+    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.databaseConnection];
+
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithConnection:self.databaseConnection form:form];
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];

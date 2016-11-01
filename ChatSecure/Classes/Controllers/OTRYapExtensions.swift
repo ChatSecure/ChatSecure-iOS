@@ -25,9 +25,7 @@ public class OTRYapExtensions:NSObject {
             
             dict.setObject(buddy.username, forKey: usernameColumnName)
             
-            if let displayNme = buddy.displayName {
-                dict.setObject(displayNme, forKey: displayNameColumnName)
-            }
+            dict.setObject(buddy.displayName, forKey: displayNameColumnName)
             
         }
         

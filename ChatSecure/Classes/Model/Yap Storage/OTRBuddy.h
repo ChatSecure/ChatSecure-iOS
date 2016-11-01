@@ -8,6 +8,7 @@
 
 #import "OTRYapDatabaseObject.h"
 #import "OTRThreadOwner.h"
+#import "OTRUserInfoProfile.h"
 @import UIKit;
 
 typedef NS_ENUM(int, OTRChatState) {
@@ -35,10 +36,10 @@ extern const struct OTRBuddyAttributes {
     __unsafe_unretained NSString * _Nonnull encryptionStatus;
 } OTRBuddyAttributes;
 
-@interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner>
+@interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner, OTRUserInfoProfile>
 
 @property (nonatomic, strong, nonnull) NSString *username;
-@property (nonatomic, strong, nullable) NSString *displayName;
+@property (nonatomic, strong, readwrite, nonnull) NSString *displayName;
 @property (nonatomic, strong, nullable) NSString *composingMessageString;
 @property (nonatomic, strong, nullable) NSString *statusMessage;
 @property (nonatomic) OTRChatState chatState;

@@ -8,6 +8,7 @@
 @import UIKit;
 #import "OTRYapDatabaseObject.h"
 #import "OTRProtocol.h"
+#import "OTRUserInfoProfile.h"
 
 typedef NS_ENUM(int, OTRAccountType) {
     OTRAccountTypeNone        = 0,
@@ -30,7 +31,7 @@ extern NSString *const OTRGoogleTalkImageName;
 extern NSString *const OTRXMPPImageName;
 extern NSString *const OTRXMPPTorImageName;
 
-@interface OTRAccount : OTRYapDatabaseObject
+@interface OTRAccount : OTRYapDatabaseObject <OTRUserInfoProfile>
 
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, readonly) OTRAccountType accountType;

@@ -76,6 +76,13 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return @"";
 }
 
+- (NSString*) displayName {
+    if (_displayName) {
+        return _displayName;
+    }
+    return self.username;
+}
+
 - (void)setAvatarData:(NSData *)avatarData
 {
     if (![self.avatarData isEqualToData:avatarData]) {

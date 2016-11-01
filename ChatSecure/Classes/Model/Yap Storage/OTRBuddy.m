@@ -12,7 +12,7 @@
 #import "OTRDatabaseManager.h"
 @import YapDatabase;
 #import "OTRImages.h"
-#import "JSQMessagesAvatarImageFactory.h"
+@import JSQMessagesViewController;
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRKit;
 
@@ -30,6 +30,7 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 };
 
 @implementation OTRBuddy
+@synthesize displayName = _displayName;
 
 - (id)init
 {
@@ -69,6 +70,13 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
             [OTRImages removeImageWithIdentifier:self.uniqueId];
         }
     }
+}
+
+- (NSString*) displayName {
+    if (_displayName) {
+        return _displayName;
+    }
+    return self.username;
 }
 
 
