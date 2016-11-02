@@ -7,7 +7,7 @@
 //
 
 @import Mantle;
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 /*
  {

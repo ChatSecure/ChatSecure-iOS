@@ -49,6 +49,7 @@
 #import "OTRYapMessageSendAction.h"
 @import YapDatabase.YapDatabaseView;
 @import PureLayout;
+@import KVOController;
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -159,6 +160,34 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
     layout.sizeDelegate = self;
     self.collectionView.collectionViewLayout = layout;
+    
+    //Subscribe to changes in encryption state
+    __weak __typeof__(self) weakSelf = self;
+    [self.KVOController observe:self.state keyPath:NSStringFromSelector(@selector(messageSecurity)) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        __typeof__(self) strongSelf = weakSelf;
+        
+        if ([object isKindOfClass:[MessagesViewControllerState class]]) {
+            MessagesViewControllerState *state = (MessagesViewControllerState*)object;
+            NSString * placeHolderString = nil;
+            switch (state.messageSecurity) {
+                case OTRMessageSecurityPlaintext:
+                    placeHolderString = SEND_PLAINTEXT_STRING;
+                    break;
+                case OTRMessageSecurityOTR:
+                    placeHolderString = SEND_OTR_STRING;
+                    break;
+                case OTRMessageSecurityOMEMO:
+                    placeHolderString = SEND_OMEMO_STRING;
+                    break;
+                    
+                default:
+                    placeHolderString = [NSBundle jsq_localizedStringForKey:@"new_message"];
+                    break;
+            }
+            strongSelf.inputToolbar.contentView.textView.placeHolder = placeHolderString;
+        }
+    }];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

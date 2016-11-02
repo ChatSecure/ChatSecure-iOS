@@ -167,7 +167,7 @@ public class OTROMEMOStorageManager {
                 buddy?.saveWithTransaction(transaction)
             }
             if let bud = buddy {
-                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: OTRBuddy.collection(), transaction: transaction)
+                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: bud.dynamicType.collection(), transaction: transaction)
             }
             
         }

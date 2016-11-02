@@ -1022,5 +1022,17 @@
     "RESEND_STRING": {
         "comment": "Label for button to resend message.",
         "string": "Resend"
+    },
+    "SEND_PLAINTEXT_STRING" : {
+        "comment": "The placeholder text in the chat view where the message should go",
+        "string": "Send unencrypted message"
+    },
+    "SEND_OTR_STRING" : {
+        "comment": "The placeholder text in the chat view where the message should go",
+        "string": "Send OTR encrypted message"
+    },
+    "SEND_OMEMO_STRING" : {
+        "comment": "The placeholder text in the chat view where the message should go",
+        "string": "Send OMEMO encrypted message"
     }
 }
