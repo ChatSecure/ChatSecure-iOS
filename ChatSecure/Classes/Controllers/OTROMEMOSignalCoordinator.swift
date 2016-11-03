@@ -234,7 +234,7 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: buddy.dynamicType.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
