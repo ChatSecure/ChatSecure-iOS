@@ -76,7 +76,6 @@ typedef NS_ENUM(NSUInteger, OTRMessageSecurity) {
 /** Mark message as deliverd via XEP-0184.*/
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 
-
 @property (nonatomic, strong, nullable) NSString *text;
 @property (nonatomic, strong, nonnull) NSString *messageId;
 @property (nonatomic, strong, nullable) NSError *error;

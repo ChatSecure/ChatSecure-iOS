@@ -27,7 +27,6 @@
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
 		63363FAE1CCAE29B00B0C720 /* OTRYapExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63363FAD1CCAE29B00B0C720 /* OTRYapExtensions.swift */; };
 		633E88CE1D94751B00AD6FBE /* OTRAccountSignalEncryptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */; };
-		634043191BD5AAF300ECA95A /* OTRBuddyEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */; };
 		6340431D1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */; };
 		634364231CC192F1009E169F /* YapDatabaseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634364221CC192F1009E169F /* YapDatabaseConstants.swift */; };
@@ -740,7 +739,6 @@
 		633821C81BA8D48D0019C906 /* PushContainers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushContainers.swift; sourceTree = "<group>"; };
 		633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioSessionManager.h; sourceTree = "<group>"; };
 		633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioSessionManager.m; sourceTree = "<group>"; };
-		634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyEnums.h; sourceTree = "<group>"; };
 		6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoomMessage.swift; sourceTree = "<group>"; };
 		6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoomOccupant.swift; sourceTree = "<group>"; };
 		634364221CC192F1009E169F /* YapDatabaseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDatabaseConstants.swift; sourceTree = "<group>"; };
@@ -1201,7 +1199,6 @@
 				63B916E41B7431C1003B778F /* OTRStreamManagementStorageObject.m */,
 				633105CA1A16D1A300C17BAE /* OTRBuddy.h */,
 				633105CB1A16D1A300C17BAE /* OTRBuddy.m */,
-				634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */,
 				633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */,
 				633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */,
 				633105CE1A16D1A300C17BAE /* OTRMessage.h */,
@@ -1764,7 +1761,6 @@
 				6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */,
 				63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */,
 				D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */,
-				634043191BD5AAF300ECA95A /* OTRBuddyEnums.h in Headers */,
 				639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */,
 				D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */,
 				D93DDB311BA79A7000CD8331 /* UIViewController+ChatSecure.h in Headers */,
@@ -2916,7 +2912,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -2946,7 +2942,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2976,7 +2972,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -3070,7 +3066,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -3098,7 +3094,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -3127,7 +3123,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

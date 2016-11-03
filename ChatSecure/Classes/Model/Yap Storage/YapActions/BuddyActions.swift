@@ -45,10 +45,18 @@ public class BuddyAction: OTRYapDatabaseObject, YapActionable {
                 })
                 
                 guard let acct = account else {
+                    connection.readWriteWithBlock({ (transaction) -> Void in
+                        transaction.removeObjectForKey(key, inCollection: collection)
+                    })
                     return
                 }
                 
-                let proto = OTRProtocolManager.sharedInstance().protocolForAccount(acct)
+                guard let proto = OTRProtocolManager.sharedInstance().protocolForAccount(acct) else {
+                    connection.readWriteWithBlock({ (transaction) -> Void in
+                        transaction.removeObjectForKey(key, inCollection: collection)
+                    })
+                    return
+                }
                 if proto.connectionStatus() == .Connected {
                     proto.removeBuddies([buddy])
                     connection.readWriteWithBlock({ (transaction) -> Void in

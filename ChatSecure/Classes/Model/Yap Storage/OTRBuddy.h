@@ -20,6 +20,13 @@ typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateGone      = 5
 };
 
+typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
+    OTRSessionSecurityDefault,
+    OTRSessionSecurityPlaintext,
+    OTRSessionSecurityOTR,
+    OTRSessionSecurityOMEMO,
+};
+
 
 @class OTRAccount, OTRMessage;
 
@@ -48,6 +55,9 @@ extern const struct OTRBuddyAttributes {
 
 /** the date last message was received for buddy. also used by incoming/outgoing subscription requests to force buddy to appear in conversation view */
 @property (nonatomic, strong, nullable) NSDate *lastMessageDate;
+
+/** User can choose a preferred security method e.g. plaintext, OTR, OMEMO. If undefined, best available option should be chosen elsewhere. OMEMO > OTR > Plaintext */
+@property (nonatomic, readwrite) OTRSessionSecurity preferredSecurity;
 
 /**
  * Setting this value does a comparison of against the previously value

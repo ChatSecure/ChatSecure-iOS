@@ -28,6 +28,7 @@
 
 @class OTRAccount,OTRBuddy;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
 
 @property (nonatomic, readonly) NSUInteger numberOfConnectedProtocols;
@@ -36,7 +37,7 @@
 @property (nonatomic, strong) OTREncryptionManager *encryptionManager;
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
-- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
+- (nullable id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
 - (void)removeProtocolForAccount:(OTRAccount *)account;
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account;
 
@@ -44,7 +45,7 @@
 
 - (void)loginAccount:(OTRAccount *)account;
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated;
-- (void)loginAccounts:(NSArray *)accounts;
+- (void)loginAccounts:(NSArray<OTRAccount*> *)accounts;
 - (void)disconnectAllAccounts;
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
 
@@ -53,3 +54,4 @@
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 @end
+NS_ASSUME_NONNULL_END
