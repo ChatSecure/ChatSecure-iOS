@@ -7,7 +7,7 @@
 //
 
 #import "OTRAudioSessionManager.h"
-#import <KVOController/NSObject+FBKVOController.h>
+@import KVOController;
 
 @import AVFoundation;
 

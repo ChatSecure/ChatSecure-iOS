@@ -27,13 +27,13 @@
 #import "OTRSettingDetailViewController.h"
 #import "OTRAboutViewController.h"
 #import "OTRQRCodeViewController.h"
-#import <QuartzCore/QuartzCore.h>
+@import QuartzCore;
 #import "OTRConstants.h"
-#import "UserVoice.h"
+@import uservoice_iphone_sdk;
 #import "OTRAccountTableViewCell.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "OTRSecrets.h"
-@import YapDatabase.YapDatabaseView;
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRAccount.h"
@@ -44,7 +44,7 @@
 #import "OTRQRCodeActivity.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
-#import <KVOController/NSObject+FBKVOController.h>
+@import KVOController;
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;

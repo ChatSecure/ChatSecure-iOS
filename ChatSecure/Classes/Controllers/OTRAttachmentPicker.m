@@ -8,7 +8,7 @@
 
 #import "OTRAttachmentPicker.h"
 
-#import <MobileCoreServices/MobileCoreServices.h>
+@import MobileCoreServices;
 @import OTRAssets;
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"

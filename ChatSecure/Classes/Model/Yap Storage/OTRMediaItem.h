@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "JSQMessageMediaData.h"
+@import JSQMessagesViewController;
 #import "OTRYapDatabaseObject.h"
 
 @class OTRMessage;

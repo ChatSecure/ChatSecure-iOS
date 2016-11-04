@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "TTTAttributedLabel.h"
+@import UIKit;
+@import TTTAttributedLabel;
 
 @class OTRBuddy;
 

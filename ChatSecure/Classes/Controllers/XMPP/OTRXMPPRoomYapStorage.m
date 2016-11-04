@@ -7,11 +7,11 @@
 //
 
 #import "OTRXMPPRoomYapStorage.h"
-#import <ChatSecureCore/OTRDatabaseManager.h>
+#import "OTRDatabaseManager.h"
+#import "OTRAccount.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import <YapDatabase/YapDatabaseRelationship.h>
-#import <ChatSecureCore/OTRAccount.h>
-#import "NSXMLElement+XEP_0203.h"
+@import YapDatabase;
+@import XMPPFramework;
 
 @interface OTRXMPPRoomYapStorage ()
 

@@ -7,7 +7,7 @@
 //
 
 #import "OTRAccount.h"
-#import <SAMKeychain/SAMKeychain.h>
+@import SAMKeychain;
 #import "OTRLog.h"
 #import "OTRConstants.h"
 

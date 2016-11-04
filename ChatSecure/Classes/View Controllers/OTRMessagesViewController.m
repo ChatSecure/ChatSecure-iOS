@@ -30,12 +30,12 @@
 #import "OTRProtocolManager.h"
 #import "OTRColors.h"
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
-#import "NSString+FontAwesome.h"
+@import BButton;
 #import "OTRAttachmentPicker.h"
 #import "OTRImageItem.h"
 #import "OTRVideoItem.h"
 #import "OTRAudioItem.h"
-#import "JTSImageViewController.h"
+@import JTSImageViewController;
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
@@ -47,7 +47,7 @@
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapMessageSendAction.h"
-@import YapDatabase.YapDatabaseView;
+@import YapDatabase;
 @import PureLayout;
 @import KVOController;
 

@@ -8,9 +8,9 @@
 
 #import "OTRXMPPBuddyManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import <XMPPFramework/XMPPStream.h>
+@import XMPPFramework;
 #import "OTRXMPPBuddy.h"
-@import YapDatabase.YapDatabaseView;
+@import YapDatabase;
 
 @interface OTRXMPPBuddyManager () <OTRYapViewHandlerDelegateProtocol>
 

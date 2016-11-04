@@ -15,9 +15,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRAccountsManager.h"
-@import YapDatabase.YapDatabaseFullTextSearch;
-@import YapDatabase.YapDatabaseView;
-@import YapDatabase.YapDatabaseSearchResultsView;
+@import YapDatabase;
 @import PureLayout;
 @import BButton;
 #import "OTRBuddyInfoCell.h"

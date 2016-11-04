@@ -9,7 +9,7 @@
 #import "OTRImageItem.h"
 #import "OTRImages.h"
 #import "OTRMediaFileManager.h"
-#import "JSQMessagesMediaViewBubbleImageMasker.h"
+@import JSQMessagesViewController;
 #import "OTRDatabaseManager.h"
 #import "OTRMessage.h"
 

@@ -28,7 +28,7 @@
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 
-#import "Appirater.h"
+@import Appirater;
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
 #import "OTRUtilities.h"
@@ -36,10 +36,10 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-#import <SAMKeychain/SAMKeychain.h>
+@import SAMKeychain;
 
 #import "OTRLog.h"
-#import "DDTTYLogger.h"
+@import CocoaLumberjack;
 #import "OTRAccount.h"
 #import "OTRXMPPAccount.h"
 #import "OTRBuddy.h"
@@ -58,7 +58,7 @@
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
-#import <HockeySDK_Source/HockeySDK.h>
+@import HockeySDK_Source;
 @import OTRAssets;
 @import OTRKit;
 #import "OTRPushTLVHandlerProtocols.h"

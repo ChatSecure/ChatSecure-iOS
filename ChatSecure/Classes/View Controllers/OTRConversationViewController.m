@@ -20,11 +20,11 @@
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
-@import YapDatabase.YapDatabaseView;
+@import YapDatabase;
 
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import <KVOController/NSObject+FBKVOController.h>
+@import KVOController;
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"
 #import "OTRProtocolManager.h"

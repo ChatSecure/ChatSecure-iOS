@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "OTRThreadOwner.h"
 
 @class OTRBuddy;

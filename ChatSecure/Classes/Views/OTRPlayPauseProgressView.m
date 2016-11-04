@@ -9,7 +9,7 @@
 #import "OTRPlayPauseProgressView.h"
 #import "OTRPlayView.h"
 #import "OTRPauseView.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
 

@@ -11,7 +11,7 @@
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
 #import "OTRDatabaseView.h"
-#import <SAMKeychain/SAMKeychain.h>
+@import SAMKeychain;
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
@@ -19,11 +19,10 @@
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRMediaFileManager.h"
-#import "IOCipher.h"
+@import IOCipher;
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
-@import YapDatabase.YapDatabaseSecondaryIndex;
-@import YapDatabase.YapDatabaseSearchResultsView;
+@import YapDatabase;
 @import YapTaskQueue;
 #import "OTRLanguageManager.h"
 #import "OTRSignalSession.h"

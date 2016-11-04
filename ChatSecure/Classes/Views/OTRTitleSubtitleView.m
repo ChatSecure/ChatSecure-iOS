@@ -9,7 +9,7 @@
 #import "OTRTitleSubtitleView.h"
 #import "OTRUtilities.h"
 
-#import "PureLayout.h"
+@import PureLayout;
 
 static const CGFloat kOTRMaxImageViewHeight = 9;
 

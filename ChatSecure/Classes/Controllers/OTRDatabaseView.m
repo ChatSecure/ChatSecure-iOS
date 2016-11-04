@@ -7,9 +7,7 @@
 //
 
 #import "OTRDatabaseView.h"
-@import YapDatabase.YapDatabaseView;
-@import YapDatabase.YapDatabaseFullTextSearch;
-@import YapDatabase.YapDatabaseFilteredView;
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"

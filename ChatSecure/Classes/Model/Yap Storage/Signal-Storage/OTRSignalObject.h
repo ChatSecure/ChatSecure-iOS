@@ -7,7 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-@import YapDatabase.YapDatabaseRelationship;
+@import YapDatabase;
 
 NS_ASSUME_NONNULL_BEGIN
 

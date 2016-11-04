@@ -7,7 +7,7 @@
 //
 
 @import XMPPFramework;
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 @class XMPPMessage;
 
 @interface OTRXMPPMessageYapStroage : XMPPModule

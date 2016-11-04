@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
-#import <ChatSecureCore/OTRThreadOwner.h>
+#import "OTRThreadOwner.h"
 
 @interface OTRColors : NSObject
 

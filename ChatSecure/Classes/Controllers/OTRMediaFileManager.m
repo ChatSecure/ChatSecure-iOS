@@ -7,7 +7,7 @@
 //
 
 #import "OTRMediaFileManager.h"
-#import "IOCipher.h"
+@import IOCipher;
 #import "OTRMediaItem.h"
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"

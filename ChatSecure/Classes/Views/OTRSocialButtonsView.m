@@ -7,9 +7,9 @@
 //
 
 #import "OTRSocialButtonsView.h"
-#import "PureLayout.h"
-#import "BButton.h"
-#import "NSURL+chatsecure.h"
+@import PureLayout;
+@import BButton;
+#import "NSURL+ChatSecure.h"
 #import "OTRAppDelegate.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"

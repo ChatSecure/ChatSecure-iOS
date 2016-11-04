@@ -8,7 +8,7 @@
 
 #import "OTRListSettingViewController.h"
 #import "OTRListSettingValue.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRListSettingViewController ()
 

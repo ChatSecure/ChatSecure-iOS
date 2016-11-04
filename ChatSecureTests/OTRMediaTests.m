@@ -11,7 +11,7 @@
 #import <ChatSecureCore/OTRVideoItem.h>
 #import <ChatSecureCore/OTRBuddy.h>
 #import <ChatSecureCore/OTRMessage.h>
-#import "IOCipher.h"
+#import <IOCipher/IOCipher.h>
 
 @interface OTRMediaTests : XCTestCase
 

@@ -22,7 +22,7 @@
 
 #import "OTRXMPPManager.h"
 
-#import "GCDAsyncSocket.h"
+@import CocoaAsyncSocket;
 @import XMPPFramework;
 #import "OTRYapDatabaseRosterStorage.h"
 
@@ -48,7 +48,7 @@
 #import "OTRNotificationController.h"
 #import "OTRStreamManagementYapStorage.h"
 #import "OTRXMPPMessageYapStroage.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRXMPPRoomManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPBuddyManager.h"

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 typedef NS_ENUM(NSUInteger, OTRPlayPauseProgressViewStatus) {
     OTRPlayPauseProgressViewStatusPlay,

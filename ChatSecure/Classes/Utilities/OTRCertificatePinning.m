@@ -7,10 +7,9 @@
 //
 
 #import "OTRCertificatePinning.h"
-#import <SAMKeychain/SAMKeychain.h>
-#import "SAMKeychainQuery.h"
-#import "GCDAsyncSocket.h"
-#import "AFSecurityPolicy.h"
+@import SAMKeychain;
+@import CocoaAsyncSocket;
+@import AFNetworking;
 @import XMPPFramework;
 
 

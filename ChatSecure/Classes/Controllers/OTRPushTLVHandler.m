@@ -7,7 +7,7 @@
 //
 
 #import "OTRPushTLVHandler.h"
-#import "OTRKit.h"
+@import OTRKit;
 
 static const uint16_t OTRPushTLVType = 0x01A4;
 

@@ -11,7 +11,7 @@
 #import "OTRMessage.h"
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
-#import <Security/SecureTransport.h>
+@import Security;
 @import XLForm;
 
 #import "OTRLog.h"

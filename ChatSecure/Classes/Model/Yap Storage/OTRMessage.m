@@ -11,7 +11,7 @@
 #import "OTRAccount.h"
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "NSString+HTML.h"
+@import MWFeedParser;
 @import OTRAssets;
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"

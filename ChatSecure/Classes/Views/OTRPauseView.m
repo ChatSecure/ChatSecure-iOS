@@ -7,7 +7,7 @@
 //
 
 #import "OTRPauseView.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRPauseView ()
 

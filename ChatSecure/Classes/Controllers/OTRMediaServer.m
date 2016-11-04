@@ -7,9 +7,8 @@
 //
 
 #import "OTRMediaServer.h"
-#import "GCDWebServer.h"
-#import "GCDWebServerRequest.h"
-#import "GCDWebServerVirtualFileResponse.h"
+@import GCDWebServer;
+@import IOCipher;
 #import "OTRMediaFileManager.h"
 
 @interface OTRMediaServer ()

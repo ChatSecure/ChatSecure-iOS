@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <Twitter/Twitter.h>
-#import <MessageUI/MessageUI.h>
+@import UIKit;
+@import Twitter;
+@import MessageUI;
 #import "OTRViewSetting.h"
 
 #import "OTRSetting.h"

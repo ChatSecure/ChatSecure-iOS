@@ -7,7 +7,7 @@
 //
 
 #import "OTRHoldToTalkView.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRTouchAndHoldGestureRecognizer.h"
 
 @interface OTRHoldToTalkView ()

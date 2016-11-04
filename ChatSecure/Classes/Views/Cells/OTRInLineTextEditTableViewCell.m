@@ -22,7 +22,7 @@
 
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRUtilities.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRInLineTextEditTableViewCell ()
 

@@ -7,10 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <ChatSecureCore/NSURL+ChatSecure.h>
-#import <ChatSecureCore/OTRAccount.h>
-#import <OTRAssets/OTRBranding.h>
-
+@import ChatSecureCore;
+@import OTRAssets;
 
 @interface OTRURLTests : XCTestCase
 

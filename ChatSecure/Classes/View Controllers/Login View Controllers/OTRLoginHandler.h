@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 @class OTRAccount, XLFormDescriptor;
 
 @protocol OTRBaseLoginViewControllerHandlerProtocol <NSObject>

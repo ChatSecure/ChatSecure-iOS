@@ -9,7 +9,7 @@
 #import "OTRChooseAccountViewController.h"
 
 #import "OTRNewBuddyViewController.h"
-#import <QuartzCore/QuartzCore.h>
+@import QuartzCore;
 @import OTRAssets;
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"

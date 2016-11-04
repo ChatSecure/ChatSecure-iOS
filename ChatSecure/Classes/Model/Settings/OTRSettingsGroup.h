@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @interface OTRSettingsGroup : NSObject
 

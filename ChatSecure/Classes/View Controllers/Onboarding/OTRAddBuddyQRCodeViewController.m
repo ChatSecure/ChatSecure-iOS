@@ -8,7 +8,7 @@
 
 #import "OTRAddBuddyQRCodeViewController.h"
 @import OTRAssets;
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRQRCodeReaderDelegate.h"
 #import "OTRQRCodeViewController.h"
 @import XMPPFramework;

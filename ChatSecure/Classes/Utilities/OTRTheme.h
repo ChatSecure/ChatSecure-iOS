@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+@import Foundation;
+@import UIKit;
 
 @interface OTRTheme : NSObject
 

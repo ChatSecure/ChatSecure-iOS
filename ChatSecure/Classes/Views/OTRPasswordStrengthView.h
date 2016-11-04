@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "NJOPasswordStrengthEvaluator.h"
+@import UIKit;
+@import Navajo;
 
 @class OTRPasswordStrengthView;
 

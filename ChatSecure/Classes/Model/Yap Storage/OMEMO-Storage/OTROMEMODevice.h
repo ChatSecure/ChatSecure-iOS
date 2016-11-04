@@ -6,8 +6,7 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-#import <ChatSecureCore/ChatSecureCore.h>
-
+#import "OTRYapDatabaseObject.h"
 
 /*
  *

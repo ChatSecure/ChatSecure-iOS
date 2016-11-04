@@ -9,7 +9,7 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
-#import <QuartzCore/QuartzCore.h>
+@import QuartzCore;
 @import OTRAssets;
 #import "OTRXMPPManager.h"
 #import "OTRDatabaseManager.h"
@@ -19,8 +19,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPBuddy.h"
 
-#import "QRCodeReaderViewController.h"
-#import "QRCodeReader.h"
+@import QRCodeReaderViewController;
 @import XMPPFramework;
 #import "OTRLanguageManager.h"
 #import "NSURL+ChatSecure.h"

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "CPAProxy.h"
+@import Foundation;
+@import CPAProxy;
 
 @interface OTRTorManager : NSObject
 

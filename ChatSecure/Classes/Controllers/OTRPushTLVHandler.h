@@ -6,10 +6,9 @@
 //  Copyright © 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "OTRTLVHandler.h"
-#import <ChatSecureCore/OTRPushTLVHandlerProtocols.h>
-@class OTRKit;
+@import Foundation;
+@import OTRKit;
+#import "OTRPushTLVHandlerProtocols.h"
 
 @interface OTRPushTLVHandler : NSObject <OTRTLVHandler, OTRPushTLVHandlerProtocol>
 

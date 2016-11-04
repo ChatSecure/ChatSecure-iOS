@@ -7,7 +7,7 @@
 //
 
 #import "OTRCircleButtonView.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRCircleButtonView()
 @property (nonatomic) BOOL hasAddedConstraints;

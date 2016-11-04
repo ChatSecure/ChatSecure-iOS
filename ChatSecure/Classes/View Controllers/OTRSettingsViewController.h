@@ -20,10 +20,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "OTRViewSetting.h"
 #import "OTRSettingsManager.h"
-#import <MessageUI/MessageUI.h>
+@import MessageUI;
 #import "OTRDonateSetting.h"
 
 @interface OTRSettingsViewController : UIViewController <OTRSettingDelegate, MFMailComposeViewControllerDelegate, OTRDonateSettingDelegate>

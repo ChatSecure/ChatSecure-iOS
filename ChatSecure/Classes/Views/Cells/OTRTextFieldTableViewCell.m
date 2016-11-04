@@ -7,8 +7,8 @@
 //
 
 #import "OTRTextFieldTableViewCell.h"
-#import "JVFloatLabeledTextField.h"
-#import "PureLayout.h"
+@import JVFloatLabeledTextField;
+@import PureLayout;
 
 @implementation OTRTextFieldTableViewCell
 

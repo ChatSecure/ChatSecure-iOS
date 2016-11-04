@@ -9,8 +9,8 @@
 #import "OTRImages.h"
 #import "OTRUtilities.h"
 #import "OTRColors.h"
-#import "UIImage+BBlock.h"
-#import "JSQMessagesAvatarImageFactory.h"
+@import BBlock;
+@import JSQMessagesViewController;
 #import "OTRComposingImageView.h"
 #import "NSString+ChatSecure.h"
 @import OTRAssets;

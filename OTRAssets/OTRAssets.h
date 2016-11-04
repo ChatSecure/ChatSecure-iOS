@@ -6,7 +6,7 @@
 //  Copyright © 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 /** Stub class for identifying asset framework bundle via bundleForClass: */
 @interface OTRAssets : NSObject
@@ -24,6 +24,6 @@ FOUNDATION_EXPORT const unsigned char OTRAssetsVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <OTRAssets/PublicHeader.h>
 
-#import <OTRAssets/OTRStrings.h>
-#import <OTRAssets/OTRSecrets.h>
-#import <OTRAssets/OTRBranding.h>
+#import "OTRStrings.h"
+#import "OTRSecrets.h"
+#import "OTRBranding.h"

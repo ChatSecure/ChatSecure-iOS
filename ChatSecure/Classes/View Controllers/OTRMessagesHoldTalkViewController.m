@@ -7,7 +7,7 @@
 //
 
 #import "OTRMessagesHoldTalkViewController.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRHoldToTalkView.h"
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"

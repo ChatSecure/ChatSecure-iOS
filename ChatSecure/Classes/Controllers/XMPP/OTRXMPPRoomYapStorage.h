@@ -6,9 +6,9 @@
 //  Copyright © 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 @import XMPPFramework;
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 #import "OTRMessage.h"
 
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>

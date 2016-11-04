@@ -16,7 +16,7 @@
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRGoolgeOAuthLoginHandler.h"
-#import "GTMOAuth2ViewControllerTouch.h"
+@import gtm_oauth2;
 #import "OTRDatabaseManager.h"
 #import "OTRChatSecureIDCreateAccountHandler.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"

@@ -7,13 +7,11 @@
 //
 
 #import "OTRInviteViewController.h"
-#import "PureLayout.h"
-#import "Strings.h"
-#import "BButton.h"
+@import PureLayout;
+@import BButton;
 #import "OTRAddBuddyQRCodeViewController.h"
-#import <MessageUI/MessageUI.h>
+@import MessageUI;
 #import "OTRAccount.h"
-#import "Strings.h"
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"
 #import "OTRColors.h"

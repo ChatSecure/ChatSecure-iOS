@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <ChatSecureCore/ChatSecureCore.h>
+@import UIKit;
+@import ChatSecureCore;
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {

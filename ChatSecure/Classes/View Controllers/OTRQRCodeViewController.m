@@ -21,8 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRQRCodeViewController.h"
-#import "ZXingObjC.h"
-#import "PureLayout.h"
+@import ZXingObjC;
+@import PureLayout;
 #import  <QuartzCore/CALayer.h>
 #import "OTRLanguageManager.h"
 @import OTRAssets;

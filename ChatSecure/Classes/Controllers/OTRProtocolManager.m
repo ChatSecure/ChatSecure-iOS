@@ -31,7 +31,7 @@
 #import "OTRPushTLVHandler.h"
 @import YapDatabase;
 
-#import <KVOController/NSObject+FBKVOController.h>
+@import KVOController;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 

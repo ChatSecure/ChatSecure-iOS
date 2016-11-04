@@ -8,7 +8,7 @@
 
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRAccount.h"
-@import YapDatabase.YapDatabaseRelationship;
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPAccount.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>

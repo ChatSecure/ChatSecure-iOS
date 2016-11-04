@@ -7,8 +7,8 @@
 //
 
 #import "UIActivityViewController+ChatSecure.h"
-#import "ARChromeActivity.h"
-#import "TUSafariActivity.h"
+@import ARChromeActivity;
+@import TUSafariActivity;
 #import "OTROpenInFacebookActivity.h"
 #import "OTROpenInTwitterActivity.h"
 @import OTRAssets;

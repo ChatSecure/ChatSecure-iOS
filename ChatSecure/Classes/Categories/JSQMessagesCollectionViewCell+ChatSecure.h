@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "JSQMessagesCollectionViewCell.h"
+@import JSQMessagesViewController;
 
 @interface JSQMessagesCollectionViewCell (ChatSecure)
 

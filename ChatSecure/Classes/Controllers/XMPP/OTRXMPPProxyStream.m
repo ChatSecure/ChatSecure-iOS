@@ -7,7 +7,7 @@
 //
 
 #import "OTRXMPPProxyStream.h"
-#import "GCDAsyncProxySocket.h"
+@import ProxyKit;
 
 @implementation OTRXMPPProxyStream
 

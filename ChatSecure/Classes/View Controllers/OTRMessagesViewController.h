@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-#import <JSQMessagesViewController/JSQMessagesViewController.h>
 #import "OTRBuddy.h"
 @import OTRKit;
 @import JSQMessagesViewController;

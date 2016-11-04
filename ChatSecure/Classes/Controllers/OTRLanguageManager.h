@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 extern NSString *const kOTRDefaultLanguageLocale;
 extern NSString *const kOTRSettingKeyLanguage;

@@ -23,11 +23,11 @@
 #import "OTRAboutViewController.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "PureLayout.h"
-#import "TTTAttributedLabel.h"
+@import PureLayout;
+@import TTTAttributedLabel;
 #import "OTRSocialButtonsView.h"
 #import "OTRAcknowledgementsViewController.h"
-#import "NSURL+chatsecure.h"
+#import "NSURL+ChatSecure.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActivityViewController+ChatSecure.h"

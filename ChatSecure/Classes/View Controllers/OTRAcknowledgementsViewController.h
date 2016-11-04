@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "VTAcknowledgementsViewController.h"
-
-#import "TTTAttributedLabel.h"
+@import VTAcknowledgementsViewController;
+@import TTTAttributedLabel;
 
 @interface OTRAcknowledgementsViewController : VTAcknowledgementsViewController <TTTAttributedLabelDelegate>
 

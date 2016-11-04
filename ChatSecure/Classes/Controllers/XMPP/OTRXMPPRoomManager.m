@@ -11,7 +11,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPRoomYapStorage.h"
 #import "OTRBuddy.h"
-@import YapDatabase.YapDatabaseView;
+@import YapDatabase;
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 

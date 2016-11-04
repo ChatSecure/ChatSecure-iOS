@@ -9,7 +9,6 @@
 #import "OTRAudioItem.h"
 #import "OTRAudioControlsView.h"
 @import JSQMessagesViewController;
-#import "JSQMessagesMediaViewBubbleImageMasker.h"
 #import "OTRPlayPauseProgressView.h"
 
 @implementation OTRAudioItem

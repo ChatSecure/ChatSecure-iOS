@@ -7,10 +7,10 @@
 //
 
 #import "OTRAcknowledgementsViewController.h"
-#import "TTTAttributedLabel.h"
+@import TTTAttributedLabel;
 @import OTRKit;
 #import "OTRTorManager.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface VTAcknowledgementsViewController()
 // private methods from superclass

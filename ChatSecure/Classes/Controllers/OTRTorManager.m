@@ -8,6 +8,8 @@
 
 #import "OTRTorManager.h"
 
+@import CPAProxy;
+
 @implementation OTRTorManager
 
 - (instancetype) init {

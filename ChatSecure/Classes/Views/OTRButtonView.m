@@ -7,7 +7,7 @@
 //
 
 #import "OTRButtonView.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 
 CGFloat const kOTRButtonViewTopMargin = 3;

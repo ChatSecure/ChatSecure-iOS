@@ -10,7 +10,7 @@
 #import "OTRBuddy.h"
 #import "OTRImages.h"
 #import "OTRColors.h"
-#import "PureLayout.h"
+@import PureLayout;
 @import OTRAssets;
 
 const CGFloat OTRBuddyImageCellPadding = 12.0;

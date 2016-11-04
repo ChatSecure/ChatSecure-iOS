@@ -12,7 +12,7 @@
 #import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
 @import OTRAssets;
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRDatabaseManager.h"
 #import "OTRLanguageManager.h"
 
