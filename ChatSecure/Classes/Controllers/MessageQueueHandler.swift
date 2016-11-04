@@ -168,33 +168,6 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return action
     }
     
-    private func incrementSendActionFailureCount(messageKey:String, messageCollection:String, error:NSError?) {
-        self.databaseConnection.readWriteWithBlock { (transaction) in
-            if let sendingAction = self.fetchSendingAction(messageKey, messageCollection: messageCollection, transaction: transaction) {
-                sendingAction.failureCount += 1
-                
-                if(sendingAction.failureCount >= self.maxFailureCount) {
-                    // We reached max failure count and should stop trying and mark message as failed. 
-                    // Possibly in the future we might want to kill all actions in the queue because they're unlikely to succeed
-                    
-                    transaction.removeObjectForKey(sendingAction.uniqueId, inCollection: sendingAction.dynamicType.collection())
-                    
-                    //Since we're giving up on this message we need to 'mark' the message with an error
-                    
-                    // get reall message
-                    guard let message  = transaction.objectForKey(messageKey, inCollection: messageCollection) as? OTRMessage else {
-                        return
-                    }
-                    message.error = error
-                    message.saveWithTransaction(transaction)
-                    
-                } else {
-                    sendingAction.saveWithTransaction(transaction)
-                }
-            }
-        }
-    }
-    
     //MARK: XMPPManager functions
     
     private func sendMessage(outstandingMessage:OutstandingMessageInfo) {
@@ -206,7 +179,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             })
             
             guard let message = msg else {
-                outstandingMessage.completion(success: false, retryTimeout: -1)
+                outstandingMessage.completion(success: true, retryTimeout: 0.0)
                 return
             }
             
@@ -226,13 +199,13 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             
         })
         guard let buddy = bud,account = acc else {
-            completion(success: false, retryTimeout: -1)
+            completion(success: true, retryTimeout: 0.0)
             return
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
         guard let accountProtocol = self.protocolManager?.protocolForAccount(account) as? OTRXMPPManager else {
-            completion(success: false, retryTimeout: -1)
+            completion(success: true, retryTimeout: 0.0)
             return
         }
         
@@ -273,7 +246,8 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                         })
                         
                         if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: message.dynamicType.collection()) {
-                            messageInfo.completion(success: success, retryTimeout: -1)
+                            //Even though we were not succesfull in sending a message. The action needs to be removed from the queue so the next message can be handled.
+                            messageInfo.completion(success: true, retryTimeout: 0.0)
                         }
                     }
                 })
@@ -332,7 +306,9 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         }
         
         guard let message = msg else {
-            completion(success: false, retryTimeout: -1)
+            // Somehow we have an action without a message. This is very strange. Do not like.
+            // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
+            completion(success: true, retryTimeout: 0.0)
             return
         }
         
@@ -396,9 +372,16 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             }
             
             let err = NSError.chatSecureError(EncryptionError.unableToCreateOTRSession, userInfo: nil)
-            strongSelf.incrementSendActionFailureCount(messageInfo.messageKey, messageCollection: messageInfo.messageCollection, error: err)
             
-            messageInfo.completion(success: false, retryTimeout: strongSelf.messageRetryTimeout)
+            strongSelf.databaseConnection.readWriteWithBlock({ (transaction) in
+                if let message = transaction.objectForKey(messageInfo.messageKey, inCollection: messageInfo.messageCollection)?.copy() as? OTRMessage {
+                    message.error = err
+                    message.saveWithTransaction(transaction)
+                }
+            })
+            
+            
+            messageInfo.completion(success: true, retryTimeout: 0.0)
         }
         
     }
@@ -419,7 +402,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             message.saveWithTransaction(transaction)
         }
         
-        messageInfo.completion(success: true, retryTimeout: -1)
+        messageInfo.completion(success: true, retryTimeout: 0.0)
     }
     
     public func didFailToSendMessage(messageKey:String, messageCollection:String, error:NSError?) {
@@ -427,9 +410,8 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             return;
         }
         
-        self.incrementSendActionFailureCount(messageKey, messageCollection: messageCollection, error:error)
-        
-        messageInfo.completion(success: false, retryTimeout: -1)
+        //Even though this action failed we need to keep the queue moving.
+        messageInfo.completion(success: true, retryTimeout: 0.0)
     }
     
 }

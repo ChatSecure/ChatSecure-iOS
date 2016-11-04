@@ -8,6 +8,7 @@
 
 import Foundation
 import YapTaskQueue
+import YapDatabase
 
 
 extension OTRYapMessageSendAction:  YapTaskQueueAction {
@@ -34,6 +35,16 @@ extension OTRYapMessageSendAction:  YapTaskQueueAction {
             return .OrderedSame
         }
         return self.date.compare(otherDate)
+    }
+    
+}
+
+extension OTRYapMessageSendAction: YapDatabaseRelationshipNode {
+    
+    // Relationship only really used to make sure tasks are deleted when messages are deleted
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.MessageActionEdgeName.name(), destinationKey: self.messageKey, collection: self.messageCollection, nodeDeleteRules: .DeleteSourceIfDestinationDeleted)
+        return [edge]
     }
     
 }

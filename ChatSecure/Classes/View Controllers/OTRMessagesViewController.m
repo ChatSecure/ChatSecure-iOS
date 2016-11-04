@@ -418,7 +418,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
-                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:[message date]];
+                    dbMessage.messageSecurity = self.state.messageSecurity;
+                    dbMessage.date = [NSDate date];
+                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:dbMessage.date];
                     [sendingAction saveWithTransaction:transaction];
                     [dbMessage saveWithTransaction:transaction];
                 }];
