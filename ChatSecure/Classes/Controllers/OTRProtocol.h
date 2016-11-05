@@ -54,15 +54,15 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 
 - (void) sendMessage:(OTRMessage*)message;
 
-- (void) connectWithPassword:(NSString *)password;
-- (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated;
+- (void) connect;
+- (void) connectUserInitiated:(BOOL)userInitiated;
 
 - (void) disconnect;
 - (void) disconnectSocketOnly:(BOOL)socketOnly;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
 
-- (void) removeBuddies:(NSArray *)buddies;
-- (void) blockBuddies:(NSArray *)buddies;
+- (void) removeBuddies:(NSArray<OTRBuddy*> *)buddies;
+- (void) blockBuddies:(NSArray<OTRBuddy*> *)buddies;
 
 - (id) initWithAccount:(OTRAccount*)account;
 
@@ -71,6 +71,4 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 @protocol OTRXMPPProtocol <OTRProtocol>
 - (void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy;
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRBuddy *)buddy;
-
-- (void) teardownStream;
 @end

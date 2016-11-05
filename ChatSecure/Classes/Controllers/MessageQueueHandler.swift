@@ -277,7 +277,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-            accountProtocol.connectWithPassword(account.password, userInitiated: false)
+            accountProtocol.connectUserInitiated(false)
         } else {
             // The account might be connected then? even if not auto connecting we might just start up faster then the
             // can enter credentials. Try again in a bit myabe the account will be ready
