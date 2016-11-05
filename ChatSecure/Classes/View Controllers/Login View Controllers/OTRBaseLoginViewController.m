@@ -105,6 +105,18 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                 strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 if (error) {
+                    // Unset/remove password from keychain if account
+                    // is unsaved / doesn't already exist. This prevents the case
+                    // where there is a login attempt, but it fails and
+                    // the account is never saved. If the account is never
+                    // saved, it's impossible to delete the orphaned password
+                    __block BOOL accountExists = NO;
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                        accountExists = [transaction objectForKey:account.uniqueId inCollection:[[OTRAccount class] collection]] != nil;
+                    }];
+                    if (!accountExists) {
+                        [account removeKeychainPassword:nil];
+                    }
                     [strongSelf handleError:error];
                 } else {
                     strongSelf.account = account;

@@ -40,6 +40,12 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 /** This value is only used when rememberPassword is false */
 @synthesize password = _password;
 
+- (void) dealloc {
+    if (!self.rememberPassword) {
+        [self removeKeychainPassword:nil];
+    }
+}
+
 - (id)init
 {
     if(self = [super init])
@@ -112,7 +118,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     } else {
         DDLogInfo(@"Password for %@ deleted from keychain.", self.username);
     }
-    if (*error) {
+    if (error) {
         *error = internalError;
     }
     return result;
