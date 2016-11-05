@@ -58,7 +58,8 @@
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
-@import HockeySDK_Source;
+#import "OTRXMPPTorAccount.h"
+@import KSCrash;
 @import OTRAssets;
 @import OTRKit;
 #import "OTRPushTLVHandlerProtocols.h"
@@ -67,7 +68,7 @@
 #import "OTRChatDemo.h"
 #endif
 
-@interface OTRAppDelegate () <BITHockeyManagerDelegate>
+@interface OTRAppDelegate ()
 
 @property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
@@ -84,10 +85,7 @@
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
 #endif
     
-    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:[OTRSecrets hockeyBetaIdentifier]
-                                                         liveIdentifier:[OTRSecrets hockeyLiveIdentifier]
-                                                               delegate:self];
-    [[BITHockeyManager sharedHockeyManager] startManager];
+    [self setupCrashReporting];
     
     _theme = [[[self themeClass] alloc] init];
     [self.theme setupGlobalTheme];
@@ -174,6 +172,26 @@
     [self batteryStateDidChange:nil];
     
     return YES;
+}
+
+- (void) setupCrashReporting {
+    // Setup Crash Reporting
+    KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
+    [installation addConditionalAlertWithTitle:NSLocalizedString(@"Crash Detected", @"")
+                                       message:NSLocalizedString(@"The app crashed last time it was launched. Send a crash report?", @"")
+                                     yesAnswer:NSLocalizedString(@"Sure!", @"")
+                                      noAnswer:NSLocalizedString(@"No thanks", @"")];
+    // http://stackoverflow.com/a/27398665/805882
+    BOOL isRunningTestFlightBeta = [[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"];
+    if (isRunningTestFlightBeta) {
+#warning !!! This will crash the app to help detect deadlocks !!!
+        [KSCrash sharedInstance].deadlockWatchdogInterval = 10;
+        installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
+    } else {
+        installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
+    }
+    
+    [installation install];
 }
 
 - (void) loadDemoData {
@@ -332,11 +350,7 @@
 /** Doesn't stop autoLogin if previous crash when it's a background launch */
 - (void)autoLoginFromBackground:(BOOL)fromBackground
 {
-    //Auto Login
-    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession
-        || fromBackground) {
-        [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
-    }
+    [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -464,11 +478,6 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if ([[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
-                                                          sourceApplication:sourceApplication
-                                                                 annotation:annotation]) {
-        return YES;
-    }
     if ([url.scheme isEqualToString:@"xmpp"]) {
         XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
         XMPPJID *jid = xmppURI.jid;

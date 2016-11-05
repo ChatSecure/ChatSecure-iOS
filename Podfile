@@ -22,7 +22,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
   pod "CocoaLumberjack", '~> 2.3.0'
-  pod "HockeySDK-Source", '~> 3.7'
+  #pod "HockeySDK-Source", '~> 3.7'
+  pod 'KSCrash', '~> 1.10.1'
   pod 'MBProgressHUD', '~> 0.9'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
