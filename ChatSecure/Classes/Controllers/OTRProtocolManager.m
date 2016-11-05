@@ -67,8 +67,8 @@ static OTRProtocolManager *sharedManager = nil;
     @synchronized(self.protocolManagerDictionary) {
         if (account) {
             id protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
-            if (protocol && [protocol respondsToSelector:@selector(teardownStream)]) {
-                [protocol teardownStream];
+            if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
+                [protocol disconnect];
             }
             [self.KVOController unobserve:protocol];
             [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
@@ -156,7 +156,7 @@ static OTRProtocolManager *sharedManager = nil;
         [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
             if (!error) {
                 ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
-                [protocol connectWithPassword:account.password userInitiated:userInitiated];
+                [protocol connectUserInitiated:userInitiated];
             }
             else {
                 DDLogError(@"Error Refreshing Token");
@@ -165,7 +165,7 @@ static OTRProtocolManager *sharedManager = nil;
     }
     else
     {
-        [protocol connectWithPassword:account.password userInitiated:userInitiated];
+        [protocol connectUserInitiated:userInitiated];
     }
 }
 
