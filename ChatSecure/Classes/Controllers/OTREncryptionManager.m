@@ -148,13 +148,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection {
     __block OTRBuddy *buddy = nil;
     __block OTRAccount *account = nil;
+    __block BOOL hasOMEMODevices = NO;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         id databaseObject = [transaction objectForKey:buddyKey inCollection:collection];
         if ([databaseObject isKindOfClass:[OTRBuddy class]]) {
             buddy = databaseObject;
             account = [buddy accountWithTransaction:transaction];
         }
+        hasOMEMODevices = [OTROMEMODevice allDevicesForParentKey:buddyKey collection:collection transaction:transaction].count > 0;
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+        
+        if (buddy == nil || account == nil) {
+            return;
+        }
         
         if (buddy.status == OTRThreadStatusOffline) {
             //If the buddy if offline then don't try to start the session up
@@ -162,7 +168,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         
         [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
-            if ([activeFingerprint count] > 0) {
+            //If a buddy has omemo devices they probably support OTR so we should create a session to allow for media messages and knock info to exchange.
+            if ([activeFingerprint count] > 0 || hasOMEMODevices) {
                 [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
                     if (messageState != OTRKitMessageStateEncrypted) {
                         [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
