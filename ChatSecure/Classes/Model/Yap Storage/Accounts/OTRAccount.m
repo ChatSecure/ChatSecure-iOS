@@ -37,6 +37,14 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 @implementation OTRAccount
 
 @synthesize accountType = _accountType;
+/** This value is only used when rememberPassword is false */
+@synthesize password = _password;
+
+- (void) dealloc {
+    if (!self.rememberPassword) {
+        [self removeKeychainPassword:nil];
+    }
+}
 
 - (id)init
 {
@@ -95,32 +103,50 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return nil;
 }
 
+- (BOOL) removeKeychainPassword:(NSError**)error {
+    NSError *internalError = nil;
+    BOOL result = [SAMKeychain deletePasswordForService:kOTRServiceName account:self.uniqueId error:&internalError];
+    if (!result) {
+        DDLogError(@"Error deleting password from keychain: %@%@", [internalError localizedDescription], [internalError userInfo]);
+    } else {
+        DDLogInfo(@"Password for %@ deleted from keychain.", self.username);
+    }
+    if (error) {
+        *error = internalError;
+    }
+    return result;
+}
+
 - (void)setPassword:(NSString *) password {
-    
-    if (!password.length || !self.rememberPassword) {
-        NSError *error = nil;
-        [SAMKeychain deletePasswordForService:kOTRServiceName account:self.uniqueId error:&error];
-        if (error) {
-            DDLogError(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
-        }
+    // Store password in-memory only if rememberPassword is false
+    // Also remove keychain value
+    if (!self.rememberPassword) {
+        [self removeKeychainPassword:nil];
+        _password = password;
+        return;
+    }
+    if (!password.length) {
+        NSAssert(password.length > 0, @"Improperly removing password!");
+        DDLogError(@"Improperly removing password! To remove password call removeKeychainPassword!");
         return;
     }
     NSError *error = nil;
-    [SAMKeychain setPassword:password forService:kOTRServiceName account:self.uniqueId error:&error];
-    if (error) {
+    BOOL result = [SAMKeychain setPassword:password forService:kOTRServiceName account:self.uniqueId error:&error];
+    if (!result) {
         DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
 }
 
 - (NSString *)password {
     if (!self.rememberPassword) {
-        return nil;
+        [self removeKeychainPassword:nil];
+        return _password;
     }
     NSError *error = nil;
     NSString *password = [SAMKeychain passwordForService:kOTRServiceName account:self.uniqueId error:&error];
     if (error) {
+        //NSAssert(password.length > 0, @"Looking for password in keychain but it wasn't found!");
         DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
-        error = nil;
     }
     return password;
 }

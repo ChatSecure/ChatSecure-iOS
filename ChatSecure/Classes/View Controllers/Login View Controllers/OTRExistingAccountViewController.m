@@ -18,9 +18,7 @@
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRGoolgeOAuthLoginHandler.h"
 #import "GTMOAuth2ViewControllerTouch.h"
-#import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-#import "OTRChatSecureIDCreateAccountHandler.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 @import OTRAssets;
 
@@ -103,7 +101,7 @@
         __typeof__(self) strongSelf = weakSelf;
 		OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] init];
         loginViewController.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO];
-        loginViewController.createLoginHandler = [[OTRXMPPLoginHandler alloc] init];
+        loginViewController.loginHandler = [[OTRXMPPLoginHandler alloc] init];
         [strongSelf.navigationController pushViewController:loginViewController animated:YES];
     }]];
     
@@ -123,7 +121,7 @@
                 OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
                 loginViewController.account = googleAccount;
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
-                loginViewController.createLoginHandler = loginHandler;
+                loginViewController.loginHandler = loginHandler;
                 
                 NSMutableArray *viewControllers = [strongSelf.navigationController.viewControllers mutableCopy];
                 [viewControllers removeObject:viewController];

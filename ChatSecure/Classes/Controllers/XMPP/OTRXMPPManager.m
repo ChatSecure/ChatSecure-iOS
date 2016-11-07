@@ -59,12 +59,11 @@
 #import "OTRNotificationController.h"
 #import "XMPPStreamManagement.h"
 #import "OTRStreamManagementYapStorage.h"
-#import "XMPPMessageCarbons.h"
-#import "OTRXMPPMessageYapStroage.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRXMPPRoomManager.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRXMPPBuddyManager.h"
+#import "OTRXMPPBudyTimers.h"
+#import "OTRXMPPError.h"
+#import "OTRXMPPManager_Private.h"
 @import OTRAssets;
 #import "XMPPIQ+XEP_0357.h"
 
@@ -83,42 +82,7 @@ NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
 NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 
-@interface OTRXMPPManager()
 
-@property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
-
-@property (nonatomic, strong) XMPPStream *xmppStream;
-@property (nonatomic, strong) XMPPReconnect *xmppReconnect;
-@property (nonatomic, strong) XMPPRoster *xmppRoster;
-@property (nonatomic, strong) XMPPvCardTempModule *xmppvCardTempModule;
-@property (nonatomic, strong) XMPPvCardAvatarModule *xmppvCardAvatarModule;
-@property (nonatomic, strong) XMPPCapabilities *xmppCapabilities;
-@property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) XMPPJID *JID;
-@property (nonatomic, strong) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, strong) OTRYapDatabaseRosterStorage * xmppRosterStorage;
-@property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
-@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
-@property (nonatomic) dispatch_queue_t workQueue;
-@property (nonatomic) BOOL isRegisteringNewAccount;
-@property (nonatomic, strong) XMPPStreamManagement *streamManagement;
-@property (nonatomic, strong) XMPPMessageCarbons *messageCarbons;
-@property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
-@property (nonatomic) BOOL userInitiatedConnection;
-@property (nonatomic) OTRLoginStatus loginStatus;
-@property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
-
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
-
-- (void)setupStream;
-- (void)teardownStream;
-
-- (void)goOnline;
-- (void)goOffline;
-- (void)failedToConnect:(NSError *)error;
-
-@end
 
 
 @implementation OTRXMPPManager
@@ -164,7 +128,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
-	self.xmppStream = [[XMPPStream alloc] init];
+	_xmppStream = [[XMPPStream alloc] init];
     
     //Used to fetch correct account from XMPPStream in delegate methods especailly
     self.xmppStream.tag = self.account.uniqueId;
@@ -404,27 +368,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     }
 }
 
-- (void)refreshStreamJID:(NSString *)myJID withPassword:(NSString *)myPassword
-{
-    int r = arc4random() % 99999;
-    
-    NSString * resource = [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
-    
-    self.JID = [XMPPJID jidWithString:myJID resource:resource];
-    
-	[self.xmppStream setMyJID:self.JID];
-    
-    self.password = myPassword;
-}
 
 - (void)authenticateWithStream:(XMPPStream *)stream {
     NSError * error = nil;
     BOOL status = YES;
     if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
-        status = [stream authenticateWithGoogleAccessToken:self.password error:&error];
+        status = [stream authenticateWithGoogleAccessToken:self.account.password error:&error];
     }
     else {
-        status = [stream authenticateWithPassword:self.password error:&error];
+        status = [stream authenticateWithPassword:self.account.password error:&error];
     }
 }
 
@@ -441,19 +393,16 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark Connect/disconnect
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
+- (BOOL)startConnection
 {
-    self.password = myPassword;
     self.connectionStatus = OTRProtocolConnectionStatusConnecting;
     
-    self.JID = [XMPPJID jidWithString:myJID resource:self.account.resource];
+    XMPPJID *jid = [XMPPJID jidWithString:self.account.username resource:self.account.resource];
     
-    if (![self.JID.domain isEqualToString:self.xmppStream.myJID.domain]) {
+    if (![jid.domain isEqualToString:self.xmppStream.myJID.domain]) {
         [self.xmppStream disconnect];
     }
-    
-	[self.xmppStream setMyJID:self.JID];
-    //DDLogInfo(@"myJID %@",myJID);
+    self.xmppStream.myJID = jid;
 	if (![self.xmppStream isDisconnected]) {
         [self authenticateWithStream:self.xmppStream];
 		return YES;
@@ -533,30 +482,32 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self disconnectSocketOnly:NO];
 }
 
-- (void)registerNewAccountWithPassword:(NSString *)newPassword
+- (BOOL)startRegisteringNewAccount
 {
     self.isRegisteringNewAccount = YES;
     if (self.xmppStream.isConnected) {
         [self.xmppStream disconnect];
+        return NO;
     }
     
-    [self connectWithJID:self.account.username password:newPassword];
+    return [self startConnection];
 }
 
-- (void)registerNewAccountWithPassword:(NSString *)newPassword stream:(XMPPStream *)stream
+- (BOOL)continueRegisteringNewAccount
 {
     NSError * error = nil;
-    if ([stream supportsInBandRegistration]) {
-        [stream registerWithPassword:self.password error:&error];
-        if(error)
-        {
+    if ([self.xmppStream supportsInBandRegistration]) {
+        [self.xmppStream registerWithPassword:self.account.password error:&error];
+        if (error) {
             [self failedToRegisterNewAccount:error];
+            return NO;
         }
-    }
-    else{
+    } else {
         error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPUnsupportedAction userInfo:nil];
         [self failedToRegisterNewAccount:error];
+        return NO;
     }
+    return YES;
 }
 
 
@@ -605,7 +556,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     if (self.isRegisteringNewAccount) {
-        [self registerNewAccountWithPassword:self.password stream:sender];
+        [self continueRegisteringNewAccount];
     }
     else{
         [self authenticateWithStream:sender];
@@ -656,8 +607,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
     // Refetch capabilities to check for XEP-0357 support
-    XMPPJID *jid = [XMPPJID jidWithString:[self.JID bare]];
-    [self.xmppCapabilities fetchCapabilitiesForJID:jid];
+    [self.xmppCapabilities fetchCapabilitiesForJID:self.xmppStream.myJID.bareJID];
     
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
@@ -752,7 +702,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     // update my vCard to local nickname setting
     // currently this will clobber whatever you have on the server
-    if ([self.JID isEqualToJID:jid options:XMPPJIDCompareBare]) {
+    if ([self.xmppStream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
         if (self.account.displayName.length &&
             vCardTemp.nickname.length &&
             ![vCardTemp.nickname isEqualToString:self.account.displayName]) {
@@ -779,7 +729,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, jid, error);
     
     // update my vCard to local nickname setting
-    if ([self.JID isEqualToJID:jid options:XMPPJIDCompareBare] &&
+    if ([self.xmppStream.myJID isEqualToJID:jid options:XMPPJIDCompareBare] &&
         self.account.displayName.length) {
         XMPPvCardTemp *vCardTemp = [XMPPvCardTemp vCardTemp];
         vCardTemp.nickname = self.account.displayName;
@@ -991,32 +941,26 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     }
 }
 
-- (NSString*) accountName
-{
-    return [self.JID full];
-    
-}
-
 - (NSString*) type {
     return kOTRProtocolTypeXMPP;
 }
 
-- (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
+- (void) connectUserInitiated:(BOOL)userInitiated
 {
     // Don't issue a reconnect if we're already connected and authenticated
     if ([self.xmppStream isConnected] && [self.xmppStream isAuthenticated]) {
         return;
     }
     self.userInitiatedConnection = userInitiated;
-    [self connectWithJID:self.account.username password:password];
+    [self startConnection];
     if (self.userInitiatedConnection) {
         [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
     }
 }
 
--(void)connectWithPassword:(NSString *)password
+-(void)connect
 {
-    [self connectWithPassword:password userInitiated:NO];
+    [self connectUserInitiated:NO];
 }
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId

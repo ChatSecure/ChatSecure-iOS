@@ -44,7 +44,7 @@ public class OTRWelcomeViewController: UIViewController {
         if segue.identifier == "createNewAccountSegue" {
             let createAccountVC: OTRBaseLoginViewController = segue.destinationViewController as! OTRBaseLoginViewController
             createAccountVC.form = OTRXLFormCreator.formForAccountType(OTRAccountType.Jabber, createAccount: true)
-            createAccountVC.createLoginHandler = OTRXMPPCreateAccountHandler()
+            createAccountVC.loginHandler = OTRXMPPCreateAccountHandler()
         }
     }
     

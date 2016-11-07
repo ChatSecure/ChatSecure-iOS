@@ -30,8 +30,7 @@
 // Override superclass to prevent password clash
 - (void) finishConnectingWithForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account {
     [self prepareForXMPPConnectionFrom:form account:account];
-    NSString *password = account.password;
-    [self.xmppManager connectWithPassword:password userInitiated:YES];
+    [self.xmppManager connectUserInitiated:YES];
 }
 
 @end

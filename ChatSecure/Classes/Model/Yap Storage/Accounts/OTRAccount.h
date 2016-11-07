@@ -35,6 +35,7 @@ extern NSString *const OTRXMPPTorImageName;
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, readonly) OTRAccountType accountType;
 @property (nonatomic, strong) NSString *username;
+/** Setting rememberPassword to false will remove keychain passwords */
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL autologin;
 
@@ -44,7 +45,13 @@ extern NSString *const OTRXMPPTorImageName;
  */
 @property (nonatomic, strong) NSData *avatarData;
 
+/** 
+ * To remove the keychain password, you must explicitly call removeKeychainPassword
+ * instead of setting empty string or nil 
+ */
 @property (nonatomic, strong) NSString *password;
+/** Removes the account password from keychain */
+- (BOOL) removeKeychainPassword:(NSError**)error;
 
 
 - (id)initWithAccountType:(OTRAccountType)accountType;

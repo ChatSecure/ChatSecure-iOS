@@ -17,6 +17,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import AVFoundation;
 @import OTRAssets;

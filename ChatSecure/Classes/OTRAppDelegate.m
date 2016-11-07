@@ -34,7 +34,7 @@
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
 #import "OTRSettingsManager.h"
-#import "OTRSecrets.h"
+@import OTRAssets;
 #import "OTRDatabaseManager.h"
 #import <SAMKeychain/SAMKeychain.h>
 

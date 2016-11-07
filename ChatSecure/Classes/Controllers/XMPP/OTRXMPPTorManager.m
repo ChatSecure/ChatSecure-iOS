@@ -10,6 +10,10 @@
 #import "OTRTorManager.h"
 #import "XMPPStream.h"
 #import "OTRXMPPTorAccount.h"
+#import "OTRXMPPError.h"
+#import "OTRProtocol.h"
+#import "OTRXMPPManager_Private.h"
+
 
 @interface OTRXMPPTorManager()
 @property (nonatomic, strong) OTRXMPPTorAccount *account;
@@ -17,34 +21,22 @@
 
 @implementation OTRXMPPTorManager
 
-@synthesize xmppStream = _xmppStream;
-
-- (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
-{
+- (void) connectUserInitiated:(BOOL)userInitiated {
     if ([OTRTorManager sharedInstance].torManager.isConnected) {
-        [super connectWithPassword:password userInitiated:userInitiated];
-    }
-    else {
+        [super connectUserInitiated:userInitiated];
+    } else {
         NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
         [self failedToConnect:error];
     }
 }
 
-- (void)connectWithPassword:(NSString *)password
-{
-    [self connectWithPassword:password userInitiated:NO];
-}
-
--(XMPPStream *)xmppStream
-{
-    if (!_xmppStream) {
-        _xmppStream = [super xmppStream];
-        NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
-        NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
-        [_xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
-        [_xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
-    }
-    return _xmppStream;
+// override
+- (void) setupStream {
+    [super setupStream];
+    NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
+    NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
+    [self.xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+    [self.xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
 }
 
 - (NSString *)accountDomainWithError:(NSError**)error;
