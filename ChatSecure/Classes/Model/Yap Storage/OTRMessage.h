@@ -55,6 +55,8 @@ extern const struct OTRMessageAttributes {
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
 
 @property (nonatomic, strong) NSDate *date;
+/** OUTGOING ONLY. The date that the message is acknowledged by the server. Only relevant if the stream supporrts XEP-0198 at the time of sending*/
+@property (nonatomic, strong, nullable) NSDate *dateAcked;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSString *messageId;
 @property (nonatomic, strong) NSError *error;
@@ -70,5 +72,6 @@ extern const struct OTRMessageAttributes {
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
++ (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId incoming:(BOOL)incoming transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 @end

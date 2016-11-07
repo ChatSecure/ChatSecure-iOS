@@ -18,7 +18,6 @@
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRGoolgeOAuthLoginHandler.h"
 #import "GTMOAuth2ViewControllerTouch.h"
-#import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 @import OTRAssets;

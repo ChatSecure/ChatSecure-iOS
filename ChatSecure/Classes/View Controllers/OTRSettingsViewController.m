@@ -32,7 +32,6 @@
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "OTRSecrets.h"
 @import YapDatabase.YapDatabaseView;
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
