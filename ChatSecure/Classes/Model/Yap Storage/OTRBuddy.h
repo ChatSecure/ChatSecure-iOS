@@ -20,6 +20,7 @@ typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateGone      = 5
 };
 
+/** These are the preferences for a buddy on how to send a message. Related OTRMessageTransportSecurity*/
 typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
     OTRSessionSecurityDefault,
     OTRSessionSecurityPlaintext,
@@ -70,6 +71,11 @@ extern const struct OTRBuddyAttributes {
 - (nullable OTRMessage *)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (void)updateLastMessageDateWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+
+- (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction
+                             completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block
+                             completionQueue:(nonnull dispatch_queue_t)queue;
+
 
 + (nullable instancetype)fetchBuddyForUsername:(nonnull NSString *)username
                           accountName:(nonnull NSString *)accountName

@@ -43,7 +43,7 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
         self.messageId = [[NSUUID UUID] UUIDString];
         self.delivered = NO;
         self.read = NO;
-        self.messageSecurity = OTRMessageSecurityPlaintext;
+        self.messageSecurity = OTRMessageTransportSecurityPlaintext;
         self.transportedSecurely = NO;
     }
     return self;
@@ -95,10 +95,10 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
 #pragma - mark OTRMessage Protocol methods
 
-- (OTRMessageSecurity) messageSecurity {
+- (OTRMessageTransportSecurity) messageSecurity {
     // Migrate legacy property
     if (self.transportedSecurely) {
-        return OTRMessageSecurityOTR;
+        return OTRMessageTransportSecurityOTR;
     }
     return _messageSecurity;
 }

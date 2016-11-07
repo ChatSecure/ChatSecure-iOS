@@ -18,7 +18,7 @@ import Foundation
     public var canKnock = false
     
     // This should reflect that the current thread is either encrypted or not encrypted. Enables OTRData UI.
-    public var messageSecurity = OTRMessageSecurity.OMEMO
+    public var messageSecurity = OTRMessageTransportSecurity.OMEMO
     
     // This should reflect if the thread(buddy) is online or not so show knock UI or not.
     public var isThreadOnline = false

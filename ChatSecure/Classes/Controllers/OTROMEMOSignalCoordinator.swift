@@ -67,17 +67,6 @@ import YapDatabase
         self.outstandingXMPPStanzaResponseBlocks.removeValueForKey(elementId)
     }
     
-    /**
-     Check if a buddy supports OMEMO. This checks if we've seen devices for this buddy.
-     
-     - parameter buddyYapKey: The yap key of the buddy.
-     
-     - returns: True if there are devices and the buddy supports OMEMO otherwise false.
-     */
-    public func buddySupportsOMEMO(buddyYapKey:String) -> Bool {
-        return self.omemoStorageManager.getDevicesForParentYapKey(buddyYapKey, yapCollection: OTRBuddy.collection(), trusted: true).count > 0
-    }
-    
     /** 
      This must be called before sending every message. It ensures that for every device there is a session and if not the bundles are fetched.
      

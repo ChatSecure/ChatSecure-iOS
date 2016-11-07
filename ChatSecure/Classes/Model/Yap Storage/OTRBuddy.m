@@ -142,6 +142,36 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     return [finalMessage copy];
 }
 
+- (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block completionQueue:(nonnull dispatch_queue_t)queue
+{
+    NSArray <OTROMEMODevice *>*devices = [OTROMEMODevice allDevicesForParentKey:self.uniqueId
+                                                                     collection:[[self class] collection]
+                                                                        transaction:transaction];
+    // If we have some omemo devices then that's the best we have.
+    if ([devices count] > 0) {
+        dispatch_async(queue, ^{
+            block(OTRMessageTransportSecurityOMEMO);
+        });
+        return;
+    }
+    
+    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
+    
+    // Check if we have fingerprints for this buddy. This is the best proxy we have for detecting if we have had an otr session in the past.
+    // If we had a session in the past then we should use that otherwise.
+    [[OTRKit sharedInstance] allFingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
+        if ([activeFingerprint count]) {
+            dispatch_async(queue, ^{
+                block(OTRMessageTransportSecurityOTR);
+            });
+        } else {
+            dispatch_async(queue, ^{
+                block(OTRMessageTransportSecurityPlaintext);
+            });
+        }
+    }];
+}
+
 #pragma - makr OTRThreadOwner Methods
 
 - (NSString *)threadName

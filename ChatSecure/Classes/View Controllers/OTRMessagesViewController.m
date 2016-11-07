@@ -164,19 +164,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
     //Subscribe to changes in encryption state
     __weak __typeof__(self) weakSelf = self;
     [self.KVOController observe:self.state keyPath:NSStringFromSelector(@selector(messageSecurity)) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        
         __typeof__(self) strongSelf = weakSelf;
         
         if ([object isKindOfClass:[MessagesViewControllerState class]]) {
             MessagesViewControllerState *state = (MessagesViewControllerState*)object;
             NSString * placeHolderString = nil;
             switch (state.messageSecurity) {
-                case OTRMessageSecurityPlaintext:
+                case OTRMessageTransportSecurityPlaintext:
                     placeHolderString = SEND_PLAINTEXT_STRING;
                     break;
-                case OTRMessageSecurityOTR:
+                case OTRMessageTransportSecurityOTR:
                     placeHolderString = SEND_OTR_STRING;
                     break;
-                case OTRMessageSecurityOMEMO:
+                case OTRMessageTransportSecurityOMEMO:
                     placeHolderString = SEND_OMEMO_STRING;
                     break;
                     
@@ -452,69 +453,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self presentViewController:verifyNav animated:YES completion:nil];
 }
 
-- (void)setupLockButton
-{
-    __weak OTRMessagesViewController *welf = self;
-    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus) {
-        
-        void (^showEncryptionDropDown)(void) = ^void(void) {
-            
-            [[OTRKit sharedInstance] messageStateForUsername:welf.buddy.username accountName:welf.account.username protocol:welf.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-                NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-                NSString *fingerprintString = VERIFY_STRING;
-                NSArray * buttons = nil;
-                
-                if (messageState == OTRKitMessageStateEncrypted) {
-                    encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
-                }
-                
-                NSString * title = nil;
-                if (currentStatus == OTRLockStatusLockedAndError) {
-                    title = LOCKED_ERROR_STRING;
-                }
-                else if (currentStatus == OTRLockStatusLockedAndWarn) {
-                    title = LOCKED_WARN_STRING;
-                }
-                else if (currentStatus == OTRLockStatusLockedAndVerified){
-                    title = LOCKED_SECURE_STRING;
-                }
-                else if (currentStatus == OTRLockStatusUnlocked){
-                    title = UNLOCKED_ALERT_STRING;
-                }
-                
-                UIButton *encryptionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                [encryptionButton setTitle:encryptionString forState:UIControlStateNormal];
-                [encryptionButton addTarget:self action:@selector(encryptionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-                
-                if (currentStatus == OTRLockStatusUnlocked || currentStatus == OTRLockStatusUnlocked) {
-                    buttons = @[encryptionButton];
-                }
-                else {
-                    UIButton *fingerprintButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                    [fingerprintButton setTitle:fingerprintString forState:UIControlStateNormal];
-                    [fingerprintButton addTarget:self action:@selector(verifyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-                    buttons = @[encryptionButton,fingerprintButton];
-                }
-                
-                [self showDropdownWithTitle:title buttons:buttons animated:YES tag:OTRDropDownTypeEncryption];
-            }];
-        };
-        if (!self.buttonDropdownView) {
-            showEncryptionDropDown();
-        }
-        else{
-            if (self.buttonDropdownView.tag == OTRDropDownTypeEncryption) {
-                [self hideDropdownAnimated:YES completion:nil];
-            }
-            else {
-                [self hideDropdownAnimated:YES completion:showEncryptionDropDown];
-            }
-        }
-    }];
-    
-    [self.navigationItem setRightBarButtonItem:[self rightBarButtonItem]];
-}
-
 - (UIBarButtonItem *)rightBarButtonItem
 {
     if (!self.lockBarButtonItem) {
@@ -525,136 +463,44 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
-    if (!self.account || !self.rightBarButtonItem) {
-        return;
-    }
-    //TODO: Probably not the best way to set the message security. This should be improved by picking better defaults and the buddy info view controller
-    BOOL supportsOMEMO = [self.xmppManager.omemoSignalCoordinator buddySupportsOMEMO:self.threadKey];
-    if (supportsOMEMO) {
-        self.state.messageSecurity = OTRMessageSecurityOMEMO;
+    if (!self.account) {
         return;
     }
     
-    [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
-        if( isGeneratingKey) {
-            [self addLockSpinner];
-        }
-        else {
-            UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
-            if ([rightBarItem isEqual:self.lockBarButtonItem]) {
-                
-                [[OTRProtocolManager sharedInstance].encryptionManager currentEncryptionState:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isTrusted, BOOL hasVerifiedFingerprints, OTRKitMessageState messageState) {
+    __weak __typeof__(self) weakSelf = self;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        id possibleBuddy = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
+        if ([possibleBuddy isKindOfClass:[OTRBuddy class]]) {
+            OTRBuddy *buddy = (OTRBuddy *)possibleBuddy;
+            switch (buddy.preferredSecurity) {
+                case OTRSessionSecurityPlaintext: {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+                    });
+                    break;
+                }
+                case OTRSessionSecurityOTR: {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOTR;
+                    });
+                    break;
+                }
+                case OTRSessionSecurityOMEMO: {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOMEMO;
+                    });
+                    break;
+                }
+                case OTRSessionSecurityDefault: {
+                    [buddy bestTransportSecurityWithTransaction:transaction completionBlock:^(OTRMessageTransportSecurity security) {
+                        strongSelf.state.messageSecurity = security;
+                    } completionQueue:dispatch_get_main_queue()];
+                    break;
+                }
                     
-                    //Set correct lock icon and status
-                    if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
-                        self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
-                    }
-                    else if (messageState == OTRKitMessageStateEncrypted && hasVerifiedFingerprints)
-                    {
-                        self.lockButton.lockStatus = OTRLockStatusLockedAndError;
-                    }
-                    else if (messageState == OTRKitMessageStateEncrypted) {
-                        self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
-                    }
-                    else {
-                        self.lockButton.lockStatus = OTRLockStatusUnlocked;
-                    }
-                    
-                    if (messageState == OTRKitMessageStateEncrypted) {
-                        self.state.messageSecurity = OTRMessageSecurityOTR;
-                    }
-                    [self didUpdateState];
-                    
-                } completionQueue:nil];
             }
         }
-    }];
-}
-
--(void)addLockSpinner {
-    UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [activityIndicatorView sizeToFit];
-    [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
-    [activityIndicatorView startAnimating];
-    self.navigationItem.rightBarButtonItem = activityBarButtonItem;
-}
--(void)removeLockSpinner {
-    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
-    [self updateEncryptionState];
-}
-
-- (void)encryptionButtonPressed:(id)sender
-{
-    [self hideDropdownAnimated:YES completion:nil];
-    
-    [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-        
-        if (messageState == OTRKitMessageStateEncrypted) {
-            [[OTRKit sharedInstance] disableEncryptionWithUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString];
-        }
-        else {
-            [[OTRKit sharedInstance] initiateEncryptionWithUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString];
-        }
-    }];
-}
-
-- (void)verifyButtonPressed:(id)sender
-{
-    [self hideDropdownAnimated:YES completion:nil];
-    
-    [[OTRKit sharedInstance] fingerprintForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(NSString *ourFingerprintString) {
-        
-        [[OTRKit sharedInstance] activeFingerprintForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(NSString *theirFingerprintString) {
-            
-            [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL verified) {
-                
-                
-                UIAlertController * alert = nil;
-                
-                UIAlertAction * verifiedButtonItem = [UIAlertAction actionWithTitle:VERIFIED_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:YES completion:^{
-                        [self updateEncryptionState];
-                    }];
-                }];
-                
-                UIAlertAction * notVerifiedButtonItem = [UIAlertAction actionWithTitle:NOT_VERIFIED_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                    
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [self updateEncryptionState];
-                    }];
-                }];
-                
-                UIAlertAction * verifyLaterButtonItem = [UIAlertAction actionWithTitle:VERIFY_LATER_STRING style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [self updateEncryptionState];
-                    }];
-                }];
-                
-                if(ourFingerprintString && theirFingerprintString) {
-                    NSString *msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.username, theirFingerprintString];
-                    alert = [UIAlertController alertControllerWithTitle:VERIFY_FINGERPRINT_STRING message:msg preferredStyle:UIAlertControllerStyleAlert];
-
-                    if(verified)
-                    {
-                        [alert addAction:verifiedButtonItem];
-                        [alert addAction:notVerifiedButtonItem];
-                    }
-                    else
-                    {
-                        [alert addAction:verifyLaterButtonItem];
-                        [alert addAction:verifiedButtonItem];
-                    }
-                } else {
-                    alert = [UIAlertController alertControllerWithTitle:nil message:SECURE_CONVERSATION_STRING preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
-                    [alert addAction:ok];
-                }
-                
-                [self presentViewController:alert animated:YES completion:nil];
-            }];
-        }];
     }];
 }
 
@@ -1102,7 +948,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             message.incoming = NO;
             message.buddyUniqueId = self.buddy.uniqueId;
             message.mediaItemUniqueId = imageItem.uniqueId;
-            message.messageSecurity = OTRMessageSecurityOTR;
+            message.messageSecurity = OTRMessageTransportSecurityOTR;
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -1141,7 +987,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.incoming = NO;
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.buddy.uniqueId;
-    message.messageSecurity = OTRMessageSecurityOTR;
+    message.messageSecurity = OTRMessageTransportSecurityOTR;
     
     NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
@@ -1342,9 +1188,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     ////// Lock Icon //////
     NSString *lockString = nil;
-    if (message.messageSecurity == OTRMessageSecurityOTR) {
+    if (message.messageSecurity == OTRMessageTransportSecurityOTR) {
         lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
-    } else if (message.messageSecurity == OTRMessageSecurityOMEMO) {
+    } else if (message.messageSecurity == OTRMessageTransportSecurityOMEMO) {
         lockString = [NSString stringWithFormat:@"%@ OMEMO ",[NSString fa_stringForFontAwesomeIcon:FALock]];
     }
     else {

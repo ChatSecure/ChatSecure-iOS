@@ -211,7 +211,7 @@
         self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
     }
-    else if (self.state.isThreadOnline && self.state.messageSecurity == OTRMessageSecurityOTR) {
+    else if (self.state.isThreadOnline && self.state.messageSecurity == OTRMessageTransportSecurityOTR) {
         //Encrypted Show camera button
         self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
         

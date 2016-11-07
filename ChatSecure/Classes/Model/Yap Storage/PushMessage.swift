@@ -52,7 +52,7 @@ extension PushMessage: OTRMessageProtocol {
         return self.error
     }
     
-    public func messageSecurity() -> OTRMessageSecurity {
+    public func messageSecurity() -> OTRMessageTransportSecurity {
         return .Plaintext
     }
     

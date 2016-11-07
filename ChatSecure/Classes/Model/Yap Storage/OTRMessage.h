@@ -23,10 +23,11 @@ extern const struct OTRMessageAttributes {
     __unsafe_unretained NSString * _Nonnull mediaItem;
 } OTRMessageAttributes;
 
-typedef NS_ENUM(NSUInteger, OTRMessageSecurity) {
-    OTRMessageSecurityPlaintext,
-    OTRMessageSecurityOTR,
-    OTRMessageSecurityOMEMO
+// This enum reperesents all the ways a message can be transported. 
+typedef NS_ENUM(NSUInteger, OTRMessageTransportSecurity) {
+    OTRMessageTransportSecurityPlaintext,
+    OTRMessageTransportSecurityOTR,
+    OTRMessageTransportSecurityOMEMO
 };
 
 
@@ -45,7 +46,7 @@ typedef NS_ENUM(NSUInteger, OTRMessageSecurity) {
 
 - (nullable NSError *)messageError;
 
-- (OTRMessageSecurity)messageSecurity;
+- (OTRMessageTransportSecurity)messageSecurity;
 
 - (BOOL)messageRead;
 
@@ -84,7 +85,7 @@ typedef NS_ENUM(NSUInteger, OTRMessageSecurity) {
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 
 /** The method the message is intended to be sent and will be sent */
-@property (nonatomic) OTRMessageSecurity messageSecurity;
+@property (nonatomic) OTRMessageTransportSecurity messageSecurity;
 
 @property (nonatomic, strong, nullable) NSString *mediaItemUniqueId;
 @property (nonatomic, strong, nonnull) NSString *buddyUniqueId;

@@ -13,7 +13,7 @@ import YapTaskQueue
 private struct OutstandingMessageInfo {
     let messageKey:String
     let messageCollection:String
-    let messageSecurity:OTRMessageSecurity
+    let messageSecurity:OTRMessageTransportSecurity
     let timer:NSTimer?
     let completion:((success: Bool, retryTimeout: NSTimeInterval) -> Void)
 }
@@ -74,7 +74,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     
     //MARK: Access to outstanding messages and account
     
-    private func waitingForAccount(accountString:String,messageKey:String,messageCollection:String,messageSecurity:OTRMessageSecurity,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
+    private func waitingForAccount(accountString:String,messageKey:String,messageCollection:String,messageSecurity:OTRMessageTransportSecurity,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
         
         dispatch_async(self.isolationQueue) {
             
@@ -106,7 +106,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return messageInfoSet
     }
     
-    private func waitingForBuddy(buddyKey:String,messageKey:String, messageCollection:String, messageSecurity:OTRMessageSecurity, timer:NSTimer,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
+    private func waitingForBuddy(buddyKey:String,messageKey:String, messageCollection:String, messageSecurity:OTRMessageTransportSecurity, timer:NSTimer,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
         
         let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,messageSecurity:messageSecurity, timer:nil, completion: completion)
         
@@ -123,7 +123,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return messageInfo
     }
     
-    private func waitingForMessage(messageKey:String,messageCollection:String,messageSecurity:OTRMessageSecurity,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
+    private func waitingForMessage(messageKey:String,messageCollection:String,messageSecurity:OTRMessageTransportSecurity,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
         let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection, messageSecurity:messageSecurity, timer:nil, completion: completion)
         let key = "\(messageKey)\(messageCollection)"
         
