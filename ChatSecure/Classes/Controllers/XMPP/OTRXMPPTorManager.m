@@ -11,32 +11,22 @@
 @import XMPPFramework;
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPError.h"
+#import "OTRProtocol.h"
+#import "OTRXMPPManager_Private.h"
 
-
-@interface OTRXMPPManager(Private)
-// private internal methods for override
-- (void)setupStream;
-@end
 
 @interface OTRXMPPTorManager()
 @end
 
 @implementation OTRXMPPTorManager
 
-- (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
-{
+- (void) connectUserInitiated:(BOOL)userInitiated {
     if ([OTRTorManager sharedInstance].torManager.isConnected) {
-        [super connectWithPassword:password userInitiated:userInitiated];
-    }
-    else {
+        [super connectUserInitiated:userInitiated];
+    } else {
         NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
         [self failedToConnect:error];
     }
-}
-
-- (void)connectWithPassword:(NSString *)password
-{
-    [self connectWithPassword:password userInitiated:NO];
 }
 
 // override

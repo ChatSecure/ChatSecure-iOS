@@ -106,47 +106,10 @@
 
 - (void)showLoginSuccessNotification:(NSNotification *)notification
 {
-    if (!self.enabled) {
-        return;
-    }
-    UIViewController *topViewController = [self topViewController];
-    if (![topViewController isKindOfClass:[OTRBaseLoginViewController class]]) {
-        OTRXMPPManager *xmppManager = notification.object;
-        NSString *accountName = nil;
-        if (xmppManager) {
-            accountName = [xmppManager accountName];
-            accountName = [XMPPJID jidWithString:accountName].bare;
-        }
-        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:CONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeSuccess];
-        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
-    }
 }
 
 - (void)showLoginFailureNotification:(NSNotification *)notification
 {
-    if (!self.enabled) {
-        return;
-    }
-    BOOL isUserInitiated = [[notification.userInfo objectForKey:kOTRProtocolLoginUserInitiated] boolValue];
-    
-    UIViewController *topViewController = [self topViewController];
-    if ([topViewController isKindOfClass:[UINavigationController class]]) {
-        topViewController = ((UINavigationController *)topViewController).topViewController;
-    }
-    
-    BOOL correctViewController = !([topViewController isKindOfClass:[OTRBaseLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
-    
-    
-    if (correctViewController && isUserInitiated) {
-        OTRXMPPManager *xmppManager = notification.object;
-        NSString *accountName = nil;
-        if (xmppManager) {
-            accountName = [xmppManager accountName];
-            accountName = [XMPPJID jidWithString:accountName].bare;
-        }
-        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
-        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
-    }
 }
 
 #pragma - mark Public Methods

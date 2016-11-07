@@ -59,7 +59,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.tableView reloadData];
-    [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
+    [self.loginHandler moveAccountValues:self.account intoForm:self.form];
     
     // We need to refresh the username row with the default selected server
     [self updateUsernameRow];
@@ -68,7 +68,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 - (void)setAccount:(OTRAccount *)account
 {
     _account = account;
-    [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
+    [self.loginHandler moveAccountValues:self.account intoForm:self.form];
 }
 
 - (void) cancelButtonPressed:(id)sender {
@@ -91,7 +91,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 		__weak __typeof__(self) weakSelf = self;
         self.loginAttempts += 1;
-        [self.createLoginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
+        [self.loginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
             __typeof__(self) strongSelf = weakSelf;
             NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
             [[MBProgressHUD HUDForView:strongSelf.view] setProgress:progress/100.0f];
@@ -105,6 +105,18 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                 strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 if (error) {
+                    // Unset/remove password from keychain if account
+                    // is unsaved / doesn't already exist. This prevents the case
+                    // where there is a login attempt, but it fails and
+                    // the account is never saved. If the account is never
+                    // saved, it's impossible to delete the orphaned password
+                    __block BOOL accountExists = NO;
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                        accountExists = [transaction objectForKey:account.uniqueId inCollection:[[OTRAccount class] collection]] != nil;
+                    }];
+                    if (!accountExists) {
+                        [account removeKeychainPassword:nil];
+                    }
                     [strongSelf handleError:error];
                 } else {
                     strongSelf.account = account;
@@ -367,7 +379,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 {
     OTRBaseLoginViewController *baseLoginViewController = [[self alloc] initWithForm:[OTRXLFormCreator formForAccount:account] style:UITableViewStyleGrouped];
     baseLoginViewController.account = account;
-    baseLoginViewController.createLoginHandler = [OTRLoginHandler loginHandlerForAccount:account];
+    baseLoginViewController.loginHandler = [OTRLoginHandler loginHandlerForAccount:account];
     
     return baseLoginViewController;
 }

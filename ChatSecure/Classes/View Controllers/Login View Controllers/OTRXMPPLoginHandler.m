@@ -20,7 +20,6 @@
 #import "OTRTorManager.h"
 
 @interface OTRXMPPLoginHandler()
-@property (nonatomic, strong) NSString *password;
 @end
 
 @implementation OTRXMPPLoginHandler
@@ -95,14 +94,11 @@
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
     
     if (password && password.length > 0) {
-        self.password = password;
+        account.password = password;
     } else if (account.password.length == 0) {
         // No password in field, generate strong password for user
-        self.password = [OTRPasswordGenerator passwordWithLength:20];
-    } else {
-        self.password = account.password;
+        account.password = [OTRPasswordGenerator passwordWithLength:20];
     }
-
     
     NSNumber *autologin = [[form formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] value];
     if (autologin) {
@@ -224,7 +220,10 @@
 - (void) finishConnectingWithForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account {
     [self prepareForXMPPConnectionFrom:form account:account];
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
-    [self.xmppManager connectWithPassword:password userInitiated:YES];
+    if (password.length > 0) {
+        account.password = password;
+    }
+    [self.xmppManager connectUserInitiated:YES];
 }
 
 - (void)receivedNotification:(NSNotification *)notification
@@ -233,10 +232,7 @@
     NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];
     OTRAccount *account = self.xmppManager.account;
 
-    if (newStatus == OTRLoginStatusAuthenticated) {        
-        // Account has been created, so save the password
-        account.password = self.password;
-        
+    if (newStatus == OTRLoginStatusAuthenticated) {
         if (self.completion) {
             self.completion(account,nil);
         }
