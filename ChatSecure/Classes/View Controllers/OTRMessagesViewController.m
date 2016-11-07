@@ -113,11 +113,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
-    ////// Lock Button //////
-    //[self setupLockButton];
-    
-    // Info Button
-#warning OMEMO Debug
+    // Profile Info Button
     [self setupInfoButton];
     
      ////// TitleView //////
@@ -433,7 +429,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
-#pragma - mark lockButton Methods
+#pragma - mark Profile Button Methods
 
 - (void)setupInfoButton {
     UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
