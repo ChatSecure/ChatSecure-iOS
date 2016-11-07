@@ -182,16 +182,24 @@
                                      yesAnswer:NSLocalizedString(@"Sure!", @"")
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
     // http://stackoverflow.com/a/27398665/805882
-    BOOL isRunningTestFlightBeta = [[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"];
-    if (isRunningTestFlightBeta) {
+    // this doesn't seem to work
+    //BOOL isRunningTestFlightBeta = [[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"];
+    //if (isRunningTestFlightBeta) {
 #warning !!! This will crash the app to help detect deadlocks !!!
-        [KSCrash sharedInstance].deadlockWatchdogInterval = 10;
-        installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
-    } else {
-        installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
-    }
+#warning !!! Change this back for production builds !!!
+    KSCrash *crash = [KSCrash sharedInstance];
+    crash.deadlockWatchdogInterval = 5;
+    installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
+    //} else {
+    //    installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
+    //}
     
     [installation install];
+    
+    [installation sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error)
+    {
+        // Stuff to do when report sending is complete
+    }];
 }
 
 - (void) loadDemoData {
