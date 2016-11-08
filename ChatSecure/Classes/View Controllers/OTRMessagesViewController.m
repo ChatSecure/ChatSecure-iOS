@@ -186,6 +186,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     break;
             }
             strongSelf.inputToolbar.contentView.textView.placeHolder = placeHolderString;
+            [self didUpdateState];
         }
     }];
     
@@ -473,6 +474,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
         id possibleBuddy = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
         if ([possibleBuddy isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *buddy = (OTRBuddy *)possibleBuddy;
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            
+            [[OTRKit sharedInstance] messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (messageState == OTRKitMessageStateEncrypted) {
+                        self.state.canSendMedia = YES;
+                    } else {
+                        self.state.canSendMedia = NO;
+                    }
+                    [self didUpdateState];
+                });
+                
+            }];
+            
             switch (buddy.preferredSecurity) {
                 case OTRSessionSecurityPlaintext: {
                     dispatch_async(dispatch_get_main_queue(), ^{

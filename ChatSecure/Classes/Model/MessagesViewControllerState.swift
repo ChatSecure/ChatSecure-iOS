@@ -11,15 +11,18 @@ import Foundation
 /// A simple model to encompass all the possible states that affect the send button. In the future this could have more properties for the lock and title bar
 @objc public class MessagesViewControllerState:NSObject {
     
-    // This should reflect whether the textview currently has text
+    /** This should reflect whether the textview currently has text */
     public var hasText = false
     
-    // This should reflect if the current thread can send a knock message and therefore show knock UI
+    /** This should reflect if the current thread can send a knock message and therefore show knock UI */
     public var canKnock = false
     
-    // This should reflect that the current thread is either encrypted or not encrypted. Enables OTRData UI.
-    public var messageSecurity = OTRMessageTransportSecurity.OMEMO
+    /** Reflects media messages can be send. Right now OTRData is only supported so based on if OTR session exists */
+    public var canSendMedia = false
     
-    // This should reflect if the thread(buddy) is online or not so show knock UI or not.
+    /** This should reflect how messages should be sent and what the buddy prefrences are */
+    public var messageSecurity = OTRMessageTransportSecurity.Plaintext
+    
+    /** This should reflect if the thread(buddy) is online or not so show knock UI or not. */
     public var isThreadOnline = false
 }
