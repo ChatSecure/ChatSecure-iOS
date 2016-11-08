@@ -148,7 +148,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
     
     /** Setup databse view handler*/
-    YapDatabaseConnection *connection = [self.databaseConnection.database newConnection];
+    YapDatabaseConnection *connection = [self.readWriteDatabaseConnection.database newConnection];
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:connection];
     self.viewHandler.delegate = self;
     
@@ -198,10 +198,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        NSString *accountKey = [strongSelf buddy].accountUniqueId;
+        __block NSString *accountKey = nil;
+        [strongSelf.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            accountKey = [strongSelf buddyWithTransaction:transaction].accountUniqueId;
+        }];
         if ([account.uniqueId isEqualToString:accountKey]) {
             [strongSelf updateEncryptionState];
         }
+        
+        
     };
     
     self.didFinishGeneratingPrivateKeyNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
@@ -214,7 +219,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if ([note.object isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *notificationBuddy = note.object;
-            if ([notificationBuddy.uniqueId isEqualToString:strongSelf.buddy.uniqueId]) {
+            __block NSString *buddyKey = nil;
+            [strongSelf.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                buddyKey = [strongSelf buddyWithTransaction:transaction].uniqueId;
+            }];
+            if ([notificationBuddy.uniqueId isEqualToString:buddyKey]) {
                 [strongSelf updateEncryptionState];
             }
         }
@@ -264,29 +273,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return indexPaths;
 }
 
-- (id<OTRThreadOwner>)threadObject {
-    __block id <OTRThreadOwner> object = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        object = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
-    }];
-    return object;
+- (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    id object = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
+    if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+        return object;
+    }
+    return nil;
 }
 
-- (OTRBuddy *)buddy {
-    id <OTRThreadOwner> object = [self threadObject];
+- (nullable OTRBuddy *)buddyWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    id <OTRThreadOwner> object = [self threadObjectWithTransaction:transaction];
     if ([object isKindOfClass:[OTRBuddy class]]) {
         return (OTRBuddy *)object;
     }
     return nil;
 }
 
-- (OTRAccount *)account {
-    __block OTRAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        id <OTRThreadOwner> thread =  [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
-        account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
-    }];
-    
+- (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    id <OTRThreadOwner> thread =  [self threadObjectWithTransaction:transaction];
+    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
     return account;
 }
 
@@ -297,7 +302,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.threadKey = key;
     self.threadCollection = collection;
-    self.senderId = [self.threadObject threadAccountIdentifier];
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        self.senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
+    }];
     
     if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
@@ -311,16 +318,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView reloadData];
 }
 
-- (YapDatabaseConnection *)databaseConnection
+                           
+- (YapDatabaseConnection *)readOnlyDatabaseConnection
 {
-    if (!_databaseConnection) {
-        _databaseConnection = [[OTRDatabaseManager sharedInstance].database newConnection];
+    if (!_readOnlyDatabaseConnection) {
+        _readOnlyDatabaseConnection = [[OTRDatabaseManager sharedInstance].database newConnection];
     }
-    return _databaseConnection;
+    return _readOnlyDatabaseConnection;
 }
+                           
+- (YapDatabaseConnection *)readWriteDatabaseConnection
+{
+    if (!_readWriteDatabaseConnection) {
+            _readWriteDatabaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    }
+    return _readWriteDatabaseConnection;
+}
+                        
 
-- (OTRXMPPManager *)xmppManager {
-    OTRAccount *account = [self account];
+- (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    OTRAccount *account = [self accountWithTransaction:transaction];
     return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
 }
 
@@ -329,7 +346,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([collection isEqualToString:[OTRBuddy collection]]) {
         __block OTRBuddy *buddy = nil;
         __block OTRAccount *account = nil;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             buddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
             account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
         }];
@@ -373,19 +390,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     // Set all messages as read
-    id <OTRThreadOwner>threadOwner = [self threadObject];
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    __weak __typeof__(self) weakSelf = self;
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        id <OTRThreadOwner>threadOwner = [strongSelf threadObjectWithTransaction:transaction];
         [threadOwner setAllMessagesAsReadInTransaction:transaction];
     }];
 }
 
 - (void)refreshTitleView
 {
-    id<OTRThreadOwner> thread = [self threadObject];
-    OTRAccount *account = [self account];
+    __block id<OTRThreadOwner> thread = nil;
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [self threadObjectWithTransaction:transaction];
+        account =  [self accountWithTransaction:transaction];
+    }];
     self.titleView.titleLabel.text = [thread threadName];
     
-    if([self.account.displayName length]) {
+    if([account.displayName length]) {
         self.titleView.subtitleLabel.text = account.displayName;
     }
     else {
@@ -393,10 +416,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     //Create big circle and the imageview will resize it down
-    if (!self.buddy) {
-        self.titleView.titleImageView.image = nil;
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
+        self.titleView.titleImageView.image = [OTRImages circleWithRadius:50
+                                                                lineWidth:0
+                                                                lineColor:nil
+                                                                fillColor:[OTRColors colorWithStatus:[thread currentStatus]]];
     } else {
-       self.titleView.titleImageView.image = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:[OTRColors colorWithStatus:[thread currentStatus]]];
+        self.titleView.titleImageView.image = nil;
+       
     }
     
 }
@@ -413,7 +440,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             OTRMessage *msg = (OTRMessage *)message;
             UIAlertAction *resendAction = [UIAlertAction actionWithTitle:RESEND_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
                     dbMessage.messageSecurity = self.state.messageSecurity;
@@ -439,12 +466,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (void) infoButtonPressed:(id)sender {
-    OTRAccount *account = [self account];
-    OTRBuddy *buddy = [self buddy];
-    
-    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.databaseConnection];
+    __block OTRAccount *account = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    YapDatabaseConnection *newConnection = [self.readWriteDatabaseConnection.database newConnection];
+    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:newConnection];
 
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithConnection:self.databaseConnection form:form];
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithConnection:newConnection form:form];
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];
@@ -460,12 +491,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
-    if (!self.account) {
-        return;
-    }
-    
     __weak __typeof__(self) weakSelf = self;
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         id possibleBuddy = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
         if ([possibleBuddy isKindOfClass:[OTRBuddy class]]) {
@@ -525,13 +552,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)connectButtonPressed:(id)sender
 {
     [self hideDropdownAnimated:YES completion:nil];
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+    }];
+    
+    if (account == nil) {
+        return;
+    }
     
     //If we have the password then we can login with that password otherwise show login UI to enter password
-    if ([self.account.password length]) {
-        [[OTRProtocolManager sharedInstance] loginAccount:self.account userInitiated:YES];
+    if ([account.password length]) {
+        [[OTRProtocolManager sharedInstance] loginAccount:account userInitiated:YES];
         
     } else {
-        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:self.account];
+        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
         nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:nav animated:YES completion:nil];
@@ -607,7 +642,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return;
     }
     
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
         [thread setCurrentMessageText:text];
         [transaction setObject:thread forKey:key inCollection:collection];
@@ -629,7 +664,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     __block NSString *text = nil;
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
         text = [thread currentMessageText];
         [thread setCurrentMessageText:nil];
@@ -733,14 +768,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag
 {
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [self buddyWithTransaction:transaction];
+        account = [self accountWithTransaction:transaction];
+    }];
+    
     if (data) {
         
-        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
     } else {
-        NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:self.buddy.uniqueId];
+        NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:buddy.uniqueId];
         
-        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
     }
     
     [mediaItem touchParentMessage];
@@ -774,7 +816,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
 {
     if (videoItem.filename) {
-        NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
+        NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.threadKey];
         MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
         [self presentViewController:moviePlayerViewController animated:YES completion:nil];
     }
@@ -795,7 +837,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.audioPlaybackController stopCurrentlyPlaying];
         OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
         [self.audioPlaybackController attachAudioControlsView:audioControls];
-        [self.audioPlaybackController playAudioItem:audioItem buddyUniqueId:self.buddy.uniqueId error:&error];
+        [self.audioPlaybackController playAudioItem:audioItem buddyUniqueId:self.threadKey error:&error];
     }
     
     if (error) {
@@ -845,7 +887,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.textColor = textColor;
 
 	// Do not allow clickable links for Tor accounts to prevent information leakage
-    if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
+    // Could be better to move this information to the message object to not need to do a database read.
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+    }];
+    if ([account isKindOfClass:[OTRXMPPTorAccount class]]) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     }
     else {
@@ -890,7 +937,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     //3. save both to database
     __weak __typeof__(self) weakSelf = self;
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         [message saveWithTransaction:transaction];
         [sendingAction saveWithTransaction:transaction];
@@ -957,7 +1004,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             __block OTRMessage *message = [[OTRMessage alloc] init];
             message.read = YES;
             message.incoming = NO;
-            message.buddyUniqueId = self.buddy.uniqueId;
+            message.buddyUniqueId = self.threadKey;
             message.mediaItemUniqueId = imageItem.uniqueId;
             message.messageSecurity = OTRMessageTransportSecurityOTR;
             
@@ -965,7 +1012,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [message saveWithTransaction:transaction];
                 [imageItem saveWithTransaction:transaction];
             } completionBlock:^{
-                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.buddy.uniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.threadKey completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
                     if (error) {
                         message.error = error;
@@ -997,10 +1044,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.read = YES;
     message.incoming = NO;
     message.mediaItemUniqueId = videoItem.uniqueId;
-    message.buddyUniqueId = self.buddy.uniqueId;
+    message.buddyUniqueId = self.threadKey;
     message.messageSecurity = OTRMessageTransportSecurityOTR;
     
-    NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
+    NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.threadKey];
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
         
         if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
@@ -1028,7 +1075,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     __block OTRMessage *message = [[OTRMessage alloc] init];
     message.read = YES;
     message.incoming = NO;
-    message.buddyUniqueId = self.buddy.uniqueId;
+    message.buddyUniqueId = self.threadKey;
     
     __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
     audioItem.isIncoming = message.incoming;
@@ -1039,7 +1086,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     message.mediaItemUniqueId = audioItem.uniqueId;
     
-    NSString *newPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:self.buddy.uniqueId];
+    NSString *newPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:self.threadKey];
     
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
         
@@ -1091,12 +1138,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSString *)senderDisplayName
 {
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+    }];
+    
     NSString *senderDisplayName = @"";
-    if (self.account) {
-        if ([self.account.displayName length]) {
-            senderDisplayName = self.account.displayName;
+    if (account) {
+        if ([account.displayName length]) {
+            senderDisplayName = account.displayName;
         } else {
-            senderDisplayName = self.account.username;
+            senderDisplayName = account.username;
         }
     }
     
@@ -1133,10 +1185,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
     }
     else if ([message messageIncoming]) {
-        avatarImage = [self.buddy avatarImage];
+        __block OTRBuddy *buddy = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            buddy = [self buddyWithTransaction:transaction];
+        }];
+        avatarImage = [buddy avatarImage];
     }
     else {
-        avatarImage = [self.account avatarImage];
+        __block OTRAccount *account = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            account = [self accountWithTransaction:transaction];
+        }];
+        avatarImage = [account avatarImage];
     }
     
     if (avatarImage) {
@@ -1233,7 +1293,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 
                 __block OTRMediaItem *mediaItem = nil;
                 //Get the media item
-                [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                     mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
                 }];
                 
@@ -1307,11 +1367,14 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
     __block id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    __weak __typeof__(self) weakSelf = self;
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        __typeof__(self) strongSelf = weakSelf;
         [transaction removeObjectForKey:[message messageKey] inCollection:[message messageCollection]];
         //Update Last message date for sorting and grouping
-        [self.buddy updateLastMessageDateWithTransaction:transaction];
-        [self.buddy saveWithTransaction:transaction];
+        OTRBuddy *buddy = [[strongSelf buddyWithTransaction:transaction] copy];
+        [buddy updateLastMessageDateWithTransaction:transaction];
+        [buddy saveWithTransaction:transaction];
     }];
 }
 

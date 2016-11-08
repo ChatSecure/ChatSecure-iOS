@@ -20,31 +20,32 @@
 
 @implementation OTRMessagesGroupViewController
 
-- (void)setupWithGroupYapId:(NSString *)groupId
-{
-    self.accountUniqueId = [[self threadObject] threadAccountIdentifier];
-}
-
 - (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
 {
     self.accountUniqueId = accountId;
-    [self setupGroupChat:buddies account:[self account] name:name];
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+    }];
+    [self setupGroupChat:buddies account:account name:name];
     
 }
 
 - (void)setupGroupChat:(NSArray <NSString *>*)buddies account:(OTRAccount *)account name:(NSString *)name {
-    NSString *service = [self.xmppManager.roomManager.conferenceServicesJID firstObject];
+    __block OTRXMPPManager *xmppManager = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmppManager = [self xmppManagerWithTransaction:transaction];
+    }];
+    
+    NSString *service = [xmppManager.roomManager.conferenceServicesJID firstObject];
     NSString *roomName = [NSUUID UUID].UUIDString;
     XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
-    self.threadKey = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
+    self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
     [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
-- (OTRAccount *)account {
-    __block OTRAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
-    }];
+- (OTRAccount *)accountWithTransaction:(YapDatabaseReadTransaction *)transaction {
+    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
     return account;
 }
 
@@ -63,7 +64,7 @@
 #pragma - mark Button Actions
 
 - (void)didSelectOccupantsButton:(id)sender {
-    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[self.databaseConnection.database newConnection] roomKey:self.threadKey];
+    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[self.readWriteDatabaseConnection.database newConnection] roomKey:self.threadKey];
     [self.navigationController pushViewController:occupantsViewController animated:YES];
 }
 
@@ -72,17 +73,21 @@
     if(![text length]) {
         return;
     }
-    OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
-    databaseMessage.messageText = text;
-    databaseMessage.messageDate = [NSDate date];
-    databaseMessage.roomUniqueId = self.threadKey;
-    OTRXMPPRoom *room = (OTRXMPPRoom *)[self threadObject];
-    databaseMessage.roomJID = room.jid;
-    databaseMessage.roomUniqueId = room.uniqueId;
-    databaseMessage.senderJID = room.ownJID;
-    databaseMessage.state = RoomMessageStateNeedsSending;
     
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    __weak __typeof__(self) weakSelf = self;
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        
+        OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
+        databaseMessage.messageText = text;
+        databaseMessage.messageDate = [NSDate date];
+        databaseMessage.roomUniqueId = self.threadKey;
+        OTRXMPPRoom *room = (OTRXMPPRoom *)[strongSelf threadObjectWithTransaction:transaction];
+        databaseMessage.roomJID = room.jid;
+        databaseMessage.roomUniqueId = room.uniqueId;
+        databaseMessage.senderJID = room.ownJID;
+        databaseMessage.state = RoomMessageStateNeedsSending;
+
         [databaseMessage saveWithTransaction:transaction];
     }];
     
@@ -99,7 +104,7 @@
         if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
             OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
             __block OTRXMPPRoomOccupant *roomOccupant = nil;
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 [transaction enumerateRoomOccupantsWithJid:roomMessage.senderJID block:^(OTRXMPPRoomOccupant * _Nonnull occupant, BOOL * _Null_unspecified stop) {
                     roomOccupant = occupant;
                     *stop = YES;

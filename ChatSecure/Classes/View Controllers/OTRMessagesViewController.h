@@ -25,7 +25,8 @@
 
 @interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
 @property (nonatomic, strong) NSString *threadKey;
 @property (nonatomic, strong) NSString *threadCollection;
 @property (nonatomic, strong) UIButton *microphoneButton;
@@ -42,10 +43,10 @@
 
 - (UIBarButtonItem *)rightBarButtonItem;
 
-- (id<OTRThreadOwner>)threadObject;
-- (OTRAccount *)account;
-- (OTRXMPPManager *)xmppManager;
-- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
+- (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 /** This is called on every key stroke so be careful here. Used in subclasses*/
 - (void)isTyping;
