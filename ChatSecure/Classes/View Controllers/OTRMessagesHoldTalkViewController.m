@@ -210,8 +210,16 @@
         self.inputToolbar.contentView.rightBarButtonItem = self.knockButton;
         self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+    } else {
+        [self setupDefaultSendButton];
+        if (self.state.hasText) {
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        } else {
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
+        }
     }
-    else if (self.state.isThreadOnline && self.state.messageSecurity == OTRMessageTransportSecurityOTR) {
+    
+    if (self.state.isThreadOnline && self.state.canSendMedia) {
         //Encrypted Show camera button
         self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
         
@@ -233,12 +241,6 @@
         
     } else {
         [self removeMediaButtons];
-        [self setupDefaultSendButton];
-        if (self.state.hasText) {
-            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        } else {
-            self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
-        }
     }
 }
 
