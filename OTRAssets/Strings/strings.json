@@ -1034,5 +1034,13 @@
     "SEND_OMEMO_STRING" : {
         "comment": "The placeholder text in the chat view where the message should go",
         "string": "Send OMEMO encrypted message"
+    },
+    "VIEW_DEVICES_STRING" : {
+        "comment": "The label for a button to view the OMEMO devices",
+        "string": "View Devices"
+    },
+    "UNENCRYPTED_STRING" : {
+        "comment": "Label for messages that are not encrypted",
+        "string": "Unencrypted"
     }
 }

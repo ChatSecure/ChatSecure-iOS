@@ -83,8 +83,8 @@
             
             OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
             message.incoming = YES;
-            id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
-            if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+            NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+            if([activeThreadYapKey isEqualToString:message.threadId]) {
                 message.read = YES;
             }
             OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
@@ -193,8 +193,8 @@
                 if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                     OTRMessage *message = [self messageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
                     message.incoming = incoming;
-                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
-                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                    NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+                    if([activeThreadYapKey isEqualToString:message.threadId]) {
                         message.read = YES;
                     }
                     [message saveWithTransaction:transaction];

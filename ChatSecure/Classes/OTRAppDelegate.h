@@ -48,7 +48,7 @@
 
 - (void) showConversationViewController;
 
-- (id<OTRThreadOwner>)activeThread;
+- (NSString *)activeThreadYapKey;
 
 + (OTRAppDelegate *)appDelegate;
 

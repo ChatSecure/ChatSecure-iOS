@@ -194,13 +194,25 @@
 #pragma - mark JSQMessageViewController
 
 - (void)isTyping {
-    OTRXMPPManager *xmppManager = [self xmppManager];
-    [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:[self threadKey]];
+    __weak __typeof__(self) weakSelf = self;
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
+        [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:[strongSelf threadKey]];
+    }];
+    
+    
 }
 
 - (void)didFinishTyping {
-    OTRXMPPManager *xmppManager = [self xmppManager];
-    [xmppManager sendChatState:kOTRChatStateActive withBuddyID:[self threadKey]];
+    __weak __typeof__(self) weakSelf = self;
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
+        [xmppManager sendChatState:kOTRChatStateActive withBuddyID:[strongSelf threadKey]];
+    }];
+    
+    
 }
 
 - (void)didUpdateState
@@ -407,7 +419,7 @@
         //Create PushMessage to insert into conversation timeline
         __block PushMessage *message = [[PushMessage alloc] init];
         message.buddyKey = self.threadKey;
-        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             [message saveWithTransaction:transaction];
         }];
         
@@ -419,7 +431,7 @@
             if(error != nil) {
                 __typeof__(self) strongSelf = weakSelf;
                 message.error = error;
-                [strongSelf.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [strongSelf.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     [message saveWithTransaction:transaction];
                 }];
             }

@@ -248,9 +248,9 @@
     self.window.rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
 }
 
-- (id<OTRThreadOwner>)activeThread
+- (NSString *)activeThreadYapKey
 {
-    __block id<OTRThreadOwner> threadOwner = nil;
+    __block NSString *threadOwnerYapKey = nil;
     NSArray <UIViewController *>*viewControllers = [self.splitViewCoordinator.splitViewController viewControllers];
     [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSArray <UIViewController *>*result = nil;
@@ -264,16 +264,17 @@
             if([obj isKindOfClass:[OTRMessagesViewController class]] && [obj otr_isVisible])
             {
                 OTRMessagesViewController *messagesViewController = (OTRMessagesViewController *)obj;
-                threadOwner = [messagesViewController threadObject];
+                threadOwnerYapKey = messagesViewController.threadKey;
+                
                 *stop = YES;
             }
         }];
         
-        if (threadOwner) {
+        if (threadOwnerYapKey) {
             *stop = YES;
         }
     }];
-    return threadOwner;
+    return threadOwnerYapKey;
 }
 
 - (void)removeFacebookAccounts
