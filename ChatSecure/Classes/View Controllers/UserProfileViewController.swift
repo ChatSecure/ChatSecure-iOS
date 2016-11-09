@@ -308,12 +308,28 @@ public class UserProfileViewController: XLFormViewController {
         guard let cell = self.tableView(tableView, cellForRowAtIndexPath: indexPath) as? OMEMODeviceFingerprintCell else {
             return
         }
-        guard let device = cell.rowDescriptor.value as? OTROMEMODevice else {
+        var fingerprint = ""
+        var username = ""
+        var cryptoType = ""
+        if let device = cell.rowDescriptor.value as? OTROMEMODevice {
+            cryptoType = "OMEMO"
+            fingerprint = device.humanReadableFingerprint
+            connection?.readWithBlock({ (transaction) in
+                if let buddy = transaction.objectForKey(device.parentKey, inCollection: device.parentCollection) as? OTRBuddy {
+                    username = buddy.username
+                }
+            })
+        }
+        if let otrFingerprint = cell.rowDescriptor.value as? OTRFingerprint {
+            cryptoType = "OTR"
+            fingerprint = otrFingerprint.fingerprint.lowercaseString
+            username = otrFingerprint.username
+        }
+        if fingerprint.characters.count == 0 || username.characters.count == 0 || cryptoType.characters.count == 0 {
             return
         }
-        let fingerprint = device.humanReadableFingerprint
-        
-        let activityViewController = UIActivityViewController(activityItems: [fingerprint], applicationActivities: nil)
+        let stringToShare = "\(username): \(cryptoType) \(fingerprint)"
+        let activityViewController = UIActivityViewController(activityItems: [stringToShare], applicationActivities: nil)
         if let ppc = activityViewController.popoverPresentationController {
             ppc.sourceView = cell
             ppc.sourceRect = cell.frame
