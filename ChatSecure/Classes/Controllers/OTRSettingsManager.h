@@ -24,17 +24,19 @@
 #import "OTRSetting.h"
 #import "OTRConstants.h"
 
+@class OTRSettingsGroup;
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRSettingsManager : NSObject
 
-@property (nonatomic, strong, readonly) NSMutableArray *settingsGroups;
-@property (nonatomic, strong, readonly) NSDictionary *settingsDictionary;
+@property (nonatomic, strong, readonly) NSArray<OTRSettingsGroup*> *settingsGroups;
+@property (nonatomic, strong, readonly) NSDictionary<NSString*,OTRSetting*> *settingsDictionary;
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*) stringForGroupInSection:(NSUInteger)section;
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section;
-- (OTRSetting*) settingForOTRSettingKey:(NSString*)key;
+- (nullable OTRSetting*) settingForOTRSettingKey:(NSString*)key;
 
-- (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting;
+- (nullable NSIndexPath *)indexPathForSetting:(OTRSetting *)setting;
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
 + (double) doubleForOTRSettingKey:(NSString*)key;
@@ -46,3 +48,4 @@
 
 
 @end
+NS_ASSUME_NONNULL_END

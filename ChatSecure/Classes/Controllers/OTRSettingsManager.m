@@ -23,7 +23,6 @@
 #import "OTRSettingsManager.h"
 #import "OTRViewSetting.h"
 @import OTRAssets;
-#import "OTRSettingsGroup.h"
 #import "OTRSetting.h"
 #import "OTRBoolSetting.h"
 #import "OTRViewSetting.h"
@@ -31,6 +30,7 @@
 #import "OTRFeedbackSetting.h"
 #import "OTRConstants.h"
 #import "OTRShareSetting.h"
+#import "OTRSettingsGroup.h"
 #import "OTRLanguageSetting.h"
 #import "OTRDonateSetting.h"
 #import "OTRIntSetting.h"
@@ -42,16 +42,11 @@
 #import "OTRUtilities.h"
 
 @interface OTRSettingsManager ()
-
-@property (nonatomic, strong) NSMutableArray *settingsGroups;
-@property (nonatomic, strong) NSDictionary *settingsDictionary;
-
-- (void) populateSettings;
 @end
 
 @implementation OTRSettingsManager
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {
@@ -62,12 +57,12 @@
 
 - (void) populateSettings
 {
-    self.settingsGroups = [NSMutableArray array];
+    NSMutableArray<OTRSettingsGroup*> *settingsGroups = [NSMutableArray array];
     NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
     // Leave this in for now
     OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
-    OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
-    [self.settingsGroups addObject:accountsGroup];
+    OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:@[accountsViewSetting]];
+    [settingsGroups addObject:accountsGroup];
     
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING
                                                                                  description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING
@@ -75,43 +70,27 @@
     
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
     
-    OTRBoolSetting *opportunisticOtrSetting = [[OTRBoolSetting alloc] initWithTitle:OPPORTUNISTIC_OTR_SETTING_TITLE
-                                                                        description:OPPORTUNISTIC_OTR_SETTING_DESCRIPTION
-                                                                        settingsKey:kOTRSettingKeyOpportunisticOtr];
-    opportunisticOtrSetting.defaultValue = @(YES);
-    [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
-    
     OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING
                                                                            description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
     
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:OTR_FINGERPRINTS_STRING
-                                                                                  description:OTR_FINGERPRINTS_SUBTITLE_STRING];
-    fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
     
     if (![OTRNotificationPermissions canSendNotifications] ||
         [PushController getPushPreference] != PushPreferenceEnabled) {
         OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:nil viewControllerClass:[EnablePushViewController class]];
         pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
-        [self.settingsGroups addObject:pushGroup];
+        [settingsGroups addObject:pushGroup];
     }
 
     
-    NSArray *chatSettings;
-    NSArray * securitySettings;
-    
-    
-    chatSettings = [NSArray arrayWithObjects:deletedDisconnectedConversations, nil];
-    
+    NSArray *chatSettings = @[deletedDisconnectedConversations];
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
-    [self.settingsGroups addObject:chatSettingsGroup];
+    [settingsGroups addObject:chatSettingsGroup];
     
-    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
+    NSArray * securitySettings = @[certSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
-    [self.settingsGroups addObject:securitySettingsGroup];
+    [settingsGroups addObject:securitySettingsGroup];
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
     feedbackViewSetting.imageName = @"18-envelope.png";
@@ -129,8 +108,9 @@
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
-    [self.settingsGroups addObject:otherGroup];
-    self.settingsDictionary = newSettingsDictionary;
+    [settingsGroups addObject:otherGroup];
+    _settingsDictionary = newSettingsDictionary;
+    _settingsGroups = settingsGroups;
 }
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath
@@ -151,7 +131,7 @@
     return [settingsGroup.settings count];
 }
 
-- (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
+- (nullable NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
 {
     __block NSIndexPath *indexPath = nil;
     [self.settingsGroups enumerateObjectsUsingBlock:^(OTRSettingsGroup *group, NSUInteger idx, BOOL *stop) {
@@ -188,7 +168,7 @@
     return [defaults floatForKey:key];
 }
 
-- (OTRSetting*) settingForOTRSettingKey:(NSString*)key {
+- (nullable OTRSetting*) settingForOTRSettingKey:(NSString*)key {
     return [self.settingsDictionary objectForKey:key];
 }
 
