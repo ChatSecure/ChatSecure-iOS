@@ -432,14 +432,33 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     NSError *error =  [message messageError];
     if (error) {
-        UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+        
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:okButton];
+        
         
         if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             OTRMessage *msg = (OTRMessage *)message;
-            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:RESEND_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices) {
+                UIAlertAction *omemoAction = [UIAlertAction actionWithTitle:VIEW_DEVICES_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self infoButtonPressed:action];
+                }];
+                [alertController addAction:omemoAction];
+            }
+            NSString * encryptionString = UNENCRYPTED_STRING;
+            switch (self.state.messageSecurity) {
+                case OTRMessageTransportSecurityOTR:
+                    encryptionString = @"OTR";
+                    break;
+                case OTRMessageTransportSecurityOMEMO:
+                    encryptionString = @"OMEMO";
+                    break;
+                    
+                default:
+                    break;
+            }
+            NSString *resendString = [NSString stringWithFormat:@"%@ (%@)",RESEND_STRING,encryptionString];
+            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:resendString style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
@@ -451,7 +470,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 }];
             }];
             [alertController addAction:resendAction];
+            
+            
+            
         }
+        UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleCancel handler:nil];
+        [alertController addAction:okButton];
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
