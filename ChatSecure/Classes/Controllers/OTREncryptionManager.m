@@ -167,9 +167,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             return;
         }
         
-        [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
+        [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *allFingerprints) {
             //If a buddy has omemo devices they probably support OTR so we should create a session to allow for media messages and knock info to exchange.
-            if ([activeFingerprint count] > 0 || hasOMEMODevices) {
+            if ([allFingerprints count] > 0 || hasOMEMODevices) {
                 [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
                     if (messageState != OTRKitMessageStateEncrypted) {
                         [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];

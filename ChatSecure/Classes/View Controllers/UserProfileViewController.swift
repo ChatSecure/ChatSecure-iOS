@@ -216,12 +216,36 @@ public class UserProfileViewController: XLFormViewController {
             }
         }
         
+        let allFingerprints = OTRKit.sharedInstance().allFingerprints()
+        let myFingerprint = OTRKit.sharedInstance().fingerprintForAccountName(account.username, protocol: account.protocolTypeString())
+        let addFingerprintsToSection: ([OTRFingerprint], XLFormSectionDescriptor) -> Void = { fingerprints, section in
+            for fingerprint in fingerprints {
+                let row = XLFormRowDescriptor(tag: fingerprint.fingerprint, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
+                if let myFingerprint = myFingerprint {
+                    if (fingerprint === myFingerprint) {
+                        // We implicitly trust ourselves with OTR
+                        row.disabled = true
+                    } else {
+                        row.disabled = false
+                    }
+                }
+                
+                row.value = fingerprint
+                
+                section.addFormRow(row)
+            }
+        }
+        
         var allMyDevices: [OTROMEMODevice] = []
         allMyDevices.append(thisDevice)
         allMyDevices.appendContentsOf(ourFilteredDevices)
         addDevicesToSection(allMyDevices, yourProfileSection)
         
         var theirSections: [XLFormSectionDescriptor] = []
+
+        if let myFingerprint = myFingerprint {
+            addFingerprintsToSection([myFingerprint], yourProfileSection)
+        }
         
         // Add section for each buddy's device
         for buddy in buddies {
@@ -234,8 +258,13 @@ public class UserProfileViewController: XLFormViewController {
             connection.readWithBlock({ (transaction: YapDatabaseReadTransaction) in
                 theirDevices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
             })
+            let theirFingerprints = allFingerprints.filter({ (fingerprint: OTRFingerprint) -> Bool in
+                return fingerprint.username == buddy.username &&
+                fingerprint.accountName == account.username
+            })
 
             addDevicesToSection(theirDevices, theirSection)
+            addFingerprintsToSection(theirFingerprints, theirSection)
             theirSections.append(theirSection)
         }
  

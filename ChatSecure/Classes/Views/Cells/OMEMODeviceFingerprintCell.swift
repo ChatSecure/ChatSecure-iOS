@@ -11,6 +11,7 @@ import XLForm
 import OTRAssets
 import XMPPFramework
 import FormatterKit
+import OTRKit
 
 private extension String {
     //http://stackoverflow.com/a/34454633/805882
@@ -62,9 +63,26 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
     
     public override func update() {
         super.update()
-        guard let device = rowDescriptor.value as? OTROMEMODevice else {
-            return
+        if let device = rowDescriptor.value as? OTROMEMODevice {
+            updateCellFromDevice(device)
         }
+        if let fingerprint = rowDescriptor.value as? OTRFingerprint {
+            updateCellFromFingerprint(fingerprint)
+        }
+    }
+    
+
+    
+    @IBAction func switchValueChanged(sender: UISwitch) {
+        if let device = rowDescriptor.value as? OTROMEMODevice {
+            switchValueWithDevice(device)
+        }
+        if let fingerprint = rowDescriptor.value as? OTRFingerprint {
+            switchValueWithFingerprint(fingerprint)
+        }
+    }
+    
+    private func updateCellFromDevice(device: OTROMEMODevice) {
         let trusted = device.isTrusted()
         trustSwitch.on = trusted
         
@@ -75,7 +93,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         fingerprintLabel.text = fingerprint
         let interval = -NSDate().timeIntervalSinceDate(device.lastSeenDate)
         let since = self.dynamicType.intervalFormatter.stringForTimeInterval(interval)
-        let lastSeen = NSLocalizedString("Last Seen: ", comment: "") + since
+        let lastSeen = "OMEMO: " + since
         lastSeenLabel.text = lastSeen
         let enabled = !rowDescriptor.isDisabled()
         trustSwitch.enabled = enabled
@@ -83,10 +101,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         lastSeenLabel.enabled = enabled
     }
     
-    @IBAction func switchValueChanged(sender: UISwitch) {
-        guard let device = rowDescriptor.value as? OTROMEMODevice else {
-            return
-        }
+    private func switchValueWithDevice(device: OTROMEMODevice) {
         if (trustSwitch.on) {
             device.trustLevel = .TrustedUser
         } else {
@@ -94,5 +109,27 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         }
         rowDescriptor.value = device
     }
+    
+    private func updateCellFromFingerprint(fingerprint: OTRFingerprint) {
+        fingerprintLabel.text = fingerprint.fingerprint.lowercaseString
+        lastSeenLabel.text = "OTR"
+        trustSwitch.enabled = true
+        if (fingerprint.trustLevel == .TrustedUser ||
+            fingerprint.trustLevel == .TrustedTofu) {
+            trustSwitch.on = true
+        } else {
+            trustSwitch.on = false
+        }
+    }
+    
+    private func switchValueWithFingerprint(fingerprint: OTRFingerprint) {
+        if (trustSwitch.on) {
+            fingerprint.trustLevel = .TrustedUser
+        } else {
+            fingerprint.trustLevel = .Untrusted
+        }
+        rowDescriptor.value = fingerprint
+    }
+
     
 }
