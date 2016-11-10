@@ -438,6 +438,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         
         if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
+            //If it's an outgoing message the error title should be that we were unable to send the message.
+            alertController.title = UNABLE_TO_SEND_STRING;
             OTRMessage *msg = (OTRMessage *)message;
             // This is an incoming message so we can offer to resend
             UIAlertAction *resendAction = [UIAlertAction actionWithTitle:TRY_AGAIN_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

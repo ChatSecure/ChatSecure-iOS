@@ -1054,5 +1054,10 @@
     "VIEW_PROFILE_DESCRIPTION_STRING" : {
         "comment": "Describe how to change a contact's device settings",
         "string": "View profile to review contact's devices or change encryption settings."
+    },
+    "UNABLE_TO_SEND_STRING" : {
+        "comment": "Title for error message",
+        "string": "Unable to Send Message"
     }
+
 }

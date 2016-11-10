@@ -116,6 +116,7 @@
 #define errSSLPeerRecordOverflowString [OTRLanguageManager translatedString: @"Record overflow"]
 #define KNOCK_SENT_STRING [OTRLanguageManager translatedString: @"Knock Sent"]
 #define SECURITY_STRING [OTRLanguageManager translatedString: @"Security"]
+#define UNABLE_TO_SEND_STRING [OTRLanguageManager translatedString: @"Unable to Send Message"]
 #define errSSLPeerCertUnknownString [OTRLanguageManager translatedString: @"Unknown certificate"]
 #define ERROR_CREATING_ACCOUNT_STRING [OTRLanguageManager translatedString: @"Error Creating Account"]
 #define OTR_FINGERPRINTS_STRING [OTRLanguageManager translatedString: @"OTR Fingerprints"]
