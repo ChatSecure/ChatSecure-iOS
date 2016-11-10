@@ -171,10 +171,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     placeHolderString = SEND_PLAINTEXT_STRING;
                     break;
                 case OTRMessageTransportSecurityOTR:
-                    placeHolderString = SEND_OTR_STRING;
+                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING,@"OTR"];
                     break;
                 case OTRMessageTransportSecurityOMEMO:
-                    placeHolderString = SEND_OMEMO_STRING;
+                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING,@"OMEMO"];;
                     break;
                     
                 default:
@@ -434,31 +434,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (error) {
         
         
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleActionSheet];
         
         
         if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             OTRMessage *msg = (OTRMessage *)message;
-            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices) {
-                UIAlertAction *omemoAction = [UIAlertAction actionWithTitle:VIEW_DEVICES_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self infoButtonPressed:action];
-                }];
-                [alertController addAction:omemoAction];
-            }
-            NSString * encryptionString = UNENCRYPTED_STRING;
-            switch (self.state.messageSecurity) {
-                case OTRMessageTransportSecurityOTR:
-                    encryptionString = @"OTR";
-                    break;
-                case OTRMessageTransportSecurityOMEMO:
-                    encryptionString = @"OMEMO";
-                    break;
-                    
-                default:
-                    break;
-            }
-            NSString *resendString = [NSString stringWithFormat:@"%@ (%@)",RESEND_STRING,encryptionString];
-            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:resendString style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // This is an incoming message so we can offer to resend
+            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:TRY_AGAIN_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
@@ -471,11 +453,36 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
             [alertController addAction:resendAction];
             
+            NSString * sendingType = UNENCRYPTED_STRING;
+            switch (self.state.messageSecurity) {
+                case OTRMessageTransportSecurityOTR:
+                    sendingType = @"OTR";
+                    break;
+                case OTRMessageTransportSecurityOMEMO:
+                    sendingType = @"OMEMO";
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
+            alertController.message = [alertController.message stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
+            
+            //If this is an error about not having a trusted identity then we should offer to connect to the
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices) {
+                UIAlertAction *omemoAction = [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self infoButtonPressed:action];
+                }];
+                [alertController addAction:omemoAction];
+                alertController.message = [alertController.message stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
+            }
+            
             
             
         }
-        UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleCancel handler:nil];
-        [alertController addAction:okButton];
+        UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        [alertController addAction:cancelButton];
         
         [self presentViewController:alertController animated:YES completion:nil];
     }

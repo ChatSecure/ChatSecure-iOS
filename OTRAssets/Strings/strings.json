@@ -245,7 +245,7 @@
     },
     "ERROR_STRING": {
         "comment": "Title of error message pop-up box",
-        "string": "Error!"
+        "string": "Error"
     },
     "EXPIRATION_STRING": {
         "comment": "Message displayed in Notification Manager when session will expire in one minute",
@@ -1019,28 +1019,40 @@
         "comment": "The placeholder text for the text field to enter a group chat name or label",
         "string": "Enter a group name"
     },
-    "RESEND_STRING": {
+    "TRY_AGAIN_STRING": {
         "comment": "Label for button to resend message.",
-        "string": "Resend"
+        "string": "Try Again"
     },
     "SEND_PLAINTEXT_STRING" : {
         "comment": "The placeholder text in the chat view where the message should go",
-        "string": "Send unencrypted message"
+        "string": "Send plaintext message"
     },
-    "SEND_OTR_STRING" : {
+    "SEND_ENCRYPTED_STRING" : {
         "comment": "The placeholder text in the chat view where the message should go",
-        "string": "Send OTR encrypted message"
+        "string": "Send %@ encrypted message"
     },
-    "SEND_OMEMO_STRING" : {
-        "comment": "The placeholder text in the chat view where the message should go",
-        "string": "Send OMEMO encrypted message"
-    },
-    "VIEW_DEVICES_STRING" : {
-        "comment": "The label for a button to view the OMEMO devices",
-        "string": "View Devices"
+    "VIEW_PROFILE_STRING" : {
+        "comment": "The label for a button to view the buddy profile",
+        "string": "View Profile"
     },
     "UNENCRYPTED_STRING" : {
         "comment": "Label for messages that are not encrypted",
-        "string": "Unencrypted"
+        "string": "plaintext"
+    },
+    "UNKNOWN_ERROR_STRING" : {
+        "comment": "Describes an error without a known cause",
+        "string": "Unkown Error."
+    },
+    "NO_DEVICES_ERROR_STRING" : {
+        "comment": "Error message for not finding any devices",
+        "string": "We could not find any trusted devices for this contact."
+    },
+    "RESEND_DESCRIPTION_STRING" : {
+        "comment": "Describe what resending will do the %@ will be replaced withe the method OTR/OMEMO/Plaintext",
+        "string": "Resending this message will use %@."
+    },
+    "VIEW_PROFILE_DESCRIPTION_STRING" : {
+        "comment": "Describe how to change a contact's device settings",
+        "string": "View profile to review contact's devices or change encryption settings."
     }
 }

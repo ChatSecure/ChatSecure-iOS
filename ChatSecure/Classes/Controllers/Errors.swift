@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OTRAssets
 
 public extension NSError {
     class func XMPPXMLError(error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
@@ -145,11 +146,11 @@ extension OTROMEMOError: ChatSecureErrorProtocol {
     public func localizedDescription() -> String {
         switch self {
         case .UnknownError:
-            return "Unknown Error"
+            return NSLocalizedString("Unkown Error.", comment: "Describes an error without a known cause")
         case .NoDevicesForBuddy:
-            return "Could not find any trusted devices for buddy and encrypt a message to them"
+            return NSLocalizedString("We could not find any trusted devices for this contact.", comment: "Error message for not finding any devices")
         case .NoDevices:
-            return "Could not encrypt to any buddies"
+            return NSLocalizedString("We could not find any trusted devices for this account.", comment: "Error message for not finding any devices")
         }
     }
     
