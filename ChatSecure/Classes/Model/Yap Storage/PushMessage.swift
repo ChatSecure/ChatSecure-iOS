@@ -22,7 +22,7 @@ public class PushMessage: OTRYapDatabaseObject {
     
     ///Send it to the same collection of other messages
     public class override func collection() -> String {
-        return OTRMessage.collection()
+        return OTRBaseMessage.collection()
     }
     
 }
@@ -33,7 +33,7 @@ extension PushMessage: OTRMessageProtocol {
     }
     
     public func messageCollection() -> String {
-        return OTRMessage.collection()
+        return OTRBaseMessage.collection()
     }
     
     public func threadId() -> String? {

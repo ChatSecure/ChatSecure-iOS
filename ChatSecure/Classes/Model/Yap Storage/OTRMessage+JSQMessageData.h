@@ -6,9 +6,19 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 @import JSQMessagesViewController;
 
-@interface OTRMessage (JSQMessageData) <JSQMessageData>
+@interface OTRBaseMessage (JSQMessageData)
+
+@end
+
+@interface OTRIncomingMessage (JSQMessageData) <JSQMessageData>
+
+@end
+
+
+@interface OTROutgoingMessage (JSQMessageData) <JSQMessageData>
 
 @end

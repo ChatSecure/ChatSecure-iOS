@@ -17,7 +17,8 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRMediaFileManager.h"
 @import IOCipher;
 #import "NSFileManager+ChatSecure.h"

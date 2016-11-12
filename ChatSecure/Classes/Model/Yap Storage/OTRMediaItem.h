@@ -8,8 +8,8 @@
 
 @import JSQMessagesViewController;
 #import "OTRYapDatabaseObject.h"
-
-@class OTRMessage;
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 
 @interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
 
@@ -20,7 +20,7 @@
 
 - (void)touchParentMessage;
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-- (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
+- (OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 

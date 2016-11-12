@@ -68,7 +68,7 @@ extern const struct OTRBuddyAttributes {
 
 @property (nonatomic, strong, nonnull) NSString *accountUniqueId;
 
-- (nullable OTRMessage *)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (void)updateLastMessageDateWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 

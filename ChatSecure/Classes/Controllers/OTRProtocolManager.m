@@ -23,7 +23,8 @@
 #import "OTRProtocolManager.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRConstants.h"
 #import "OTROAuthRefresher.h"
 #import "OTROAuthXMPPAccount.h"
@@ -242,7 +243,7 @@ static OTRProtocolManager *sharedManager = nil;
 }
 
 
-- (void)sendMessage:(OTRMessage *)message {
+- (void)sendMessage:(OTROutgoingMessage *)message {
     
     __block OTRAccount * account = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {

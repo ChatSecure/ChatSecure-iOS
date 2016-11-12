@@ -41,7 +41,8 @@
 @import YapDatabase;
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
@@ -483,7 +484,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
         {
             [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [OTRMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
+                [OTRBaseMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
             }];
         }
     }];
@@ -688,9 +689,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     if ([message.elementID length]) {
         [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
-                    ((OTRMessage *)databaseMessage).error = error;
-                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
+                if ([databaseMessage isKindOfClass:[OTRBaseMessage class]]) {
+                    ((OTRBaseMessage *)databaseMessage).error = error;
+                    [(OTRBaseMessage *)databaseMessage saveWithTransaction:transaction];
                     *stop = YES;
                 }
                 
@@ -926,7 +927,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark OTRProtocol
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void) sendMessage:(OTRMessage*)message
+- (void) sendMessage:(OTROutgoingMessage*)message
 {
     NSString *text = message.text;
     
@@ -1209,7 +1210,7 @@ managedBuddyObjectID
 }
 
 // Delivery receipts
-- (void) sendDeliveryReceiptForMessage:(OTRMessage*)message {
+- (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message {
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];        
         XMPPMessage *tempMessage = [XMPPMessage messageWithType:@"chat" elementID:message.messageId];

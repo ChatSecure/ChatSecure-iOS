@@ -6,8 +6,13 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-#import <ChatSecureCore/ChatSecureCore.h>
+#import "OTRBaseMessage.h"
 
-@interface OTRIncomingMessage : OTRBaseMessage
+@interface OTRIncomingMessage : OTRBaseMessage <OTRMessageProtocol>
+
+@property (nonatomic) BOOL read;
+
+/** The method the message is intended to be sent and will be sent */
+@property (nonatomic, strong, nonnull) OTRMessageEncryptionInfo *messageSecurityInfo;
 
 @end

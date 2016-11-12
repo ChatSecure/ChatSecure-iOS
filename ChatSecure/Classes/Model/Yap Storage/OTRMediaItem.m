@@ -11,7 +11,6 @@
 @import JSQMessagesViewController;
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "OTRMessage.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRMediaItem
@@ -39,13 +38,13 @@
     }];
 }
 
-- (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
+- (OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
-    __block OTRMessage *message = nil;
+    __block OTRBaseMessage *message = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
     [[readTransaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
+        message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
         *stop = YES;
     }];
     return message;

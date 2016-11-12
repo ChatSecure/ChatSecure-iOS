@@ -18,30 +18,30 @@
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
-- (void)receivedTextViewChangedNotification:(NSNotification *)notification;
+- (void)receivedTextViewChangedNotification:( NSNotification * _Nonnull )notification;
 - (void)didUpdateState;
 
 @end
 
 @interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
-@property (nonatomic, strong) NSString *threadKey;
-@property (nonatomic, strong) NSString *threadCollection;
-@property (nonatomic, strong) UIButton *microphoneButton;
-@property (nonatomic, strong) UIButton *sendButton;
-@property (nonatomic, strong) UIButton *cameraButton;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *readOnlyDatabaseConnection;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, strong, nullable) NSString *threadKey;
+@property (nonatomic, strong, nullable) NSString *threadCollection;
+@property (nonatomic, strong, nullable) UIButton *microphoneButton;
+@property (nonatomic, strong, nullable) UIButton *sendButton;
+@property (nonatomic, strong, nullable) UIButton *cameraButton;
 
-@property (nonatomic, strong, readonly) MessagesViewControllerState *state;
+@property (nonatomic, strong, nonnull, readonly) MessagesViewControllerState *state;
 
-- (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
-- (void)sendAudioFileURL:(NSURL *)url;
-- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
+- (void)setThreadKey:(nullable NSString *)key collection:(nullable NSString *)collection;
+- (void)sendAudioFileURL:(nonnull NSURL *)url;
+- (void)sendImageFilePath:(nonnull NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
 
 - (void)updateEncryptionState;
 
-- (UIBarButtonItem *)rightBarButtonItem;
+- (nullable UIBarButtonItem *)rightBarButtonItem;
 
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;

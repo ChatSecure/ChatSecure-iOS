@@ -8,7 +8,8 @@
 
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
 @import YapDatabase;
 #import "OTRImages.h"
@@ -94,7 +95,7 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        OTRBaseMessage *message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (message) {
             if (!date) {
                 date = message.date;
@@ -118,28 +119,28 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         id databseObject = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if ([databseObject isKindOfClass:[OTRMessage class]]) {
-            OTRMessage *message = (OTRMessage *)databseObject;
-            if (!message.isRead) {
+        if ([databseObject isKindOfClass:[OTRIncomingMessage class]]) {
+            OTRIncomingMessage *message = (OTRIncomingMessage *)databseObject;
+            if (!message.read) {
                 message.read = YES;
                 [message saveWithTransaction:transaction];
             }
         }        
     }];
 }
-- (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
+- (id <OTRMessageProtocol>)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    __block OTRMessage *finalMessage = nil;
+    __block id <OTRMessageProtocol> finalMessage = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        OTRBaseMessage *message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (!finalMessage ||    [message.date compare:finalMessage.date] == NSOrderedDescending) {
-            finalMessage = message;
+            finalMessage = (id <OTRMessageProtocol>)message;
         }
         
     }];
-    return [finalMessage copy];
+    return finalMessage;
 }
 
 - (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block completionQueue:(nonnull dispatch_queue_t)queue

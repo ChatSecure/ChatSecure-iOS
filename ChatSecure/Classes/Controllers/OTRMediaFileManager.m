@@ -9,7 +9,8 @@
 #import "OTRMediaFileManager.h"
 @import IOCipher;
 #import "OTRMediaItem.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 

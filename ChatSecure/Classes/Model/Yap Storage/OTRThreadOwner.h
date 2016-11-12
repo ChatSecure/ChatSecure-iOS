@@ -6,7 +6,7 @@
 //  Copyright © 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRMessage.h"
+#import "OTRBaseMessage.h"
 
 typedef NS_ENUM(NSInteger, OTRThreadStatus) {
     OTRThreadStatusAvailable    = 0,

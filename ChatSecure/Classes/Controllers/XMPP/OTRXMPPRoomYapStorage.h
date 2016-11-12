@@ -9,7 +9,8 @@
 @import Foundation;
 @import XMPPFramework;
 @import YapDatabase;
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>
 

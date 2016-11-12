@@ -20,7 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-@class OTRMessage, OTRBuddy, OTRAccount;
+@class OTROutgoingMessage, OTRBuddy, OTRAccount;
 @protocol PushControllerProtocol;
 
 typedef NS_ENUM(int, OTRProtocolType) {
@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 - (OTRAccount *)account;
 - (OTRProtocolConnectionStatus)connectionStatus;
 
-- (void) sendMessage:(OTRMessage*)message;
+- (void) sendMessage:(OTROutgoingMessage*)message;
 
 - (void) connect;
 - (void) connectUserInitiated:(BOOL)userInitiated;

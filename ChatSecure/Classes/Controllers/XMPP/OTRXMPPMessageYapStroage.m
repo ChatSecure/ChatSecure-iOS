@@ -11,7 +11,8 @@
 #import "OTRLog.h"
 @import OTRKit;
 #import "OTRXMPPBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
 #import "OTRConstants.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -46,14 +47,12 @@
     return [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
 }
 
-- (OTRMessage *)messageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId
-{
+- (OTRBaseMessage *)baseMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId class:(Class)class {
     NSString *body = [xmppMessage body];
     
     NSDate * date = [xmppMessage delayedDeliveryDate];
     
-    OTRMessage *message = [[OTRMessage alloc] init];
-    message.incoming = YES;
+    OTRBaseMessage *message = [[class alloc] init];
     message.text = body;
     message.buddyUniqueId = buddyId;
     if (date) {
@@ -62,6 +61,15 @@
     
     message.messageId = [xmppMessage elementID];
     return message;
+}
+
+- (OTROutgoingMessage *)outgoingMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId {
+    return (OTROutgoingMessage *)[self baseMessageFromXMPPMessage:xmppMessage buddyId:buddyId class:[OTROutgoingMessage class]];
+}
+
+- (OTRIncomingMessage *)incomingMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId
+{
+    return (OTRIncomingMessage *)[self baseMessageFromXMPPMessage:xmppMessage buddyId:buddyId class:[OTRIncomingMessage class]];
 }
 
 - (void)handleMessage:(XMPPMessage *)xmppMessage stream:(XMPPStream *)stream incoming:(BOOL)incoming;
@@ -81,8 +89,7 @@
                 return;
             }
             
-            OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
-            message.incoming = YES;
+            OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
             NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
             if([activeThreadYapKey isEqualToString:message.threadId]) {
                 message.read = YES;
@@ -144,7 +151,7 @@
 - (void)handleDeliverResponse:(XMPPMessage *)xmppMessage transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
-        [OTRMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
+        [OTROutgoingMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
     }
 }
 
@@ -191,13 +198,17 @@
                 
                 
                 if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
-                    OTRMessage *message = [self messageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                    message.incoming = incoming;
-                    NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
-                    if([activeThreadYapKey isEqualToString:message.threadId]) {
-                        message.read = YES;
+                    if (incoming) {
+                        OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+                        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+                        if([activeThreadYapKey isEqualToString:message.threadId]) {
+                            message.read = YES;
+                        }
+                        [message saveWithTransaction:transaction];
+                    } else {
+                        OTROutgoingMessage *message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+                        [message saveWithTransaction:transaction];
                     }
-                    [message saveWithTransaction:transaction];
                 }
             }
         }

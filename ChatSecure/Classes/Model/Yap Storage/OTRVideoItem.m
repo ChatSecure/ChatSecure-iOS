@@ -10,7 +10,8 @@
 #import "OTRImages.h"
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 @import JSQMessagesViewController;
 @import PureLayout;
 #import "OTRMediaServer.h"
@@ -23,7 +24,7 @@
 {
     __block NSString *buddyUniqueId = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRMessage *message = [self parentMessageInTransaction:transaction];
+        OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
         buddyUniqueId = message.buddyUniqueId;
     }];
     

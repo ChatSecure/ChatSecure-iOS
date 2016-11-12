@@ -437,14 +437,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleActionSheet];
         
         
-        if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
+        if([message isKindOfClass:[OTROutgoingMessage class]]) {
             //If it's an outgoing message the error title should be that we were unable to send the message.
             alertController.title = UNABLE_TO_SEND_STRING;
-            OTRMessage *msg = (OTRMessage *)message;
+            OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
             // This is an incoming message so we can offer to resend
             UIAlertAction *resendAction = [UIAlertAction actionWithTitle:TRY_AGAIN_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    OTRMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
+                    OTROutgoingMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
                     dbMessage.messageSecurity = self.state.messageSecurity;
                     dbMessage.date = [NSDate date];
@@ -959,14 +959,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.definesPresentationContext = YES;
     
     //1. Create new message database object
-    __block OTRMessage *message = [[OTRMessage alloc] init];
+    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     message.text = text;
-    message.read = YES;
     message.messageSecurity = self.state.messageSecurity;
     
     //2. Create send message task
-    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
+    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTROutgoingMessage collection] buddyKey:message.threadId date:message.date];
     
     //3. save both to database
     __weak __typeof__(self) weakSelf = self;
@@ -1034,9 +1033,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             imageItem.isIncoming = NO;
             imageItem.filename = [UUID stringByAppendingPathExtension:(asJPEG ? @"jpg" : @"png")];
             
-            __block OTRMessage *message = [[OTRMessage alloc] init];
-            message.read = YES;
-            message.incoming = NO;
+            __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
             message.buddyUniqueId = self.threadKey;
             message.mediaItemUniqueId = imageItem.uniqueId;
             message.messageSecurity = OTRMessageTransportSecurityOTR;
@@ -1073,9 +1070,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     __block OTRVideoItem *videoItem = [OTRVideoItem videoItemWithFileURL:videoURL];
     
-    __block OTRMessage *message = [[OTRMessage alloc] init];
-    message.read = YES;
-    message.incoming = NO;
+    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.threadKey;
     message.messageSecurity = OTRMessageTransportSecurityOTR;
@@ -1105,13 +1100,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)sendAudioFileURL:(NSURL *)url
 {
-    __block OTRMessage *message = [[OTRMessage alloc] init];
-    message.read = YES;
-    message.incoming = NO;
+    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     
     __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
-    audioItem.isIncoming = message.incoming;
+    audioItem.isIncoming = [message messageIncoming];
     audioItem.filename = [[url absoluteString] lastPathComponent];
     
     AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
@@ -1301,61 +1294,55 @@ typedef NS_ENUM(int, OTRDropDownType) {
         lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
     }
     
-    ////// Delivered Icon //////
-    if([message isKindOfClass:[OTRMessage class]]) {
-        OTRMessage *msg = (OTRMessage *)message;
-        if(!msg.dateSent && !msg.isIncoming && ![msg isMediaMessage]) {
-            // Message not sent yet
-            // Show waiting icon only
-            
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
+
+    if ([message isKindOfClass:[OTROutgoingMessage class]]) {
+        OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;
+        
+        if(outgoingMessage.dateSent == nil && ![outgoingMessage isMediaMessage]) {
+            // Waiting to send message. This message is in the queue.
             NSString *waitingString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
             return [[NSAttributedString alloc] initWithString:waitingString attributes:iconAttributes];
             
-        } else {
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
+        } else if (outgoingMessage.isDelivered){
+            NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
             
-            //Delivery icon
-            if (msg.isDelivered) {
-                NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
-                
-                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+        }
+        
+    }
+    
+    if([[message messageMediaItemKey] length] > 0) {
+        
+        __block OTRMediaItem *mediaItem = nil;
+        //Get the media item
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
+        }];
+        
+        float percentProgress = mediaItem.transferProgress * 100;
+        
+        NSString *progressString = nil;
+        NSUInteger insertIndex = 0;
+        
+        if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+            insertIndex = [attributedString length];
+        } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+            if(percentProgress > 0) {
+                progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+            } else {
+                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
             }
-            
-            // Media message progress
-            if([msg isMediaMessage]) {
-                
-                __block OTRMediaItem *mediaItem = nil;
-                //Get the media item
-                [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                    mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
-                }];
-                
-                float percentProgress = mediaItem.transferProgress * 100;
-                
-                NSString *progressString = nil;
-                NSUInteger insertIndex = 0;
-                
-                if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-                    progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
-                    insertIndex = [attributedString length];
-                } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-                    if(percentProgress > 0) {
-                        progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
-                    } else {
-                        progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
-                    }
-                }
-                
-                if ([progressString length]) {
-                    UIFont *font = [UIFont systemFontOfSize:12];
-                    [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
-                }
-            }
-            return attributedString;
+        }
+        
+        if ([progressString length]) {
+            UIFont *font = [UIFont systemFontOfSize:12];
+            [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
         }
     }
     
-    return nil;
+    return attributedString;
 }
 
 

@@ -11,7 +11,8 @@
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -163,7 +164,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    NSSet *whitelist = [NSSet setWithObjects:[OTRMessage collection],[OTRXMPPRoomMessage collection], nil];
+    NSSet *whitelist = [NSSet setWithObjects:[OTRBaseMessage collection],[OTRXMPPRoomMessage collection], nil];
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whitelist];
     
     
@@ -280,8 +281,8 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewFiltering *viewFiltering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection, NSString *key, id object) {
         
-        if ([object isKindOfClass:[OTRMessage class]]) {
-            return !((OTRMessage *)object).isRead;
+        if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+            return ![((id<OTRMessageProtocol>)object) messageRead];
         }
         return NO;
     }];

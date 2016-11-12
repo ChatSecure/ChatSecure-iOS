@@ -10,7 +10,8 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRXMPPBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRXMPPAccount.h"
 @import OTRAssets;
 
@@ -58,23 +59,25 @@
             [buddy saveWithTransaction:transaction];
             
             [textArray enumerateObjectsUsingBlock:^(NSString *text, NSUInteger index, BOOL *stop) {
-                OTRMessage *message = [[OTRMessage alloc] init];
+                OTRBaseMessage *message = nil;
+                
+                if (index % 2) {
+                    message = [[OTRIncomingMessage alloc] init];
+                    ((OTRIncomingMessage *)message).read = YES;
+                    ((OTRIncomingMessage *)message).messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
+                }
+                else {
+                    message = [[OTROutgoingMessage alloc] init];
+                    ((OTROutgoingMessage *)message).delivered = YES;
+                    ((OTROutgoingMessage *)message).messageSecurity = OTRMessageTransportSecurityOTR;
+                }
+                
                 message.text = text;
                 message.buddyUniqueId = buddy.uniqueId;
                 NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
                 [dateComponents setHour:(-1*index)];
                 message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
                 
-                if (index % 2) {
-                   message.incoming = YES;
-                }
-                else {
-                    message.incoming = NO;
-                    message.delivered = YES;
-                }
-                
-                message.read = YES;
-                message.messageSecurity = OTRMessageTransportSecurityOTR;
                 buddy.lastMessageDate = message.date;
                 
                 [message saveWithTransaction:transaction];

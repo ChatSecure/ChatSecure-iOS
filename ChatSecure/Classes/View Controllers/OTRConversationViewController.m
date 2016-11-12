@@ -17,7 +17,8 @@
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
 #import "OTRXMPPBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
 @import YapDatabase;
@@ -331,7 +332,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
+            [OTRBaseMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
         }];
         
         if ([thread isKindOfClass:[OTRXMPPRoom class]]) {

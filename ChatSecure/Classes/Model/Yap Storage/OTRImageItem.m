@@ -11,7 +11,8 @@
 #import "OTRMediaFileManager.h"
 @import JSQMessagesViewController;
 #import "OTRDatabaseManager.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 
 
 @implementation OTRImageItem
@@ -32,7 +33,7 @@
         __block NSString *buddyUniqueId = nil;
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            OTRMessage *message = [strongSelf parentMessageInTransaction:transaction];
+            OTRBaseMessage *message = [strongSelf parentMessageInTransaction:transaction];
             buddyUniqueId = [message buddyUniqueId];
         } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
             __strong typeof(weakSelf)strongSelf = weakSelf;

@@ -37,7 +37,7 @@ import YapDatabase
                     return
                 }
                 
-                if let message = OTRMessage.messageForMessageId(stanzaId, incoming: false, transaction: transaction) as? OTRMessage{
+                if let message = OTROutgoingMessage.messageForMessageId(stanzaId, transaction: transaction) as? OTROutgoingMessage{
                     message.dateAcked = NSDate()
                     message.saveWithTransaction(transaction)
                 }

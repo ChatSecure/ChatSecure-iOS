@@ -35,7 +35,7 @@ import XMPPFramework
     private func fetchMessage(XMPPId:String) -> OTRMessageProtocol? {
         var message:OTRMessageProtocol? = nil
         self.databaseConnection.readWithBlock { (transaction) in
-            message = OTRMessage.messageForMessageId(XMPPId, incoming: false, transaction: transaction)
+            message = OTRBaseMessage.messageForMessageId(XMPPId, incoming: false, transaction: transaction)
         }
         return message
     }

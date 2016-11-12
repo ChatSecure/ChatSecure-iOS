@@ -434,16 +434,16 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 return
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
-            let databaseMessage = OTRMessage()
+            let databaseMessage = OTRIncomingMessage()
             self.databaseConnection.readWriteWithBlock({ (transaction) in
                 // TODO: check if it's our jid and handle as an outgoing message from another device
                 guard let buddy = OTRBuddy.fetchBuddyWithUsername(fromJID.bare(), withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
-                databaseMessage.incoming = true
                 databaseMessage.text = messageString
                 databaseMessage.buddyUniqueId = buddy.uniqueId
-                databaseMessage.messageSecurity = .OMEMO
+                //TODO: look up device based on senderID
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: "", collection: "")!
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)
@@ -472,7 +472,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             })
             // Display local notification
             if let _ = databaseMessage.text {
-                let messageCopy = databaseMessage.copy() as! OTRMessage
+                let messageCopy = databaseMessage.copy() as! OTRIncomingMessage
                 dispatch_async(dispatch_get_main_queue(), { 
                     UIApplication.sharedApplication().showLocalNotification(messageCopy)
                 })

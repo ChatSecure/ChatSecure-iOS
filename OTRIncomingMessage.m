@@ -10,4 +10,25 @@
 
 @implementation OTRIncomingMessage
 
+#pragma MARK - OTRMessageProtocol
+
+- (BOOL)messageIncoming
+{
+    return YES;
+}
+
+- (OTRMessageTransportSecurity)messageSecurity
+{
+    OTRMessageTransportSecurity security = [super messageSecurity];
+    if(security == OTRMessageTransportSecurityPlaintext) {
+        return self.messageSecurityInfo.messageSecurity;
+    }
+    return security;
+}
+
+- (BOOL)messageRead
+{
+    return self.read;
+}
+
 @end

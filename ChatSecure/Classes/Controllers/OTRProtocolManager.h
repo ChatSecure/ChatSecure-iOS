@@ -26,7 +26,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount,OTRBuddy;
+@class OTRAccount, OTRBuddy, OTROutgoingMessage;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disconnectAllAccounts;
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
 
-- (void)sendMessage:(OTRMessage *)message;
+- (void)sendMessage:(OTROutgoingMessage *)message;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 

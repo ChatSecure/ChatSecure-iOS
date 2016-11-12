@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRMessage.h"
+#import "OTRBaseMessage.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 @import YapDatabase;
@@ -19,32 +19,18 @@
 #import "OTRMessageEncryptionInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-const struct OTRMessageAttributes OTRMessageAttributes = {
-	.date = @"date",
-	.text = @"text",
-	.delivered = @"delivered",
-	.read = @"read",
-	.incoming = @"incoming",
-    .messageId = @"messageId",
-    .transportedSecurely = @"transportedSecurely",
-    .mediaItem = @"mediaItem"
-};
-
-@interface OTRMessage()
+@interface OTRBaseMessage()
 @property (nonatomic) BOOL transportedSecurely;
 @end
 
 
-@implementation OTRMessage
+@implementation OTRBaseMessage
 
 - (id)init
 {
     if (self = [super init]) {
         self.date = [NSDate date];
         self.messageId = [[NSUUID UUID] UUIDString];
-        self.delivered = NO;
-        self.read = NO;
-        self.messageSecurity = [[OTRMessageEncryptionInfo alloc] initPlaintext];
         self.transportedSecurely = NO;
     }
     return self;
@@ -96,12 +82,22 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
 #pragma - mark OTRMessage Protocol methods
 
+// Override in subclass
+- (BOOL)messageIncoming {
+    return YES;
+}
+
+// Override in subclass
+- (BOOL)messageRead {
+    return YES;
+}
+
 - (OTRMessageTransportSecurity) messageSecurity {
     // Migrate legacy property
     if (self.transportedSecurely) {
         return OTRMessageTransportSecurityOTR;
     }
-    return _messageSecurity;
+    return OTRMessageTransportSecurityPlaintext;
 }
 
 - (NSString *)messageKey {
@@ -120,11 +116,6 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     return self.buddyUniqueId;
 }
 
-- (BOOL)messageIncoming
-{
-    return self.incoming;
-}
-
 - (NSString *)messageMediaItemKey
 {
     return self.mediaItemUniqueId;
@@ -134,17 +125,9 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     return self.error;
 }
 
-- (BOOL)messageRead {
-    return self.isRead;
-}
-
 - (NSString *)remoteMessageId
 {
     return self.messageId;
-}
-
-- (OTRMessageTransportSecurity)messageSecurity {
-    return self.messageSecurityInfo.messageSecurity;
 }
 
 - (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
@@ -154,7 +137,7 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    [transaction removeAllObjectsInCollection:[OTRMessage collection]];
+    [transaction removeAllObjectsInCollection:[self collection]];
 }
 
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction
@@ -190,25 +173,12 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     }];
     return deliveredMessage;
 }
-
-+ (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
++ (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadTransaction *)transaction
 {
-    __block OTRMessage *deliveredMessage = nil;
-    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
-        if (![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
-            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
-            OTRMessage *msg = (OTRMessage *)message;
-            if (![msg.mediaItemUniqueId length]) {
-                deliveredMessage = msg;
-                *stop = YES;
-            }
-        }
-    }];
-
-    if (deliveredMessage) {
-        deliveredMessage.delivered = YES;
-        deliveredMessage.dateDelivered = [NSDate date];
-        [deliveredMessage saveWithTransaction:transaction];
+    if ([self class] == [OTRIncomingMessage class]) {
+        return [self messageForMessageId:messageId incoming:YES transaction:transaction];
+    } else {
+        return [self messageForMessageId:messageId incoming:NO transaction:transaction];
     }
 }
 

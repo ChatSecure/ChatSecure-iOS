@@ -9,7 +9,8 @@
 #import "OTRConversationCell.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
 @import YapDatabase;
 

@@ -24,7 +24,8 @@
 @import UIKit;
 @import XMPPFramework;
 #import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
 
@@ -56,7 +57,7 @@
 - (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 
 // Delivery receipts
-- (void) sendDeliveryReceiptForMessage:(OTRMessage*)message;
+- (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message;
 
 @end
 
