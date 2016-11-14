@@ -442,8 +442,10 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 }
                 databaseMessage.text = messageString
                 databaseMessage.buddyUniqueId = buddy.uniqueId
-                //TODO: look up device based on senderID
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: "", collection: "")!
+                
+                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
+                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: deviceYapKey, collection: OTROMEMODevice.collection())!
                 databaseMessage.messageId = message.elementID()
                 
                 databaseMessage.saveWithTransaction(transaction)
@@ -453,8 +455,6 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 buddy.saveWithTransaction(transaction)
                 
                 //Update device last received message
-                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
-                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
                 guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
                     return
                 }
