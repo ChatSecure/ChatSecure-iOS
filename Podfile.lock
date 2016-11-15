@@ -385,7 +385,7 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapDatabase/SQLCipher/Extensions/Views (2.9.2):
     - YapDatabase/SQLCipher/Core
-  - YapTaskQueue/SQLCipher (0.1.4):
+  - YapTaskQueue/SQLCipher (0.1.5):
     - YapDatabase/SQLCipher (~> 2.9)
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
@@ -524,7 +524,7 @@ SPEC CHECKSUMS:
   XLForm: 2250b4e96ab8ffa5f3355838c79edd90de451782
   XMPPFramework: 96396d09d681b470db3ebc464be4b5bd725d5644
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
-  YapTaskQueue: 7b12e62922ea4177d3b608c7cad9d661ee436939
+  YapTaskQueue: 8701b7a47addd0c9417643591b0580cb50cd1669
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 PODFILE CHECKSUM: 1bcd73c789ba54f9e4a951f371a9d95571c31661
