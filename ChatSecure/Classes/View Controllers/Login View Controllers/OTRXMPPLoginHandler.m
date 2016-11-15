@@ -162,9 +162,9 @@
     
     // Start generating our OTR key here so it's ready when we need it
     
-    [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(NSString *fingerprint, NSError *error) {
-        NSParameterAssert(fingerprint.length > 0);
-        if (fingerprint.length) {
+    [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(OTRFingerprint *fingerprint, NSError *error) {
+        NSParameterAssert(fingerprint.fingerprint.length > 0);
+        if (fingerprint.fingerprint.length > 0) {
             NSLog(@"Fingerprint generated for %@: %@", jid.bare, fingerprint);
         } else {
             NSLog(@"Error generating fingerprint for %@: %@", jid.bare, error);

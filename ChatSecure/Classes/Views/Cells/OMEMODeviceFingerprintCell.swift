@@ -110,7 +110,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
     }
     
     private func updateCellFromFingerprint(fingerprint: OTRFingerprint) {
-        fingerprintLabel.text = fingerprint.fingerprint.lowercaseString
+        fingerprintLabel.text = fingerprint.fingerprint.otr_hexString().lowercaseString
         lastSeenLabel.text = "OTR"
         if (fingerprint.trustLevel == .TrustedUser ||
             fingerprint.trustLevel == .TrustedTofu) {
@@ -124,7 +124,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         if (trustSwitch.on) {
             fingerprint.trustLevel = .TrustedUser
         } else {
-            fingerprint.trustLevel = .Untrusted
+            fingerprint.trustLevel = .UntrustedUser
         }
         rowDescriptor.value = fingerprint
     }

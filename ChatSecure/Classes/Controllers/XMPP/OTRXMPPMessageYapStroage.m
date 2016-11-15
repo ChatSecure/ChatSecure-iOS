@@ -110,7 +110,7 @@
                 }
                 if ([errorText containsString:@"OTR Error"]) {
                     // automatically renegotiate a new session when there's an error
-                    [[OTRKit sharedInstance] initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
+                    [[OTRProtocolManager sharedInstance].encryptionManager.otrKit initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
                 }
                 // Suppress error messages for now...
                 // [message saveWithTransaction:transaction];
@@ -123,7 +123,7 @@
             }
             
             if (message.text) {
-                [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
+                [[OTRProtocolManager sharedInstance].encryptionManager.otrKit decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
             }
         }
     }];

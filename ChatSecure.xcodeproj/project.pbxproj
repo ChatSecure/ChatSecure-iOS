@@ -155,7 +155,6 @@
 		D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059D1A16D1A300C17BAE /* OTRDonateSetting.m */; };
 		D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059F1A16D1A300C17BAE /* OTRDoubleSetting.m */; };
 		D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A11A16D1A300C17BAE /* OTRFeedbackSetting.m */; };
-		D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A31A16D1A300C17BAE /* OTRFingerprintSetting.m */; };
 		D93DDAC61BA79A2600CD8331 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A51A16D1A300C17BAE /* OTRIntSetting.m */; };
 		D93DDAC71BA79A2600CD8331 /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A71A16D1A300C17BAE /* OTRLanguageSetting.m */; };
 		D93DDAC81BA79A2600CD8331 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A91A16D1A300C17BAE /* OTRListSetting.m */; };
@@ -212,7 +211,6 @@
 		D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106231A16D1A300C17BAE /* OTRConversationViewController.m */; };
 		D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106291A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m */; };
 		D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062B1A16D1A300C17BAE /* OTRDoubleSettingViewController.m */; };
-		D93DDB041BA79A2A00CD8331 /* OTRFingerprintsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062D1A16D1A300C17BAE /* OTRFingerprintsViewController.m */; };
 		D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062F1A16D1A300C17BAE /* OTRIntSettingViewController.m */; };
 		D93DDB061BA79A2A00CD8331 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106311A16D1A300C17BAE /* OTRLanguageListSettingViewController.m */; };
 		D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106331A16D1A300C17BAE /* OTRListSettingViewController.m */; };
@@ -295,7 +293,6 @@
 		D93DDB771BA79A8100CD8331 /* OTRDonateSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331059C1A16D1A300C17BAE /* OTRDonateSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB781BA79A8200CD8331 /* OTRDoubleSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331059E1A16D1A300C17BAE /* OTRDoubleSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB791BA79A8200CD8331 /* OTRFeedbackSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A01A16D1A300C17BAE /* OTRFeedbackSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB7A1BA79A8300CD8331 /* OTRFingerprintSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A21A16D1A300C17BAE /* OTRFingerprintSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB7B1BA79A8300CD8331 /* OTRIntSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A41A16D1A300C17BAE /* OTRIntSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB7C1BA79A8400CD8331 /* OTRLanguageSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A61A16D1A300C17BAE /* OTRLanguageSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB7D1BA79A8400CD8331 /* OTRListSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A81A16D1A300C17BAE /* OTRListSetting.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -353,7 +350,6 @@
 		D93DDBB71BA79ABD00CD8331 /* OTRConversationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106221A16D1A300C17BAE /* OTRConversationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB81BA79ABE00CD8331 /* OTRDatabaseUnlockViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106281A16D1A300C17BAE /* OTRDatabaseUnlockViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB91BA79ABF00CD8331 /* OTRDoubleSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062A1A16D1A300C17BAE /* OTRDoubleSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBBA1BA79AC000CD8331 /* OTRFingerprintsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062C1A16D1A300C17BAE /* OTRFingerprintsViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBBB1BA79AC200CD8331 /* OTRIntSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062E1A16D1A300C17BAE /* OTRIntSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBBC1BA79AC300CD8331 /* OTRLanguageListSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106301A16D1A300C17BAE /* OTRLanguageListSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBBD1BA79AC400CD8331 /* OTRListSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106321A16D1A300C17BAE /* OTRListSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -593,8 +589,6 @@
 		6331059F1A16D1A300C17BAE /* OTRDoubleSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSetting.m; sourceTree = "<group>"; };
 		633105A01A16D1A300C17BAE /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		633105A11A16D1A300C17BAE /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
-		633105A21A16D1A300C17BAE /* OTRFingerprintSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFingerprintSetting.h; sourceTree = "<group>"; };
-		633105A31A16D1A300C17BAE /* OTRFingerprintSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFingerprintSetting.m; sourceTree = "<group>"; };
 		633105A41A16D1A300C17BAE /* OTRIntSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSetting.h; sourceTree = "<group>"; };
 		633105A51A16D1A300C17BAE /* OTRIntSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSetting.m; sourceTree = "<group>"; };
 		633105A61A16D1A300C17BAE /* OTRLanguageSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageSetting.h; sourceTree = "<group>"; };
@@ -678,8 +672,6 @@
 		633106291A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseUnlockViewController.m; sourceTree = "<group>"; };
 		6331062A1A16D1A300C17BAE /* OTRDoubleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSettingViewController.h; sourceTree = "<group>"; };
 		6331062B1A16D1A300C17BAE /* OTRDoubleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSettingViewController.m; sourceTree = "<group>"; };
-		6331062C1A16D1A300C17BAE /* OTRFingerprintsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFingerprintsViewController.h; sourceTree = "<group>"; };
-		6331062D1A16D1A300C17BAE /* OTRFingerprintsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFingerprintsViewController.m; sourceTree = "<group>"; };
 		6331062E1A16D1A300C17BAE /* OTRIntSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSettingViewController.h; sourceTree = "<group>"; };
 		6331062F1A16D1A300C17BAE /* OTRIntSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSettingViewController.m; sourceTree = "<group>"; };
 		633106301A16D1A300C17BAE /* OTRLanguageListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageListSettingViewController.h; sourceTree = "<group>"; };
@@ -1178,8 +1170,6 @@
 				6331059F1A16D1A300C17BAE /* OTRDoubleSetting.m */,
 				633105A01A16D1A300C17BAE /* OTRFeedbackSetting.h */,
 				633105A11A16D1A300C17BAE /* OTRFeedbackSetting.m */,
-				633105A21A16D1A300C17BAE /* OTRFingerprintSetting.h */,
-				633105A31A16D1A300C17BAE /* OTRFingerprintSetting.m */,
 				633105A41A16D1A300C17BAE /* OTRIntSetting.h */,
 				633105A51A16D1A300C17BAE /* OTRIntSetting.m */,
 				633105A61A16D1A300C17BAE /* OTRLanguageSetting.h */,
@@ -1317,8 +1307,6 @@
 				633106291A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m */,
 				6331062A1A16D1A300C17BAE /* OTRDoubleSettingViewController.h */,
 				6331062B1A16D1A300C17BAE /* OTRDoubleSettingViewController.m */,
-				6331062C1A16D1A300C17BAE /* OTRFingerprintsViewController.h */,
-				6331062D1A16D1A300C17BAE /* OTRFingerprintsViewController.m */,
 				6331062E1A16D1A300C17BAE /* OTRIntSettingViewController.h */,
 				6331062F1A16D1A300C17BAE /* OTRIntSettingViewController.m */,
 				633106301A16D1A300C17BAE /* OTRLanguageListSettingViewController.h */,
@@ -1855,8 +1843,6 @@
 				D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */,
 				D93DDBAB1BA79AAE00CD8331 /* OTRGoolgeOAuthLoginHandler.h in Headers */,
 				D93DDB861BA79A8900CD8331 /* OTRGoogleOAuthXMPPAccount.h in Headers */,
-				D93DDBBA1BA79AC000CD8331 /* OTRFingerprintsViewController.h in Headers */,
-				D93DDB7A1BA79A8300CD8331 /* OTRFingerprintSetting.h in Headers */,
 				D93DDB791BA79A8200CD8331 /* OTRFeedbackSetting.h in Headers */,
 				D93DDB841BA79A8800CD8331 /* OTRFacebookOAuthXMPPAccount.h in Headers */,
 				D93DDBA11BA79AA300CD8331 /* OTRExistingAccountViewController.h in Headers */,
@@ -2427,7 +2413,6 @@
 				D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */,
 				D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */,
 				D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */,
-				D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */,
 				63D150FE1D8B5637006FB2E2 /* OTROMEMOStorageManager.swift in Sources */,
 				D93DDAC61BA79A2600CD8331 /* OTRIntSetting.m in Sources */,
 				D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */,
@@ -2508,7 +2493,6 @@
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
 				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
 				D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */,
-				D93DDB041BA79A2A00CD8331 /* OTRFingerprintsViewController.m in Sources */,
 				D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */,
 				D93DDB061BA79A2A00CD8331 /* OTRLanguageListSettingViewController.m in Sources */,
 				D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */,

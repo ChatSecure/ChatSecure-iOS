@@ -216,11 +216,12 @@ public class UserProfileViewController: XLFormViewController {
             }
         }
         
-        let allFingerprints = OTRKit.sharedInstance().allFingerprints()
-        let myFingerprint = OTRKit.sharedInstance().fingerprintForAccountName(account.username, protocol: account.protocolTypeString())
+        let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
+        let allFingerprints = otrKit.allFingerprints()
+        let myFingerprint = otrKit.fingerprintForAccountName(account.username, protocol: account.protocolTypeString())
         let addFingerprintsToSection: ([OTRFingerprint], XLFormSectionDescriptor) -> Void = { fingerprints, section in
             for fingerprint in fingerprints {
-                let row = XLFormRowDescriptor(tag: fingerprint.fingerprint, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
+                let row = XLFormRowDescriptor(tag: fingerprint.fingerprint.otr_hexString(), rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
                 if let myFingerprint = myFingerprint {
                     if (fingerprint === myFingerprint) {
                         // We implicitly trust ourselves with OTR
@@ -322,7 +323,7 @@ public class UserProfileViewController: XLFormViewController {
         }
         if let otrFingerprint = cell.rowDescriptor.value as? OTRFingerprint {
             cryptoType = "OTR"
-            fingerprint = otrFingerprint.fingerprint.lowercaseString
+            fingerprint = otrFingerprint.fingerprint.otr_hexString().lowercaseString
             username = otrFingerprint.username
         }
         if fingerprint.characters.count == 0 || username.characters.count == 0 || cryptoType.characters.count == 0 {

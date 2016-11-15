@@ -160,17 +160,16 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     
     // Check if we have fingerprints for this buddy. This is the best proxy we have for detecting if we have had an otr session in the past.
     // If we had a session in the past then we should use that otherwise.
-    [[OTRKit sharedInstance] allFingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
-        if ([activeFingerprint count]) {
-            dispatch_async(queue, ^{
-                block(OTRMessageTransportSecurityOTR);
-            });
-        } else {
-            dispatch_async(queue, ^{
-                block(OTRMessageTransportSecurityPlaintext);
-            });
-        }
-    }];
+    NSArray<OTRFingerprint *> *allFingerprints = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit fingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString];
+    if ([allFingerprints count]) {
+        dispatch_async(queue, ^{
+            block(OTRMessageTransportSecurityOTR);
+        });
+    } else {
+        dispatch_async(queue, ^{
+            block(OTRMessageTransportSecurityPlaintext);
+        });
+    }
 }
 
 #pragma - makr OTRThreadOwner Methods

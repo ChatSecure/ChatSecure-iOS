@@ -36,7 +36,6 @@
 #import "OTRIntSetting.h"
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
-#import "OTRFingerprintSetting.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 #import "OTRUtilities.h"

@@ -29,9 +29,9 @@ static const uint16_t OTRPushTLVType = 0x01A4;
     return @[@(OTRPushTLVType)];
 }
 
-- (void)receiveTLV:(OTRTLV *)tlv username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+- (void)receiveTLV:(OTRTLV *)tlv username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint tag:(id)tag
 {
-    [self.delegate receivePushData:tlv.data username:username accountName:accountName protocolString:protocol];
+    [self.delegate receivePushData:tlv.data username:username accountName:accountName protocolString:protocol fingerprint:fingerprint];
 }
 
 - (void)sendPushData:(NSData *)data username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol

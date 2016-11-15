@@ -278,10 +278,11 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     if (fingerprintTypes.count > 0) {
         // We only support OTR fingerprints at the moment
         if ([fingerprintTypes containsObject:@(OTRFingerprintTypeOTR)]) {
-            [OTRProtocolManager.sharedInstance.encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(NSString *fingerprint, NSError *error) {
+            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(OTRFingerprint * _Nullable fingerprint, NSError * _Nullable error) {
+                
                 if (fingerprint) {
                     NSString *key = [[self class] fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
-                    [fingerprints setObject:fingerprint forKey:key];
+                    [fingerprints setObject:[fingerprint.fingerprint otr_hexString] forKey:key];
                 }
                 
                 // Since we only support OTR at the moment, we can finish here, but this should be refactored with a dispatch_group when we support more key types.
@@ -291,6 +292,8 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionBlock(url, nil);
                 });
+
+                
             }];
         }
     }

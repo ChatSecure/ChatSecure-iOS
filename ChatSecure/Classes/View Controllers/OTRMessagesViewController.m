@@ -532,17 +532,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
             OTRBuddy *buddy = (OTRBuddy *)possibleBuddy;
             OTRAccount *account = [buddy accountWithTransaction:transaction];
             
-            [[OTRKit sharedInstance] messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (messageState == OTRKitMessageStateEncrypted) {
-                        self.state.canSendMedia = YES;
-                    } else {
-                        self.state.canSendMedia = NO;
-                    }
-                    [self didUpdateState];
-                });
-                
-            }];
+            __block OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (messageState == OTRKitMessageStateEncrypted) {
+                    self.state.canSendMedia = YES;
+                } else {
+                    self.state.canSendMedia = NO;
+                }
+                [self didUpdateState];
+            });
             
             switch (buddy.preferredSecurity) {
                 case OTRSessionSecurityPlaintext: {

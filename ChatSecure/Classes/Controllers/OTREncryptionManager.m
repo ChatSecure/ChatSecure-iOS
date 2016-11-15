@@ -61,9 +61,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (id) init {
     if (self = [super init]) {
-        _otrKit = [OTRKit sharedInstance];
-        [self.otrKit setupWithDataPath:nil];
-        self.otrKit.delegate = self;
+        _otrKit = [[OTRKit alloc] initWithDelegate:self dataPath:nil];
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
         _pushTLVHandler = [[OTRPushTLVHandler alloc] initWithOTRKit:self.otrKit delegate:nil];
         NSArray *protectPaths = @[self.otrKit.privateKeyPath, self.otrKit.fingerprintsPath, self.otrKit.instanceTagsPath];
@@ -109,43 +107,6 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
 }
 
-- (void)currentEncryptionState:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol completion:(void (^)(BOOL currentlyTrusted, BOOL hasTurstedFingerprints, OTRKitMessageState messageState))completionBlock completionQueue:(dispatch_queue_t)queue
-{
-    if (!queue) {
-        queue = dispatch_get_main_queue();
-    }
-    
-    __block BOOL currentlyTrusted = NO;
-    __block BOOL hasTrustedFingerprints = NO;
-    __block OTRKitMessageState messageState = OTRKitMessageStatePlaintext;
-    
-    dispatch_group_t group = dispatch_group_create();
-    
-    dispatch_group_enter(group);
-    [self.otrKit activeFingerprintIsVerifiedForUsername:username accountName:accountName protocol:protocol completion:^(BOOL isCurrentlyTrusted) {
-        currentlyTrusted = isCurrentlyTrusted;
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_enter(group);
-    [self.otrKit hasVerifiedFingerprintsForUsername:username accountName:accountName protocol:protocol completion:^(BOOL hasVerifiedFingerprints) {
-        hasTrustedFingerprints = hasVerifiedFingerprints;
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_enter(group);
-    [self.otrKit messageStateForUsername:username accountName:accountName protocol:protocol completion:^(OTRKitMessageState msgState) {
-        messageState = msgState;
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_notify(group, queue, ^{
-        if(completionBlock) {
-            completionBlock(currentlyTrusted, hasTrustedFingerprints, messageState);
-        }
-    });
-}
-
 - (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection {
     __block OTRBuddy *buddy = nil;
     __block OTRAccount *account = nil;
@@ -168,23 +129,20 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             return;
         }
         
-        [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *allFingerprints) {
-            //If a buddy has omemo devices they probably support OTR so we should create a session to allow for media messages and knock info to exchange.
-            if ([allFingerprints count] > 0 || hasOMEMODevices) {
-                [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-                    if (messageState != OTRKitMessageStateEncrypted) {
-                        [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
-                    }
-                }];
+        NSArray<OTRFingerprint *>*fingerprints = [self.otrKit fingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+        if ([fingerprints count] > 0 || hasOMEMODevices) {
+            OTRKitMessageState messageState = [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+            if (messageState != OTRKitMessageStateEncrypted) {
+                [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
             }
-        }];
+        }
     }];
 }
 
 
 #pragma mark OTRKitDelegate methods
 
-- (void)otrKit:(OTRKit *)otrKit injectMessage:(NSString *)text username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+- (void)otrKit:(OTRKit *)otrKit injectMessage:(NSString *)text username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint tag:(id)tag
 {
     //only otrproltocol
     OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
@@ -199,8 +157,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         [[OTRProtocolManager sharedInstance] sendMessage:message];
     }];
 }
-
-- (void)otrKit:(OTRKit *)otrKit encodedMessage:(NSString *)encodedMessage wasEncrypted:(BOOL)wasEncrypted username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error
+    
+- (void)otrKit:(OTRKit *)otrKit encodedMessage:(NSString *)encodedMessage wasEncrypted:(BOOL)wasEncrypted username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint tag:(id)tag error:(NSError *)error
 {
     if (error) {
         DDLogError(@"Encode Error: %@",error);
@@ -257,11 +215,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [[OTRProtocolManager sharedInstance] sendMessage:outgoingMessage];
         }];
     }
-    
-    
 }
 
-- (void)otrKit:(OTRKit *)otrKit decodedMessage:(NSString *)decodedMessage wasEncrypted:(BOOL)wasEncrypted tlvs:(NSArray *)tlvs username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+- (void)otrKit:(OTRKit *)otrKit decodedMessage:(NSString *)decodedMessage tlvs:(NSArray<OTRTLV *> *)tlvs wasEncrypted:(BOOL)wasEncrypted username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint tag:(id)tag error:(NSError *)error
 {
     //decodedMessage can be nil if just TLV
     OTRIncomingMessage *originalMessage = nil;
@@ -278,8 +234,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         originalMessage.text = decodedMessage;
         
         if (wasEncrypted) {
-            //TODO: fill in with correct fingerprint
-            originalMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
+            originalMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:fingerprint.fingerprint];
         }
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
@@ -302,7 +257,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
 }
 
-- (void)otrKit:(OTRKit *)otrKit updateMessageState:(OTRKitMessageState)messageState username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol
+- (void)otrKit:(OTRKit *)otrKit updateMessageState:(OTRKitMessageState)messageState username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint
 {
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -385,7 +340,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             }];
             // Inject message to recipient indicating error
             NSString *errorString = [NSString stringWithFormat:@"OTR Error: %@", [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription];
-            [self otrKit:self.otrKit injectMessage:errorString username:username accountName:accountName protocol:protocol tag:tag];
+            [self otrKit:self.otrKit injectMessage:errorString username:username accountName:accountName protocol:protocol fingerprint:nil tag:tag];
             // automatically renegotiate a new session when there's an error
             [self.otrKit initiateEncryptionWithUsername:username accountName:accountName protocol:protocol];
         }
@@ -544,14 +499,13 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 #pragma mark OTRDataHandlerDelegate methods
 
-- (void)dataHandler:(OTRDataHandler*)dataHandler
-           transfer:(OTRDataTransfer*)transfer
-              error:(NSError*)error {
+- (void)dataHandler:(OTRDataHandler *)dataHandler transfer:(OTRDataTransfer *)transfer fingerprint:(OTRFingerprint *)fingerprint error:(NSError *)error
+{
     DDLogError(@"error with file transfer: %@ %@", transfer, error);
 }
 
-- (void)dataHandler:(OTRDataHandler*)dataHandler
-    offeredTransfer:(OTRDataIncomingTransfer*)transfer {
+- (void)dataHandler:(OTRDataHandler *)dataHandler offeredTransfer:(OTRDataIncomingTransfer *)transfer fingerprint:(OTRFingerprint *)fingerprint
+{
     DDLogInfo(@"offered file transfer: %@", transfer);
     
     // for now, just accept all incoming files
@@ -559,8 +513,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //Create placeholder for updating progress
     
     OTRIncomingMessage *newMessage = [((OTRIncomingMessage *)transfer.tag) copy];
-    //TODO: Should use real fingerprint here.
-    newMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
+    newMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:fingerprint.fingerprint];
     newMessage.text = nil;
     
     NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
@@ -597,9 +550,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
 }
 
-- (void)dataHandler:(OTRDataHandler*)dataHandler
-           transfer:(OTRDataTransfer*)transfer
-           progress:(float)progress {
+- (void)dataHandler:(OTRDataHandler *)dataHandler transfer:(OTRDataTransfer *)transfer progress:(float)progress fingerprint:(OTRFingerprint *)fingerprint
+{
     DDLogInfo(@"[OTRDATA]file transfer %@ progress: %f", transfer.transferId, progress);
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -613,8 +565,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
 }
 
-- (void)dataHandler:(OTRDataHandler*)dataHandler
-   transferComplete:(OTRDataTransfer*)transfer {
+- (void)dataHandler:(OTRDataHandler *)dataHandler transferComplete:(OTRDataTransfer *)transfer fingerprint:(OTRFingerprint *)fingerprint
+{
     DDLogInfo(@"transfer complete: %@", transfer);
     if ([transfer isKindOfClass:[OTRDataOutgoingTransfer class]]) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

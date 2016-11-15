@@ -432,7 +432,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     }
     
     //MARK: OTRPushTLVHandlerDelegate
-    public func receivePushData(tlvData: NSData!, username: String!, accountName: String!, protocolString: String!) {
+    public func receivePushData(tlvData: NSData!, username: String!, accountName: String!, protocolString: String!, fingerprint:OTRFingerprint!) {
         
         let buddy = self.storage.buddy(username, accountName: accountName)
         
