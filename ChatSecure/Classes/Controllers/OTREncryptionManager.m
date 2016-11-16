@@ -54,6 +54,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 @interface OTREncryptionManager () <OTRKitDelegate, OTRDataHandlerDelegate>
 @property (nonatomic, strong) OTRKit *otrKit;
+@property (nonatomic, strong) NSCache *otrFingerprintCache;
 @end
 
 @implementation OTREncryptionManager
@@ -61,6 +62,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (id) init {
     if (self = [super init]) {
+        _otrFingerprintCache = [[NSCache alloc] init];
         _otrKit = [[OTRKit alloc] initWithDelegate:self dataPath:nil];
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
         _pushTLVHandler = [[OTRPushTLVHandler alloc] initWithOTRKit:self.otrKit delegate:nil];
@@ -137,6 +139,80 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             }
         }
     }];
+}
+
+- (NSString *)cacheKeyForYapKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)data
+{
+    return [NSString stringWithFormat:@"%@%@%@",key,collection,@([data hash])];
+}
+
+- (OTRTrustLevel)otrFetchTrustForUsername:(NSString*)username
+                              accountName:(NSString*)accountName
+                                 protocol:(NSString*)protocol
+                              fingerprint:(NSData *)fingerprintData
+{
+    NSArray<OTRFingerprint*>*fingerprints = [self.otrKit fingerprintsForUsername:username accountName:accountName protocol:protocol];
+    __block OTRTrustLevel trust = OTRTrustLevelUnknown;
+    [fingerprints enumerateObjectsUsingBlock:^(OTRFingerprint * _Nonnull finger, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([finger.fingerprint isEqualToData:fingerprintData]) {
+            trust = finger.trustLevel;
+            *stop = YES;
+        }
+    }];
+    
+    return trust;
+}
+
+- (OTRTrustLevel)otrTrustForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint
+{
+    NSString *cacheKey = [self cacheKeyForYapKey:key collection:collection fingerprint:fingerprint];
+    NSNumber *resultNumber = [self.otrFingerprintCache objectForKey:cacheKey];
+    OTRTrustLevel trust = OTRTrustLevelUnknown;
+    if (resultNumber == nil) {
+        __block OTRBuddy *buddy = nil;
+        __block OTRAccount *account = nil;
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            buddy = [transaction objectForKey:key inCollection:collection];
+            account = [buddy accountWithTransaction:transaction];
+        }];
+        
+        trust = [self otrFetchTrustForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString fingerprint:fingerprint];
+        // No point in saving uknown trust to the cache. This might cause issues with the cach not being invalidated properly.
+        if (trust != OTRTrustLevelUnknown) {
+            [self.otrFingerprintCache setObject:@(trust) forKey:cacheKey];
+        }
+        
+    } else {
+        trust = resultNumber.unsignedIntegerValue;
+    }
+    return trust;
+}
+
+- (void)saveNewOTRTrust:(OTRTrustLevel)trust key:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError**)error
+{
+    [self.otrFingerprintCache setObject:@(trust) forKey:[self cacheKeyForYapKey:key collection:collection fingerprint:fingerprint]];
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [transaction objectForKey:key inCollection:collection];
+        account = [buddy accountWithTransaction:transaction];
+    }];
+    OTRFingerprint *newFingerprint = [[OTRFingerprint alloc] initWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString fingerprint:fingerprint trustLevel:trust];
+    [self.otrKit saveFingerprint:newFingerprint];
+}
+
+- (BOOL)removeOTRFingerprintForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError **)error
+{
+    NSString *cacheKey = [self cacheKeyForYapKey:key collection:collection fingerprint:fingerprint];
+    [self.otrFingerprintCache removeObjectForKey:cacheKey];
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [transaction objectForKey:key inCollection:collection];
+        account = [buddy accountWithTransaction:transaction];
+    }];
+    OTRFingerprint *newFingerprint = [[OTRFingerprint alloc] initWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString fingerprint:fingerprint trustLevel:OTRTrustLevelUnknown];
+    return [self.otrKit deleteFingerprint:newFingerprint error:error];
 }
 
 

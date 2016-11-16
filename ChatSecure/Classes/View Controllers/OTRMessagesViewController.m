@@ -1279,7 +1279,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         font = [UIFont systemFontOfSize:12];
     }
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
-    
+    NSDictionary *lockAttributes = [iconAttributes copy];
     
     ////// Lock Icon //////
     NSString *lockString = nil;
@@ -1292,7 +1292,36 @@ typedef NS_ENUM(int, OTRDropDownType) {
         lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
     }
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
+    BOOL trusted = YES;
+    if ([message isKindOfClass:[OTRIncomingMessage class]]) {
+        OTRIncomingMessage *incomingMessage = (OTRIncomingMessage *)message;
+        if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
+            NSData *otrFingerprintData = incomingMessage.messageSecurityInfo.otrFingerprint;
+            if ([otrFingerprintData length]) {
+                OTRTrustLevel trustLevel = [[OTRProtocolManager sharedInstance].encryptionManager otrTrustForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData];
+                trusted = trustLevel == OTRTrustLevelTrustedTofu || trustLevel == OTRTrustLevelTrustedUser;
+                
+            }
+        } else if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
+            NSString *omemoDeviceYapKey = incomingMessage.messageSecurityInfo.omemoDeviceYapKey;
+            NSString *omemoDeviceYapCollection = incomingMessage.messageSecurityInfo.omemoDeviceYapCollection;
+            __block OTROMEMODevice *device = nil;
+            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
+            }];
+            if(device != nil) {
+                trusted = [device isTrusted];
+            }
+        }
+    }
+    
+    if (!trusted) {
+        NSMutableDictionary *mutableCopy = [lockAttributes mutableCopy];
+        [mutableCopy setObject:[UIColor redColor] forKey:NSForegroundColorAttributeName];
+        lockAttributes = mutableCopy;
+    }
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:lockAttributes];
 
     if ([message isKindOfClass:[OTROutgoingMessage class]]) {
         OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;

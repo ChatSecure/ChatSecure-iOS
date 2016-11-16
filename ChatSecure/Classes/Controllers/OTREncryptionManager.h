@@ -53,6 +53,16 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
  */
 - (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection;
 
+/** 
+ * This is the only way the trust for an OTR fingerprint should be checked. This goes through an internal cache to speed up checks.
+ *
+ * @param key the buddy yap key
+ * @param collection The buddy collection
+ */
+- (OTRTrustLevel)otrTrustForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint;
+- (void)saveNewOTRTrust:(OTRTrustLevel)trust key:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError**)error;
+- (BOOL)removeOTRFingerprintForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError **)error;
+
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
