@@ -37,6 +37,7 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
     OTREncryptionMessageStateFinished,
     OTREncryptionMessageStateError
 };
+NS_ASSUME_NONNULL_BEGIN
 
 @interface OTREncryptionManager:NSObject
 
@@ -59,9 +60,9 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
  * @param key the buddy yap key
  * @param collection The buddy collection
  */
-- (OTRTrustLevel)otrTrustForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint;
-- (void)saveNewOTRTrust:(OTRTrustLevel)trust key:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError**)error;
-- (BOOL)removeOTRFingerprintForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint error:(NSError **)error;
+- (nullable OTRFingerprint *)otrFingerprintForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint;
+- (void)saveFingerprint:(OTRFingerprint *)fingerprint error:( NSError* _Nullable *)error;
+- (BOOL)removeOTRFingerprint:(OTRFingerprint *)fingerprint error:( NSError * _Nullable *)error;
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
@@ -71,3 +72,5 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
 
 
 @end
+
+NS_ASSUME_NONNULL_END

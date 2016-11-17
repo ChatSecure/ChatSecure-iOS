@@ -1298,9 +1298,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
             NSData *otrFingerprintData = incomingMessage.messageSecurityInfo.otrFingerprint;
             if ([otrFingerprintData length]) {
-                OTRTrustLevel trustLevel = [[OTRProtocolManager sharedInstance].encryptionManager otrTrustForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData];
-                trusted = trustLevel == OTRTrustLevelTrustedTofu || trustLevel == OTRTrustLevelTrustedUser;
-                
+                trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
             }
         } else if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
             NSString *omemoDeviceYapKey = incomingMessage.messageSecurityInfo.omemoDeviceYapKey;

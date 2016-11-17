@@ -48,9 +48,15 @@ public class UserProfileViewController: XLFormViewController {
     
     public func doneButtonPressed(sender: AnyObject?) {
         var devicesToSave: [OTROMEMODevice] = []
+        var otrFingerprintsToSave: [OTRFingerprint] = []
         for (_, value) in form.formValues() {
-            if let viewedDevice = value as? OTROMEMODevice {
-                devicesToSave.append(viewedDevice)
+            switch value {
+            case let device as OTROMEMODevice:
+                devicesToSave.append(device)
+            case let fingerprint as OTRFingerprint:
+                otrFingerprintsToSave.append(fingerprint)
+            default:
+                break
             }
         }
         connection?.asyncReadWriteWithBlock({ (t: YapDatabaseReadWriteTransaction) in
@@ -62,6 +68,10 @@ public class UserProfileViewController: XLFormViewController {
                 }
             }
         })
+        
+        otrFingerprintsToSave.forEach { (fingerprint) in
+            OTRProtocolManager.sharedInstance().encryptionManager.saveFingerprint(fingerprint, error: nil)
+        }
         dismissViewControllerAnimated(true, completion: nil)
     }
     
