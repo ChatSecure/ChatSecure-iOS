@@ -193,7 +193,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     return [[OTRFingerprint alloc] initWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString fingerprint:fingerprint trustLevel:trust];
 }
 
-- (void)saveFingerprint:(OTRFingerprint *)fingerprint error:( NSError* _Nullable *)error;
+- (void)saveFingerprint:(OTRFingerprint *)fingerprint;
 {
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -210,6 +210,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:fingerprint.username accountName:fingerprint.accountName transaction:transaction];
     }];
+    
+    if (!buddy) {
+        return false;
+    }
+    
     NSString *cacheKey = [self cacheKeyForYapKey:buddy.uniqueId collection:[buddy.class collection] fingerprint:fingerprint.fingerprint];
     [self.otrFingerprintCache removeObjectForKey:cacheKey];
     

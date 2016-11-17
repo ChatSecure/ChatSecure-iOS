@@ -70,7 +70,7 @@ public class UserProfileViewController: XLFormViewController {
         })
         
         otrFingerprintsToSave.forEach { (fingerprint) in
-            OTRProtocolManager.sharedInstance().encryptionManager.saveFingerprint(fingerprint, error: nil)
+            OTRProtocolManager.sharedInstance().encryptionManager.saveFingerprint(fingerprint)
         }
         dismissViewControllerAnimated(true, completion: nil)
     }

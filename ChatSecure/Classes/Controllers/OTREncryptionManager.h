@@ -25,10 +25,10 @@
 
 @class OTRPushTLVHandler;
 
-extern NSString *const OTRMessageStateDidChangeNotification;
-extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
-extern NSString *const OTRDidFinishGeneratingPrivateKeyNotification;
-extern NSString *const OTRMessageStateKey;
+extern NSString * _Nonnull const OTRMessageStateDidChangeNotification;
+extern NSString * _Nonnull const OTRWillStartGeneratingPrivateKeyNotification;
+extern NSString * _Nonnull const OTRDidFinishGeneratingPrivateKeyNotification;
+extern NSString * _Nonnull const OTRMessageStateKey;
 
 // This is a hack to get around problems using OTRKit.h in swift files
 typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
@@ -59,9 +59,27 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param key the buddy yap key
  * @param collection The buddy collection
+ * @param fingerprint The Data for the fingerprint. Since one buddy may have multiple fingerprints of different trust levels.
+ *
+ * @returns An OTRFingerPrint object either from the internal cache or OTRKit.
  */
 - (nullable OTRFingerprint *)otrFingerprintForKey:(NSString *)key collection:(NSString *)collection fingerprint:(NSData *)fingerprint;
-- (void)saveFingerprint:(OTRFingerprint *)fingerprint error:( NSError* _Nullable *)error;
+
+/**
+ * Save a fingerprint to file with OTRKit. Use this to save instead of accessing OTRKit directly so it goes through an internal cache.
+ * 
+ * @param fingerprint The fingerprint to be saved.
+ */
+- (void)saveFingerprint:(OTRFingerprint *)fingerprint;
+
+/**
+ * Remove a fingerprint from the OTRKit store. use this to remove a fingerprint so it goes through an internal cache.
+ *
+ * @param fingerprint The fingerprint object to be removed.
+ * @param error Any errors from OTRKit
+ *
+ * @return If the the removal was successful
+ */
 - (BOOL)removeOTRFingerprint:(OTRFingerprint *)fingerprint error:( NSError * _Nullable *)error;
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
