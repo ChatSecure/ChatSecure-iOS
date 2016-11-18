@@ -441,9 +441,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self infoButtonPressed:action];
     }];
     if (error) {
-        
+        NSUInteger otrFingerprintError = 32872;
         title = ERROR_STRING;
         alertMessage = error.localizedDescription;
+        
+        if (error.code == otrFingerprintError) {
+            alertMessage = NO_DEVICES_ERROR_STRING;
+        }
         
         if([message isKindOfClass:[OTROutgoingMessage class]]) {
             //If it's an outgoing message the error title should be that we were unable to send the message.
@@ -457,7 +461,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     dbMessage.error = nil;
                     dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
                     dbMessage.date = [NSDate date];
-                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:dbMessage.date];
+                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
                     [sendingAction saveWithTransaction:transaction];
                     [dbMessage saveWithTransaction:transaction];
                 }];
@@ -481,7 +485,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
             
             //If this is an error about not having a trusted identity then we should offer to connect to the
-            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices || error.code == 32872) {
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices || error.code == otrFingerprintError) {
                 
                 [actions addObject:viewProfileAction];
                 alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];

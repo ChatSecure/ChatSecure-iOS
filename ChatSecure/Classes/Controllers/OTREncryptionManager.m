@@ -41,6 +41,7 @@
 #import "OTRLog.h"
 #import "OTRPushTLVHandler.h"
 #import "OTRXMPPManager.h"
+#import "OTRYapMessageSendAction.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import AVFoundation;
@@ -265,8 +266,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;
             if (error) {
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    outgoingMessage.error = error;
-                    [outgoingMessage saveWithTransaction:transaction];
+                    OTROutgoingMessage *dbMessage = [[transaction objectForKey:outgoingMessage.uniqueId inCollection:[OTROutgoingMessage collection]] copy];
+                    dbMessage.error = error;
+                    [dbMessage saveWithTransaction:transaction];
+                    // Need to make sure any sending action associated with this message is removed
+                    NSString * actionKey = [OTRYapMessageSendAction actionKeyForMessageKey:dbMessage.uniqueId messageCollection:[OTROutgoingMessage collection]];
+                    [transaction removeObjectForKey:actionKey inCollection:[OTRYapMessageSendAction collection]];
                 }];
             }
             else if ([encodedMessage length]) {
