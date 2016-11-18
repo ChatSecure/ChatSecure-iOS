@@ -12,7 +12,4 @@
 
 @property (nonatomic) BOOL read;
 
-/** The method the message is intended to be sent and will be sent */
-@property (nonatomic, strong, nonnull) OTRMessageEncryptionInfo *messageSecurityInfo;
-
 @end

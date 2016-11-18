@@ -68,6 +68,9 @@ extern const struct OTRMessageAttributes {
 @property (nonatomic, strong, nullable) NSString *mediaItemUniqueId;
 @property (nonatomic, strong, nonnull) NSString *buddyUniqueId;
 
+/** The security method the message is intended to be sent and will be sent */
+@property (nonatomic, strong, nonnull) OTRMessageEncryptionInfo *messageSecurityInfo;
+
 + (void)deleteAllMessagesWithTransaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForBuddyId:(nonnull NSString *)uniqueBuddyId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(nonnull NSString *)uniqueAccountId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;

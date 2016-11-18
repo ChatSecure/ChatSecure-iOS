@@ -64,13 +64,13 @@
                 if (index % 2) {
                     message = [[OTRIncomingMessage alloc] init];
                     ((OTRIncomingMessage *)message).read = YES;
-                    ((OTRIncomingMessage *)message).messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
                 }
                 else {
                     message = [[OTROutgoingMessage alloc] init];
                     ((OTROutgoingMessage *)message).delivered = YES;
-                    ((OTROutgoingMessage *)message).messageSecurity = OTRMessageTransportSecurityOTR;
                 }
+                
+                message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
                 
                 message.text = text;
                 message.buddyUniqueId = buddy.uniqueId;

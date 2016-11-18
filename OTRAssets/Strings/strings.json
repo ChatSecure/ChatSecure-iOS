@@ -1058,6 +1058,16 @@
     "UNABLE_TO_SEND_STRING" : {
         "comment": "Title for error message",
         "string": "Unable to Send Message"
+    },
+    "UNTRUSTED_DEVICE_STRING" : {
+        "comment": "Title for error message",
+        "string": "Untrusted Device"
+    },
+    "UNTRUSTED_DEVICE_SENT_STRING" : {
+        "comment": "Error message description",
+        "string" : "This message was sent to an untrusted device."
+    },"UNTRUSTED_DEVICE_REVEIVED_STRING" : {
+        "comment": "Error message description",
+        "string" : "This message was received from an untrusted device."
     }
-
 }

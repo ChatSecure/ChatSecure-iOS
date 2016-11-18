@@ -431,29 +431,38 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showMessageError:(id<OTRMessageProtocol>)message
 {
     NSError *error =  [message messageError];
+    NSString *title = nil;
+    NSString *alertMessage = nil;
+    NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    UIAlertAction *viewProfileAction = [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self infoButtonPressed:action];
+    }];
     if (error) {
         
-        
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleActionSheet];
-        
+        title = ERROR_STRING;
+        alertMessage = error.localizedDescription;
         
         if([message isKindOfClass:[OTROutgoingMessage class]]) {
             //If it's an outgoing message the error title should be that we were unable to send the message.
-            alertController.title = UNABLE_TO_SEND_STRING;
+            title = UNABLE_TO_SEND_STRING;
             OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
-            // This is an incoming message so we can offer to resend
+            
+            // This is an outgoing message so we can offer to resend
             UIAlertAction *resendAction = [UIAlertAction actionWithTitle:TRY_AGAIN_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTROutgoingMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
-                    dbMessage.messageSecurity = self.state.messageSecurity;
+                    dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
                     dbMessage.date = [NSDate date];
                     OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:dbMessage.date];
                     [sendingAction saveWithTransaction:transaction];
                     [dbMessage saveWithTransaction:transaction];
                 }];
             }];
-            [alertController addAction:resendAction];
+            [actions addObject:resendAction];
             
             NSString * sendingType = UNENCRYPTED_STRING;
             switch (self.state.messageSecurity) {
@@ -469,25 +478,66 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }
             
             NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
-            alertController.message = [alertController.message stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
+            alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
             
             //If this is an error about not having a trusted identity then we should offer to connect to the
-            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices) {
-                UIAlertAction *omemoAction = [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self infoButtonPressed:action];
-                }];
-                [alertController addAction:omemoAction];
-                alertController.message = [alertController.message stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices || error.code == 32872) {
+                
+                [actions addObject:viewProfileAction];
+                alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
             }
-            
-            
-            
         }
-        UIAlertAction *cancelButton = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        [alertController addAction:cancelButton];
-        
+        [actions addObject:cancelAction];
+    }
+    
+    
+    if (![self isMessageTrusted:message]) {
+        title = UNTRUSTED_DEVICE_STRING;
+        if ([message messageIncoming]) {
+            alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING;
+        } else {
+            alertMessage = UNTRUSTED_DEVICE_SENT_STRING;
+        }
+        alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
+        [actions addObject:viewProfileAction];
+        [actions addObject:cancelAction];
+    }
+    
+    if ([actions count] > 0) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:alertMessage preferredStyle:UIAlertControllerStyleActionSheet];
+        [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [alertController addAction:obj];
+        }];
         [self presentViewController:alertController animated:YES completion:nil];
     }
+}
+
+- (BOOL)isMessageTrusted:(id <OTRMessageProtocol>)message {
+    BOOL trusted = YES;
+    if (![message isKindOfClass:[OTRBaseMessage class]]) {
+        return trusted;
+    }
+    
+    OTRBaseMessage *baseMessage = (OTRBaseMessage *)message;
+    
+    
+    if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
+        NSData *otrFingerprintData = baseMessage.messageSecurityInfo.otrFingerprint;
+        if ([otrFingerprintData length]) {
+            trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
+        }
+    } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
+        NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
+        NSString *omemoDeviceYapCollection = baseMessage.messageSecurityInfo.omemoDeviceYapCollection;
+        __block OTROMEMODevice *device = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
+        }];
+        if(device != nil) {
+            trusted = [device isTrusted];
+        }
+    }
+    return trusted;
 }
 
 #pragma - mark Profile Button Methods
@@ -960,7 +1010,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     message.text = text;
-    message.messageSecurity = self.state.messageSecurity;
+    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
     
     //2. Create send message task
     __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTROutgoingMessage collection] buddyKey:message.threadId date:message.date];
@@ -1034,7 +1084,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
             message.buddyUniqueId = self.threadKey;
             message.mediaItemUniqueId = imageItem.uniqueId;
-            message.messageSecurity = OTRMessageTransportSecurityOTR;
+            message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -1071,7 +1121,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.threadKey;
-    message.messageSecurity = OTRMessageTransportSecurityOTR;
+    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
     
     NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.threadKey];
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
@@ -1205,7 +1255,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     UIImage *avatarImage = nil;
-    if ([message messageError]) {
+    if ([message messageError] || ![self isMessageTrusted:message]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
     }
     else if ([message messageIncoming]) {
@@ -1293,25 +1343,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     BOOL trusted = YES;
-    if ([message isKindOfClass:[OTRIncomingMessage class]]) {
-        OTRIncomingMessage *incomingMessage = (OTRIncomingMessage *)message;
-        if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
-            NSData *otrFingerprintData = incomingMessage.messageSecurityInfo.otrFingerprint;
-            if ([otrFingerprintData length]) {
-                trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
-            }
-        } else if (incomingMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
-            NSString *omemoDeviceYapKey = incomingMessage.messageSecurityInfo.omemoDeviceYapKey;
-            NSString *omemoDeviceYapCollection = incomingMessage.messageSecurityInfo.omemoDeviceYapCollection;
-            __block OTROMEMODevice *device = nil;
-            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
-            }];
-            if(device != nil) {
-                trusted = [device isTrusted];
-            }
-        }
-    }
+    if([message isKindOfClass:[OTRBaseMessage class]]) {
+        trusted = [self isMessageTrusted:message];
+    };
     
     if (!trusted) {
         NSMutableDictionary *mutableCopy = [lockAttributes mutableCopy];

@@ -97,7 +97,7 @@
     if (self.transportedSecurely) {
         return OTRMessageTransportSecurityOTR;
     }
-    return OTRMessageTransportSecurityPlaintext;
+    return self.messageSecurityInfo.messageSecurity;
 }
 
 - (NSString *)messageKey {

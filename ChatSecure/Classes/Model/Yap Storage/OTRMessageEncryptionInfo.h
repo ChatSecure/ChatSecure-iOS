@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, OTRMessageTransportSecurity) {
 
 - (nullable instancetype) init NS_UNAVAILABLE;
 
+- (nullable instancetype)initWithMessageSecurity:(OTRMessageTransportSecurity)messageSecurity;
 - (nullable instancetype)initPlaintext;
 - (nullable instancetype)initWithOTRFingerprint:(nonnull NSData *)otrFingerprint;
 - (nullable instancetype)initWithOMEMODevice:(nonnull NSString *)omemoDeviceYapKey collection:(nonnull NSString*)collection;

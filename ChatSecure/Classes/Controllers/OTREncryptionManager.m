@@ -270,8 +270,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 }];
             }
             else if ([encodedMessage length]) {
-                if (wasEncrypted) {
-                    outgoingMessage.messageSecurity = OTRMessageTransportSecurityOTR;
+                if (wasEncrypted && fingerprint != nil) {
+                    outgoingMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:fingerprint.fingerprint];
                 }
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [message saveWithTransaction:transaction];

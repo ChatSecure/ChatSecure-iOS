@@ -22,8 +22,6 @@
 /** Mark message as deliverd via XEP-0184.*/
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 
-@property (nonatomic) OTRMessageTransportSecurity messageSecurity;
-
 + (void)receivedDeliveryReceiptForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
 
 @end

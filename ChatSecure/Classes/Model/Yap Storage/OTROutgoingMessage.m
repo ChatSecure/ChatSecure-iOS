@@ -40,15 +40,6 @@
     return NO;
 }
 
-- (OTRMessageTransportSecurity)messageSecurity
-{
-    OTRMessageTransportSecurity security = [super messageSecurity];
-    if(security == OTRMessageTransportSecurityPlaintext) {
-        return _messageSecurity;
-    }
-    return security;
-}
-
 - (BOOL)messageRead
 {
     return YES;
