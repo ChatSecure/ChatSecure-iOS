@@ -84,7 +84,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     self.existingAccount = (self.account != nil);
     if ([self validForm]) {
         self.form.disabled = YES;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         self.navigationItem.rightBarButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
@@ -92,10 +92,9 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 		__weak __typeof__(self) weakSelf = self;
         self.loginAttempts += 1;
         [self.loginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
-            __typeof__(self) strongSelf = weakSelf;
             NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
-            [[MBProgressHUD HUDForView:strongSelf.view] setProgress:progress/100.0f];
-            [[MBProgressHUD HUDForView:strongSelf.view] setLabelText:summaryString];
+            hud.progress = progress/100.0f;
+            hud.label.text = summaryString;
             
             } completion:^(OTRAccount *account, NSError *error) {
                 __typeof__(self) strongSelf = weakSelf;
@@ -103,7 +102,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                 strongSelf.navigationItem.rightBarButtonItem.enabled = YES;
                 strongSelf.navigationItem.backBarButtonItem.enabled = YES;
                 strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                [hud hideAnimated:YES];
                 if (error) {
                     // Unset/remove password from keychain if account
                     // is unsaved / doesn't already exist. This prevents the case

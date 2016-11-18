@@ -24,7 +24,7 @@ abstract_target 'ChatSecureCorePods' do
   pod "CocoaLumberjack", '~> 2.3.0'
   #pod "HockeySDK-Source", '~> 3.7'
   pod 'KSCrash', '~> 1.10.1'
-  pod 'MBProgressHUD', '~> 0.9'
+  pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
   pod 'YapDatabase/SQLCipher', '~> 2.9'
@@ -35,8 +35,8 @@ abstract_target 'ChatSecureCorePods' do
   # pod 'JSQMessagesViewController', '~> 8.0'
   pod 'BBlock', '~> 1.2'
   pod 'JVFloatLabeledTextField', '~> 1.0'
-  pod 'TTTAttributedLabel', '~> 1.10'
-  pod 'VTAcknowledgementsViewController', '~> 0.15'
+  pod 'TTTAttributedLabel', '~> 2.0'
+  pod 'VTAcknowledgementsViewController', '~> 1.2'
   pod 'PureLayout', '~> 3.0'
   pod 'BButton', '~> 4.0'
   pod 'uservoice-iphone-sdk', '~> 3.2'
@@ -44,13 +44,13 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ARChromeActivity', '~> 1.0'
   # We need a commit from next release
   #pod 'CocoaAsyncSocket', '~> 7.4'
-  pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => '071109901100334ad54ae704b4c644b6bb89ad21'
+  pod 'CocoaAsyncSocket', '~> 7.5.1'
 
   pod 'JTSImageViewController', '~> 1.4'
   pod 'KVOController', '~> 1.0'
   #Reachability only needed for YapActionItems
   pod 'Reachability', '~> 3'
-  pod 'XLForm', '~> 3.1'
+  pod 'XLForm', '~> 3.3'
   #pod 'ParkedTextField', '~> 0.2'
   pod 'FormatterKit/TimeIntervalFormatter'
 
@@ -69,7 +69,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
 
   # Use this until able to push proper podspec that depends on 2.9
-  pod 'YapTaskQueue/SQLCipher', '~> 0.1'
+  pod 'YapTaskQueue/SQLCipher', '~> 0.1.6'
 
   # Submodules
   pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'

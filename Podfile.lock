@@ -14,7 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Appirater (2.0.5)
+  - Appirater (2.1.2)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -131,7 +131,7 @@ PODS:
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
   - Mantle/extobjc (2.1.0)
-  - MBProgressHUD (0.9.2)
+  - MBProgressHUD (1.0.0)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
     - MWFeedParser/NSDate+InternetDateTime (= 1.0.1)
@@ -164,11 +164,11 @@ PODS:
     - SQLCipher/common
   - SQLCipher/standard (3.4.0):
     - SQLCipher/common
-  - TTTAttributedLabel (1.13.4)
+  - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.4)
   - uservoice-iphone-sdk (3.2.9)
-  - VTAcknowledgementsViewController (0.17)
-  - XLForm (3.2.0)
+  - VTAcknowledgementsViewController (1.2)
+  - XLForm (3.3.0)
   - XMPPFramework (3.7.0):
     - XMPPFramework/All (= 3.7.0)
   - XMPPFramework/All (3.7.0):
@@ -385,7 +385,7 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapDatabase/SQLCipher/Extensions/Views (2.9.2):
     - YapDatabase/SQLCipher/Core
-  - YapTaskQueue/SQLCipher (0.1.5):
+  - YapTaskQueue/SQLCipher (0.1.6):
     - YapDatabase/SQLCipher (~> 2.9)
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
@@ -412,7 +412,7 @@ DEPENDENCIES:
   - KVOController (~> 1.0)
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
   - Mantle (~> 2.0)
-  - MBProgressHUD (~> 0.9)
+  - MBProgressHUD (~> 1.0)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
@@ -425,14 +425,14 @@ DEPENDENCIES:
   - SAMKeychain (~> 1.5)
   - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
   - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec`)
-  - TTTAttributedLabel (~> 1.10)
+  - TTTAttributedLabel (~> 2.0)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
-  - VTAcknowledgementsViewController (~> 0.15)
-  - XLForm (~> 3.1)
+  - VTAcknowledgementsViewController (~> 1.2)
+  - XLForm (~> 3.3)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (~> 2.9)
-  - YapTaskQueue/SQLCipher (~> 0.1)
+  - YapTaskQueue/SQLCipher (~> 0.1.6)
   - ZXingObjC (~> 3.0)
 
 EXTERNAL SOURCES:
@@ -481,7 +481,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
+  Appirater: f1c9e53e8b612193e6256144f6a0fd2e31f4340d
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
@@ -503,7 +503,7 @@ SPEC CHECKSUMS:
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
-  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
@@ -517,16 +517,16 @@ SPEC CHECKSUMS:
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
   SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
-  TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
-  VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
-  XLForm: 2250b4e96ab8ffa5f3355838c79edd90de451782
+  VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
+  XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
   XMPPFramework: 96396d09d681b470db3ebc464be4b5bd725d5644
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
-  YapTaskQueue: 8701b7a47addd0c9417643591b0580cb50cd1669
+  YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: 1bcd73c789ba54f9e4a951f371a9d95571c31661
+PODFILE CHECKSUM: e27e68f928913e00235516c876963914dc76ad44
 
 COCOAPODS: 1.2.0.beta.1

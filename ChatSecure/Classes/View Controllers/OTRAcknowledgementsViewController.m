@@ -33,7 +33,7 @@
     if (!plistPath) {
         plistPath = [[NSBundle mainBundle] pathForResource:@"Pods-ChatSecureCorePods-ChatSecure-acknowledgements" ofType:@"plist"];
     }
-    if (self = [super initWithAcknowledgementsPlistPath:plistPath]) {
+    if (self = [super initWithPath:plistPath]) {
         self.headerText = headerLabel.text;
         self.headerLabel = headerLabel;
         self.headerLabel.delegate = self;
