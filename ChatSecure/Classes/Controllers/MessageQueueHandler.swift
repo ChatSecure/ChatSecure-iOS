@@ -265,9 +265,11 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                     //We need to initate an OTR session
                     
                     //Timeout at some point waiting for OTR session
-                    let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
-                    self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,messageSecurity:message.messageSecurity(), timer:timer, completion: completion)
-                    otrKit.initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
+                        self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,messageSecurity:message.messageSecurity(), timer:timer, completion: completion)
+                        otrKit.initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
+                    })
                 }
             }
             
