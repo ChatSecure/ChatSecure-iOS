@@ -1,4 +1,4 @@
-osx_image: xcode8
+osx_image: xcode8.1
 language: objective-c
 
 # Handle git submodules yourself
@@ -8,8 +8,10 @@ git:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-  - xcrun instruments -w '237D7619-4A4E-4624-8925-67A42A8A690A' || true # xcodebuild exited with 65. WTF Apple https://github.com/travis-ci/travis-ci/issues/6675
-  - sleep 15
+  # Fix Travis  xcodebuild exited with 65 https://github.com/travis-ci/travis-ci/issues/6675#issuecomment-257964767
+  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep "iPhone 6 (10.1" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
+  - echo $IOS_SIMULATOR_UDID
+  - open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
   - bundle install # We need a pre-release CocoaPods version
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
@@ -23,13 +25,12 @@ install:
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
+  - mv ./Submodules/OTRKit/OTRKitDependencies ./Submodules/OTRKit/OTRKitDependencies-iOS
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
-  - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # https://github.com/CocoaPods/CocoaPods/issues/3850
   - bundle exec pod repo update --silent
   - bundle exec pod install
-  - bundle exec pod update libsqlfs SQLCipher --no-repo-update # Waiting for CocoaPods fix https://github.com/CocoaPods/CocoaPods/pull/5844
 script:
   - set -o pipefail
-  - xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination 'name=iPhone 6' test | xcpretty -c
+  - travis_retry xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination 'name=iPhone 6' test | xcpretty -c
