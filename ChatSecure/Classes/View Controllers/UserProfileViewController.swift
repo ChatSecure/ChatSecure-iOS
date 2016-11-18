@@ -333,7 +333,7 @@ public class UserProfileViewController: XLFormViewController {
         }
         if let otrFingerprint = cell.rowDescriptor.value as? OTRFingerprint {
             cryptoType = "OTR"
-            fingerprint = otrFingerprint.fingerprint.otr_hexString().lowercaseString
+            fingerprint = otrFingerprint.fingerprint.humanReadableFingerprint()
             username = otrFingerprint.username
         }
         if fingerprint.characters.count == 0 || username.characters.count == 0 || cryptoType.characters.count == 0 {
