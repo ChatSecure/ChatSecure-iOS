@@ -60,10 +60,12 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
 #import "OTRXMPPTorAccount.h"
-@import KSCrash;
 @import OTRAssets;
 @import OTRKit;
 #import "OTRPushTLVHandlerProtocols.h"
+#import <KSCrash/KSCrash.h>
+#import <KSCrash/KSCrashInstallationQuincyHockey.h>
+#import <KSCrash/KSCrashInstallation+Alert.h>
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -182,21 +184,9 @@
                                        message:NSLocalizedString(@"The app crashed last time it was launched. Send a crash report?", @"")
                                      yesAnswer:NSLocalizedString(@"Sure!", @"")
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
-    // http://stackoverflow.com/a/27398665/805882
-    // this doesn't seem to work
-    //BOOL isRunningTestFlightBeta = [[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"];
-    //if (isRunningTestFlightBeta) {
-#warning !!! This will crash the app to help detect deadlocks !!!
-#warning !!! Change this back for production builds !!!
-    KSCrash *crash = [KSCrash sharedInstance];
-    crash.deadlockWatchdogInterval = 5;
-    installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
-    //} else {
-    //    installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
-    //}
-    
+
+    installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     [installation install];
-    
     [installation sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error)
     {
         // Stuff to do when report sending is complete
