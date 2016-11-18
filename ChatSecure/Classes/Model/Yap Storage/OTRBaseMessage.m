@@ -80,6 +80,14 @@
     return edges;
 }
 
+/** Override normal behaviour to migrate from old way of storing encryption state */
+- (OTRMessageEncryptionInfo *)messageSecurityInfo {
+    if (self.transportedSecurely) {
+        return [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
+    }
+    return _messageSecurityInfo;
+}
+
 #pragma - mark OTRMessage Protocol methods
 
 // Override in subclass
@@ -93,10 +101,6 @@
 }
 
 - (OTRMessageTransportSecurity) messageSecurity {
-    // Migrate legacy property
-    if (self.transportedSecurely) {
-        return OTRMessageTransportSecurityOTR;
-    }
     return self.messageSecurityInfo.messageSecurity;
 }
 
