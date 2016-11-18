@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="365" height="121"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="365" height="120.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="365" height="120"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="39146e6b d685f4b2 79073f22 b97bdb5d e522d72e 7cda73b3 4a2ad564 88a9ab35" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Pgs-2g-6hr">
@@ -45,6 +45,15 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TOFU" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNy-FF-DXM">
+                        <rect key="frame" x="314" y="98" width="35" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="vG9-bM-6Kl"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Pgs-2g-6hr" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="4lg-e8-MEZ"/>
@@ -52,7 +61,9 @@
                     <constraint firstItem="Kz0-3J-RIS" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Pgs-2g-6hr" secondAttribute="bottom" constant="6" id="J5o-c5-gua"/>
                     <constraint firstItem="rtN-uh-FSE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Pgs-2g-6hr" secondAttribute="trailing" constant="8" id="UTo-Ex-Ru8"/>
                     <constraint firstItem="Kz0-3J-RIS" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="VOH-at-2HN"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="QNy-FF-DXM" secondAttribute="bottom" id="XQl-Lv-GDE"/>
                     <constraint firstItem="rtN-uh-FSE" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="fW2-Dc-WEQ"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="QNy-FF-DXM" secondAttribute="trailing" constant="8" id="kTf-Pg-rIG"/>
                     <constraint firstItem="Pgs-2g-6hr" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="8" id="u1U-bU-gb1"/>
                     <constraint firstItem="Kz0-3J-RIS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="8" id="zya-r0-7qY"/>
                 </constraints>
@@ -60,6 +71,7 @@
             <connections>
                 <outlet property="fingerprintLabel" destination="Pgs-2g-6hr" id="jp8-9z-O6Z"/>
                 <outlet property="lastSeenLabel" destination="Kz0-3J-RIS" id="Mtc-tS-lud"/>
+                <outlet property="trustLevelLabel" destination="QNy-FF-DXM" id="ccB-TL-igS"/>
                 <outlet property="trustSwitch" destination="rtN-uh-FSE" id="13G-gC-Gfh"/>
             </connections>
             <point key="canvasLocation" x="56.5" y="104.5"/>

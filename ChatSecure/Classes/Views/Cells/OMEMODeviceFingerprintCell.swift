@@ -54,6 +54,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
     @IBOutlet weak var fingerprintLabel: UILabel!
     @IBOutlet weak var trustSwitch: UISwitch!
     @IBOutlet weak var lastSeenLabel: UILabel!
+    @IBOutlet weak var trustLevelLabel: UILabel!
     
     private static let intervalFormatter = TTTTimeIntervalFormatter()
     
@@ -97,7 +98,13 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         let since = self.dynamicType.intervalFormatter.stringForTimeInterval(interval)
         let lastSeen = "OMEMO: " + since
         lastSeenLabel.text = lastSeen
-
+        if (device.trustLevel == .TrustedTofu) {
+            trustLevelLabel.text = "TOFU"
+        } else if (device.trustLevel == .TrustedUser) {
+            trustLevelLabel.text = NSLocalizedString("Verified", comment: "")
+        } else {
+            trustLevelLabel.text = NSLocalizedString("Untrusted", comment: "")
+        }
     }
     
     private func switchValueWithDevice(device: OTROMEMODevice) {
@@ -107,16 +114,24 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
             device.trustLevel = .Untrusted
         }
         rowDescriptor.value = device
+        updateCellFromDevice(device)
     }
     
     private func updateCellFromFingerprint(fingerprint: OTRFingerprint) {
-        fingerprintLabel.text = fingerprint.fingerprint.otr_hexString().lowercaseString
+        fingerprintLabel.text = fingerprint.fingerprint.humanReadableFingerprint()
         lastSeenLabel.text = "OTR"
         if (fingerprint.trustLevel == .TrustedUser ||
             fingerprint.trustLevel == .TrustedTofu) {
             trustSwitch.on = true
         } else {
             trustSwitch.on = false
+        }
+        if (fingerprint.trustLevel == .TrustedTofu) {
+            trustLevelLabel.text = "TOFU"
+        } else if (fingerprint.trustLevel == .TrustedUser) {
+            trustLevelLabel.text = NSLocalizedString("Verified", comment: "")
+        } else {
+            trustLevelLabel.text = NSLocalizedString("Untrusted", comment: "")
         }
     }
     
@@ -127,6 +142,7 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
             fingerprint.trustLevel = .UntrustedUser
         }
         rowDescriptor.value = fingerprint
+        updateCellFromFingerprint(fingerprint)
     }
 
     
