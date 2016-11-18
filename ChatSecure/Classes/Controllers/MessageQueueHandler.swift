@@ -342,11 +342,11 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     
     private func handleMessageStateDidChangeNotification(notification:NSNotification) {
         guard let buddy = notification.object as? OTRBuddy,
-            messageStateInt = (notification.userInfo?[OTRMessageStateKey] as? NSNumber)?.unsignedLongValue else {
+            let messageStateInt = (notification.userInfo?[OTRMessageStateKey] as? NSNumber)?.unsignedLongValue else {
             return
         }
         
-        if let messageState = OTRKitMessageState(rawValue: messageStateInt) where messageState == .Encrypted {
+        if  messageStateInt == OTREncryptionMessageState.Encrypted.rawValue {
             // Buddy has gone encrypted
             // Check if we have an outstanding messages for this buddy
             guard let messageInfo = self.popWaitingBuddy(buddy.uniqueId) else {
