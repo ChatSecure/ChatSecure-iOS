@@ -1334,7 +1334,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     ////// Lock Icon //////
     NSString *lockString = nil;
     if (message.messageSecurity == OTRMessageTransportSecurityOTR) {
-        lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+        lockString = [NSString stringWithFormat:@"%@ OTR ",[NSString fa_stringForFontAwesomeIcon:FALock]];
     } else if (message.messageSecurity == OTRMessageTransportSecurityOMEMO) {
         lockString = [NSString stringWithFormat:@"%@ OMEMO ",[NSString fa_stringForFontAwesomeIcon:FALock]];
     }
