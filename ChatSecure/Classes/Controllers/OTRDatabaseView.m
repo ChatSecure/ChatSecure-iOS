@@ -189,6 +189,11 @@ NSString *OTRPushAccountGroup = @"Account";
             //Checking to see if the buddy username is equal to the account username in order to remove 'self' buddy
             OTRBuddy *buddy = (OTRBuddy *)object;
             OTRAccount *account = [buddy accountWithTransaction:transaction];
+            // Hack fix for buddies created without an account
+            // There must be a race condition in the roster popualtion
+            if (!account) {
+                return nil;
+            }
             if (![account.username isEqualToString:buddy.username]) {
                 return OTRBuddyGroup;
             }
@@ -230,7 +235,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"2"
+                                                           versionTag:@"3"
                                                               options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName sendNotification:YES];
