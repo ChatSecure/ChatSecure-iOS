@@ -74,8 +74,12 @@ class OTROMEMOIntegrationTest: XCTestCase {
     func testDeviceSetup() {
         self.setupTwoAccounts(#function)
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
-        let buddySupport = self.bobUser!.signalOMEMOCoordinator.buddySupportsOMEMO(self.bobUser!.buddy.uniqueId)
-        XCTAssertTrue(buddySupport,"Buddy has OMEMO support")
+        let buddy = self.bobUser!.buddy
+        let connection = self.bobUser?.databaseManager.readWriteDatabaseConnection
+        connection?.readWithBlock({ (transaction) in
+            let devices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
+            XCTAssert(devices.count > 0)
+        })
     }
     
     /**
@@ -102,8 +106,8 @@ class OTROMEMOIntegrationTest: XCTestCase {
         
         var messageFound = false
         self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
-            transaction.enumerateKeysAndObjectsInCollection(OTRMessage.collection(), usingBlock: { (key, object, stop) in
-                let message = object as! OTRMessage
+            transaction.enumerateKeysAndObjectsInCollection(OTRBaseMessage.collection(), usingBlock: { (key, object, stop) in
+                let message = object as! OTRBaseMessage
                 XCTAssertEqual(message.text, messageText)
                 messageFound = true
             })
