@@ -398,7 +398,7 @@ DEPENDENCIES:
   - BBlock (~> 1.2)
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
-  - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `071109901100334ad54ae704b4c644b6bb89ad21`)
+  - CocoaAsyncSocket (~> 7.5.1)
   - CocoaLumberjack (~> 2.3.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - FormatterKit/TimeIntervalFormatter
@@ -438,9 +438,6 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
     :path: Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec
-  CocoaAsyncSocket:
-    :commit: 071109901100334ad54ae704b4c644b6bb89ad21
-    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
   CPAProxy:
     :path: Submodules/CPAProxy/CPAProxy.podspec
   gtm-http-fetcher:
@@ -469,9 +466,6 @@ EXTERNAL SOURCES:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
 CHECKOUT OPTIONS:
-  CocoaAsyncSocket:
-    :commit: 071109901100334ad54ae704b4c644b6bb89ad21
-    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
   JSQMessagesViewController:
     :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController

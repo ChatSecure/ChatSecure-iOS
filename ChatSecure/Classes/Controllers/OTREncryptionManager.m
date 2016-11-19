@@ -418,13 +418,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             default:
                 break;
         }
-        if (error) {
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                OTRBaseMessage *message = (OTRBaseMessage *)tag;
-                message.error = error;
-                message.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
-                [message saveWithTransaction:transaction];
-            }];
+        if (error != nil) {
+            if ([tag isKindOfClass:[OTRBaseMessage class]]) {
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    OTRBaseMessage *dbMessage = [[OTRBaseMessage fetchObjectWithUniqueID:((OTRBaseMessage *)tag).uniqueId transaction:transaction] copy];
+                    dbMessage.error = error;
+                    dbMessage.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
+                    [dbMessage saveWithTransaction:transaction];
+                    //Remove the action if there is an error on the parent message.
+                    NSString * actionKey = [OTRYapMessageSendAction actionKeyForMessageKey:dbMessage.uniqueId messageCollection:[OTRBaseMessage collection]];
+                    [transaction removeObjectForKey:actionKey inCollection:[OTRYapMessageSendAction collection]];
+                }];
+            }
+            
             // Inject message to recipient indicating error
             NSString *errorString = [NSString stringWithFormat:@"OTR Error: %@", [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription];
             [self otrKit:self.otrKit injectMessage:errorString username:username accountName:accountName protocol:protocol fingerprint:nil tag:tag];
