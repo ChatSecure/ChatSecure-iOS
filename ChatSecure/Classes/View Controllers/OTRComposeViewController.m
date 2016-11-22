@@ -254,7 +254,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (BOOL)canAddBuddies
 {
-    if([OTRAccountsManager allAccountsAbleToAddBuddies]) {
+    if([[OTRAccountsManager allAccountsAbleToAddBuddies] count] > 0) {
         return YES;
     }
     return NO;
@@ -433,7 +433,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
-    if(indexPath.section == 0 && [accounts count] && ![self isSearchResultsControllerTableView:tableView])
+    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
     {
         [self addBuddy:accounts];
     }
@@ -474,6 +474,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)addBuddy:(NSArray * _Nullable)accountsAbleToAddBuddies
 {
+    if ([accountsAbleToAddBuddies count] == 0) {
+        return; // No accounts
+    }
+    
     //add buddy cell
     UIViewController *viewController = nil;
     if([accountsAbleToAddBuddies count] > 1) {
