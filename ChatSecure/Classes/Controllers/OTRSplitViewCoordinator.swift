@@ -101,11 +101,11 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
     
     //MARK: OTRComposeViewControllerDelegate Methods
     public func controller(viewController: OTRComposeViewController, didSelectBuddies buddies: [String]?, accountId: String?, name: String?) {
-        self.splitViewController?.dismissViewControllerAnimated(true) { () -> Void in
-            
+
+        func doClose () -> Void {
             guard let buds = buddies,
                 accountKey = accountId else {
-                return
+                    return
             }
             
             if (buds.count == 1) {
@@ -115,6 +115,13 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             } else if (buds.count > 1) {
                 self.enterConversationWithBuddies(buds, accountKey: accountKey, name:name)
             }
+        }
+
+        
+        if (self.splitViewController?.presentedViewController == viewController.navigationController) {
+            self.splitViewController?.dismissViewControllerAnimated(true) { doClose() }
+        } else {
+            doClose()
         }
     }
     
