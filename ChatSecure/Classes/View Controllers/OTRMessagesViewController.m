@@ -559,6 +559,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         account = [self accountWithTransaction:transaction];
         buddy = [self buddyWithTransaction:transaction];
     }];
+    if (!account || !buddy) {
+        return;
+    }
     YapDatabaseConnection *newConnection = [self.readWriteDatabaseConnection.database newConnection];
     XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:newConnection];
 
