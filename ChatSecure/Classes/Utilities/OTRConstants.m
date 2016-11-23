@@ -46,7 +46,6 @@ NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certifi
 
 NSString *const kOTRSettingKeyFontSize                 = @"kOTRSettingKeyFontSize";
 NSString *const kOTRSettingKeyDeleteOnDisconnect       = @"kOTRSettingKeyDeleteOnDisconnect";
-NSString *const kOTRSettingKeyOpportunisticOtr         = @"kOTRSettingKeyOpportunisticOtr";
 NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDisconnectionWarning";
 NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
 NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";

@@ -47,7 +47,6 @@ extern NSString *const kOTRCertificateServiceName;
 
 extern NSString *const kOTRSettingKeyFontSize;
 extern NSString *const kOTRSettingKeyDeleteOnDisconnect;
-extern NSString *const kOTRSettingKeyOpportunisticOtr;
 extern NSString *const kOTRSettingKeyShowDisconnectionWarning;
 extern NSString *const kOTRSettingUserAgreedToEULA;
 extern NSString *const kOTRSettingAccountsKey;
