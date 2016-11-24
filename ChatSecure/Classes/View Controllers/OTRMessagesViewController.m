@@ -316,6 +316,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
     [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     [self.collectionView reloadData];
+    
+    [self updateEncryptionState];
 }
 
                            
@@ -570,6 +572,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:newConnection];
 
     UserProfileViewController *verify = [[UserProfileViewController alloc] initWithConnection:newConnection form:form];
+    verify.completionBlock = ^{
+        [self updateEncryptionState];
+    };
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];

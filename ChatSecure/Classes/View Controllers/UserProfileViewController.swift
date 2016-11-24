@@ -13,6 +13,7 @@ import YapDatabase
 public class UserProfileViewController: XLFormViewController {
     
     public var connection: YapDatabaseConnection?
+    public var completionBlock: dispatch_block_t?
     
     // Crypto Chooser row tags
     public static let DefaultRowTag = "DefaultRowTag"
@@ -71,6 +72,9 @@ public class UserProfileViewController: XLFormViewController {
         
         otrFingerprintsToSave.forEach { (fingerprint) in
             OTRProtocolManager.sharedInstance().encryptionManager.saveFingerprint(fingerprint)
+        }
+        if let completionBlock = completionBlock {
+            completionBlock()
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
