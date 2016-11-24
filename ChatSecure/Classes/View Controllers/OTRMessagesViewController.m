@@ -428,8 +428,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)showMessageError:(id<OTRMessageProtocol>)message
-{
+- (void)showMessageError:(id<OTRMessageProtocol>)message sender:(id)sender {
     NSError *error =  [message messageError];
     NSString *title = nil;
     NSString *alertMessage = nil;
@@ -512,6 +511,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [alertController addAction:obj];
         }];
+        if ([sender isKindOfClass:[UIView class]]) {
+            UIView *sourceView = sender;
+            alertController.popoverPresentationController.sourceView = sourceView;
+            alertController.popoverPresentationController.sourceRect = sourceView.bounds;
+        }
         [self presentViewController:alertController animated:YES completion:nil];
     }
 }
@@ -1467,7 +1471,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    [self showMessageError:message];
+    [self showMessageError:message sender:avatarImageView];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath

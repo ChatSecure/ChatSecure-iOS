@@ -62,47 +62,47 @@ PODS:
   - KissXML (5.1.2):
     - KissXML/Core (= 5.1.2)
   - KissXML/Core (5.1.2)
-  - KSCrash (1.10.1):
-    - KSCrash/Installations (= 1.10.1)
-  - KSCrash/Installations (1.10.1):
+  - KSCrash (1.10.3):
+    - KSCrash/Installations (= 1.10.3)
+  - KSCrash/Installations (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.10.1)
-  - KSCrash/Reporting (1.10.1):
+  - KSCrash/Recording (1.10.3)
+  - KSCrash/Reporting (1.10.3):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.10.1)
-    - KSCrash/Reporting/MessageUI (= 1.10.1)
-    - KSCrash/Reporting/Sinks (= 1.10.1)
-    - KSCrash/Reporting/Tools (= 1.10.1)
-  - KSCrash/Reporting/Filters (1.10.1):
+    - KSCrash/Reporting/Filters (= 1.10.3)
+    - KSCrash/Reporting/MessageUI (= 1.10.3)
+    - KSCrash/Reporting/Sinks (= 1.10.3)
+    - KSCrash/Reporting/Tools (= 1.10.3)
+  - KSCrash/Reporting/Filters (1.10.3):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.10.1)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.10.1)
-    - KSCrash/Reporting/Filters/Base (= 1.10.1)
-    - KSCrash/Reporting/Filters/Basic (= 1.10.1)
-    - KSCrash/Reporting/Filters/GZip (= 1.10.1)
-    - KSCrash/Reporting/Filters/JSON (= 1.10.1)
-    - KSCrash/Reporting/Filters/Sets (= 1.10.1)
-    - KSCrash/Reporting/Filters/Stringify (= 1.10.1)
-    - KSCrash/Reporting/Filters/Tools (= 1.10.1)
-  - KSCrash/Reporting/Filters/Alert (1.10.1):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.10.1):
+    - KSCrash/Reporting/Filters/Alert (= 1.10.3)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.10.3)
+    - KSCrash/Reporting/Filters/Base (= 1.10.3)
+    - KSCrash/Reporting/Filters/Basic (= 1.10.3)
+    - KSCrash/Reporting/Filters/GZip (= 1.10.3)
+    - KSCrash/Reporting/Filters/JSON (= 1.10.3)
+    - KSCrash/Reporting/Filters/Sets (= 1.10.3)
+    - KSCrash/Reporting/Filters/Stringify (= 1.10.3)
+    - KSCrash/Reporting/Filters/Tools (= 1.10.3)
+  - KSCrash/Reporting/Filters/Alert (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.10.1):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.10.1):
+  - KSCrash/Reporting/Filters/AppleFmt (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.10.1):
+  - KSCrash/Reporting/Filters/Base (1.10.3):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.10.1):
+  - KSCrash/Reporting/Filters/GZip (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.10.1):
+  - KSCrash/Reporting/Filters/JSON (1.10.3):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -110,18 +110,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.10.1):
+  - KSCrash/Reporting/Filters/Stringify (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.10.1):
+  - KSCrash/Reporting/Filters/Tools (1.10.3):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.10.1):
+  - KSCrash/Reporting/MessageUI (1.10.3):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.10.1):
+  - KSCrash/Reporting/Sinks (1.10.3):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.10.1):
+  - KSCrash/Reporting/Tools (1.10.3):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libsqlfs/common (1.3.2)
@@ -493,7 +493,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
-  KSCrash: d9fae3bfbc77a31aa5a0710edaf2bff43c77eb1f
+  KSCrash: ec0b6524c3cecf324741a0c3aa2fb36aab098f48
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
