@@ -283,34 +283,38 @@ import YapDatabase
      
      - parameter deviceId: The OMEMO device id
     */
-    public func removeDevice(deviceIds:[NSNumber], completion:((Bool) -> Void)) {
+    public func removeDevice(devices:[OTROMEMODevice], completion:((Bool) -> Void)) {
         
         dispatch_async(self.workQueue) { [weak self] in
-            if let module = self?.omemoModule {
-                let elementId = NSUUID().UUIDString
-                
-                self?.outstandingXMPPStanzaResponseBlocks[elementId] = { [weak self] success in
-                    
-                    if(success) {
-                        guard let pKey = self?.accountYapKey else {
-                            return
-                        }
-                        
-                        self?.databaseConnection.readWriteWithBlock({ (transaction) in
-                            for did in deviceIds {
-                                let yapKey = OTROMEMODevice.yapKeyWithDeviceId(did, parentKey: pKey, parentCollection: OTRAccount.collection())
-                                transaction.removeObjectForKey(yapKey, inCollection: OTROMEMODevice.collection())
-                            }
-                        })
+            
+            guard let accountKey = self?.accountYapKey else {
+                completion(false)
+                return
+            }
+            
+            var removeRemoteDevice = [OTROMEMODevice]()
+            self?.databaseConnection.readWriteWithBlock({ (transaction) in
+                devices.forEach({ (device) in
+                    if (device.parentKey == accountKey && device.parentCollection == OTRAccount.collection()) {
+                        removeRemoteDevice.append(device)
                     }
-                    
+                    device.removeWithTransaction(transaction)
+                })
+            })
+            
+            if( removeRemoteDevice.count > 0 ) {
+                let elementId = NSUUID().UUIDString
+                let deviceIds = removeRemoteDevice.map({ (device) -> NSNumber in
+                    return device.deviceId
+                })
+                self?.outstandingXMPPStanzaResponseBlocks[elementId] = { success in
                     completion(success)
                 }
-                module.removeDeviceIds(deviceIds, elementId: elementId)
+                self?.omemoModule?.removeDeviceIds(deviceIds, elementId: elementId)
+            } else {
+                completion(true)
             }
         }
-        
-        
     }
 }
 

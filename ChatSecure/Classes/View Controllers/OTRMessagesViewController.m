@@ -571,7 +571,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     YapDatabaseConnection *newConnection = [self.readWriteDatabaseConnection.database newConnection];
     XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:newConnection];
 
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithConnection:newConnection form:form];
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:newConnection form:form];
     verify.completionBlock = ^{
         [self updateEncryptionState];
     };

@@ -12,7 +12,6 @@ import YapDatabase
 
 public class UserProfileViewController: XLFormViewController {
     
-    public var connection: YapDatabaseConnection?
     public var completionBlock: dispatch_block_t?
     
     // Crypto Chooser row tags
@@ -22,9 +21,30 @@ public class UserProfileViewController: XLFormViewController {
     public static let OMEMORowTag = "OMEMORowTag"
     public static let ShowAdvancedCryptoSettingsTag = "ShowAdvancedCryptoSettingsTag"
     
-    public init(connection: YapDatabaseConnection, form: XLFormDescriptor) {
-        super.init(nibName: nil, bundle: nil)
+    public let accountKey:String
+    public var connection: YapDatabaseConnection
+    
+    lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
+        var account:OTRAccount? = nil
+        self.connection.readWithBlock { (transaction) in
+            account = OTRAccount.fetchObjectWithUniqueID(self.accountKey, transaction: transaction)
+        }
+        
+        guard let acct = account else {
+            return nil
+        }
+        
+        guard let xmpp = OTRProtocolManager.sharedInstance().protocolForAccount(acct) as? OTRXMPPManager else {
+            return nil
+        }
+        return xmpp.omemoSignalCoordinator
+    }()
+    
+    public init(accountKey:String, connection: YapDatabaseConnection, form: XLFormDescriptor) {
+        self.accountKey = accountKey
         self.connection = connection
+        super.init(nibName: nil, bundle: nil)
+        
         self.form = form
     }
     
@@ -39,7 +59,10 @@ public class UserProfileViewController: XLFormViewController {
 
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
-        // Do any additional setup after loading the view.
+        self.tableView.allowsMultipleSelectionDuringEditing = false
+        
+        // Overriding superclass behaviour. This prevents the red icon on left of cell for deletion. Just want swipe to delete on device/fingerprint.
+        self.tableView.setEditing(false, animated: false)
     }
 
     public override func didReceiveMemoryWarning() {
@@ -60,7 +83,7 @@ public class UserProfileViewController: XLFormViewController {
                 break
             }
         }
-        connection?.asyncReadWriteWithBlock({ (t: YapDatabaseReadWriteTransaction) in
+        connection.asyncReadWriteWithBlock({ (t: YapDatabaseReadWriteTransaction) in
             for viewedDevice in devicesToSave {
                 if var device = t.objectForKey(viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
                     device = device.copy() as! OTROMEMODevice
@@ -176,7 +199,60 @@ public class UserProfileViewController: XLFormViewController {
         
         return formRows
     }
-
+    
+//MARK UITableView Delegate overrides
+    
+    public override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    public override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if ( editingStyle == .Delete ) {
+            if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
+                rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
+                switch rowDescriptor.value {
+                case let device as OTROMEMODevice:
+                    
+                    self.signalCoordinator?.removeDevice([device], completion: { (success) in
+                        
+                    })
+                break
+                case let fingerprint as OTRFingerprint:
+                    do {
+                        try OTRProtocolManager.sharedInstance().encryptionManager.otrKit.deleteFingerprint(fingerprint)
+                    } catch {
+                        
+                    }
+                break
+                default:
+                    break
+                }
+            }
+        }
+    }
+    
+    public override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
+            
+            switch rowDescriptor.value {
+            case let device as OTROMEMODevice:
+                if let myBundle = self.signalCoordinator?.fetchMyBundle() {
+                    // This is only used to compare so we don't allow delete UI on our device
+                    let thisDeviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(NSNumber(unsignedInt: myBundle.deviceId), parentKey: self.accountKey, parentCollection: OTRAccount.collection())
+                    if device.uniqueId != thisDeviceYapKey {
+                        return .Delete
+                    }
+                }
+            case let fingerprint as OTRFingerprint:
+                if (fingerprint.accountName != fingerprint.username) {
+                    return .Delete
+                }
+            default:
+                break
+            }
+        }
+        return .None
+    }
     
     public static func profileFormDescriptorForAccount(account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
         let form = XLFormDescriptor(title: NSLocalizedString("Profile", comment: ""))
@@ -329,7 +405,7 @@ public class UserProfileViewController: XLFormViewController {
         if let device = cell.rowDescriptor.value as? OTROMEMODevice {
             cryptoType = "OMEMO"
             fingerprint = device.humanReadableFingerprint
-            connection?.readWithBlock({ (transaction) in
+            self.connection.readWithBlock({ (transaction) in
                 if let buddy = transaction.objectForKey(device.parentKey, inCollection: device.parentCollection) as? OTRBuddy {
                     username = buddy.username
                 }

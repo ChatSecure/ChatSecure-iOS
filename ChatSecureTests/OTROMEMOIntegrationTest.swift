@@ -126,12 +126,13 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
         let expectation = self.expectationWithDescription("Remove Devices")
         let deviceNumber = NSNumber(int:5)
+        let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
         
         self.bobUser?.databaseManager.readWriteDatabaseConnection.readWriteWithBlock({ (transaction) in
-            let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
+            
             device.saveWithTransaction(transaction)
         })
-        self.bobUser?.signalOMEMOCoordinator.removeDevice([deviceNumber], completion: { (result) in
+        self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
             self.bobUser!.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
                 let yapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
