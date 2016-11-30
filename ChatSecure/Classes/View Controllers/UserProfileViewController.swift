@@ -88,6 +88,11 @@ public class UserProfileViewController: XLFormViewController {
                 if var device = t.objectForKey(viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
                     device = device.copy() as! OTROMEMODevice
                     device.trustLevel = viewedDevice.trustLevel
+                    
+                    if (device.trustLevel == .TrustedUser && device.isExpired()) {
+                        device.lastSeenDate = viewedDevice.lastSeenDate
+                    }
+                    
                     device.saveWithTransaction(t)
                 }
             }
@@ -100,6 +105,54 @@ public class UserProfileViewController: XLFormViewController {
             completionBlock()
         }
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    private func isAbleToDeleteCellAtIndexPath(indexPath:NSIndexPath) -> Bool {
+        if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
+            
+            switch rowDescriptor.value {
+            case let device as OTROMEMODevice:
+                if let myBundle = self.signalCoordinator?.fetchMyBundle() {
+                    // This is only used to compare so we don't allow delete UI on our device
+                    let thisDeviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(NSNumber(unsignedInt: myBundle.deviceId), parentKey: self.accountKey, parentCollection: OTRAccount.collection())
+                    if device.uniqueId != thisDeviceYapKey {
+                        return true
+                    }
+                }
+            case let fingerprint as OTRFingerprint:
+                if (fingerprint.accountName != fingerprint.username) {
+                    return true
+                }
+            default:
+                break
+            }
+        }
+        return false
+    }
+    
+    private func performEdit(action:UITableViewCellEditingStyle, indexPath:NSIndexPath) {
+        if ( action == .Delete ) {
+            if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
+                rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
+                switch rowDescriptor.value {
+                case let device as OTROMEMODevice:
+                    
+                    self.signalCoordinator?.removeDevice([device], completion: { (success) in
+                        
+                    })
+                    break
+                case let fingerprint as OTRFingerprint:
+                    do {
+                        try OTRProtocolManager.sharedInstance().encryptionManager.otrKit.deleteFingerprint(fingerprint)
+                    } catch {
+                        
+                    }
+                    break
+                default:
+                    break
+                }
+            }
+        }
     }
     
     public static func cryptoChooserRows(buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
@@ -203,56 +256,24 @@ public class UserProfileViewController: XLFormViewController {
 //MARK UITableView Delegate overrides
     
     public override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    public override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if ( editingStyle == .Delete ) {
-            if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
-                rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
-                switch rowDescriptor.value {
-                case let device as OTROMEMODevice:
-                    
-                    self.signalCoordinator?.removeDevice([device], completion: { (success) in
-                        
-                    })
-                break
-                case let fingerprint as OTRFingerprint:
-                    do {
-                        try OTRProtocolManager.sharedInstance().encryptionManager.otrKit.deleteFingerprint(fingerprint)
-                    } catch {
-                        
-                    }
-                break
-                default:
-                    break
-                }
-            }
+        if  self.isAbleToDeleteCellAtIndexPath(indexPath) {
+            return true
         }
+        return false
     }
     
     public override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        if let rowDescriptor = self.form.formRowAtIndex(indexPath) {
-            
-            switch rowDescriptor.value {
-            case let device as OTROMEMODevice:
-                if let myBundle = self.signalCoordinator?.fetchMyBundle() {
-                    // This is only used to compare so we don't allow delete UI on our device
-                    let thisDeviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(NSNumber(unsignedInt: myBundle.deviceId), parentKey: self.accountKey, parentCollection: OTRAccount.collection())
-                    if device.uniqueId != thisDeviceYapKey {
-                        return .Delete
-                    }
-                }
-            case let fingerprint as OTRFingerprint:
-                if (fingerprint.accountName != fingerprint.username) {
-                    return .Delete
-                }
-            default:
-                break
-            }
+        if  self.isAbleToDeleteCellAtIndexPath(indexPath) {
+            return .Delete
         }
         return .None
     }
+    
+    public override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        self.performEdit(editingStyle, indexPath: indexPath)
+    }
+    
     
     public static func profileFormDescriptorForAccount(account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
         let form = XLFormDescriptor(title: NSLocalizedString("Profile", comment: ""))
@@ -288,7 +309,7 @@ public class UserProfileViewController: XLFormViewController {
                 guard let _ = device.publicIdentityKeyData else {
                     continue
                 }
-                let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType()) 
+                let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
                 row.value = device.copy()
                 
                 // Removed devices cannot be re-trusted but are stored

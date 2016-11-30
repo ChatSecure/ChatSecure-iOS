@@ -110,6 +110,9 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
     private func switchValueWithDevice(device: OTROMEMODevice) {
         if (trustSwitch.on) {
             device.trustLevel = .TrustedUser
+            if (device.isExpired()){
+                device.lastSeenDate = NSDate()
+            }
         } else {
             device.trustLevel = .Untrusted
         }
