@@ -989,7 +989,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 	// Do not allow clickable links for Tor accounts to prevent information leakage
     // Could be better to move this information to the message object to not need to do a database read.
     __block OTRAccount *account = nil;
-    [self.readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [self accountWithTransaction:transaction];
     }];
     if ([account isKindOfClass:[OTRXMPPTorAccount class]]) {
