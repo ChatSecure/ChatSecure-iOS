@@ -69,8 +69,7 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     imagePickerController.sourceType = sourceType;
-    NSArray* mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:sourceType];
-    imagePickerController.mediaTypes = mediaTypes;
+    imagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
     imagePickerController.delegate = self;
     
     self.imagePickerController = imagePickerController;

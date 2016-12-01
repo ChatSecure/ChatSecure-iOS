@@ -937,7 +937,7 @@
     },
     "USE_CAMERA_STRING" : {
         "comment": "Label for button to take a photo from camera",
-        "string": "Take Photo or Video"
+        "string": "Take Photo"
     },
     "PHOTO_LIBRARY_STRING" : {
         "comment": "Label for button to open up photo library and choose photo",

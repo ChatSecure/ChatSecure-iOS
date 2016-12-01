@@ -264,7 +264,7 @@
 #define CURRENT_PASSPHRASE_STRING [OTRLanguageManager translatedString: @"Current Passphrase"]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: @"Self Signed SSL"]
 #define ABOUT_VERSION_STRING [OTRLanguageManager translatedString: @"About This Version"]
-#define USE_CAMERA_STRING [OTRLanguageManager translatedString: @"Take Photo or Video"]
+#define USE_CAMERA_STRING [OTRLanguageManager translatedString: @"Take Photo"]
 #define BUDDY_FINGERPRINTS_STRING [OTRLanguageManager translatedString: @"Buddy Fingerprints"]
 #define PINNED_CERTIFICATES_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Manage saved SSL certificates"]
 #define REMOVE_STRING [OTRLanguageManager translatedString: @"Remove"]
