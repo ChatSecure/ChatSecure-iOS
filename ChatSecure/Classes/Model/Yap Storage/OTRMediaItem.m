@@ -33,7 +33,7 @@
 
 - (void)touchParentMessage
 {
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [self touchParentMessageWithTransaction:transaction];
     }];
 }
