@@ -460,10 +460,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                     OTROutgoingMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
                     dbMessage.error = nil;
-                    dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
-                    dbMessage.date = [NSDate date];
-                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
-                    [sendingAction saveWithTransaction:transaction];
+                    
+                    // Check if this is a media message. For now these are handled differently
+                    if ([dbMessage.mediaItemUniqueId length]) {
+                        OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
+                        [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
+                    } else {
+                        dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
+                        dbMessage.date = [NSDate date];
+                        OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
+                        [sendingAction saveWithTransaction:transaction];
+                    }
                     [dbMessage saveWithTransaction:transaction];
                 }];
             }];
@@ -863,14 +870,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark Sending Media Items
 
-- (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag
+- (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    __block OTRBuddy *buddy = nil;
-    __block OTRAccount *account = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [self buddyWithTransaction:transaction];
-        account = [self accountWithTransaction:transaction];
-    }];
+    OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+    OTRAccount *account = [self accountWithTransaction:transaction];
     
     if (data) {
         
@@ -882,7 +885,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
     }
     
-    [mediaItem touchParentMessage];
+    [mediaItem touchParentMessageWithTransaction:transaction];
 }
 
 #pragma - mark Media Display Methods
@@ -1105,6 +1108,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
                 [imageItem saveWithTransaction:transaction];
+                
             } completionBlock:^{
                 [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.threadKey completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
@@ -1114,7 +1118,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             [message saveWithTransaction:transaction];
                         }];
                     }
-                    [self sendMediaItem:imageItem data:imageData tag:message];
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                        [self sendMediaItem:imageItem data:imageData tag:message transaction:transaction];
+                    }];
                     
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];
@@ -1155,9 +1161,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [videoItem saveWithTransaction:transaction];
             [message saveWithTransaction:transaction];
+            [self sendMediaItem:videoItem data:nil tag:message transaction:transaction];
         }];
         
-        [self sendMediaItem:videoItem data:nil tag:message];
+        
         
     }];
 }
@@ -1198,9 +1205,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [message saveWithTransaction:transaction];
             [audioItem saveWithTransaction:transaction];
+            [self sendMediaItem:audioItem data:data tag:message transaction:transaction];
         }];
         
-        [self sendMediaItem:audioItem data:data tag:message];
+        
     }];
 }
 
