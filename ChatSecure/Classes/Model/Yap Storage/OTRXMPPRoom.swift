@@ -102,8 +102,10 @@ extension OTRXMPPRoom:OTRThreadOwner {
         relationshipTransaction.enumerateEdgesWithName(OTRXMPPRoomMessage.roomEdgeName, destinationKey: self.uniqueId, collection: self.threadCollection(), usingBlock: { (edge, stop) -> Void in
             
             if let message = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? OTRXMPPRoomMessage {
-                message.read = true
-                message.saveWithTransaction(transaction)
+                if (!message.read) {
+                    message.read = true
+                    message.saveWithTransaction(transaction)
+                }
             }
         })
     }
