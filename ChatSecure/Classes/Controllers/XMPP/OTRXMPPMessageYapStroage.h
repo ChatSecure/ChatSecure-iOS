@@ -12,8 +12,8 @@
 
 @interface OTRXMPPMessageYapStroage : XMPPModule
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *databaseConnection;
 
-- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)connection;
+- (_Nullable instancetype)initWithDatabaseConnection:(YapDatabaseConnection * _Nonnull )connection;
 
 @end

@@ -64,7 +64,10 @@
 }
 
 - (OTROutgoingMessage *)outgoingMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId {
-    return (OTROutgoingMessage *)[self baseMessageFromXMPPMessage:xmppMessage buddyId:buddyId class:[OTROutgoingMessage class]];
+    OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)[self baseMessageFromXMPPMessage:xmppMessage buddyId:buddyId class:[OTROutgoingMessage class]];
+    // Fill in current data so it looks like this 'outgoing' message was really sent (but of course this is a message we received through carbons).
+    outgoingMessage.dateSent = [NSDate date];
+    return outgoingMessage;
 }
 
 - (OTRIncomingMessage *)incomingMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId
@@ -175,6 +178,7 @@
     //So from is our JID and to is buddy
     BOOL incoming = NO;
     XMPPMessage *forwardedMessage = [xmppMessage messageCarbonForwardedMessage];
+    
     
     NSString *username = nil;
     if ([xmppMessage isReceivedMessageCarbon]) {

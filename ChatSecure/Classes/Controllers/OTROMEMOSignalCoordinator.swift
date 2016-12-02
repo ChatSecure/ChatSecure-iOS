@@ -316,6 +316,116 @@ import YapDatabase
             }
         }
     }
+    
+    public func processKeyData(keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
+        let aesGcmBlockLength = 16
+        guard let encryptedPayload = payload where encryptedPayload.length > aesGcmBlockLength else {
+            return
+        }
+        
+        let rid = self.signalEncryptionManager.registrationId
+        
+        //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
+        var unencryptedKeyData:NSData?
+        for key in keyData {
+            if key.deviceId == rid {
+                let keyData = key.data
+                do {
+                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
+                    // have successfully decripted the AES key. We should break and use it to decrypt the payload
+                    break
+                } catch {
+                    return
+                }
+            }
+        }
+        guard let aesKey = unencryptedKeyData else {
+            return
+        }
+        
+        let encryptedBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
+        let tag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
+        
+        do {
+            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {
+                return
+            }
+            let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
+            var databaseMessage:OTRBaseMessage = OTRIncomingMessage()
+            self.databaseConnection.readWriteWithBlock({ (transaction) in
+                
+                var relatedBuddyUsername = fromJID.bare()
+                var innerMessage = message
+                if let ourJID = self.myJID {
+                    if (ourJID.isEqualToJID(fromJID, options: XMPPJIDCompareBare) && message.isMessageCarbon()) {
+                        //This came from another of our devices this is really going to be an outgoing message
+                        innerMessage = message.messageCarbonForwardedMessage()
+                        if (message.isReceivedMessageCarbon()) {
+                            relatedBuddyUsername = innerMessage.from().bare()
+                        } else {
+                            relatedBuddyUsername = innerMessage.to().bare()
+                            let outgoingMessage = OTROutgoingMessage()
+                            outgoingMessage.dateSent = NSDate()
+                            databaseMessage = outgoingMessage
+                        }
+                        
+                        
+                        
+                    }
+                }
+                
+                guard let buddy = OTRBuddy.fetchBuddyWithUsername(relatedBuddyUsername, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
+                    return
+                }
+                databaseMessage.text = messageString
+                databaseMessage.buddyUniqueId = buddy.uniqueId
+                
+                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
+                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: deviceYapKey, collection: OTROMEMODevice.collection())!
+                if let id = innerMessage.elementID() {
+                    databaseMessage.messageId = id
+                }
+                
+                databaseMessage.saveWithTransaction(transaction)
+                
+                // Should we be using the date of the xmpp message?
+                buddy.lastMessageDate = NSDate()
+                buddy.saveWithTransaction(transaction)
+                
+                //Update device last received message
+                guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
+                    return
+                }
+                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: NSDate())
+                newDevice.saveWithTransaction(transaction)
+                
+                // Send delivery receipt
+                guard let account = OTRAccount.fetchObjectWithUniqueID(buddy.accountUniqueId, transaction: transaction) else {
+                    return
+                }
+                guard let protocolManager = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
+                    return
+                }
+                
+                if let incomingMessage = databaseMessage as? OTRIncomingMessage {
+                    protocolManager.sendDeliveryReceiptForMessage(incomingMessage)
+                }
+                
+            })
+            // Display local notification
+            if let _ = databaseMessage.text {
+                if let messageCopy = databaseMessage.copy() as? OTRIncomingMessage {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        UIApplication.sharedApplication().showLocalNotification(messageCopy)
+                    })
+                }
+            }
+        } catch {
+            return
+        }
+
+    }
 }
 
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
@@ -405,85 +515,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
-        let aesGcmBlockLength = 16
-        guard let encryptedPayload = payload where encryptedPayload.length > aesGcmBlockLength else {
-            return
-        }
-        
-        let rid = self.signalEncryptionManager.registrationId
-        
-        //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
-        var unencryptedKeyData:NSData?
-        for key in keyData {
-            if key.deviceId == rid {
-                let keyData = key.data
-                do {
-                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
-                    // have successfully decripted the AES key. We should break and use it to decrypt the payload
-                    break
-                } catch {
-                    return
-                }
-            }
-        }
-        guard let aesKey = unencryptedKeyData else {
-            return
-        }
-        
-        let encryptedBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
-        let tag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
-        
-        do {
-            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {
-                return
-            }
-            let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
-            let databaseMessage = OTRIncomingMessage()
-            self.databaseConnection.readWriteWithBlock({ (transaction) in
-                // TODO: check if it's our jid and handle as an outgoing message from another device
-                guard let buddy = OTRBuddy.fetchBuddyWithUsername(fromJID.bare(), withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
-                    return
-                }
-                databaseMessage.text = messageString
-                databaseMessage.buddyUniqueId = buddy.uniqueId
-                
-                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
-                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: deviceYapKey, collection: OTROMEMODevice.collection())!
-                databaseMessage.messageId = message.elementID()
-                
-                databaseMessage.saveWithTransaction(transaction)
-                
-                // Should we be using the date of the xmpp message?
-                buddy.lastMessageDate = NSDate()
-                buddy.saveWithTransaction(transaction)
-                
-                //Update device last received message
-                guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
-                    return
-                }
-                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: NSDate())
-                newDevice.saveWithTransaction(transaction)
-                
-                // Send delivery receipt
-                guard let account = OTRAccount.fetchObjectWithUniqueID(buddy.accountUniqueId, transaction: transaction) else {
-                    return
-                }
-                guard let protocolManager = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
-                    return
-                }
-                protocolManager.sendDeliveryReceiptForMessage(databaseMessage)
-            })
-            // Display local notification
-            if let _ = databaseMessage.text {
-                let messageCopy = databaseMessage.copy() as! OTRIncomingMessage
-                dispatch_async(dispatch_get_main_queue(), { 
-                    UIApplication.sharedApplication().showLocalNotification(messageCopy)
-                })
-            }
-        } catch {
-            return
-        }
+        self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, fromJID: fromJID, payload: payload, message: message)
     }
 }
 
