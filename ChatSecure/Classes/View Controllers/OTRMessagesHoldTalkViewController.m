@@ -236,6 +236,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
     if (self.state.isThreadOnline && self.state.canSendMedia) {
         //Encrypted Show camera button
         self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+        self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
         
         if (!self.state.hasText) {
             //No text then show microphone
