@@ -100,7 +100,7 @@
     // Create 3 primary view controllers, settings, conversation list and messages
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
-    self.messagesViewController = [[self.theme messagesViewControllerClass] messagesViewController];
+    self.messagesViewController = [self.theme messagesViewController];
     
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -217,17 +217,17 @@
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
     //MessagesViewController Nav
-    self.messagesNavigationController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
+    UINavigationController *messagesNavigationController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
     
     //SplitViewController
     UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-    splitViewController.viewControllers = @[leadingViewController,self.messagesNavigationController];
+    splitViewController.viewControllers = @[leadingViewController,messagesNavigationController];
     splitViewController.delegate = self.splitViewControllerDelegate;
     splitViewController.title = CHAT_STRING;
     
     //setup 'back' button in nav bar
-    self.messagesNavigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    self.messagesNavigationController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
+    messagesNavigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    messagesNavigationController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
     
     self.splitViewCoordinator.splitViewController = splitViewController;
     

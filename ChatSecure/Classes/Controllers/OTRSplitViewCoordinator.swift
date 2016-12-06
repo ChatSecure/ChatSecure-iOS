@@ -23,8 +23,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         }
         
         if let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate {
-            if let c = appDelegate.theme.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
-                let messagesVC = c.init()
+            if let messagesVC = appDelegate.theme.groupMessagesViewController() as? OTRMessagesGroupViewController {
                 messagesVC.setupWithBuddies(buddyKeys, accountId: accountKey, name:name)
                 //setup 'back' button in nav bar
                 let navigationController = UINavigationController(rootViewController: messagesVC)
@@ -57,17 +56,13 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         
         // 1. If it is a hold-to-talk now but should be a group thread the create group thread. Else if is group
         if let _  = messagesViewController as? OTRMessagesHoldTalkViewController where threadOwner.isGroupThread() {
-            if let c = appDelegate?.theme.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
-                messagesViewController = c.init()
-            }
+            messagesViewController = appDelegate?.theme.groupMessagesViewController() as? OTRMessagesViewController
         } else if let _ = messagesViewController as? OTRMessagesGroupViewController where !threadOwner.isGroupThread() {
-            if let c = appDelegate?.theme.messagesViewControllerClass() as? OTRMessagesViewController.Type {
-                messagesViewController = c.init()
-            }
+            messagesViewController = appDelegate?.theme.messagesViewController() as? OTRMessagesViewController
         }
         
         
-        guard let mVC = messagesViewController, navController = appDelegate?.messagesNavigationController else {
+        guard let mVC = messagesViewController else {
             return
         }
         
@@ -77,33 +72,12 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         
         mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
         
-        if (!navController.viewControllers.contains(mVC)) {
-            navController.setViewControllers([mVC], animated: true)
-        }
+        let navigationController = UINavigationController(rootViewController: mVC)
         
+        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem();
+        navigationController.topViewController!.navigationItem.leftItemsSupplementBackButton = true;
         
-        navController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem();
-        navController.topViewController!.navigationItem.leftItemsSupplementBackButton = true;
-        
-        guard let viewControllers = self.splitViewController?.viewControllers  else {
-            return
-        }
-        
-        //Should we dismiss other views that may be on top of the splitviewcontroller? How?
-        
-        //This ensures if in actual split view side by side won't push duplicate nav controller
-        if (viewControllers.contains(navController)) {
-            return
-        } else {
-            //This works for normal pushing on to like iphone 4,5,6
-            if let otherViewControllers = viewControllers.first?.childViewControllers {
-                if otherViewControllers.contains(navController) {
-                    return
-                }
-            }
-        }
-        
-        splitVC.showDetailViewController(navController, sender: sender)
+        splitVC.showDetailViewController(navigationController, sender: sender)
     }
     
     //MARK: OTRConversationViewControllerDelegate Methods

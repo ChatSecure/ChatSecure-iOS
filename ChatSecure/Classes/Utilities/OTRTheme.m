@@ -37,8 +37,19 @@
     return [OTRMessagesGroupViewController class];
 }
 
+/** Override this in subclass to use a different message view controller class */
+- (JSQMessagesViewController *) groupMessagesViewController
+{
+    return [[self groupMessagesViewControllerClass] messagesViewController];
+}
+
 - (Class) messagesViewControllerClass {
     return [OTRMessagesHoldTalkViewController class];
+}
+
+/** Override this in subclass to use a different group message view controller class */
+- (JSQMessagesViewController *) messagesViewController{
+    return [[self messagesViewControllerClass] messagesViewController];
 }
 
 - (Class)composeViewControllerClass {

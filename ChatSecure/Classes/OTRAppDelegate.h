@@ -37,7 +37,6 @@
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 @property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
-@property (nonatomic, strong) UINavigationController *messagesNavigationController;
 
 @property (nonatomic, strong) PushController *pushController;
 @property (nonatomic, strong) PushOTRListener *pushListener;
