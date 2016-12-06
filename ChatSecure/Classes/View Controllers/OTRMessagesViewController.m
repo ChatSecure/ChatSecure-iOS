@@ -231,7 +231,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([self.threadKey length]) {
         [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
-        [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+        [self updateViewWithKey:self.threadKey collection:self.threadCollection];
         [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
         if(![self.inputToolbar.contentView.textView.text length]) {
             [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
@@ -312,7 +312,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
     [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
-    [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self updateViewWithKey:self.threadKey collection:self.threadCollection];
     [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
     [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     [self.collectionView reloadData];
@@ -343,7 +343,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
 }
 
-- (void)updateViewWithKey:(NSString *)key colleciton:(NSString *)collection
+- (void)updateViewWithKey:(NSString *)key collection:(NSString *)collection
 {
     if ([collection isEqualToString:[OTRBuddy collection]]) {
         __block OTRBuddy *buddy = nil;
@@ -575,10 +575,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (!account || !buddy) {
         return;
     }
-    YapDatabaseConnection *newConnection = [self.readWriteDatabaseConnection.database newConnection];
-    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:newConnection];
+    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readWriteDatabaseConnection];
 
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:newConnection form:form];
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:self.readWriteDatabaseConnection form:form];
     verify.completionBlock = ^{
         [self updateEncryptionState];
     };
@@ -1025,6 +1024,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.providesPresentationContextTransitionStyle = YES;
     self.navigationController.definesPresentationContext = YES;
     
+    //0. Clear out message text immediately
+    //   This is to prevent the scenario where multiple messages get sent because the message text isn't cleared out
+    //   due to aggregated touch events during UI pauses.
+    //   A side effect is that sent messages may not appear in the UI immediately
+    [self finishSendingMessage];
+    
     //1. Create new message database object
     __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
@@ -1046,9 +1051,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         buddy.composingMessageString = nil;
         buddy.lastMessageDate = message.date;
         [buddy saveWithTransaction:transaction];
-        
-    } completionQueue:dispatch_get_main_queue() completionBlock:^{
-        [weakSelf finishSendingMessage];
     }];
 }
 
@@ -1105,7 +1107,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             message.mediaItemUniqueId = imageItem.uniqueId;
             message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
             
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
                 [imageItem saveWithTransaction:transaction];
                 
@@ -1114,7 +1116,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     [imageItem touchParentMessage];
                     if (error) {
                         message.error = error;
-                        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                             [message saveWithTransaction:transaction];
                         }];
                     }
@@ -1158,7 +1160,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
         
         message.error = error;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [videoItem saveWithTransaction:transaction];
             [message saveWithTransaction:transaction];
             [self sendMediaItem:videoItem data:nil tag:message transaction:transaction];
@@ -1202,7 +1204,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
         
         message.error = error;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [message saveWithTransaction:transaction];
             [audioItem saveWithTransaction:transaction];
             [self sendMediaItem:audioItem data:data tag:message transaction:transaction];
@@ -1492,7 +1494,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message isMediaMessage]) {
         __block OTRMediaItem *item = nil;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
              item = [OTRImageItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
         } completionBlock:^{
             if ([item isKindOfClass:[OTRImageItem class]]) {
@@ -1513,64 +1515,67 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)didSetupMappings:(OTRYapViewHandler *)handler
 {
     // The databse view is setup now so refresh from there
-    [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self updateViewWithKey:self.threadKey collection:self.threadCollection];
     [self.collectionView reloadData];
 }
 
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler key:(NSString *)key collection:(NSString *)collection
 {
-    [self updateViewWithKey:key colleciton:collection];
+    [self updateViewWithKey:key collection:collection];
 }
 
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
-    if (rowChanges.count) {
-        NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
-        NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
-        
-        
-        if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
-            //Inserted new item, probably at the end
-            //Get last message and test if isIncoming
-            NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-            if ([lastMessage messageIncoming]) {
-                [self finishReceivingMessage];
-            } else {
-                [self finishSendingMessage];
-            }
+    if (!rowChanges.count) {
+        return;
+    }
+    NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
+    NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
+    
+    if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+        //Inserted new item, probably at the end
+        //Get last message and test if isIncoming
+        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
+        id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+        if ([lastMessage messageIncoming]) {
+            [self finishReceivingMessage];
         } else {
-            //deleted a message or message updated
-            [self.collectionView performBatchUpdates:^{
-                
-                for (YapDatabaseViewRowChange *rowChange in rowChanges)
+            // We can't use finishSendingMessage here because it might
+            // accidentally clear out unsent message text
+            [self.collectionView reloadData];
+            [self scrollToBottomAnimated:YES];
+        }
+    } else {
+        //deleted a message or message updated
+        [self.collectionView performBatchUpdates:^{
+            
+            for (YapDatabaseViewRowChange *rowChange in rowChanges)
+            {
+                switch (rowChange.type)
                 {
-                    switch (rowChange.type)
+                    case YapDatabaseViewChangeDelete :
                     {
-                        case YapDatabaseViewChangeDelete :
-                        {
-                            [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
-                            break;
-                        }
-                        case YapDatabaseViewChangeInsert :
-                        {
-                            [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
-                            break;
-                        }
-                        case YapDatabaseViewChangeMove :
-                        {
-                            [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
-                            break;
-                        }
-                        case YapDatabaseViewChangeUpdate :
-                        {
-                            [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
-                            break;
-                        }
+                        [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
+                        break;
+                    }
+                    case YapDatabaseViewChangeInsert :
+                    {
+                        [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
+                        break;
+                    }
+                    case YapDatabaseViewChangeMove :
+                    {
+                        [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
+                        break;
+                    }
+                    case YapDatabaseViewChangeUpdate :
+                    {
+                        [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
+                        break;
                     }
                 }
-            } completion:nil];
-        }
+            }
+        } completion:nil];
     }
 }
 
