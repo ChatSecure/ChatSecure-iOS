@@ -113,6 +113,13 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             return;
         }
         
+        // Exit if OTRSessionSecurity is not set to use OTR
+        if (buddy.preferredSecurity != OTRSessionSecurityOTR &&
+            buddy.preferredSecurity != OTRSessionSecurityOMEMOandOTR &&
+            buddy.preferredSecurity != OTRSessionSecurityBestAvailable) {
+            return;
+        }
+        
         NSArray<OTRFingerprint *>*fingerprints = [self.otrKit fingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
         if ([fingerprints count] > 0 || hasOMEMODevices) {
             OTRKitMessageState messageState = [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];

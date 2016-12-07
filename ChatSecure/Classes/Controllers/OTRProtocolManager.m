@@ -246,10 +246,9 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)sendMessage:(OTROutgoingMessage *)message {
     
     __block OTRAccount * account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
         account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
-        
     } completionBlock:^{
         OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
         id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];

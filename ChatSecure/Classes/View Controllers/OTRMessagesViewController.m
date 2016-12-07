@@ -356,7 +356,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         
         //Update UI now
-        if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
+        if (buddy.chatState == OTRChatStateComposing || buddy.chatState == OTRChatStatePaused) {
             self.showTypingIndicator = YES;
         }
         else {
@@ -615,7 +615,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
             });
             
             switch (buddy.preferredSecurity) {
-                case OTRSessionSecurityPlaintext: {
+                case OTRSessionSecurityPlaintextOnly:
+                case OTRSessionSecurityPlaintextWithOTR: {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
                     });
@@ -627,13 +628,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     });
                     break;
                 }
+                case OTRSessionSecurityOMEMOandOTR:
                 case OTRSessionSecurityOMEMO: {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         strongSelf.state.messageSecurity = OTRMessageTransportSecurityOMEMO;
                     });
                     break;
                 }
-                case OTRSessionSecurityDefault: {
+                case OTRSessionSecurityBestAvailable: {
                     [buddy bestTransportSecurityWithTransaction:transaction completionBlock:^(OTRMessageTransportSecurity security) {
                         strongSelf.state.messageSecurity = security;
                     } completionQueue:dispatch_get_main_queue()];
@@ -754,7 +756,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
         OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
         if (![text length]) {
-            [xmppManager sendChatState:kOTRChatStateInactive withBuddyID:[thread threadAccountIdentifier]];
+            [xmppManager sendChatState:OTRChatStateInactive withBuddyID:[thread threadAccountIdentifier]];
         }
     }];
 }

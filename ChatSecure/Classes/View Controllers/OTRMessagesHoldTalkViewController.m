@@ -198,7 +198,7 @@
     [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
-        [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:[strongSelf threadKey]];
+        [xmppManager sendChatState:OTRChatStateComposing withBuddyID:[strongSelf threadKey]];
     }];
     
     
@@ -209,7 +209,7 @@
     [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
-        [xmppManager sendChatState:kOTRChatStateActive withBuddyID:[strongSelf threadKey]];
+        [xmppManager sendChatState:OTRChatStateActive withBuddyID:[strongSelf threadKey]];
     }];
     
     

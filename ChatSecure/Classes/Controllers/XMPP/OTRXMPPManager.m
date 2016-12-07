@@ -475,7 +475,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         NSArray *buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
             buddy.status = OTRThreadStatusOffline;
-            buddy.chatState = kOTRChatStateGone;
+            buddy.chatState = OTRChatStateGone;
             
             [buddy saveWithTransaction:transaction];
         }
@@ -932,7 +932,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     NSString *text = message.text;
     
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
     
@@ -948,6 +948,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         
         if ([OTRKit stringStartsWithOTRPrefix:text]) {
             [xmppMessage addPrivateMessageCarbons];
+            [xmppMessage addStorageHint:XMPPMessageStorageNoCopy];
+            [xmppMessage addStorageHint:XMPPMessageStorageNoPermanentStore];
         }
 		
 		[self.xmppStream sendElement:xmppMessage];
@@ -994,7 +996,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         XMPPMessage * xMessage = [[XMPPMessage alloc] initWithType:@"chat" to:[XMPPJID jidWithString:buddy.username]];
         BOOL shouldSend = YES;
         
-        if (chatState == kOTRChatStateActive) {
+        if (chatState == OTRChatStateActive) {
             //Timers
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[self pausedChatStateTimerForBuddyObjectID:buddyUniqueId] invalidate];
@@ -1003,9 +1005,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
             
             [xMessage addActiveChatState];
         }
-        else if (chatState == kOTRChatStateComposing)
+        else if (chatState == OTRChatStateComposing)
         {
-            if(buddy.lastSentChatState !=kOTRChatStateComposing)
+            if(buddy.lastSentChatState !=OTRChatStateComposing)
                 [xMessage addComposingChatState];
             else
                 shouldSend = NO;
@@ -1016,18 +1018,18 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
                 [[self inactiveChatStateTimerForBuddyObjectID:buddy.uniqueId] invalidate];
             });
         }
-        else if(chatState == kOTRChatStateInactive)
+        else if(chatState == OTRChatStateInactive)
         {
-            if(buddy.lastSentChatState != kOTRChatStateInactive)
+            if(buddy.lastSentChatState != OTRChatStateInactive)
                 [xMessage addInactiveChatState];
             else
                 shouldSend = NO;
         }
-        else if (chatState == kOTRChatStatePaused)
+        else if (chatState == OTRChatStatePaused)
         {
             [xMessage addPausedChatState];
         }
-        else if (chatState == kOTRChatStateGone)
+        else if (chatState == OTRChatStateGone)
         {
             [xMessage addGoneChatState];
         }
@@ -1137,7 +1139,7 @@ managedBuddyObjectID
     dispatch_async(dispatch_get_main_queue(), ^{
         [timer invalidate];
     });
-    [self sendChatState:kOTRChatStatePaused withBuddyID:managedBuddyObjectID];
+    [self sendChatState:OTRChatStatePaused withBuddyID:managedBuddyObjectID];
 }
 -(void)sendInactiveChatState:(NSTimer *)timer
 {
@@ -1146,7 +1148,7 @@ managedBuddyObjectID
         [timer invalidate];
     });
     
-    [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
+    [self sendChatState:OTRChatStateInactive withBuddyID:managedBuddyObjectID];
 }
 
 - (void)invalidatePausedChatStateTimerForBuddyUniqueId:(NSString *)buddyUniqueId

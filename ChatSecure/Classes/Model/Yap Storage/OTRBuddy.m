@@ -37,8 +37,8 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 {
     if (self = [super init]) {
         self.status = OTRThreadStatusOffline;
-        self.chatState = kOTRChatStateUnknown;
-        self.lastSentChatState = kOTRChatStateUnknown;
+        self.chatState = OTRChatStateUnknown;
+        self.lastSentChatState = OTRChatStateUnknown;
     }
     return self;
 }
@@ -145,6 +145,10 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 
 - (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block completionQueue:(nonnull dispatch_queue_t)queue
 {
+    NSParameterAssert(transaction);
+    NSParameterAssert(block);
+    NSParameterAssert(queue);
+    if (!block || !queue || !transaction) { return; }
     NSArray <OTROMEMODevice *>*devices = [OTROMEMODevice allDevicesForParentKey:self.uniqueId
                                                                      collection:[[self class] collection]
                                                                         transaction:transaction];
@@ -267,14 +271,14 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 {
     NSMutableArray *buddiesToChange = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-        if(buddy.chatState != kOTRChatStateUnknown)
+        if(buddy.chatState != OTRChatStateUnknown)
         {
             [buddiesToChange addObject:buddy];
         }
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-        buddy.chatState = kOTRChatStateUnknown;
+        buddy.chatState = OTRChatStateUnknown;
         [buddy saveWithTransaction:transaction];
     }];
 }

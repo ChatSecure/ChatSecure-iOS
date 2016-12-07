@@ -138,15 +138,15 @@
     if([xmppMessage hasChatState])
     {
         if([xmppMessage hasComposingChatState])
-            messageBuddy.chatState = kOTRChatStateComposing;
+            messageBuddy.chatState = OTRChatStateComposing;
         else if([xmppMessage hasPausedChatState])
-            messageBuddy.chatState = kOTRChatStatePaused;
+            messageBuddy.chatState = OTRChatStatePaused;
         else if([xmppMessage hasActiveChatState])
-            messageBuddy.chatState = kOTRChatStateActive;
+            messageBuddy.chatState = OTRChatStateActive;
         else if([xmppMessage hasInactiveChatState])
-            messageBuddy.chatState = kOTRChatStateInactive;
+            messageBuddy.chatState = OTRChatStateInactive;
         else if([xmppMessage hasGoneChatState])
-            messageBuddy.chatState = kOTRChatStateGone;
+            messageBuddy.chatState = OTRChatStateGone;
         [messageBuddy saveWithTransaction:transaction];
     }
 }

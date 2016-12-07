@@ -251,18 +251,17 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                         }
                     }
                 })
-            } else if (message.messageSecurity() == .OTR || message.messageSecurity() == .Plaintext) {
+            } else if (message.messageSecurity() == .OTR || buddy.preferredSecurity == .PlaintextWithOTR) {
                 //We're connected now we need to check encryption requirements
                 let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
                 let messageState = otrKit.messageStateForUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
                     
                 // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
-                if ((message.messageSecurity() == .OTR && messageState == .Encrypted) || message.messageSecurity() == .Plaintext) {
-                    
+                if (messageState == .Encrypted || buddy.preferredSecurity == .PlaintextWithOTR) {
                     self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
                     otrKit.encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
                 } else {
-                    //We need to initate an OTR session
+                    //We need to initiate an OTR session
                     
                     //Timeout at some point waiting for OTR session
                     dispatch_async(dispatch_get_main_queue(), { 
@@ -271,11 +270,10 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                         otrKit.initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
                     })
                 }
+            } else if (message.messageSecurity() == .Plaintext) {
+                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
+                protocolManager?.sendMessage(message)
             }
-            
-            
-            
-            
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
             accountProtocol.connectUserInitiated(false)

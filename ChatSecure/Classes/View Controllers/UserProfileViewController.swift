@@ -157,10 +157,13 @@ public class UserProfileViewController: XLFormViewController {
     
     public static func cryptoChooserRows(buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
         
-        let defaultRow = XLFormRowDescriptor(tag: DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: NSLocalizedString("Best Available", comment: ""))
-        let plaintextRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: NSLocalizedString("Plaintext (Opportunistic OTR)", comment: ""))
+        let bestAvailableRow = XLFormRowDescriptor(tag: DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: NSLocalizedString("Best Available", comment: ""))
+        let plaintextOnlyRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: NSLocalizedString("Plaintext Only", comment: ""))
+        let plaintextOtrRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: NSLocalizedString("Plaintext (Opportunistic OTR)", comment: ""))
         let otrRow = XLFormRowDescriptor(tag: OTRRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OTR")
         let omemoRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO")
+        let omemoOtrRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO & OTR")
+
         
         var hasDevices = false
         
@@ -172,15 +175,16 @@ public class UserProfileViewController: XLFormViewController {
         
         if (!hasDevices) {
             omemoRow.disabled = NSNumber(bool: true)
+            omemoOtrRow.disabled = NSNumber(bool: true)
         }
         
         let trueValue = NSNumber(bool: true)
         switch buddy.preferredSecurity {
-        case .Plaintext:
-            plaintextRow.value = trueValue
+        case .PlaintextOnly:
+            plaintextOnlyRow.value = trueValue
             break
-        case .Default:
-            defaultRow.value = trueValue
+        case .BestAvailable:
+            bestAvailableRow.value = trueValue
             break
         case .OTR:
             otrRow.value = trueValue
@@ -188,9 +192,14 @@ public class UserProfileViewController: XLFormViewController {
         case .OMEMO:
             omemoRow.value = trueValue
             break
+        case .OMEMOandOTR:
+            omemoOtrRow.value = trueValue
+            break
+        case .PlaintextWithOTR:
+            plaintextOtrRow.value = trueValue
         }
         
-        let formRows = [defaultRow, plaintextRow, otrRow, omemoRow]
+        let formRows = [bestAvailableRow, plaintextOnlyRow, plaintextOtrRow, otrRow, omemoRow, omemoOtrRow]
         
         var currentRow: XLFormRowDescriptor? = nil
         var rowsToDeselect: NSMutableSet = NSMutableSet()
@@ -225,16 +234,21 @@ public class UserProfileViewController: XLFormViewController {
                 (row.sectionDescriptor.formDescriptor.delegate as! XLFormViewControllerDelegate).reloadFormRow!(row)
             }
             
-            var preferredSecurity: OTRSessionSecurity = .Default
-            if plaintextRow.value?.boolValue == true {
-                preferredSecurity = .Plaintext
+            var preferredSecurity: OTRSessionSecurity = .BestAvailable
+            if plaintextOnlyRow.value?.boolValue == true {
+                preferredSecurity = .PlaintextOnly
             } else if otrRow.value?.boolValue == true {
                 preferredSecurity = .OTR
             } else if omemoRow.value?.boolValue == true {
                 preferredSecurity = .OMEMO
-            } else if defaultRow.value?.boolValue == true {
-                preferredSecurity = .Default
+            } else if bestAvailableRow.value?.boolValue == true {
+                preferredSecurity = .BestAvailable
+            } else if plaintextOtrRow.value?.boolValue == true {
+                preferredSecurity = .PlaintextWithOTR
+            } else if omemoOtrRow.value?.boolValue == true {
+                preferredSecurity = .OMEMOandOTR
             }
+            
             connection.readWriteWithBlock({ (transaction: YapDatabaseReadWriteTransaction) in
                 if var buddy = transaction.objectForKey(buddy.uniqueId, inCollection: buddy.dynamicType.collection()) as? OTRBuddy {
                     buddy = buddy.copy() as! OTRBuddy
@@ -245,11 +259,10 @@ public class UserProfileViewController: XLFormViewController {
             currentRow = nil
         }
         
-        defaultRow.onChangeBlock = onChangeBlock
-        plaintextRow.onChangeBlock = onChangeBlock
-        otrRow.onChangeBlock = onChangeBlock
-        omemoRow.onChangeBlock = onChangeBlock
-        
+        for row in formRows {
+            row.onChangeBlock = onChangeBlock
+        }
+
         return formRows
     }
     

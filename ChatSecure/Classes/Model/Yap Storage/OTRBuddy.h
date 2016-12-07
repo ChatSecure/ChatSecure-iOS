@@ -11,21 +11,23 @@
 #import "OTRUserInfoProfile.h"
 @import UIKit;
 
-typedef NS_ENUM(int, OTRChatState) {
-    kOTRChatStateUnknown   = 0,
-    kOTRChatStateActive    = 1,
-    kOTRChatStateComposing = 2,
-    kOTRChatStatePaused    = 3,
-    kOTRChatStateInactive  = 4,
-    kOTRChatStateGone      = 5
+typedef NS_ENUM(NSUInteger, OTRChatState) {
+    OTRChatStateUnknown   = 0,
+    OTRChatStateActive    = 1,
+    OTRChatStateComposing = 2,
+    OTRChatStatePaused    = 3,
+    OTRChatStateInactive  = 4,
+    OTRChatStateGone      = 5
 };
 
 /** These are the preferences for a buddy on how to send a message. Related OTRMessageTransportSecurity*/
 typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
-    OTRSessionSecurityDefault,
-    OTRSessionSecurityPlaintext,
-    OTRSessionSecurityOTR,
-    OTRSessionSecurityOMEMO,
+    OTRSessionSecurityBestAvailable = 0,
+    OTRSessionSecurityPlaintextOnly = 1,
+    OTRSessionSecurityPlaintextWithOTR = 2,
+    OTRSessionSecurityOTR = 3,
+    OTRSessionSecurityOMEMO = 4,
+    OTRSessionSecurityOMEMOandOTR = 5
 };
 
 
