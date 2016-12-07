@@ -49,7 +49,6 @@
 		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; };
 		6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */; };
-		637ABBC31DD5232800B18DD2 /* OTRMessageEncryptionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 637ABBC21DD5232800B18DD2 /* OTRMessageEncryptionInfo.m */; };
 		637ABBC41DD52ABB00B18DD2 /* OTRMessageEncryptionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 637ABBC11DD5232800B18DD2 /* OTRMessageEncryptionInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		637ABBC91DD5312200B18DD2 /* OTROutgoingMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 637ABBC71DD5312200B18DD2 /* OTROutgoingMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		637ABBCA1DD5312200B18DD2 /* OTROutgoingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637ABBC81DD5312200B18DD2 /* OTROutgoingMessage.m */; };
@@ -2314,7 +2313,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				637ABBC31DD5232800B18DD2 /* OTRMessageEncryptionInfo.m in Sources */,
 				D93DDBE21BA7A06A00CD8331 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
