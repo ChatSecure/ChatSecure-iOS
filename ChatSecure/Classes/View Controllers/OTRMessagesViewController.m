@@ -75,7 +75,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) OTRLockButton *lockButton;
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
-@property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
@@ -113,15 +112,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
+    ////// TitleView //////
+    OTRTitleSubtitleView *titleView = [self titleView];
+    [self refreshTitleView:titleView];
+    self.navigationItem.titleView = titleView;
+    
     // Profile Info Button
     [self setupInfoButton];
     
-     ////// TitleView //////
-    self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    self.navigationItem.titleView = self.titleView;
-    
-    [self refreshTitleView];
     
     ////// Send Button //////
     self.sendButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
@@ -132,11 +130,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.cameraButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
     self.cameraButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.cameraButton setTitle:[NSString fa_stringForFontAwesomeIcon:FACamera] forState:UIControlStateNormal];
-    self.cameraButton.frame = CGRectMake(0, 0, 22, 32);
+    self.cameraButton.frame = CGRectMake(0, 0, 32, 32);
     
     ////// Microphone Button //////
     self.microphoneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.microphoneButton.frame = CGRectMake(0, 0, 22, 32);
+    self.microphoneButton.frame = CGRectMake(0, 0, 32, 32);
     self.microphoneButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
     self.microphoneButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.microphoneButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAMicrophone]
@@ -192,7 +190,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    
     
     __weak typeof(self)weakSelf = self;
     
@@ -388,7 +385,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             
         });
         
-        [self refreshTitleView];
+        [self refreshTitleView:[self titleView]];
     }
     
     // Set all messages as read
@@ -400,7 +397,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (void)refreshTitleView
+- (OTRTitleSubtitleView * __nonnull)titleView {
+    UIView *titleView = self.navigationItem.titleView;
+    if ([titleView isKindOfClass:[OTRTitleSubtitleView class]]) {
+        return  (OTRTitleSubtitleView*)titleView;
+    }
+    return [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+}
+/** Updates the title view with the current thread information on this view controller*/
+- (void)refreshTitleView:(OTRTitleSubtitleView *)titleView
 {
     __block id<OTRThreadOwner> thread = nil;
     __block OTRAccount *account = nil;
@@ -408,26 +413,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
         thread = [self threadObjectWithTransaction:transaction];
         account =  [self accountWithTransaction:transaction];
     }];
-    self.titleView.titleLabel.text = [thread threadName];
+    
+    titleView.titleLabel.text = [thread threadName];
     
     if([account.displayName length]) {
-        self.titleView.subtitleLabel.text = account.displayName;
+        titleView.subtitleLabel.text = account.displayName;
     }
     else {
-        self.titleView.subtitleLabel.text = account.username;
+        titleView.subtitleLabel.text = account.username;
     }
     
     //Create big circle and the imageview will resize it down
     if ([thread isKindOfClass:[OTRBuddy class]]) {
-        self.titleView.titleImageView.image = [OTRImages circleWithRadius:50
+        titleView.titleImageView.image = [OTRImages circleWithRadius:50
                                                                 lineWidth:0
                                                                 lineColor:nil
                                                                 fillColor:[OTRColors colorWithStatus:[thread currentStatus]]];
     } else {
-        self.titleView.titleImageView.image = nil;
+        titleView.titleImageView.image = nil;
        
     }
-    
 }
 
 - (void)showMessageError:(id<OTRMessageProtocol>)message sender:(id)sender {

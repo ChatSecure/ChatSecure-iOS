@@ -96,7 +96,7 @@ static const CGFloat kOTRMaxImageViewHeight = 9;
 
 - (void)setupConstraintsWithImageView:(UIImageView *)imageView withLabel:(UILabel *)label
 {
-    
+
     //Keeps trailing edge off of leading edge of label by at least 2
     [imageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:label withOffset:-2.0];
     //Keep centered horizontaly

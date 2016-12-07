@@ -8,6 +8,7 @@
 
 @import Foundation;
 @import UIKit;
+@import JSQMessagesViewController;
 
 @interface OTRTheme : NSObject
 
@@ -27,6 +28,12 @@
 
 /** Override this in subclass to use a different group message view controller class */
 - (Class) groupMessagesViewControllerClass;
+
+/** Override this in subclass to use a different message view controller class */
+- (__kindof JSQMessagesViewController *) messagesViewController;
+
+/** Override this in subclass to use a different group message view controller class */
+- (__kindof JSQMessagesViewController *) groupMessagesViewController;
 
 /** Override this in subclass to use a different compose view controller class */
 - (Class) composeViewControllerClass;
