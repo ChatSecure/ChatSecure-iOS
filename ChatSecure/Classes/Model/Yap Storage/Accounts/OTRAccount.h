@@ -60,7 +60,7 @@ extern NSString *const OTRXMPPTorImageName;
 /**
  The current or generated avatar image either from avatarData or the initials from displayName or username
  
- @return An UIImage from the OTRImages NSCache
+ @return An UIImage from the OTRImages NSCacheØ
  */
 - (UIImage *)avatarImage;
 - (Class)protocolClass;

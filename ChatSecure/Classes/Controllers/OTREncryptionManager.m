@@ -220,7 +220,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     message.text =text;
     
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
         message.buddyUniqueId = buddy.uniqueId;
@@ -335,7 +335,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)otrKit:(OTRKit *)otrKit updateMessageState:(OTRKitMessageState)messageState username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol fingerprint:(OTRFingerprint *)fingerprint
 {
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
         if(!buddy) {
@@ -353,7 +353,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
              protocol:(NSString*)protocol {
     
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
@@ -444,7 +444,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)otrKit:(OTRKit *)otrKit willStartGeneratingPrivateKeyForAccountName:(NSString *)accountName protocol:(NSString *)protocol
 {
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];
     } completionBlock:^{
@@ -457,7 +457,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)otrKit:(OTRKit *)otrKit didFinishGeneratingPrivateKeyForAccountName:(NSString *)accountName protocol:(NSString *)protocol error:(NSError *)error
 {
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];;
     } completionBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRDidFinishGeneratingPrivateKeyNotification object:account];
@@ -665,7 +665,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         __block OTRIncomingMessage *message = nil;
         __block OTRMediaItem *mediaItem = nil;
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             message = [OTRIncomingMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
             mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
         }];

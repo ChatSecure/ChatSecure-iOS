@@ -772,7 +772,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     __block OTRXMPPBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
     }];
     if (!buddy.vCardTemp) {
@@ -985,7 +985,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     dispatch_async(self.workQueue, ^{
         
         __block OTRXMPPBuddy *buddy = nil;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
         
@@ -1213,7 +1213,7 @@ managedBuddyObjectID
 
 // Delivery receipts
 - (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message {
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];        
         XMPPMessage *tempMessage = [XMPPMessage messageWithType:@"chat" elementID:message.messageId];
         [tempMessage addAttributeWithName:@"from" stringValue:buddy.username];

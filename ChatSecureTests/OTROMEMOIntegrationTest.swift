@@ -75,7 +75,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.setupTwoAccounts(#function)
         self.omemoModule?.xmppStreamDidAuthenticate(nil)
         let buddy = self.bobUser!.buddy
-        let connection = self.bobUser?.databaseManager.readWriteDatabaseConnection
+        let connection = self.bobUser?.databaseManager.readOnlyDatabaseConnection
         connection?.readWithBlock({ (transaction) in
             let devices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
             XCTAssert(devices.count > 0)
@@ -134,7 +134,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         })
         self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
-            self.bobUser!.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
+            self.bobUser!.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
                 let yapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
                 let device = OTROMEMODevice.fetchObjectWithUniqueID(yapKey, transaction: transaction)
                 XCTAssertNil(device)

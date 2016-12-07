@@ -110,7 +110,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                     // the account is never saved. If the account is never
                     // saved, it's impossible to delete the orphaned password
                     __block BOOL accountExists = NO;
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                         accountExists = [transaction objectForKey:account.uniqueId inCollection:[[OTRAccount class] collection]] != nil;
                     }];
                     if (!accountExists) {
