@@ -770,8 +770,8 @@
 		637645C81B98F9BF00B3402F /* PushController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushController.swift; sourceTree = "<group>"; };
 		637ABBC11DD5232800B18DD2 /* OTRMessageEncryptionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageEncryptionInfo.h; sourceTree = "<group>"; };
 		637ABBC21DD5232800B18DD2 /* OTRMessageEncryptionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessageEncryptionInfo.m; sourceTree = "<group>"; };
-		637ABBC51DD530CD00B18DD2 /* OTRIncomingMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTRIncomingMessage.h; path = ../../../../OTRIncomingMessage.h; sourceTree = "<group>"; };
-		637ABBC61DD530CD00B18DD2 /* OTRIncomingMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OTRIncomingMessage.m; path = ../../../../OTRIncomingMessage.m; sourceTree = "<group>"; };
+		637ABBC51DD530CD00B18DD2 /* OTRIncomingMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRIncomingMessage.h; sourceTree = "<group>"; };
+		637ABBC61DD530CD00B18DD2 /* OTRIncomingMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRIncomingMessage.m; sourceTree = "<group>"; };
 		637ABBC71DD5312200B18DD2 /* OTROutgoingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROutgoingMessage.h; sourceTree = "<group>"; };
 		637ABBC81DD5312200B18DD2 /* OTROutgoingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROutgoingMessage.m; sourceTree = "<group>"; };
 		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStroage.h; sourceTree = "<group>"; };
