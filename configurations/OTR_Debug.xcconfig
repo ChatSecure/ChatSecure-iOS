@@ -1,2 +1,0 @@
-#include "OTR_Codesigning.xcconfig"
-#include "../Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"

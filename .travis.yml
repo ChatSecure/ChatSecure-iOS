@@ -19,7 +19,6 @@ before_install:
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
-  - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
   - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
   - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
