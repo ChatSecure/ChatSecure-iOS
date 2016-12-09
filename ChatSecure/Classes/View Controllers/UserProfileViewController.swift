@@ -250,10 +250,18 @@ public class UserProfileViewController: XLFormViewController {
             }
             
             connection.readWriteWithBlock({ (transaction: YapDatabaseReadWriteTransaction) in
-                if var buddy = transaction.objectForKey(buddy.uniqueId, inCollection: buddy.dynamicType.collection()) as? OTRBuddy {
-                    buddy = buddy.copy() as! OTRBuddy
-                    buddy.preferredSecurity = preferredSecurity
-                    buddy.saveWithTransaction(transaction)
+                guard var buddy = transaction.objectForKey(buddy.uniqueId, inCollection: buddy.dynamicType.collection()) as? OTRBuddy else {
+                    return
+                }
+                guard let account = buddy.accountWithTransaction(transaction) else {
+                    return
+                }
+                buddy = buddy.copy() as! OTRBuddy
+                buddy.preferredSecurity = preferredSecurity
+                buddy.saveWithTransaction(transaction)
+                // Cancel OTR session if plaintext or omemo only
+                if (preferredSecurity == .PlaintextOnly || preferredSecurity == .OMEMO) {
+                    OTRProtocolManager.sharedInstance().encryptionManager.otrKit.disableEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
                 }
             })
             currentRow = nil

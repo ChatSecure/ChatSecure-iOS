@@ -671,7 +671,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 case OTRSessionSecurityPlaintextOnly:
                 case OTRSessionSecurityPlaintextWithOTR: {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+                        if (messageState == OTRKitMessageStateEncrypted) {
+                            strongSelf.state.messageSecurity = OTRMessageTransportSecurityOTR;
+                        } else {
+                            strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+                        }
                     });
                     break;
                 }
