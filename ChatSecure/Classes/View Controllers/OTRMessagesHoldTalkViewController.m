@@ -19,6 +19,8 @@
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
+static Float64 kOTRMessagesMinimumAudioTime = .5;
+
 @import AVFoundation;
 @import OTRAssets;
 
@@ -341,9 +343,14 @@
     //stop recording and send
     NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
     [self.audioSessionManager stopRecording];
+    AVURLAsset *audioAsset = [AVURLAsset assetWithURL:currentURL];
+    Float64 duration = CMTimeGetSeconds(audioAsset.duration);
+    
     
     if (currentURL) {
-        if (self.trashView.trashButton.isHighlighted) {
+        // Delete recording if the button trash button is slelected or the audio is less than the minimum time.
+        // This prevents taps on the record button from sending audio with extremely little length
+        if (self.trashView.trashButton.isHighlighted || duration < kOTRMessagesMinimumAudioTime) {
             if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
                 [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
             }
