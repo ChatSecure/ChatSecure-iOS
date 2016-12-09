@@ -223,7 +223,8 @@ NSString *OTRPushAccountGroup = @"Account";
         OTRBuddy *buddy1 = (OTRBuddy *)object1;
         OTRBuddy *buddy2 = (OTRBuddy *)object2;
         
-        if (buddy1.status == buddy2.status) {
+        
+        if (buddy1.currentStatus == buddy2.currentStatus) {
             NSString *buddy1String = buddy1.username;
             NSString *buddy2String = buddy2.username;
             
@@ -237,7 +238,7 @@ NSString *OTRPushAccountGroup = @"Account";
             
             return [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
         }
-        else if (buddy1.status < buddy2.status) {
+        else if (buddy1.currentStatus < buddy2.currentStatus) {
             return NSOrderedAscending;
         }
         else{

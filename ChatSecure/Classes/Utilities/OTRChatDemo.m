@@ -14,6 +14,7 @@
 #import "OTROutgoingMessage.h"
 #import "OTRXMPPAccount.h"
 #import "OTROMEMODevice.h"
+#import "OTRBuddyCache.h"
 @import OTRAssets;
 
 @implementation OTRChatDemo
@@ -50,13 +51,13 @@
                 buddy.displayName = name;
                 buddy.username = name;
                 buddy.accountUniqueId  = account.uniqueId;
-                buddy.status = OTRThreadStatusAvailable;
+                [[OTRBuddyCache sharedInstance] setThreadStatus:(NSInteger)OTRThreadStatusAvailable+idx forBuddy:buddy resource:nil];
                 buddy.preferredSecurity = OTRSessionSecurityOMEMO;
                 OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedTofu parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:[NSData data] lastSeenDate:[NSDate date]];
                 [device saveWithTransaction:transaction];
             }
             
-            buddy.status = (NSInteger)OTRThreadStatusAvailable+idx;
+            [[OTRBuddyCache sharedInstance] setThreadStatus:(NSInteger)OTRThreadStatusAvailable+idx forBuddy:buddy resource:nil];
             
             NSArray *textArray = [self shuffleHelloArray:helloArray];
             

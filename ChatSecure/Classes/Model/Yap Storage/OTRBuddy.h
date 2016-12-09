@@ -33,28 +33,20 @@ typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
 
 @class OTRAccount, OTRMessage;
 
-extern const struct OTRBuddyAttributes {
-	__unsafe_unretained NSString * _Nonnull username;
-	__unsafe_unretained NSString * _Nonnull displayName;
-	__unsafe_unretained NSString * _Nonnull composingMessageString;
-	__unsafe_unretained NSString * _Nonnull statusMessage;
-	__unsafe_unretained NSString * _Nonnull chatState;
-    __unsafe_unretained NSString * _Nonnull lastSentChatState;
-    __unsafe_unretained NSString * _Nonnull status;
-    __unsafe_unretained NSString * _Nonnull lastMessageDate;
-    __unsafe_unretained NSString * _Nonnull avatarData;
-    __unsafe_unretained NSString * _Nonnull encryptionStatus;
-} OTRBuddyAttributes;
 
 @interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner, OTRUserInfoProfile>
 
 @property (nonatomic, strong, nonnull) NSString *username;
 @property (nonatomic, strong, readwrite, nonnull) NSString *displayName;
 @property (nonatomic, strong, nullable) NSString *composingMessageString;
-@property (nonatomic, strong, nullable) NSString *statusMessage;
-@property (nonatomic) OTRChatState chatState;
-@property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic) OTRThreadStatus status;
+
+// Dynamic properties backed by in-memory cache
+// You don't have to save the object when setting these
+// When setting these properties use OTRBuddyCache methods
+@property (atomic, strong, nullable, readonly) NSString *statusMessage;
+@property (atomic, readonly) OTRChatState chatState;
+@property (atomic, readonly) OTRChatState lastSentChatState;
+@property (atomic, readonly) OTRThreadStatus status;
 
 /** uniqueId of last incoming or outgoing OTRMessage */
 @property (nonatomic, strong, nullable) NSString *lastMessageId;
@@ -86,11 +78,7 @@ extern const struct OTRBuddyAttributes {
                    withAccountUniqueId:(nonnull NSString *)accountUniqueId
                            transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
-
-+ (void)resetAllChatStatesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
-+ (void)resetAllBuddyStatusesWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
-
-
-
+/** Excluded properties for Mantle */
++ (nonnull NSSet<NSString*>*) excludedProperties;
 
 @end

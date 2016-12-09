@@ -15,6 +15,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRLanguageManager.h"
 #import "OTRXMPPBuddy_Private.h"
+#import "OTRBuddyCache.h"
 
 @import OTRAssets;
 
@@ -246,24 +247,21 @@
         }
         
         if ([[presence status] length]) {
-            newBuddy.statusMessage = [presence status];
+            [[OTRBuddyCache sharedInstance] setStatusMessage:[presence status] forBuddy:newBuddy];
         }
         else {
-            newBuddy.statusMessage = defaultMessage;
+            [[OTRBuddyCache sharedInstance] setStatusMessage:defaultMessage forBuddy:newBuddy];
         }
     }
-    [newBuddy setStatus:newStatus forResource:resource];
+    [[OTRBuddyCache sharedInstance] setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
     
-    // Save if there were changes, or it's a new buddy
-    BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy] || newlyCreatedBuddy;
-    if (!shouldSave) {
-        return;
+    // Save if it's a new buddy
+    if (newlyCreatedBuddy) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [newBuddy saveWithTransaction:transaction];
+        }];
     }
-    
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [newBuddy saveWithTransaction:transaction];
-    }];
 }
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream

@@ -17,6 +17,7 @@
 #import "OTRConstants.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRThreadOwner.h"
+#import "OTRBuddyCache.h"
 
 @implementation OTRXMPPMessageYapStroage
 
@@ -139,23 +140,27 @@
     }];
 }
 
-- (void)handleChatState:(XMPPMessage *)xmppMessage username:(NSString *)username stream:(XMPPStream *)stream transaction:(YapDatabaseReadWriteTransaction *)transaction
+- (void)handleChatState:(XMPPMessage *)xmppMessage username:(NSString *)username stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
+    // Saves aren't needed when setting chatState or status because OTRBuddyCache is used internally
+
     OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
+    if (!messageBuddy) { return; }
+    OTRChatState chatState = OTRChatStateUnknown;
     if([xmppMessage hasChatState])
     {
         if([xmppMessage hasComposingChatState])
-            messageBuddy.chatState = OTRChatStateComposing;
+            chatState = OTRChatStateComposing;
         else if([xmppMessage hasPausedChatState])
-            messageBuddy.chatState = OTRChatStatePaused;
+            chatState = OTRChatStatePaused;
         else if([xmppMessage hasActiveChatState])
-            messageBuddy.chatState = OTRChatStateActive;
+            chatState = OTRChatStateActive;
         else if([xmppMessage hasInactiveChatState])
-            messageBuddy.chatState = OTRChatStateInactive;
+            chatState = OTRChatStateInactive;
         else if([xmppMessage hasGoneChatState])
-            messageBuddy.chatState = OTRChatStateGone;
-        [messageBuddy saveWithTransaction:transaction];
+            chatState = OTRChatStateGone;
     }
+    [[OTRBuddyCache sharedInstance] setChatState:chatState forBuddy:messageBuddy];
 }
 
 - (void)handleDeliverResponse:(XMPPMessage *)xmppMessage transaction:(YapDatabaseReadWriteTransaction *)transaction

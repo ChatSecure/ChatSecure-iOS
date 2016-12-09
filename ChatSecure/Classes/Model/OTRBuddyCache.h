@@ -1,0 +1,40 @@
+//
+//  OTRBuddyCache.h
+//  ChatSecure
+//
+//  Created by Chris Ballinger on 12/8/16.
+//  Copyright © 2016 Chris Ballinger. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "OTRXMPPBuddy.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+/** Thread safe getters and setters for ephemeral in-memory storage of some buddy properties */
+@interface OTRBuddyCache : NSObject
+
++ (instancetype) sharedInstance;
+
+/** Clears everything for a buddy */
+- (void) purgeAllPropertiesForBuddy:(OTRBuddy*)buddy;
+
+- (void) setChatState:(OTRChatState)chatState forBuddy:(OTRBuddy*)buddy;
+- (OTRChatState) chatStateForBuddy:(OTRBuddy*)buddy;
+
+- (void) setLastSentChatState:(OTRChatState)lastSentChatState forBuddy:(OTRBuddy*)buddy;
+- (OTRChatState) lastSentChatStateForBuddy:(OTRBuddy*)buddy;
+
+- (void) setStatusMessage:(nullable NSString*)statusMessage forBuddy:(OTRBuddy*)buddy;
+- (nullable NSString*) statusMessageForBuddy:(OTRBuddy*)buddy;
+
+- (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy;
+/** If resource is nil, it will clear out every other resource */
+- (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy resource:(nullable NSString *)resource;
+- (OTRThreadStatus)threadStatusForBuddy:(OTRBuddy*)buddy;
+
+- (void)setWaitingForvCardTempFetch:(BOOL)waiting forBuddy:(OTRXMPPBuddy*)buddy;
+- (BOOL)waitingForvCardTempFetchForBuddy:(OTRXMPPBuddy*)buddy;
+
+@end
+NS_ASSUME_NONNULL_END

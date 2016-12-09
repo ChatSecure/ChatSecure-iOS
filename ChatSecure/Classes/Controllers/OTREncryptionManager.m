@@ -108,7 +108,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             return;
         }
         
-        if (buddy.status == OTRThreadStatusOffline) {
+        if (buddy.currentStatus == OTRThreadStatusOffline) {
             //If the buddy if offline then don't try to start the session up
             return;
         }
@@ -357,7 +357,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
-    if(!buddy || buddy.status == OTRThreadStatusOffline) {
+    if(!buddy || buddy.currentStatus == OTRThreadStatusOffline) {
         return NO;
     }
     else {

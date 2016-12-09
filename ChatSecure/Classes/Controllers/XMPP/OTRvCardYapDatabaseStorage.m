@@ -177,9 +177,10 @@
     }
     
     __block BOOL result = NO;
-    __block NSObject<OTRvCard> *vCard = nil;
     
+    // Saving is not required due to internal use of in-memory OTRBuddyCache
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        id<OTRvCard> vCard = nil;
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
             vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         } else {
@@ -190,17 +191,12 @@
             result = NO;
         } else if ([vCard.lastUpdatedvCardTemp timeIntervalSinceNow] <= -24*60*60 ||
                    !vCard.vCardTemp) {
-            vCard = [vCard copy];
+            //This goes to the cache and does not change the database object.
             vCard.waitingForvCardTempFetch = YES;
             result = YES;
         }
     }];
     
-    if (result) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [vCard saveWithTransaction:transaction];
-        }];
-    }
     
     return result;
 }

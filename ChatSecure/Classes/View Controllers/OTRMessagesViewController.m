@@ -866,7 +866,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
         OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
         if (![text length]) {
-            [xmppManager sendChatState:OTRChatStateInactive withBuddyID:[thread threadAccountIdentifier]];
+            [xmppManager sendChatState:OTRChatStateInactive withBuddyID:[thread threadIdentifier]];
         }
     }];
 }

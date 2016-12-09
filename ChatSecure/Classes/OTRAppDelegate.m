@@ -163,14 +163,6 @@
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
     
-    
-    ////// Reset buddy status //////
-    OTRDatabaseManager *databaseManager = [OTRDatabaseManager sharedInstance];
-    [databaseManager.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
-        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
-    }];
-    
     [self autoLoginFromBackground:NO];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     

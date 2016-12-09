@@ -387,6 +387,8 @@
 		D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBE21BA7A06A00CD8331 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
+		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; };
+		D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
@@ -902,6 +904,8 @@
 		D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyApprovalCell.h; sourceTree = "<group>"; };
 		D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyApprovalCell.m; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
+		D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCache.m; sourceTree = "<group>"; };
 		D95553D71C4F16730019667A /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
@@ -1145,6 +1149,8 @@
 		633105401A16D1A300C17BAE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */,
+				D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */,
 				D9EEEDD11D27388600B8BC54 /* OTRvCard.h */,
 				63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */,
 				63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */,
@@ -1743,6 +1749,7 @@
 				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
 				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
 				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
+				D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */,
 				D93DDB331BA79A7000CD8331 /* NSString+ChatSecure.h in Headers */,
 				D93DDB361BA79A7000CD8331 /* OTRAccountsManager.h in Headers */,
 				D93DDB371BA79A7100CD8331 /* OTRDatabaseManager.h in Headers */,
@@ -2472,6 +2479,7 @@
 				632AA72F1D4819BD00F65733 /* OTRSignalPreKey.m in Sources */,
 				D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */,
+				D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */,
 				D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */,
 				63564E101BBB1C5200EB4CA6 /* PushStorage.swift in Sources */,
 				D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */,
