@@ -435,17 +435,99 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
-- (void)showMessageError:(id<OTRMessageProtocol>)message sender:(id)sender {
+/** 
+ This generates a UIAlertAction where the handler fetches the outgoing message (optionaly duplicates). Then if media message resend media message. If not update messageSecurityInfo and date and create new sending action.
+ */
+- (UIAlertAction *)resendOutgoingMessageActionForMessageKey:(NSString *)messageKey
+                                          messageCollection:(NSString *)messageCollection
+                                readWriteDatabaseConnection:(YapDatabaseConnection*)databaseConnection
+                                           duplicateMessage:(BOOL)duplicateMessaage
+                                                      title:(NSString *)title
+{
+    UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            OTROutgoingMessage *dbMessage = [[transaction objectForKey:messageKey inCollection:messageCollection] copy];
+            if (duplicateMessaage) {
+                dbMessage = [OTROutgoingMessage duplicateMessage:dbMessage];
+            }
+            dbMessage.error = nil;
+            
+            // Check if this is a media message. For now these are handled differently
+            if ([dbMessage.mediaItemUniqueId length]) {
+                OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
+                [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
+            } else {
+                dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
+                dbMessage.date = [NSDate date];
+                OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
+                [sendingAction saveWithTransaction:transaction];
+            }
+            [dbMessage saveWithTransaction:transaction];
+        }];
+    }];
+    return action;
+}
+
+- (nonnull UIAlertAction *)viewProfileAction {
+    return [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self infoButtonPressed:action];
+    }];
+}
+
+- (nonnull UIAlertAction *)cancleAction {
+    return [UIAlertAction actionWithTitle:CANCEL_STRING
+                                    style:UIAlertActionStyleCancel
+                                  handler:nil];
+}
+
+- (NSArray <UIAlertAction *>*)actionForMessage:(id<OTRMessageProtocol>)message {
+    NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
+    
+    
+    if ([message isKindOfClass:[OTROutgoingMessage class]] ) {
+        OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
+        
+        BOOL duplicate = YES;
+        NSError *error = [message messageError];
+        if (error != nil) {
+            duplicate = NO;
+        }
+        // This is an outgoing message so we can offer to resend
+        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING];
+        [actions addObject:resendAction];
+    }
+    
+    if (![message isKindOfClass:[OTRChatMessageGroup class]]) {
+        [actions addObject:[self viewProfileAction]];
+    }
+    
+    [actions addObject:[self cancleAction]];
+    return actions;
+}
+
+- (void)didTapAvatar:(id<OTRMessageProtocol>)message sender:(id)sender {
     NSError *error =  [message messageError];
     NSString *title = nil;
     NSString *alertMessage = nil;
-    NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:nil];
-    UIAlertAction *viewProfileAction = [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self infoButtonPressed:action];
-    }];
+    
+    NSString * sendingType = UNENCRYPTED_STRING;
+    switch (self.state.messageSecurity) {
+        case OTRMessageTransportSecurityOTR:
+            sendingType = @"OTR";
+            break;
+        case OTRMessageTransportSecurityOMEMO:
+            sendingType = @"OMEMO";
+            break;
+            
+        default:
+            break;
+    }
+    
+    if ([message isKindOfClass:[OTROutgoingMessage class]]) {
+        title = RESEND_MESSAGE_TITLE;
+        alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
+    }
+    
     if (error) {
         NSUInteger otrFingerprintError = 32872;
         title = ERROR_STRING;
@@ -458,53 +540,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if([message isKindOfClass:[OTROutgoingMessage class]]) {
             //If it's an outgoing message the error title should be that we were unable to send the message.
             title = UNABLE_TO_SEND_STRING;
-            OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
             
-            // This is an outgoing message so we can offer to resend
-            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:TRY_AGAIN_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    OTROutgoingMessage *dbMessage = [[transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]] copy];
-                    dbMessage.error = nil;
-                    
-                    // Check if this is a media message. For now these are handled differently
-                    if ([dbMessage.mediaItemUniqueId length]) {
-                        OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
-                        [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
-                    } else {
-                        dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
-                        dbMessage.date = [NSDate date];
-                        OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
-                        [sendingAction saveWithTransaction:transaction];
-                    }
-                    [dbMessage saveWithTransaction:transaction];
-                }];
-            }];
-            [actions addObject:resendAction];
             
-            NSString * sendingType = UNENCRYPTED_STRING;
-            switch (self.state.messageSecurity) {
-                case OTRMessageTransportSecurityOTR:
-                    sendingType = @"OTR";
-                    break;
-                case OTRMessageTransportSecurityOMEMO:
-                    sendingType = @"OMEMO";
-                    break;
-                    
-                default:
-                    break;
-            }
             
             NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
             alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
             
             //If this is an error about not having a trusted identity then we should offer to connect to the
-            if (error.code == OTROMEMOErrorNoDevicesForBuddy || error.code == OTROMEMOErrorNoDevices || error.code == otrFingerprintError) {
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy ||
+                error.code == OTROMEMOErrorNoDevices ||
+                error.code == otrFingerprintError) {
                 
-                [actions addObject:viewProfileAction];
                 alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
             }
         }
-        [actions addObject:cancelAction];
     }
     
     
@@ -516,10 +565,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             alertMessage = UNTRUSTED_DEVICE_SENT_STRING;
         }
         alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
-        [actions addObject:viewProfileAction];
-        [actions addObject:cancelAction];
     }
     
+    NSArray <UIAlertAction*>*actions = [self actionForMessage:message];
     if ([actions count] > 0) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:alertMessage preferredStyle:UIAlertControllerStyleActionSheet];
         [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1493,7 +1541,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    [self showMessageError:message sender:avatarImageView];
+    [self didTapAvatar:message sender:avatarImageView];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath

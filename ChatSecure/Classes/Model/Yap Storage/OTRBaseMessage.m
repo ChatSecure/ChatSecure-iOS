@@ -186,6 +186,16 @@
     }
 }
 
++ (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message {
+    OTRBaseMessage *newMessage = [[[message class] alloc] init];
+    newMessage.text = message.text;
+    newMessage.error = message.error;
+    newMessage.mediaItemUniqueId = message.mediaItemUniqueId;
+    newMessage.buddyUniqueId = message.buddyUniqueId;
+    newMessage.messageSecurityInfo = message.messageSecurityInfo;
+    return newMessage;
+}
+
 + (NSUInteger)modelVersion {
     return 1;
 }

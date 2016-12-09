@@ -77,4 +77,14 @@ extern const struct OTRMessageAttributes {
 + (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId incoming:(BOOL)incoming transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 + (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
+/** 
+ This creates a duplicate message. The only properties that are coppied over are 
+    - text
+    - error
+    - mediaItemUniqueId 
+    - buddyUnieqId 
+    - messageSecurityInfo
+ This new object will have a new unique id and message id
+ */
++ (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message;
 @end

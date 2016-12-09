@@ -1019,9 +1019,9 @@
         "comment": "The placeholder text for the text field to enter a group chat name or label",
         "string": "Enter a group name"
     },
-    "TRY_AGAIN_STRING": {
+    "RESEND_STRING": {
         "comment": "Label for button to resend message.",
-        "string": "Try Again"
+        "string": "Resend"
     },
     "SEND_PLAINTEXT_STRING" : {
         "comment": "The placeholder text in the chat view where the message should go",
@@ -1069,5 +1069,8 @@
     },"UNTRUSTED_DEVICE_REVEIVED_STRING" : {
         "comment": "Error message description",
         "string" : "This message was received from an untrusted device."
+    }, "RESEND_MESSAGE_TITLE" : {
+        "comment": "Ttitle for alert view to resend a message",
+        "string" : "Resend Message"
     }
 }

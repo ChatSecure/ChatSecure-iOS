@@ -59,6 +59,7 @@
 		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */; };
 		639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639120921D8CA1E200F4100E /* OTROmemoStorageTest.swift */; };
+		63917C3E1DFA20D900341D96 /* OTRModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63917C3D1DFA20D900341D96 /* OTRModelTest.swift */; };
 		63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */; };
 		639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */; };
@@ -790,6 +791,7 @@
 		638FC09B1B0BE46100B37454 /* NSFileManager+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ChatSecure.h"; sourceTree = "<group>"; };
 		638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ChatSecure.m"; sourceTree = "<group>"; };
 		639120921D8CA1E200F4100E /* OTROmemoStorageTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROmemoStorageTest.swift; sourceTree = "<group>"; };
+		63917C3D1DFA20D900341D96 /* OTRModelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRModelTest.swift; sourceTree = "<group>"; };
 		63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewControllerState.swift; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1531,6 +1533,7 @@
 				63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */,
 				635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */,
 				635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */,
+				63917C3D1DFA20D900341D96 /* OTRModelTest.swift */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 				63F614DA1BB214640083A06A /* ChatSecureTests-Bridging-Header.h */,
 			);
@@ -2212,7 +2215,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run \'pod install\' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		3465A939CCAAAAC0480C0795 /* [CP] Embed Pods Frameworks */ = {
@@ -2270,7 +2273,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run \'pod install\' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		A32A5DF4737208630E1EA1F8 /* [CP] Copy Pods Resources */ = {
@@ -2300,7 +2303,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run \'pod install\' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		B54AA4231DBE4A463B56D596 /* [CP] Copy Pods Resources */ = {
@@ -2336,6 +2339,7 @@
 				636767E91D83562700432B48 /* TestXMPPAccount.swift in Sources */,
 				635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */,
 				63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */,
+				63917C3E1DFA20D900341D96 /* OTRModelTest.swift in Sources */,
 				63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */,
 				639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
