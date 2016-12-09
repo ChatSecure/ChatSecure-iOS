@@ -624,6 +624,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 //    }
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:newMessage.buddyUniqueId transaction:transaction];
+        buddy.lastMessageDate = [NSDate date];
+        [buddy saveWithTransaction:transaction];
         [newMessage saveWithTransaction:transaction];
         [mediaItem saveWithTransaction:transaction];
     }];
@@ -655,6 +658,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTROutgoingMessage *message = [OTROutgoingMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
             message.delivered = YES;
             message.dateDelivered = [NSDate date];
+            
+            OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.uniqueId transaction:transaction];
+            buddy.lastMessageDate = [NSDate date];
+            [buddy saveWithTransaction:transaction];
+            
             [message saveWithTransaction:transaction];
         }];
     }
@@ -664,10 +672,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         
         __block OTRIncomingMessage *message = nil;
         __block OTRMediaItem *mediaItem = nil;
+        __block OTRBuddy *buddy = nil;
         
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             message = [OTRIncomingMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
             mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
+            buddy = [OTRBuddy fetchObjectWithUniqueID:message.uniqueId transaction:transaction];
         }];
         
         mediaItem.transferProgress = 1;
@@ -684,6 +694,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [audioItem saveWithTransaction:transaction];
                     [message saveWithTransaction:transaction];
+                    buddy.lastMessageDate = [NSDate date];
+                    [buddy saveWithTransaction:transaction];
                 }];
                 
                 
@@ -700,6 +712,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
                 [imageItem saveWithTransaction:transaction];
+                buddy.lastMessageDate = [NSDate date];
+                [buddy saveWithTransaction:transaction];
             } completionBlock:^{
                 [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:imageItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
@@ -716,6 +730,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [videoItem saveWithTransaction:transaction];
                     [message saveWithTransaction:transaction];
+                    buddy.lastMessageDate = [NSDate date];
+                    [buddy saveWithTransaction:transaction];
                 }];
                 
             } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
