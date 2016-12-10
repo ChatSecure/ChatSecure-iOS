@@ -13,35 +13,39 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapDatabaseRosterStorage.h"
 #import "OTRXMPPRoomManager.h"
+#import "OTRXMPPBuddyTimers.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager() <OTRCertificatePinningDelegate>
-@property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
-@property (nonatomic, strong) XMPPStream *xmppStream;
-@property (nonatomic, strong) XMPPReconnect *xmppReconnect;
-@property (nonatomic, strong) XMPPRoster *xmppRoster;
-@property (nonatomic, strong) XMPPvCardTempModule *xmppvCardTempModule;
-@property (nonatomic, strong) XMPPvCardAvatarModule *xmppvCardAvatarModule;
-@property (nonatomic, strong) XMPPCapabilities *xmppCapabilities;
-@property (nonatomic, strong) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, strong) OTRYapDatabaseRosterStorage * xmppRosterStorage;
+
+@property (nonatomic, strong, readonly) XMPPStream *xmppStream;
+@property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
+@property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
+@property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
+@property (nonatomic, strong, readonly) XMPPCapabilities *xmppCapabilities;
+@property (nonatomic, strong, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+@property (nonatomic, strong, readonly) OTRYapDatabaseRosterStorage * xmppRosterStorage;
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
-@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
-@property (nonatomic) dispatch_queue_t workQueue;
-@property (nonatomic) BOOL isRegisteringNewAccount;
-@property (nonatomic, strong) XMPPStreamManagement *streamManagement;
-@property (nonatomic, strong) XMPPMessageCarbons *messageCarbons;
-@property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
-@property (nonatomic) BOOL userInitiatedConnection;
-@property (nonatomic) OTRLoginStatus loginStatus;
-@property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
 
-@property (nonatomic, strong) OMEMOModule *omemoModule;
+@property (nonatomic, strong, readonly) XMPPStreamManagement *streamManagement;
+@property (nonatomic, strong, readonly) XMPPMessageCarbons *messageCarbons;
+@property (nonatomic, strong, readonly) OTRXMPPMessageYapStroage *messageStorage;
 
+@property (nonatomic, strong, readonly) OTRXMPPBuddyManager* xmppBuddyManager;
+@property (nonatomic, strong, readonly) OMEMOModule *omemoModule;
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
-@property (nonatomic, strong) OTRXMPPMessageStatusModule *messageStatusModule;
-@property (nonatomic, strong) OTRStreamManagementDelegate *streamManagementDelegate;
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly) XMPPMessageDeliveryReceipts *deliveryReceipts;
+@property (nonatomic, strong, readonly) OTRXMPPMessageStatusModule *messageStatusModule;
+@property (nonatomic, strong, readonly) OTRStreamManagementDelegate *streamManagementDelegate;
+
+@property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,OTRXMPPBuddyTimers*> * buddyTimers;
+
+@property (nonatomic, readwrite) BOOL isRegisteringNewAccount;
+@property (nonatomic, readwrite) BOOL userInitiatedConnection;
+@property (nonatomic, readwrite) OTRLoginStatus loginStatus;
+@property (nonatomic, readwrite) OTRProtocolConnectionStatus connectionStatus;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -50,9 +54,8 @@
 - (void)goOffline;
 - (void)failedToConnect:(NSError *)error;
 
-
-
 /** wtf. why isn't this being picked up by OTRProtocol */
 - (void) connectUserInitiated:(BOOL)userInitiated;
 
 @end
+NS_ASSUME_NONNULL_END

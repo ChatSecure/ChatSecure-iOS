@@ -50,7 +50,7 @@
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
 #import "OTRXMPPRoomManager.h"
-#import "OTRXMPPBudyTimers.h"
+#import "OTRXMPPBuddyTimers.h"
 #import "OTRXMPPError.h"
 #import "OTRXMPPManager_Private.h"
 @import OTRAssets;
@@ -67,25 +67,21 @@ NSString *const OTRXMPPOldLoginStatusKey = @"OTRXMPPOldLoginStatusKey";
 NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
 NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
-
-
-
-
 @implementation OTRXMPPManager
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init]) {
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
-        self.workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
+        _workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
         self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
-        self.buddyTimers = [NSMutableDictionary dictionary];
-        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        _buddyTimers = [NSMutableDictionary dictionary];
+        _databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
     return self;
 }
 
-- (id) initWithAccount:(OTRAccount *)newAccount {
+- (instancetype) initWithAccount:(OTRAccount *)newAccount {
     if(self = [self init])
     {
         NSAssert([newAccount isKindOfClass:[OTRXMPPAccount class]], @"Must have XMPP account");
@@ -93,9 +89,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         _account = (OTRXMPPAccount *)newAccount;
         
         // Setup the XMPP stream
-        [self setupStream];
-        
-        self.buddyTimers = [NSMutableDictionary dictionary];
+        [self setupStream];        
     }
     
     return self;
@@ -115,15 +109,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
 	_xmppStream = [[XMPPStream alloc] init];
-    
+
     //Used to fetch correct account from XMPPStream in delegate methods especailly
     self.xmppStream.tag = self.account.uniqueId;
-    
     self.xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     
     [self.certificatePinningModule activate:self.xmppStream];
     
-    self.deliveryReceipts = [[XMPPMessageDeliveryReceipts alloc] init];
+    _deliveryReceipts = [[XMPPMessageDeliveryReceipts alloc] init];
     // We want to check if OTR messages can be decrypted
     self.deliveryReceipts.autoSendMessageDeliveryReceipts = NO;
     self.deliveryReceipts.autoSendMessageDeliveryRequests = YES;
@@ -151,7 +144,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	// automatically reconnects the stream for you.
 	// There's a bunch more information in the XMPPReconnect header file.
 	
-	self.xmppReconnect = [[XMPPReconnect alloc] init];
+	_xmppReconnect = [[XMPPReconnect alloc] init];
 	
 	// Setup roster
 	// 
@@ -167,7 +160,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	
     OTRYapDatabaseRosterStorage * rosterStorage = [[OTRYapDatabaseRosterStorage alloc] init];
 	
-	self.xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
+	_xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
 	
 	self.xmppRoster.autoFetchRoster = YES;
     self.xmppRoster.autoClearAllUsersAndResources = NO;
@@ -179,9 +172,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
     OTRvCardYapDatabaseStorage * vCardStorage  = [[OTRvCardYapDatabaseStorage alloc] init];
-	self.xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardStorage];
+	_xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardStorage];
 	
-	self.xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:self.xmppvCardTempModule];
+	_xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:self.xmppvCardTempModule];
 	
 	// Setup capabilities
 	// 
@@ -202,8 +195,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	self.xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
-    self.xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
+	_xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
+    _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
     
     self.xmppCapabilities.autoFetchHashedCapabilities = YES;
     self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
@@ -226,21 +219,21 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
     // Message Carbons
-    self.messageCarbons = [[XMPPMessageCarbons alloc] init];
+    _messageCarbons = [[XMPPMessageCarbons alloc] init];
     [self.messageCarbons activate:self.xmppStream];
     
     // Message storage
-    self.messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
+    _messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
     [self.messageStorage activate:self.xmppStream];
     
     //Stream Management
     YapDatabaseConnection *databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     databaseConnection.name = NSStringFromClass([OTRStreamManagementYapStorage class]);
     
-    self.streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:databaseConnection];
+    _streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:databaseConnection];
     
     OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:databaseConnection];
-    self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
+    _streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
     [self.streamManagement addDelegate:self.streamManagementDelegate delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     [self.streamManagement automaticallyRequestAcksAfterStanzaCount:5 orTimeout:5];
     [self.streamManagement automaticallySendAcksAfterStanzaCount:5 orTimeout:5];
@@ -253,19 +246,19 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.roomManager activate:self.xmppStream];
     
     //Buddy Manager (for deleting)
-    self.xmppBuddyManager = [[OTRXMPPBuddyManager alloc] init];
+    _xmppBuddyManager = [[OTRXMPPBuddyManager alloc] init];
     self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
     self.xmppBuddyManager.protocol = self;
     [self.xmppBuddyManager activate:self.xmppStream];
     
     //Message Queue Module
     MessageQueueHandler *queueHandler = [OTRDatabaseManager sharedInstance].messageQueueHandler;
-    self.messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
+    _messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
     [self.messageStatusModule activate:self.xmppStream];
     
     //OMEMO
     self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection error:nil];
-    self.omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator xmlNamespace:OMEMOModuleNamespaceConversationsLegacy];
+    _omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator xmlNamespace:OMEMOModuleNamespaceConversationsLegacy];
     [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.omemoSignalCoordinator.workQueue];
 
     [self.omemoModule activate:self.xmppStream];
@@ -295,43 +288,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_omemoModule deactivate];
 
     [_xmppStream disconnect];
-
-    _xmppStream = nil;
-    _xmppReconnect = nil;
-    _xmppRoster = nil;
-    _xmppRosterStorage = nil;
-    _xmppvCardTempModule = nil;
-    _xmppvCardAvatarModule = nil;
-    _xmppCapabilities = nil;
-    _xmppCapabilitiesStorage = nil;
-    _certificatePinningModule = nil;
-    _deliveryReceipts = nil;
-    _streamManagement = nil;
-    _roomManager = nil;
-    _xmppBuddyManager = nil;
-    _messageStatusModule = nil;
-    _omemoModule = nil;
-}
-
-// It's easy to create XML elments to send and to read received XML elements.
-// You have the entire NSXMLElement and NSXMLNode API's.
-// 
-// In addition to this, the NSXMLElement+XMPP category provides some very handy methods for working with XMPP.
-// 
-// On the iPhone, Apple chose not to include the full NSXML suite.
-// No problem - we use the KissXML library as a drop in replacement.
-// 
-// For more information on working with XML elements, see the Wiki article:
-// http://code.google.com/p/xmppframework/wiki/WorkingWithElements
-
-- (XMPPStream *)xmppStream
-{
-    if(!_xmppStream)
-    {
-        _xmppStream = [[XMPPStream alloc] init];
-        _xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
-    }
-    return _xmppStream;
 }
 
 - (void)goOnline
@@ -874,13 +830,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
             *stop = YES;
         }
     }];
-    PushController *pushController = [OTRAppDelegate appDelegate].pushController;
-    BOOL hasPushAccount = [pushController.pushStorage hasPushAccount];
+    BOOL hasPushAccount = [[OTRProtocolManager sharedInstance].pushController.pushStorage hasPushAccount];
     
     if (supportsPushXEP && hasPushAccount) {
-        [[OTRAppDelegate appDelegate].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
+        [[OTRProtocolManager sharedInstance].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
             if (endpoint) {
-                [pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
+                [[OTRProtocolManager sharedInstance].pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
                     if (token) {
                         [self enablePushWithToken:token endpoint:endpoint];
                     } else if (error) {
@@ -909,8 +864,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
     NSString *tokenString = token.pushToken.tokenString;
     if (tokenString.length > 0) {
-        PushController *pushController = [OTRAppDelegate appDelegate].pushController;
-        NSString *pushEndpointURLString = [pushController getMessagesEndpoint].absoluteString;
+        NSString *pushEndpointURLString = [[OTRProtocolManager sharedInstance].pushController getMessagesEndpoint].absoluteString;
         NSMutableDictionary *options = [NSMutableDictionary dictionary];
         [options setObject:tokenString forKey:@"token"];
         if (pushEndpointURLString) {
@@ -1087,10 +1041,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 //Chat State
 
--(OTRXMPPBudyTimers *)buddyTimersForBuddyObjectID:(NSString *)
+-(OTRXMPPBuddyTimers *)buddyTimersForBuddyObjectID:(NSString *)
 managedBuddyObjectID
 {
-    OTRXMPPBudyTimers * timers = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
+    OTRXMPPBuddyTimers * timers = [self.buddyTimers objectForKey:managedBuddyObjectID];
     return timers;
 }
 
@@ -1109,10 +1063,10 @@ managedBuddyObjectID
 -(void)restartPausedChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
+        OTRXMPPBuddyTimers * timer = [self.buddyTimers objectForKey:managedBuddyObjectID];
         if(!timer)
         {
-            timer = [[OTRXMPPBudyTimers alloc] init];
+            timer = [[OTRXMPPBuddyTimers alloc] init];
         }
         [timer.pausedChatStateTimer invalidate];
         timer.pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState:) userInfo:managedBuddyObjectID repeats:NO];
@@ -1123,10 +1077,10 @@ managedBuddyObjectID
 -(void)restartInactiveChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
+        OTRXMPPBuddyTimers * timer = [self.buddyTimers objectForKey:managedBuddyObjectID];
         if(!timer)
         {
-            timer = [[OTRXMPPBudyTimers alloc] init];
+            timer = [[OTRXMPPBuddyTimers alloc] init];
         }
         [timer.inactiveChatStateTimer invalidate];
         timer.inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState:) userInfo:managedBuddyObjectID repeats:NO];

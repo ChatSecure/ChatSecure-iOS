@@ -38,7 +38,6 @@
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 @property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 
-@property (nonatomic, strong) PushController *pushController;
 @property (nonatomic, strong) PushOTRListener *pushListener;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
@@ -49,7 +48,7 @@
 
 - (NSString *)activeThreadYapKey;
 
-+ (OTRAppDelegate *)appDelegate;
++ (instancetype)appDelegate;
 
 
 #pragma mark Theming

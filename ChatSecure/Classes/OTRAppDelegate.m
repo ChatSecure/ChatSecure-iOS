@@ -433,7 +433,7 @@
 {
     [self application:application performFetchWithCompletionHandler:completionHandler];
     
-    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+    [[OTRProtocolManager sharedInstance].pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
         // Only show notification if buddy lookup succeeds
         if (buddy) {
             [application showLocalNotificationForKnockFrom:buddy];
@@ -537,7 +537,7 @@
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
 {
-    [self.pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    [[OTRProtocolManager sharedInstance].pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
@@ -553,20 +553,6 @@
     } else {
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
-}
-
-#pragma - mark Getters and Setters
-
-- (PushController *)pushController{
-    if (!_pushController) {
-        NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
-        // Casting here because it's easier than figuring out the
-        // non-modular include spaghetti mess
-        id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)[OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
-        _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
-
-    }
-    return _pushController;
 }
 
 #pragma - mark Class Methods

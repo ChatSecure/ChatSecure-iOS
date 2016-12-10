@@ -33,12 +33,14 @@
 @import YapDatabase;
 
 @import KVOController;
+@import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-static OTRProtocolManager *sharedManager = nil;
-
-@interface OTRProtocolManager ()
+@interface OTRProtocolManager () {
+    /** Used for determining correct usage of dispatch_sync */
+    void *IsOnInternalQueueKey;
+}
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
@@ -56,8 +58,15 @@ static OTRProtocolManager *sharedManager = nil;
     {
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
-        self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.encryptionManager.pushTLVHandler.delegate = [OTRAppDelegate appDelegate].pushController;
+        _encryptionManager = [[OTREncryptionManager alloc] init];
+        
+        NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
+        // Casting here because it's easier than figuring out the
+        // non-modular include spaghetti mess
+        id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)self.encryptionManager.pushTLVHandler;
+        _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
+        self.encryptionManager.pushTLVHandler.delegate = self.pushController;
+        
         self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -101,28 +110,14 @@ static OTRProtocolManager *sharedManager = nil;
 #pragma mark -
 #pragma mark Singleton Object Methods
 
-+ (OTRProtocolManager*)sharedInstance {
-    @synchronized(self) {
-        if (sharedManager == nil) {
-            sharedManager = [[self alloc] init];
-        }
-    }
-    return sharedManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedManager == nil) {
-            sharedManager = [super allocWithZone:zone];
-            return sharedManager;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone
++ (instancetype)sharedInstance
 {
-    return self;
+    static id sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
 }
 
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
@@ -136,7 +131,6 @@ static OTRProtocolManager *sharedManager = nil;
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
-        protocol.pushController = [OTRAppDelegate appDelegate].pushController;
         if (protocol && account.uniqueId) {
             [self addProtocol:protocol forAccount:account];
         }

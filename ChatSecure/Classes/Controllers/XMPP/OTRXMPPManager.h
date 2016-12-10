@@ -32,15 +32,14 @@
 @class OTRXMPPAccount, OTRXMPPRoomManager;
 @class OTROMEMOSignalCoordinator;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
 
-@property (nonatomic, readonly) XMPPRoster *xmppRoster;
-@property (nonatomic, readonly) OTRXMPPRoomManager *roomManager;
+@property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
+@property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
-@property (nonatomic, weak) id <PushControllerProtocol> pushController;
-
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;
@@ -78,3 +77,5 @@ extern NSString *const OTRXMPPNewLoginStatusKey;
 extern NSString *const OTRXMPPLoginErrorKey;
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
+
+NS_ASSUME_NONNULL_END

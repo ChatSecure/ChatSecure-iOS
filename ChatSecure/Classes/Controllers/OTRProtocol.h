@@ -45,9 +45,8 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
     OTRLoginStatusAuthenticated
 };
 
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRProtocol <NSObject>
-
-@property (nonatomic, weak) id <PushControllerProtocol> pushController;
 
 - (OTRAccount *)account;
 - (OTRProtocolConnectionStatus)connectionStatus;
@@ -64,7 +63,7 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 - (void) removeBuddies:(NSArray<OTRBuddy*> *)buddies;
 - (void) blockBuddies:(NSArray<OTRBuddy*> *)buddies;
 
-- (id) initWithAccount:(OTRAccount*)account;
+- (instancetype) initWithAccount:(OTRAccount*)account;
 
 @end
 
@@ -72,3 +71,4 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 - (void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy;
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRBuddy *)buddy;
 @end
+NS_ASSUME_NONNULL_END

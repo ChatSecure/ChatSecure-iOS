@@ -26,7 +26,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount, OTRBuddy, OTROutgoingMessage;
+@class OTRAccount, OTRBuddy, OTROutgoingMessage, PushController;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
@@ -34,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSUInteger numberOfConnectedProtocols;
 @property (nonatomic, readonly) NSUInteger numberOfConnectingProtocols;
 
-@property (nonatomic, strong) OTREncryptionManager *encryptionManager;
+@property (nonatomic, strong, readonly) OTREncryptionManager *encryptionManager;
+@property (nonatomic, strong, readonly) PushController *pushController;
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
 - (nullable id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
@@ -51,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendMessage:(OTROutgoingMessage *)message;
 
-+ (OTRProtocolManager*)sharedInstance; // Singleton method
++ (instancetype)sharedInstance; // Singleton method
 
 @end
 NS_ASSUME_NONNULL_END

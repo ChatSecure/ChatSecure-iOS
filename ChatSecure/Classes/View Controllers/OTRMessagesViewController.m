@@ -375,7 +375,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             __typeof__(self) strongSelf = weakSelf;
-            __block BOOL canKnock = [[[OTRAppDelegate appDelegate].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
+            __block BOOL canKnock = [[[OTRProtocolManager sharedInstance].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (canKnock != strongSelf.state.canKnock) {
                     strongSelf.state.canKnock = canKnock;

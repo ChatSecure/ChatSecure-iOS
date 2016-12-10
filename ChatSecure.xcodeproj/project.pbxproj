@@ -138,7 +138,7 @@
 		D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */; };
 		D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */; };
 		D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */; };
-		D93DDA941BA79A2400CD8331 /* OTRXMPPBudyTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */; };
+		D93DDA941BA79A2400CD8331 /* OTRXMPPBuddyTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105361A16D1A300C17BAE /* OTRXMPPBuddyTimers.m */; };
 		D93DDA951BA79A2400CD8331 /* OTRXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105381A16D1A300C17BAE /* OTRXMPPManager.m */; };
 		D93DDA961BA79A2400CD8331 /* OTRXMPPProxyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053A1A16D1A300C17BAE /* OTRXMPPProxyStream.m */; };
 		D93DDA971BA79A2400CD8331 /* OTRXMPPTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053C1A16D1A300C17BAE /* OTRXMPPTorManager.m */; };
@@ -276,7 +276,7 @@
 		D93DDB451BA79A7200CD8331 /* OTRStreamManagementYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */ = {isa = PBXBuildFile; fileRef = 637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB471BA79A7200CD8331 /* OTRvCardYapDatabaseStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB481BA79A7200CD8331 /* OTRXMPPBuddyTimers.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105351A16D1A300C17BAE /* OTRXMPPBuddyTimers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105391A16D1A300C17BAE /* OTRXMPPProxyStream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -559,8 +559,8 @@
 		633105311A16D1A300C17BAE /* OTRTorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTorManager.m; sourceTree = "<group>"; };
 		633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardYapDatabaseStorage.h; sourceTree = "<group>"; };
 		633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardYapDatabaseStorage.m; sourceTree = "<group>"; };
-		633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
-		633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBudyTimers.m; sourceTree = "<group>"; };
+		633105351A16D1A300C17BAE /* OTRXMPPBuddyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddyTimers.h; sourceTree = "<group>"; };
+		633105361A16D1A300C17BAE /* OTRXMPPBuddyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBuddyTimers.m; sourceTree = "<group>"; };
 		633105371A16D1A300C17BAE /* OTRXMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPManager.h; sourceTree = "<group>"; };
 		633105381A16D1A300C17BAE /* OTRXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPManager.m; sourceTree = "<group>"; };
 		633105391A16D1A300C17BAE /* OTRXMPPProxyStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPProxyStream.h; sourceTree = "<group>"; };
@@ -1119,8 +1119,8 @@
 				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
 				633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */,
-				633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */,
-				633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */,
+				633105351A16D1A300C17BAE /* OTRXMPPBuddyTimers.h */,
+				633105361A16D1A300C17BAE /* OTRXMPPBuddyTimers.m */,
 				633105371A16D1A300C17BAE /* OTRXMPPManager.h */,
 				633105381A16D1A300C17BAE /* OTRXMPPManager.m */,
 				636985581BC875110083FC53 /* OTRXMPPRoomManager.h */,
@@ -1806,7 +1806,7 @@
 				D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */,
 				D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */,
-				D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */,
+				D93DDB481BA79A7200CD8331 /* OTRXMPPBuddyTimers.h in Headers */,
 				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,
 				D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */,
 				D93DDB831BA79A8800CD8331 /* OTRViewSetting.h in Headers */,
@@ -2396,7 +2396,7 @@
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStroage.m in Sources */,
 				D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */,
 				63A1F1C61DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift in Sources */,
-				D93DDA941BA79A2400CD8331 /* OTRXMPPBudyTimers.m in Sources */,
+				D93DDA941BA79A2400CD8331 /* OTRXMPPBuddyTimers.m in Sources */,
 				D93DDA951BA79A2400CD8331 /* OTRXMPPManager.m in Sources */,
 				D93DDA961BA79A2400CD8331 /* OTRXMPPProxyStream.m in Sources */,
 				D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */,
