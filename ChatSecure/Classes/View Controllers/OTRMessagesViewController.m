@@ -934,7 +934,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRAccount *account = [self accountWithTransaction:transaction];
     
     if (data) {
-        
+        buddy.lastMessageDate = [NSDate date];
+        [buddy saveWithTransaction:transaction];
         [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
     } else {
