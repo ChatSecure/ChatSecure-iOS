@@ -68,8 +68,8 @@
         
         _protocolManagers = [[NSMutableDictionary alloc] init];
         
-        self.numberOfConnectedProtocols = 0;
-        self.numberOfConnectingProtocols = 0;
+        _numberOfConnectedProtocols = 0;
+        _numberOfConnectingProtocols = 0;
         _encryptionManager = [[OTREncryptionManager alloc] init];
         
         NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
@@ -84,7 +84,9 @@
 
 - (void) setNumberOfConnectedProtocols:(NSUInteger)numberOfConnectedProtocols {
     [self performBlockAsync:^{
+        [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
         _numberOfConnectedProtocols = numberOfConnectedProtocols;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
     }];
 }
 
@@ -98,7 +100,9 @@
 
 - (void) setNumberOfConnectingProtocols:(NSUInteger)numberOfConnectingProtocols {
     [self performBlockAsync:^{
+        [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
         _numberOfConnectingProtocols = numberOfConnectingProtocols;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
     }];
 }
 
