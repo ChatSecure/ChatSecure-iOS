@@ -41,21 +41,33 @@
     /** Used for determining correct usage of dispatch_sync */
     void *IsOnInternalQueueKey;
 }
+@property (nonatomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
+@property (nonatomic, readonly, nonnull) dispatch_queue_t internalQueue;
 
-@property (nonatomic) NSUInteger numberOfConnectedProtocols;
-@property (nonatomic) NSUInteger numberOfConnectingProtocols;
-@property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
-@property (nonatomic) dispatch_queue_t internalQueue;
+/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
+- (void) performBlockAsync:(dispatch_block_t)block;
 
+/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
+- (void) performBlock:(dispatch_block_t)block;
 @end
 
 @implementation OTRProtocolManager
+@synthesize numberOfConnectingProtocols = _numberOfConnectingProtocols;
+@synthesize numberOfConnectedProtocols = _numberOfConnectedProtocols;
 
--(id)init
+-(instancetype)init
 {
     self = [super init];
     if(self)
     {
+        _internalQueue = dispatch_queue_create("OTRProtocolManager Internal Queue", 0);
+        // For safe usage of dispatch_sync
+        IsOnInternalQueueKey = &IsOnInternalQueueKey;
+        void *nonNullUnusedPointer = (__bridge void *)self;
+        dispatch_queue_set_specific(_internalQueue, IsOnInternalQueueKey, nonNullUnusedPointer, NULL);
+        
+        _protocolManagers = [[NSMutableDictionary alloc] init];
+        
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
         _encryptionManager = [[OTREncryptionManager alloc] init];
@@ -66,108 +78,134 @@
         id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)self.encryptionManager.pushTLVHandler;
         _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
         self.encryptionManager.pushTLVHandler.delegate = self.pushController;
-        
-        self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-- (void)removeProtocolForAccount:(OTRAccount *)account
-{
-    @synchronized(self.protocolManagerDictionary) {
-        if (account) {
-            id protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
-            if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
-                [protocol disconnect];
-            }
-            [self.KVOController unobserve:protocol];
-            [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
-        }
-    }
+- (void) setNumberOfConnectedProtocols:(NSUInteger)numberOfConnectedProtocols {
+    [self performBlockAsync:^{
+        _numberOfConnectedProtocols = numberOfConnectedProtocols;
+    }];
 }
 
-- (void)addProtocol:(id)protocol forAccount:(OTRAccount *)account
+- (NSUInteger) numberOfConnectedProtocols {
+    __block NSUInteger count = 0;
+    [self performBlock:^{
+        count = _numberOfConnectedProtocols;
+    }];
+    return count;
+}
+
+- (void) setNumberOfConnectingProtocols:(NSUInteger)numberOfConnectingProtocols {
+    [self performBlockAsync:^{
+        _numberOfConnectingProtocols = numberOfConnectingProtocols;
+    }];
+}
+
+- (NSUInteger) numberOfConnectingProtocols {
+    __block NSUInteger count = 0;
+    [self performBlock:^{
+        count = _numberOfConnectingProtocols;
+    }];
+    return count;
+}
+
+- (void)removeProtocolForAccount:(OTRAccount *)account
 {
-    @synchronized(self.protocolManagerDictionary){
-        [self.protocolManagerDictionary setObject:protocol forKey:account.uniqueId];
+    NSParameterAssert(account);
+    if (!account) { return; }
+    [self performBlockAsync:^{
+        id<OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+        if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
+            [protocol disconnect];
+        }
+        [self.KVOController unobserve:protocol];
+        [self.protocolManagers removeObjectForKey:account.uniqueId];
+    }];
+}
+
+- (void)addProtocol:(id<OTRProtocol>)protocol forAccount:(OTRAccount *)account
+{
+    [self performBlockAsync:^{
+        [self.protocolManagers setObject:protocol forKey:account.uniqueId];
         [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
-    }
+    }];
 }
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account
 {
-    if ([account.uniqueId length]) {
-        @synchronized(self.protocolManagerDictionary) {
-            if ([self.protocolManagerDictionary objectForKey:account.uniqueId]) {
-                return YES;
-            }
-        }
-    }
-    
-    return NO;
-}
-
-#pragma mark -
-#pragma mark Singleton Object Methods
-
-+ (instancetype)sharedInstance
-{
-    static id sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
-    return sharedInstance;
+    NSParameterAssert(account.uniqueId);
+    if (!account.uniqueId) { return NO; }
+    __block BOOL exists = NO;
+    [self performBlock:^{
+        exists = [self.protocolManagers objectForKey:account.uniqueId] != nil;
+    }];
+    return exists;
 }
 
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
 {
-    [self addProtocol:protocol forAccount:account];
+    NSParameterAssert(protocol);
+    NSParameterAssert(account.uniqueId);
+    if (!protocol || !account.uniqueId) { return; }
+    [self performBlockAsync:^{
+        [self addProtocol:protocol forAccount:account];
+    }];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
-    NSObject <OTRProtocol> * protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
-    if(!protocol)
-    {
-        protocol = [[[account protocolClass] alloc] initWithAccount:account];
-        if (protocol && account.uniqueId) {
-            [self addProtocol:protocol forAccount:account];
+    NSParameterAssert(account);
+    if (!account.uniqueId) { return nil; }
+    __block id <OTRProtocol> protocol = nil;
+    [self performBlock:^{
+        protocol = [self.protocolManagers objectForKey:account.uniqueId];
+        if(!protocol)
+        {
+            protocol = [[[account protocolClass] alloc] initWithAccount:account];
+            if (protocol && account.uniqueId) {
+                [self addProtocol:protocol forAccount:account];
+            }
         }
-    }
+    }];
     return protocol;
 }
 
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated
 {
-    id <OTRProtocol> protocol = [self protocolForAccount:account];
-    if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
-        DDLogError(@"Account already connected %@", account);
-        return;
-    }
-    
-    if([account isKindOfClass:[OTROAuthXMPPAccount class]])
-    {
-        [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
-            if (!error) {
-                ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
-                [protocol connectUserInitiated:userInitiated];
-            }
-            else {
-                DDLogError(@"Error Refreshing Token");
-            }
-        }];
-    }
-    else
-    {
-        [protocol connectUserInitiated:userInitiated];
-    }
+    NSParameterAssert(account);
+    if (!account) { return; }
+    [self performBlockAsync:^{
+        id <OTRProtocol> protocol = [self protocolForAccount:account];
+        if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
+            DDLogError(@"Account already connected %@", account);
+            return;
+        }
+        
+        if([account isKindOfClass:[OTROAuthXMPPAccount class]])
+        {
+            [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
+                if (!error) {
+                    ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
+                    [protocol connectUserInitiated:userInitiated];
+                }
+                else {
+                    DDLogError(@"Error Refreshing Token");
+                }
+            }];
+        }
+        else
+        {
+            [protocol connectUserInitiated:userInitiated];
+        }
+    }];
 }
 
 - (void)loginAccount:(OTRAccount *)account
 {
     [self loginAccount:account userInitiated:NO];
 }
+
 - (void)loginAccounts:(NSArray *)accounts
 {
     [accounts enumerateObjectsUsingBlock:^(OTRAccount * account, NSUInteger idx, BOOL *stop) {
@@ -176,11 +214,11 @@
 }
 
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
-    @synchronized(self.protocolManagerDictionary) {
-        [self.protocolManagerDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+    [self performBlockAsync:^{
+        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
             [protocol disconnectSocketOnly:socketOnly];
         }];
-    }
+    }];
 }
 
 - (void)disconnectAllAccounts
@@ -228,29 +266,65 @@
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;
 {
-    id <OTRProtocol> protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
-    if (protocol) {
-        return [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
-    }
-    return NO;
-    
+    __block BOOL connected = NO;
+    [self performBlock:^{
+        id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+        if (protocol) {
+            connected = [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
+        }
+    }];
+    return connected;
 }
-
 
 - (void)sendMessage:(OTROutgoingMessage *)message {
-    
-    __block OTRAccount * account = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
-        account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
-    } completionBlock:^{
-        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
-        id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
-        [protocol sendMessage:message];
+    [self performBlockAsync:^{
+        __block OTRAccount * account = nil;
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+            account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+        } completionBlock:^{
+            OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+            id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
+            [protocol sendMessage:message];
+        }];
     }];
-    
-    
-    
 }
+
+#pragma mark Singleton Object Methods
+
++ (instancetype)sharedInstance
+{
+    static id sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+}
+
+#pragma mark Internal Utilities
+
+/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
+- (void) performBlock:(dispatch_block_t)block {
+    NSParameterAssert(block != nil);
+    if (!block) { return; }
+    if (dispatch_get_specific(IsOnInternalQueueKey)) {
+        block();
+    } else {
+        dispatch_sync(_internalQueue, block);
+    }
+}
+
+/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
+- (void) performBlockAsync:(dispatch_block_t)block {
+    NSParameterAssert(block != nil);
+    if (!block) { return; }
+    if (dispatch_get_specific(IsOnInternalQueueKey)) {
+        block();
+    } else {
+        dispatch_async(_internalQueue, block);
+    }
+}
+
 
 @end

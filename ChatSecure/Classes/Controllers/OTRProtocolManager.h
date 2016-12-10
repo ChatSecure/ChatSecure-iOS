@@ -31,8 +31,8 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
 
-@property (nonatomic, readonly) NSUInteger numberOfConnectedProtocols;
-@property (nonatomic, readonly) NSUInteger numberOfConnectingProtocols;
+@property (atomic, readonly) NSUInteger numberOfConnectedProtocols;
+@property (atomic, readonly) NSUInteger numberOfConnectingProtocols;
 
 @property (nonatomic, strong, readonly) OTREncryptionManager *encryptionManager;
 @property (nonatomic, strong, readonly) PushController *pushController;
