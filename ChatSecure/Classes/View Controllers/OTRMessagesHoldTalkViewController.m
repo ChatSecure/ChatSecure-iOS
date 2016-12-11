@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRProtocolManager.h"
 #import "OTRMessagesHoldTalkViewController.h"
 @import PureLayout;
 #import "OTRHoldToTalkView.h"

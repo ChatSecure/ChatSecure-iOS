@@ -17,6 +17,7 @@
 #import "OTRConstants.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRThreadOwner.h"
+#import "OTRGlobalState.h"
 
 @implementation OTRXMPPMessageYapStroage
 
@@ -93,7 +94,7 @@
             }
             
             OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
-            NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+            NSString *activeThreadYapKey = [[OTRGlobalState sharedInstance].activeThreadDelegate activeThreadYapKey];
             if([activeThreadYapKey isEqualToString:message.threadId]) {
                 message.read = YES;
             }
@@ -204,7 +205,7 @@
                 if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                     if (incoming) {
                         OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+                        NSString *activeThreadYapKey = [[OTRGlobalState sharedInstance].activeThreadDelegate activeThreadYapKey];
                         if([activeThreadYapKey isEqualToString:message.threadId]) {
                             message.read = YES;
                         }

@@ -83,6 +83,7 @@ abstract_target 'ChatSecureCorePods' do
 
 
   target 'ChatSecureCore'
+  target 'ChatSecureUIKit'
   target 'ChatSecureTests'
   target 'ChatSecure'
 end

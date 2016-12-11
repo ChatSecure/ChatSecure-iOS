@@ -46,6 +46,7 @@
 #import "OTRLanguageManager.h"
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
 #import "OTRYapMessageSendAction.h"
 @import YapDatabase;
 @import PureLayout;

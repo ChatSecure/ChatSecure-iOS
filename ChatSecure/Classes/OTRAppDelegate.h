@@ -22,23 +22,21 @@
 
 @import UIKit;
 
-@class OTRTheme;
+#import "OTRTheme.h"
 @class OTRSettingsViewController;
 @class OTRMessagesViewController;
 @class OTRConversationViewController;
 @class PushController;
-@class PushOTRListener;
 @protocol OTRThreadOwner;
+@import ChatSecureCore;
 
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, OTRActiveThreadDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 @property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
-
-@property (nonatomic, strong) PushOTRListener *pushListener;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
@@ -46,7 +44,6 @@
 
 - (void) showConversationViewController;
 
-- (NSString *)activeThreadYapKey;
 
 + (instancetype)appDelegate;
 

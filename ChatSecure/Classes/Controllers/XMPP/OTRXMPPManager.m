@@ -30,7 +30,6 @@
 
 #import <CFNetwork/CFNetwork.h>
 
-#import "OTRSettingsManager.h"
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
@@ -46,7 +45,6 @@
 #import "OTRAccount.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
-#import "OTRNotificationController.h"
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
 #import "OTRXMPPRoomManager.h"
@@ -437,7 +435,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         }
     } completionQueue:dispatch_get_main_queue() completionBlock:^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+        if([[NSUserDefaults standardUserDefaults] boolForKey:kOTRSettingKeyDeleteOnDisconnect])
         {
             [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [OTRBaseMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
@@ -923,7 +921,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.userInitiatedConnection = userInitiated;
     [self startConnection];
     if (self.userInitiatedConnection) {
-        [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
+        //[[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
     }
 }
 

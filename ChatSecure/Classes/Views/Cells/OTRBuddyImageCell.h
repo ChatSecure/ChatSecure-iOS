@@ -7,7 +7,7 @@
 //
 
 @import UIKit;
-#import "OTRThreadOwner.h"
+@import ChatSecureCore;
 @class OTRBuddy;
 
 extern const CGFloat OTRBuddyImageCellPadding;

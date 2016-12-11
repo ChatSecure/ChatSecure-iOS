@@ -16,7 +16,13 @@
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRGoolgeOAuthLoginHandler.h"
-@import gtm_oauth2;
+
+////// For some reason gtm_oauth2 now complains about non-modular includes
+//@import gtm_oauth2;
+#import "GTMOAuth2Authentication.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+//////
+
 #import "OTRDatabaseManager.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 @import OTRAssets;

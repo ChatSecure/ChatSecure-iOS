@@ -6,10 +6,12 @@
 //  Copyright © 2015 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRAccount.h"
 #import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
 @import OTRAssets;
 
 @interface OTRMessagesGroupViewController ()

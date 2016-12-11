@@ -8,7 +8,7 @@
 
 #import "OTROAuthRefresher.h"
 
-#import "GTMOAuth2Authentication.h"
+@import gtm_oauth2;
 #import "OTRSecrets.h"
 #import "OTRConstants.h"
 

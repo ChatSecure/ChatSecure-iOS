@@ -16,38 +16,43 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
     OTRBubbleMessageTypeOutgoing
 };
 
+#if TARGET_OS_IPHONE
+#define OTRImage UIImage
+#else
+#define OTRImage NSImage
+#endif
+
 @interface OTRImages : NSObject
 
-+ (UIView *)typingBubbleView;
 
-+ (UIImage *)circleWithRadius:(CGFloat)radius;
-+ (UIImage *)circleWithRadius:(CGFloat)radius lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor fillColor:(UIColor *)fillColor;
++ (OTRImage *)circleWithRadius:(CGFloat)radius;
++ (OTRImage *)circleWithRadius:(CGFloat)radius lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor fillColor:(UIColor *)fillColor;
 
-+ (UIImage *)twitterImage;
++ (OTRImage *)twitterImage;
 
-+ (UIImage *)facebookActivityImage;
++ (OTRImage *)facebookActivityImage;
 
-+ (UIImage *)duckduckgoImage;
++ (OTRImage *)duckduckgoImage;
 
-+ (UIImage *)xmppServerImageWithName:(NSString *)name;
++ (OTRImage *)xmppServerImageWithName:(NSString *)name;
 
-+ (UIImage *)warningImage;
-+ (UIImage *)circleWarningWithColor:(UIColor *)color;
-+ (UIImage *)warningImageWithColor:(UIColor *)color;
++ (OTRImage *)warningImage;
++ (OTRImage *)circleWarningWithColor:(UIColor *)color;
++ (OTRImage *)warningImageWithColor:(UIColor *)color;
 
-+ (UIImage *)checkmarkWithColor:(UIColor *)color;
++ (OTRImage *)checkmarkWithColor:(UIColor *)color;
 
-+ (UIImage *)errorWithColor:(UIColor *)color;
++ (OTRImage *)errorWithColor:(UIColor *)color;
 
-+ (UIImage *)wifiWithColor:(UIColor *)color;
++ (OTRImage *)wifiWithColor:(UIColor *)color;
 
-+ (UIImage *)microphoneWithColor:(UIColor *)color size:(CGSize)size;
++ (OTRImage *)microphoneWithColor:(UIColor *)color size:(CGSize)size;
 
-+ (UIImage *)imageWithIdentifier:(NSString *)identifier;
++ (OTRImage *)imageWithIdentifier:(NSString *)identifier;
 + (void)removeImageWithIdentifier:(NSString *)identifier;
-+ (void)setImage:(UIImage *)image forIdentifier:(NSString *)identifier;
++ (void)setImage:(OTRImage *)image forIdentifier:(NSString *)identifier;
 
-+ (UIImage *)avatarImageWithUsername:(NSString *)username;
++ (OTRImage *)avatarImageWithUsername:(NSString *)username;
 
 /**
  This creates and caches either the image from the avatarData or the initials image created from dispalyName or username. If a cached image is available then that will be returned.
@@ -58,7 +63,7 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
  @param username Optional the last source for generating an avatar
  @return An UIImage that represents the best possible image
  */
-+ (UIImage *)avatarImageWithUniqueIdentifier:(NSString *)identifier avatarData:(NSData *)data displayName:(NSString *)displayName username:(NSString *)username;
++ (OTRImage *)avatarImageWithUniqueIdentifier:(NSString *)identifier avatarData:(NSData *)data displayName:(NSString *)displayName username:(NSString *)username;
 
 
 @end

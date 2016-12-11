@@ -15,6 +15,7 @@
 @import JSQMessagesViewController;
 @import PureLayout;
 #import "OTRMediaServer.h"
+#import "OTRMediaItem+JSQ.h"
 
 @import AVFoundation;
 

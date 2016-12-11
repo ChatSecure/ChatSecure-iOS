@@ -52,12 +52,12 @@
 #import "OTROutgoingMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
-#import "OTRNotificationController.h"
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
 #import "OTRMessagesViewController.h"
 #import "OTRXMPPTorAccount.h"
 @import OTRAssets;
@@ -143,10 +143,9 @@
      
     [self.window makeKeyAndVisible];
     
-    application.applicationIconBadgeNumber = 0;
+    [OTRGlobalState sharedInstance].activeThreadDelegate = self;
     
-    OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
-    [notificationController start];
+    application.applicationIconBadgeNumber = 0;
     
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
         [PushController registerForPushNotifications];

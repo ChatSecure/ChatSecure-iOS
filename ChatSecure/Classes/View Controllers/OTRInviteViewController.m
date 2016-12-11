@@ -18,6 +18,8 @@
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
+
 
 static CGFloat const kOTRInvitePadding = 10;
 

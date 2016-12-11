@@ -37,6 +37,8 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
+@import ChatSecureCore;
 
 #import "OTRUtilities.h"
 
@@ -141,30 +143,6 @@
         }
     }];
     return indexPath;
-}
-
-+ (BOOL) boolForOTRSettingKey:(NSString*)key
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults boolForKey:key];
-}
-
-+ (double) doubleForOTRSettingKey:(NSString*)key
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults doubleForKey:key];
-}
-
-+ (NSInteger) intForOTRSettingKey:(NSString *)key
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults integerForKey:key];
-}
-
-+ (float) floatForOTRSettingKey:(NSString *)key
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults floatForKey:key];
 }
 
 - (nullable OTRSetting*) settingForOTRSettingKey:(NSString*)key {
