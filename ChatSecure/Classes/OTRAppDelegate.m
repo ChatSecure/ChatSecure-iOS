@@ -178,6 +178,12 @@
 }
 
 - (void) setupCrashReporting {
+    KSCrash *crash = [KSCrash sharedInstance];
+#warning Change this to KSCrashTypeProductionSafe before App Store release!
+#warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
+    crash.handlingCrashTypes = KSCrashTypeAll;
+    crash.deadlockWatchdogInterval = 5;
+    
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
     [installation addConditionalAlertWithTitle:NSLocalizedString(@"Crash Detected", @"")
@@ -185,11 +191,18 @@
                                      yesAnswer:NSLocalizedString(@"Sure!", @"")
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
 
-    installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
+#warning Change this to hockeyLiveIdentifier before App Store release!
+    installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
+    //installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
+    
     [installation install];
     [installation sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error)
     {
-        // Stuff to do when report sending is complete
+        if (error) {
+            NSLog(@"Error sending KSCrashInstallationHockey reports: %@", error);
+        } else {
+            NSLog(@"Sending %d KSCrashInstallationHockey reports.", (int)filteredReports.count);
+        }
     }];
 }
 
