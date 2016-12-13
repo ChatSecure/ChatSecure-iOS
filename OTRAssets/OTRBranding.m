@@ -109,11 +109,12 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 
 
 + (NSDictionary*) defaultPlist {
+    // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];
     NSString *path = [bundle pathForResource:@"Branding" ofType:@"plist"];
-    NSParameterAssert(path != nil);
+    //NSParameterAssert(path != nil);
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
-    NSParameterAssert(plist != nil);
+    //NSParameterAssert(plist != nil);
     return plist;
 }
 
