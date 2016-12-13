@@ -47,6 +47,8 @@
 @import KVOController;
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
+
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import "NSURL+ChatSecure.h"

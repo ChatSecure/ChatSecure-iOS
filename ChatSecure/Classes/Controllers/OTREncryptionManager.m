@@ -29,8 +29,6 @@
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
 @import OTRAssets;
-#import "OTRAppDelegate.h"
-#import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRImageItem.h"
 #import "OTRAudioItem.h"
@@ -615,13 +613,6 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     mediaItem.filename = transfer.fileName;
     mediaItem.isIncoming = YES;
     newMessage.mediaItemUniqueId = mediaItem.uniqueId;
-    
-    
-    //Todo This needs to be moved
-//    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
-//    {
-//        newMessage.read = YES;
-//    }
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:newMessage.buddyUniqueId transaction:transaction];

@@ -38,11 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSIndexPath *)indexPathForSetting:(OTRSetting *)setting;
 
-+ (BOOL) boolForOTRSettingKey:(NSString*)key;
-+ (double) doubleForOTRSettingKey:(NSString*)key;
-+ (NSInteger) intForOTRSettingKey:(NSString *)key;
-+ (float) floatForOTRSettingKey:(NSString *)key;
-
 /** Recalculates current setting list */
 - (void) populateSettings;
 

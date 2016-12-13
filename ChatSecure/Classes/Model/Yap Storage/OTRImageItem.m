@@ -13,7 +13,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
-
+#import "OTRMediaItem+JSQ.h"
 
 @implementation OTRImageItem
 

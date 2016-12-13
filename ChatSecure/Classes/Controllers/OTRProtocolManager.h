@@ -22,7 +22,6 @@
 
 @import Foundation;
 #import "OTREncryptionManager.h"
-#import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 

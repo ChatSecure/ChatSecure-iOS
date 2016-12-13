@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRAccount.h"
 #import "OTRXLFormCreator.h"
 @import XLForm;
 #import "OTRXMPPAccount.h"
@@ -15,6 +16,8 @@
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
+
 #import "OTRLanguageManager.h"
 #import "OTRXMPPTorAccount.h"
 

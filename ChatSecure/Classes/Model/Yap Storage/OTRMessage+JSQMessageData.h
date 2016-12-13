@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRBaseMessage.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 @import JSQMessagesViewController;

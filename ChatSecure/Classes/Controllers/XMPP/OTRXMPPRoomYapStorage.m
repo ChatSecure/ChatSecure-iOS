@@ -9,6 +9,7 @@
 #import "OTRXMPPRoomYapStorage.h"
 #import "OTRDatabaseManager.h"
 #import "OTRAccount.h"
+#import "OTRGlobalState.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import YapDatabase;
 @import XMPPFramework;
@@ -118,7 +119,7 @@
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageDate = [databaseMessage date];
-        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+        NSString *activeThreadYapKey = [[OTRGlobalState sharedInstance].activeThreadDelegate activeThreadYapKey];
         if([activeThreadYapKey isEqualToString:databaseMessage.threadId]) {
             databaseMessage.read = YES;
         } else {

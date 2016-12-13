@@ -16,6 +16,8 @@
 @import MBProgressHUD;
 #import "OTRXLFormCreator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
+@import ChatSecureCore;
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPAccount.h"
 @import OTRAssets;
@@ -248,7 +250,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     if (error.code == OTRXMPPXMLErrorConflict && self.loginAttempts < kOTRMaxLoginAttempts) {
         //Caught the conflict error before there's any alert displayed on the screen
         //Create a new nickname with a random hex value at the end
-        NSString *uniqueString = [[OTRPasswordGenerator randomDataWithLength:2] hexString];
+        NSString *uniqueString = [[OTRPasswordGenerator randomDataWithLength:2] xmpp_hexStringValue];
         XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
         NSString *value = [nicknameRow value];
         NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];

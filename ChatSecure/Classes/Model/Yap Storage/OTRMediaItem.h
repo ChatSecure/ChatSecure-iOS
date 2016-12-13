@@ -6,12 +6,11 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-@import JSQMessagesViewController;
 #import "OTRYapDatabaseObject.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 
-@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
+@interface OTRMediaItem : OTRYapDatabaseObject
 
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;

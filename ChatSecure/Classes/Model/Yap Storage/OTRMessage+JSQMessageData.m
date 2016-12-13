@@ -6,11 +6,14 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
+@import ChatSecureCore.OTROutgoingMessage;
 #import "OTRMessage+JSQMessageData.h"
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMediaItem.h"
+#import "OTRMediaItem+JSQ.h"
+
 @import YapDatabase;
 
 @implementation OTRBaseMessage (JSQMessageData)

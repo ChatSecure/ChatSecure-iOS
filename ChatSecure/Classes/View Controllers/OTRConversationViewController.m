@@ -31,6 +31,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureUIKit/ChatSecureUIKit-Swift.h>
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import "OTRMessagesGroupViewController.h"

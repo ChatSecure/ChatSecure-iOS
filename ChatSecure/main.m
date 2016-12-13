@@ -8,6 +8,7 @@
 
 @import UIKit;
 #import <ChatSecureCore/ChatSecureCore.h>
+#import <ChatSecureUIKit/ChatSecureUIKit.h>
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
