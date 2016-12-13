@@ -182,7 +182,7 @@
 #warning Change this to KSCrashTypeProductionSafe before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
     crash.handlingCrashTypes = KSCrashTypeAll;
-    crash.deadlockWatchdogInterval = 5;
+    crash.deadlockWatchdogInterval = 10;
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];

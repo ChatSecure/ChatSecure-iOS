@@ -170,7 +170,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     func tokensForBuddy(buddyKey: String, createdByThisAccount: Bool) throws -> [TokenContainer] {
         var error:NSError? = nil
         var tokens:[TokenContainer] = []
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
             guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
                 error = NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
                 return
@@ -248,7 +248,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     */
     func numberOfTokensForBuddy(buddyKey: String, createdByThisAccount: Bool) -> Int {
         var count = 0
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
             guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
                 return
             }
