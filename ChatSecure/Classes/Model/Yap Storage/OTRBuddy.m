@@ -260,10 +260,6 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
         }
     }];
 
-    if (finalBuddy) {
-        finalBuddy = [finalBuddy copy];
-    }
-    
     return finalBuddy;
 }
 

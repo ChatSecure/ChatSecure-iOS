@@ -22,6 +22,7 @@
 
 @import UIKit;
 
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const kOTRProtocolLoginSuccess;
 extern NSString *const kOTRProtocolLoginFail;
 extern NSString *const kOTRProtocolLoginFailErrorKey;
@@ -82,3 +83,5 @@ extern NSString *const kOTRErrorDomain;
 
 extern NSUInteger const kOTRMinimumPassphraseLength;
 extern NSUInteger const kOTRMaximumPassphraseLength;
+
+NS_ASSUME_NONNULL_END

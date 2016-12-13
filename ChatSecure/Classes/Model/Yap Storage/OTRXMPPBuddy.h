@@ -13,11 +13,15 @@
 
 @interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
 
+
 /** This is for outgoing subscription requests */
 @property (nonatomic, getter = isPendingApproval) BOOL pendingApproval;
 /** Incoming subscription requests mean this object is a stub/placeholder */
 @property (nonatomic) BOOL hasIncomingSubscriptionRequest;
 
 - (void)setStatus:(OTRThreadStatus)status forResource:(NSString *)resource;
+- (OTRThreadStatus)statusForResource:(NSString*)resource;
+
+
 
 @end

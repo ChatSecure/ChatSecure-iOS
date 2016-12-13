@@ -14,63 +14,77 @@
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "OTRLanguageManager.h"
+#import "OTRXMPPBuddy_Private.h"
 
 @import OTRAssets;
 
 @interface OTRYapDatabaseRosterStorage ()
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) NSString *accountUniqueId;
+@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *databaseConnection;
 
 @end
 
 @implementation OTRYapDatabaseRosterStorage
 
--(id)init
+-(instancetype)init
 {
     if (self = [super init]) {
-        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+        _databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     }
     return self;
 }
 
 #pragma - mark Helper Methods
 
-- (OTRXMPPAccount *)accountForStream:(XMPPStream *)stream
-{
-    __block OTRXMPPAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-    }];
-    return account;
+/** Turns out buddies are created during account creation before the account object is saved to the database. oh brother */
+- (nonnull NSString*)accountUniqueIdForStream:(XMPPStream*)stream {
+    NSParameterAssert(stream.tag);
+    return stream.tag;
 }
 
-- (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
+- (nullable OTRXMPPBuddy *)fetchBuddyWithJID:(XMPPJID *)jid stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
-    }];
+    NSString *accountUniqueId = [self accountUniqueIdForStream:stream];
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:accountUniqueId transaction:transaction];
     return buddy;
 }
 
-- (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
-{
-    if (![self.accountUniqueId length]) {
-        OTRAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-        self.accountUniqueId = account.uniqueId;
-    }
-    __block OTRXMPPBuddy *buddy = nil;
-    
-    buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction] copy];
-    
-    if (!buddy) {
-        buddy = [[OTRXMPPBuddy alloc] init];
-        buddy.username = [jid bare];
-        buddy.accountUniqueId = self.accountUniqueId;
-    }
-    
+/** When created, it is still unsaved and must be manually saved within a yap transaction. */
+- (nullable OTRXMPPBuddy *)createBuddyWithJID:(XMPPJID *)jid stream:(XMPPStream *)stream {
+    NSString *accountUniqueId = [self accountUniqueIdForStream:stream];
+    OTRXMPPBuddy *buddy = [[OTRXMPPBuddy alloc] init];
+    buddy.username = [jid bare];
+    buddy.accountUniqueId = accountUniqueId;
     return buddy;
+}
+
+- (nullable OTRXMPPBuddy*) createBuddyFromRosterItem:(NSXMLElement *)rosterItem stream:(XMPPStream *)stream {
+    NSString *jidStr = [rosterItem attributeStringValueForName:@"jid"];
+    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    return [self createBuddyWithJID:jid stream:stream];
+}
+
+
+/** Compares two buddy objects to see if there are changes worth saving */
+- (BOOL) shouldSaveUpdatedBuddy:(nonnull OTRXMPPBuddy*)buddy oldBuddy:(nullable OTRXMPPBuddy*)oldBuddy {
+    NSParameterAssert(buddy);
+    if (!buddy) { return NO; }
+    if (!oldBuddy) { return YES; }
+    NSAssert(buddy.uniqueId == oldBuddy.uniqueId, @"Comparing two different buddies! Noooooooo.");
+    if (buddy.uniqueId != oldBuddy.uniqueId) {
+        // I guess we should still save if the uniqueId is different
+        return YES;
+    }
+    if (![buddy.displayName isEqualToString:oldBuddy.displayName]) {
+        return YES;
+    }
+    if (buddy.pendingApproval != oldBuddy.pendingApproval) {
+        return YES;
+    }
+    if (![buddy.resourceInfo isEqualToDictionary:oldBuddy.resourceInfo]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
@@ -102,37 +116,46 @@
     return NO;
 }
 
-- (void)updateBuddy:(OTRXMPPBuddy *)buddy withItem:(NSXMLElement *)item
+/** Buddy can be nil, which indicates a new buddy should be saved. */
+- (void)updateBuddy:(nullable OTRXMPPBuddy *)buddy withItem:(nonnull NSXMLElement *)item stream:(XMPPStream*)stream
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        OTRXMPPBuddy *localBuddy = [[OTRXMPPBuddy fetchObjectWithUniqueID:buddy.uniqueId transaction:transaction] copy];
-        if (!localBuddy) {
-            localBuddy = buddy;
+    if (!item) { return; }
+    BOOL newlyCreatedBuddy = NO;
+    if (!buddy) {
+        buddy = [self createBuddyFromRosterItem:item stream:stream];
+        if (!buddy) {
+            return;
         }
-        
-        if (![localBuddy isKindOfClass:[OTRXMPPBuddy class]]) {
-            OTRXMPPBuddy *xmppBuddy = [[OTRXMPPBuddy alloc] init];
-            [xmppBuddy mergeValuesForKeysFromModel:localBuddy];
-            [localBuddy removeWithTransaction:transaction];
-            localBuddy = xmppBuddy;
-        }
-        
-        NSString *name = [item attributeStringValueForName:@"name"];
-        
-        if (name.length) {
-            localBuddy.displayName = name;
-        }
-        
-        if ([self isPendingApprovalElement:item]) {
-            localBuddy.pendingApproval = YES;
-        }
-        else {
-            localBuddy.pendingApproval = NO;
-        }
-        
-        
-        [localBuddy saveWithTransaction:transaction];
+        newlyCreatedBuddy = YES;
+    }
+    // Fixing a potential migration issue from ages past. Maybe can be removed?
+    if (![buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+        OTRXMPPBuddy *xmppBuddy = [[OTRXMPPBuddy alloc] init];
+        [xmppBuddy mergeValuesForKeysFromModel:buddy];
+        buddy = xmppBuddy;
+        newlyCreatedBuddy = YES;
+    }
+    OTRXMPPBuddy *newBuddy = [buddy copy];
+    
+    
+    NSString *name = [item attributeStringValueForName:@"name"];
+    if (name.length) {
+        newBuddy.displayName = name;
+    }
+    if ([self isPendingApprovalElement:item]) {
+        newBuddy.pendingApproval = YES;
+    }
+    else {
+        newBuddy.pendingApproval = NO;
+    }
+    // Save if there were changes, or it's a new buddy
+    BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy] || newlyCreatedBuddy;
+    if (!shouldSave) {
+        return;
+    }
+    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [newBuddy saveWithTransaction:transaction];
     }];
 }
 
@@ -163,73 +186,84 @@
         return;
     }
     
-    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
-    
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
+    }];
     NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if ([subscription isEqualToString:@"remove"])
+    if (buddy && [subscription isEqualToString:@"remove"])
     {
-        if (buddy)
-        {
-            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-            }];
-        }
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        }];
+    } else {
+        [self updateBuddy:buddy withItem:item stream:stream];
     }
-    else if(buddy)
-    {
-        [self updateBuddy:buddy withItem:item];
-    }
-    
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        OTRXMPPBuddy *buddy = [[self buddyWithJID:[presence from] xmppStream:stream transaction:transaction] copy];
-        NSString *resource = [presence from].resource;
-        
-        OTRThreadStatus newStatus = OTRThreadStatusOffline;
-        NSString *newStatusMessage = OFFLINE_STRING;
-        
-        if (buddy && !([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence])) {
-            NSString *defaultMessage = OFFLINE_STRING;
-            switch (presence.intShow)
-            {
-                case 0  :
-                    newStatus = OTRThreadStatusDoNotDisturb;
-                    newStatusMessage = DO_NOT_DISTURB_STRING;
-                    break;
-                case 1  :
-                    newStatus = OTRThreadStatusExtendedAway;
-                    newStatusMessage = EXTENDED_AWAY_STRING;
-                    break;
-                case 2  :
-                    newStatus = OTRThreadStatusAway;
-                    newStatusMessage = AWAY_STRING;
-                    break;
-                case 3  :
-                case 4  :
-                    newStatus =OTRThreadStatusAvailable;
-                    newStatusMessage = AVAILABLE_STRING;
-                    break;
-                default :
-                    break;
-            }
-            
-            if ([[presence status] length]) {
-                buddy.statusMessage = [presence status];
-            }
-            else {
-                buddy.statusMessage = defaultMessage;
-            }
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [self fetchBuddyWithJID:[presence from] stream:stream transaction:transaction];
+    }];
+    BOOL newlyCreatedBuddy = NO;
+    if (!buddy) {
+        buddy = [self createBuddyWithJID:[presence from] stream:stream];
+        if (!buddy) {
+            return;
+        }
+        newlyCreatedBuddy = YES;
+    }
+    OTRXMPPBuddy *newBuddy = [buddy copy];
+    
+    NSString *resource = [presence from].resource;
+    OTRThreadStatus newStatus = OTRThreadStatusOffline;
+    NSString *newStatusMessage = OFFLINE_STRING;
+    if (buddy && !([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence])) {
+        NSString *defaultMessage = OFFLINE_STRING;
+        switch (presence.intShow)
+        {
+            case 0  :
+                newStatus = OTRThreadStatusDoNotDisturb;
+                newStatusMessage = DO_NOT_DISTURB_STRING;
+                break;
+            case 1  :
+                newStatus = OTRThreadStatusExtendedAway;
+                newStatusMessage = EXTENDED_AWAY_STRING;
+                break;
+            case 2  :
+                newStatus = OTRThreadStatusAway;
+                newStatusMessage = AWAY_STRING;
+                break;
+            case 3  :
+            case 4  :
+                newStatus =OTRThreadStatusAvailable;
+                newStatusMessage = AVAILABLE_STRING;
+                break;
+            default :
+                break;
         }
         
-        [buddy setStatus:newStatus forResource:resource];
-        
-        [buddy saveWithTransaction:transaction];
-    }];
+        if ([[presence status] length]) {
+            newBuddy.statusMessage = [presence status];
+        }
+        else {
+            newBuddy.statusMessage = defaultMessage;
+        }
+    }
+    [newBuddy setStatus:newStatus forResource:resource];
     
+    
+    // Save if there were changes, or it's a new buddy
+    BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy] || newlyCreatedBuddy;
+    if (!shouldSave) {
+        return;
+    }
+    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [newBuddy saveWithTransaction:transaction];
+    }];
 }
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
@@ -272,8 +306,8 @@
 - (void)getSubscription:(NSString *__autoreleasing *)subscription ask:(NSString *__autoreleasing *)ask nickname:(NSString *__autoreleasing *)nickname groups:(NSArray *__autoreleasing *)groups forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     //Can't tell if this is ever called so just a stub for now
-    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
-    *nickname = buddy.displayName;
+    //OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
+    //*nickname = buddy.displayName;
 }
 
 @end

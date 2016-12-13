@@ -11,18 +11,20 @@
 
 @class XMPPJID, XMPPStream, XMPPvCardTemp;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPAccount : OTRAccount <OTRvCard>
 
 @property (nonatomic, strong) NSString *domain;
 @property (nonatomic, strong) NSString *resource;
-@property (nonatomic) int port;
+@property (nonatomic) uint16_t port;
 
-@property (nonatomic, strong) NSString *pushPubsubEndpoint;
-@property (nonatomic, strong) NSString *pushPubsubNode;
+@property (nonatomic, strong, nullable) NSString *pushPubsubEndpoint;
+@property (nonatomic, strong, nullable) NSString *pushPubsubNode;
 
-+ (int)defaultPort;
++ (uint16_t)defaultPort;
 + (NSString *)newResource;
 
-+ (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
++ (nullable instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
 
 @end
+NS_ASSUME_NONNULL_END

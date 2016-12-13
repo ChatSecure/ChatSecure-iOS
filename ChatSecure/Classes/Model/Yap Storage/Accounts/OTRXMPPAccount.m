@@ -21,11 +21,11 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 @synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
 @synthesize photoHash = _photoHash;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init]) {
-        self.port = [[self class] defaultPort];
-        self.resource = [[self class] newResource];
+        _port = [[self class] defaultPort];
+        _resource = [[self class] newResource];
         self.autologin = YES;
         self.rememberPassword = YES;
     }
@@ -62,18 +62,20 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return NSStringFromClass([OTRAccount class]);
 }
 
-+ (int)defaultPort
++ (uint16_t)defaultPort
 {
     return OTRDefaultPortNumber;
 }
 
 + (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
-    id xmppAccount = nil;
-    if([stream.tag isKindOfClass:[NSString class]]) {
-        
-        xmppAccount = [self fetchObjectWithUniqueID:stream.tag transaction:transaction];
+    NSParameterAssert(stream);
+    NSParameterAssert(transaction);
+    if (!stream || !transaction) { return nil; }
+    if (![stream.tag isKindOfClass:[NSString class]]) {
+        return nil;
     }
+    OTRXMPPAccount *xmppAccount = [self fetchObjectWithUniqueID:stream.tag transaction:transaction];
     return xmppAccount;
 }
 

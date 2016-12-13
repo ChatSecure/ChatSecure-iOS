@@ -7,14 +7,8 @@
 //
 
 #import "OTRXMPPBuddy.h"
+#import "OTRXMPPBuddy_Private.h"
 @import XMPPFramework;
-
-@interface OTRXMPPBuddy ()
-
-@property (nonatomic, strong) NSDictionary <NSString *,NSNumber *>*resourceInfo;
-
-@end
-
 
 @implementation OTRXMPPBuddy
 @synthesize vCardTemp = _vCardTemp;
@@ -73,6 +67,11 @@
     }
 }
 
+- (OTRThreadStatus)statusForResource:(NSString*)resource {
+    if (!resource) { return OTRThreadStatusOffline; }
+    return [self.resourceInfo objectForKey:resource].integerValue;
+}
+
 - (void)setStatus:(OTRThreadStatus)status
 {
     if (status == OTRThreadStatusOffline) {
@@ -107,7 +106,5 @@
 {
     return [OTRBuddy collection];
 }
-
-
 
 @end
