@@ -40,7 +40,6 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
         }
         if let b = buddy {
-            OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSessionForBuddyKey(b.threadIdentifier(), collection: b.threadCollection())
             self.enterConversationWithThread(b, sender: nil)
         }
     }

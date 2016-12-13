@@ -192,8 +192,8 @@
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
 
 #warning Change this to hockeyLiveIdentifier before App Store release!
-    installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
-    //installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
+    //installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
+    installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     
     [installation install];
     [installation sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error)
