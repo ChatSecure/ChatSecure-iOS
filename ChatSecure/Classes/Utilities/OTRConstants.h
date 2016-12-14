@@ -68,6 +68,9 @@ extern NSString *const kOTRNotificationThreadKey;
 extern NSString *const kOTRNotificationThreadCollection;
 extern NSString *const OTRUserNotificationsChanged;
 
+extern NSString *const OTRUserNotificationsUNTextInputReply;
+
+
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
 extern NSString *const kOTRPushEnabledKey;

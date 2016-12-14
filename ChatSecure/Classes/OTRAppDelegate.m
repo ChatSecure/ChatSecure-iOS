@@ -66,12 +66,13 @@
 #import <KSCrash/KSCrash.h>
 #import <KSCrash/KSCrashInstallationQuincyHockey.h>
 #import <KSCrash/KSCrashInstallation+Alert.h>
+@import UserNotifications;
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
 #endif
 
-@interface OTRAppDelegate ()
+@interface OTRAppDelegate () <UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
@@ -173,6 +174,14 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateDidChange:) name:UIDeviceBatteryStateDidChangeNotification object:nil];
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     [self batteryStateDidChange:nil];
+    
+    // Setup iOS 10+ in-app notifications
+    NSOperatingSystemVersion ios10version = {.majorVersion = 10, .minorVersion = 0, .patchVersion = 0};
+    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:ios10version]) {
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    }
+
+    
     
     return YES;
 }
@@ -475,18 +484,7 @@
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
-    NSDictionary *userInfo = notification.userInfo;
-    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
-    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
     
-    __block id <OTRThreadOwner> thread = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
-    }];
-    
-    if (thread) {
-        [self.splitViewCoordinator enterConversationWithThread:thread sender:notification];
-    }
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -538,6 +536,21 @@
     }
 }
 
+- (void) enterThreadWithUserInfo:(NSDictionary*)userInfo {
+    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
+    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
+    NSParameterAssert(threadKey);
+    NSParameterAssert(threadCollection);
+    if (!threadKey || !threadCollection) { return; }
+    __block id <OTRThreadOwner> thread = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
+    }];
+    if (thread) {
+        [self.splitViewCoordinator enterConversationWithThread:thread sender:self];
+    }
+}
+
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRUserNotificationsChanged object:self userInfo:@{@"settings": notificationSettings}];
@@ -566,6 +579,22 @@
     } else {
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
+}
+
+#pragma mark UNUserNotificationCenterDelegate methods (iOS 10+)
+
+- (void) userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    if ([notification.request.content.threadIdentifier isEqualToString:[self activeThreadYapKey]]) {
+        completionHandler(UNNotificationPresentationOptionNone);
+    } else {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
+    }
+}
+
+- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    [self enterThreadWithUserInfo:userInfo];
+    completionHandler();
 }
 
 #pragma - mark Class Methods

@@ -9,6 +9,7 @@
 import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
+import UserNotifications
 
 @objc public protocol PushControllerProtocol {
     
@@ -494,8 +495,20 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     //MARK: Utility
     
     public static func registerForPushNotifications() {
-        let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Alert, .Sound], categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+        if #available(iOS 10.0, *) {
+            let center = UNUserNotificationCenter.currentNotificationCenter()
+            center.requestAuthorizationWithOptions([.Badge, .Alert, .Sound], completionHandler: { (granted, error) in
+                // TODO: Handle push registration error
+                let app = UIApplication.sharedApplication()
+                NSNotificationCenter.defaultCenter().postNotificationName(OTRUserNotificationsChanged, object: app.delegate, userInfo:nil)
+                if (granted) {
+                    app.registerForRemoteNotifications()
+                }
+            })
+        } else {
+            let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Alert, .Sound], categories: nil)
+            UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+        }
     }
     
     
