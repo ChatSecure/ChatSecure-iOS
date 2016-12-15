@@ -514,6 +514,13 @@
     }];
     [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
         if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
+            NSString *title = nil;
+            if (accounts.count == 1) {
+                title = NSLocalizedString(@"Add", @"String for adding a buddy");
+            } else {
+                title = account.username;
+            }
             UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 OTRBuddy *buddy = [[OTRBuddy alloc] init];
