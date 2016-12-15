@@ -37,35 +37,19 @@
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-@interface OTRProtocolManager () {
-    /** Used for determining correct usage of dispatch_sync */
-    void *IsOnInternalQueueKey;
-}
-@property (nonatomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
-@property (nonatomic, readonly, nonnull) dispatch_queue_t internalQueue;
-
-/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
-- (void) performBlockAsync:(dispatch_block_t)block;
-
-/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
-- (void) performBlock:(dispatch_block_t)block;
+@interface OTRProtocolManager ()
+@property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
+@property (atomic, readwrite) NSUInteger numberOfConnectingProtocols;
+@property (atomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
 @end
 
 @implementation OTRProtocolManager
-@synthesize numberOfConnectingProtocols = _numberOfConnectingProtocols;
-@synthesize numberOfConnectedProtocols = _numberOfConnectedProtocols;
 
 -(instancetype)init
 {
     self = [super init];
     if(self)
     {
-        _internalQueue = dispatch_queue_create("OTRProtocolManager Internal Queue", 0);
-        // For safe usage of dispatch_sync
-        IsOnInternalQueueKey = &IsOnInternalQueueKey;
-        void *nonNullUnusedPointer = (__bridge void *)self;
-        dispatch_queue_set_specific(_internalQueue, IsOnInternalQueueKey, nonNullUnusedPointer, NULL);
-        
         _protocolManagers = [[NSMutableDictionary alloc] init];
         
         _numberOfConnectedProtocols = 0;
@@ -82,69 +66,29 @@
     return self;
 }
 
-- (void) setNumberOfConnectedProtocols:(NSUInteger)numberOfConnectedProtocols {
-    [self performBlockAsync:^{
-        [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-        _numberOfConnectedProtocols = numberOfConnectedProtocols;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-    }];
-}
-
-- (NSUInteger) numberOfConnectedProtocols {
-    __block NSUInteger count = 0;
-    [self performBlock:^{
-        count = _numberOfConnectedProtocols;
-    }];
-    return count;
-}
-
-- (void) setNumberOfConnectingProtocols:(NSUInteger)numberOfConnectingProtocols {
-    [self performBlockAsync:^{
-        [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
-        _numberOfConnectingProtocols = numberOfConnectingProtocols;
-        [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
-    }];
-}
-
-- (NSUInteger) numberOfConnectingProtocols {
-    __block NSUInteger count = 0;
-    [self performBlock:^{
-        count = _numberOfConnectingProtocols;
-    }];
-    return count;
-}
-
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     NSParameterAssert(account);
     if (!account) { return; }
-    [self performBlockAsync:^{
-        id<OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
-        if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
-            [protocol disconnect];
-        }
-        [self.KVOController unobserve:protocol];
-        [self.protocolManagers removeObjectForKey:account.uniqueId];
-    }];
+    id<OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
+        [protocol disconnect];
+    }
+    [self.KVOController unobserve:protocol];
+    [self.protocolManagers removeObjectForKey:account.uniqueId];
 }
 
 - (void)addProtocol:(id<OTRProtocol>)protocol forAccount:(OTRAccount *)account
 {
-    [self performBlockAsync:^{
-        [self.protocolManagers setObject:protocol forKey:account.uniqueId];
-        [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
-    }];
+    [self.protocolManagers setObject:protocol forKey:account.uniqueId];
+    [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
 }
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account
 {
     NSParameterAssert(account.uniqueId);
     if (!account.uniqueId) { return NO; }
-    __block BOOL exists = NO;
-    [self performBlock:^{
-        exists = [self.protocolManagers objectForKey:account.uniqueId] != nil;
-    }];
-    return exists;
+    return [self.protocolManagers objectForKey:account.uniqueId] != nil;
 }
 
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
@@ -152,26 +96,21 @@
     NSParameterAssert(protocol);
     NSParameterAssert(account.uniqueId);
     if (!protocol || !account.uniqueId) { return; }
-    [self performBlockAsync:^{
-        [self addProtocol:protocol forAccount:account];
-    }];
+    [self addProtocol:protocol forAccount:account];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
     NSParameterAssert(account);
     if (!account.uniqueId) { return nil; }
-    __block id <OTRProtocol> protocol = nil;
-    [self performBlock:^{
-        protocol = [self.protocolManagers objectForKey:account.uniqueId];
-        if(!protocol)
-        {
-            protocol = [[[account protocolClass] alloc] initWithAccount:account];
-            if (protocol && account.uniqueId) {
-                [self addProtocol:protocol forAccount:account];
-            }
+    id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    if(!protocol)
+    {
+        protocol = [[[account protocolClass] alloc] initWithAccount:account];
+        if (protocol && account.uniqueId) {
+            [self addProtocol:protocol forAccount:account];
         }
-    }];
+    }
     return protocol;
 }
 
@@ -179,30 +118,28 @@
 {
     NSParameterAssert(account);
     if (!account) { return; }
-    [self performBlockAsync:^{
-        id <OTRProtocol> protocol = [self protocolForAccount:account];
-        if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
-            DDLogError(@"Account already connected %@", account);
-            return;
-        }
-        
-        if([account isKindOfClass:[OTROAuthXMPPAccount class]])
-        {
-            [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
-                if (!error) {
-                    ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
-                    [protocol connectUserInitiated:userInitiated];
-                }
-                else {
-                    DDLogError(@"Error Refreshing Token");
-                }
-            }];
-        }
-        else
-        {
-            [protocol connectUserInitiated:userInitiated];
-        }
-    }];
+    id <OTRProtocol> protocol = [self protocolForAccount:account];
+    if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
+        DDLogError(@"Account already connected %@", account);
+        return;
+    }
+    
+    if([account isKindOfClass:[OTROAuthXMPPAccount class]])
+    {
+        [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
+            if (!error) {
+                ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
+                [protocol connectUserInitiated:userInitiated];
+            }
+            else {
+                DDLogError(@"Error Refreshing Token");
+            }
+        }];
+    }
+    else
+    {
+        [protocol connectUserInitiated:userInitiated];
+    }
 }
 
 - (void)loginAccount:(OTRAccount *)account
@@ -218,10 +155,8 @@
 }
 
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
-    [self performBlockAsync:^{
-        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-            [protocol disconnectSocketOnly:socketOnly];
-        }];
+    [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+        [protocol disconnectSocketOnly:socketOnly];
     }];
 }
 
@@ -270,27 +205,23 @@
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;
 {
-    __block BOOL connected = NO;
-    [self performBlock:^{
-        id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
-        if (protocol) {
-            connected = [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
-        }
-    }];
+    BOOL connected = NO;
+    id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    if (protocol) {
+        connected = [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
+    }
     return connected;
 }
 
 - (void)sendMessage:(OTROutgoingMessage *)message {
-    [self performBlockAsync:^{
-        __block OTRAccount * account = nil;
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
-            account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
-        } completionBlock:^{
-            OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
-            id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
-            [protocol sendMessage:message];
-        }];
+    __block OTRAccount * account = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+        account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+    } completionBlock:^{
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
+        [protocol sendMessage:message];
     }];
 }
 
@@ -305,30 +236,5 @@
     });
     return sharedInstance;
 }
-
-#pragma mark Internal Utilities
-
-/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
-- (void) performBlock:(dispatch_block_t)block {
-    NSParameterAssert(block != nil);
-    if (!block) { return; }
-    if (dispatch_get_specific(IsOnInternalQueueKey)) {
-        block();
-    } else {
-        dispatch_sync(_internalQueue, block);
-    }
-}
-
-/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
-- (void) performBlockAsync:(dispatch_block_t)block {
-    NSParameterAssert(block != nil);
-    if (!block) { return; }
-    if (dispatch_get_specific(IsOnInternalQueueKey)) {
-        block();
-    } else {
-        dispatch_async(_internalQueue, block);
-    }
-}
-
 
 @end
