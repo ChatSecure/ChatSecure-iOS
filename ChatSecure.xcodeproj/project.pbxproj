@@ -187,7 +187,6 @@
 		D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
 		D93DDAE21BA79A2700CD8331 /* OTRColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105ED1A16D1A300C17BAE /* OTRColors.m */; };
 		D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F11A16D1A300C17BAE /* OTRImages.m */; };
-		D93DDAE51BA79A2700CD8331 /* OTRNotificationPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */; };
 		D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */; };
 		D93DDAE81BA79A2800CD8331 /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FB1A16D1A300C17BAE /* OTRUtilities.m */; };
 		D93DDAE91BA79A2800CD8331 /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FD1A16D1A300C17BAE /* OTRXMPPError.m */; };
@@ -326,7 +325,6 @@
 		D93DDB971BA79A9900CD8331 /* OTRColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EC1A16D1A300C17BAE /* OTRColors.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F01A16D1A300C17BAE /* OTRImages.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB9A1BA79A9C00CD8331 /* OTRLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F21A16D1A300C17BAE /* OTRLog.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB9B1BA79A9D00CD8331 /* OTRNotificationPermissions.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F31A16D1A300C17BAE /* OTRNotificationPermissions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB9E1BA79AA000CD8331 /* OTRUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FA1A16D1A300C17BAE /* OTRUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FC1A16D1A300C17BAE /* OTRXMPPError.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -644,8 +642,6 @@
 		633105F01A16D1A300C17BAE /* OTRImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRImages.h; sourceTree = "<group>"; };
 		633105F11A16D1A300C17BAE /* OTRImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRImages.m; sourceTree = "<group>"; };
 		633105F21A16D1A300C17BAE /* OTRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLog.h; sourceTree = "<group>"; };
-		633105F31A16D1A300C17BAE /* OTRNotificationPermissions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationPermissions.h; sourceTree = "<group>"; };
-		633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationPermissions.m; sourceTree = "<group>"; };
 		633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPasswordGenerator.h; sourceTree = "<group>"; };
 		633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPasswordGenerator.m; sourceTree = "<group>"; };
 		633105F81A16D1A300C17BAE /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
@@ -1278,8 +1274,6 @@
 				633105F01A16D1A300C17BAE /* OTRImages.h */,
 				633105F11A16D1A300C17BAE /* OTRImages.m */,
 				633105F21A16D1A300C17BAE /* OTRLog.h */,
-				633105F31A16D1A300C17BAE /* OTRNotificationPermissions.h */,
-				633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */,
 				633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */,
 				633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */,
 				633105EE1A16D1A300C17BAE /* OTRConstants.h */,
@@ -1772,7 +1766,6 @@
 				D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */,
 				D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */,
 				632AA72A1D480BFF00F65733 /* OTRSignalSenderKey.h in Headers */,
-				D93DDB9B1BA79A9D00CD8331 /* OTRNotificationPermissions.h in Headers */,
 				D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */,
 				D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */,
 				632AA73A1D482A1A00F65733 /* OTRSignalSession.h in Headers */,
@@ -2480,7 +2473,6 @@
 				D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */,
 				D93DDAE21BA79A2700CD8331 /* OTRColors.m in Sources */,
 				D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */,
-				D93DDAE51BA79A2700CD8331 /* OTRNotificationPermissions.m in Sources */,
 				D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */,
 				637ABBCA1DD5312200B18DD2 /* OTROutgoingMessage.m in Sources */,
 				63D65D2E1DD68A8D00D9E52E /* OTRMessage.m in Sources */,

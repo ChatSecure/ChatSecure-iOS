@@ -29,7 +29,7 @@ public class EnablePushViewController: UIViewController {
     
     override public func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        if userLaunchedToSettings && OTRNotificationPermissions.canSendNotifications() {
+        if userLaunchedToSettings && PushController.canReceivePushNotifications() {
             PushController.setPushPreference(.Enabled)
             showNextScreen()
         }
@@ -66,7 +66,7 @@ public class EnablePushViewController: UIViewController {
     }
     
     func didRegisterUserNotificationSettings(notification: NSNotification) {
-        if OTRNotificationPermissions.canSendNotifications() {
+        if PushController.canReceivePushNotifications() {
             PushController.setPushPreference(.Enabled)
             showNextScreen()
         } else {

@@ -13,7 +13,6 @@
 #import "OTRComposeViewController.h"
 
 #import "OTRConversationCell.h"
-#import "OTRNotificationPermissions.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
 #import "OTRXMPPBuddy.h"
