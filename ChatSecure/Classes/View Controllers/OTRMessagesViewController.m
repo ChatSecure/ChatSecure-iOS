@@ -305,6 +305,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
+        self.inputToolbar.contentView.textView.text = nil;
+        [self receivedTextViewChanged:self.inputToolbar.contentView.textView];
     }
     
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
@@ -820,21 +822,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 //* Takes the current value out of the thread object and sets it to the text view and nils out result*/
 - (void)moveLastComposingTextForThreadKey:(NSString *)key colleciton:(NSString *)collection toTextView:(UITextView *)textView {
-    
     if (![key length] || ![collection length] || !textView) {
         return;
     }
-    
-    __block NSString *text = nil;
-    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
-        text = [thread currentMessageText];
-        [thread setCurrentMessageText:nil];
-        [transaction setObject:thread forKey:key inCollection:collection];
-    } completionQueue:dispatch_get_main_queue() completionBlock:^{
-        textView.text = text;
-        [self receivedTextViewChanged:textView];
+    __block id <OTRThreadOwner> thread = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [[transaction objectForKey:key inCollection:collection] copy];
     }];
+    // Don't remove text you're already composing
+    NSString *oldThreadText = [thread currentMessageText];
+    if (!textView.text.length && oldThreadText.length) {
+        textView.text = oldThreadText;
+        [self receivedTextViewChanged:textView];
+    }
+    if (oldThreadText.length) {
+        [thread setCurrentMessageText:nil];
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction setObject:thread forKey:key inCollection:collection];
+        }];
+    }
 }
 
 - (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
