@@ -521,7 +521,7 @@
             } else {
                 title = account.username;
             }
-            UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 OTRBuddy *buddy = [[OTRBuddy alloc] init];
                 buddy.username = jidString;
