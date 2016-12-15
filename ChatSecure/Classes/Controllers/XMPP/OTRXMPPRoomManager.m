@@ -12,6 +12,7 @@
 #import "OTRXMPPRoomYapStorage.h"
 #import "OTRBuddy.h"
 @import YapDatabase;
+#import "OTRLog.h"
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 
@@ -268,6 +269,62 @@
 
 - (void)xmppMUC:(XMPPMUC *)sender roomJID:(XMPPJID *)roomJID didReceiveInvitation:(XMPPMessage *)message
 {
+    // We must check if we trust the person who invited us
+    // because some servers will send you invites from anyone
+    // We should probably move some of this code upstream into XMPPFramework
+    
+    // Since XMPP is super great, there are (at least) two ways to receive a room invite.
+
+    // Examples from XEP-0045:
+    // Example 124. Room Sends Invitation to New Member:
+    //
+    // <message from='darkcave@chat.shakespeare.lit' to='hecate@shakespeare.lit'>
+    //   <x xmlns='http://jabber.org/protocol/muc#user'>
+    //     <invite from='bard@shakespeare.lit'/>
+    //     <password>cauldronburn</password>
+    //   </x>
+    // </message>
+    //
+    
+    // Examples from XEP-0249:
+    //
+    //
+    // Example 1. A direct invitation
+    //
+    // <message from='crone1@shakespeare.lit/desktop' to='hecate@shakespeare.lit'>
+    //   <x xmlns='jabber:x:conference'
+    //      jid='darkcave@macbeth.shakespeare.lit'
+    //      password='cauldronburn'
+    //      reason='Hey Hecate, this is the place for all good witches!'/>
+    // </message>
+    
+    XMPPJID *fromJID = nil;
+    
+    NSXMLElement * roomInvite = [message elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+    NSXMLElement * directInvite = [message elementForName:@"x" xmlns:@"jabber:x:conference"];
+    if (roomInvite) {
+        // XEP-0045
+        NSXMLElement * invite  = [roomInvite elementForName:@"invite"];
+        fromJID = [XMPPJID jidWithString:[invite attributeStringValueForName:@"from"]];
+    } else if (directInvite) {
+        // XEP-0249
+        fromJID = [message from];
+    }
+    if (!fromJID) {
+        DDLogWarn(@"Could not parse fromJID from room invite: %@", message);
+        return;
+    }
+    __block OTRXMPPBuddy *buddy = nil;
+    NSString *fromJidString = [fromJID bare];
+    NSString *accountUniqueId = self.xmppStream.tag;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:fromJidString withAccountUniqueId:accountUniqueId transaction:transaction];
+    }];
+    // We were invited by someone not on our roster. Shady business!
+    if (!buddy) {
+        DDLogWarn(@"Received room invitation from someone not on our roster! %@ %@", fromJID, message);
+        return;
+    }
     [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare subject:nil];
 }
 
