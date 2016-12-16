@@ -10,6 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRAccount.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRLog.h"
 @import YapDatabase;
 @import XMPPFramework;
 
@@ -102,6 +103,14 @@
             
             return;
         }
+        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        if (databaseRoom.joined &&
+            ([message elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
+            [message elementForName:@"x" xmlns:@"jabber:x:conference"])) {
+                DDLogWarn(@"Received invitation to current room: %@", message);
+                return;
+        }
+        
         databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.xmppId = [message elementID];
         databaseMessage.messageText = [message body];
@@ -110,7 +119,6 @@
             databaseMessage.messageDate = [NSDate date];
         }
         databaseMessage.senderJID = [fromJID full];
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
@@ -127,11 +135,11 @@
         
         [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];
+    } completionBlock:^{
+        if(databaseMessage) {
+            [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+        }
     }];
-    
-    if(databaseMessage) {
-        [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
-    }
 }
 
 - (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey
