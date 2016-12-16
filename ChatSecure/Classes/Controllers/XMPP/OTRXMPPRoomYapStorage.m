@@ -106,7 +106,7 @@
         databaseMessage.xmppId = [message elementID];
         databaseMessage.messageText = [message body];
         databaseMessage.messageDate = [message delayedDeliveryDate];
-        if (!databaseMessage.date) {
+        if (!databaseMessage.messageDate) {
             databaseMessage.messageDate = [NSDate date];
         }
         databaseMessage.senderJID = [fromJID full];
@@ -180,13 +180,16 @@
         
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
-            occupant.available = NO;
+            occupant.available = NO; 
         } else {
             occupant.available = YES;
         }
         
         if (buddyJID) {
             occupant.realJID = buddyJID.bare;
+        } else {
+            // Not really sure what's going on here
+            occupant.realJID = [presenceJID resource];
         }
         
         occupant.roomName = [presenceJID resource];

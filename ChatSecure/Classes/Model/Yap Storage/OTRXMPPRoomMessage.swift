@@ -128,7 +128,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
     public func date() -> NSDate {
         guard let date = self.messageDate else {
-            return NSDate()
+            return NSDate.distantPast()
         }
         return date
     }
@@ -138,9 +138,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func messageHash() -> UInt {
-        
-        //TODO this is not correct but UInt(self.hash) does not working
-        return UInt(self.date().timeIntervalSince1970)
+        return UInt(bitPattern: self.uniqueId.hash)
     }
     
     public func text() -> String? {

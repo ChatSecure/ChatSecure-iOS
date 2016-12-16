@@ -74,6 +74,12 @@
         return;
     }
     
+    //0. Clear out message text immediately
+    //   This is to prevent the scenario where multiple messages get sent because the message text isn't cleared out
+    //   due to aggregated touch events during UI pauses.
+    //   A side effect is that sent messages may not appear in the UI immediately
+    [self finishSendingMessage];
+    
     __weak __typeof__(self) weakSelf = self;
     [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
