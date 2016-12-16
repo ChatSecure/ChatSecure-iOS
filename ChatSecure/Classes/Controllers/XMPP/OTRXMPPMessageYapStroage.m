@@ -77,8 +77,15 @@
 
 - (void)handleMessage:(XMPPMessage *)xmppMessage stream:(XMPPStream *)stream incoming:(BOOL)incoming;
 {
+    // We don't handle incoming group chat messages here
+    // Check out OTRXMPPRoomYapStorage instead
+    if ([[xmppMessage type] isEqualToString:@"groupchat"] ||
+        [xmppMessage elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
+        [xmppMessage elementForName:@"x" xmlns:@"jabber:x:conference"]) {
+        return;
+    }
+    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
         if ([stream.tag isKindOfClass:[NSString class]]) {
             NSString *username = [[xmppMessage from] bare];
             
