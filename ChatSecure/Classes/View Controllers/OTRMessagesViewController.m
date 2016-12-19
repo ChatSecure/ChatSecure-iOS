@@ -630,6 +630,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (!account || !buddy) {
         return;
     }
+    
+    // Hack to manually re-fetch OMEMO devicelist because PEP sucks
+    // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
+    id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    if ([manager isKindOfClass:[OTRXMPPManager class]]) {
+        XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
+        OTRXMPPManager *xmpp = manager;
+        [xmpp.omemoSignalCoordinator.omemoModule fetchDeviceIdsForJID:jid elementId:nil];
+    }
+    
     XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readWriteDatabaseConnection];
 
     UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:self.readWriteDatabaseConnection form:form];
