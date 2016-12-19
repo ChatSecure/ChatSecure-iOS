@@ -68,6 +68,7 @@
 #import <KSCrash/KSCrashInstallation+Alert.h>
 @import UserNotifications;
 
+//#define CHATSECURE_DEMO 1
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
 #endif

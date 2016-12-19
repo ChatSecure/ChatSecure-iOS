@@ -13,6 +13,7 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRXMPPAccount.h"
+#import "OTROMEMODevice.h"
 @import OTRAssets;
 
 @implementation OTRChatDemo
@@ -49,7 +50,10 @@
                 buddy.displayName = name;
                 buddy.username = name;
                 buddy.accountUniqueId  = account.uniqueId;
-                
+                buddy.status = OTRThreadStatusAvailable;
+                buddy.preferredSecurity = OTRSessionSecurityOMEMO;
+                OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedTofu parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:[NSData data] lastSeenDate:[NSDate date]];
+                [device saveWithTransaction:transaction];
             }
             
             buddy.status = (NSInteger)OTRThreadStatusAvailable+idx;
@@ -66,11 +70,13 @@
                     ((OTRIncomingMessage *)message).read = YES;
                 }
                 else {
-                    message = [[OTROutgoingMessage alloc] init];
-                    ((OTROutgoingMessage *)message).delivered = YES;
+                    OTROutgoingMessage *outgoingMessage = [[OTROutgoingMessage alloc] init];
+                    outgoingMessage.delivered = YES;
+                    outgoingMessage.dateSent = [NSDate date];
+                    message = outgoingMessage;
                 }
                 
-                message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:[NSData new]];
+                message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOMEMODevice:@"" collection:@""];
                 
                 message.text = text;
                 message.buddyUniqueId = buddy.uniqueId;
