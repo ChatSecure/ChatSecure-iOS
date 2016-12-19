@@ -333,12 +333,6 @@ public class UserProfileViewController: XLFormViewController {
                 let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
                 row.value = device.copy()
                 
-                // Removed devices cannot be re-trusted but are stored
-                // for historical purposes
-                if device.trustLevel == .Removed {
-                    row.disabled = true
-                }
-                
                 // Don't allow editing of your own device
                 if device.uniqueId == thisDevice.uniqueId {
                     row.disabled = true

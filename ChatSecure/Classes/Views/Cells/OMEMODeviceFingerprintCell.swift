@@ -102,6 +102,8 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
             trustLevelLabel.text = "TOFU"
         } else if (device.trustLevel == .TrustedUser) {
             trustLevelLabel.text = NSLocalizedString("Verified", comment: "")
+        } else if (device.trustLevel == .Removed) {
+            trustLevelLabel.text = NSLocalizedString("Removed By Server", comment: "")
         } else {
             trustLevelLabel.text = NSLocalizedString("Untrusted", comment: "")
         }

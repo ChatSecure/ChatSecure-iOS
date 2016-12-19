@@ -111,7 +111,6 @@ public class OTROMEMOStorageManager {
             let devicesToAdd:Set<NSNumber> = newDeviceSet.subtract(previouslyStoredDevicesIdSet)
             
             // Instead of fulling removing devices, mark them as removed for historical purposes
-            // TODO - add way to let user remove devices manually
             devicesToRemove.forEach({ (deviceId) in
                 let deviceKey = OTROMEMODevice.yapKeyWithDeviceId(deviceId, parentKey: parentYapKey, parentCollection: parentYapCollection)
                 guard var device = transaction.objectForKey(deviceKey, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice else {
