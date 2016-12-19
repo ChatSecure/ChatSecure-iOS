@@ -46,7 +46,16 @@
     if (self.isIncoming) {
         view.backgroundColor = [UIColor jsq_messageBubbleLightGrayColor];
         audioControls.timeLabel.textColor = [UIColor blackColor];
-        audioControls.playPuaseProgressView.color = [UIColor blackColor];
+        
+        
+        if (self.transferProgress < 1) {
+            audioControls.playPuaseProgressView.userInteractionEnabled = NO;
+            audioControls.playPuaseProgressView.color = [UIColor darkGrayColor];
+        } else {
+            audioControls.playPuaseProgressView.userInteractionEnabled = YES;
+            audioControls.playPuaseProgressView.color = [UIColor blackColor];
+        }
+        
         
     }
     else {

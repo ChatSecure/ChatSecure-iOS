@@ -1244,6 +1244,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
     audioItem.isIncoming = [message messageIncoming];
+    audioItem.transferProgress = 1;
     audioItem.filename = [[url absoluteString] lastPathComponent];
     
     AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
@@ -1561,8 +1562,12 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if ([message isMediaMessage]) {
         __block OTRMediaItem *item = nil;
         [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-             item = [OTRImageItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
+             item = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
         } completionBlock:^{
+            if (item.transferProgress != 1) {
+                return;
+            }
+            
             if ([item isKindOfClass:[OTRImageItem class]]) {
                 [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
             }
