@@ -129,6 +129,11 @@ extension OTRAccountSignalEncryptionManager {
         let address = SignalAddress(name: username.lowercaseString, deviceId: deviceId)
         return self.storage.sessionRecordExistsForAddress(address)
     }
+    
+    public func removeSessionRecordForUsername(username:String, deviceId:Int32) -> Bool {
+        let address = SignalAddress(name: username.lowercaseString, deviceId: deviceId)
+        return self.storage.deleteSessionRecordForAddress(address)
+    }
 }
 
 extension OTRAccountSignalEncryptionManager: OTRSignalStorageManagerDelegate {

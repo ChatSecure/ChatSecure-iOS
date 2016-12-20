@@ -110,8 +110,9 @@ import YapDatabase
             let group = dispatch_group_create()
             //For each device Check if we have a session. If not then we need to fetch it from their XMPP server.
             for device in devs where device.deviceId.unsignedIntValue != self?.signalEncryptionManager.registrationId {
-                if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.intValue) {
+                if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.intValue) || device.publicIdentityKeyData == nil {
                     //No session for this buddy and device combo. We need to fetch the bundle.
+                    //No public idenitty key data. We don't have enough information (for the user and UI) to encrypt this message.
                     
                     let elementId = NSUUID().UUIDString
                     
@@ -291,20 +292,48 @@ import YapDatabase
                 completion(false)
                 return
             }
-            
-            var removeRemoteDevice = [OTROMEMODevice]()
+            //Array with tuple of username and the device
+            //Needed to avoid nesting yap transactions
+            var usernameDeviceArray = [(String,OTROMEMODevice)]()
             self?.databaseConnection.readWriteWithBlock({ (transaction) in
                 devices.forEach({ (device) in
-                    if (device.parentKey == accountKey && device.parentCollection == OTRAccount.collection()) {
-                        removeRemoteDevice.append(device)
+                    
+                    // Get the username if buddy or account. Could possibly be extracted into a extension or protocol
+                    let extractUsername:(AnyObject?) -> String? = { object in
+                        switch object {
+                        case let buddy as OTRBuddy:
+                            return buddy.username
+                        case let account as OTRAccount:
+                            return account.username
+                        default: return nil
+                        }
+                    }
+                    
+                    //Need the parent object to get the username
+                    let buddyOrAccount = transaction.objectForKey(device.parentKey, inCollection: device.parentCollection)
+                    
+                    
+                    if let username = extractUsername(buddyOrAccount) {
+                        usernameDeviceArray.append((username,device))
                     }
                     device.removeWithTransaction(transaction)
                 })
             })
             
-            if( removeRemoteDevice.count > 0 ) {
+            //For each username device pair remove the underlying signal session
+            usernameDeviceArray.forEach({ (username,device) in
+                self?.signalEncryptionManager.removeSessionRecordForUsername(username, deviceId: device.deviceId.intValue)
+            })
+            
+            
+            let remoteDevicesToRemove = devices.filter({ (device) -> Bool in
+                // Can only remove devices that belong to this account from the remote server.
+                return device.parentKey == accountKey && device.parentCollection == OTRAccount.collection()
+            })
+            
+            if( remoteDevicesToRemove.count > 0 ) {
                 let elementId = NSUUID().UUIDString
-                let deviceIds = removeRemoteDevice.map({ (device) -> NSNumber in
+                let deviceIds = remoteDevicesToRemove.map({ (device) -> NSNumber in
                     return device.deviceId
                 })
                 self?.outstandingXMPPStanzaResponseBlocks[elementId] = { success in
