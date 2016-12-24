@@ -86,7 +86,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     }
     
     func saveThisAccount(account: Account) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             transaction.setObject(account, forKey:PushYapKeys.thisAccountKey.rawValue, inCollection:Account.yapCollection())
         }
     }
@@ -95,7 +95,7 @@ class PushStorage: NSObject, PushStorageProtocol {
         let deviceContainer = DeviceContainer()
         deviceContainer.pushDevice = device
         deviceContainer.pushAccountKey = PushYapKeys.thisAccountKey.rawValue
-        self.databaseConnection.readWriteWithBlock({ (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock({ (transaction) -> Void in
             transaction.setObject(deviceContainer, forKey:PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection())
         })
     }
@@ -124,33 +124,33 @@ class PushStorage: NSObject, PushStorageProtocol {
     }
     
     func removeUnusedToken(token: TokenContainer) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             transaction.removeObjectForKey(token.uniqueId, inCollection: PushYapCollections.unusedTokenCollection.rawValue)
         }
     }
     
     func removeToken(token: TokenContainer) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             token.removeWithTransaction(transaction)
         }
     }
     
     func associateBuddy(tokenContainer: TokenContainer, buddyKey: String) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             tokenContainer.buddyKey = buddyKey
             tokenContainer.saveWithTransaction(transaction)
         }
     }
     
     func saveUnusedToken(tokenContainer: TokenContainer) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             tokenContainer.accountKey = PushYapKeys.thisAccountKey.rawValue
             transaction.setObject(tokenContainer, forKey:tokenContainer.uniqueId, inCollection:PushYapCollections.unusedTokenCollection.rawValue)
         }
     }
     
     func saveUsedToken(tokenContainer: TokenContainer) {
-        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             tokenContainer.saveWithTransaction(transaction)
         }
     }
@@ -206,7 +206,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     func removeAllOurExpiredUnusedTokens(timeBuffer: NSTimeInterval, completion: ((count: Int) -> Void)?) {
         var count:Int = 0
-        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock({ (transaction) in
             let collection = PushYapCollections.unusedTokenCollection.rawValue
             var removeKeyArray:[String] = []
             transaction.enumerateKeysAndObjectsInCollection(collection, usingBlock: { (key, object, stop) in
