@@ -62,47 +62,49 @@ PODS:
   - KissXML (5.1.2):
     - KissXML/Core (= 5.1.2)
   - KissXML/Core (5.1.2)
-  - KSCrash (1.11.2):
-    - KSCrash/Installations (= 1.11.2)
-  - KSCrash/Installations (1.11.2):
+  - KSCrash (1.13.1):
+    - KSCrash/Installations (= 1.13.1)
+  - KSCrash/Installations (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.11.2)
-  - KSCrash/Reporting (1.11.2):
+  - KSCrash/Recording (1.13.1):
+    - KSCrash/Recording/Tools (= 1.13.1)
+  - KSCrash/Recording/Tools (1.13.1)
+  - KSCrash/Reporting (1.13.1):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.11.2)
-    - KSCrash/Reporting/MessageUI (= 1.11.2)
-    - KSCrash/Reporting/Sinks (= 1.11.2)
-    - KSCrash/Reporting/Tools (= 1.11.2)
-  - KSCrash/Reporting/Filters (1.11.2):
+    - KSCrash/Reporting/Filters (= 1.13.1)
+    - KSCrash/Reporting/MessageUI (= 1.13.1)
+    - KSCrash/Reporting/Sinks (= 1.13.1)
+    - KSCrash/Reporting/Tools (= 1.13.1)
+  - KSCrash/Reporting/Filters (1.13.1):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.11.2)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.11.2)
-    - KSCrash/Reporting/Filters/Base (= 1.11.2)
-    - KSCrash/Reporting/Filters/Basic (= 1.11.2)
-    - KSCrash/Reporting/Filters/GZip (= 1.11.2)
-    - KSCrash/Reporting/Filters/JSON (= 1.11.2)
-    - KSCrash/Reporting/Filters/Sets (= 1.11.2)
-    - KSCrash/Reporting/Filters/Stringify (= 1.11.2)
-    - KSCrash/Reporting/Filters/Tools (= 1.11.2)
-  - KSCrash/Reporting/Filters/Alert (1.11.2):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.11.2):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.11.2):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.11.2):
+    - KSCrash/Reporting/Filters/Alert (= 1.13.1)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.13.1)
+    - KSCrash/Reporting/Filters/Base (= 1.13.1)
+    - KSCrash/Reporting/Filters/Basic (= 1.13.1)
+    - KSCrash/Reporting/Filters/GZip (= 1.13.1)
+    - KSCrash/Reporting/Filters/JSON (= 1.13.1)
+    - KSCrash/Reporting/Filters/Sets (= 1.13.1)
+    - KSCrash/Reporting/Filters/Stringify (= 1.13.1)
+    - KSCrash/Reporting/Filters/Tools (= 1.13.1)
+  - KSCrash/Reporting/Filters/Alert (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.11.2):
+  - KSCrash/Reporting/Filters/AppleFmt (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.11.2):
+  - KSCrash/Reporting/Filters/Base (1.13.1):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.11.2):
+  - KSCrash/Reporting/Filters/GZip (1.13.1):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/JSON (1.13.1):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -110,18 +112,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.11.2):
+  - KSCrash/Reporting/Filters/Stringify (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.11.2):
+  - KSCrash/Reporting/Filters/Tools (1.13.1):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.11.2):
+  - KSCrash/Reporting/MessageUI (1.13.1):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.11.2):
+  - KSCrash/Reporting/Sinks (1.13.1):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.11.2):
+  - KSCrash/Reporting/Tools (1.13.1):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libsqlfs/common (1.3.2)
@@ -408,7 +410,7 @@ DEPENDENCIES:
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`, branch `7.2.0-send_button`)
   - JTSImageViewController (~> 1.4)
   - JVFloatLabeledTextField (~> 1.0)
-  - KSCrash (~> 1.11.2)
+  - KSCrash (~> 1.13.1)
   - KVOController (~> 1.0)
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
   - Mantle (~> 2.0)
@@ -493,7 +495,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
-  KSCrash: 8acc46aca72b2772d5d1e3cba1da9173db4d705e
+  KSCrash: 86ffc5b51fc7f584557300141f21fc15de9ad9dd
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
@@ -521,6 +523,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: a5b4f3d64833e1519c956aac0dcac4ec3a8c9282
+PODFILE CHECKSUM: 19e171498b7fad1b563d70d840923ca9bfe0b1e8
 
 COCOAPODS: 1.2.0.beta.1
