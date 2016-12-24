@@ -23,7 +23,7 @@
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)connection
 {
     if (self = [self init]) {
-        self.databaseConnection = connection;
+        _databaseConnection = connection;
     }
     return self;
 }
@@ -195,31 +195,30 @@
         username = [[forwardedMessage to] bare];
     }
     
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         
         OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyForUsername:username accountName:stream.tag transaction:transaction];
         
-        if (buddy) {
-            if (![self duplicateMessage:forwardedMessage buddyUniqueId:buddy.uniqueId transaction:transaction]) {
+        if (!buddy) {
+            return;
+        }
+        if (![self duplicateMessage:forwardedMessage buddyUniqueId:buddy.uniqueId transaction:transaction]) {
+            if (incoming) {
+                [self handleChatState:forwardedMessage username:username stream:stream transaction:transaction];
+                [self handleDeliverResponse:forwardedMessage transaction:transaction];
+            }
+            
+            if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                 if (incoming) {
-                    [self handleChatState:forwardedMessage username:username stream:stream transaction:transaction];
-                    [self handleDeliverResponse:forwardedMessage transaction:transaction];
-                }
-                
-                
-                
-                if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
-                    if (incoming) {
-                        OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
-                        if([activeThreadYapKey isEqualToString:message.threadId]) {
-                            message.read = YES;
-                        }
-                        [message saveWithTransaction:transaction];
-                    } else {
-                        OTROutgoingMessage *message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                        [message saveWithTransaction:transaction];
+                    OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+                    NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+                    if([activeThreadYapKey isEqualToString:message.threadId]) {
+                        message.read = YES;
                     }
+                    [message saveWithTransaction:transaction];
+                } else {
+                    OTROutgoingMessage *message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+                    [message saveWithTransaction:transaction];
                 }
             }
         }

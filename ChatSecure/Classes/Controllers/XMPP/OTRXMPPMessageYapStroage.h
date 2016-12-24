@@ -10,10 +10,13 @@
 @import YapDatabase;
 @class XMPPMessage;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPMessageYapStroage : XMPPModule
 
-@property (nonatomic, strong, nonnull) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 
-- (_Nullable instancetype)initWithDatabaseConnection:(YapDatabaseConnection * _Nonnull )connection;
+/** This connection is only used for readWrites */
+- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
 
 @end
+NS_ASSUME_NONNULL_END

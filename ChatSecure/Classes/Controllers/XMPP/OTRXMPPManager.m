@@ -223,7 +223,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.messageCarbons activate:self.xmppStream];
     
     // Message storage
-    _messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
+    _messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
     [self.messageStorage activate:self.xmppStream];
     
     //Stream Management

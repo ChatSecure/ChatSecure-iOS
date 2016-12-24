@@ -154,7 +154,7 @@
         return;
     }
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newBuddy saveWithTransaction:transaction];
     }];
 }
@@ -193,7 +193,7 @@
     NSString *subscription = [item attributeStringValueForName:@"subscription"];
     if (buddy && [subscription isEqualToString:@"remove"])
     {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }];
     } else {
@@ -261,7 +261,7 @@
         return;
     }
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newBuddy saveWithTransaction:transaction];
     }];
 }

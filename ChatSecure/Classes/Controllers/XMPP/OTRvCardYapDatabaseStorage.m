@@ -86,7 +86,7 @@
  **/
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         id<OTRvCard> vCard = nil;
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
             vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
@@ -138,7 +138,7 @@
  **/
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         id<OTRvCard> vCard = nil;
         if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
             vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
@@ -177,24 +177,30 @@
     }
     
     __block BOOL result = NO;
+    __block NSObject<OTRvCard> *vCard = nil;
     
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        id<OTRvCard> vCard = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
-            vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
+            vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         } else {
-            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
+            vCard = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
         }
         
         if (vCard.waitingForvCardTempFetch) {
             result = NO;
         } else if ([vCard.lastUpdatedvCardTemp timeIntervalSinceNow] <= -24*60*60 ||
                    !vCard.vCardTemp) {
+            vCard = [vCard copy];
             vCard.waitingForvCardTempFetch = YES;
-            [vCard saveWithTransaction:transaction];
             result = YES;
         }
     }];
+    
+    if (result) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [vCard saveWithTransaction:transaction];
+        }];
+    }
     
     return result;
 }

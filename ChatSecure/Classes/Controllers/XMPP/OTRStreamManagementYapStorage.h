@@ -11,10 +11,12 @@
 
 @class YapDatabaseConnection;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRStreamManagementYapStorage : NSObject <XMPPStreamManagementStorage>
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@
 
 @interface OTRStreamManagementYapStorage ()
 
-@property (nonatomic) dispatch_queue_t parentQueue;
+@property (nonatomic, readonly) dispatch_queue_t parentQueue;
 
 @end
 
@@ -22,7 +22,7 @@
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection
 {
     if (self = [super init]) {
-        self.databaseConnection = databaseConnection;
+        _databaseConnection = databaseConnection;
     }
     return self;
 }
@@ -61,7 +61,7 @@
  **/
 - (BOOL)configureWithParent:(XMPPStreamManagement *)parent queue:(dispatch_queue_t)queue
 {
-    self.parentQueue = queue;
+    _parentQueue = queue;
     return YES;
 }
 
@@ -72,6 +72,8 @@
     
     if (!storageObject) {
         storageObject = [[OTRStreamManagementStorageObject alloc] initWithUniqueId:accountUniqueId];
+    } else {
+        storageObject = [storageObject copy];
     }
     
     return storageObject;
