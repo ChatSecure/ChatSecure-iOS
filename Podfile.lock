@@ -482,7 +482,7 @@ SPEC CHECKSUMS:
   ChatSecure-Push-iOS: fe8577fd81ff76b1f303dcd51a350fb0c964a6d0
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  CPAProxy: 6389b3ba04b37a9055adc07daba573f144a3607f
+  CPAProxy: 3a23720ca12c0725353a6cd45673fae2b460a98a
   FormatterKit: 11ad17b983200629246a5a466f6f1bfa2df823cb
   GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
