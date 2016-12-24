@@ -189,9 +189,9 @@
 
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
-#warning Change this to KSCrashMonitorTypeProductionSafe before App Store release!
+#warning Change this to KSCrashTypeProductionSafe before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
-    crash.monitoring = KSCrashMonitorTypeAll;
+    crash.handlingCrashTypes = KSCrashTypeAll;
     crash.deadlockWatchdogInterval = 10;
     
     // Setup Crash Reporting
@@ -200,6 +200,9 @@
                                        message:NSLocalizedString(@"The app crashed last time it was launched. Send a crash report?", @"")
                                      yesAnswer:NSLocalizedString(@"Sure!", @"")
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
+
+#warning Change this to hockeyLiveIdentifier before App Store release!
+    //installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
     installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     
     [installation install];
