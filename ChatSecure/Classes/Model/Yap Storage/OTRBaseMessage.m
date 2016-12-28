@@ -153,7 +153,7 @@
     }];
     //Update Last message date for sorting and grouping
     OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:uniqueBuddyId transaction:transaction];
-    buddy.lastMessageDate = nil;
+    buddy.lastMessageId = nil;
     [buddy saveWithTransaction:transaction];
 }
 

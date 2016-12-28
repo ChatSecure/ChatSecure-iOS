@@ -51,7 +51,12 @@ NSString *OTRPushAccountGroup = @"Account";
             if ([object isKindOfClass:[OTRBuddy class]])
             {
                 OTRBuddy *buddy = (OTRBuddy *)object;
-                if (buddy.lastMessageDate) {
+                // Hack to show "placeholder" items in list
+                if (buddy.lastMessageId && buddy.lastMessageId.length == 0) {
+                    return OTRConversationGroup;
+                }
+                id <OTRMessageProtocol> lastMessage = [buddy lastMessageWithTransaction:transaction];
+                if (lastMessage) {
                     return OTRConversationGroup;
                 }
             } else {
@@ -69,8 +74,21 @@ NSString *OTRPushAccountGroup = @"Account";
             if ([object1 conformsToProtocol:@protocol(OTRThreadOwner)] && [object2 conformsToProtocol:@protocol(OTRThreadOwner)]) {
                 id <OTRThreadOwner> thread1 = object1;
                 id <OTRThreadOwner> thread2 = object2;
+                id <OTRMessageProtocol> message1 = [thread1 lastMessageWithTransaction:transaction];
+                id <OTRMessageProtocol> message2 = [thread2 lastMessageWithTransaction:transaction];
                 
-                return [[thread2 lastMessageDate] compare:[thread1 lastMessageDate]];
+                // Assume nil dates indicate a lastMessageId of ""
+                // indicating that we want to force to the top
+                NSDate *date1 = [message1 date];
+                if (!date1) {
+                    date1 = [NSDate date];
+                }
+                NSDate *date2 = [message2 date];
+                if (!date2) {
+                    date2 = [NSDate date];
+                }
+                
+                return [date2 compare:date1];
             }
         } else if ([group isEqualToString:OTRAllPresenceSubscriptionRequestGroup]) {
             if ([object1 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]] && [object2 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
@@ -89,7 +107,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"3"
+                                                                   versionTag:@"6"
                                                                       options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName sendNotification:YES];

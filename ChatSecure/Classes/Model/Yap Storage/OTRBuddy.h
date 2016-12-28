@@ -56,8 +56,8 @@ extern const struct OTRBuddyAttributes {
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRThreadStatus status;
 
-/** the date last message was received for buddy. also used by incoming/outgoing subscription requests to force buddy to appear in conversation view */
-@property (nonatomic, strong, nullable) NSDate *lastMessageDate;
+/** uniqueId of last incoming or outgoing OTRMessage */
+@property (nonatomic, strong, nullable) NSString *lastMessageId;
 
 /** User can choose a preferred security method e.g. plaintext, OTR, OMEMO. If undefined, best available option should be chosen elsewhere. OMEMO > OTR > Plaintext */
 @property (nonatomic, readwrite) OTRSessionSecurity preferredSecurity;
@@ -72,7 +72,6 @@ extern const struct OTRBuddyAttributes {
 
 - (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
-- (void)updateLastMessageDateWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 - (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction
                              completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block

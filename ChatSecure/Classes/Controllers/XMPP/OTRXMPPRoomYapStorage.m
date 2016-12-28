@@ -125,7 +125,7 @@
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.displayName = occupant.realJID;
         
-        databaseRoom.lastRoomMessageDate = [databaseMessage date];
+        databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
         if([activeThreadYapKey isEqualToString:databaseMessage.threadId]) {
             databaseMessage.read = YES;

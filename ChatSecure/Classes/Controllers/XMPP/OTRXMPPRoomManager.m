@@ -95,7 +95,7 @@
         OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
         if(!room) {
             room = [[OTRXMPPRoom alloc] init];
-            room.lastRoomMessageDate = [NSDate date];
+            room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
             

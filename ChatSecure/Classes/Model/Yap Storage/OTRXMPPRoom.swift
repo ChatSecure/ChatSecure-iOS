@@ -16,7 +16,7 @@ public class OTRXMPPRoom: OTRYapDatabaseObject {
     public var jid:String?
     public var joined = false
     public var messageText:String?
-    public var lastRoomMessageDate:NSDate?
+    public var lastRoomMessageId:String?
     public var subject:String?
     override public var uniqueId:String {
         get {
@@ -57,10 +57,6 @@ extension OTRXMPPRoom:OTRThreadOwner {
     
     public func currentMessageText() -> String? {
         return self.messageText
-    }
-    
-    public func lastMessageDate() -> NSDate? {
-        return self.lastRoomMessageDate
     }
     
     public func avatarImage() -> UIImage {

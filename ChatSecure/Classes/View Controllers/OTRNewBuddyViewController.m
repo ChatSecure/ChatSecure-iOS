@@ -205,7 +205,7 @@
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
                 // hack to show buddy in conversations view
-                buddy.lastMessageDate = [NSDate date];
+                buddy.lastMessageId = @"";
             }
             
             buddy.displayName = newBuddyDisplayName;

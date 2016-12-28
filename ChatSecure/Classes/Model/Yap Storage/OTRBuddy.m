@@ -89,25 +89,6 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     return (numberOfMessages > 0);
 }
 
-- (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction
-{
-    __block NSDate *date = nil;
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRBaseMessage *message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (message) {
-            if (!date) {
-                date = message.date;
-            }
-            else {
-                date = [date laterDate:message.date];
-            }
-        }
-    }];
-    self.lastMessageDate = date;
-}
-
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
@@ -131,6 +112,15 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 - (id <OTRMessageProtocol>)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block id <OTRMessageProtocol> finalMessage = nil;
+    
+    if (self.lastMessageId.length) {
+        finalMessage = [OTRBaseMessage fetchObjectWithUniqueID:self.lastMessageId transaction:transaction];
+    }
+    if (finalMessage) {
+        return finalMessage;
+    }
+    
+    // Use slow lookup for legacy db migration
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {

@@ -948,9 +948,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];
     OTRAccount *account = [self accountWithTransaction:transaction];
+    OTRBaseMessage *message = [mediaItem parentMessageInTransaction:transaction];
     
     if (data) {
-        buddy.lastMessageDate = [NSDate date];
+        buddy.lastMessageId = message.uniqueId;
         [buddy saveWithTransaction:transaction];
         [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
@@ -1125,7 +1126,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         //Update buddy
         OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
         buddy.composingMessageString = nil;
-        buddy.lastMessageDate = message.date;
+        buddy.lastMessageId = message.uniqueId;
         [buddy saveWithTransaction:transaction];
     }];
 }
@@ -1555,7 +1556,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [transaction removeObjectForKey:[message messageKey] inCollection:[message messageCollection]];
         //Update Last message date for sorting and grouping
         OTRBuddy *buddy = [[strongSelf buddyWithTransaction:transaction] copy];
-        [buddy updateLastMessageDateWithTransaction:transaction];
+        buddy.lastMessageId = nil;
         [buddy saveWithTransaction:transaction];
     }];
 }

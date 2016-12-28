@@ -84,12 +84,11 @@
                 [dateComponents setHour:(-1*index)];
                 message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
                 
-                buddy.lastMessageDate = message.date;
+                buddy.lastMessageId = message.uniqueId;
                 
                 [message saveWithTransaction:transaction];
             }];
             
-            [buddy updateLastMessageDateWithTransaction:transaction];
             [buddy saveWithTransaction:transaction];
         }];
     }];

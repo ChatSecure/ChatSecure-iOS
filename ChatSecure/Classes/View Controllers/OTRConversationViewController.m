@@ -371,7 +371,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 buddy.username = request.jid;
                 buddy.accountUniqueId = account.uniqueId;
                 // hack to show buddy in conversations view
-                buddy.lastMessageDate = [NSDate date];
+                buddy.lastMessageId = @"";
             }
             buddy.displayName = request.jid;
             [buddy saveWithTransaction:transaction];

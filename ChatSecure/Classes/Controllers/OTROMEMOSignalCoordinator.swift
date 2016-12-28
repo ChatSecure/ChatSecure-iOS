@@ -419,7 +419,7 @@ import YapDatabase
                 databaseMessage.saveWithTransaction(transaction)
                 
                 // Should we be using the date of the xmpp message?
-                buddy.lastMessageDate = NSDate()
+                buddy.lastMessageId = databaseMessage.uniqueId
                 buddy.saveWithTransaction(transaction)
                 
                 //Update device last received message
