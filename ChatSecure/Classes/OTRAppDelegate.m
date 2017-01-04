@@ -189,10 +189,14 @@
 
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
+    crash.handlingCrashTypes = KSCrashTypeProductionSafe;
+    /*
 #warning Change this to KSCrashTypeProductionSafe before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
+    
     crash.handlingCrashTypes = KSCrashTypeAll;
     crash.deadlockWatchdogInterval = 10;
+     */
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
@@ -201,8 +205,6 @@
                                      yesAnswer:NSLocalizedString(@"Sure!", @"")
                                       noAnswer:NSLocalizedString(@"No thanks", @"")];
 
-#warning Change this to hockeyLiveIdentifier before App Store release!
-    //installation.appIdentifier = [OTRSecrets hockeyBetaIdentifier];
     installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     
     [installation install];
