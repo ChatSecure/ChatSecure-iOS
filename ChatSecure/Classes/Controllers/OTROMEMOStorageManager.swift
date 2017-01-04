@@ -142,7 +142,7 @@ public class OTROMEMOStorageManager {
      - parameter devices: An array of the device numbers. Should be UInt32.
      */
     public func storeOurDevices(devices:[NSNumber]) {
-        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) in
+        self.databaseConnection.asyncReadWriteWithBlock { (transaction) in
             self.storeDevices(devices, parentYapKey: self.accountKey, parentYapCollection: self.accountCollection, transaction: transaction)
         }
     }
@@ -154,7 +154,7 @@ public class OTROMEMOStorageManager {
      - parameter buddyUsername: The bare JID for the buddy.
      */
     public func storeBuddyDevices(devices:[NSNumber], buddyUsername:String) {
-        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWriteWithBlock { (transaction) in
+        self.databaseConnection.asyncReadWriteWithBlock { (transaction) in
             // Fetch the buddy from the database.
             var buddy = OTRBuddy.fetchBuddyWithUsername(buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction)
             // If this is teh first launch the buddy will not be in the buddy list becuase the roster comes in after device list from PEP.

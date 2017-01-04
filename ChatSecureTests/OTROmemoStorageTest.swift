@@ -60,7 +60,7 @@ class OTROmemoStorageTest: XCTestCase {
     func storeInitialDevices() {
         self.omemoStorage.storeOurDevices(self.initialDevices)
         let firstStoredDevices = omemoStorage.getDevicesForOurAccount(nil)
-        XCTAssertEqual(firstStoredDevices.count, 3)
+        XCTAssertEqual(firstStoredDevices.count, self.initialDevices.count)
         firstStoredDevices.forEach { (device) in
             XCTAssert(device.trustLevel == .TrustedTofu)
             XCTAssertEqual(device.parentKey, self.accountKey)
