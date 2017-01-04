@@ -31,4 +31,4 @@ before_script:
   - bundle exec pod install
 script:
   - set -o pipefail
-  - travis_retry xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination id=$IOS_SIMULATOR_UDID test | xcpretty -c
+  - travis_retry xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" test | xcpretty -c
