@@ -1,4 +1,4 @@
-osx_image: xcode8.1
+osx_image: xcode8.2
 language: objective-c
 
 # Handle git submodules yourself
@@ -23,8 +23,7 @@ install:
   - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
-  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
-  - mv ./Submodules/OTRKit/OTRKitDependencies ./Submodules/OTRKit/OTRKitDependencies-iOS
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies-iOS.zip -d ./Submodules/OTRKit/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
