@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (OTRThreadStatus)currentStatus;
 - (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (void)setAllMessagesAsReadInTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
+- (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 - (BOOL)isGroupThread;
 
 

@@ -12,11 +12,11 @@ import YapDatabase.YapDatabaseSecondaryIndex
 public extension YapDatabaseReadTransaction {
     
     public func enumerateMessages(id id:String, block:(message:OTRMessageProtocol,stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabseMessageIdSecondaryIndexColumnName) = ?"
+        let queryString = "Where \(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [id])
         
         secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
@@ -45,7 +45,7 @@ public extension YapDatabaseReadTransaction {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName) = ?"
+        let queryString = "Where \(OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [jid])
         
         secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
@@ -56,15 +56,18 @@ public extension YapDatabaseReadTransaction {
     }
     
     public func numberOfUnreadMessages() -> UInt {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
         
-        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) = 0"
+        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
         
         var count:UInt = 0
-        secondaryIndexTransaction.getNumberOfRows(&count, matchingQuery: query)
+        let success = secondaryIndexTransaction.getNumberOfRows(&count, matchingQuery: query)
+        if (!success) {
+            NSLog("Error with global numberOfUnreadMessages index")
+        }
         return count
     }
 }

@@ -47,6 +47,7 @@
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapMessageSendAction.h"
+#import "UIViewController+ChatSecure.h"
 @import YapDatabase;
 @import PureLayout;
 @import KVOController;
@@ -391,12 +392,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     // Set all messages as read
-    __weak __typeof__(self) weakSelf = self;
-    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        __typeof__(self) strongSelf = weakSelf;
-        id <OTRThreadOwner>threadOwner = [strongSelf threadObjectWithTransaction:transaction];
-        [threadOwner setAllMessagesAsReadInTransaction:transaction];
-    }];
+    if ([self otr_isVisible]) {
+        __weak __typeof__(self) weakSelf = self;
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            __typeof__(self) strongSelf = weakSelf;
+            id <OTRThreadOwner>threadOwner = [strongSelf threadObjectWithTransaction:transaction];
+            [threadOwner setAllMessagesAsReadInTransaction:transaction];
+        }];
+    }
 }
 
 - (OTRTitleSubtitleView * __nonnull)titleView {

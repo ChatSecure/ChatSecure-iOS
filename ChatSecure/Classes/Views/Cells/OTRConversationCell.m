@@ -81,27 +81,24 @@
     
     __block OTRAccount *account = nil;
     __block id <OTRMessageProtocol> lastMessage = nil;
-
+    __block NSUInteger unreadMessages = 0;
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
-        
+        unreadMessages = [thread numberOfUnreadMessagesWithTransaction:transaction];
         lastMessage = [thread lastMessageWithTransaction:transaction];
     }];
-    
     
     self.accountLabel.text = account.username;
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
     self.conversationLabel.text = lastMessage.text;
-    if (![lastMessage messageRead]) {
+    if (unreadMessages > 0) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor blackColor];
-        
-    }
-    else {
+    } else {
         self.nameLabel.font = [UIFont systemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
     }

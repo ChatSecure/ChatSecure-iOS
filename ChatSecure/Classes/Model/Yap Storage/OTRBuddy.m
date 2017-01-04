@@ -16,6 +16,7 @@
 @import JSQMessagesViewController;
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRKit;
+#import "OTRLog.h"
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.username = @"username",
@@ -94,6 +95,21 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
 
+- (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
+    YapDatabaseSecondaryIndexTransaction *indexTransaction = [transaction ext:OTRMessagesSecondaryIndex];
+    if (!indexTransaction) {
+        return 0;
+    }
+    NSString *queryString = [NSString stringWithFormat:@"WHERE %@ == %@ AND %@ == ?", OTRYapDatabaseUnreadMessageSecondaryIndexColumnName, @(NO), OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
+    YapDatabaseQuery *query = [YapDatabaseQuery queryWithFormat:queryString, self.uniqueId];
+    NSUInteger numRows = 0;
+    BOOL success = [indexTransaction getNumberOfRows:&numRows matchingQuery:query];
+    if (!success) {
+        DDLogError(@"Query error for OTRBuddy numberOfUnreadMessagesWithTransaction");
+    }
+    return numRows;
+}
+
 - (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
@@ -109,6 +125,9 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
         }        
     }];
 }
+
+
+
 - (id <OTRMessageProtocol>)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block id <OTRMessageProtocol> finalMessage = nil;

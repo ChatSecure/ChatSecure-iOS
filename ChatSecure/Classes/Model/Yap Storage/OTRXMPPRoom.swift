@@ -90,6 +90,20 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return message
     }
     
+    public func numberOfUnreadMessagesWithTransaction(transaction: YapDatabaseReadTransaction) -> UInt {
+        guard let indexTransaction = transaction.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+            return 0
+        }
+        let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let query = YapDatabaseQuery(string: queryString, parameters: [self.uniqueId])
+        var count:UInt = 0
+        let success = indexTransaction.getNumberOfRows(&count, matchingQuery: query)
+        if (!success) {
+            NSLog("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
+        }
+        return count
+    }
+    
     public func setAllMessagesAsReadInTransaction(transaction: YapDatabaseReadWriteTransaction) {
         guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
             return
