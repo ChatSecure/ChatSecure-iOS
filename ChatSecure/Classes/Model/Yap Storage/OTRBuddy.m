@@ -37,8 +37,8 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 {
     if (self = [super init]) {
         self.status = OTRThreadStatusOffline;
-        self.chatState = OTRChatStateUnknown;
-        self.lastSentChatState = OTRChatStateUnknown;
+        self.chatState = OTRThreadStatusOffline;
+        self.lastSentChatState = OTRThreadStatusOffline;
     }
     return self;
 }
@@ -257,14 +257,15 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 {
     NSMutableArray *buddiesToChange = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-        if(buddy.chatState != OTRChatStateUnknown)
+        if(buddy.chatState != OTRThreadStatusOffline)
         {
             [buddiesToChange addObject:buddy];
         }
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-        buddy.chatState = OTRChatStateUnknown;
+        buddy = [buddy copy];
+        buddy.chatState = OTRThreadStatusOffline;
         [buddy saveWithTransaction:transaction];
     }];
 }
@@ -280,6 +281,7 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
+        buddy = [buddy copy];
         buddy.status = OTRThreadStatusOffline;
         [buddy saveWithTransaction:transaction];
     }];
