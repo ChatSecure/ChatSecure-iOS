@@ -100,7 +100,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                                                  name:YapDatabaseModifiedNotification
                                                object:nil];
     
-    NSString *notificationName = [YapDatabaseConstants notificationName:DatbaseNotificationNameRegisteredExtension];
+    NSString *notificationName = [DatbaseNotificationName RegisteredExtension];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(extensionRegisteredNotification:) name:notificationName object:nil];
     
@@ -123,7 +123,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 // This helps solve a race condition when setting up the database asynchronously
 - (void) extensionRegisteredNotification:(NSNotification*)notification {
     
-    NSString *key = [YapDatabaseConstants notificationKeyName:DatabaseNotificationKeyExtensionName];
+    NSString *key = [DatabaseNotificationKey ExtensionName];
     NSString *name = notification.userInfo[key];
     if ([name isEqualToString:OTRConversationDatabaseViewExtensionName]) {
         [self setupMappings:YES];

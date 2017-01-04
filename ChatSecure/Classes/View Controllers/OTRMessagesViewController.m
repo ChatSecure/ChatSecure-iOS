@@ -147,8 +147,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
     
     /** Setup databse view handler*/
-    YapDatabaseConnection *connection = [self.readWriteDatabaseConnection.database newConnection];
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:connection];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     
     ///Custom Layout to account for no bubble cells

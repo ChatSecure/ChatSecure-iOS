@@ -48,7 +48,8 @@
     [self.mucModule activate:aXmppStream];
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
-    self.unsentMessagesViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.databaseConnection.database newConnection]];
+    self.unsentMessagesViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection
+                                                            databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
     self.unsentMessagesViewHandler.delegate = self;
     return result;
 }

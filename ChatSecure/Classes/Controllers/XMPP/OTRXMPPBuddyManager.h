@@ -13,7 +13,7 @@
 
 @interface OTRXMPPBuddyManager : XMPPModule
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection; //This is always the single long lived read connection
 @property (nonatomic, weak) id<OTRProtocol> protocol;
 
 @end

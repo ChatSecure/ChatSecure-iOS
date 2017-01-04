@@ -32,6 +32,8 @@ extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnN
 @property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
 
+@property (nonatomic, readonly) YapDatabaseConnection *longLivedReadOnlyConnection;
+
 @property (nonatomic, readonly) MessageQueueHandler *messageQueueHandler;
 @property (nonatomic, readonly) YapTaskQueueBroker *messageQueueBroker;
 

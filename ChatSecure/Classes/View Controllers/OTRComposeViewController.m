@@ -102,11 +102,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self setupSearchController];
     
     //////// View Handlers /////////
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.database newConnection]];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
     
-    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.database newConnection]];
+    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
     NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
     [self.searchViewHandler setup:searchViewName groupBlock:^BOOL(NSString * _Nonnull group, YapDatabaseReadTransaction * _Nonnull transaction) {
