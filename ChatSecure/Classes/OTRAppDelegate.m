@@ -189,12 +189,12 @@
 
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
-    crash.handlingCrashTypes = KSCrashTypeProductionSafe;
+    crash.monitoring = KSCrashMonitorTypeProductionSafe;
     /*
 #warning Change this to KSCrashTypeProductionSafe before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
     
-    crash.handlingCrashTypes = KSCrashTypeAll;
+    crash.monitoring = KSCrashMonitorTypeAll;
     crash.deadlockWatchdogInterval = 10;
      */
     
