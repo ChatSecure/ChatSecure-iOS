@@ -110,24 +110,6 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     return numRows;
 }
 
-- (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
-{
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        id databseObject = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if ([databseObject isKindOfClass:[OTRIncomingMessage class]]) {
-            OTRIncomingMessage *message = (OTRIncomingMessage *)databseObject;
-            if (!message.read) {
-                message.read = YES;
-                [message saveWithTransaction:transaction];
-            }
-        }        
-    }];
-}
-
-
-
 - (id <OTRMessageProtocol>)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block id <OTRMessageProtocol> finalMessage = nil;

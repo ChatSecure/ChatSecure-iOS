@@ -171,8 +171,6 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [OTRDatabaseView registerChatDatabaseView];
         [OTRDatabaseView registerAllBuddiesDatabaseView];
         [OTRDatabaseView registerAllSubscriptionRequestsView];
-        [OTRDatabaseView registerUnreadMessagesView];
-        
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
         _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];

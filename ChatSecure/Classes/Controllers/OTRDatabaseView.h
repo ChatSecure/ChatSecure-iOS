@@ -17,7 +17,6 @@ extern NSString *OTRAllAccountDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
 extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 extern NSString *OTRAllPushAccountInfoViewExtensionName;
-extern NSString *OTRUnreadMessagesViewExtensionName;
 
 // Group Strings
 extern NSString *OTRAllAccountGroup;
@@ -49,7 +48,5 @@ extern NSString *OTRPushTokenGroup;
 + (BOOL)registerAllBuddiesDatabaseView;
 
 + (BOOL)registerAllSubscriptionRequestsView;
-
-+ (BOOL)registerUnreadMessagesView;
 
 @end

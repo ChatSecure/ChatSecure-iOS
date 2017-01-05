@@ -75,7 +75,7 @@
 		63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */; };
 		63BB66B41BC5D5F00004A619 /* OTRXMPPRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66B31BC5D5F00004A619 /* OTRXMPPRoom.swift */; };
-		63C0C4431BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4421BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift */; };
+		63C0C4431BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4421BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift */; };
 		63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */; };
 		63CBD6901C642B9E00AC6D1F /* BuddyActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBD68F1C642B9E00AC6D1F /* BuddyActions.swift */; };
 		63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D14F341C0FC6A90029F36B /* OTRThreadOwner.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -818,7 +818,7 @@
 		63BB66B31BC5D5F00004A619 /* OTRXMPPRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoom.swift; sourceTree = "<group>"; };
 		63BE425C1B320EE20017058C /* OTRLoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginHandler.h; sourceTree = "<group>"; };
 		63BE425D1B320EE20017058C /* OTRLoginHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginHandler.m; sourceTree = "<group>"; };
-		63C0C4421BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabaseReadTransaction+ChatSecure.swift"; sourceTree = "<group>"; };
+		63C0C4421BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabaseTransaction+ChatSecure.swift"; sourceTree = "<group>"; };
 		63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRRoomOccupantsViewController.swift; sourceTree = "<group>"; };
 		63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioPlaybackController.h; sourceTree = "<group>"; };
 		63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioPlaybackController.m; sourceTree = "<group>"; };
@@ -1058,7 +1058,7 @@
 				6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */,
 				63363FAD1CCAE29B00B0C720 /* OTRYapExtensions.swift */,
 				634364221CC192F1009E169F /* YapDatabaseConstants.swift */,
-				63C0C4421BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift */,
+				63C0C4421BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift */,
 				D9315CB11BB606890077D2EE /* ShareController.swift */,
 				63E413A91CDA9E2400B17303 /* MessageQueueHandler.swift */,
 				63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */,
@@ -2540,7 +2540,7 @@
 				D93DDB1B1BA79A2C00CD8331 /* OTRAudioControlsView.m in Sources */,
 				D93DDB1C1BA79A2C00CD8331 /* OTRPlayPauseProgressView.m in Sources */,
 				D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */,
-				63C0C4431BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift in Sources */,
+				63C0C4431BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift in Sources */,
 				D93DDB1E1BA79A2C00CD8331 /* OTRPauseView.m in Sources */,
 				D93DDB1F1BA79A2C00CD8331 /* OTRColorFadingDotView.m in Sources */,
 				D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */,
