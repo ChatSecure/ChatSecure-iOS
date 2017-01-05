@@ -120,7 +120,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
                                               options:options];
     
     self.database.defaultObjectPolicy = YapDatabasePolicyShare;
-    self.database.defaultObjectCacheLimit = 1000;
+    self.database.defaultObjectCacheLimit = 10000;
     
     self.readOnlyDatabaseConnection = [self.database newConnection];
     self.readOnlyDatabaseConnection.name = @"readOnlyDatabaseConnection";
