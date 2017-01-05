@@ -72,10 +72,8 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
         
         //iPad check where there are two navigation controllers and we want the second one
-        if splitVC.viewControllers.count > 1 && (splitVC.viewControllers[1] as! UINavigationController).viewControllers.contains(mVC){
-            
-        } else if splitVC.viewControllers.count == 1 && (splitVC.viewControllers.first as! UINavigationController).viewControllers.contains(mVC){
-            
+        if splitVC.viewControllers.count > 1 && ((splitVC.viewControllers[1] as? UINavigationController)?.viewControllers.contains(mVC)) ?? false {
+        } else if splitVC.viewControllers.count == 1 && ((splitVC.viewControllers.first as? UINavigationController)?.viewControllers.contains(mVC)) ?? false {
         } else {
             splitVC.showDetailViewController(mVC, sender: sender)
         }
