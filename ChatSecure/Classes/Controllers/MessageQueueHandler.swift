@@ -41,7 +41,6 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     
     let operationQueue = NSOperationQueue()
     let databaseConnection:YapDatabaseConnection
-    weak var protocolManager = OTRProtocolManager.sharedInstance()
     private var outstandingMessages = [String:OutstandingMessageInfo]()
     private var outstandingBuddies = [String:OutstandingMessageInfo]()
     private var outstandingAccounts = [String:Set<OutstandingMessageInfo>]()
@@ -204,7 +203,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = self.protocolManager?.protocolForAccount(account) as? OTRXMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
             completion(success: true, retryTimeout: 0.0)
             return
         }
@@ -272,7 +271,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                 }
             } else if (message.messageSecurity() == .Plaintext) {
                 self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
-                protocolManager?.sendMessage(message)
+                OTRProtocolManager.sharedInstance().sendMessage(message)
             }
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)

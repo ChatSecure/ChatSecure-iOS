@@ -22,7 +22,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
   pod "CocoaLumberjack", '~> 2.3.0'
-  pod 'KSCrash', '~> 1.13.6'
+  pod 'KSCrash', '~> 1.11.2'
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
