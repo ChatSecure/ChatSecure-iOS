@@ -60,7 +60,7 @@ public class OTRYapViewHandler: NSObject {
     
     public var databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatbaseNotificationName.LongLivedTransactionChanges) {
+    public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatabaseNotificationName.LongLivedTransactionChanges) {
         self.databaseConnection = databaseConnection
         super.init()
         self.notificationToken = NSNotificationCenter.defaultCenter().addObserverForName(databaseChangeNotificationName, object: self.databaseConnection, queue: NSOperationQueue.mainQueue()) {[weak self] (notification) -> Void in

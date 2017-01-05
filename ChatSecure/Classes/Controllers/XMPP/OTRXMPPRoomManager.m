@@ -49,7 +49,7 @@
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
     self.unsentMessagesViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection
-                                                            databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
+                                                            databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.unsentMessagesViewHandler.delegate = self;
     return result;
 }

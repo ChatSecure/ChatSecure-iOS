@@ -84,7 +84,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     ////////// Create YapDatabase View /////////////////
     
-    self.conversationListViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
+    self.conversationListViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.conversationListViewHandler.delegate = self;
     [self.conversationListViewHandler setup:OTRConversationDatabaseViewExtensionName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
     

@@ -107,7 +107,7 @@ public extension YapDatabase {
     
     private func sendExtensionRegisteredNotification(extensionName: String) {
         dispatch_async(dispatch_get_main_queue()) {
-            let name = DatbaseNotificationName.RegisteredExtension
+            let name = DatabaseNotificationName.RegisteredExtension
             let userInfo = [DatabaseNotificationKey.ExtensionName:extensionName]
             NSNotificationCenter.defaultCenter().postNotificationName(name, object: self, userInfo: userInfo)
         }

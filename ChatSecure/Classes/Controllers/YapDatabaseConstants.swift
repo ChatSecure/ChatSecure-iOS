@@ -56,9 +56,9 @@ import Foundation
     }
 }
 
-public class DatbaseNotificationName:NSObject {
-    public static let LongLivedTransactionChanges = "DatbaseNotificationName.LongLivedTransactionChanges"
-    public static let RegisteredExtension = "DatbaseNotificationName.RegisteredExtension"
+public class DatabaseNotificationName:NSObject {
+    public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
+    public static let RegisteredExtension = "DatabaseNotificationName.RegisteredExtension"
 }
 
 public class DatabaseNotificationKey:NSObject {

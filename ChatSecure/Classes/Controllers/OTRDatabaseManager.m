@@ -135,7 +135,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
         NSArray <NSNotification *>*changes = [weakSelf.longLivedReadOnlyConnection beginLongLivedReadTransaction];
         if (changes != nil) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]
+            [[NSNotificationCenter defaultCenter] postNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]
                                                                 object:weakSelf.longLivedReadOnlyConnection
                                                               userInfo:@{[DatabaseNotificationKey ConnectionChanges]:changes}];
         }
