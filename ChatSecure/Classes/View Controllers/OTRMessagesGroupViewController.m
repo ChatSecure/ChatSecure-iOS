@@ -64,7 +64,7 @@
 #pragma - mark Button Actions
 
 - (void)didSelectOccupantsButton:(id)sender {
-    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[self.readWriteDatabaseConnection.database newConnection] roomKey:self.threadKey];
+    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
     [self.navigationController pushViewController:occupantsViewController animated:YES];
 }
 

@@ -53,10 +53,9 @@
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
-@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate>
+@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol>
 
-@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) UITableView *tableView;
 
 @end
@@ -77,25 +76,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     [super viewDidLoad];
     
-    //Make sure allAccountsDatabaseView is registered
-    [OTRDatabaseView registerAllAccountsDatabaseView];
-    
     //User main thread database connection
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-    self.databaseConnection.name = NSStringFromClass([self class]);
-    [self.databaseConnection beginLongLivedReadTransaction];
-    
-    //Create mappings from allAccountsDatabaseView
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllAccountGroup] view:OTRAllAccountDatabaseViewExtensionName];
-    
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction){
-        [self.mappings updateWithTransaction:transaction];
-    }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(yapDatabaseModified:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:nil];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationKey ConnectionChanges]];
+    self.viewHandler.delegate = self;
+    [self.viewHandler setup:OTRAllAccountDatabaseViewExtensionName groups:@[OTRAllAccountGroup]];
     
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
@@ -142,12 +126,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (OTRAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block OTRAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        
-        account = [[transaction extension:OTRAllAccountDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
-    }];
-    
+    OTRAccount *account = [self.viewHandler object:indexPath];
     return account;
 }
 
@@ -155,7 +134,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 && indexPath.row != [self.mappings numberOfItemsInSection:0])
+    if (indexPath.section == 0 && indexPath.row != [self.viewHandler.mappings numberOfItemsInSection:0])
     {
         return UITableViewCellEditingStyleDelete;
     }
@@ -170,7 +149,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (indexPath.section == 0) { // Accounts 
         static NSString *addAccountCellIdentifier = @"addAccountCellIdentifier";
         UITableViewCell * cell = nil;
-        if (indexPath.row == [self.mappings numberOfItemsInSection:indexPath.section]) {
+        if (indexPath.row == [self.viewHandler.mappings numberOfItemsInSection:indexPath.section]) {
             cell = [tableView dequeueReusableCellWithIdentifier:addAccountCellIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
@@ -230,7 +209,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     if (sectionIndex == 0) {
-        return [self.mappings numberOfItemsInSection:0]+1;
+        return [self.viewHandler.mappings numberOfItemsInSection:0]+1;
     }
     return [self.settingsManager numberOfSettingsInSection:sectionIndex];
 }
@@ -248,7 +227,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts
-        if (indexPath.row == [self.mappings numberOfItemsInSection:0]) {
+        if (indexPath.row == [self.viewHandler.mappings numberOfItemsInSection:0]) {
             [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
         } else {
             OTRAccount *account = [self accountAtIndexPath:indexPath];
@@ -465,20 +444,16 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma - mark YapDatabse Methods
 
-- (void)yapDatabaseModified:(NSNotification *)notification
+- (void)didSetupMappings:(OTRYapViewHandler *)handler
 {
-    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
-    
-    // Process the notification(s),
-    // and get the change-set(s) as applies to my view and mappings configuration.
-    
-    NSArray *sectionChanges = nil;
-    NSArray *rowChanges = nil;
-    
-    [[self.databaseConnection ext:OTRAllAccountDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                                                 rowChanges:&rowChanges
-                                                                           forNotifications:notifications
-                                                                               withMappings:self.mappings];
+    [self.tableView reloadData];
+}
+
+- (void)didReceiveChanges:(OTRYapViewHandler * _Nonnull)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> * _Nonnull)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> * _Nonnull)rowChanges
+{
+    if ([rowChanges count] == 0) {
+        return;
+    }
     
     [self.tableView beginUpdates];
     

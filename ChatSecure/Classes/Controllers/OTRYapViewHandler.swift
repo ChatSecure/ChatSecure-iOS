@@ -58,28 +58,19 @@ public class OTRYapViewHandler: NSObject {
     
     public var mappings:YapDatabaseViewMappings?
     
-    public var databaseConnection:YapDatabaseConnection {
-        didSet {
-            self.setupDatabseConnection()
-        }
-    }
+    public var databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection) {
+    public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatbaseNotificationName.LongLivedTransactionChanges) {
         self.databaseConnection = databaseConnection
         super.init()
-        self.setupDatabseConnection()
+        self.notificationToken = NSNotificationCenter.defaultCenter().addObserverForName(databaseChangeNotificationName, object: self.databaseConnection, queue: NSOperationQueue.mainQueue()) {[weak self] (notification) -> Void in
+            self?.yapDatbaseModified(notification)
+        }
     }
     
     deinit {
         if let token = self.notificationToken {
             NSNotificationCenter.defaultCenter().removeObserver(token)
-        }
-    }
-    
-    func setupDatabseConnection() {
-        self.databaseConnection.beginLongLivedReadTransaction()
-        self.notificationToken = NSNotificationCenter.defaultCenter().addObserverForName(YapDatabaseModifiedNotification, object: self.databaseConnection.database, queue: NSOperationQueue.mainQueue()) {[weak self] (notification) -> Void in
-            self?.yapDatbaseModified(notification)
         }
     }
     
@@ -151,7 +142,9 @@ public class OTRYapViewHandler: NSObject {
     }
     
     func yapDatbaseModified(notification:NSNotification) {
-        let notifications = self.databaseConnection.beginLongLivedReadTransaction()
+        guard let notifications = notification.userInfo? [DatabaseNotificationKey.ConnectionChanges] as? [NSNotification] else {
+            return
+        }
         
         guard let mappings = self.mappings else {
             if let view = self.viewName {

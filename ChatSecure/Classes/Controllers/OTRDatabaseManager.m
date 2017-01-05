@@ -47,6 +47,8 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 @property (nonatomic, strong) YapDatabaseActionManager *actionManager;
 @property (nonatomic, strong) NSString *inMemoryPassphrase;
 
+@property (nonatomic, strong) id yapDatabaseNotificationToken;
+
 @end
 
 @implementation OTRDatabaseManager
@@ -68,6 +70,12 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     //fix file protection on existing files
      if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:databaseDirectory];
     return success;
+}
+
+- (void)dealloc {
+    if (self.yapDatabaseNotificationToken != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.yapDatabaseNotificationToken];
+    }
 }
 
 - (BOOL)setupSecureMediaStorage
@@ -120,6 +128,21 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     self.readWriteDatabaseConnection = [self.database newConnection];
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
     
+    _longLivedReadOnlyConnection = [self.database newConnection];
+    self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
+    
+    __weak __typeof__(self) weakSelf = self;
+    self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        NSArray <NSNotification *>*changes = [weakSelf.longLivedReadOnlyConnection beginLongLivedReadTransaction];
+        if (changes != nil) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]
+                                                                object:weakSelf.longLivedReadOnlyConnection
+                                                              userInfo:@{[DatabaseNotificationKey ConnectionChanges]:changes}];
+        }
+        
+    }];
+    [self.longLivedReadOnlyConnection beginLongLivedReadTransaction];
+    
     _messageQueueHandler = [[MessageQueueHandler alloc] initWithDbConnection:self.readWriteDatabaseConnection];
     
     ////// Register Extensions////////
@@ -148,8 +171,6 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [OTRDatabaseView registerChatDatabaseView];
         [OTRDatabaseView registerAllBuddiesDatabaseView];
         [OTRDatabaseView registerAllSubscriptionRequestsView];
-        [OTRDatabaseView registerUnreadMessagesView];
-        
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
         _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];

@@ -40,12 +40,10 @@
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
-@interface OTRConversationViewController ()
+@interface OTRConversationViewController () <OTRYapViewHandlerDelegateProtocol>
 
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
-@property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
+@property (nonatomic, strong) OTRYapViewHandler *conversationListViewHandler;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
 
@@ -86,23 +84,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     ////////// Create YapDatabase View /////////////////
     
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-    self.databaseConnection.name = NSStringFromClass([self class]);
-    [self.databaseConnection beginLongLivedReadTransaction];
+    self.conversationListViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
+    self.conversationListViewHandler.delegate = self;
+    [self.conversationListViewHandler setup:OTRConversationDatabaseViewExtensionName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
     
-    [self setupMappings:YES];
     [self.tableView reloadData];
-    [self setupUnreadMappings:YES];
     [self updateTitle];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(yapDatabaseModified:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:nil];
-    
-    NSString *notificationName = [YapDatabaseConstants notificationName:DatbaseNotificationNameRegisteredExtension];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(extensionRegisteredNotification:) name:notificationName object:nil];
     
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
@@ -117,49 +104,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 [strongSelf disableComposeButton];
             }
         });
-    }];
-}
-
-// This helps solve a race condition when setting up the database asynchronously
-- (void) extensionRegisteredNotification:(NSNotification*)notification {
-    
-    NSString *key = [YapDatabaseConstants notificationKeyName:DatabaseNotificationKeyExtensionName];
-    NSString *name = notification.userInfo[key];
-    if ([name isEqualToString:OTRConversationDatabaseViewExtensionName]) {
-        [self setupMappings:YES];
-        [self.tableView reloadData];
-    } else if ([name isEqualToString:OTRUnreadMessagesViewExtensionName]) {
-        [self setupUnreadMappings:YES];
-        [self updateTitle];
-    }
-}
-
-- (void) setupMappings:(BOOL)update {
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        
-        if (!self.mappings && [transaction ext:OTRConversationDatabaseViewExtensionName]) {
-            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]
-                                                                       view:OTRConversationDatabaseViewExtensionName];
-            if (update) {
-                [self.mappings updateWithTransaction:transaction];
-            }
-        }
-    }];
-}
-
-- (void) setupUnreadMappings:(BOOL)update {
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        if (!self.unreadMessagesMappings && [transaction ext:OTRUnreadMessagesViewExtensionName]) {
-            
-            self.unreadMessagesMappings = [[YapDatabaseViewMappings alloc] initWithGroupFilterBlock:^BOOL(NSString *group, YapDatabaseReadTransaction *transaction) {
-                return YES;
-            } sortBlock:^NSComparisonResult(NSString *group1, NSString *group2, YapDatabaseReadTransaction *transaction) {
-                return NSOrderedSame;
-            } view:OTRUnreadMessagesViewExtensionName];
-            if (update) {
-                [self.unreadMessagesMappings updateWithTransaction:transaction];
-            }
-        }
     }];
 }
 
@@ -255,14 +199,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 }
 
 - (id) objectAtIndexPath:(NSIndexPath*)indexPath {
-    __block id object = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        YapDatabaseViewTransaction *ext = [transaction ext:OTRConversationDatabaseViewExtensionName];
-        NSParameterAssert(ext != nil);
-        object = [ext objectAtIndexPath:indexPath withMappings:self.mappings];
-        NSParameterAssert(object != nil);
-    }];
-    return object;
+    return [self.conversationListViewHandler object:indexPath];
 }
 
 - (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
@@ -298,7 +235,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)updateTitle
 {
-    NSUInteger numberUnreadMessages = [self.unreadMessagesMappings numberOfItemsInAllGroups];
+    __block NSUInteger numberUnreadMessages = 0;
+    [self.conversationListViewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        numberUnreadMessages = [transaction numberOfUnreadMessages];
+    }];
     if (numberUnreadMessages > 99) {
         self.title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING];
     }
@@ -316,12 +256,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [self.mappings numberOfSections];
+    return [self.conversationListViewHandler.mappings numberOfSections];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.mappings numberOfItemsInSection:section];
+    return [self.conversationListViewHandler.mappings numberOfItemsInSection:section];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -357,7 +297,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void) handleSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest*)request approved:(BOOL)approved {
     __block OTRXMPPAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.conversationListViewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [request accountWithTransaction:transaction];
     }];
     OTRXMPPManager *manager = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
@@ -454,58 +394,19 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 #pragma - mark YapDatabse Methods
 
-- (void)yapDatabaseModified:(NSNotification *)notification
+- (void)didSetupMappings:(OTRYapViewHandler *)handler
 {
-    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
-    
-    NSArray *sectionChanges = nil;
-    NSArray *rowChanges = nil;
-    
-    YapDatabaseViewConnection *conversationExt = [self.databaseConnection ext:OTRConversationDatabaseViewExtensionName];
-    if (conversationExt) {
-        if (!self.mappings) {
-            [self setupMappings:YES];
-            [self.tableView reloadData];
-        } else {
-            [conversationExt getSectionChanges:&sectionChanges
-                                    rowChanges:&rowChanges
-                              forNotifications:notifications
-                                  withMappings:self.mappings];
-        }
-    }
-    
-    NSArray *unreadMessagesSectionChanges = nil;
-    NSArray *unreadMessagesRowChanges = nil;
-    
-    YapDatabaseViewConnection *unreadExt = [self.databaseConnection ext:OTRUnreadMessagesViewExtensionName];
-    if (unreadExt) {
-        if (!self.unreadMessagesMappings) {
-            [self setupUnreadMappings:YES];
-            [self updateTitle];
-        } else {
-            [unreadExt getSectionChanges:&unreadMessagesSectionChanges
-                              rowChanges:&unreadMessagesRowChanges
-                        forNotifications:notifications
-                            withMappings:self.unreadMessagesMappings];
-        }
-        
-    }
-    
-    if ([unreadMessagesSectionChanges count] || [unreadMessagesRowChanges count]) {
-        [self updateTitle];
-    }
-    
-    // No need to update mappings.
-    // The above method did it automatically.
-    
-    if ([sectionChanges count] == 0 && [rowChanges count] == 0)
-    {
-        // Nothing has changed that affects our tableView
+    [self.tableView reloadData];
+    [self updateTitle];
+}
+
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
+{
+    if ([rowChanges count] == 0 && sectionChanges == 0) {
         return;
     }
     
-    // Familiar with NSFetchedResultsController?
-    // Then this should look pretty familiar
+    [self updateTitle];
     
     [self.tableView beginUpdates];
     
@@ -566,4 +467,5 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.tableView endUpdates];
 }
+
 @end

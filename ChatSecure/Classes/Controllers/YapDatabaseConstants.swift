@@ -48,32 +48,22 @@ import Foundation
             case BuddyAccountEdgeName: return "account"
             case SubscriptionRequestAccountEdgeName: return "OTRXMPPPresenceSubscriptionRequestEdges.account"
             case MessageBuddyEdgeName: return "buddy"
-            case .MessageMediaEdgeName: return "media"
-            case .OmemoDeviceEdgeName: return "OmemoDeviceEdgeName"
-            case .SignalSignedPreKey: return "SignalSignedPreKey"
-            case .MessageActionEdgeName: return "MessageActionEdgeName"
+            case MessageMediaEdgeName: return "media"
+            case OmemoDeviceEdgeName: return "OmemoDeviceEdgeName"
+            case SignalSignedPreKey: return "SignalSignedPreKey"
+            case MessageActionEdgeName: return "MessageActionEdgeName"
         }
     }
 }
 
-@objc public enum DatbaseNotificationName:Int {
-    case RegisteredExtension
-    
-    public func name() -> String {
-        switch self {
-        case RegisteredExtension: return "DatbaseNotificationName.RegisteredExtension"
-        }
-    }
+public class DatbaseNotificationName:NSObject {
+    public static let LongLivedTransactionChanges = "DatbaseNotificationName.LongLivedTransactionChanges"
+    public static let RegisteredExtension = "DatbaseNotificationName.RegisteredExtension"
 }
 
-@objc public enum DatabaseNotificationKey:Int {
-    case ExtensionName
-    
-    public func name() -> String {
-        switch self {
-        case ExtensionName: return "DatabaseNotificationKey.ExtensionName"
-        }
-    }
+public class DatabaseNotificationKey:NSObject {
+    public static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
+    public static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
 }
 
 @objc public enum BuddyFTSColumnName:Int {
@@ -97,14 +87,6 @@ import Foundation
     
     public class func extensionName(extensionName:DatabaseExtensionName) -> String {
         return extensionName.name()
-    }
-    
-    public class func notificationName(notificationName:DatbaseNotificationName) -> String {
-        return notificationName.name()
-    }
-    
-    public class func notificationKeyName(notificationKeyName:DatabaseNotificationKey) -> String {
-        return notificationKeyName.name()
     }
     
     public class func buddyFTSColumnName(columnName:BuddyFTSColumnName) -> String {

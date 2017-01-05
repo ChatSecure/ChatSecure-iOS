@@ -147,8 +147,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
     
     /** Setup databse view handler*/
-    YapDatabaseConnection *connection = [self.readWriteDatabaseConnection.database newConnection];
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:connection];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatbaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     
     ///Custom Layout to account for no bubble cells
@@ -185,6 +184,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self tryToMarkAllMessagesAsRead];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -324,7 +329,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (YapDatabaseConnection *)readOnlyDatabaseConnection
 {
     if (!_readOnlyDatabaseConnection) {
-        _readOnlyDatabaseConnection = [[OTRDatabaseManager sharedInstance].database newConnection];
+        _readOnlyDatabaseConnection = [OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection;
     }
     return _readOnlyDatabaseConnection;
 }
@@ -391,13 +396,46 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self refreshTitleView:[self titleView]];
     }
     
+    [self tryToMarkAllMessagesAsRead];
+}
+
+- (void)tryToMarkAllMessagesAsRead {
     // Set all messages as read
     if ([self otr_isVisible]) {
         __weak __typeof__(self) weakSelf = self;
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            __typeof__(self) strongSelf = weakSelf;
-            id <OTRThreadOwner>threadOwner = [strongSelf threadObjectWithTransaction:transaction];
-            [threadOwner setAllMessagesAsReadInTransaction:transaction];
+        __block id <OTRThreadOwner>threadOwner = nil;
+        __block NSArray <id <OTRMessageProtocol>>* unreadMessages = nil;
+        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            threadOwner = [weakSelf threadObjectWithTransaction:transaction];
+            unreadMessages = [transaction allUnreadMessagesForThread:threadOwner];
+        } completionBlock:^{
+            
+            if ([unreadMessages count] == 0) {
+                return;
+            }
+            
+            //Mark as read
+            
+            NSMutableArray <id <OTRMessageProtocol>>*toBeSaved = [[NSMutableArray alloc] init];
+            
+            [unreadMessages enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[OTRIncomingMessage class]]) {
+                    OTRIncomingMessage *message = [((OTRIncomingMessage *)obj) copy];
+                    message.read = YES;
+                    [toBeSaved addObject:message];
+                } else if ([obj isKindOfClass:[OTRXMPPRoomMessage class]]) {
+                    OTRXMPPRoomMessage *message = [((OTRXMPPRoomMessage *)obj) copy];
+                    message.read = YES;
+                    [toBeSaved addObject:message];
+                }
+            }];
+            
+            [weakSelf.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [toBeSaved enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [transaction setObject:obj forKey:[obj messageKey] inCollection:[obj messageCollection]];
+                }];
+                [transaction touchObjectForKey:[threadOwner threadIdentifier] inCollection:[threadOwner threadCollection]];
+            }];
         }];
     }
 }

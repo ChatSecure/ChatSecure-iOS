@@ -104,22 +104,6 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return count
     }
     
-    public func setAllMessagesAsReadInTransaction(transaction: YapDatabaseReadWriteTransaction) {
-        guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
-            return
-        }
-        
-        relationshipTransaction.enumerateEdgesWithName(OTRXMPPRoomMessage.roomEdgeName, destinationKey: self.uniqueId, collection: self.threadCollection(), usingBlock: { (edge, stop) -> Void in
-            
-            if let message = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? OTRXMPPRoomMessage {
-                if (!message.read) {
-                    message.read = true
-                    message.saveWithTransaction(transaction)
-                }
-            }
-        })
-    }
-    
     public func isGroupThread() -> Bool {
         return true
     }

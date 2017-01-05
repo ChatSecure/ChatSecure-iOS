@@ -22,7 +22,6 @@ NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName"
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
-NSString *OTRUnreadMessagesViewExtensionName = @"OTRUnreadMessagesViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
@@ -297,24 +296,6 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                       options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName sendNotification:YES];
-}
-
-+ (BOOL)registerUnreadMessagesView
-{
-    
-    YapDatabaseViewFiltering *viewFiltering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection, NSString *key, id object) {
-        
-        if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
-            return ![((id<OTRMessageProtocol>)object) messageRead];
-        }
-        return NO;
-    }];
-    
-    YapDatabaseFilteredView *filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName
-                                                                                          filtering:viewFiltering];
-    
-    
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:filteredView withName:OTRUnreadMessagesViewExtensionName sendNotification:YES];
 }
 
 @end

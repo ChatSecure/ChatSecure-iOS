@@ -70,4 +70,30 @@ public extension YapDatabaseReadTransaction {
         }
         return count
     }
+    
+    public func allUnreadMessagesForThread(thread:OTRThreadOwner) -> [OTRMessageProtocol] {
+        guard let indexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+            return []
+        }
+        let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier()])
+        var result = [OTRMessageProtocol]()
+        let success = indexTransaction.enumerateKeysAndObjectsMatchingQuery(query) { (collection, key, object, stop) in
+            if let message = object as? OTRMessageProtocol {
+                result.append(message)
+            }
+        }
+        
+        if (!success) {
+            NSLog("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
+        }
+        
+        return result
+    }
+}
+
+public extension YapDatabaseReadWriteTransaction {
+    
+    
+    
 }
