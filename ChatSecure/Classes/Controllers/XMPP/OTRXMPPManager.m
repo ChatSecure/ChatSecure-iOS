@@ -239,7 +239,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     //MUC
     _roomManager = [[OTRXMPPRoomManager alloc] init];
-    self.roomManager.databaseConnection = [OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection;
+    self.roomManager.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     [self.roomManager activate:self.xmppStream];
     
     //Buddy Manager (for deleting)
