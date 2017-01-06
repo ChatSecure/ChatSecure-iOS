@@ -54,6 +54,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         _database = [OTRDatabaseManager sharedInstance].database;
         _readWriteConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
         _searchConnection = [self.database newConnection];
+        _searchConnection.name = @"ComposeViewSearchConnection";
         _searchQueue = [[YapDatabaseSearchQueue alloc] init];
         _selectionModeIsSingle = YES;
     }
