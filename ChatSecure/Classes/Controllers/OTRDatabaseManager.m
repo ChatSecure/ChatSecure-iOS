@@ -124,15 +124,21 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     
     self.readOnlyDatabaseConnection = [self.database newConnection];
     self.readOnlyDatabaseConnection.name = @"readOnlyDatabaseConnection";
-    self.readOnlyDatabaseConnection.permittedTransactions = YDB_AnyReadTransaction;
+
     
     self.readWriteDatabaseConnection = [self.database newConnection];
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
-    //self.readWriteDatabaseConnection.permittedTransactions = YDB_AnyReadWriteTransaction;
+
     
     _longLivedReadOnlyConnection = [self.database newConnection];
     self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
+    
+#if DEBUG
+    self.readOnlyDatabaseConnection.permittedTransactions = YDB_AnyReadTransaction;
+    // TODO: We can do better work at isolating work between connections
+    //self.readWriteDatabaseConnection.permittedTransactions = YDB_AnyReadWriteTransaction;
     //self.longLivedReadOnlyConnection.permittedTransactions = YDB_MainThreadOnly;
+#endif
     
     __weak __typeof__(self) weakSelf = self;
     self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
