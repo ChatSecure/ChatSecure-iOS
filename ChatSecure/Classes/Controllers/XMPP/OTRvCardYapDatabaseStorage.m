@@ -26,7 +26,7 @@
 {
     if (self = [super init]) {
         self.storageQueue = dispatch_queue_create("OTR.OTRvCardYapDatabaseStorage", NULL);
-        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
     return self;
 }

@@ -29,7 +29,7 @@
 -(instancetype)init
 {
     if (self = [super init]) {
-        _databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+        _databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
     return self;
 }
