@@ -26,7 +26,9 @@ abstract_target 'ChatSecureCorePods' do
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  pod 'YapDatabase/SQLCipher', '~> 2.9'
+  #pod 'YapDatabase/SQLCipher', '~> 2.9'
+  pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
+
   pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
   # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
@@ -71,6 +73,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'YapTaskQueue/SQLCipher', '~> 0.1.6'
 
   # Submodules
+
+
   pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
   pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

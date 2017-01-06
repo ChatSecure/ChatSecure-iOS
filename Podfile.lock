@@ -357,7 +357,6 @@ PODS:
     - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.9.2)
     - YapDatabase/SQLCipher/Extensions/Views (= 2.9.2)
   - YapDatabase/SQLCipher/Extensions/ActionManager (2.9.2):
-    - Reachability (~> 3)
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/Views
   - YapDatabase/SQLCipher/Extensions/CloudKit (2.9.2):
@@ -431,7 +430,7 @@ DEPENDENCIES:
   - VTAcknowledgementsViewController (~> 1.2)
   - XLForm (~> 3.3)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 2.9)
+  - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (~> 0.1.6)
   - ZXingObjC (~> 3.0)
 
@@ -464,6 +463,8 @@ EXTERNAL SOURCES:
     :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
+  YapDatabase:
+    :path: Submodules/YapDatabase/YapDatabase.podspec
 
 CHECKOUT OPTIONS:
   JSQMessagesViewController:
@@ -517,10 +518,10 @@ SPEC CHECKSUMS:
   VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
   XMPPFramework: 96396d09d681b470db3ebc464be4b5bd725d5644
-  YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
+  YapDatabase: 29bc55b61783a795476a7b9e460af5e6e702183d
   YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: a5b4f3d64833e1519c956aac0dcac4ec3a8c9282
+PODFILE CHECKSUM: d03eae7633eb155fd0a0ad06a7ff942df20d47d0
 
 COCOAPODS: 1.2.0.beta.3

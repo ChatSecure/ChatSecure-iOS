@@ -6,8 +6,9 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : 0,
     "D2885296440547CB23891301E79B480A22EAC5F6" : 9223372036854775807,
-    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : 0,
     "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : 0,
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : 0,
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : 9223372036854775807,
     "6629762BA356A4C56436558F8BA2A9102478B1C6" : 0,
     "425D736B25093B4D45BF64638604863B9D31F2C1" : 0,
     "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : 0,
@@ -21,8 +22,9 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure-iOS\/Submodules\/CPAProxy\/",
     "D2885296440547CB23891301E79B480A22EAC5F6" : "ChatSecure-iOS\/Submodules\/KSCrash\/",
-    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher\/",
     "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "ChatSecure-iOS\/Submodules\/XMPPFramework\/",
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher\/",
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "ChatSecure-iOS\/Submodules\/YapDatabase\/",
     "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure-iOS\/Submodules\/xmpp-server-list\/",
     "425D736B25093B4D45BF64638604863B9D31F2C1" : "ChatSecure-iOS\/Submodules\/OTRKit\/",
     "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : "ChatSecure-iOS\/Submodules\/SignalProtocol-ObjC\/",
@@ -90,6 +92,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/KSCrash.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2885296440547CB23891301E79B480A22EAC5F6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/YapDatabase.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/SignalProtocol-ObjC.git",
