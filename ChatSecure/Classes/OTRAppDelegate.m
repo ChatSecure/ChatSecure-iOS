@@ -189,14 +189,14 @@
 
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
-    //crash.handlingCrashTypes = KSCrashTypeProductionSafe;
-    
+    crash.handlingCrashTypes = KSCrashTypeProductionSafe;
+    /*
 #warning Change this to KSCrashTypeProductionSafe before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
     
     crash.handlingCrashTypes = KSCrashTypeAll;
     crash.deadlockWatchdogInterval = 10;
-    
+    */
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
