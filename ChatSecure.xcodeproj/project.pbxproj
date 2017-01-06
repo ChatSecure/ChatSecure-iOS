@@ -10,6 +10,7 @@
 		62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */; };
 		6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */; };
 		631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
+		6325DD601E20390700C88944 /* OTRLogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6325DD5F1E20390700C88944 /* OTRLogListViewController.swift */; };
 		6326D9AF1DC3D0F100D72403 /* OTRYapMessageSendAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6326D9AD1DC3D0F100D72403 /* OTRYapMessageSendAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6326D9B01DC3D0F100D72403 /* OTRYapMessageSendAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6326D9AE1DC3D0F100D72403 /* OTRYapMessageSendAction.m */; };
 		632AA72A1D480BFF00F65733 /* OTRSignalSenderKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 632AA7281D480BFF00F65733 /* OTRSignalSenderKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -482,6 +483,7 @@
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
 		6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = "<group>"; };
 		6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRAccountSignalEncryptionManager.swift; sourceTree = "<group>"; };
+		6325DD5F1E20390700C88944 /* OTRLogListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRLogListViewController.swift; sourceTree = "<group>"; };
 		6326D9AD1DC3D0F100D72403 /* OTRYapMessageSendAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapMessageSendAction.h; sourceTree = "<group>"; };
 		6326D9AE1DC3D0F100D72403 /* OTRYapMessageSendAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapMessageSendAction.m; sourceTree = "<group>"; };
 		632AA7281D480BFF00F65733 /* OTRSignalSenderKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRSignalSenderKey.h; path = "Signal-Storage/OTRSignalSenderKey.h"; sourceTree = "<group>"; };
@@ -1330,6 +1332,7 @@
 				633106441A16D1A300C17BAE /* OTRSettingsViewController.h */,
 				633106451A16D1A300C17BAE /* OTRSettingsViewController.m */,
 				63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */,
+				6325DD5F1E20390700C88944 /* OTRLogListViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -2414,6 +2417,7 @@
 				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,
 				D93DDABA1BA79A2500CD8331 /* OTRActivityItemProvider.m in Sources */,
 				D93DDABB1BA79A2500CD8331 /* OTRDomainCellInfo.m in Sources */,
+				6325DD601E20390700C88944 /* OTRLogListViewController.swift in Sources */,
 				D93DDABC1BA79A2500CD8331 /* OTROpenInFacebookActivity.m in Sources */,
 				D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */,
 				D93DDABD1BA79A2500CD8331 /* OTROpenInTwitterActivity.m in Sources */,

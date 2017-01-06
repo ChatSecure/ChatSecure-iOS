@@ -104,8 +104,16 @@
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";
     
+
+    
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
+#ifdef DEBUG
+    OTRViewSetting *logsSetting = [[OTRViewSetting alloc] initWithTitle:@"View Logs"
+                                                            description:nil
+                                                    viewControllerClass:[OTRLogListViewController class]];
+    [otherSettings addObject:logsSetting];
+#endif
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
     [settingsGroups addObject:otherGroup];
     _settingsDictionary = newSettingsDictionary;
