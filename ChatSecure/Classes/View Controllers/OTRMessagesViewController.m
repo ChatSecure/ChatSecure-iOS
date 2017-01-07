@@ -407,6 +407,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __block NSArray <id <OTRMessageProtocol>>* unreadMessages = nil;
         [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             threadOwner = [weakSelf threadObjectWithTransaction:transaction];
+            if (!threadOwner) { return; }
             unreadMessages = [transaction allUnreadMessagesForThread:threadOwner];
         } completionBlock:^{
             
