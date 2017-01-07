@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setStatusMessage:(nullable NSString*)statusMessage forBuddy:(OTRBuddy*)buddy;
 - (nullable NSString*) statusMessageForBuddy:(OTRBuddy*)buddy;
 
-- (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy;
 /** If resource is nil, it will clear out every other resource */
 - (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy resource:(nullable NSString *)resource;
 - (OTRThreadStatus)threadStatusForBuddy:(OTRBuddy*)buddy;

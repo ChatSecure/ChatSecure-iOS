@@ -14,7 +14,6 @@
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "OTRLanguageManager.h"
-#import "OTRXMPPBuddy_Private.h"
 #import "OTRBuddyCache.h"
 
 @import OTRAssets;
@@ -80,9 +79,6 @@
         return YES;
     }
     if (buddy.pendingApproval != oldBuddy.pendingApproval) {
-        return YES;
-    }
-    if (![buddy.resourceInfo isEqualToDictionary:oldBuddy.resourceInfo]) {
         return YES;
     }
     return NO;

@@ -127,17 +127,13 @@
     return statusMessage;
 }
 
-- (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy {
-    [self setThreadStatus:status forBuddy:buddy resource:nil];
-}
-
 - (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy resource:(NSString *)_resource {
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
     [self performBlockAsync:^{
         NSString *resource = [_resource copy];
         if (!resource) {
-            [self.threadStatuses removeAllObjects];
+            [self.threadStatuses removeObjectForKey:buddy.uniqueId];
             resource = @"";
         }
         NSDictionary <NSString*,NSNumber*> *resourceInfo = @{resource: @(status)};

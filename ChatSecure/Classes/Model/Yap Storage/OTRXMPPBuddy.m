@@ -7,7 +7,6 @@
 //
 
 #import "OTRXMPPBuddy.h"
-#import "OTRXMPPBuddy_Private.h"
 #import "OTRBuddyCache.h"
 @import XMPPFramework;
 
