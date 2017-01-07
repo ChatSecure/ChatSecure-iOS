@@ -181,40 +181,19 @@
 
 - (void)protocolDidChange:(NSDictionary *)change
 {
-    
-    OTRProtocolConnectionStatus newStatus = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-    OTRProtocolConnectionStatus oldStatus = [[change objectForKey:NSKeyValueChangeOldKey] integerValue];
-    
-    if (oldStatus == newStatus) {
-        return;
+    __block NSUInteger connected = 0;
+    __block NSUInteger connecting = 0;
+    @synchronized (self) {
+        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id<OTRProtocol>  _Nonnull obj, BOOL * _Nonnull stop) {
+            if ([obj connectionStatus] == OTRProtocolConnectionStatusConnected) {
+                connected++;
+            } else if ([obj connectionStatus] == OTRProtocolConnectionStatusConnecting) {
+                connecting++;
+            }
+        }];
     }
-    
-    NSInteger connectedInt = 0;
-    NSInteger connectingInt = 0;
-    
-    switch (oldStatus) {
-        case OTRProtocolConnectionStatusConnected:
-            connectedInt = -1;
-            break;
-        case OTRProtocolConnectionStatusConnecting:
-            connectingInt = -1;
-        default:
-            break;
-    }
-    
-    switch (newStatus) {
-        case OTRProtocolConnectionStatusConnected:
-            connectedInt = 1;
-            break;
-        case OTRProtocolConnectionStatusConnecting:
-            connectingInt = 1;
-        default:
-            break;
-    }
-    
-    
-    self.numberOfConnectedProtocols += connectedInt;
-    self.numberOfConnectingProtocols += connectingInt;
+    self.numberOfConnectedProtocols = connected;
+    self.numberOfConnectingProtocols = connecting;
 }
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;
