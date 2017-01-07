@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype) sharedInstance;
 
-/** Clears everything for a buddy */
-- (void) purgeAllPropertiesForBuddy:(OTRBuddy*)buddy;
+/** 
+ Clears everything for a buddy
+ */
+- (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies;
 
 - (void) setChatState:(OTRChatState)chatState forBuddy:(OTRBuddy*)buddy;
 - (OTRChatState) chatStateForBuddy:(OTRBuddy*)buddy;

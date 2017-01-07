@@ -192,16 +192,28 @@
 }
 
 /** Clears everything for a buddy */
-- (void) purgeAllPropertiesForBuddy:(OTRBuddy*)buddy {
-    NSParameterAssert(buddy.uniqueId);
-    if (!buddy.uniqueId) { return; }
+- (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies {
+    
+    if([buddies count] == 0) {
+        return;
+    }
+    
     [self performBlockAsync:^{
-        [self.chatStates removeObjectForKey:buddy.uniqueId];
-        [self.lastSentChatStates removeObjectForKey:buddy.uniqueId];
-        [self.statusMessages removeObjectForKey:buddy.uniqueId];
-        [self.threadStatuses removeObjectForKey:buddy.uniqueId];
-        [self.waitingForvCardTempFetch removeObjectForKey:buddy.uniqueId];
-        [self touchBuddy:buddy];
+        [buddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.chatStates removeObjectForKey:buddy.uniqueId];
+            [self.lastSentChatStates removeObjectForKey:buddy.uniqueId];
+            [self.statusMessages removeObjectForKey:buddy.uniqueId];
+            [self.threadStatuses removeObjectForKey:buddy.uniqueId];
+            [self.waitingForvCardTempFetch removeObjectForKey:buddy.uniqueId];
+        }];
+    }];
+    
+    [self performBlockAsync:^{
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [buddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
+                [self touchBuddy:buddy withTransaction:transaction];
+            }];
+        }];
     }];
 }
 
@@ -209,11 +221,15 @@
 #pragma mark Utility
 
 /** This is needed so database views are updated properly */
-- (void) touchBuddy:(OTRBuddy*)buddy {
+- (void) touchBuddy:(OTRBuddy*)buddy withTransaction:(YapDatabaseReadWriteTransaction *)transaction {
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
+    [transaction touchObjectForKey:buddy.uniqueId inCollection:[[buddy class] collection]];
+}
+
+- (void) touchBuddy:(OTRBuddy*)buddy {
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [transaction touchObjectForKey:buddy.uniqueId inCollection:[[buddy class] collection]];
+        [self touchBuddy:buddy withTransaction:transaction];
     }];
 }
 

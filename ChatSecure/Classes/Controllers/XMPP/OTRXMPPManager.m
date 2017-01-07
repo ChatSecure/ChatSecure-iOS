@@ -424,14 +424,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppStream disconnectAfterSending];
     
     __weak typeof(self)weakSelf = self;
+    __block NSArray<OTRXMPPBuddy*> *buddiesArray = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        NSArray<OTRXMPPBuddy*> *buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
-        for (OTRXMPPBuddy *buddy in buddiesArray) {
-            // We don't need to save in here because we're using OTRBuddyCache in memory storage
-            [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddy:buddy];
-        }
+        buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
     } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        
+        [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:buddiesArray];
+        
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
         {
@@ -546,12 +546,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     }
     
     //Reset buddy info to offline
+    __block NSArray<OTRXMPPBuddy*> *allBuddies = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        NSArray<OTRXMPPBuddy*> *allBuddies = [self.account allBuddiesWithTransaction:transaction];
-        [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-            // We don't need to save in here because we're using OTRBuddyCache in memory storage
-            [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddy:buddy];
-        }];
+        allBuddies = [self.account allBuddiesWithTransaction:transaction];
+    } completionBlock:^{
+        // We don't need to save in here because we're using OTRBuddyCache in memory storage
+        [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:allBuddies];
     }];
 }
 
