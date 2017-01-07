@@ -40,7 +40,7 @@
 @interface OTRProtocolManager ()
 @property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
 @property (atomic, readwrite) NSUInteger numberOfConnectingProtocols;
-@property (atomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
+@property (nonatomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
 @end
 
 @implementation OTRProtocolManager
@@ -70,17 +70,24 @@
 {
     NSParameterAssert(account);
     if (!account) { return; }
-    id<OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    id<OTRProtocol> protocol = nil;
+    @synchronized (self) {
+        protocol =  [self.protocolManagers objectForKey:account.uniqueId];
+    }
     if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
         [protocol disconnect];
     }
     [self.KVOController unobserve:protocol];
-    [self.protocolManagers removeObjectForKey:account.uniqueId];
+    @synchronized (self) {
+        [self.protocolManagers removeObjectForKey:account.uniqueId];
+    }
 }
 
 - (void)addProtocol:(id<OTRProtocol>)protocol forAccount:(OTRAccount *)account
 {
-    [self.protocolManagers setObject:protocol forKey:account.uniqueId];
+    @synchronized (self) {
+        [self.protocolManagers setObject:protocol forKey:account.uniqueId];
+    }
     [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
 }
 
@@ -88,7 +95,9 @@
 {
     NSParameterAssert(account.uniqueId);
     if (!account.uniqueId) { return NO; }
-    return [self.protocolManagers objectForKey:account.uniqueId] != nil;
+    @synchronized (self) {
+        return [self.protocolManagers objectForKey:account.uniqueId] != nil;
+    }
 }
 
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
@@ -103,7 +112,10 @@
 {
     NSParameterAssert(account);
     if (!account.uniqueId) { return nil; }
-    id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    id <OTRProtocol> protocol = nil;
+    @synchronized (self) {
+         protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    }
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
@@ -155,9 +167,11 @@
 }
 
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
-    [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-        [protocol disconnectSocketOnly:socketOnly];
-    }];
+    @synchronized (self) {
+        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+            [protocol disconnectSocketOnly:socketOnly];
+        }];
+    }
 }
 
 - (void)disconnectAllAccounts
@@ -206,7 +220,10 @@
 -(BOOL)isAccountConnected:(OTRAccount *)account;
 {
     BOOL connected = NO;
-    id <OTRProtocol> protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    id <OTRProtocol> protocol = nil;
+    @synchronized (self) {
+        protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    }
     if (protocol) {
         connected = [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
     }
