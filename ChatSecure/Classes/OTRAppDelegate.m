@@ -68,10 +68,7 @@
 #import <KSCrash/KSCrashInstallation+Alert.h>
 @import UserNotifications;
 
-//#define CHATSECURE_DEMO 1
-#if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
-#endif
 
 @interface OTRAppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -130,9 +127,13 @@
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
-#if CHATSECURE_DEMO
-        [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
-#endif
+        if ([[[NSProcessInfo processInfo] environment][@"OTRLaunchMode"] isEqualToString:@"ChatSecureUITestsDemoData"]) {
+            [OTRChatDemo loadDemoChatInDatabase];
+        } else if ([[[NSProcessInfo processInfo] environment][@"OTRLaunchMode"] isEqualToString:@"ChatSecureUITests"]) {
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [transaction removeAllObjectsInAllCollections];
+            }];
+        }
     }
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
@@ -213,12 +214,6 @@
             NSLog(@"Sending %d KSCrashInstallationHockey reports.", (int)filteredReports.count);
         }
     }];
-}
-
-- (void) loadDemoData {
-#if CHATSECURE_DEMO
-    [OTRChatDemo loadDemoChatInDatabase];
-#endif
 }
 
 /**
