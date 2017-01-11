@@ -166,9 +166,7 @@
     
     [self autoLoginFromBackground:NO];
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
-    
-    [self removeFacebookAccounts];
-    
+        
     // For disabling screen dimming while plugged in
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateDidChange:) name:UIDeviceBatteryStateDidChangeNotification object:nil];
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
@@ -283,41 +281,6 @@
         }
     }];
     return threadOwnerYapKey;
-}
-
-- (void)removeFacebookAccounts
-{
-    NSNumber *deleted = [[NSUserDefaults standardUserDefaults] objectForKey:kOTRDeletedFacebookKey];
-    
-    if (deleted.boolValue) {
-        return;
-    }
-    
-    __block NSUInteger deletedAccountsCount = 0;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        deletedAccountsCount = [OTRAccount removeAllAccountsOfType:OTRAccountTypeFacebook inTransaction:transaction];
-        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kOTRDeletedFacebookKey];
-        
-    } completionQueue:dispatch_get_main_queue() completionBlock:^{
-        if (deletedAccountsCount > 0) {
-            
-            void (^moreInfoBlock)(void) = ^void(void) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://developers.facebook.com/docs/chat"]];
-            };
-        
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
-            UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                moreInfoBlock();
-            }];
-            
-            [alertController addAction:okAction];
-            [alertController addAction:moreInfoAction];
-            
-            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-        }
-    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
