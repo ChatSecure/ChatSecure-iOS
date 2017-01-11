@@ -59,6 +59,16 @@ class ChatSecureUITests: XCTestCase {
         snapshot("02ConversationListScreen")
         XCUIApplication().tables["conversationTableView"].childrenMatchingType(.Any).elementBoundByIndex(0).tap()
         snapshot("03ChatScreen")
+        XCUIApplication().navigationBars["Chats"].buttons["More Info"].tap()
+        snapshot("04ProfileScreen")
+        
+//        app.navigationBars["Profile"].buttons["Done"].tap()
+//        
+//        let chatsNavigationBar = app.navigationBars["Chats"]
+//        chatsNavigationBar.buttons["Chats"].tap()
+//        chatsNavigationBar.childrenMatchingType(.Button).elementBoundByIndex(1).tap()
+//        app.tables["settingsTableView"].staticTexts["New Account"].tap()
+//        app.buttons["Create New Account"].tap()
         
     }
     
