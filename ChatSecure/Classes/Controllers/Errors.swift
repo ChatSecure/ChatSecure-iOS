@@ -146,11 +146,11 @@ extension OTROMEMOError: ChatSecureErrorProtocol {
     public func localizedDescription() -> String {
         switch self {
         case .UnknownError:
-            return NSLocalizedString("Unkown Error.", comment: "Describes an error without a known cause")
+            return OTRLanguageManager.translatedString("Unknown Error")
         case .NoDevicesForBuddy:
-            return NSLocalizedString("We could not find any trusted devices for this contact.", comment: "Error message for not finding any devices")
+            return OTRLanguageManager.translatedString("We could not find any trusted devices for this contact.")
         case .NoDevices:
-            return NSLocalizedString("We could not find any trusted devices for this account.", comment: "Error message for not finding any devices")
+            return OTRLanguageManager.translatedString("We could not find any trusted devices for this account.")
         }
     }
     

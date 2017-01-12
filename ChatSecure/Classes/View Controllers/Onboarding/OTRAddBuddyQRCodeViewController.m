@@ -43,7 +43,7 @@
     
     UIButton *showOwnQRCodeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     showOwnQRCodeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [showOwnQRCodeButton setTitle:NSLocalizedString(@"My Code", @"Your QR code") forState:UIControlStateNormal];
+    [showOwnQRCodeButton setTitle:[OTRLanguageManager translatedString:@"My QR Code"] forState:UIControlStateNormal];
     [showOwnQRCodeButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [showOwnQRCodeButton addTarget:self action:@selector(showOwnQRCode:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:showOwnQRCodeButton];

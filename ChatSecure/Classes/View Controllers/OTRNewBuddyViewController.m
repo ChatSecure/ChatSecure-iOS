@@ -275,7 +275,7 @@
 #warning TODO: Process OTR fingerprint
         // this is where you'd add the OTR (or Axolotl) fingerprint to the trusted store
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Unrecognized Invite Format", @"shown when invite QR code doesnt work") message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[OTRLanguageManager translatedString:@"Unrecognized Invite Format"] message:nil preferredStyle:UIAlertControllerStyleAlert];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }

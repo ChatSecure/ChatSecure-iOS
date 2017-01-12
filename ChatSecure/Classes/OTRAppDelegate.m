@@ -196,10 +196,10 @@
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
-    [installation addConditionalAlertWithTitle:NSLocalizedString(@"Crash Detected", @"")
-                                       message:NSLocalizedString(@"The app crashed last time it was launched. Send a crash report?", @"")
-                                     yesAnswer:NSLocalizedString(@"Sure!", @"")
-                                      noAnswer:NSLocalizedString(@"No thanks", @"")];
+    [installation addConditionalAlertWithTitle:[OTRLanguageManager translatedString:@"Crash Detected"]
+                                       message:[OTRLanguageManager translatedString:@"The app crashed last time it was launched. Send a crash report?"]
+                                     yesAnswer:OK_STRING
+                                      noAnswer:CANCEL_STRING];
 
     installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     
@@ -475,7 +475,7 @@
             // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
             NSString *title = nil;
             if (accounts.count == 1) {
-                title = NSLocalizedString(@"Add", @"String for adding a buddy");
+                title = ADD_STRING;
             } else {
                 title = account.username;
             }
