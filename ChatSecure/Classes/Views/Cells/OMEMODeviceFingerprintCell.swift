@@ -101,11 +101,11 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         if (device.trustLevel == .TrustedTofu) {
             trustLevelLabel.text = "TOFU"
         } else if (device.trustLevel == .TrustedUser) {
-            trustLevelLabel.text = NSLocalizedString("Verified", comment: "")
+            trustLevelLabel.text = OTRLanguageManager.translatedString("Verified")
         } else if (device.trustLevel == .Removed) {
-            trustLevelLabel.text = NSLocalizedString("Removed By Server", comment: "")
+            trustLevelLabel.text = OTRLanguageManager.translatedString("Removed By Server")
         } else {
-            trustLevelLabel.text = NSLocalizedString("Untrusted", comment: "")
+            trustLevelLabel.text = OTRLanguageManager.translatedString("Untrusted Device")
         }
     }
     
@@ -134,9 +134,9 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         if (fingerprint.trustLevel == .TrustedTofu) {
             trustLevelLabel.text = "TOFU"
         } else if (fingerprint.trustLevel == .TrustedUser) {
-            trustLevelLabel.text = NSLocalizedString("Verified", comment: "")
+            trustLevelLabel.text = OTRLanguageManager.translatedString("Verified")
         } else {
-            trustLevelLabel.text = NSLocalizedString("Untrusted", comment: "")
+            trustLevelLabel.text = OTRLanguageManager.translatedString("Untrusted Device")
         }
     }
     

@@ -72,28 +72,28 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount
 {
     XLFormDescriptor *descriptor = nil;
-    XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:NSLocalizedString(@"Nickname", @"for choosing your XMPP vCard display name")];
+    XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:[OTRLanguageManager translatedString:@"Nickname"]];
     
     if (createAccount) {
-        descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Sign Up", @"title for creating a new account")];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:SIGN_UP_STRING];
         descriptor.assignFirstResponderOnShow = YES;
         
-        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Basic Setup", @"username section")];
-        basicSection.footerTitle = NSLocalizedString(@"Think of a unique nickname that you don't use anywhere else and doesn't contain personal information.", @"basic setup selection footer");
+        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:[OTRLanguageManager translatedString:@"Basic Setup"]];
+        basicSection.footerTitle = [OTRLanguageManager translatedString:@"Think of a unique nickname that you don't use anywhere else and doesn't contain personal information."];
         nicknameRow.required = YES;
         [basicSection addFormRow:nicknameRow];
         
         XLFormSectionDescriptor *showAdvancedSection = [XLFormSectionDescriptor formSectionWithTitle:nil];
-        XLFormRowDescriptor *showAdvancedRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormShowAdvancedTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:NSLocalizedString(@"Show Advanced Options", @"toggle switch for show advanced")];
+        XLFormRowDescriptor *showAdvancedRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormShowAdvancedTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Show Advanced Options"]];
         showAdvancedRow.value = @0;
         [showAdvancedSection addFormRow:showAdvancedRow];
         
-        XLFormSectionDescriptor *accountSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Account", @"password section")];
-        accountSection.footerTitle = NSLocalizedString(@"We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else.", @"help text for password generator");
+        XLFormSectionDescriptor *accountSection = [XLFormSectionDescriptor formSectionWithTitle:ACCOUNT_STRING];
+        accountSection.footerTitle = [OTRLanguageManager translatedString:@"We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else."];
         accountSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
-        XLFormRowDescriptor *generatePasswordRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormGenerateSecurePasswordTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:NSLocalizedString(@"Generate Secure Password", @"whether or not we should generate a strong password for them")];
+        XLFormRowDescriptor *generatePasswordRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormGenerateSecurePasswordTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Generate Secure Password"]];
         generatePasswordRow.value = @1;
-        XLFormRowDescriptor *customizeUsernameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormCustomizeUsernameSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:NSLocalizedString(@"Customize Username", @"if you want to change your username")];
+        XLFormRowDescriptor *customizeUsernameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormCustomizeUsernameSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Customize Username"]];
         customizeUsernameRow.value = @0;
         XLFormRowDescriptor *passwordRow = [self passwordTextFieldRowDescriptorWithValue:nil];
         passwordRow.hidden = [NSString stringWithFormat:@"$%@==1", kOTRXLFormGenerateSecurePasswordTag];
@@ -104,13 +104,13 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [accountSection addFormRow:generatePasswordRow];
         [accountSection addFormRow:passwordRow];
         
-        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Server", @"server selection section title")];
+        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:[OTRLanguageManager translatedString:@"Server"]];
         serverSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
 
-        serverSection.footerTitle = NSLocalizedString(@"Choose from our list of trusted servers, or use your own.", @"server selection footer");
+        serverSection.footerTitle = [OTRLanguageManager translatedString:@"Choose from our list of trusted servers, or use your own."];
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
         
-        XLFormSectionDescriptor *torSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Tor", @"password section")];
+        XLFormSectionDescriptor *torSection = [XLFormSectionDescriptor formSectionWithTitle:@"Tor"];
         torSection.footerTitle = TOR_WARNING_MESSAGE_STRING;
         torSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
         [torSection addFormRow:[self torRowDescriptorWithValue:NO]];
@@ -121,7 +121,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [descriptor addFormSection:torSection];
         [descriptor addFormSection:serverSection];
     } else {
-        descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
         XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
         
@@ -239,7 +239,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 }
 
 + (XLFormRowDescriptor*) torRowDescriptorWithValue:(BOOL)value {
-    XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:NSLocalizedString(@"Enable Tor", @"toggle switch for show advanced")];
+    XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Enable Tor"]];
     torRow.value = @(value);
     return torRow;
 }

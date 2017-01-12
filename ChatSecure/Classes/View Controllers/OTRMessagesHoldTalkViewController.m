@@ -289,12 +289,12 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
                 [self.audioSessionManager recordAudioToURL:url error:nil];
                 [self setHold2TalkButtonRecording];
             } else {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Microphone Disabled", @"microphone permission is disabled") message:@"To use this feature you must re-enable microphone permissions." preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *fix = [UIAlertAction actionWithTitle:NSLocalizedString(@"Enable", @"enable permission") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:[OTRLanguageManager translatedString:@"Microphone Disabled"] message:[OTRLanguageManager translatedString:@"To use this feature you must re-enable microphone permissions."] preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *fix = [UIAlertAction actionWithTitle:[OTRLanguageManager translatedString:@"Enable"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     NSURL *settings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                     [[UIApplication sharedApplication] openURL:settings];
                 }];
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel button") style:UIAlertActionStyleCancel handler:nil];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
                 [alert addAction:fix];
                 [alert addAction:cancel];
                 [self presentViewController:alert animated:YES completion:nil];

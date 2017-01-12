@@ -1041,9 +1041,9 @@
     },
     "UNKNOWN_ERROR_STRING" : {
         "comment": "Describes an error without a known cause",
-        "string": "Unkown Error."
+        "string": "Unknown Error"
     },
-    "NO_DEVICES_ERROR_STRING" : {
+    "NO_DEVICES_BUDDY_ERROR_STRING" : {
         "comment": "Error message for not finding any devices",
         "string": "We could not find any trusted devices for this contact."
     },
@@ -1072,5 +1072,95 @@
     }, "RESEND_MESSAGE_TITLE" : {
         "comment": "Ttitle for alert view to resend a message",
         "string" : "Resend Message"
+    }, "Advanced_Encryption_Settings" : {
+        "comment": "",
+        "string" : "Advanced Encryption Settings"
+    }, "Best_Available" : {
+        "comment": "",
+        "string" : "Best Available"
+    }, "Could_Not_Decrypt_Database": {
+        "comment": "",
+        "string" : "Could not decrypt database. If the app is not working properly, you may need to delete and reinstall."
+    }, "Database_Error_String": {
+        "comment": "",
+        "string" : "Database Error"
+    }, "Advanced_Crypto_Warning": {
+        "comment": "",
+        "string" : "Don't change these unless you really know what you're doing. By default we will always select the best available encryption method."
+    }, "Enable_String": {
+        "comment": "enable permission",
+        "string" : "Enable"
+    }, "Me_String": {
+        "comment": "",
+        "string" : "Me"
+    }, "Microphone_Disabled": {
+        "comment": "microphone permission is disabled",
+        "string" : "Microphone Disabled"
+    }, "Microphone_Reenable_Please": {
+        "comment": "microphone permission is disabled",
+        "string" : "To use this feature you must re-enable microphone permissions."
+    }, "Plaintext_Opportunistic_OTR": {
+        "comment": "",
+        "string" : "Plaintext (Opportunistic OTR)"
+    }, "Plaintext_Only": {
+        "comment": "",
+        "string" : "Plaintext Only"
+    }, "Profile_String": {
+        "comment": "",
+        "string" : "Profile"
+    }, "Show_Advanced_Encryption_Settings": {
+        "comment": "",
+        "string" : "Show Advanced Encryption Settings"
+    }, "Unrecognized_Invite_Format": {
+        "comment": "shown when invite QR code doesnt work",
+        "string" : "Unrecognized Invite Format"
+    }, "NO_DEVICES_ACCOUNT_ERROR_STRING" : {
+        "comment": "Error message for not finding any devices",
+        "string": "We could not find any trusted devices for this account."
+    }, "Removed_By_Server" : {
+        "comment": "",
+        "string": "Removed By Server"
+    }, "MY_QR_CODE" : {
+        "comment": "Your QR code",
+        "string": "My QR Code"
+    },  "Nickname_String": {
+        "comment": "for choosing your XMPP vCard display name",
+        "string": "Nickname"
+    }, "Basic_Setup": {
+        "comment": "username section",
+        "string": "Basic Setup"
+    }, "Basic_Setup_Hint": {
+        "comment": "basic setup selection footer",
+        "string": "Think of a unique nickname that you don't use anywhere else and doesn't contain personal information."
+    }, "Show_Advanced_Options": {
+        "comment": "toggle switch for show advanced",
+        "string": "Show Advanced Options"
+    }, "Generate_Secure_Password": {
+        "comment": "whether or not we should generate a strong password for them",
+        "string": "Generate Secure Password"
+    }, "Generate_Secure_Password_Hint": {
+        "comment": "help text for password generator",
+        "string": "We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else."
+    }, "Customize_Username": {
+        "comment": "if you want to change your username",
+        "string": "Customize Username"
+    }, "Server_String": {
+        "comment": "server selection section title",
+        "string": "Server"
+    }, "Server_String_Hint": {
+        "comment": "server selection footer",
+        "string": "Choose from our list of trusted servers, or use your own."
+    }, "Enable_Tor_String": {
+        "comment": "",
+        "string": "Enable Tor"
+    }, "Choose_Server_String": {
+        "comment": "title for server selection screen",
+        "string": "Choose Server"
+    }, "Crash_Detected_Title": {
+        "comment": "",
+        "string": "Crash Detected"
+    }, "Crash_Detected_Message": {
+        "comment": "",
+        "string": "The app crashed last time it was launched. Send a crash report?"
     }
 }

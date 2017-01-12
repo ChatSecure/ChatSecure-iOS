@@ -101,7 +101,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 {
     NSArray *serverList = [OTRXMPPServerInfo defaultServerList];
     
-    XLFormDescriptor *formDescriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Choose Server", @"title for server selection screen")];
+    XLFormDescriptor *formDescriptor = [XLFormDescriptor formDescriptorWithTitle:[OTRLanguageManager translatedString:@"Choose Server"]];
     XLFormSectionDescriptor *sectionDescriptor = [[XLFormSectionDescriptor alloc] init];
     [formDescriptor addFormSection:sectionDescriptor];
     
@@ -112,8 +112,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
     }
     
     XLFormRowDescriptor *customRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTROTRXMPPServerListViewControllerCustomTag rowType:XLFormRowDescriptorTypeURL title:CUSTOM_STRING];
-    [customRowDescriptor.cellConfigAtConfigure setObject:NSLocalizedString(@"example.com", @"example XMPP server domain") forKey:@"textField.placeholder"];
-
+    [customRowDescriptor.cellConfigAtConfigure setObject:@"example.com" forKey:@"textField.placeholder"];
     
     [sectionDescriptor addFormRow:customRowDescriptor];
     
