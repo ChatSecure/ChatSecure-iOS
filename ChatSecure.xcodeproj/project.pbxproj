@@ -40,6 +40,7 @@
 		6358FDE01CDC097A00C9D3B6 /* OTRXMPPMessageStatusModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6358FDDF1CDC097A00C9D3B6 /* OTRXMPPMessageStatusModule.swift */; };
 		635E51A91DA82A4E002B70AB /* OTROMEMOTestModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */; };
 		635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */; };
+		635EF2021E276C410087BD72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCC831D1B5116008F903C /* OTRStringTests.swift */; };
 		635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
@@ -2206,6 +2207,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
 				D9AA246C1CAB401800337ECA /* GTMOAuth2ViewTouch.xib in Resources */,
 				D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
