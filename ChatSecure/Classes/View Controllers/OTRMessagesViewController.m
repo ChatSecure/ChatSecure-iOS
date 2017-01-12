@@ -658,6 +658,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)setupInfoButton {
     UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    infoButton.accessibilityIdentifier = @"profileButton";
     [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
 }

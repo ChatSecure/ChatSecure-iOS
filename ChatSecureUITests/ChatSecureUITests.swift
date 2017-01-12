@@ -111,7 +111,7 @@ class ChatSecureUITests: XCTestCase {
         skipEnablePush(app)
         XCUIApplication().tables["conversationTableView"].childrenMatchingType(.Any).elementBoundByIndex(0).tap()
         snapshot("03ChatScreen")
-        XCUIApplication().buttons[localizedString("More Info")].tap()
+        XCUIApplication().buttons["profileButton"].tap()
         snapshot("04ProfileScreen")
         
 //        app.navigationBars["Profile"].buttons["Done"].tap()
