@@ -952,6 +952,7 @@
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
+		D9E8277D1E2819F20071F40D /* strings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = strings.json; path = OTRAssets/Strings/strings.json; sourceTree = SOURCE_ROOT; };
 		D9EEEDD11D27388600B8BC54 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRvCard.h; path = "Yap Storage/OTRvCard.h"; sourceTree = "<group>"; };
 		DE32B878BAC9A236855EAF6E /* Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1543,6 +1544,7 @@
 		6396AF9C1A169D54009F3E6C /* ChatSecure */ = {
 			isa = PBXGroup;
 			children = (
+				D9E8277D1E2819F20071F40D /* strings.json */,
 				D95553D71C4F16730019667A /* ChatSecure.entitlements */,
 				633104D71A169EE600C17BAE /* Resources */,
 				6396AF9D1A169D54009F3E6C /* Supporting Files */,
