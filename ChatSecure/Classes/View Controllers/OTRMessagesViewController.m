@@ -578,7 +578,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         alertMessage = error.localizedDescription;
         
         if (error.code == otrFingerprintError) {
-            alertMessage = NO_DEVICES_ERROR_STRING;
+            alertMessage = NO_DEVICES_BUDDY_ERROR_STRING;
         }
         
         if([message isKindOfClass:[OTROutgoingMessage class]]) {
