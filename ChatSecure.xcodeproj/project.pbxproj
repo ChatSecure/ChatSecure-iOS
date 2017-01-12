@@ -325,7 +325,7 @@
 		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB971BA79A9900CD8331 /* OTRColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EC1A16D1A300C17BAE /* OTRColors.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F01A16D1A300C17BAE /* OTRImages.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB9A1BA79A9C00CD8331 /* OTRLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F21A16D1A300C17BAE /* OTRLog.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1837,6 +1837,7 @@
 				D93DDB311BA79A7000CD8331 /* UIViewController+ChatSecure.h in Headers */,
 				D93DDB301BA79A7000CD8331 /* UIImage+ChatSecure.h in Headers */,
 				D93DDB2F1BA79A7000CD8331 /* UIActivityViewController+ChatSecure.h in Headers */,
+				D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */,
 				D93DDB2E1BA79A7000CD8331 /* UIActivity+ChatSecure.h in Headers */,
 				D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */,
 				D93DDB2D1BA79A7000CD8331 /* UIActionSheet+ChatSecure.h in Headers */,
@@ -1916,7 +1917,6 @@
 				D93DDBC51BA79ACF00CD8331 /* OTRCircleView.h in Headers */,
 				D93DDBC61BA79AD000CD8331 /* OTRCircleButtonView.h in Headers */,
 				D93DDBB51BA79ABA00CD8331 /* OTRChooseAccountViewController.h in Headers */,
-				D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */,
 				D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */,
 				D93DDB761BA79A8100CD8331 /* OTRCertificateSetting.h in Headers */,
 				D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */,
