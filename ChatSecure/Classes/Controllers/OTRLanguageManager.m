@@ -19,15 +19,14 @@ NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString *userSetting = [defaults objectForKey:kOTRSettingKeyLanguage];
-    NSString *currentLocale = nil;
+     nil;
+    NSArray *prefrences = nil;
+    if ( [userSetting length] > 0 ) {
+        prefrences = @[userSetting];
+    }
     
-    //Check that there is a user setting and it's not the default locale
-    if([userSetting length] && ![userSetting isEqualToString:kOTRDefaultLanguageLocale]) {
-        currentLocale = userSetting;
-    }
-    else {
-        currentLocale = [[defaults objectForKey:kOTRAppleLanguagesKey] objectAtIndex:0];
-    }
+    NSString *currentLocale = [[NSBundle preferredLocalizationsFromArray:[[OTRAssets resourcesBundle] localizations]
+                                                          forPreferences:prefrences] firstObject];
 
     return currentLocale;
 }
@@ -55,14 +54,11 @@ NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
     NSString * currentLocale = [OTRLanguageManager currentLocale];
     NSBundle *bundle = [OTRAssets resourcesBundle];
     NSParameterAssert(bundle != nil);
+    
     NSString *bundlePath = [bundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
-    if (!bundlePath && [currentLocale length] > 2) {
-        currentLocale = [currentLocale substringToIndex:2];
-        bundlePath = [bundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
-    }
+    
     if (!bundlePath) {
-        NSString *defaultLocale = @"en";
-        bundlePath = [bundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:defaultLocale];
+        bundlePath = [bundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:@"Base"];
     }
     NSBundle *foreignBundle = [[NSBundle alloc] initWithPath:[bundlePath stringByDeletingLastPathComponent]];
     NSString * translatedString = NSLocalizedStringFromTableInBundle(englishString, nil, foreignBundle, nil);
@@ -71,7 +67,6 @@ NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
         translatedString = englishString;
     }
     return translatedString;
-    
 }
 
 @end

@@ -4,14 +4,18 @@ workspace "../ChatSecure.xcworkspace"
 
 # A list of devices you want to take the screenshots from
 devices([
-  "iPhone 7 Plus",
   "iPad Pro (12.9 inch)"
 ])
 
+#"iPhone 7 Plus"
+
 languages([
-  'cmn-Hans', 'da-DK', 'el-GR', 'es-ES', 'fr-FR', 'it-IT', 'nl-NL', 'pt-BR', 'ru-RU', 'tr-TR',
-  'cmn-Hant', 'de-DE', 'en-US', 'fi-FI', 'id-ID', 'ja-JP', 'no-NO', 'pt-PT', 'sv-SE', 'vi-VI'
+  'en-US',
+  'de-DE',
+  'zh-Hans'
 ])
+
+localize_simulator true
 
 # The name of the scheme which contains the UI Tests
 scheme "ChatSecureUITests"

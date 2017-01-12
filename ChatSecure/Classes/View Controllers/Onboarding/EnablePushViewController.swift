@@ -15,6 +15,8 @@ public class EnablePushViewController: UIViewController {
     private var userLaunchedToSettings: Bool = false
 
     @IBOutlet weak var enablePushButton: UIButton!
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var skipButton: UIButton!
     
     override public func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
@@ -38,6 +40,9 @@ public class EnablePushViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: OTRUserNotificationsChanged, object: nil)
+        self.skipButton.setTitle(OTRLanguageManager.translatedString("Skip"), forState: .Normal)
+        self.enablePushButton.setTitle(OTRLanguageManager.translatedString("Enable Push"), forState: .Normal)
+        self.skipButton.accessibilityIdentifier = "EnablePushViewSkipButton"
     }
     
     @IBAction func enablePushPressed(sender: AnyObject) {

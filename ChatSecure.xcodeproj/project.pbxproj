@@ -13,6 +13,7 @@
 		6325DD601E20390700C88944 /* OTRLogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6325DD5F1E20390700C88944 /* OTRLogListViewController.swift */; };
 		6326D9AF1DC3D0F100D72403 /* OTRYapMessageSendAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6326D9AD1DC3D0F100D72403 /* OTRYapMessageSendAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6326D9B01DC3D0F100D72403 /* OTRYapMessageSendAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6326D9AE1DC3D0F100D72403 /* OTRYapMessageSendAction.m */; };
+		632A2D341E2728B8000D3192 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		632AA72A1D480BFF00F65733 /* OTRSignalSenderKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 632AA7281D480BFF00F65733 /* OTRSignalSenderKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		632AA72B1D480BFF00F65733 /* OTRSignalSenderKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 632AA7291D480BFF00F65733 /* OTRSignalSenderKey.m */; };
 		632AA72E1D4819BD00F65733 /* OTRSignalPreKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 632AA72C1D4819BD00F65733 /* OTRSignalPreKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2197,6 +2198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				632A2D341E2728B8000D3192 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

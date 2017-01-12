@@ -29,7 +29,10 @@ public class OTRWelcomeViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.createAccountButton.setTitle(OTRLanguageManager.translatedString("Create New Account"), forState: .Normal)
+        self.skipButton.setTitle(OTRLanguageManager.translatedString("Skip"), forState: .Normal)
+        self.existingAccountButton.setTitle(OTRLanguageManager.translatedString("Add Existing Account"), forState: .Normal)
+        
     }
 
     override public func didReceiveMemoryWarning() {
