@@ -24,7 +24,7 @@
 @import ZXingObjC;
 @import PureLayout;
 #import  <QuartzCore/CALayer.h>
-#import "OTRLanguageManager.h"
+
 @import OTRAssets;
 
 @interface OTRQRCodeViewController()
@@ -36,7 +36,7 @@
 - (instancetype) initWithQRString:(NSString*)qrString {
     if (self = [super init]) {
         _qrString = qrString;
-        self.title = QR_CODE_STRING;
+        self.title = QR_CODE_STRING();
     }
     return self;
 }
@@ -74,7 +74,7 @@
     self.instructionsLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.instructionsLabel];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING() style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
     
     [self.view setNeedsUpdateConstraints];
 }

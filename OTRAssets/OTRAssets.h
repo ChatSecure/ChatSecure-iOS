@@ -22,8 +22,12 @@ FOUNDATION_EXPORT double OTRAssetsVersionNumber;
 //! Project version string for OTRAssets.
 FOUNDATION_EXPORT const unsigned char OTRAssetsVersionString[];
 
+FOUNDATION_EXPORT NSString *const kOTRDefaultLanguageLocale;
+FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
+
 // In this header, you should import all the public headers of your framework using statements like #import <OTRAssets/PublicHeader.h>
 
 #import "OTRStrings.h"
 #import "OTRSecrets.h"
 #import "OTRBranding.h"
+#import "OTRLanguageManager.h"

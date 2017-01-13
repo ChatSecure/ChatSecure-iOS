@@ -16,7 +16,7 @@
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
-#import "OTRLanguageManager.h"
+
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static Float64 kOTRMessagesMinimumAudioTime = .5;
@@ -60,7 +60,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
                            forState:UIControlStateNormal];
     
     self.knockButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
-    NSString *title = KNOCK_STRING;
+    NSString *title = KNOCK_STRING();
     CGFloat maxHeight = 32.0f;
     [self.knockButton setTitle:title forState:UIControlStateNormal];
     
@@ -132,14 +132,14 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)setHold2TalkStatusWaiting
 {
-    self.hold2TalkButton.textLabel.text = HOLD_TO_TALK_STRING;
+    self.hold2TalkButton.textLabel.text = HOLD_TO_TALK_STRING();
     self.hold2TalkButton.textLabel.textColor = [UIColor whiteColor];
     self.hold2TalkButton.backgroundColor = [UIColor darkGrayColor];
 }
 
 - (void)setHold2TalkButtonRecording
 {
-    self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
+    self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING();
     self.hold2TalkButton.textLabel.textColor = [UIColor darkGrayColor];
     self.hold2TalkButton.backgroundColor = [UIColor whiteColor];
 }
@@ -289,12 +289,12 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
                 [self.audioSessionManager recordAudioToURL:url error:nil];
                 [self setHold2TalkButtonRecording];
             } else {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:[OTRLanguageManager translatedString:@"Microphone Disabled"] message:[OTRLanguageManager translatedString:@"To use this feature you must re-enable microphone permissions."] preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *fix = [UIAlertAction actionWithTitle:[OTRLanguageManager translatedString:@"Enable"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:Microphone_Disabled() message:Microphone_Reenable_Please() preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *fix = [UIAlertAction actionWithTitle:Enable_String() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     NSURL *settings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                     [[UIApplication sharedApplication] openURL:settings];
                 }];
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
                 [alert addAction:fix];
                 [alert addAction:cancel];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -328,11 +328,11 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
     if (insideButton) {
         self.trashView.trashIconLabel.alpha = 1;
         self.trashView.microphoneIconLabel.alpha = 0;
-        self.hold2TalkButton.textLabel.text = RELEASE_TO_DELETE_STRING;
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_DELETE_STRING();
     } else {
         self.trashView.trashIconLabel.alpha = percentDistance;
         self.trashView.microphoneIconLabel.alpha = 1-percentDistance;
-        self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING();
     }
     
     [self.view setNeedsUpdateConstraints];

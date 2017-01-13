@@ -12,7 +12,7 @@
 #import "OTROpenInFacebookActivity.h"
 #import "OTROpenInTwitterActivity.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 
 @implementation UIActivityViewController (ChatSecure)
 
@@ -21,7 +21,7 @@
     if ([urlArray count]) {
         TUSafariActivity *safariActivity = [TUSafariActivity new];
         ARChromeActivity *chromeActivity = [ARChromeActivity new];
-        chromeActivity.activityTitle = OPEN_IN_CHROME;
+        chromeActivity.activityTitle = OPEN_IN_CHROME();
         chromeActivity.callbackURL = [NSURL URLWithString:@"chatsecure://"];
         OTROpenInTwitterActivity *twitterActivity = [OTROpenInTwitterActivity new];
         OTROpenInFacebookActivity *facebookActivity = [OTROpenInFacebookActivity new];

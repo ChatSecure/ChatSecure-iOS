@@ -25,7 +25,7 @@
 @import OTRAssets;
 @import YapDatabase;
 @import YapTaskQueue;
-#import "OTRLanguageManager.h"
+
 #import "OTRSignalSession.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -199,7 +199,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         return YES;
     }
     else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[OTRLanguageManager translatedString:@"Database Error"] message:[OTRLanguageManager translatedString:@"Could not decrypt database. If the app is not working properly, you may need to delete and reinstall."] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:Database_Error_String() message:Could_Not_Decrypt_Database() delegate:nil cancelButtonTitle:OK_STRING() otherButtonTitles:nil];
         [alert show];
         return NO;
     }

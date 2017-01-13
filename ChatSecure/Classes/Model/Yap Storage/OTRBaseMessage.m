@@ -15,7 +15,7 @@
 @import OTRAssets;
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
-#import "OTRLanguageManager.h"
+
 #import "OTRMessageEncryptionInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 

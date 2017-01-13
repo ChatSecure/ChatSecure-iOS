@@ -1,5 +1,5 @@
 //
-//  OTRLanguageController.h
+//  OTRLanguageManager.h
 //  Off the Record
 //
 //  Created by David on 11/13/12.
@@ -8,22 +8,18 @@
 
 @import Foundation;
 
-extern NSString *const kOTRDefaultLanguageLocale;
-extern NSString *const kOTRSettingKeyLanguage;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface OTRLanguageManager : NSObject
-
-@property (nonatomic,strong) NSDictionary * languageLookupDictionary;
 
 /**
  @return an Array of supported language codes from the bundle
  */
-+ (NSArray *)supportedLanguages;
++ (NSArray<NSString*> *)supportedLanguages;
 
 + (void)setLocale:(NSString *)locale;
-
 + (NSString *)currentLocale;
 
-+ (NSString *)translatedString:(NSString *)englishString;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -48,7 +48,7 @@
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 #import "NSURL+ChatSecure.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
@@ -66,7 +66,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     if (self = [super init])
     {
-        self.title = SETTINGS_STRING;
+        self.title = SETTINGS_STRING();
         self.settingsManager = [[OTRSettingsManager alloc] init];
     }
     return self;
@@ -153,7 +153,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             cell = [tableView dequeueReusableCellWithIdentifier:addAccountCellIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
-                cell.textLabel.text = NEW_ACCOUNT_STRING;
+                cell.textLabel.text = NEW_ACCOUNT_STRING();
                 cell.imageView.image = [UIImage imageNamed:circleImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
                 cell.detailTextLabel.text = nil;
             }
@@ -262,8 +262,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     {
         OTRAccount *account = [self accountAtIndexPath:indexPath];
         
-        UIAlertAction * cancelButtonItem = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction * okButtonItem = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction * cancelButtonItem = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction * okButtonItem = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             
             if( [[OTRProtocolManager sharedInstance] isAccountConnected:account])
             {
@@ -274,8 +274,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             [OTRAccountsManager removeAccount:account];
         }];
         
-        NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:DELETE_ACCOUNT_TITLE_STRING message:message preferredStyle:UIAlertControllerStyleAlert];
+        NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING(), account.username];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:DELETE_ACCOUNT_TITLE_STRING() message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:cancelButtonItem];
         [alert addAction:okButtonItem];
         [self presentViewController:alert animated:YES completion:nil];
@@ -302,13 +302,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)logoutAccount:(OTRAccount *)account sender:(id)sender
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING() style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
         [protocol disconnect];
     }];
     
-    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [ShareController shareAccount:account sender:sender viewController:self];
     }];
     
@@ -378,7 +378,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #warning Hardcoded Whitelabel Value
     NSURL *bitcoinURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *paypalAlertAction = [UIAlertAction actionWithTitle:@"PayPal" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [[UIApplication sharedApplication] openURL:paypalURL];
@@ -388,7 +388,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         [[UIApplication sharedApplication] openURL:bitcoinURL];
     }];
     
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
     
     [alertController addAction:paypalAlertAction];
     [alertController addAction:bitcoinAlertAction];
@@ -423,9 +423,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #pragma mark OTRFeedbackSettingDelegate method
 
 - (void) presentUserVoiceViewForSetting:(OTRSetting *)setting {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 #warning Hardcoded Whitelabel Value
         UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
         [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];

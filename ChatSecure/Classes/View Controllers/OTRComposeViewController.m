@@ -21,7 +21,7 @@
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
-#import "OTRLanguageManager.h"
+
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import OTRAssets;
@@ -68,7 +68,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.view.backgroundColor = [UIColor whiteColor];
     
     /////////// Navigation Bar ///////////
-    self.title = COMPOSE_STRING;
+    self.title = COMPOSE_STRING();
     
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
@@ -193,13 +193,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     if (self.selectedBuddiesIdSet.count > 1) {
         //Group so need user to select name
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:GROUP_NAME_STRING message:ENTER_GROUP_NAME_STRING preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:GROUP_NAME_STRING() message:ENTER_GROUP_NAME_STRING() preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSString *name = alertController.textFields.firstObject.text;
             completion(name);
         }];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         
@@ -207,7 +207,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         [alertController addAction:cancelAction];
         
         [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.placeholder = GROUP_NAME_STRING;
+            textField.placeholder = GROUP_NAME_STRING();
             
             [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
                 okAction.enabled = textField.text.length > 0;
@@ -377,7 +377,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
         }
-        cell.textLabel.text = ADD_BUDDY_STRING;
+        cell.textLabel.text = ADD_BUDDY_STRING();
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         return cell;

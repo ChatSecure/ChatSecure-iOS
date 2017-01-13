@@ -8,6 +8,9 @@
 
 #import "OTRAssets.h"
 
+NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
+NSString *const kOTRDefaultLanguageLocale = @"kOTRDefaultLanguageLocale";
+
 @implementation OTRAssets
 
 /** Returns OTRResources.bundle */

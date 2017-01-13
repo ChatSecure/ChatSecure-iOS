@@ -7,7 +7,7 @@
 //
 
 #import "OTRBuddyApprovalCell.h"
-#import "OTRLanguageManager.h"
+
 @import OTRAssets;
 @import PureLayout;
 
@@ -34,7 +34,7 @@
     NSString * name = [thread threadName];
     
     self.nameLabel.text = name;
-    self.identifierLabel.text = [NSString stringWithFormat:@"%@ %@", name, WANTS_TO_CHAT_STRING];
+    self.identifierLabel.text = [NSString stringWithFormat:@"%@ %@", name, WANTS_TO_CHAT_STRING()];
 }
 
 - (void)updateConstraints

@@ -10,7 +10,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRConstants.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 @import XMPPFramework;
 
 static NSUInteger const OTRDefaultPortNumber = 5222;
@@ -48,7 +48,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 }
 - (NSString *)accountDisplayName
 {
-    return JABBER_STRING;
+    return JABBER_STRING();
 }
 
 - (Class)protocolClass {

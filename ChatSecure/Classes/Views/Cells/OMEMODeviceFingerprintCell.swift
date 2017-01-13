@@ -101,11 +101,11 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         if (device.trustLevel == .TrustedTofu) {
             trustLevelLabel.text = "TOFU"
         } else if (device.trustLevel == .TrustedUser) {
-            trustLevelLabel.text = OTRLanguageManager.translatedString("Verified")
+            trustLevelLabel.text = VERIFIED_STRING()
         } else if (device.trustLevel == .Removed) {
-            trustLevelLabel.text = OTRLanguageManager.translatedString("Removed By Server")
+            trustLevelLabel.text = Removed_By_Server()
         } else {
-            trustLevelLabel.text = OTRLanguageManager.translatedString("Untrusted Device")
+            trustLevelLabel.text = UNTRUSTED_DEVICE_STRING()
         }
     }
     
@@ -134,9 +134,9 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         if (fingerprint.trustLevel == .TrustedTofu) {
             trustLevelLabel.text = "TOFU"
         } else if (fingerprint.trustLevel == .TrustedUser) {
-            trustLevelLabel.text = OTRLanguageManager.translatedString("Verified")
+            trustLevelLabel.text = VERIFIED_STRING()
         } else {
-            trustLevelLabel.text = OTRLanguageManager.translatedString("Untrusted Device")
+            trustLevelLabel.text = UNTRUSTED_DEVICE_STRING()
         }
     }
     

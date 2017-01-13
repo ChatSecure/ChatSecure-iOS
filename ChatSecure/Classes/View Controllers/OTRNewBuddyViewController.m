@@ -21,7 +21,7 @@
 
 @import QRCodeReaderViewController;
 @import XMPPFramework;
-#import "OTRLanguageManager.h"
+
 #import "NSURL+ChatSecure.h"
 
 @interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
@@ -63,21 +63,21 @@
 {
     [super viewDidLoad];
     
-    self.title = ADD_BUDDY_STRING;
+    self.title = ADD_BUDDY_STRING();
     
     //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
     
-    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
+    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
     self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
     
     self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING;
+    self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING();
     
     if (self.isXMPPaccount) {
         self.displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-        self.displayNameTextField.placeholder = OPTIONAL_STRING;
+        self.displayNameTextField.placeholder = OPTIONAL_STRING();
         self.accountNameTextField.delegate= self.displayNameTextField.delegate = self;
         
         self.displayNameTextField.autocapitalizationType = self.accountNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -116,11 +116,11 @@
     
     if (indexPath.row == 0) {
         textField = self.accountNameTextField;
-        cellText = USERNAME_STRING;
+        cellText = USERNAME_STRING();
     }
     else if(indexPath.row == 1) {
         textField = self.displayNameTextField;
-        cellText = NAME_STRING;
+        cellText = NAME_STRING();
     }
     
     OTRInLineTextEditTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellType];
@@ -275,7 +275,7 @@
 #warning TODO: Process OTR fingerprint
         // this is where you'd add the OTR (or Axolotl) fingerprint to the trusted store
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[OTRLanguageManager translatedString:@"Unrecognized Invite Format"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:Unrecognized_Invite_Format() message:nil preferredStyle:UIAlertControllerStyleAlert];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }

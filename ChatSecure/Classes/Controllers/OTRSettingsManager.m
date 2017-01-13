@@ -59,49 +59,49 @@
     NSMutableArray<OTRSettingsGroup*> *settingsGroups = [NSMutableArray array];
     NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
     // Leave this in for now
-    OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
-    OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:@[accountsViewSetting]];
+    OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING() description:nil viewControllerClass:nil];
+    OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING() settings:@[accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
-    OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING
-                                                                                 description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING
+    OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING()
+                                                                                 description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING()
                                                                                  settingsKey:kOTRSettingKeyDeleteOnDisconnect];
     
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
     
-    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING
-                                                                           description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
+    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING()
+                                                                           description:PINNED_CERTIFICATES_DESCRIPTION_STRING()];
     
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if (![PushController canReceivePushNotifications] ||
         [PushController getPushPreference] != PushPreferenceEnabled) {
-        OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:nil viewControllerClass:[EnablePushViewController class]];
+        OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING() description:nil viewControllerClass:[EnablePushViewController class]];
         pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
+        OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING() settings:@[pushViewSetting]];
         [settingsGroups addObject:pushGroup];
     }
 
     
     NSArray *chatSettings = @[deletedDisconnectedConversations];
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING() settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
     NSArray * securitySettings = @[certSetting];
-    OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
+    OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING() settings:securitySettings];
     [settingsGroups addObject:securitySettingsGroup];
     
-    OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
+    OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING() description:nil];
     feedbackViewSetting.imageName = @"18-envelope.png";
     
-    OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
+    OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING() description:nil];
     shareViewSetting.imageName = @"275-broadcast.png";
     
-    OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
+    OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING() description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
     [newSettingsDictionary setObject:languageSetting forKey:kOTRSettingKeyLanguage];
     
-    OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
+    OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING() description:nil];
     donateSetting.imageName = @"29-heart.png";
     
 
@@ -114,7 +114,7 @@
                                                     viewControllerClass:[OTRLogListViewController class]];
     [otherSettings addObject:logsSetting];
 #endif
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING() settings:otherSettings];
     [settingsGroups addObject:otherGroup];
     _settingsDictionary = newSettingsDictionary;
     _settingsGroups = settingsGroups;

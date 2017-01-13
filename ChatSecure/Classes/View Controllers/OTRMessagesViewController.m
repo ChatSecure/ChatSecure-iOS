@@ -43,7 +43,7 @@
 #import "OTRMediaServer.h"
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
-#import "OTRLanguageManager.h"
+
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapMessageSendAction.h"
@@ -166,13 +166,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
             NSString * placeHolderString = nil;
             switch (state.messageSecurity) {
                 case OTRMessageTransportSecurityPlaintext:
-                    placeHolderString = SEND_PLAINTEXT_STRING;
+                    placeHolderString = SEND_PLAINTEXT_STRING();
                     break;
                 case OTRMessageTransportSecurityOTR:
-                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING,@"OTR"];
+                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING(),@"OTR"];
                     break;
                 case OTRMessageTransportSecurityOMEMO:
-                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING,@"OMEMO"];;
+                    placeHolderString = [NSString stringWithFormat:SEND_ENCRYPTED_STRING(),@"OMEMO"];;
                     break;
                     
                 default:
@@ -513,13 +513,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (nonnull UIAlertAction *)viewProfileAction {
-    return [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    return [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self infoButtonPressed:action];
     }];
 }
 
 - (nonnull UIAlertAction *)cancleAction {
-    return [UIAlertAction actionWithTitle:CANCEL_STRING
+    return [UIAlertAction actionWithTitle:CANCEL_STRING()
                                     style:UIAlertActionStyleCancel
                                   handler:nil];
 }
@@ -537,7 +537,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             duplicate = NO;
         }
         // This is an outgoing message so we can offer to resend
-        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING];
+        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING()];
         [actions addObject:resendAction];
     }
     
@@ -554,7 +554,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSString *title = nil;
     NSString *alertMessage = nil;
     
-    NSString * sendingType = UNENCRYPTED_STRING;
+    NSString * sendingType = UNENCRYPTED_STRING();
     switch (self.state.messageSecurity) {
         case OTRMessageTransportSecurityOTR:
             sendingType = @"OTR";
@@ -568,26 +568,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     if ([message isKindOfClass:[OTROutgoingMessage class]]) {
-        title = RESEND_MESSAGE_TITLE;
-        alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
+        title = RESEND_MESSAGE_TITLE();
+        alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
     }
     
     if (error) {
         NSUInteger otrFingerprintError = 32872;
-        title = ERROR_STRING;
+        title = ERROR_STRING();
         alertMessage = error.localizedDescription;
         
         if (error.code == otrFingerprintError) {
-            alertMessage = NO_DEVICES_BUDDY_ERROR_STRING;
+            alertMessage = NO_DEVICES_BUDDY_ERROR_STRING();
         }
         
         if([message isKindOfClass:[OTROutgoingMessage class]]) {
             //If it's an outgoing message the error title should be that we were unable to send the message.
-            title = UNABLE_TO_SEND_STRING;
+            title = UNABLE_TO_SEND_STRING();
             
             
             
-            NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING,sendingType];
+            NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
             alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
             
             //If this is an error about not having a trusted identity then we should offer to connect to the
@@ -595,20 +595,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 error.code == OTROMEMOErrorNoDevices ||
                 error.code == otrFingerprintError) {
                 
-                alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
+                alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
             }
         }
     }
     
     
     if (![self isMessageTrusted:message]) {
-        title = UNTRUSTED_DEVICE_STRING;
+        title = UNTRUSTED_DEVICE_STRING();
         if ([message messageIncoming]) {
-            alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING;
+            alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING();
         } else {
-            alertMessage = UNTRUSTED_DEVICE_SENT_STRING;
+            alertMessage = UNTRUSTED_DEVICE_SENT_STRING();
         }
-        alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING]];
+        alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
     }
     
     NSArray <UIAlertAction*>*actions = [self actionForMessage:message];
@@ -1443,7 +1443,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([self isPushMessageAtIndexPath:indexPath]) {
         JSQMessagesTimestampFormatter *formatter = [JSQMessagesTimestampFormatter sharedFormatter];
-        NSString *knockString = KNOCK_SENT_STRING;
+        NSString *knockString = KNOCK_SENT_STRING();
         //Add new line if there is already a date string
         if ([text length] > 0) {
             knockString = [@"\n" stringByAppendingString:knockString];
@@ -1532,13 +1532,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSUInteger insertIndex = 0;
         
         if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING(),percentProgress];
             insertIndex = [attributedString length];
         } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
             if(percentProgress > 0) {
-                progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+                progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING(),percentProgress];
             } else {
-                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING()];
             }
         }
         

@@ -31,7 +31,7 @@
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 #import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
@@ -58,7 +58,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
    
     ///////////// Setup Navigation Bar //////////////
     
-    self.title = CHATS_STRING;
+    self.title = CHATS_STRING();
     UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
@@ -240,14 +240,14 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         numberUnreadMessages = [transaction numberOfUnreadMessages];
     }];
     if (numberUnreadMessages > 99) {
-        self.title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING];
+        self.title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING()];
     }
     else if (numberUnreadMessages > 0)
     {
-        self.title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING,(int)numberUnreadMessages];
+        self.title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING(),(int)numberUnreadMessages];
     }
     else {
-        self.title = CHATS_STRING;
+        self.title = CHATS_STRING();
     }
 }
 

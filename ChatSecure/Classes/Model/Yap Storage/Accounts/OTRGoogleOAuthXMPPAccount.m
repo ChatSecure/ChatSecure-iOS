@@ -10,7 +10,7 @@
 @import gtm_oauth2;
 @import OTRAssets;
 #import "OTRConstants.h"
-#import "OTRLanguageManager.h"
+
 
 NSString *const kOTRExpirationDateKey = @"kOTRExpirationDateKey";
 NSString *const kOTRExpiresInKey      = @"expires_in";
@@ -24,7 +24,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 }
 - (NSString *)accountDisplayName
 {
-    return GOOGLE_TALK_STRING;
+    return GOOGLE_TALK_STRING();
 }
 
 -(NSString *)accessTokenString {

@@ -9,7 +9,7 @@
 #import "OTRRememberPasswordView.h"
 @import OTRAssets;
 @import PureLayout;
-#import "OTRLanguageManager.h"
+
 
 @interface OTRRememberPasswordView ()
 
@@ -32,7 +32,7 @@
          ////// label //////
         self.rememberPasswordLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.rememberPasswordLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.rememberPasswordLabel.text = REMEMBER_PASSPHRASE_STRING;
+        self.rememberPasswordLabel.text = REMEMBER_PASSPHRASE_STRING();
         
         ////// switch //////
         self.rememberPasswordSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -62,7 +62,7 @@
 
 - (void)passwordInfoButtonPressed:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:REMEMBER_PASSPHRASE_STRING message:REMEMBER_PASSPHRASE_INFO_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:REMEMBER_PASSPHRASE_STRING() message:REMEMBER_PASSPHRASE_INFO_STRING() delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING(), nil];
     [alertView show];
 }
 

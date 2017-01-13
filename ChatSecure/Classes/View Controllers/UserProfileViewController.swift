@@ -9,6 +9,7 @@
 import UIKit
 import XLForm
 import YapDatabase
+import OTRAssets
 
 public class UserProfileViewController: XLFormViewController {
     
@@ -157,9 +158,9 @@ public class UserProfileViewController: XLFormViewController {
     
     public static func cryptoChooserRows(buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
         
-        let bestAvailableRow = XLFormRowDescriptor(tag: DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: OTRLanguageManager.translatedString("Best Available"))
-        let plaintextOnlyRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: OTRLanguageManager.translatedString("Plaintext Only"))
-        let plaintextOtrRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: OTRLanguageManager.translatedString("Plaintext (Opportunistic OTR)"))
+        let bestAvailableRow = XLFormRowDescriptor(tag: DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Best_Available())
+        let plaintextOnlyRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Only())
+        let plaintextOtrRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Opportunistic_OTR())
         let otrRow = XLFormRowDescriptor(tag: OTRRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OTR")
         let omemoRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO")
         let omemoOtrRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO & OTR")
@@ -297,9 +298,9 @@ public class UserProfileViewController: XLFormViewController {
     
     
     public static func profileFormDescriptorForAccount(account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
-        let form = XLFormDescriptor(title: OTRLanguageManager.translatedString("Profile"))
+        let form = XLFormDescriptor(title: Profile_String())
         
-        let yourProfileSection = XLFormSectionDescriptor.formSectionWithTitle(OTRLanguageManager.translatedString("Me"))
+        let yourProfileSection = XLFormSectionDescriptor.formSectionWithTitle(Me_String())
         let yourProfileRow = XLFormRowDescriptor(tag: account.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
         yourProfileRow.value = account
         yourProfileSection.addFormRow(yourProfileRow)
@@ -400,9 +401,9 @@ public class UserProfileViewController: XLFormViewController {
         // cryptoChooserRows is only meaningful for 1:1 conversations at the moment
         if buddies.count == 1 {
             let buddy = buddies.first!
-            let cryptoSection = XLFormSectionDescriptor.formSectionWithTitle( OTRLanguageManager.translatedString("Advanced Encryption Settings"))
-            cryptoSection.footerTitle = OTRLanguageManager.translatedString("Don't change these unless you really know what you're doing. By default we will always select the best available encryption method.")
-            let showAdvancedSwitch = XLFormRowDescriptor.init(tag: self.ShowAdvancedCryptoSettingsTag, rowType: XLFormRowDescriptorTypeBooleanSwitch, title: OTRLanguageManager.translatedString("Show Advanced Encryption Settings"))
+            let cryptoSection = XLFormSectionDescriptor.formSectionWithTitle(Advanced_Encryption_Settings())
+            cryptoSection.footerTitle = Advanced_Crypto_Warning()
+            let showAdvancedSwitch = XLFormRowDescriptor.init(tag: self.ShowAdvancedCryptoSettingsTag, rowType: XLFormRowDescriptorTypeBooleanSwitch, title: Show_Advanced_Encryption_Settings())
             showAdvancedSwitch.value = NSNumber(bool: false)
             let cryptoChooser = cryptoChooserRows(buddy, connection: connection)
             for row in cryptoChooser {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import OTRAssets
 
 public class OTRWelcomeViewController: UIViewController {
     
@@ -29,9 +30,9 @@ public class OTRWelcomeViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.createAccountButton.setTitle(OTRLanguageManager.translatedString("Create New Account"), forState: .Normal)
-        self.skipButton.setTitle(OTRLanguageManager.translatedString("Skip"), forState: .Normal)
-        self.existingAccountButton.setTitle(OTRLanguageManager.translatedString("Add Existing Account"), forState: .Normal)
+        self.createAccountButton.setTitle(CREATE_NEW_ACCOUNT_STRING(), forState: .Normal)
+        self.skipButton.setTitle(SKIP_STRING(), forState: .Normal)
+        self.existingAccountButton.setTitle(ADD_EXISTING_STRING(), forState: .Normal)
         
     }
 

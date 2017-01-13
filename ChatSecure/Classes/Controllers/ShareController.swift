@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import OTRAssets
 
 public class ShareControllerURLSource: NSObject, UIActivityItemSource {
     public var account: OTRAccount?
@@ -26,11 +27,11 @@ public class ShareControllerURLSource: NSObject, UIActivityItemSource {
     }
     
     public func activityViewController(activityViewController: UIActivityViewController, subjectForActivityType activityType: String?) -> String {
-        var name = OTRLanguageManager.translatedString("Someone")
+        var name = SOMEONE_STRING()
         if let displayName = account?.username {
             name = displayName
         }
-        let chatString = OTRLanguageManager.translatedString("wants to chat.")
+        let chatString = WANTS_TO_CHAT_STRING()
         let text = "\(name) \(chatString)"
         return text
     }

@@ -37,7 +37,7 @@
 #import "OTRVideoItem.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
-#import "OTRLanguageManager.h"
+
 #import "OTRLog.h"
 #import "OTRPushTLVHandler.h"
 #import "OTRXMPPManager.h"
@@ -472,7 +472,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSString *eventString = [OTREncryptionManager stringForEvent:event];
     
     NSInteger code = 200 + event;
-    NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING];
+    NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING()];
     if (string.length) {
         [description appendFormat:@"\n\n%@: %@", string, eventString];
     }
@@ -491,49 +491,49 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSString *string = nil;
     switch (event) {
         case OTRKitMessageEventEncryptionRequired:
-            string = OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING;
+            string = OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING();
             break;
         case OTRKitMessageEventEncryptionError:
-            string = OTRL_MSGEVENT_ENCRYPTION_ERROR_STRING;
+            string = OTRL_MSGEVENT_ENCRYPTION_ERROR_STRING();
             break;
         case OTRKitMessageEventConnectionEnded:
-            string = OTRL_MSGEVENT_CONNECTION_ENDED_STRING;
+            string = OTRL_MSGEVENT_CONNECTION_ENDED_STRING();
             break;
         case OTRKitMessageEventSetupError:
-            string = OTRL_MSGEVENT_SETUP_ERROR_STRING;
+            string = OTRL_MSGEVENT_SETUP_ERROR_STRING();
             break;
         case OTRKitMessageEventMessageReflected:
-            string = OTRL_MSGEVENT_MSG_REFLECTED_STRING;
+            string = OTRL_MSGEVENT_MSG_REFLECTED_STRING();
             break;
         case OTRKitMessageEventMessageResent:
-            string = OTRL_MSGEVENT_MSG_RESENT_STRING;
+            string = OTRL_MSGEVENT_MSG_RESENT_STRING();
             break;
         case OTRKitMessageEventReceivedMessageNotInPrivate:
-            string = OTRL_MSGEVENT_RCVDMSG_NOT_IN_PRIVATE_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_NOT_IN_PRIVATE_STRING();
             break;
         case OTRKitMessageEventReceivedMessageUnreadable:
-            string = OTRL_MSGEVENT_RCVDMSG_UNREADABLE_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_UNREADABLE_STRING();
             break;
         case OTRKitMessageEventReceivedMessageMalformed:
-            string = OTRL_MSGEVENT_RCVDMSG_MALFORMED_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_MALFORMED_STRING();
             break;
         case OTRKitMessageEventLogHeartbeatReceived:
-            string = OTRL_MSGEVENT_LOG_HEARTBEAT_RCVD_STRING;
+            string = OTRL_MSGEVENT_LOG_HEARTBEAT_RCVD_STRING();
             break;
         case OTRKitMessageEventLogHeartbeatSent:
-            string = OTRL_MSGEVENT_LOG_HEARTBEAT_SENT_STRING;
+            string = OTRL_MSGEVENT_LOG_HEARTBEAT_SENT_STRING();
             break;
         case OTRKitMessageEventReceivedMessageGeneralError:
-            string = OTRL_MSGEVENT_RCVDMSG_GENERAL_ERR_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_GENERAL_ERR_STRING();
             break;
         case OTRKitMessageEventReceivedMessageUnencrypted:
-            string = OTRL_MSGEVENT_RCVDMSG_UNENCRYPTED_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_UNENCRYPTED_STRING();
             break;
         case OTRKitMessageEventReceivedMessageUnrecognized:
-            string = OTRL_MSGEVENT_RCVDMSG_UNRECOGNIZED_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_UNRECOGNIZED_STRING();
             break;
         case OTRKitMessageEventReceivedMessageForOtherInstance:
-            string = OTRL_MSGEVENT_RCVDMSG_FOR_OTHER_INSTANCE_STRING;
+            string = OTRL_MSGEVENT_RCVDMSG_FOR_OTHER_INSTANCE_STRING();
             break;
         default:
             break;

@@ -9,9 +9,9 @@
 #import "OTRActivityItemProvider.h"
 @import OTRAssets;
 #import "OTRQRCodeActivity.h"
-#import "OTRLanguageManager.h"
 
-static NSString *const kShareURL = @"https://get.chatsecure.org";
+
+static NSString *const kShareURL = @"https://chatsecure.org";
 
 @implementation OTRActivityItemProvider
 
@@ -34,7 +34,7 @@ static NSString *const kShareURL = @"https://get.chatsecure.org";
 }
 
 - (NSString*) shareString {
-    return [NSString stringWithFormat:@"%@: %@", SHARE_MESSAGE_STRING, kShareURL];
+    return [NSString stringWithFormat:@"%@: %@", SHARE_MESSAGE_STRING(), kShareURL];
 }
 
 - (NSString*) twitterShareString {

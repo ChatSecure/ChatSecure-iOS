@@ -14,7 +14,7 @@
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
-#import "OTRLanguageManager.h"
+
 
 @import OTRAssets;
 
@@ -119,7 +119,7 @@
     if (!self.enabled) {
         return;
     }
-    OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING subtitleText:accountName];
+    OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING() subtitleText:accountName];
     options.image = [UIImage otr_imageWithImage:[OTRImages wifiWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
     //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
 }

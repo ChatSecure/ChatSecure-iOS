@@ -15,7 +15,7 @@
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRLanguageManager.h"
+
 #import "OTRXMPPTorAccount.h"
 
 NSString *const kOTRXLFormCustomizeUsernameSwitchTag        = @"kOTRXLFormCustomizeUsernameSwitchTag";
@@ -72,28 +72,28 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount
 {
     XLFormDescriptor *descriptor = nil;
-    XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:[OTRLanguageManager translatedString:@"Nickname"]];
+    XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:Nickname_String()];
     
     if (createAccount) {
-        descriptor = [XLFormDescriptor formDescriptorWithTitle:SIGN_UP_STRING];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:SIGN_UP_STRING()];
         descriptor.assignFirstResponderOnShow = YES;
         
-        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:[OTRLanguageManager translatedString:@"Basic Setup"]];
-        basicSection.footerTitle = [OTRLanguageManager translatedString:@"Think of a unique nickname that you don't use anywhere else and doesn't contain personal information."];
+        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:Basic_Setup()];
+        basicSection.footerTitle = Basic_Setup_Hint();
         nicknameRow.required = YES;
         [basicSection addFormRow:nicknameRow];
         
         XLFormSectionDescriptor *showAdvancedSection = [XLFormSectionDescriptor formSectionWithTitle:nil];
-        XLFormRowDescriptor *showAdvancedRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormShowAdvancedTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Show Advanced Options"]];
+        XLFormRowDescriptor *showAdvancedRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormShowAdvancedTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:Show_Advanced_Options()];
         showAdvancedRow.value = @0;
         [showAdvancedSection addFormRow:showAdvancedRow];
         
-        XLFormSectionDescriptor *accountSection = [XLFormSectionDescriptor formSectionWithTitle:ACCOUNT_STRING];
-        accountSection.footerTitle = [OTRLanguageManager translatedString:@"We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else."];
+        XLFormSectionDescriptor *accountSection = [XLFormSectionDescriptor formSectionWithTitle:ACCOUNT_STRING()];
+        accountSection.footerTitle = Generate_Secure_Password_Hint();
         accountSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
-        XLFormRowDescriptor *generatePasswordRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormGenerateSecurePasswordTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Generate Secure Password"]];
+        XLFormRowDescriptor *generatePasswordRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormGenerateSecurePasswordTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:Generate_Secure_Password()];
         generatePasswordRow.value = @1;
-        XLFormRowDescriptor *customizeUsernameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormCustomizeUsernameSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Customize Username"]];
+        XLFormRowDescriptor *customizeUsernameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormCustomizeUsernameSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:Customize_Username()];
         customizeUsernameRow.value = @0;
         XLFormRowDescriptor *passwordRow = [self passwordTextFieldRowDescriptorWithValue:nil];
         passwordRow.hidden = [NSString stringWithFormat:@"$%@==1", kOTRXLFormGenerateSecurePasswordTag];
@@ -104,14 +104,14 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [accountSection addFormRow:generatePasswordRow];
         [accountSection addFormRow:passwordRow];
         
-        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:[OTRLanguageManager translatedString:@"Server"]];
+        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:Server_String()];
         serverSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
 
-        serverSection.footerTitle = [OTRLanguageManager translatedString:@"Choose from our list of trusted servers, or use your own."];
+        serverSection.footerTitle = Server_String_Hint();
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
         
         XLFormSectionDescriptor *torSection = [XLFormSectionDescriptor formSectionWithTitle:@"Tor"];
-        torSection.footerTitle = TOR_WARNING_MESSAGE_STRING;
+        torSection.footerTitle = TOR_WARNING_MESSAGE_STRING();
         torSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
         [torSection addFormRow:[self torRowDescriptorWithValue:NO]];
         
@@ -121,11 +121,11 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [descriptor addFormSection:torSection];
         [descriptor addFormSection:serverSection];
     } else {
-        descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING];
-        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
-        XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING()];
+        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING()];
+        XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING()];
         
-        [nicknameRow.cellConfigAtConfigure setObject:OPTIONAL_STRING forKey:@"textField.placeholder"];
+        [nicknameRow.cellConfigAtConfigure setObject:OPTIONAL_STRING() forKey:@"textField.placeholder"];
         [basicSection addFormRow:nicknameRow];
         
         switch (accountType) {
@@ -179,7 +179,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 + (XLFormRowDescriptor *)jidTextFieldRowDescriptorWithValue:(NSString *)value
 {
-    XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING placeHolder:XMPP_USERNAME_EXAMPLE_STRING value:value];
+    XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING() placeHolder:XMPP_USERNAME_EXAMPLE_STRING() value:value];
     usernameDescriptor.value = value;
     usernameDescriptor.required = YES;
     [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
@@ -188,7 +188,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 + (XLFormRowDescriptor *)usernameTextFieldRowDescriptorWithValue:(NSString *)value
 {
-    XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell defaultRowDescriptorType] title:USERNAME_STRING];
+    XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell defaultRowDescriptorType] title:USERNAME_STRING()];
     usernameDescriptor.value = value;
     usernameDescriptor.required = YES;
     [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
@@ -197,17 +197,17 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 + (XLFormRowDescriptor *)passwordTextFieldRowDescriptorWithValue:(NSString *)value
 {
-    XLFormRowDescriptor *passwordDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormPasswordTextFieldTag rowType:XLFormRowDescriptorTypePassword title:PASSWORD_STRING];
+    XLFormRowDescriptor *passwordDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormPasswordTextFieldTag rowType:XLFormRowDescriptorTypePassword title:PASSWORD_STRING()];
     passwordDescriptor.value = value;
     passwordDescriptor.required = YES;
-    [passwordDescriptor.cellConfigAtConfigure setObject:REQUIRED_STRING forKey:@"textField.placeholder"];
+    [passwordDescriptor.cellConfigAtConfigure setObject:REQUIRED_STRING() forKey:@"textField.placeholder"];
     
     return passwordDescriptor;
 }
 
 + (XLFormRowDescriptor *)rememberPasswordRowDescriptorWithValue:(BOOL)value
 {
-    XLFormRowDescriptor *switchDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormRememberPasswordSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:REMEMBER_PASSWORD_STRING];
+    XLFormRowDescriptor *switchDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormRememberPasswordSwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:REMEMBER_PASSWORD_STRING()];
     switchDescriptor.value = @(value);
     
     return switchDescriptor;
@@ -215,7 +215,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 + (XLFormRowDescriptor *)loginAutomaticallyRowDescriptorWithValue:(BOOL)value
 {
-    XLFormRowDescriptor *loginDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormLoginAutomaticallySwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:LOGIN_AUTOMATICALLY_STRING];
+    XLFormRowDescriptor *loginDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormLoginAutomaticallySwitchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:LOGIN_AUTOMATICALLY_STRING()];
     loginDescriptor.value = @(value);
     
     return loginDescriptor;
@@ -223,14 +223,14 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 + (XLFormRowDescriptor *)hostnameRowDescriptorWithValue:(NSString *)value
 {
-    return [self textfieldFormDescriptorType:XLFormRowDescriptorTypeURL withTag:kOTRXLFormHostnameTextFieldTag title:HOSTNAME_STRING placeHolder:OPTIONAL_STRING value:value];
+    return [self textfieldFormDescriptorType:XLFormRowDescriptorTypeURL withTag:kOTRXLFormHostnameTextFieldTag title:HOSTNAME_STRING() placeHolder:OPTIONAL_STRING() value:value];
 }
 
 + (XLFormRowDescriptor *)portRowDescriptorWithValue:(NSNumber *)value
 {
     NSString *defaultPortNumberString = [NSString stringWithFormat:@"%d",[OTRXMPPAccount defaultPort]];
     
-    XLFormRowDescriptor *portRowDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeInteger withTag:kOTRXLFormPortTextFieldTag title:PORT_STRING placeHolder:defaultPortNumberString value:value];
+    XLFormRowDescriptor *portRowDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeInteger withTag:kOTRXLFormPortTextFieldTag title:PORT_STRING() placeHolder:defaultPortNumberString value:value];
     
     //Regex between 0 and 65536 for valid ports or empty
     [portRowDescriptor addValidator:[XLFormRegexValidator formRegexValidatorWithMsg:@"Incorect port number" regex:@"^$|^([1-9][0-9]{0,3}|[1-5][0-9]{0,4}|6[0-5]{0,2}[0-3][0-5])$"]];
@@ -239,14 +239,14 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 }
 
 + (XLFormRowDescriptor*) torRowDescriptorWithValue:(BOOL)value {
-    XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:[OTRLanguageManager translatedString:@"Enable Tor"]];
+    XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:Enable_Tor_String()];
     torRow.value = @(value);
     return torRow;
 }
 
 + (XLFormRowDescriptor *)resourceRowDescriptorWithValue:(NSString *)value
 {
-    XLFormRowDescriptor *resourceRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormResourceTextFieldTag rowType:XLFormRowDescriptorTypeText title:RESOURCE_STRING];
+    XLFormRowDescriptor *resourceRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormResourceTextFieldTag rowType:XLFormRowDescriptorTypeText title:RESOURCE_STRING()];
     resourceRowDescriptor.value = value;
     
     return resourceRowDescriptor;

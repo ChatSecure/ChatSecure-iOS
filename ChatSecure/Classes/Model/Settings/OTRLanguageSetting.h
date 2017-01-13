@@ -7,7 +7,7 @@
 //
 
 #import "OTRListSetting.h"
-#import "OTRLanguageManager.h"
+
 
 @interface OTRLanguageSetting : OTRListSetting
 

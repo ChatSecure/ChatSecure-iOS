@@ -16,7 +16,7 @@
 #import "OTRTheme.h"
 #import "OTRColors.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static CGFloat const kOTRInvitePadding = 10;
@@ -55,7 +55,7 @@ static CGFloat const kOTRInvitePadding = 10;
 {
     [super viewDidLoad];
     self.view.backgroundColor = [OTRAppDelegate appDelegate].theme.mainThemeColor;
-    self.title = INVITE_LINK_STRING;
+    self.title = INVITE_LINK_STRING();
     
     self.titleImageView.image = [UIImage imageNamed:@"invite_success" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.titleImageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -69,8 +69,8 @@ static CGFloat const kOTRInvitePadding = 10;
     
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:2];
     
-    [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:INVITE_LINK_STRING action:@selector(linkShareButtonPressed:)]];
-    [shareButtons addObject:[self shareButtonWithIcon:FACamera title:SCAN_QR_STRING action:@selector(qrButtonPressed:)]];
+    [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:INVITE_LINK_STRING() action:@selector(linkShareButtonPressed:)]];
+    [shareButtons addObject:[self shareButtonWithIcon:FACamera title:SCAN_QR_STRING() action:@selector(qrButtonPressed:)]];
     
     
     self.shareButtons = shareButtons;
@@ -121,7 +121,7 @@ static CGFloat const kOTRInvitePadding = 10;
     if(![account isEqual:_account]) {
         _account = account;
         
-        self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING,[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
+        self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING(),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
     }
 }
 

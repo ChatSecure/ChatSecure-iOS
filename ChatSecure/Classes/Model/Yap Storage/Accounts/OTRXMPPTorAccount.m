@@ -9,7 +9,7 @@
 #import "OTRXMPPTorAccount.h"
 
 #import "OTRXMPPTorManager.h"
-#import "OTRLanguageManager.h"
+
 @import OTRAssets;
 
 
@@ -22,7 +22,7 @@
 
 - (NSString *)accountDisplayName
 {
-    return XMPP_TOR_STRING;
+    return XMPP_TOR_STRING();
 }
 
 - (Class)protocolClass{

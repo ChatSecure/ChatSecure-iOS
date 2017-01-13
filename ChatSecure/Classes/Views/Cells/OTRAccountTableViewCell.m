@@ -10,7 +10,7 @@
 
 #import "OTRAccount.h"
 #import "OTRImages.h"
-#import "OTRLanguageManager.h"
+
 @import OTRAssets;
 
 @implementation OTRAccountTableViewCell
@@ -40,11 +40,11 @@
 
 - (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus {
     if (connectionStatus == OTRProtocolConnectionStatusConnected) {
-        self.detailTextLabel.text = CONNECTED_STRING;
+        self.detailTextLabel.text = CONNECTED_STRING();
     }
     else if (connectionStatus == OTRProtocolConnectionStatusConnecting)
     {
-        self.detailTextLabel.text = CONNECTING_STRING;
+        self.detailTextLabel.text = CONNECTING_STRING();
     }
     else {
         self.detailTextLabel.text = nil;

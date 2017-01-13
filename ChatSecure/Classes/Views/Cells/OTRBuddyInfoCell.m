@@ -14,7 +14,7 @@
 @import OTRAssets;
 @import PureLayout;
 #import "OTRDatabaseManager.h"
-#import "OTRLanguageManager.h"
+
 
 @interface OTRBuddyInfoCell ()
 
@@ -76,7 +76,7 @@
     
     if ([thread isKindOfClass:[OTRXMPPBuddy class]]) {
         if(((OTRXMPPBuddy *)thread).isPendingApproval) {
-            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
+            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING()];
             self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
         }
     }

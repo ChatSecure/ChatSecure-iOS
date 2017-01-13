@@ -30,7 +30,7 @@
 
 @import Appirater;
 #import "OTRConstants.h"
-#import "OTRLanguageManager.h"
+
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
 #import "OTRSettingsManager.h"
@@ -196,10 +196,10 @@
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
-    [installation addConditionalAlertWithTitle:[OTRLanguageManager translatedString:@"Crash Detected"]
-                                       message:[OTRLanguageManager translatedString:@"The app crashed last time it was launched. Send a crash report?"]
-                                     yesAnswer:OK_STRING
-                                      noAnswer:CANCEL_STRING];
+    [installation addConditionalAlertWithTitle:Crash_Detected_Title()
+                                       message:Crash_Detected_Message()
+                                     yesAnswer:OK_STRING()
+                                      noAnswer:CANCEL_STRING()];
 
     installation.appIdentifier = [OTRSecrets hockeyLiveIdentifier];
     
@@ -238,7 +238,7 @@
     UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
     splitViewController.viewControllers = @[leadingViewController,messagesNavigationController];
     splitViewController.delegate = self.splitViewControllerDelegate;
-    splitViewController.title = CHAT_STRING;
+    splitViewController.title = CHAT_STRING();
     
     //setup 'back' button in nav bar
     messagesNavigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
@@ -465,7 +465,7 @@
     if (otrFingerprint.length == 40) {
         message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
     }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
     __block NSArray *accounts = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
@@ -475,7 +475,7 @@
             // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
             NSString *title = nil;
             if (accounts.count == 1) {
-                title = ADD_STRING;
+                title = ADD_STRING();
             } else {
                 title = account.username;
             }
@@ -495,7 +495,7 @@
     }];
     if (alert.actions.count > 0) {
         // No need to show anything if only option is "cancel"
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:cancel];
         [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
     }

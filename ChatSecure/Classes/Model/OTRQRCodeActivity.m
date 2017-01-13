@@ -9,7 +9,7 @@
 #import "OTRQRCodeActivity.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
-#import "OTRLanguageManager.h"
+
 @import OTRAssets;
 
 NSString *const kOTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
@@ -23,7 +23,7 @@ NSString *const kOTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 -(NSString *)activityTitle
 {
-    return QR_CODE_STRING;
+    return QR_CODE_STRING();
 }
 
 -(NSString *)activityType

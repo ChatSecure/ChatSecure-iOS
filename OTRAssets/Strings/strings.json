@@ -123,9 +123,9 @@
         "comment": "Message shown when connecting to the Tor network",
         "string": "Connecting to Tor"
     },
-    "CONNECT_EXISTING_STRING": {
+    "ADD_EXISTING_STRING": {
         "comment": "Label for button to create account by logging into an existing account",
-        "string": "Connect to Existing Account"
+        "string": "Add Existing Account"
     },
     "CONVERSATION_NOT_SECURE_WARNING_STRING": {
         "comment": "Warn user that the current chat is not secure",
@@ -1043,6 +1043,14 @@
         "comment": "Describes an error without a known cause",
         "string": "Unknown Error"
     },
+    "ENABLE_PUSH_STRING" : {
+        "comment": "button for enabling push messages",
+        "string": "Enable Push"
+    },
+    "ENABLE_PUSH_IN_SETTINGS_STRING" : {
+        "comment": "button for enabling push messages in iOS system settings",
+        "string": "Enable Push in Settings"
+    },
     "NO_DEVICES_BUDDY_ERROR_STRING" : {
         "comment": "Error message for not finding any devices",
         "string": "We could not find any trusted devices for this contact."
@@ -1106,7 +1114,7 @@
         "comment": "",
         "string" : "Plaintext Only"
     }, "Profile_String": {
-        "comment": "",
+        "comment": "title for contacts profile view",
         "string" : "Profile"
     }, "Show_Advanced_Encryption_Settings": {
         "comment": "",

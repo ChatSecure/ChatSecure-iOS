@@ -13,7 +13,7 @@
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "OTRLanguageManager.h"
+
 #import "OTRBuddyCache.h"
 
 @import OTRAssets;
@@ -216,27 +216,27 @@
     
     NSString *resource = [presence from].resource;
     OTRThreadStatus newStatus = OTRThreadStatusOffline;
-    NSString *newStatusMessage = OFFLINE_STRING;
+    NSString *newStatusMessage = OFFLINE_STRING();
     if (buddy && !([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence])) {
-        NSString *defaultMessage = OFFLINE_STRING;
+        NSString *defaultMessage = OFFLINE_STRING();
         switch (presence.intShow)
         {
             case 0  :
                 newStatus = OTRThreadStatusDoNotDisturb;
-                newStatusMessage = DO_NOT_DISTURB_STRING;
+                newStatusMessage = DO_NOT_DISTURB_STRING();
                 break;
             case 1  :
                 newStatus = OTRThreadStatusExtendedAway;
-                newStatusMessage = EXTENDED_AWAY_STRING;
+                newStatusMessage = EXTENDED_AWAY_STRING();
                 break;
             case 2  :
                 newStatus = OTRThreadStatusAway;
-                newStatusMessage = AWAY_STRING;
+                newStatusMessage = AWAY_STRING();
                 break;
             case 3  :
             case 4  :
                 newStatus =OTRThreadStatusAvailable;
-                newStatusMessage = AVAILABLE_STRING;
+                newStatusMessage = AVAILABLE_STRING();
                 break;
             default :
                 break;

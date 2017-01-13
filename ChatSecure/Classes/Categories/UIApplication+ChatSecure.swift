@@ -9,6 +9,7 @@
 import Foundation
 import MWFeedParser
 import UserNotifications
+import OTRAssets
 
 public extension UIApplication {
     
@@ -39,12 +40,12 @@ public extension UIApplication {
     }
     
     public func showLocalNotificationForKnockFrom(thread:OTRThreadOwner?) {
-        var name = OTRLanguageManager.translatedString("Someone")
+        var name = SOMEONE_STRING()
         if let threadName = thread?.threadName() {
             name = threadName
         }
         
-        let chatString = OTRLanguageManager.translatedString("wants to chat.")
+        let chatString = WANTS_TO_CHAT_STRING()
         let text = "\(name) \(chatString)"
         let unreadCount = self.applicationIconBadgeNumber + 1
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
@@ -72,7 +73,7 @@ public extension UIApplication {
             })
         } else if(self.applicationState != .Active) {
             let localNotification = UILocalNotification()
-            localNotification.alertAction = OTRLanguageManager.translatedString("Reply")
+            localNotification.alertAction = REPLY_STRING()
             localNotification.soundName = UILocalNotificationDefaultSoundName
             localNotification.applicationIconBadgeNumber = unreadCount ?? 0
             localNotification.alertBody = text

@@ -10,7 +10,7 @@
 #import "OTRCertificatePinning.h"
 #import "OTRCertificatesViewController.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 
 @interface OTRCertificateDomainViewController ()
 
@@ -90,7 +90,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return SAVED_CERTIFICATES_STRING;
+    return SAVED_CERTIFICATES_STRING();
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

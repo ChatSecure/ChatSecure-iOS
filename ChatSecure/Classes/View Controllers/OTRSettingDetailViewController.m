@@ -22,7 +22,7 @@
 
 #import "OTRSettingDetailViewController.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 
 @implementation OTRSettingDetailViewController
 @synthesize otrSetting, saveButton, cancelButton;
@@ -35,8 +35,8 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.saveButton = [[UIBarButtonItem alloc] initWithTitle:SAVE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
-        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+        self.saveButton = [[UIBarButtonItem alloc] initWithTitle:SAVE_STRING() style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     }
     return self;
 }

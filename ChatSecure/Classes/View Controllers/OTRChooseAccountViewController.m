@@ -13,7 +13,7 @@
 @import OTRAssets;
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
-#import "OTRLanguageManager.h"
+
 
 @interface OTRChooseAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     
-    self.title = ACCOUNT_STRING;
+    self.title = ACCOUNT_STRING();
 	
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.dataSource = self;

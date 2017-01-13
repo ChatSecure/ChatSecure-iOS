@@ -12,7 +12,7 @@
 @import OTRAssets;
 @import XLForm;
 #import "OTRXMPPServerInfo.h"
-#import "OTRLanguageManager.h"
+
 
 NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServerListViewControllerCustomTag";
 
@@ -101,7 +101,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 {
     NSArray *serverList = [OTRXMPPServerInfo defaultServerList];
     
-    XLFormDescriptor *formDescriptor = [XLFormDescriptor formDescriptorWithTitle:[OTRLanguageManager translatedString:@"Choose Server"]];
+    XLFormDescriptor *formDescriptor = [XLFormDescriptor formDescriptorWithTitle:Choose_Server_String()];
     XLFormSectionDescriptor *sectionDescriptor = [[XLFormSectionDescriptor alloc] init];
     [formDescriptor addFormSection:sectionDescriptor];
     
@@ -111,7 +111,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
         [sectionDescriptor addFormRow:rowDescriptor];
     }
     
-    XLFormRowDescriptor *customRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTROTRXMPPServerListViewControllerCustomTag rowType:XLFormRowDescriptorTypeURL title:CUSTOM_STRING];
+    XLFormRowDescriptor *customRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTROTRXMPPServerListViewControllerCustomTag rowType:XLFormRowDescriptorTypeURL title:CUSTOM_STRING()];
     [customRowDescriptor.cellConfigAtConfigure setObject:@"example.com" forKey:@"textField.placeholder"];
     
     [sectionDescriptor addFormRow:customRowDescriptor];

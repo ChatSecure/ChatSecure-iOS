@@ -12,7 +12,7 @@
 @import OTRAssets;
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "OTRLanguageManager.h"
+
 
 @interface OTRAttachmentPicker () <UINavigationControllerDelegate>
 
@@ -36,7 +36,7 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         }];
@@ -44,7 +44,7 @@
     }
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         }];
         [alertController addAction:openLibraryAction];
@@ -54,7 +54,7 @@
         [self.delegate attachmentPicker:self addAdditionalOptions:alertController];
     }
     
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
     
     [alertController addAction:cancelAlertAction];
     

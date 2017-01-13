@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import OTRAssets
 
 public class EnablePushViewController: UIViewController {
     
@@ -40,8 +41,8 @@ public class EnablePushViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: OTRUserNotificationsChanged, object: nil)
-        self.skipButton.setTitle(OTRLanguageManager.translatedString("Skip"), forState: .Normal)
-        self.enablePushButton.setTitle(OTRLanguageManager.translatedString("Enable Push"), forState: .Normal)
+        self.skipButton.setTitle(SKIP_STRING(), forState: .Normal)
+        self.enablePushButton.setTitle(ENABLE_PUSH_STRING(), forState: .Normal)
         self.skipButton.accessibilityIdentifier = "EnablePushViewSkipButton"
     }
     
@@ -75,12 +76,12 @@ public class EnablePushViewController: UIViewController {
             PushController.setPushPreference(.Enabled)
             showNextScreen()
         } else {
-            let alert = UIAlertController(title: OTRLanguageManager.translatedString("Enable Push in Settings"), message: nil, preferredStyle: .Alert)
-            let settingsAction = UIAlertAction(title: OTRLanguageManager.translatedString("Settings"), style: .Default, handler: { (action: UIAlertAction) -> Void in
+            let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .Alert)
+            let settingsAction = UIAlertAction(title: SETTINGS_STRING(), style: .Default, handler: { (action: UIAlertAction) -> Void in
                 let appSettings = NSURL(string: UIApplicationOpenSettingsURLString)
                 UIApplication.sharedApplication().openURL(appSettings!)
             })
-            let cancelAction = UIAlertAction(title: OTRLanguageManager.translatedString("Cancel"), style: .Cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .Cancel, handler: nil)
             alert.addAction(settingsAction)
             alert.addAction(cancelAction)
             presentViewController(alert, animated: true, completion: nil)

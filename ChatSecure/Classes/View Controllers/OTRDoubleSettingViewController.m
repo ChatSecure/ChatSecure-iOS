@@ -22,7 +22,7 @@
 
 #import "OTRDoubleSettingViewController.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 
 @interface OTRDoubleSettingViewController (Private)
 - (void) setTextForValueLabel;
@@ -115,7 +115,7 @@
 }
 
 - (void) setTextForValueLabel {
-    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING, [self stringForValue:otrSetting.doubleValue], NEW_STRING, [self stringForValue:newValue]];
+    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING(), [self stringForValue:otrSetting.doubleValue], NEW_STRING(), [self stringForValue:newValue]];
 }
 
 - (NSString*) stringForValue:(double)value {

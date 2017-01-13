@@ -19,7 +19,7 @@
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPAccount.h"
 @import OTRAssets;
-#import "OTRLanguageManager.h"
+
 #import "OTRInviteViewController.h"
 #import "NSString+ChatSecure.h"
 
@@ -45,7 +45,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     self.navigationItem.rightBarButtonItem = checkButton;
     
     if (self.readOnly) {
-        self.title = ACCOUNT_STRING;
+        self.title = ACCOUNT_STRING();
     }
 }
 
@@ -272,18 +272,18 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         }
     }
     
-    [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
+    [self showAlertViewWithTitle:ERROR_STRING() message:XMPP_FAIL_STRING() error:error];
 }
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertAction * okButtonItem = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction * okButtonItem = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
         }];
         UIAlertController * alertController = nil;
         if (error) {
-            UIAlertAction * infoButton = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction * infoButton = [UIAlertAction actionWithTitle:INFO_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
                 NSString *xmlErrorString = error.userInfo[OTRXMPPXMLErrorKey];
                 if (xmlErrorString) {
@@ -298,14 +298,14 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                 }
                 
                 
-                UIAlertAction * copyButtonItem = [UIAlertAction actionWithTitle:COPY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertAction * copyButtonItem = [UIAlertAction actionWithTitle:COPY_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %ld\nUserInfo: %@",[error domain],(long)[error code],[error userInfo]];
                     
                     UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
                     [pasteBoard setString:copyString];
                 }];
                 
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:INFO_STRING message:errorDescriptionString preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:INFO_STRING() message:errorDescriptionString preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:okButtonItem];
                 [alert addAction:copyButtonItem];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -335,31 +335,31 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     NSString * fingerprint = [OTRCertificatePinning sha256FingerprintForCertificate:certificate];
     NSString * message = [NSString stringWithFormat:@"%@\n\nSHA256\n%@",hostname,fingerprint];
     
-    UIAlertController *certAlert = [UIAlertController alertControllerWithTitle:NEW_CERTIFICATE_STRING message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *certAlert = [UIAlertController alertControllerWithTitle:NEW_CERTIFICATE_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
     
     if (![OTRCertificatePinning publicKeyWithCertData:certData]) {
         //no public key not able to save because won't be able evaluate later
         
-        message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nX %@",PUBLIC_KEY_ERROR_STRING]];
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nX %@",PUBLIC_KEY_ERROR_STRING()]];
         
-        UIAlertAction *action = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleCancel handler:nil];
         [certAlert addAction:action];
     }
     else {
         if (resultType == kSecTrustResultProceed || resultType == kSecTrustResultUnspecified) {
             //#52A352
-            message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\n✓ %@",VALID_CERTIFICATE_STRING]];
+            message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\n✓ %@",VALID_CERTIFICATE_STRING()]];
         }
         else {
             NSString * sslErrorMessage = [OTRXMPPError errorStringWithTrustResultType:resultType];
             message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nX %@",sslErrorMessage]];
         }
         
-        UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:REJECT_STRING style:UIAlertActionStyleDestructive handler:nil];
+        UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:REJECT_STRING() style:UIAlertActionStyleDestructive handler:nil];
         [certAlert addAction:rejectAction];
         
         __weak __typeof__(self) weakSelf = self;
-        UIAlertAction *saveAction = [UIAlertAction actionWithTitle:SAVE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *saveAction = [UIAlertAction actionWithTitle:SAVE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             __typeof__(self) strongSelf = weakSelf;
             [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
             [strongSelf loginButtonPressed:nil];
