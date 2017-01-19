@@ -9,6 +9,11 @@ Translations are hosted by [Transifex](https://www.transifex.com/projects/p/chat
 	* Name of String in all caps with underscores (this will be the name used in XCode).
 	* Add the string with the key `string`.
 	* Add a comment that describes how the string is used with the key `comment`
+* Run `StringsConverter.py` (requires Python 2.7+)
+
+```
+$ python3 ./OTRAssets/Strings/StringsConverter.py
+```
 
 ### Setting up Transifex (only if you've been granted access to our Tranifex project)
 
