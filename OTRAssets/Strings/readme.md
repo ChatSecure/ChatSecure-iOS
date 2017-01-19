@@ -23,3 +23,11 @@ Translations are hosted by [Transifex](https://www.transifex.com/projects/p/chat
 ### Pulling translations from Transifex
 
 * `$ tx pull -a`
+
+### Finding Unused Strings
+
+StringsUnused.py requires Python 3.6 or higher.
+
+```
+$  python3 ./OTRAssets/Strings/StringsUnused.py ./ChatSecure/Classes/ ./ChatSecureCore/ ./OTRAssets/
+```
