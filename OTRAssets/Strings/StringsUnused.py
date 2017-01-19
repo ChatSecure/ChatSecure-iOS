@@ -67,8 +67,8 @@ def main(argv: [str]) -> int:
         strings_dict.pop(key)
     key_count = len(strings_dict.keys())
     print(f"Finished with {key_count} strings.")
-
-    print(f"Unused strings: {unused_keys}")
+    pretty_unused = "\n".join(sorted(unused_keys))
+    print(f"Unused strings:\n{pretty_unused}")
 
     # Overwrites strings.json with updated dictionary
     # strings_json_file.seek(0)
