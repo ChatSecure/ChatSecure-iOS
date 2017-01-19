@@ -24,6 +24,19 @@
 
 @end
 
+/**
+ The possible values for a subscription value
+ 
+ https://xmpp.org/rfcs/rfc6121.html#roster-syntax-items-subscription
+ */
+typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
+    OTRSubscriptionAttributeUnknown,
+    OTRSubscriptionAttributeNone,
+    OTRSubscriptionAttributeTo,
+    OTRSubscriptionAttributeFrom,
+    OTRSubscriptionAttributeBoth
+};
+
 @implementation OTRYapDatabaseRosterStorage
 
 -(instancetype)init
@@ -98,19 +111,36 @@
     return result;
 }
 
--(BOOL)isPendingApprovalElement:(NSXMLElement *)item
-{
+- (OTRSubscriptionAttribute)subscriptionAttribute:(NSXMLElement *)item {
     NSString *subscription = [item attributeStringValueForName:@"subscription"];
-	NSString *ask = [item attributeStringValueForName:@"ask"];
-	
-	if ([subscription isEqualToString:@"none"] || [subscription isEqualToString:@"from"])
-    {
-        if([ask isEqualToString:@"subscribe"])
-        {
-            return YES;
-        }
+    if (subscription ==nil || [subscription isEqualToString:@"none"]) {
+        return OTRSubscriptionAttributeNone;
+    } else if ([subscription isEqualToString:@"to"]) {
+        return OTRSubscriptionAttributeTo;
+    } else if ([subscription isEqualToString:@"from"]) {
+        return OTRSubscriptionAttributeFrom;
+    }else if ([subscription isEqualToString:@"both"]) {
+        return OTRSubscriptionAttributeBoth;
     }
-    return NO;
+    
+    return OTRSubscriptionAttributeUnknown;
+}
+
+-(BOOL)isPendingApproval:(NSXMLElement *)item
+{
+    NSString *ask = [item attributeStringValueForName:@"ask"];
+    if ([ask isEqualToString:@"subscribe"]) {
+        return YES;
+    }
+    
+    OTRSubscriptionAttribute subscriptionAttribute = [self subscriptionAttribute:item];
+    
+    // If you are subscribed to or are mutually subscribed then you are not pending approval.
+    if (subscriptionAttribute == OTRSubscriptionAttributeTo || subscriptionAttribute == OTRSubscriptionAttributeBoth) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 /** Buddy can be nil, which indicates a new buddy should be saved. */
@@ -139,12 +169,8 @@
     if (name.length) {
         newBuddy.displayName = name;
     }
-    if ([self isPendingApprovalElement:item]) {
-        newBuddy.pendingApproval = YES;
-    }
-    else {
-        newBuddy.pendingApproval = NO;
-    }
+    newBuddy.pendingApproval = [self isPendingApproval:item];
+    
     // Save if there were changes, or it's a new buddy
     BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy] || newlyCreatedBuddy;
     if (!shouldSave) {

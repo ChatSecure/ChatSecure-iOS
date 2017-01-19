@@ -15,7 +15,7 @@
 
 
 /** This is for outgoing subscription requests */
-@property (nonatomic, getter = isPendingApproval) BOOL pendingApproval;
+@property (nonatomic) BOOL pendingApproval;
 /** Incoming subscription requests mean this object is a stub/placeholder */
 @property (nonatomic) BOOL hasIncomingSubscriptionRequest;
 

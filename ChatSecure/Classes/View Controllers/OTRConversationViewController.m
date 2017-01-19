@@ -383,7 +383,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     // Bail out if it's a subscription request or pending approval
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
         (((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest ||
-        ((OTRXMPPBuddy*)thread).isPendingApproval)) {
+        ((OTRXMPPBuddy*)thread).pendingApproval)) {
         return;
     }
 
