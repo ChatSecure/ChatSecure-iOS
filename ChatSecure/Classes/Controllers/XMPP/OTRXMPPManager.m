@@ -230,11 +230,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     //Stream Management
     _streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:self.databaseConnection];
     
-    OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
-    _streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
+    //OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
+    XMPPStreamManagementMemoryStorage *memoryStorage = [[XMPPStreamManagementMemoryStorage alloc] init];
+    _streamManagement = [[XMPPStreamManagement alloc] initWithStorage:memoryStorage];
     [self.streamManagement addDelegate:self.streamManagementDelegate delegateQueue:self.workQueue];
-    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:5 orTimeout:5];
-    [self.streamManagement automaticallySendAcksAfterStanzaCount:5 orTimeout:5];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:5];
+    [self.streamManagement automaticallySendAcksAfterStanzaCount:30 orTimeout:5];
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     
@@ -430,8 +431,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
     } completionQueue:dispatch_get_main_queue() completionBlock:^{
         
-        [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:buddiesArray];
-        
         __strong typeof(weakSelf)strongSelf = weakSelf;
         if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
         {
@@ -551,15 +550,17 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         allBuddies = [self.account allBuddiesWithTransaction:transaction];
     } completionBlock:^{
         // We don't need to save in here because we're using OTRBuddyCache in memory storage
-        [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:allBuddies];
+        if (!self.streamManagementDelegate.streamManagementEnabled) {
+            [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:allBuddies];
+        }
     }];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    if ([sender supportsStreamManagement]) {
-        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:0];
+    if ([sender supportsStreamManagement] && ![self.streamManagement didResume]) {
+        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:300];
     }
     
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
