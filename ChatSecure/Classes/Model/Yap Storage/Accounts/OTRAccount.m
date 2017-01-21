@@ -21,6 +21,7 @@
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRColors.h"
 
 
 NSString *const OTRAimImageName               = @"aim.png";
@@ -104,6 +105,17 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     //on setAvatar clear this buddies image cache
     //invalidate if jid or display name changes
     return [OTRImages avatarImageWithUniqueIdentifier:self.uniqueId avatarData:self.avatarData displayName:self.displayName username:self.username];
+}
+
+- (UIColor *)avatarBorderColor {
+    if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:self]) {
+        id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self];
+        if ([protocol connectionStatus] == OTRProtocolConnectionStatusConnected) {
+            return [OTRColors colorWithStatus:OTRThreadStatusAvailable];
+        }
+    }
+    
+    return [OTRColors colorWithStatus:OTRThreadStatusOffline];
 }
 
 - (Class)protocolClass {

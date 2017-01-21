@@ -18,6 +18,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRKit;
 #import "OTRLog.h"
+#import "OTRColors.h"
 
 @implementation OTRBuddy
 @synthesize displayName = _displayName;
@@ -146,7 +147,14 @@
     }
 }
 
-#pragma - makr OTRThreadOwner Methods
+#pragma - mark OTRUserInfoProfile Protocol
+
+- (UIColor *)avatarBorderColor
+{
+    return [OTRColors colorWithStatus:[self currentStatus]];
+}
+
+#pragma - mark OTRThreadOwner Methods
 
 - (NSString *)threadName
 {

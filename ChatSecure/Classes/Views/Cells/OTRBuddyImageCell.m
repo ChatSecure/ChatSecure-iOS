@@ -33,7 +33,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         self.avatarImageView = [[UIImageView alloc] initWithImage:[self defaultImage]];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         CALayer *cellImageLayer = self.avatarImageView.layer;
-        [cellImageLayer setBorderWidth:2.0];
+        //[cellImageLayer setBorderWidth:2.0];
         
         [cellImageLayer setMasksToBounds:YES];
         [cellImageLayer setBorderColor:[self.imageViewBorderColor CGColor]];

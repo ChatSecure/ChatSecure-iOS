@@ -467,16 +467,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         titleView.subtitleLabel.text = account.username;
     }
     
-    //Create big circle and the imageview will resize it down
-    if ([thread isKindOfClass:[OTRBuddy class]]) {
-        titleView.titleImageView.image = [OTRImages circleWithRadius:50
-                                                                lineWidth:0
-                                                                lineColor:nil
-                                                                fillColor:[OTRColors colorWithStatus:[thread currentStatus]]];
-    } else {
-        titleView.titleImageView.image = nil;
-       
-    }
+    titleView.titleImageView.image = nil;
 }
 
 /** 

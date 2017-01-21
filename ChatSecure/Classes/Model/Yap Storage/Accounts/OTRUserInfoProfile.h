@@ -7,6 +7,7 @@
 //
 
 @import Foundation;
+#import "OTRThreadOwner.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol OTRUserInfoProfile <NSObject>
@@ -14,5 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *displayName;
 @property (nonatomic, readonly) NSString *username;
 @property (nonatomic, readonly) UIImage *avatarImage;
+@property (nonatomic, readonly, nullable) UIColor *avatarBorderColor;
 @end
 NS_ASSUME_NONNULL_END

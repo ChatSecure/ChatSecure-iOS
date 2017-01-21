@@ -18,7 +18,9 @@ public class UserInfoProfileCell: XLFormBaseCell {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        
+        
     }
     
     public override func update() {
@@ -29,6 +31,14 @@ public class UserInfoProfileCell: XLFormBaseCell {
         usernameLabel.text = userInfo.username
         displayNameLabel.text = userInfo.displayName
         avatarImageView.image = userInfo.avatarImage
+        avatarImageView.layer.cornerRadius = CGRectGetHeight(self.avatarImageView.frame)/2
+        avatarImageView.layer.masksToBounds = true
+        if let avatarBorderColor = userInfo.avatarBorderColor {
+            self.avatarImageView.layer.borderWidth = 2
+            self.avatarImageView.layer.borderColor = avatarBorderColor.CGColor
+        } else {
+            self.avatarImageView.layer.borderWidth = 0
+        }
     }
     
     public override class func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
