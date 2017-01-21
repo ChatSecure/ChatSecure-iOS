@@ -381,27 +381,25 @@ import YapDatabase
             }
             let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
             var databaseMessage:OTRBaseMessage = OTRIncomingMessage()
-            self.databaseConnection.readWriteWithBlock({ (transaction) in
-                
-                var relatedBuddyUsername = fromJID.bare()
-                var innerMessage = message
-                if let ourJID = self.myJID {
-                    if (ourJID.isEqualToJID(fromJID, options: XMPPJIDCompareBare) && message.isMessageCarbon()) {
-                        //This came from another of our devices this is really going to be an outgoing message
-                        innerMessage = message.messageCarbonForwardedMessage()
-                        if (message.isReceivedMessageCarbon()) {
-                            relatedBuddyUsername = innerMessage.from().bare()
-                        } else {
-                            relatedBuddyUsername = innerMessage.to().bare()
-                            let outgoingMessage = OTROutgoingMessage()
-                            outgoingMessage.dateSent = NSDate()
-                            databaseMessage = outgoingMessage
-                        }
-                        
-                        
-                        
-                    }
+            guard let ourJID = self.myJID else {
+                return
+            }
+            var relatedBuddyUsername = fromJID.bare()
+            var innerMessage = message
+            if (ourJID.isEqualToJID(fromJID, options: XMPPJIDCompareBare) && message.isMessageCarbon()) {
+                //This came from another of our devices this is really going to be an outgoing message
+                innerMessage = message.messageCarbonForwardedMessage()
+                if (message.isReceivedMessageCarbon()) {
+                    relatedBuddyUsername = innerMessage.from().bare()
+                } else {
+                    relatedBuddyUsername = innerMessage.to().bare()
+                    let outgoingMessage = OTROutgoingMessage()
+                    outgoingMessage.dateSent = NSDate()
+                    databaseMessage = outgoingMessage
                 }
+            }
+            
+            self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
                 
                 guard let buddy = OTRBuddy.fetchBuddyWithUsername(relatedBuddyUsername, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
@@ -441,15 +439,17 @@ import YapDatabase
                     protocolManager.sendDeliveryReceiptForMessage(incomingMessage)
                 }
                 
+                }, completionBlock: {
+                    if let _ = databaseMessage.text {
+                        if let messageCopy = databaseMessage.copy() as? OTRIncomingMessage {
+                            dispatch_async(dispatch_get_main_queue(), {
+                                UIApplication.sharedApplication().showLocalNotification(messageCopy)
+                            })
+                        }
+                    }
             })
             // Display local notification
-            if let _ = databaseMessage.text {
-                if let messageCopy = databaseMessage.copy() as? OTRIncomingMessage {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        UIApplication.sharedApplication().showLocalNotification(messageCopy)
-                    })
-                }
-            }
+            
         } catch {
             return
         }
