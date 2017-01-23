@@ -386,7 +386,7 @@ import YapDatabase
             }
             var relatedBuddyUsername = fromJID.bare()
             var innerMessage = message
-            if (ourJID.isEqualToJID(fromJID, options: XMPPJIDCompareBare) && message.isMessageCarbon()) {
+            if (message.isTrustedMessageCarbonForMyJID(ourJID)) {
                 //This came from another of our devices this is really going to be an outgoing message
                 innerMessage = message.messageCarbonForwardedMessage()
                 if (message.isReceivedMessageCarbon()) {
