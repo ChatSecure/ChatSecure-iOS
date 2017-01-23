@@ -214,11 +214,13 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
         buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
     }];
     NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if (buddy && [subscription isEqualToString:@"remove"])
+    if ([subscription isEqualToString:@"remove"])
     {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-        }];
+        if (buddy) {
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+            }];
+        }
     } else {
         [self updateBuddy:buddy withItem:item stream:stream];
     }
