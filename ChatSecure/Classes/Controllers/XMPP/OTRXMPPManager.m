@@ -219,13 +219,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
-    // Message Carbons
-    _messageCarbons = [[XMPPMessageCarbons alloc] init];
-    [self.messageCarbons activate:self.xmppStream];
-    
     // Message storage
     _messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
     [self.messageStorage activate:self.xmppStream];
+    
+    // Message Carbons
+    _messageCarbons = [[XMPPMessageCarbons alloc] init];
+    [self.messageCarbons addDelegate:self.messageStorage delegateQueue:self.messageStorage.moduleDelegateQueue];
+    [self.messageCarbons activate:self.xmppStream];
     
     //Stream Management
     _streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:self.databaseConnection];

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPMessageYapStroage : XMPPModule
 
 @property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, readonly) dispatch_queue_t moduleDelegateQueue;
 
 /** This connection is only used for readWrites */
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
