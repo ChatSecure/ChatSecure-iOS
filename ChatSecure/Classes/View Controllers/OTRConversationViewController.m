@@ -368,8 +368,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 #pragma - mark OTRAccountDatabaseCountDelegate method
 
 - (void)accountCountChanged:(OTRAccountDatabaseCount *)counter {
-    NSUInteger *numberOfAccounts = counter.numberOfAccounts;
-    [self updateComposeButton:numberOfAccounts];
+    [self updateComposeButton:counter.numberOfAccounts];
 }
 
 #pragma - mark YapDatabse Methods
