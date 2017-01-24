@@ -16,20 +16,17 @@ public class UserInfoProfileCell: XLFormBaseCell {
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     
-    public override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        
-        
-    }
-    
     public override func update() {
         super.update()
         guard let userInfo = rowDescriptor.value as? OTRUserInfoProfile else {
             return
         }
+        var displayName = userInfo.displayName
+        if let userInfo = userInfo as? OTRThreadOwner {
+            displayName = userInfo.threadName()
+        }
         usernameLabel.text = userInfo.username
-        displayNameLabel.text = userInfo.displayName
+        displayNameLabel.text = displayName
         avatarImageView.image = userInfo.avatarImage
         avatarImageView.layer.cornerRadius = CGRectGetHeight(self.avatarImageView.frame)/2
         avatarImageView.layer.masksToBounds = true

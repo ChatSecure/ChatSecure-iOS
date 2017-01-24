@@ -73,13 +73,6 @@
     
     self.nameLabel.text = name;
     self.identifierLabel.text = nil;
-    
-    if ([thread isKindOfClass:[OTRXMPPBuddy class]]) {
-        if(((OTRXMPPBuddy *)thread).pendingApproval) {
-            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING()];
-            self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
-        }
-    }
 }
 
 - (void)updateConstraints

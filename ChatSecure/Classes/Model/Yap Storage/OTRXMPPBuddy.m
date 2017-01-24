@@ -9,6 +9,7 @@
 #import "OTRXMPPBuddy.h"
 #import "OTRBuddyCache.h"
 @import XMPPFramework;
+@import OTRAssets;
 
 @implementation OTRXMPPBuddy
 @synthesize vCardTemp = _vCardTemp;
@@ -57,6 +58,15 @@
 
 - (BOOL) waitingForvCardTempFetch {
     return [[OTRBuddyCache sharedInstance] waitingForvCardTempFetchForBuddy:self];
+}
+
+- (NSString *)threadName
+{
+    NSString *threadName = [super threadName];
+    if (self.pendingApproval) {
+        threadName = [NSString stringWithFormat:@"%@ - %@", threadName, PENDING_APPROVAL_STRING()];
+    }
+    return threadName;
 }
 
 #pragma - mark Class Methods
