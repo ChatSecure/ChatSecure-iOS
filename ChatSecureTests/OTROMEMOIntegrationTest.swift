@@ -20,9 +20,10 @@ class OTROMEMOIntegrationTest: XCTestCase {
     
     // This is teh 'remote' user in this setup
     var aliceUser:TestUser?
+    var aliceOmemoModule:OTROMEMOTestModule?
     // This is the 'local' user
     var bobUser:TestUser?
-    var omemoModule:OTROMEMOTestModule?
+    var bobOmemoModule:OTROMEMOTestModule?
     
     override func setUp() {
         super.setUp()
@@ -35,11 +36,19 @@ class OTROMEMOIntegrationTest: XCTestCase {
         let aliceName = "\(name)-alice"
         let bobName = "\(name)-bob"
         self.aliceUser = self.setupUserWithName(aliceName,buddyName: bobName)
+        self.aliceOmemoModule = OTROMEMOTestModule(OMEMOStorage: self.aliceUser!.signalOMEMOCoordinator, xmlNamespace: .ConversationsLegacy, dispatchQueue: nil)
+        self.aliceOmemoModule?.addDelegate(self.aliceUser!.signalOMEMOCoordinator, delegateQueue: self.aliceUser!.signalOMEMOCoordinator.workQueue)
+        self.aliceOmemoModule?.thisUser = aliceUser
+        
         self.bobUser = self.setupUserWithName(bobName,buddyName: aliceName)
-        self.omemoModule = OTROMEMOTestModule(OMEMOStorage: self.bobUser!.signalOMEMOCoordinator, xmlNamespace: .ConversationsLegacy, dispatchQueue: nil)
-        self.omemoModule?.addDelegate(self.bobUser!.signalOMEMOCoordinator, delegateQueue: self.bobUser!.signalOMEMOCoordinator.workQueue)
-        self.omemoModule?.otherUser = aliceUser
-        self.omemoModule?.thisUser = bobUser
+        self.bobOmemoModule = OTROMEMOTestModule(OMEMOStorage: self.bobUser!.signalOMEMOCoordinator, xmlNamespace: .ConversationsLegacy, dispatchQueue: nil)
+        self.bobOmemoModule?.addDelegate(self.bobUser!.signalOMEMOCoordinator, delegateQueue: self.bobUser!.signalOMEMOCoordinator.workQueue)
+        self.bobOmemoModule?.thisUser = bobUser
+        
+        
+        self.aliceOmemoModule?.otherUser = self.bobOmemoModule
+        self.bobOmemoModule?.otherUser = self.aliceOmemoModule
+        
     }
     
     /** 
@@ -73,7 +82,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
      */
     func testDeviceSetup() {
         self.setupTwoAccounts(#function)
-        self.omemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
         let buddy = self.bobUser!.buddy
         let connection = self.bobUser?.databaseManager.readOnlyDatabaseConnection
         connection?.readWithBlock({ (transaction) in
@@ -91,7 +100,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
     */
     func testFetchingBundleSetup() {
         self.setupTwoAccounts(#function)
-        self.omemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
         let expectation = self.expectationWithDescription("Sending Message")
         let messageText = "This is message from Bob to Alice"
         self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(messageText, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
@@ -107,9 +116,11 @@ class OTROMEMOIntegrationTest: XCTestCase {
         var messageFound = false
         self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
             transaction.enumerateKeysAndObjectsInCollection(OTRBaseMessage.collection(), usingBlock: { (key, object, stop) in
-                let message = object as! OTRBaseMessage
-                XCTAssertEqual(message.text, messageText)
-                messageFound = true
+                if let message = object as? OTRBaseMessage {
+                    XCTAssertEqual(message.text, messageText)
+                    messageFound = true
+                }
+                
             })
             
             transaction.enumerateKeysAndObjectsInCollection(OTROMEMODevice.collection(), usingBlock: { (key, object, stop) in
@@ -123,7 +134,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
     
     func testRemoveDevice() {
         self.setupTwoAccounts(#function)
-        self.omemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
         let expectation = self.expectationWithDescription("Remove Devices")
         let deviceNumber = NSNumber(int:5)
         let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
