@@ -40,7 +40,7 @@
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
-@interface OTRConversationViewController () <OTRYapViewHandlerDelegateProtocol>
+@interface OTRConversationViewController () <OTRYapViewHandlerDelegateProtocol, OTRAccountDatabaseCountDelegate >
 
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) OTRYapViewHandler *conversationListViewHandler;
@@ -48,6 +48,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
 
 @property (nonatomic) BOOL hasPresentedOnboarding;
+
+@property (nonatomic, strong) OTRAccountDatabaseCount *accountCounter;
+
 @end
 
 @implementation OTRConversationViewController
@@ -91,20 +94,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self.tableView reloadData];
     [self updateTitle];
     
-    ////// KVO //////
-    __weak typeof(self)weakSelf = self;
-    [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
-            if (numberConnectedAccounts) {
-                [strongSelf enableComposeButton];
-            }
-            else {
-                [strongSelf disableComposeButton];
-            }
-        });
-    }];
+    self.accountCounter = [[OTRAccountDatabaseCount alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection delegate:self];
 }
 
 - (void) showOnboardingIfNeeded {
@@ -147,14 +137,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self updateTitle];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
-    if([OTRProtocolManager sharedInstance].numberOfConnectedProtocols){
-        [self enableComposeButton];
-    }
-    else {
-        [self disableComposeButton];
-    }
     
-    
+    [self updateComposeButton:self.accountCounter.numberOfAccounts];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -223,14 +207,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     return thread;
 }
 
-- (void)enableComposeButton
+- (void)updateComposeButton:(NSUInteger)numberOfaccounts
 {
-    self.composeBarButtonItem.enabled = YES;
-}
-
-- (void)disableComposeButton
-{
-    self.composeBarButtonItem.enabled = NO;
+    self.composeBarButtonItem.enabled = numberOfaccounts > 0;
 }
 
 - (void)updateTitle
@@ -384,6 +363,13 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
         [self.delegate conversationViewController:self didSelectThread:thread];
     }
+}
+
+#pragma - mark OTRAccountDatabaseCountDelegate method
+
+- (void)accountCountChanged:(OTRAccountDatabaseCount *)counter {
+    NSUInteger *numberOfAccounts = counter.numberOfAccounts;
+    [self updateComposeButton:numberOfAccounts];
 }
 
 #pragma - mark YapDatabse Methods

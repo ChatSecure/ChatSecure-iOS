@@ -114,7 +114,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.waitForExpectationsWithTimeout(30, handler: nil)
         
         var messageFound = false
-        self.aliceUser?.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
+        self.aliceUser?.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
             transaction.enumerateKeysAndObjectsInCollection(OTRBaseMessage.collection(), usingBlock: { (key, object, stop) in
                 if let message = object as? OTRBaseMessage {
                     XCTAssertEqual(message.text, messageText)
