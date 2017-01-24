@@ -329,9 +329,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
     OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
+    welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:welcomeNavController animated:YES completion:nil];
 }
 
 - (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
