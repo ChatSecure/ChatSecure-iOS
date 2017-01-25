@@ -726,9 +726,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         if (!buddy) { return; }
         XMPPvCardTemp *vCard = [self.xmppvCardTempModule vCardTempForJID:jid shouldFetch:YES];
         if (!vCard) { return; }
-        buddy = [buddy copy];
-        buddy.vCardTemp = vCard;
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction] copy];
+            if (!buddy) { return; }
+            buddy.vCardTemp = vCard;
             [buddy saveWithTransaction:transaction];
         }];
     }];
