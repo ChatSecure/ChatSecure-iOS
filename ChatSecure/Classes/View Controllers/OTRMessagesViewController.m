@@ -1292,7 +1292,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     audioItem.transferProgress = 1;
     audioItem.filename = [[url absoluteString] lastPathComponent];
     
-    AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
+    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
+                                                 options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
+    
     audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
     
     message.mediaItemUniqueId = audioItem.uniqueId;
