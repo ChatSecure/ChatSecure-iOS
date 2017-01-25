@@ -26,8 +26,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  #pod 'YapDatabase/SQLCipher', '~> 2.9'
-  pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
+  pod 'YapDatabase/SQLCipher', '~> 2.9'
+  #pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 
   pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
