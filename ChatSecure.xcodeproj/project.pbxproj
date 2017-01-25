@@ -25,6 +25,7 @@
 		632AA7371D481A6300F65733 /* OTRSignalObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 632AA7351D481A6300F65733 /* OTRSignalObject.m */; };
 		632AA73A1D482A1A00F65733 /* OTRSignalSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 632AA7381D482A1A00F65733 /* OTRSignalSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		632AA73B1D482A1A00F65733 /* OTRSignalSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 632AA7391D482A1A00F65733 /* OTRSignalSession.m */; };
+		632BF0401E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632BF03F1E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift */; };
 		633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633106661A16D1A300C17BAE /* LaunchScreen.xib */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
@@ -512,6 +513,7 @@
 		632AA7351D481A6300F65733 /* OTRSignalObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRSignalObject.m; path = "Signal-Storage/OTRSignalObject.m"; sourceTree = "<group>"; };
 		632AA7381D482A1A00F65733 /* OTRSignalSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRSignalSession.h; path = "Signal-Storage/OTRSignalSession.h"; sourceTree = "<group>"; };
 		632AA7391D482A1A00F65733 /* OTRSignalSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRSignalSession.m; path = "Signal-Storage/OTRSignalSession.m"; sourceTree = "<group>"; };
+		632BF03F1E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPChangeAvatar.swift; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104DA1A169FF900C17BAE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1138,6 +1140,7 @@
 				634905AF1BD05E3900347FE2 /* OTRYapViewHandler.swift */,
 				63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */,
 				63232AC61E37F13C00D84CDF /* OTRAccountDatabaseCount.swift */,
+				632BF03F1E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift */,
 				6309E4D41D493B2D002CF8FC /* Signal Controllers */,
 				633105321A16D1A300C17BAE /* XMPP */,
 				6358FDDF1CDC097A00C9D3B6 /* OTRXMPPMessageStatusModule.swift */,
@@ -2655,6 +2658,7 @@
 				D93DDB251BA79A2D00CD8331 /* OTRTitleSubtitleView.m in Sources */,
 				D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */,
 				D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */,
+				632BF0401E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift in Sources */,
 				D93DDB281BA79A2D00CD8331 /* OTRTouchAndHoldGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

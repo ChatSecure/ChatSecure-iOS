@@ -475,6 +475,22 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     return YES;
 }
 
+- (void)setAvatar:(NSData *)data completion:(void (^)(BOOL))completion
+{
+    if (![data length]) {
+        completion(NO);
+        return;
+    }
+    self.changeAvatar = [[OTRXMPPChangeAvatar alloc] initWithPhotoData:data
+                                                   xmppvCardTempModule:self.xmppvCardTempModule];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.changeAvatar updatePhoto:^(BOOL success) {
+        completion(success);
+        weakSelf.changeAvatar = nil;
+    }];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegate
