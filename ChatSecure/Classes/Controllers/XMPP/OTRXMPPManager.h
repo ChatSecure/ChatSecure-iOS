@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Delivery receipts
 - (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message;
 
-- (void)setAvatar:(NSData *)data completion:(void (^)(BOOL))completion;
+- (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL))completion;
 
 @end
 
