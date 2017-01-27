@@ -1289,7 +1289,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
     audioItem.isIncoming = [message messageIncoming];
-    audioItem.transferProgress = 1;
     audioItem.filename = [[url absoluteString] lastPathComponent];
     
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
@@ -1459,6 +1458,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return  nil;
 }
 
+/** Currently uses clock for queued, and checkmark for delivered. */
+- (nullable NSString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)outgoingMessage {
+    if (!outgoingMessage) { return nil; }
+    NSString *deliveryStatusString = nil;
+    if(outgoingMessage.dateSent == nil && ![outgoingMessage isMediaMessage]) {
+        // Waiting to send message. This message is in the queue.
+        deliveryStatusString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
+    } else if (outgoingMessage.isDelivered){
+        deliveryStatusString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+    }
+    return deliveryStatusString;
+}
+
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -1497,18 +1509,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
     if ([message isKindOfClass:[OTROutgoingMessage class]]) {
         OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;
-        
-        if(outgoingMessage.dateSent == nil && ![outgoingMessage isMediaMessage]) {
-            // Waiting to send message. This message is in the queue.
-            NSString *waitingString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
-            return [[NSAttributedString alloc] initWithString:waitingString attributes:iconAttributes];
-            
-        } else if (outgoingMessage.isDelivered){
-            NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
-            
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+        NSString *deliveryString = [self deliveryStatusStringForMessage:outgoingMessage];
+        if (deliveryString) {
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:deliveryString attributes:iconAttributes]];
         }
-        
     }
     
     if([[message messageMediaItemKey] length] > 0) {
@@ -1611,7 +1615,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
              item = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
         } completionBlock:^{
-            if (item.transferProgress != 1) {
+            if (item.transferProgress != 1 && item.isIncoming) {
                 return;
             }
             
