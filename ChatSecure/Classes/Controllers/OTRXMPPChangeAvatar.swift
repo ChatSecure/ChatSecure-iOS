@@ -25,7 +25,7 @@ import XMPPFramework
         self.xmppvCardTempModule?.addDelegate(self, delegateQueue: self.workQueue)
     }
     /**
-     This does the actual work of updating the vCard fot the sterams myJID.
+     This does the actual work of updating the vCard fot the stream's myJID.
      First it makes sure it has an up to date vCard
      **/
     public func updatePhoto(completion:(success:Bool)->Void) -> Void {

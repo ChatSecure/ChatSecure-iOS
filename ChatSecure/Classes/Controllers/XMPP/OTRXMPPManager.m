@@ -476,24 +476,27 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     return YES;
 }
 
-- (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL))completion
+- (void)setAvatar:(UIImage *)avatarImage completion:(void (^)(BOOL success))completion
 {
-    if (!newImage) {
+    if (!avatarImage) {
         completion(NO);
         return;
     }
     
+    __block UIImage *newImage = avatarImage;
+    
     
     dispatch_async(self.workQueue, ^{
+        
         //Square crop & Resize image
         newImage = [UIImage otr_prepareForAvatarUpload:newImage maxSize:120.0];
         //jpeg compression
         NSData *data = UIImageJPEGRepresentation(newImage, 0.6);
         
         //Save new avatar right away to update UI
-        __weak typeof(self) weakSelf = self;
+        
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:weakSelf.account.uniqueId transaction:transaction];
+            OTRXMPPAccount *account = [[OTRXMPPAccount fetchObjectWithUniqueID:self.account.uniqueId transaction:transaction] copy];
             account.avatarData = data;
             [account saveWithTransaction:transaction];
         }];
@@ -501,11 +504,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         self.changeAvatar = [[OTRXMPPChangeAvatar alloc] initWithPhotoData:data
                                                        xmppvCardTempModule:self.xmppvCardTempModule];
         
+        __weak typeof(self) weakSelf = self;
         [self.changeAvatar updatePhoto:^(BOOL success) {
-            completion(success);
-            weakSelf.changeAvatar = nil;
+            typeof(weakSelf) strongSelf = weakSelf;
+            if (completion) {
+                completion(success);
+            }
+            strongSelf.changeAvatar = nil;
         }];
-    })
+    });
     
 }
 
