@@ -14,24 +14,26 @@
     "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : 0,
     "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : 0,
     "65A79C2919A5538250064F3C245A290D7BFC656E" : 0,
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : 9223372036854775807,
     "2D31E58E12E928BB18019A2FA755DD659EB4E709" : 0,
     "A3F0483F361B2F4077033C635E9F3F6840AE7757" : 0,
     "AF7423C487C4B1B7082E587F3AB70804F6530E81" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "26272AA3-3A8A-4250-865E-CACC120B6235",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure-iOS\/Submodules\/CPAProxy\/",
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure\/Submodules\/CPAProxy\/",
     "D2885296440547CB23891301E79B480A22EAC5F6" : "ChatSecure-iOS\/Submodules\/KSCrash\/",
-    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "ChatSecure-iOS\/Submodules\/XMPPFramework\/",
-    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher\/",
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "ChatSecure\/Submodules\/XMPPFramework\/",
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure\/Submodules\/IOCipher\/",
     "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "ChatSecure-iOS\/Submodules\/YapDatabase\/",
-    "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure-iOS\/Submodules\/xmpp-server-list\/",
-    "425D736B25093B4D45BF64638604863B9D31F2C1" : "ChatSecure-iOS\/Submodules\/OTRKit\/",
-    "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : "ChatSecure-iOS\/Submodules\/SignalProtocol-ObjC\/",
-    "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : "ChatSecure-iOS\/Submodules\/ParkedTextField\/",
-    "65A79C2919A5538250064F3C245A290D7BFC656E" : "ChatSecure-iOS\/",
-    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "ChatSecure-iOS\/Submodules\/ProxyKit\/",
-    "A3F0483F361B2F4077033C635E9F3F6840AE7757" : "ChatSecure-iOS\/Submodules\/ChatSecure-Push-iOS\/",
+    "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure\/Submodules\/xmpp-server-list\/",
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : "ChatSecure\/Submodules\/OTRKit\/",
+    "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : "ChatSecure\/Submodules\/SignalProtocol-ObjC\/",
+    "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : "ChatSecure\/Submodules\/ParkedTextField\/",
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : "ChatSecure\/",
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : "",
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "ChatSecure\/Submodules\/ProxyKit\/",
+    "A3F0483F361B2F4077033C635E9F3F6840AE7757" : "ChatSecure\/Submodules\/ChatSecure-Push-iOS\/",
     "AF7423C487C4B1B7082E587F3AB70804F6530E81" : "ChatSecure-iOS\/Submodules\/XLForm\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "ChatSecure",
@@ -72,6 +74,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/ChatSecure-Push-iOS.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A3F0483F361B2F4077033C635E9F3F6840AE7757"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:zom\/Zom-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A9950D8C7A488A3339E7426A4D08917C04DE7033"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ParkedTextField.git",

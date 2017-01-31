@@ -22,10 +22,9 @@
 
 @import UIKit;
 
-@class OTRTheme;
-@class OTRSettingsViewController;
-@class OTRMessagesViewController;
-@class OTRConversationViewController;
+#import "OTRTheme.h"
+#import "OTRMessagesViewController.h"
+#import "OTRConversationViewController.h"
 @class PushController;
 @class PushOTRListener;
 @protocol OTRThreadOwner;
@@ -34,7 +33,6 @@
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 @property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 

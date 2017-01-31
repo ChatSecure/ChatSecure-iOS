@@ -1,5 +1,5 @@
 //
-//  OTRImagePicker.h
+//  OTRAttachmentPicker.h
 //  ChatSecure
 //
 //  Created by David Chiles on 1/16/15.

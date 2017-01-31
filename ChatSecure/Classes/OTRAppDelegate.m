@@ -102,7 +102,6 @@
     UIViewController *rootViewController = nil;
     
     // Create 3 primary view controllers, settings, conversation list and messages
-    self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
     self.messagesViewController = [self.theme messagesViewController];
     
@@ -563,9 +562,9 @@
 }
 
 #pragma - mark Class Methods
-+ (OTRAppDelegate *)appDelegate
++ (instancetype)appDelegate
 {
-    return (OTRAppDelegate *)[[UIApplication sharedApplication] delegate];
+    return [[UIApplication sharedApplication] delegate];
 }
 
 #pragma mark - Theming

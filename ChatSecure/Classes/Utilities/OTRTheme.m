@@ -12,6 +12,7 @@
 #import "OTRComposeViewController.h"
 #import "OTRMessagesGroupViewController.h"
 #import "OTRInviteViewController.h"
+#import "OTRSettingsViewController.h"
 
 @implementation OTRTheme
 
@@ -50,6 +51,11 @@
 /** Override this in subclass to use a different group message view controller class */
 - (JSQMessagesViewController *) messagesViewController{
     return [[self messagesViewControllerClass] messagesViewController];
+}
+
+/** Returns new instance. Override this in subclass to use a different settings view controller class */
+- (__kindof UIViewController *) settingsViewController {
+    return [[OTRSettingsViewController alloc] init];
 }
 
 - (Class)composeViewControllerClass {

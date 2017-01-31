@@ -21,7 +21,13 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRSettingDetailViewController.h"
+#import "OTRSetting.h"
 @import OTRAssets;
+
+@interface OTRSettingDetailViewController()
+@property (nonatomic, strong) UIBarButtonItem *saveButton;
+@property (nonatomic, strong) UIBarButtonItem *cancelButton;
+@end
 
 
 @implementation OTRSettingDetailViewController

@@ -26,8 +26,7 @@
 @interface OTRSettingDetailViewController : UIViewController
 
 @property (nonatomic, strong) OTRSetting *otrSetting;
-@property (nonatomic, strong) UIBarButtonItem *saveButton;
-@property (nonatomic, strong) UIBarButtonItem *cancelButton;
+
 - (void) save:(id)sender;
 - (CGSize) textSizeForLabel:(UILabel*)label;
 
