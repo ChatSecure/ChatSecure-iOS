@@ -491,7 +491,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         if (success) {
             self.account.password = newPassword;
         }
-        
+        self.changePasswordManager = nil
         completion(success,error);
     }];
     [self.changePasswordManager changePassword];
