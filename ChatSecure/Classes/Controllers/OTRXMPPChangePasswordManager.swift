@@ -27,7 +27,7 @@ public class OTRXMPPChangePasswordManager:NSObject {
         self.registrationModule.addDelegate(self, delegateQueue: dispatch_get_main_queue())
     }
     
-    private func changePassword() -> Bool {
+    public func changePassword() -> Bool {
         return self.registrationModule.changePassword(self.password)
     }
     

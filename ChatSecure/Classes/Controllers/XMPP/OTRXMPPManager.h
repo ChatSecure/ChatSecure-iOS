@@ -58,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Delivery receipts
 - (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message;
 
+- (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
+
 @end
 
 

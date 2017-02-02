@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) OTRXMPPBuddyManager* xmppBuddyManager;
 @property (nonatomic, strong, readonly) OMEMOModule *omemoModule;
+@property (nonatomic, strong) OTRXMPPChangePasswordManager *changePasswordManager;
 
 @property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong, readonly) XMPPMessageDeliveryReceipts *deliveryReceipts;

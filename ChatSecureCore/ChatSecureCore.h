@@ -57,6 +57,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRYapMessageSendAction.h"
 #import "OTRBuddyInfoCell.h"
 #import "NSString+ChatSecure.h"
+#import "OTRXMPPManager.h"
 #import "OTRMessageEncryptionInfo.h"
 #import "OTRMessage.h"
 
