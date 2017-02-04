@@ -17,6 +17,7 @@
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
+#import "OTRXMPPStream.h"
 
 
 ///////////////////////////////////////////////
@@ -295,13 +296,26 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
 {
-    BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
+    NSString *hostName = nil;
+    if ([sender isKindOfClass:[OTRXMPPStream class]]) {
+        OTRXMPPStream *otrStream = (OTRXMPPStream*)sender;
+        hostName = otrStream.connectedHostName;
+    } else {
+        completionHandler(NO);
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"XMPPStream is of wrong class! Expected OTRXMPPStream." userInfo:nil];
+    }
+    // We should have a hostName. If we don't, something is wrong.
+    NSParameterAssert(hostName.length > 0);
+    if (!hostName.length) {
+        completionHandler(NO);
+    }
+    BOOL trusted = [self isValidPinnedTrust:trust withHostName:hostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
         SecTrustResultType result;
         OSStatus status =  SecTrustEvaluate(trust, &result);
         if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
-            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName systemTrustResult:result];
+            [self.delegate newTrust:trust withHostName:hostName systemTrustResult:result];
         }
     }
     completionHandler(trusted);

@@ -224,10 +224,9 @@ PODS:
   - XMPPFramework/BandwidthMonitor (3.7.0):
     - XMPPFramework/Core
   - XMPPFramework/Core (3.7.0):
-    - CocoaAsyncSocket (~> 7.5.0)
+    - CocoaAsyncSocket (~> 7.5.1)
     - CocoaLumberjack (~> 2.0)
     - KissXML (~> 5.1.2)
-    - ProxyKit/Client (~> 1.1)
   - XMPPFramework/CoreDataStorage (3.7.0):
     - XMPPFramework/Core
   - XMPPFramework/FileTransfer (3.7.0):
@@ -516,11 +515,11 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: 96396d09d681b470db3ebc464be4b5bd725d5644
+  XMPPFramework: 45046908d7dbde7b36dd3005f8ef0413481697e6
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 PODFILE CHECKSUM: 638e744f2398b91d18b3b36c5cc85abf86c34db2
 
-COCOAPODS: 1.2.0.rc.1
+COCOAPODS: 1.2.0

@@ -113,7 +113,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
-        OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
         welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:welcomeNavController animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;

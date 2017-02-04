@@ -105,11 +105,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (OTRXMPPStream*) newStream {
+    return [[OTRXMPPStream alloc] init];
+}
+
 - (void)setupStream
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
-	_xmppStream = [[XMPPStream alloc] init];
+	_xmppStream = [self newStream];
 
     //Used to fetch correct account from XMPPStream in delegate methods especailly
     self.xmppStream.tag = self.account.uniqueId;
