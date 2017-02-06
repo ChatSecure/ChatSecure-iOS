@@ -348,10 +348,10 @@
 		D93DDBB11BA79AB500CD8331 /* OTRBuddyViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106161A16D1A300C17BAE /* OTRBuddyViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB21BA79AB600CD8331 /* OTRCertificateDomainViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061A1A16D1A300C17BAE /* OTRCertificatesViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBB51BA79ABA00CD8331 /* OTRChooseAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061E1A16D1A300C17BAE /* OTRChooseAccountViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDBB51BA79ABA00CD8331 /* OTRChooseAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061E1A16D1A300C17BAE /* OTRChooseAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB61BA79ABB00CD8331 /* OTRComposeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106201A16D1A300C17BAE /* OTRComposeViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB71BA79ABD00CD8331 /* OTRConversationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106221A16D1A300C17BAE /* OTRConversationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDBB81BA79ABE00CD8331 /* OTRDatabaseUnlockViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106281A16D1A300C17BAE /* OTRDatabaseUnlockViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDBB81BA79ABE00CD8331 /* OTRDatabaseUnlockViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106281A16D1A300C17BAE /* OTRDatabaseUnlockViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB91BA79ABF00CD8331 /* OTRDoubleSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062A1A16D1A300C17BAE /* OTRDoubleSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBBB1BA79AC200CD8331 /* OTRIntSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062E1A16D1A300C17BAE /* OTRIntSettingViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBBC1BA79AC300CD8331 /* OTRLanguageListSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106301A16D1A300C17BAE /* OTRLanguageListSettingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -384,7 +384,7 @@
 		D93DDBD81BA79AEE00CD8331 /* OTRPasswordStrengthView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBD91BA79AF000CD8331 /* OTRRememberPasswordView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBDB1BA79AF300CD8331 /* OTRTitleSubtitleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106751A16D1A300C17BAE /* OTRTitleSubtitleView.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDBDB1BA79AF300CD8331 /* OTRTitleSubtitleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106751A16D1A300C17BAE /* OTRTitleSubtitleView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
