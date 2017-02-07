@@ -328,7 +328,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void) addAccount:(id)sender {
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
-    OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
     welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:welcomeNavController animated:YES completion:nil];
 }
