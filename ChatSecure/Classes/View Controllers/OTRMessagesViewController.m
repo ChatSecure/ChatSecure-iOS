@@ -460,14 +460,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     titleView.titleLabel.text = [thread threadName];
     
-    if([account.displayName length]) {
-        titleView.subtitleLabel.text = account.displayName;
-    }
-    else {
-        titleView.subtitleLabel.text = account.username;
+    UIImage *statusImage = nil;
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
+        OTRBuddy *buddy = (OTRBuddy*)thread;
+        titleView.subtitleLabel.text = buddy.username;
+        UIColor *color = [buddy avatarBorderColor];
+        if (color) { // only show online status
+            statusImage = [OTRImages circleWithRadius:50
+                                      lineWidth:0
+                                      lineColor:nil
+                                      fillColor:color];
+        }
+    } else if ([thread isGroupThread]) {
+        titleView.subtitleLabel.text = GROUP_CHAT_STRING();
+    } else {
+        titleView.subtitleLabel.text = nil;
     }
     
-    titleView.titleImageView.image = nil;
+    titleView.titleImageView.image = statusImage;
 }
 
 /** 

@@ -930,14 +930,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId
 {
-    
-    
     dispatch_async(self.workQueue, ^{
         
         __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
+        if (!buddy) { return; }
         
         if (buddy.lastSentChatState == chatState) {
             return;

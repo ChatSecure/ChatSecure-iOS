@@ -151,6 +151,10 @@
 
 - (UIColor *)avatarBorderColor
 {
+    OTRThreadStatus threadStatus = [self currentStatus];
+    if (threadStatus == OTRThreadStatusOffline) {
+        return nil;
+    }
     return [OTRColors colorWithStatus:[self currentStatus]];
 }
 

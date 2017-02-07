@@ -2008,7 +2008,6 @@
 				6396AF961A169D54009F3E6C /* Sources */,
 				6396AF971A169D54009F3E6C /* Frameworks */,
 				6396AF981A169D54009F3E6C /* Resources */,
-				6386E24E1A16DBAD003465DC /* ShellScript */,
 				D9227C481BA7952100B5E1D0 /* Embed Frameworks */,
 				1B1F00C90AA4375388D309AF /* [CP] Embed Pods Frameworks */,
 				B54AA4231DBE4A463B56D596 /* [CP] Copy Pods Resources */,
@@ -2088,6 +2087,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D9AE3A171BA8CBFA00255537 /* Build configuration list for PBXNativeTarget "OTRAssets" */;
 			buildPhases = (
+				D97B6BA21E4A869C005C7B11 /* Update OTRStrings from strings.json */,
 				D9AE3A091BA8CBFA00255537 /* Sources */,
 				D9AE3A0A1BA8CBFA00255537 /* Frameworks */,
 				D9AE3A0B1BA8CBFA00255537 /* Headers */,
@@ -2347,19 +2347,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6386E24E1A16DBAD003465DC /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "python \"${SRCROOT}/OTRAssets/Strings/StringsConverter.py\"";
-		};
 		77A00DC28BB2926A0668095F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2419,6 +2406,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D97B6BA21E4A869C005C7B11 /* Update OTRStrings from strings.json */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update OTRStrings from strings.json";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python \"${SRCROOT}/OTRAssets/Strings/StringsConverter.py\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

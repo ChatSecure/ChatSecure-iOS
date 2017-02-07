@@ -114,8 +114,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             return [OTRColors colorWithStatus:OTRThreadStatusAvailable];
         }
     }
-    
-    return [OTRColors colorWithStatus:OTRThreadStatusOffline];
+    return nil;
 }
 
 - (Class)protocolClass {

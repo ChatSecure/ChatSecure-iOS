@@ -16,7 +16,8 @@
     switch(status)
     {
         case OTRThreadStatusOffline:
-            color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+            //color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+            return nil;
             break;
         case OTRThreadStatusAway:
             color = [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
