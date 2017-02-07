@@ -164,7 +164,11 @@ import YapDatabase
         })
         if let username = user {
             let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(payload, name: username, deviceId: device.deviceId.unsignedIntValue)
-            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+            var isPreKey = false
+            if (encryptedKeyData.type == .PreKeyMessage) {
+                isPreKey = true
+            }
+            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data, isPreKey: isPreKey)
         }
         return nil
     }
