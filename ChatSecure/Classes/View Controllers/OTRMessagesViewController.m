@@ -16,6 +16,7 @@
 #import "OTRAccount.h"
 #import "OTRMessage+JSQMessageData.h"
 @import JSQMessagesViewController;
+@import MobileCoreServices;
 #import "OTRProtocolManager.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPManager.h"
@@ -1276,10 +1277,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [message saveWithTransaction:transaction];
             [self sendMediaItem:videoItem data:nil tag:message transaction:transaction];
         }];
-        
-        
-        
     }];
+}
+
+- (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
+{
+    return @[(NSString*)kUTTypeImage];
 }
 
 - (void)sendAudioFileURL:(NSURL *)url
