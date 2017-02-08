@@ -67,7 +67,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Forks
-  pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
+  pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
   # Use this until able to push proper podspec that depends on 2.9
   pod 'YapTaskQueue/SQLCipher', '~> 0.1.6'

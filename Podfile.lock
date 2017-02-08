@@ -54,7 +54,7 @@ PODS:
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer/CocoaLumberjack
     - IOCipher/common
-  - JSQMessagesViewController (7.2.0):
+  - JSQMessagesViewController (7.3.4):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
@@ -167,7 +167,7 @@ PODS:
   - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.4)
   - uservoice-iphone-sdk (3.2.9)
-  - VTAcknowledgementsViewController (1.2)
+  - VTAcknowledgementsViewController (1.2.1)
   - XLForm (3.3.0)
   - XMPPFramework (3.7.0):
     - XMPPFramework/All (= 3.7.0)
@@ -386,9 +386,9 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.1.6):
     - YapDatabase/SQLCipher (~> 2.9)
-  - ZXingObjC (3.1.0):
-    - ZXingObjC/All (= 3.1.0)
-  - ZXingObjC/All (3.1.0)
+  - ZXingObjC (3.2.1):
+    - ZXingObjC/All (= 3.2.1)
+  - ZXingObjC/All (3.2.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1)
@@ -404,7 +404,7 @@ DEPENDENCIES:
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
-  - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`, branch `7.2.0-send_button`)
+  - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`, tag `7.3.4-send_button`)
   - JTSImageViewController (~> 1.4)
   - JVFloatLabeledTextField (~> 1.0)
   - KSCrash (~> 1.11.2)
@@ -446,8 +446,8 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: 7.2.0-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
+    :tag: 7.3.4-send_button
   libsqlfs:
     :branch: podspec-fix
     :git: https://github.com/ChatSecure/libsqlfs.git
@@ -466,8 +466,8 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   JSQMessagesViewController:
-    :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController
+    :tag: 7.3.4-send_button
   libsqlfs:
     :commit: 317d21a1e43e28396a62a462a8213a5f33678c2c
     :git: https://github.com/ChatSecure/libsqlfs.git
@@ -487,7 +487,7 @@ SPEC CHECKSUMS:
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   IOCipher: 4cb4cd9a5998f69f4578a51501987dc5951ff092
-  JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
@@ -513,13 +513,13 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
-  VTAcknowledgementsViewController: 62d2b3979b6d86677246967cf880d14b13ee7ac4
+  VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
   XMPPFramework: 45046908d7dbde7b36dd3005f8ef0413481697e6
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
-  ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
+  ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: 638e744f2398b91d18b3b36c5cc85abf86c34db2
+PODFILE CHECKSUM: f65a1cffbbdda9c6d664d813c5700ceecff18746
 
 COCOAPODS: 1.2.0
