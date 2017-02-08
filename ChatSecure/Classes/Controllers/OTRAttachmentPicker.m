@@ -75,7 +75,7 @@
         if (preferredMediaTypes) {
             NSMutableSet *availableSet = [NSMutableSet setWithArray:availableMediaTypes];
             [availableSet intersectSet:[NSSet setWithArray:preferredMediaTypes]];
-            preferredMediaTypes = [availableSet allObjects];
+            availableMediaTypes = [availableSet allObjects];
         } else {
             availableMediaTypes = @[];
         }
