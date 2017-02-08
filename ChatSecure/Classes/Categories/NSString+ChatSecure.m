@@ -7,6 +7,7 @@
 //
 
 #import "NSString+ChatSecure.h"
+@import XMPPFramework;
 
 @implementation NSString (ChatSecure)
 
@@ -44,6 +45,16 @@
     [regex replaceMatchesInString:string options:0 range:NSMakeRange(0, [string length]) withTemplate:@""];
     
     return string;
+}
+
+- (nullable NSString*) otr_displayName {
+    XMPPJID *jid = [XMPPJID jidWithString:self];
+    NSString *user = [jid user];
+    if (!user) {
+        return nil;
+    }
+    user = [user capitalizedString];
+    return user;
 }
 
 @end

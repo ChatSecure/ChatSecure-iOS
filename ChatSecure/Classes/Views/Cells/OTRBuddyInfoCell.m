@@ -51,20 +51,6 @@
     return self;
 }
 
-- (void)setThread:(id<OTRThreadOwner>)thread withAccountName:(NSString *)accountName
-{
-    [self setThread:thread];
-    if ([accountName length]) {
-        if ([self.identifierLabel.text length]) {
-            self.accountLabel.text = accountName;
-        }
-        else {
-            self.identifierLabel.text = accountName;
-            self.accountLabel.text = nil;
-        }
-    }
-}
-
 - (void)setThread:(id<OTRThreadOwner>)thread
 {
     [super setThread:thread];
@@ -72,7 +58,14 @@
     NSString * name = [thread threadName];
     
     self.nameLabel.text = name;
-    self.identifierLabel.text = nil;
+    
+    NSString *identifier = nil;
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
+        identifier = ((OTRBuddy*)thread).username;
+    } else if ([thread isGroupThread]) {
+        identifier = GROUP_NAME_STRING();
+    }
+    self.identifierLabel.text = identifier;
 }
 
 - (void)updateConstraints
