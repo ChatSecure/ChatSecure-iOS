@@ -66,4 +66,9 @@
     return [OTRInviteViewController class];
 }
 
+- (BOOL) enableOMEMO
+{
+    return YES;
+}
+
 @end

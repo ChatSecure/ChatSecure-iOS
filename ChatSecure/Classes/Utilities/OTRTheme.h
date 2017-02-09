@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** Override this in subclass to use a different invite view controller class */
 - (Class) inviteViewControllerClass;
 
+/** Ovverride this to disable OMEMO message encryption. default: YES */
+- (BOOL) enableOMEMO;
+
 
 @end
 NS_ASSUME_NONNULL_END

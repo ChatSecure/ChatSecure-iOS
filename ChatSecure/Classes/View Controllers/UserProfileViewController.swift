@@ -308,7 +308,7 @@ public class UserProfileViewController: XLFormViewController {
         guard let xmpp = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
             return form
         }
-        guard let myBundle = xmpp.omemoSignalCoordinator.fetchMyBundle() else {
+        guard let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() else {
             return form
         }
         let thisDevice = OTROMEMODevice(deviceId: NSNumber(unsignedInt: myBundle.deviceId), trustLevel: .TrustedUser, parentKey: account.uniqueId, parentCollection: account.dynamicType.collection(), publicIdentityKeyData: myBundle.identityKey, lastSeenDate: NSDate())
