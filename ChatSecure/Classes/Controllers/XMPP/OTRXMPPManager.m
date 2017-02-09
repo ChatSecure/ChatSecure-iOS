@@ -480,6 +480,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     return YES;
 }
 
+#pragma mark Public Methods
+
 - (void)setAvatar:(UIImage *)avatarImage completion:(void (^)(BOOL success))completion
 {
     if (!avatarImage) {
@@ -520,6 +522,26 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
 }
 
+- (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion {
+    if (!completion) {
+        return;
+    }
+    
+    if (!self.xmppStream.isAuthenticated || [newPassword length] == 0) {
+        completion(NO,nil);
+    }
+    
+    self.changePasswordManager = [[OTRXMPPChangePasswordManager alloc] initWithNewPassword:newPassword xmppStream:self.xmppStream completion:^(BOOL success, NSError * _Nullable error) {
+        
+        if (success) {
+            self.account.password = newPassword;
+        }
+        self.changePasswordManager = nil;
+        completion(success,error);
+    }];
+    [self.changePasswordManager changePassword];
+    
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegate

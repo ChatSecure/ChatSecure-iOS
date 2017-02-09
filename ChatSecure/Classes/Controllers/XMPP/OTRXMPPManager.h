@@ -65,6 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL success))completion;
 
+- (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
+
 @end
 
 
