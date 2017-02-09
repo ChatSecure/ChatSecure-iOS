@@ -199,6 +199,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	// 
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
+    
+    _serverCapabilities = [[OTRServerCapabilities alloc] init];
+    [self.serverCapabilities activate:self.xmppStream];
 	
 	_xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
     _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
@@ -290,6 +293,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_xmppBuddyManager deactivate];
     [_messageStatusModule deactivate];
     [_omemoModule deactivate];
+    [_serverCapabilities deactivate];
 
     [_xmppStream disconnect];
 }
@@ -798,13 +802,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
     DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
-    
-    // Enable XEP-0357 push bridge if server supports it
-    // ..but don't register for Tor accounts
-    if (self.account.accountType == OTRAccountTypeXMPPTor) {
-        return;
-    }
-    
     NSString *myDomain = [self.xmppStream.myJID domain];
     if ([[jid bare] isEqualToString:[jid domain]]) {
         if (![[jid domain] isEqualToString:myDomain]) {
@@ -817,6 +814,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
             return;
         }
     }
+    // Enable XEP-0357 push bridge if server supports it
+    // ..but don't register for Tor accounts
+    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+        return;
+    }
+    
     __block BOOL supportsPushXEP = NO;
     NSArray <NSXMLElement*> *featureElements = [caps elementsForName:@"feature"];
     [featureElements enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
