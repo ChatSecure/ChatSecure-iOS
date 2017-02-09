@@ -200,6 +200,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
 {
+    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     

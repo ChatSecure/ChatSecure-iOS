@@ -8,10 +8,15 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface NSString (ChatSecure)
 
-- (NSString *)otr_stringInitialsWithMaxCharacters:(NSUInteger)maxCharacters;
+- (nullable NSString *)otr_stringInitialsWithMaxCharacters:(NSUInteger)maxCharacters;
 
 - (NSString *)otr_stringByRemovingNonEnglishCharacters;
 
+/** Cleans up a JID from "user@example.com" -> "User" */
+- (nullable NSString*) otr_displayName;
+
 @end
+NS_ASSUME_NONNULL_END

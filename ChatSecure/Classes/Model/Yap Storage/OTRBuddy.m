@@ -19,6 +19,7 @@
 @import OTRKit;
 #import "OTRLog.h"
 #import "OTRColors.h"
+#import "NSString+ChatSecure.h"
 
 @implementation OTRBuddy
 @synthesize displayName = _displayName;
@@ -46,6 +47,10 @@
 
 - (void)setDisplayName:(NSString *)displayName
 {
+    // Never set displayName the same as the username
+    if ([displayName isEqualToString:self.username]) {
+        return;
+    }
     if (![_displayName isEqualToString:displayName]) {
         _displayName = displayName;
         if (!self.avatarData) {
@@ -55,10 +60,15 @@
 }
 
 - (NSString*) displayName {
-    if (_displayName) {
+    // If user has set a displayName that isn't the JID, use that immediately
+    if (_displayName.length > 0 && ![_displayName isEqualToString:self.username]) {
         return _displayName;
     }
-    return self.username;
+    NSString *user = [self.username otr_displayName];
+    if (!user.length) {
+        return _displayName;
+    }
+    return user;
 }
 
 
@@ -151,6 +161,10 @@
 
 - (UIColor *)avatarBorderColor
 {
+    OTRThreadStatus threadStatus = [self currentStatus];
+    if (threadStatus == OTRThreadStatusOffline) {
+        return nil;
+    }
     return [OTRColors colorWithStatus:[self currentStatus]];
 }
 

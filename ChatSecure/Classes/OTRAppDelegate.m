@@ -185,12 +185,12 @@
 
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
-    crash.handlingCrashTypes = KSCrashTypeProductionSafe;
+    crash.monitoring = KSCrashMonitorTypeProductionSafeMinimal;
     /*
-#warning Change this to KSCrashTypeProductionSafe before App Store release!
+#warning Change this to KSCrashMonitorTypeProductionSafeMinimal before App Store release!
 #warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
     
-    crash.handlingCrashTypes = KSCrashTypeAll;
+    crash.monitoring = KSCrashMonitorTypeAll;
     crash.deadlockWatchdogInterval = 10;
     */
     
@@ -223,7 +223,7 @@
  * @return The base default UISplitViewController
  *
  */
-- (UISplitViewController *)setupDefaultSplitViewControllerWithLeadingViewController:(nonnull UIViewController *)leadingViewController
+- (UIViewController *)setupDefaultSplitViewControllerWithLeadingViewController:(nonnull UIViewController *)leadingViewController
 {
     
     YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;

@@ -22,12 +22,12 @@ abstract_target 'ChatSecureCorePods' do
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
   pod "CocoaLumberjack", '~> 2.3.0'
-  pod 'KSCrash', '~> 1.11.2'
+  pod 'KSCrash', '~> 1.15.3'
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  #pod 'YapDatabase/SQLCipher', '~> 2.9'
-  pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
+  pod 'YapDatabase/SQLCipher', '~> 2.9'
+  #pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 
   pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
@@ -67,7 +67,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Forks
-  pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
+  pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
   # Use this until able to push proper podspec that depends on 2.9
   pod 'YapTaskQueue/SQLCipher', '~> 0.1.6'

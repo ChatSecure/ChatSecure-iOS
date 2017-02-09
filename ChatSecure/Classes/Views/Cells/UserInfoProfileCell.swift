@@ -31,7 +31,7 @@ public class UserInfoProfileCell: XLFormBaseCell {
         avatarImageView.layer.cornerRadius = CGRectGetHeight(self.avatarImageView.frame)/2
         avatarImageView.layer.masksToBounds = true
         if let avatarBorderColor = userInfo.avatarBorderColor {
-            self.avatarImageView.layer.borderWidth = 2
+            self.avatarImageView.layer.borderWidth = 1.5
             self.avatarImageView.layer.borderColor = avatarBorderColor.CGColor
         } else {
             self.avatarImageView.layer.borderWidth = 0

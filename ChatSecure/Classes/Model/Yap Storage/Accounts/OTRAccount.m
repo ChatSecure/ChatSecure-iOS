@@ -86,10 +86,15 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 }
 
 - (NSString*) displayName {
-    if (_displayName) {
+    // If user has set a displayName that isn't the JID, use that immediately
+    if (_displayName.length > 0 && ![_displayName isEqualToString:self.username]) {
         return _displayName;
     }
-    return self.username;
+    NSString *user = [self.username otr_displayName];
+    if (!user.length) {
+        return _displayName;
+    }
+    return user;
 }
 
 - (void)setAvatarData:(NSData *)avatarData
@@ -114,8 +119,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             return [OTRColors colorWithStatus:OTRThreadStatusAvailable];
         }
     }
-    
-    return [OTRColors colorWithStatus:OTRThreadStatusOffline];
+    return nil;
 }
 
 - (Class)protocolClass {

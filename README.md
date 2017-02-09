@@ -2,13 +2,22 @@
 
 [![Build Status](https://travis-ci.org/ChatSecure/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/ChatSecure/ChatSecure-iOS)
 
-[ChatSecure](https://chatsecure.org) is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+[ChatSecure](https://chatsecure.org) is a free and open source [XMPP](https://en.wikipedia.org/wiki/XMPP) messaging client for iOS that integrates [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) and [OMEMO](https://en.wikipedia.org/wiki/OMEMO) encrypted messaging support, and has optional integrated support for connectivity via the [Tor](https://en.wikipedia.org/wiki/Tor_(anonymity_network)) network.
 
+[![download chatsecure on the app store](https://chatsecure.org/images/appstore.svg)](https://itunes.apple.com/us/app/chatsecure/id464200063)
 
 ## Cost
 
-This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
-However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
+### Redistributing ChatSecure Code on the App Store
+
+Even though this project is open source, this does not mean you can reuse this code when distributing closed source commercial products. Please [contact us](mailto:chris@chatsecure.org) to discuss licensing options before you start building your product.
+
+If you are an open source project, please [contact us](mailto:chris@chatsecure.org) to arrange for an App Store redistribution exception. For more information about why this is required, please read [this blog post](https://whispersystems.org/blog/license-update/) from Open Whisper Systems.
+
+### Cost for End Users
+
+Downloading the ChatSecure app is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
+However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase!
 
 [![bitcoin coinbase donation](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![paypal donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
 
@@ -25,28 +34,22 @@ If you would like to contribute/improve a translation:
  3. [Open an issue on Github](https://github.com/ChatSecure/ChatSecure-iOS/issues) notifying us of your translation.
 
 
-
 ## Compatibility
 
-
-There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support).
-
+There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support). A smaller list of clients support the mobile-friendly [OMEMO Encryption](https://en.wikipedia.org/wiki/OMEMO#Usage).
 
 ### Desktop
 
-* [Adium](https://adium.im/) (Mac OS X)
-* [Jitsi](https://jitsi.org) (Cross-platform)
-* [Pidgin](https://pidgin.im/) (cross-platform), with [pidgin-otr](https://otr.cypherpunks.ca/index.php#downloads) plugin.
+* [CoyIM](https://coy.im) (Cross-platform)
 
 ### Mobile
 
-* [ChatSecure-Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)
-* [BEEM](http://beem-project.com/projects/beem) (Android)
-* [Conversations](https://github.com/siacs/Conversations) (Android)
+* [Conversations](https://github.com/siacs/Conversations) (Android) **Supports OMEMO**
+* [Zom](https://zom.im/) (Android, iOS)
 
 ## Build Instructions
 
-You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
+You'll need [CocoaPods](http://cocoapods.org) for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
     
     $ ### gem install cocoapods # Until CocoaPods is fixed use the bundle command below instead.
     $ bundle install
@@ -118,6 +121,7 @@ in the sources themselves:
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
+* [libsignal-protocol-c](https://github.com/WhisperSystems/libsignal-protocol-c) - Provides [Signal Protocol](https://en.wikipedia.org/wiki/Signal_Protocol) support for OMEMO.
 * [OTRKit](https://github.com/chatsecure/otrkit) - Objective-C libotr wrapper library for OTR encryption [![Build Status](https://travis-ci.org/ChatSecure/OTRKit.svg?branch=master)](https://travis-ci.org/ChatSecure/OTRKit)
 	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
 	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
@@ -143,7 +147,7 @@ For a more complete list, check the [Podfile](https://github.com/ChatSecure/Chat
 
 ## Acknowledgements
 
-Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info) and [OpenITP](https://openitp.org).
+Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info), [OpenITP](http://web.archive.org/web/20160316141316/https://openitp.org/), and the [Open Technology Fund](https://www.opentech.fund).
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Icons8](http://icons8.com/license) - Various new "iOS 7"-style icons

@@ -90,9 +90,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [self.view addSubview:self.tableView];
     [self.tableView registerClass:[OTRAccountTableViewCell class] forCellReuseIdentifier:[OTRAccountTableViewCell cellIdentifier]];
     
-    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
-
-    self.navigationItem.rightBarButtonItem = aboutButton;
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+    [infoButton addTarget:self action:@selector(showAboutScreen:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
     
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
@@ -284,7 +284,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma - mark Other Methods
 
--(void)showAboutScreen
+-(void)showAboutScreen:(id)sender
 {
     OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
     
@@ -328,10 +328,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void) addAccount:(id)sender {
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
-    OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
+    welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:welcomeNavController animated:YES completion:nil];
 }
 
 - (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting

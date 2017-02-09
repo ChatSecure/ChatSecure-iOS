@@ -254,24 +254,23 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (BOOL)canAddBuddies
 {
-    if([OTRAccountsManager allAccountsAbleToAddBuddies]) {
-        return YES;
-    }
-    return NO;
+    // TODO: we should migrate to a persistent queue so when
+    // you add a buddy offline it will eventually work
+    // See: https://github.com/ChatSecure/ChatSecure-iOS/issues/679
+    return YES;
 }
 
-- (OTRBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath withTableView:(UITableView *)tableView
+- (id<OTRThreadOwner>)threadOwnerAtIndexPath:(NSIndexPath *)indexPath withTableView:(UITableView *)tableView
 {
     NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
     OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
     return [viewHandler object:viewIndexPath];
 }
 
-- (void)selectedBuddy:(NSString *)buddyId{
+- (void)selectedThreadOwner:(NSString *)buddyId{
     if (![buddyId length]) {
         return;
     }
-    
     
     if ([self.selectedBuddiesIdSet containsObject:buddyId]) {
         [self.selectedBuddiesIdSet removeObject:buddyId];
@@ -383,20 +382,14 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         return cell;
     }
     else {
-        OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
         OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        OTRBuddy * buddy = [self buddyAtIndexPath:databaseIndexPath withTableView:tableView];
+        id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
         
-        __block NSString *buddyAccountName = nil;
-        [viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
-        }];
-        
-        [cell setThread:buddy withAccountName:buddyAccountName];
+        [cell setThread:threadOwner];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
-        if ([self.selectedBuddiesIdSet containsObject:buddy.uniqueId]) {
+        if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -433,18 +426,18 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
-    if(indexPath.section == 0 && [accounts count] && ![self isSearchResultsControllerTableView:tableView])
+    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
     {
         [self addBuddy:accounts];
     }
     else {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        OTRBuddy * buddy = [self buddyAtIndexPath:databaseIndexPath withTableView:tableView];
+        id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
         if (self.selectionModeIsSingle == YES) {
-            NSSet <NSString *>*buddySet = [NSSet setWithObject:buddy.uniqueId];
+            NSSet <NSString *>*buddySet = [NSSet setWithObject:[threadOwner threadIdentifier]];
             [self completeSelectingBuddies:buddySet groupName:nil];
         } else {
-            [self selectedBuddy:buddy.uniqueId];
+            [self selectedThreadOwner:[threadOwner threadIdentifier]];
             [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
     }
@@ -454,12 +447,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        [self removeBuddy:[self buddyAtIndexPath:databaseIndexPath withTableView:tableView]];
+        [self removeThreadOwner:[self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView]];
     }
 }
 
-- (void)removeBuddy:(OTRBuddy *)buddy {
-    __block NSString *key = buddy.uniqueId;
+- (void)removeThreadOwner:(id<OTRThreadOwner>)threadOwner {
+    __block NSString *key = [threadOwner threadIdentifier];
     [self.readWriteConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
         if (dbBuddy) {
@@ -474,6 +467,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)addBuddy:(NSArray * _Nullable)accountsAbleToAddBuddies
 {
+    if ([accountsAbleToAddBuddies count] == 0) {
+        return; // No accounts
+    }
+    
     //add buddy cell
     UIViewController *viewController = nil;
     if([accountsAbleToAddBuddies count] > 1) {

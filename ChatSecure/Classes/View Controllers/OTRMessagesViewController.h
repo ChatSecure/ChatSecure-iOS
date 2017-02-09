@@ -9,6 +9,7 @@
 @import UIKit;
 
 #import "OTRBuddy.h"
+#import "OTROutgoingMessage.h"
 @import OTRKit;
 @import JSQMessagesViewController;
 
@@ -53,5 +54,8 @@
 
 /** This is called once the text view has no text or is cleared after an update*/
 - (void)didFinishTyping;
+
+/** Currently uses clock for queued, and checkmark for delivered. */
+- (nullable NSString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)message;
 
 @end

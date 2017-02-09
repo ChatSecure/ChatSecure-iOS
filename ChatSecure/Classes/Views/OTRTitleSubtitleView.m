@@ -11,7 +11,7 @@
 
 @import PureLayout;
 
-static const CGFloat kOTRMaxImageViewHeight = 9;
+static const CGFloat kOTRMaxImageViewHeight = 6;
 
 @interface OTRTitleSubtitleView ()
 
@@ -46,8 +46,8 @@ static const CGFloat kOTRMaxImageViewHeight = 9;
         self.subtitleLabel.backgroundColor = [UIColor clearColor];
         self.subtitleLabel.textAlignment = NSTextAlignmentCenter;
         
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-        self.subtitleLabel.font = [UIFont boldSystemFontOfSize:12];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.subtitleLabel.font = [UIFont systemFontOfSize:11];
         
         self.titleImageView = [[UIImageView alloc] initForAutoLayout];
         self.subtitleImageView = [[UIImageView alloc] initForAutoLayout];
@@ -82,7 +82,7 @@ static const CGFloat kOTRMaxImageViewHeight = 9;
     ///////////// SUBTITLE LABEL /////////////
     [self.subtitleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
-    [self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
+    [self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:-4];
     
     ////// TITLE IMAGEVIEW //////
     [self setupConstraintsWithImageView:self.titleImageView withLabel:self.titleLabel];
@@ -98,7 +98,7 @@ static const CGFloat kOTRMaxImageViewHeight = 9;
 {
 
     //Keeps trailing edge off of leading edge of label by at least 2
-    [imageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:label withOffset:-2.0];
+    [imageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:label withOffset:-5.0];
     //Keep centered horizontaly
     [imageView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:label];
     

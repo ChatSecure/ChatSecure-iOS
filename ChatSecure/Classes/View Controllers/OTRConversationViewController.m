@@ -113,10 +113,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
-        OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-        nav.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:nav animated:YES completion:nil];
+        welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:welcomeNavController animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
     } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
         EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];

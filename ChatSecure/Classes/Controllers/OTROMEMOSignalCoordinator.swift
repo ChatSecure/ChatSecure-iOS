@@ -164,7 +164,11 @@ import YapDatabase
         })
         if let username = user {
             let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(payload, name: username, deviceId: device.deviceId.unsignedIntValue)
-            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data)
+            var isPreKey = false
+            if (encryptedKeyData.type == .PreKeyMessage) {
+                isPreKey = true
+            }
+            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data, isPreKey: isPreKey)
         }
         return nil
     }
@@ -355,7 +359,7 @@ import YapDatabase
         let rid = self.signalEncryptionManager.registrationId
         
         //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
-        var unencryptedKeyData:NSData?
+        var unencryptedKeyData: NSData?
         for key in keyData {
             if key.deviceId == rid {
                 let keyData = key.data
@@ -368,12 +372,31 @@ import YapDatabase
                 }
             }
         }
-        guard let aesKey = unencryptedKeyData else {
+        
+        guard var aesKey = unencryptedKeyData else {
             return
         }
+        var authTag: NSData?
         
-        let encryptedBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
-        let tag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
+        // Treat >=32 bytes OMEMO 'keys' as containing the auth tag.
+        // https://github.com/ChatSecure/ChatSecure-iOS/issues/647
+        if (aesKey.length >= aesGcmBlockLength * 2) {
+            authTag = aesKey.subdataWithRange(NSMakeRange(aesGcmBlockLength, aesKey.length - aesGcmBlockLength))
+            aesKey = aesKey.subdataWithRange(NSMakeRange(0, aesGcmBlockLength))
+        }
+        
+        var tmpBody: NSData?
+        // If there's already an auth tag, that means the payload
+        // doesn't contain the auth tag.
+        if authTag != nil { // omemo namespace
+            tmpBody = encryptedPayload
+        } else { // 'siacs' namespace fallback
+            tmpBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
+            authTag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
+        }
+        guard let tag = authTag, let encryptedBody = tmpBody else {
+            return
+        }
         
         do {
             guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {

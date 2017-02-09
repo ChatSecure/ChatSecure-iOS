@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    CFPropertyList (2.3.4)
+    CFPropertyList (2.3.5)
     activesupport (4.2.7.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -47,7 +47,7 @@ GEM
     fourflusher (2.0.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.0.3)
-    i18n (0.7.0)
+    i18n (0.8.0)
     json (1.8.6)
     minitest (5.10.1)
     molinillo (0.5.5)
@@ -69,7 +69,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cocoapods (= 1.2.0)
+  cocoapods (~> 1.2.0)
 
 BUNDLED WITH
    1.13.7

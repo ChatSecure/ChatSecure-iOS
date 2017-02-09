@@ -13,7 +13,7 @@
 #import "OTRXMPPError.h"
 #import "OTRProtocol.h"
 #import "OTRXMPPManager_Private.h"
-
+#import "ProxyXMPPStream.h"
 
 @interface OTRXMPPTorManager()
 @end
@@ -29,13 +29,23 @@
     }
 }
 
+/** Override XMPPStream with XMPPProxyStream */
+- (OTRXMPPStream*) newStream {
+    return [[ProxyXMPPStream alloc] init];
+}
+
 // override
 - (void) setupStream {
     [super setupStream];
     NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
     NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
-    [self.xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
-    [self.xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
+    if ([self.xmppStream isKindOfClass:[ProxyXMPPStream class]]) {
+        ProxyXMPPStream *proxyStream = (ProxyXMPPStream*)self.xmppStream;
+        [proxyStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+        [proxyStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
+    } else {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Stream socket is of wrong class!" userInfo:nil];
+    }
 }
 
 - (NSString *)accountDomainWithError:(NSError**)error;

@@ -130,6 +130,8 @@ FOUNDATION_EXPORT NSString* FORGOT_PASSPHRASE_STRING();
 FOUNDATION_EXPORT NSString* GITHUB_STRING();
 /** "Google Talk", the name for Google talk */
 FOUNDATION_EXPORT NSString* GOOGLE_TALK_STRING();
+/** "Group Chat", a subtitle label for a group chat */
+FOUNDATION_EXPORT NSString* GROUP_CHAT_STRING();
 /** "Group Name", The title for the view to enter a group chat name or label */
 FOUNDATION_EXPORT NSString* GROUP_NAME_STRING();
 /** "Generate Secure Password", whether or not we should generate a strong password for them */

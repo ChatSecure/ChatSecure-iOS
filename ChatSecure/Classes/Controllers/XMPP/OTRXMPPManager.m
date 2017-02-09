@@ -106,11 +106,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (OTRXMPPStream*) newStream {
+    return [[OTRXMPPStream alloc] init];
+}
+
 - (void)setupStream
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
-	_xmppStream = [[XMPPStream alloc] init];
+	_xmppStream = [self newStream];
 
     //Used to fetch correct account from XMPPStream in delegate methods especailly
     self.xmppStream.tag = self.account.uniqueId;
@@ -602,7 +606,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     if ([sender supportsStreamManagement] && ![self.streamManagement didResume]) {
-        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:300];
+        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:0];
     }
     
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
@@ -767,9 +771,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         if (!buddy) { return; }
         XMPPvCardTemp *vCard = [self.xmppvCardTempModule vCardTempForJID:jid shouldFetch:YES];
         if (!vCard) { return; }
-        buddy = [buddy copy];
-        buddy.vCardTemp = vCard;
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction] copy];
+            if (!buddy) { return; }
+            buddy.vCardTemp = vCard;
             [buddy saveWithTransaction:transaction];
         }];
     }];
@@ -966,14 +971,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId
 {
-    
-    
     dispatch_async(self.workQueue, ^{
         
         __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
+        if (!buddy) { return; }
         
         if (buddy.lastSentChatState == chatState) {
             return;
