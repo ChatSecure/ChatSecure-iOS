@@ -311,7 +311,19 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         [ShareController shareAccount:account sender:sender viewController:self];
     }];
+#warning Unlocalized string!
+    UIAlertAction *serverInfoAction = [UIAlertAction actionWithTitle:@"Server Info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
+            scvc.serverCapabilitiesModule = xmpp.serverCapabilities;
+        }
+        [self presentViewController:nav animated:YES completion:nil];
+    }];
     
+    [alertController addAction:serverInfoAction];
     [alertController addAction:shareAction];
     [alertController addAction:logoutAlertAction];
     [alertController addAction:cancelAlertAction];

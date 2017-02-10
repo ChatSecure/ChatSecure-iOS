@@ -6,7 +6,7 @@
 //  Copyright © 2017 Chris Ballinger. All rights reserved.
 //
 
-#import <XMPPFramework/XMPPFramework.h>
+@import XMPPFramework;
 
 @protocol OTRServerCapabilitiesDelegate;
 
@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
  * It depends on the XMPPCapabilities module, so make sure you have that enabled.
  */
 @interface OTRServerCapabilities : XMPPModule
+
+#pragma mark Properties
 
 /** Default is YES. discoverServices will be invoked after xmppStreamDidAuthenticate: */
 @property (atomic, readwrite) BOOL autoDiscoverServices;
@@ -38,6 +40,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, copy, readonly, nullable) NSDictionary<XMPPJID*, NSXMLElement *> *allCapabilities;
 
 /**
+ * This will return the features supported by the stream.
+ * Will be non-nil once stream is setup.
+ */
+@property (atomic, copy, readonly, nullable) NSXMLElement *streamFeatures;
+
+
+#pragma mark Public Methods
+
+/**
  * This method will fetch all capabilities for your server, your JID, and all services.
  * It will automatically call discoverServices if needed.
  */
@@ -51,9 +62,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)discoverServices;
 
+#pragma mark Utility
+
+/**
+ * This lets you extract all features from the allCapabilities property
+ * and streamFeatures property.
+ */
++ (NSSet<NSString*>*) allFeaturesForCapabilities:(NSDictionary<XMPPJID*, NSXMLElement *>*)capabilities streamFeatures:(NSXMLElement*)streamFeatures;
+
 @end
 
 @protocol OTRServerCapabilitiesDelegate <NSObject>
+@optional
 
 /**
  * This will be called when all of the capabilities of your server, your JID,

@@ -50,6 +50,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRThreadOwner.h"
 #import "OTRBuddy.h"
 #import "OTRXMPPBuddy.h"
+#import "OTRServerCapabilities.h"
 
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"

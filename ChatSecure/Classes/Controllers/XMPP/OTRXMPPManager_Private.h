@@ -15,7 +15,6 @@
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPBuddyTimers.h"
 #import "OTRXMPPStream.h"
-#import "OTRServerCapabilities.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager() <OTRCertificatePinningDelegate>
@@ -26,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, strong, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, strong, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
 @property (nonatomic, strong, readonly) OTRYapDatabaseRosterStorage * xmppRosterStorage;
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
 

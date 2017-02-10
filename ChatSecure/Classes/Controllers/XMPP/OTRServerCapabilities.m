@@ -128,6 +128,16 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     return caps;
 }
 
+- (NSXMLElement*) streamFeatures {
+    __block NSXMLElement *features = nil;
+    [self performBlock:^{
+        if (xmppStream.state >= STATE_XMPP_POST_NEGOTIATION) {
+            features = [[xmppStream.rootElement elementForName:@"stream:features"] copy];
+        }
+    }];
+    return features;
+}
+
 #pragma mark Public Methods
 
 /**
@@ -335,6 +345,30 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 }
 
 #pragma mark Utility
+
+/**
+ * This lets you extract all features from the allCapabilities property.
+ */
++ (NSSet<NSString*>*) allFeaturesForCapabilities:(NSDictionary<XMPPJID*, NSXMLElement *>*)capabilities streamFeatures:(NSXMLElement*)streamFeatures {
+    NSMutableSet *allFeatures = [NSMutableSet set];
+    [capabilities enumerateKeysAndObjectsUsingBlock:^(XMPPJID * _Nonnull key, NSXMLElement * _Nonnull query, BOOL * _Nonnull stop) {
+        NSArray<NSXMLElement*> *features = [query elementsForName:@"feature"];
+        [features enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull feature, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *value = [feature attributeStringValueForName:@"var"];
+            [allFeatures addObject:value];
+        }];
+    }];
+    [streamFeatures.children enumerateObjectsUsingBlock:^(NSXMLNode * _Nonnull node, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([node isKindOfClass:[NSXMLElement class]]) {
+            NSXMLElement *element = (NSXMLElement*)node;
+            NSString *namespace = [element xmlns];
+            if (namespace) {
+                [allFeatures addObject:namespace];
+            }
+        }
+    }];
+    return [allFeatures copy];
+}
 
 - (void) fetchCapabilitiesForJIDs:(NSSet<XMPPJID*>*)jids {
     NSAssert(dispatch_get_specific(moduleQueueTag), @"Invoked on incorrect queue");
