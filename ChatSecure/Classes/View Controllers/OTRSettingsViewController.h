@@ -21,13 +21,14 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 @import UIKit;
-#import "OTRViewSetting.h"
-#import "OTRSettingsManager.h"
 @import MessageUI;
-#import "OTRDonateSetting.h"
+#import "OTRSettingsManager.h"
 
-@interface OTRSettingsViewController : UIViewController <OTRSettingDelegate, MFMailComposeViewControllerDelegate, OTRDonateSettingDelegate>
+NS_ASSUME_NONNULL_BEGIN
+@interface OTRSettingsViewController : UIViewController <MFMailComposeViewControllerDelegate>
 
+/** This property can be replaced with a custom subclass before displaying the view */
 @property (nonatomic, strong) OTRSettingsManager *settingsManager;
 
 @end
+NS_ASSUME_NONNULL_END

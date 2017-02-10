@@ -81,14 +81,15 @@ extension PushError: ChatSecureErrorProtocol {
 
 /** Error types for encryption*/
 enum EncryptionError: Int {
-    case unableToCreateOTRSession = 350
+    case UnableToCreateOTRSession = 350
+    case OMEMONotSuported         = 351
 }
 
 extension EncryptionError: ChatSecureErrorProtocol {
     func localizedDescription() -> String {
         switch self {
-        case .unableToCreateOTRSession:
-            return "Unable to create OTR session"
+        case UnableToCreateOTRSession: return "Unable to create OTR session"
+        case .OMEMONotSuported: return "OMEMO not supported"
         }
     }
     

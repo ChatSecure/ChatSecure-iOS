@@ -7,7 +7,6 @@
 //
 
 @import UIKit;
-@import Twitter;
 @import MessageUI;
 #import "OTRViewSetting.h"
 

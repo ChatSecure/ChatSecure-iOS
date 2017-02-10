@@ -7,12 +7,8 @@
 //
 
 #import "OTRSettingDetailViewController.h"
-#import "OTRListSetting.h"
 
 @interface OTRListSettingViewController : OTRSettingDetailViewController <UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic,strong) OTRListSetting * otrSetting;
-@property (nonatomic,strong) NSIndexPath * selectedPath;
-@property (nonatomic,strong) UITableView * valueTable;
 
 @end
