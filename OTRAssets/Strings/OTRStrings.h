@@ -364,7 +364,7 @@ FOUNDATION_EXPORT NSString* UNTRUSTED_DEVICE_SENT_STRING();
 FOUNDATION_EXPORT NSString* UNTRUSTED_DEVICE_STRING();
 /** "Username", Label text for username field on login screen */
 FOUNDATION_EXPORT NSString* USERNAME_STRING();
-/** "Take Photo", Label for button to take a photo from camera */
+/** "Camera", Label for button to take a photo from camera */
 FOUNDATION_EXPORT NSString* USE_CAMERA_STRING();
 /** "Unrecognized Invite Format", shown when invite QR code doesnt work */
 FOUNDATION_EXPORT NSString* Unrecognized_Invite_Format();

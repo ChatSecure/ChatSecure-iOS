@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,OTRXMPPBuddyTimers*> * buddyTimers;
 
+@property (nonatomic, strong, nullable) OTRXMPPChangeAvatar *changeAvatar;
+
 @property (nonatomic, readwrite) BOOL isRegisteringNewAccount;
 @property (nonatomic, readwrite) BOOL userInitiatedConnection;
 @property (nonatomic, readwrite) OTRLoginStatus loginStatus;
