@@ -9,44 +9,14 @@
 import UIKit
 import XMPPFramework
 
-private enum Availability {
-    case Unknown
-    case Available
-    case Unavailable
-}
-
-private struct CapabilityInfo {
-    var availability: Availability = .Unknown
-    let title: String
-    let description: String
-    let xml: String // used to match against caps xml
-    
-    init(title: String, description: String, xml: String) {
-        self.title = title
-        self.description = description
-        self.xml = xml
-    }
-}
-
 public class ServerCapabilitiesViewController: UITableViewController, OTRServerCapabilitiesDelegate {
     
     /// You must set this before showing view
     public weak var serverCapabilitiesModule: OTRServerCapabilities?
     private let CellIdentifier = "CellIdentifier"
     
-    private lazy var capabilities: [CapabilityInfo] = {
-        var capInfo: [CapabilityInfo] = []
-        // TODO: load this from JSON or Plist
-        // TODO: use localizable keys
-        capInfo.append(CapabilityInfo(
-            title: "Stream Management",
-            description: "XEP-0198: Provides better experience during temporary disconnections.",
-            xml: "urn:xmpp:sm"))
-        capInfo.append(CapabilityInfo(
-            title: "Push",
-            description: "XEP-0357: Provides push messaging support.",
-            xml: "urn:xmpp:push"))
-        return capInfo
+    private lazy var capabilities: [ServerCapabilityInfo] = {
+        return ServerCapabilityInfo.allCapabilities()
     }()
     
     // MARK: User Interaction
@@ -94,7 +64,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
         let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier, forIndexPath: indexPath)
         let cellInfo = capabilities[indexPath.row]
         var text = "❔"
-        switch cellInfo.availability {
+        switch cellInfo.status {
             case .Available:
                 text = "✅"
                 break
@@ -119,22 +89,23 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     
     // MARK: Utility
     
-    private func markAvailable(capabilities: [CapabilityInfo], serverCapabilitiesModule: OTRServerCapabilities) -> [CapabilityInfo] {
+    private func markAvailable(capabilities: [ServerCapabilityInfo], serverCapabilitiesModule: OTRServerCapabilities) -> [ServerCapabilityInfo] {
         guard let allCaps = serverCapabilitiesModule.allCapabilities, let features = serverCapabilitiesModule.streamFeatures else {
             return capabilities
         }
         let allFeatures = OTRServerCapabilities.allFeaturesForCapabilities(allCaps, streamFeatures: features)
-        var newCaps: [CapabilityInfo] = []
+        var newCaps: [ServerCapabilityInfo] = []
         for var capInfo in capabilities {
+            capInfo = capInfo.copy() as! ServerCapabilityInfo
             for feature in allFeatures {
-                if feature.containsString(capInfo.xml) {
-                    capInfo.availability = .Available
+                if feature.containsString(capInfo.xmlns) {
+                    capInfo.status = .Available
                     break
                 }
             }
             // if its not found, mark it unavailable
-            if capInfo.availability != .Available {
-                capInfo.availability = .Unavailable
+            if capInfo.status != .Available {
+                capInfo.status = .Unavailable
             }
             newCaps.append(capInfo)
         }
