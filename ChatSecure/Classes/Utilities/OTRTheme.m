@@ -12,6 +12,7 @@
 #import "OTRComposeViewController.h"
 #import "OTRMessagesGroupViewController.h"
 #import "OTRInviteViewController.h"
+#import "OTRSettingsViewController.h"
 
 @implementation OTRTheme
 
@@ -52,12 +53,22 @@
     return [[self messagesViewControllerClass] messagesViewController];
 }
 
+/** Returns new instance. Override this in subclass to use a different settings view controller class */
+- (__kindof UIViewController *) settingsViewController {
+    return [[OTRSettingsViewController alloc] init];
+}
+
 - (Class)composeViewControllerClass {
     return [OTRComposeViewController class];
 }
 
 - (Class)inviteViewControllerClass {
     return [OTRInviteViewController class];
+}
+
+- (BOOL) enableOMEMO
+{
+    return YES;
 }
 
 @end

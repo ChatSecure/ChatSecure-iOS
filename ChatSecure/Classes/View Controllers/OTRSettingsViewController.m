@@ -44,6 +44,8 @@
 #import "OTRQRCodeActivity.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
+#import "OTRViewSetting.h"
+#import "OTRDonateSetting.h"
 @import KVOController;
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -53,7 +55,7 @@
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
-@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol>
+@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol,OTRSettingDelegate,OTRDonateSettingDelegate>
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) UITableView *tableView;
@@ -67,7 +69,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (self = [super init])
     {
         self.title = SETTINGS_STRING();
-        self.settingsManager = [[OTRSettingsManager alloc] init];
+        _settingsManager = [[OTRSettingsManager alloc] init];
     }
     return self;
 }

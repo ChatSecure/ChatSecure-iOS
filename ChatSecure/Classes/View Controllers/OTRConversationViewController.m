@@ -155,7 +155,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)settingsButtonPressed:(id)sender
 {
-    OTRSettingsViewController * settingsViewController = [[OTRSettingsViewController alloc] init];
+    UIViewController * settingsViewController = [[OTRAppDelegate appDelegate].theme settingsViewController];
     
     [self.navigationController pushViewController:settingsViewController animated:YES];
 }

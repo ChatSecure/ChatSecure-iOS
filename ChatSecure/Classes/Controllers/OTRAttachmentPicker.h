@@ -1,5 +1,5 @@
 //
-//  OTRImagePicker.h
+//  OTRAttachmentPicker.h
 //  ChatSecure
 //
 //  Created by David Chiles on 1/16/15.
@@ -20,6 +20,12 @@
 @optional
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker addAdditionalOptions:(UIAlertController *)alertController;
+
+/** This shoud reutrn an array of media types like kUTTypeImage. This array will be checked against availableMediaTypesForSourceType: To make sure no erronous types are used
+ 
+    For all availbale media types do not implement or return [UIImagePickerController availableMediaTypesForSourceType:sourceType]
+ */
+- (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source;
 
 @end
 

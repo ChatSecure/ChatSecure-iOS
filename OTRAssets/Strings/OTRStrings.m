@@ -364,8 +364,8 @@ NSString* UNTRUSTED_DEVICE_SENT_STRING() { return [OTRLanguageManager translated
 NSString* UNTRUSTED_DEVICE_STRING() { return [OTRLanguageManager translatedString:@"Untrusted Device"]; }
 /** "Username", Label text for username field on login screen */
 NSString* USERNAME_STRING() { return [OTRLanguageManager translatedString:@"Username"]; }
-/** "Take Photo", Label for button to take a photo from camera */
-NSString* USE_CAMERA_STRING() { return [OTRLanguageManager translatedString:@"Take Photo"]; }
+/** "Camera", Label for button to take a photo from camera */
+NSString* USE_CAMERA_STRING() { return [OTRLanguageManager translatedString:@"Camera"]; }
 /** "Unrecognized Invite Format", shown when invite QR code doesnt work */
 NSString* Unrecognized_Invite_Format() { return [OTRLanguageManager translatedString:@"Unrecognized Invite Format"]; }
 /** "Valid certificate", shown to show that the certificate was valid to the system */

@@ -227,8 +227,22 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             
             //Get necessary objects for OTRKit
             if (message.messageSecurity() == .OMEMO) {
+                guard let signalCoordinator = accountProtocol.omemoSignalCoordinator else {
+                    self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+                        guard let message = OTROutgoingMessage.fetchObjectWithUniqueID(message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                            return
+                        }
+                        message.error = NSError.chatSecureError(EncryptionError.OMEMONotSuported, userInfo: nil)
+                        message.saveWithTransaction(transaction)
+                    })
+                    completion(success: true, retryTimeout: 0.0)
+                    return
+                }
                 self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
-                accountProtocol.omemoSignalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
+                
+                
+                
+                signalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
                     guard let strongSelf = self else {
                         return
                     }
@@ -369,7 +383,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                 return
             }
             
-            let err = NSError.chatSecureError(EncryptionError.unableToCreateOTRSession, userInfo: nil)
+            let err = NSError.chatSecureError(EncryptionError.UnableToCreateOTRSession, userInfo: nil)
             
             strongSelf.databaseConnection.readWriteWithBlock({ (transaction) in
                 if let message = transaction.objectForKey(messageInfo.messageKey, inCollection: messageInfo.messageCollection)?.copy() as? OTRBaseMessage {

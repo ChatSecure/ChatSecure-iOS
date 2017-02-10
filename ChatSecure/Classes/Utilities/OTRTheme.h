@@ -10,11 +10,11 @@
 @import UIKit;
 @import JSQMessagesViewController;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRTheme : NSObject
 
 @property (nonatomic, strong) UIColor *mainThemeColor;
 @property (nonatomic, strong) UIColor *lightThemeColor;
-
 @property (nonatomic, strong) UIColor *buttonLabelColor;
 
 /** Set global app appearance via UIAppearance */
@@ -29,11 +29,14 @@
 /** Override this in subclass to use a different group message view controller class */
 - (Class) groupMessagesViewControllerClass;
 
-/** Override this in subclass to use a different message view controller class */
+/** Returns new instance. Override this in subclass to use a different message view controller class */
 - (__kindof JSQMessagesViewController *) messagesViewController;
 
-/** Override this in subclass to use a different group message view controller class */
+/** Returns new instance. Override this in subclass to use a different group message view controller class */
 - (__kindof JSQMessagesViewController *) groupMessagesViewController;
+
+/** Returns new instance. Override this in subclass to use a different settings view controller class */
+- (__kindof UIViewController *) settingsViewController;
 
 /** Override this in subclass to use a different compose view controller class */
 - (Class) composeViewControllerClass;
@@ -41,5 +44,9 @@
 /** Override this in subclass to use a different invite view controller class */
 - (Class) inviteViewControllerClass;
 
+/** Ovverride this to disable OMEMO message encryption. default: YES */
+- (BOOL) enableOMEMO;
+
 
 @end
+NS_ASSUME_NONNULL_END

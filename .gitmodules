@@ -28,6 +28,3 @@
 [submodule "Submodules/ParkedTextField"]
 	path = Submodules/ParkedTextField
 	url = git@github.com:ChatSecure/ParkedTextField.git
-[submodule "Submodules/YapDatabase"]
-	path = Submodules/YapDatabase
-	url = git@github.com:ChatSecure/YapDatabase.git
