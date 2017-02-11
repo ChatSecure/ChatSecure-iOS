@@ -8,12 +8,12 @@
 
 import UIKit
 import XMPPFramework
+import OTRAssets
 
 public class ServerCapabilitiesViewController: UITableViewController, OTRServerCapabilitiesDelegate {
     
     /// You must set this before showing view
     public weak var serverCapabilitiesModule: OTRServerCapabilities?
-    private let CellIdentifier = "CellIdentifier"
     
     private lazy var capabilities: [ServerCapabilityInfo] = {
         return ServerCapabilityInfo.allCapabilities()
@@ -29,7 +29,12 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: CellIdentifier)
+        let bundle = OTRAssets.resourcesBundle()
+        let nib = UINib(nibName: ServerCapabilityTableViewCell.CellIdentifier, bundle: bundle)
+        tableView.registerNib(nib, forCellReuseIdentifier: ServerCapabilityTableViewCell.CellIdentifier)
+        
+        self.title = Server_String()
+        
         let doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
         navigationItem.rightBarButtonItem = doneButton
     }
@@ -38,7 +43,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         guard let caps = serverCapabilitiesModule else { return }
-        capabilities = markAvailable(capabilities, serverCapabilitiesModule: caps)
+        capabilities = ServerCapabilityInfo.markAvailable(capabilities, serverCapabilitiesModule: caps)
         caps.addDelegate(self, delegateQueue: dispatch_get_main_queue())
         tableView.reloadData()
     }
@@ -61,54 +66,28 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     }
     
     public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.CellIdentifier, forIndexPath: indexPath)
         let cellInfo = capabilities[indexPath.row]
-        var text = "❔"
-        switch cellInfo.status {
-            case .Available:
-                text = "✅"
-                break
-            case .Unavailable:
-                text = "❌"
-                break
-            default:
-                text = "❔"
+        if let cell = cell as? ServerCapabilityTableViewCell {
+            cell.setCapability(cellInfo)
+            cell.infoButtonBlock = {(cell, sender) in
+                NSLog("Show URL: %@", cellInfo.url)
+            }
         }
-        text = text + " " + cellInfo.title
-        cell.textLabel?.text = text
         return cell
+    }
+    
+    public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 91
     }
     
     // MARK: OTRServerCapabilitiesDelegate
     
     @objc public func serverCapabilities(sender: OTRServerCapabilities, didDiscoverAllCapabilities allCapabilities: [XMPPJID : DDXMLElement]) {
         guard let caps = serverCapabilitiesModule else { return }
-        capabilities = markAvailable(capabilities, serverCapabilitiesModule: caps)
+        capabilities = ServerCapabilityInfo.markAvailable(capabilities, serverCapabilitiesModule: caps)
         tableView.reloadData()
     }
     
-    // MARK: Utility
     
-    private func markAvailable(capabilities: [ServerCapabilityInfo], serverCapabilitiesModule: OTRServerCapabilities) -> [ServerCapabilityInfo] {
-        guard let allCaps = serverCapabilitiesModule.allCapabilities, let features = serverCapabilitiesModule.streamFeatures else {
-            return capabilities
-        }
-        let allFeatures = OTRServerCapabilities.allFeaturesForCapabilities(allCaps, streamFeatures: features)
-        var newCaps: [ServerCapabilityInfo] = []
-        for var capInfo in capabilities {
-            capInfo = capInfo.copy() as! ServerCapabilityInfo
-            for feature in allFeatures {
-                if feature.containsString(capInfo.xmlns) {
-                    capInfo.status = .Available
-                    break
-                }
-            }
-            // if its not found, mark it unavailable
-            if capInfo.status != .Available {
-                capInfo.status = .Unavailable
-            }
-            newCaps.append(capInfo)
-        }
-        return newCaps
-    }
 }

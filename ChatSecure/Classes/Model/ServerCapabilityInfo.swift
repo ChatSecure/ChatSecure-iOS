@@ -62,4 +62,33 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
             url: NSURL(string: "https://xmpp.org/extensions/xep-0357.html")!))
         return caps
     }
+    
+    // MARK: Utility
+    
+    /**
+     * This will determine which features are available.
+     * Will do nothing if the module hasn't finished processing.
+     */
+    public class func markAvailable(capabilities: [ServerCapabilityInfo], serverCapabilitiesModule: OTRServerCapabilities) -> [ServerCapabilityInfo] {
+        guard let allCaps = serverCapabilitiesModule.allCapabilities, let features = serverCapabilitiesModule.streamFeatures else {
+            return capabilities
+        }
+        let allFeatures = OTRServerCapabilities.allFeaturesForCapabilities(allCaps, streamFeatures: features)
+        var newCaps: [ServerCapabilityInfo] = []
+        for var capInfo in capabilities {
+            capInfo = capInfo.copy() as! ServerCapabilityInfo
+            for feature in allFeatures {
+                if feature.containsString(capInfo.xmlns) {
+                    capInfo.status = .Available
+                    break
+                }
+            }
+            // if its not found, mark it unavailable
+            if capInfo.status != .Available {
+                capInfo.status = .Unavailable
+            }
+            newCaps.append(capInfo)
+        }
+        return newCaps
+    }
 }

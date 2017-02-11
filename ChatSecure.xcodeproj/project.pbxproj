@@ -111,6 +111,8 @@
 		63FCB1371DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCB1361DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift */; };
 		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
 		D91C86681E4E6DEE008BD763 /* ServerCapabilityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91C86671E4E6DEE008BD763 /* ServerCapabilityInfo.swift */; };
+		D91C866B1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */; };
+		D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */; };
 		D91E641A1DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91E64181DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift */; };
 		D91E641C1DB179A00074B2D4 /* OMEMODeviceFingerprintCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91E64191DB156E90074B2D4 /* OMEMODeviceFingerprintCell.xib */; };
 		D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */; };
@@ -922,6 +924,8 @@
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
 		D91C86671E4E6DEE008BD763 /* ServerCapabilityInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCapabilityInfo.swift; sourceTree = "<group>"; };
+		D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCapabilityTableViewCell.swift; sourceTree = "<group>"; };
+		D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerCapabilityTableViewCell.xib; sourceTree = "<group>"; };
 		D91E64181DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OMEMODeviceFingerprintCell.swift; sourceTree = "<group>"; };
 		D91E64191DB156E90074B2D4 /* OMEMODeviceFingerprintCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OMEMODeviceFingerprintCell.xib; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -1462,6 +1466,8 @@
 		6331064B1A16D1A300C17BAE /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */,
+				D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */,
 				D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */,
 				D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */,
 				D91E64181DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift */,
@@ -2308,6 +2314,7 @@
 				D99F178A1BAB946800604558 /* Branding.plist in Resources */,
 				D99F17881BAB936100604558 /* Localizable.strings in Resources */,
 				D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */,
+				D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */,
 				D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */,
 				D91E641C1DB179A00074B2D4 /* OMEMODeviceFingerprintCell.xib in Resources */,
 				D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */,
@@ -2650,6 +2657,7 @@
 				D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */,
 				D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */,
 				D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */,
+				D91C866B1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift in Sources */,
 				D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */,
 				D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */,
 				D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */,
