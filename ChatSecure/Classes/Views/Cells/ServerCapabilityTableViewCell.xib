@@ -20,7 +20,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description of feature." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sFM-BN-T3m">
-                        <rect key="frame" x="24" y="48" width="232" height="30"/>
+                        <rect key="frame" x="63" y="45" width="193" height="30"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -35,8 +35,8 @@
                             <action selector="infoButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="6gG-bi-myf"/>
                         </connections>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅ Feature Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uei-is-lz1">
-                        <rect key="frame" x="24" y="19" width="232" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feature Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uei-is-lz1">
+                        <rect key="frame" x="63" y="16" width="193" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="oxQ-iP-oqg"/>
                         </constraints>
@@ -44,20 +44,33 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="doZ-Zs-uhD">
+                        <rect key="frame" x="24" y="35" width="23" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="23" id="4WC-az-oaW"/>
+                            <constraint firstAttribute="height" constant="21" id="MDq-vm-zgu"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="XIs-gX-Qp3" secondAttribute="trailing" constant="16" id="4S3-QX-Ovu"/>
+                    <constraint firstItem="uei-is-lz1" firstAttribute="leading" secondItem="doZ-Zs-uhD" secondAttribute="trailing" constant="16" id="5Tz-1O-LiQ"/>
                     <constraint firstItem="XIs-gX-Qp3" firstAttribute="leading" secondItem="uei-is-lz1" secondAttribute="trailing" constant="18" id="5lg-MB-dYu"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="sFM-BN-T3m" secondAttribute="bottom" constant="4.5" id="K4a-ks-Nxz"/>
+                    <constraint firstItem="doZ-Zs-uhD" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9Ip-bk-l0w"/>
+                    <constraint firstItem="doZ-Zs-uhD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="16" id="DIy-FK-YZB"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="sFM-BN-T3m" secondAttribute="bottom" constant="8" id="K4a-ks-Nxz"/>
                     <constraint firstItem="sFM-BN-T3m" firstAttribute="leading" secondItem="uei-is-lz1" secondAttribute="leading" id="hNB-Gj-q3r"/>
                     <constraint firstItem="sFM-BN-T3m" firstAttribute="width" secondItem="uei-is-lz1" secondAttribute="width" id="hwg-LA-Rzy"/>
-                    <constraint firstItem="uei-is-lz1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="11" id="pAV-VA-Yq3"/>
+                    <constraint firstItem="uei-is-lz1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="8" id="pAV-VA-Yq3"/>
                     <constraint firstItem="XIs-gX-Qp3" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rNy-3P-kon"/>
                     <constraint firstItem="sFM-BN-T3m" firstAttribute="top" secondItem="uei-is-lz1" secondAttribute="bottom" constant="8" id="sjB-ZF-ILH"/>
-                    <constraint firstItem="uei-is-lz1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="16" id="u9L-oF-k1j"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="checkLabel" destination="doZ-Zs-uhD" id="Lil-yk-BWz"/>
                 <outlet property="infoButton" destination="XIs-gX-Qp3" id="FV1-bG-0e5"/>
                 <outlet property="subtitleLabel" destination="sFM-BN-T3m" id="7fl-4x-d5N"/>
                 <outlet property="titleLabel" destination="uei-is-lz1" id="WcW-hW-Yvu"/>

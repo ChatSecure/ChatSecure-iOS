@@ -14,25 +14,26 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var infoButton: UIButton!
+    @IBOutlet weak var checkLabel: UILabel!
     
     public static let CellIdentifier = "ServerCapabilityTableViewCell"
     
     public var infoButtonBlock: ((cell: ServerCapabilityTableViewCell, sender: AnyObject) -> ())?
     
     public func setCapability(capability: ServerCapabilityInfo) {
-        var text = "❔"
+        var check = "❔"
         switch capability.status {
         case .Available:
-            text = "✅"
+            check = "✅"
             break
         case .Unavailable:
-            text = "❌"
+            check = "❌"
             break
         default:
-            text = "❔"
+            check = "❔"
         }
-        text = text + " " + capability.title
-        self.titleLabel.text = text
+        self.checkLabel.text = check
+        self.titleLabel.text = capability.title
         self.subtitleLabel.text = capability.subtitle
     }
 
