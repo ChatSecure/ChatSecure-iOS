@@ -25,32 +25,41 @@
  "certificate": "..."
  }
  */
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPServerInfo : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong, readonly) NSString *serverDescription;
-@property (nonatomic, strong, readonly) NSURL *websiteURL;
-@property (nonatomic, strong, readonly) NSURL *twitterURL;
-@property (nonatomic, strong, readonly) NSURL *privacyPolicyURL;
-/** can be relative path or absolute url string */
-@property (nonatomic, strong, readonly) NSString *logo;
-@property (nonatomic, strong, readonly) NSString *countryCode;
 /** domain shown at the end of usernames e.g. dukgo.com */
-@property (nonatomic, strong) NSString *domain;
+- (instancetype) initWithDomain:(NSString*)domain;
+
+/** domain shown at the end of usernames e.g. dukgo.com */
+@property (nonatomic, strong, readonly) NSString *domain;
+
+@property (nonatomic, strong, readonly, nullable) NSString *name;
+@property (nonatomic, strong, readonly, nullable) NSString *serverDescription;
+@property (nonatomic, strong, readonly, nullable) NSURL *websiteURL;
+@property (nonatomic, strong, readonly, nullable) NSURL *twitterURL;
+@property (nonatomic, strong, readonly, nullable) NSURL *privacyPolicyURL;
+/** can be relative path or absolute url string */
+@property (nonatomic, strong, readonly, nullable) NSString *logo;
+@property (nonatomic, strong, readonly, nullable) NSString *countryCode;
 /** server fqdn e.g. xmpp.dukgo.com */
-@property (nonatomic, strong, readonly) NSString *server;
-@property (nonatomic, strong, readonly) NSString *onion;
-@property (nonatomic, readonly) uint16_t portNumber;
-@property (nonatomic, strong, readonly) NSString *certificate;
+@property (nonatomic, strong, readonly, nullable) NSString *server;
+@property (nonatomic, strong, readonly, nullable) NSString *onion;
+/** Defaults to 5222 */
+@property (nonatomic, readonly) in_port_t portNumber;
+@property (nonatomic, strong, readonly, nullable) NSString *certificate;
 
 /** Return image if loaded from local resource bundle */
-- (UIImage*) logoImage;
+- (nullable UIImage*) logoImage;
 
 /** Get remote image URL if loaded via internet */
 //- (NSURL *) logoURLRelativeToURL:(NSURL*)baseURL;
 
 /** loaded from bundle */
-+ (NSArray *)defaultServerList;
-+ (NSArray *)serverListFromJSONData:(NSData*)jsonData;
+@property (class, readonly, nullable) NSArray<OTRXMPPServerInfo*> *defaultServerList;
+
+//+ (nullable NSArray<OTRXMPPServerInfo*> *)defaultServerList;
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData;
 
 @end
+NS_ASSUME_NONNULL_END

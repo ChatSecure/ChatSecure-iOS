@@ -208,6 +208,8 @@ NSString* ONBOARDING_SUCCESS_STRING() { return [OTRLanguageManager translatedStr
 NSString* OPEN_IN_CHROME() { return [OTRLanguageManager translatedString:@"Open in Chrome"]; }
 /** "Open in Facebook", Label for button to open link in facebook app */
 NSString* OPEN_IN_FACEBOOK_STRING() { return [OTRLanguageManager translatedString:@"Open in Facebook"]; }
+/** "Open in Safari", Label to open link in the Safari web browser */
+NSString* OPEN_IN_SAFARI() { return [OTRLanguageManager translatedString:@"Open in Safari"]; }
 /** "Open in Twitter", Label for button to open link in twitter app */
 NSString* OPEN_IN_TWITTER_STRING() { return [OTRLanguageManager translatedString:@"Open in Twitter"]; }
 /** "Optional", Hint text for domain field telling user this field is not required */

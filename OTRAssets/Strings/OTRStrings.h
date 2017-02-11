@@ -208,6 +208,8 @@ FOUNDATION_EXPORT NSString* ONBOARDING_SUCCESS_STRING();
 FOUNDATION_EXPORT NSString* OPEN_IN_CHROME();
 /** "Open in Facebook", Label for button to open link in facebook app */
 FOUNDATION_EXPORT NSString* OPEN_IN_FACEBOOK_STRING();
+/** "Open in Safari", Label to open link in the Safari web browser */
+FOUNDATION_EXPORT NSString* OPEN_IN_SAFARI();
 /** "Open in Twitter", Label for button to open link in twitter app */
 FOUNDATION_EXPORT NSString* OPEN_IN_TWITTER_STRING();
 /** "Optional", Hint text for domain field telling user this field is not required */

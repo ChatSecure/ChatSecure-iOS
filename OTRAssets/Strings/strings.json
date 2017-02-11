@@ -263,6 +263,10 @@
         "comment": "For an old settings value",
         "string": "Old"
     },
+    "OPEN_IN_SAFARI": {
+        "comment": "Label to open link in the Safari web browser",
+        "string": "Open in Safari"
+    },
     "OPEN_IN_CHROME": {
         "comment": "Label to open link in the chrome web browser",
         "string": "Open in Chrome"

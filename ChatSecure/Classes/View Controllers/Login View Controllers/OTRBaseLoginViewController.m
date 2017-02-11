@@ -22,6 +22,7 @@
 
 #import "OTRInviteViewController.h"
 #import "NSString+ChatSecure.h"
+#import "XMPPServerInfoCell.h"
 
 static NSUInteger kOTRMaxLoginAttempts = 5;
 
@@ -189,10 +190,15 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     [self updateFormRow:usernameRow];
 }
 
-#pragma mark Table View methods
+#pragma mark UITableView methods
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    // This is required for the XMPPServerInfoCell buttons to work
+    if ([cell isKindOfClass:[XMPPServerInfoCell class]]) {
+        XMPPServerInfoCell *infoCell = (XMPPServerInfoCell*)cell;
+        [infoCell setupWithParentViewController:self];
+    }
     if (self.readOnly) {
         cell.userInteractionEnabled = NO;
     } else {
