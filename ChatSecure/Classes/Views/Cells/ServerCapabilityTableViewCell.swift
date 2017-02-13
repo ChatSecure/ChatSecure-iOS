@@ -8,6 +8,10 @@
 
 import UIKit
 
+public protocol IdentifiableCell {
+    
+}
+
 @objc(ServerCapabilityTableViewCell)
 public class ServerCapabilityTableViewCell: UITableViewCell {
     
@@ -16,10 +20,20 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
     @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var checkLabel: UILabel!
     
-    public static let CellIdentifier = "ServerCapabilityTableViewCell"
+    /// This will also be the name of the xib
+    public class func cellIdentifier() -> String {
+        return "ServerCapabilityTableViewCell"
+    }
     
     public var infoButtonBlock: ((cell: ServerCapabilityTableViewCell, sender: AnyObject) -> ())?
     
+    @IBAction func infoButtonPressed(sender: AnyObject) {
+        guard let block = infoButtonBlock else { return }
+        block(cell: self, sender: sender)
+    }
+}
+
+extension ServerCapabilityTableViewCell {
     public func setCapability(capability: ServerCapabilityInfo) {
         var check = "❔"
         switch capability.status {
@@ -35,10 +49,5 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
         self.checkLabel.text = check
         self.titleLabel.text = capability.title
         self.subtitleLabel.text = capability.subtitle
-    }
-
-    @IBAction func infoButtonPressed(sender: AnyObject) {
-        guard let block = infoButtonBlock else { return }
-        block(cell: self, sender: sender)
     }
 }

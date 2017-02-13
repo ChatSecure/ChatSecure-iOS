@@ -402,6 +402,8 @@
 		D9599BBC1E28578D006A4450 /* OTRStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = D9599BBB1E28578D006A4450 /* OTRStrings.m */; };
 		D9599BBE1E285ECD006A4450 /* OTRLanguageManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9599BBD1E285EC3006A4450 /* OTRLanguageManager_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
+		D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */; };
+		D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -951,6 +953,8 @@
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
+		D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAccountTableViewCell.swift; sourceTree = "<group>"; };
+		D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushAccountTableViewCell.xib; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
 		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
@@ -1466,6 +1470,8 @@
 		6331064B1A16D1A300C17BAE /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */,
+				D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */,
 				D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */,
 				D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */,
 				D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */,
@@ -2319,6 +2325,7 @@
 				D91E641C1DB179A00074B2D4 /* OMEMODeviceFingerprintCell.xib in Resources */,
 				D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */,
 				D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */,
+				D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */,
 				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2671,6 +2678,7 @@
 				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
 				D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */,
 				D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */,
+				D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */,
 				D93DDB061BA79A2A00CD8331 /* OTRLanguageListSettingViewController.m in Sources */,
 				D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */,
 				D93DDB081BA79A2A00CD8331 /* OTRMessagesViewController.m in Sources */,

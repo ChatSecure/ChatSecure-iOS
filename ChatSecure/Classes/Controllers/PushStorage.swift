@@ -23,6 +23,7 @@ import YapDatabase
     func saveUnusedToken(tokenContainer:TokenContainer)
     func saveUsedToken(tokenContainer:TokenContainer)
     func numberUnusedTokens() -> UInt
+    func numberUsedTokens() -> UInt
     func unusedTokenStoreMinimum() -> UInt
     func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
     func numberOfTokensForBuddy(buddyKey:String, createdByThisAccount:Bool) -> Int
@@ -161,6 +162,14 @@ class PushStorage: NSObject, PushStorageProtocol {
             unusedTokensCount = transaction.numberOfKeysInCollection(PushYapCollections.unusedTokenCollection.rawValue)
         }
         return unusedTokensCount
+    }
+    
+    func numberUsedTokens() -> UInt {
+        var usedTokensCount:UInt = 0
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
+            usedTokensCount = transaction.numberOfKeysInCollection(PushYapCollections.unusedTokenCollection.rawValue)
+        }
+        return usedTokensCount
     }
     
     func unusedTokenStoreMinimum() -> UInt {

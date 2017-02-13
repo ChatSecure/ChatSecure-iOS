@@ -24,7 +24,27 @@ import UserNotifications
     case Enabled
 }
 
-/** 
+@objc(OTRPushInfo)
+public class PushInfo: NSObject {
+    let pushOptIn = PushController.getPushPreference() == .Enabled
+    let pushAPIURL: NSURL
+    let hasPushAccount: Bool
+    let numUsedTokens: UInt
+    let numUnusedTokens: UInt
+    let pushPermitted: Bool
+    let pubsubEndpoint: String?
+    
+    init(pushAPIURL: NSURL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?) {
+        self.pushAPIURL = pushAPIURL
+        self.hasPushAccount = hasPushAccount
+        self.numUsedTokens = numUsedTokens
+        self.numUnusedTokens = numUnusedTokens
+        self.pushPermitted = pushPermitted
+        self.pubsubEndpoint = pubsubEndpoint
+    }
+}
+
+/**
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
 */
@@ -35,6 +55,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     var callbackQueue = NSOperationQueue()
     var otrListener: PushOTRListener?
     let timeBufffer:NSTimeInterval = 60*60*24
+    var pubsubEndpoint: NSString?
     
     public init(baseURL: NSURL, sessionConfiguration: NSURLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
@@ -132,7 +153,18 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     }
     
     public func getPubsubEndpoint(completion:(endpoint:String?,error:NSError?) -> Void) {
-        self.apiClient.getPubsubEndpoint(completion)
+        if let pubsubEndpoint = pubsubEndpoint {
+            self.callbackQueue.addOperationWithBlock({ 
+                completion(endpoint: pubsubEndpoint as String, error: nil)
+            })
+            return
+        }
+        self.apiClient.getPubsubEndpoint { (pubsubEndpoint, error) in
+            self.pubsubEndpoint = pubsubEndpoint
+            self.callbackQueue.addOperationWithBlock({
+                completion(endpoint: pubsubEndpoint, error: error)
+            })
+        }
     }
     
     public func getMessagesEndpoint() -> NSURL {
@@ -493,6 +525,35 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     }
     
     //MARK: Utility
+    
+    /// If callbackQueue is nil, it will complete on main queue
+    public func gatherPushInfo(completion: (PushInfo) -> (), callbackQueue: dispatch_queue_t?) {
+        var pubsubEndpoint: String?
+        var pushPermitted = false
+        let group = dispatch_group_create()
+        dispatch_group_enter(group)
+        pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
+        dispatch_group_enter(group)
+        dispatch_group_leave(group)
+        getPubsubEndpoint { (endpoint, error) in
+            pubsubEndpoint = endpoint
+            dispatch_group_leave(group)
+        }
+        var queue = dispatch_get_main_queue()
+        if let custom = callbackQueue {
+            queue = custom
+        }
+        dispatch_group_notify(group, queue) {
+            let newPushInfo = PushInfo(
+                pushAPIURL: self.apiClient.baseUrl,
+                hasPushAccount: self.storage.hasPushAccount(),
+                numUsedTokens: self.storage.numberUsedTokens(),
+                numUnusedTokens: self.storage.numberUnusedTokens(),
+                pushPermitted: pushPermitted,
+                pubsubEndpoint: pubsubEndpoint)
+            completion(newPushInfo)
+        }
+    }
     
     public static func registerForPushNotifications() {
         if #available(iOS 10.0, *) {

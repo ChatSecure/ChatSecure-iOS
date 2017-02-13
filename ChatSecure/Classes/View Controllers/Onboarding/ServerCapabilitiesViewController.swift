@@ -13,11 +13,27 @@ import OTRAssets
 public class ServerCapabilitiesViewController: UITableViewController, OTRServerCapabilitiesDelegate {
     
     /// You must set this before showing view
-    public weak var serverCapabilitiesModule: OTRServerCapabilities?
-    
-    private lazy var capabilities: [ServerCapabilityInfo] = {
+    public var serverCapabilitiesModule: OTRServerCapabilities?
+    /// You must set this before showing view
+    public var pushController: PushController?
+
+    private lazy var capabilities: [CapabilityCode : ServerCapabilityInfo] = {
         return ServerCapabilityInfo.allCapabilities()
     }()
+    private lazy var capabilitiesArray: [ServerCapabilityInfo] = {
+        return Array(self.capabilities.values) // TODO: sort
+    }()
+    private var pushInfo: PushInfo?
+    private let tableSections: [TableSection] = [.Push, .Server]
+    
+    /// Updates account information for push notifications
+    private func refreshPushInfo() {
+        guard let push = pushController else { return }
+        push.gatherPushInfo({ (pushInfo) in
+            self.pushInfo = pushInfo
+            self.tableView.reloadData()
+            }, callbackQueue: dispatch_get_main_queue())
+    }
     
     // MARK: User Interaction
     
@@ -30,8 +46,14 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func viewDidLoad() {
         super.viewDidLoad()
         let bundle = OTRAssets.resourcesBundle()
-        let nib = UINib(nibName: ServerCapabilityTableViewCell.CellIdentifier, bundle: bundle)
-        tableView.registerNib(nib, forCellReuseIdentifier: ServerCapabilityTableViewCell.CellIdentifier)
+        let serverNib = UINib(nibName: ServerCapabilityTableViewCell.cellIdentifier(), bundle: bundle)
+        let pushNib = UINib(nibName: PushAccountTableViewCell.cellIdentifier(), bundle: bundle)
+        tableView.registerNib(pushNib, forCellReuseIdentifier: PushAccountTableViewCell.cellIdentifier())
+        tableView.registerNib(serverNib, forCellReuseIdentifier: ServerCapabilityTableViewCell.cellIdentifier())
+
+        
+        
+        tableView.allowsSelection = false
         
         self.title = Server_String()
         
@@ -46,6 +68,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
         capabilities = ServerCapabilityInfo.markAvailable(capabilities, serverCapabilitiesModule: caps)
         caps.addDelegate(self, delegateQueue: dispatch_get_main_queue())
         tableView.reloadData()
+        refreshPushInfo()
     }
     
     public override func viewDidDisappear(animated: Bool) {
@@ -57,28 +80,64 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     
     // MARK: UITableViewDataSource
     
+    public override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch tableSections[section] {
+        case .Push:
+            return CHATSECURE_PUSH_STRING()
+        case .Server:
+            return Server_String()
+        }
+    }
+    
     public override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return tableSections.count
     }
     
     public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return capabilities.count
+        switch tableSections[section] {
+        case .Push:
+            if pushInfo != nil {
+                return 1
+            } else {
+                return 0
+            }
+        case .Server:
+            return capabilities.count
+        }
     }
     
     public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.CellIdentifier, forIndexPath: indexPath)
-        let cellInfo = capabilities[indexPath.row]
-        if let cell = cell as? ServerCapabilityTableViewCell {
+        switch tableSections[indexPath.section] {
+        case .Push:
+            guard let cell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell, let cellInfo = pushInfo,
+                let xmppPush = capabilities[.XEP0357] else {
+                return UITableViewCell()
+            }
+            cell.setPushInfo(cellInfo, pushCapabilities: xmppPush)
+            cell.infoButtonBlock = {(cell, sender) in
+                cellInfo.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+            }
+            return cell
+        case .Server:
+            guard let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? ServerCapabilityTableViewCell else {
+                return UITableViewCell()
+            }
+            let cellInfo = capabilitiesArray[indexPath.row]
             cell.setCapability(cellInfo)
             cell.infoButtonBlock = {(cell, sender) in
-                NSLog("Show URL: %@", cellInfo.url)
+                cellInfo.url.promptToShowURLFromViewController(self, sender: sender)
             }
+            return cell
         }
-        return cell
     }
     
     public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 91
+        switch tableSections[indexPath.section] {
+        case .Push:
+            return 140
+        case .Server:
+            return 91
+        }
     }
     
     // MARK: OTRServerCapabilitiesDelegate
@@ -89,5 +148,11 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
         tableView.reloadData()
     }
     
+    // MARK: Cell Data
     
+    private enum TableSection: UInt {
+        case Push
+        case Server
+    }
+
 }
