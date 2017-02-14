@@ -437,6 +437,10 @@
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
 		D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */; };
 		D9B9B1371DC802480007F5A7 /* OTRUserInfoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9BC71DA1E53B2BF007A3C4F /* SingleButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BC71D81E53B2BF007A3C4F /* SingleButtonTableViewCell.swift */; };
+		D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BC71D91E53B2BF007A3C4F /* SingleButtonTableViewCell.xib */; };
+		D9BC71DF1E53B465007A3C4F /* TwoButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BC71DD1E53B465007A3C4F /* TwoButtonTableViewCell.swift */; };
+		D9BC71E11E53B4A3007A3C4F /* TwoButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BC71DE1E53B465007A3C4F /* TwoButtonTableViewCell.xib */; };
 		D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BEF8DF1DCE6E12009945D1 /* OTRXMPPManager_Private.h */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
@@ -983,6 +987,10 @@
 		D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoProfileCell.swift; sourceTree = "<group>"; };
 		D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoProfileCell.xib; sourceTree = "<group>"; };
 		D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUserInfoProfile.h; sourceTree = "<group>"; };
+		D9BC71D81E53B2BF007A3C4F /* SingleButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleButtonTableViewCell.swift; sourceTree = "<group>"; };
+		D9BC71D91E53B2BF007A3C4F /* SingleButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SingleButtonTableViewCell.xib; sourceTree = "<group>"; };
+		D9BC71DD1E53B465007A3C4F /* TwoButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoButtonTableViewCell.swift; sourceTree = "<group>"; };
+		D9BC71DE1E53B465007A3C4F /* TwoButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwoButtonTableViewCell.xib; sourceTree = "<group>"; };
 		D9BE65431B6A08ED002D4136 /* XMPPServerInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPServerInfoCell.h; sourceTree = "<group>"; };
 		D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPServerInfoCell.m; sourceTree = "<group>"; };
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XMPPServerInfoCell.xib; path = Interface/XMPPServerInfoCell.xib; sourceTree = "<group>"; };
@@ -1472,6 +1480,10 @@
 			children = (
 				D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */,
 				D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */,
+				D9BC71D81E53B2BF007A3C4F /* SingleButtonTableViewCell.swift */,
+				D9BC71D91E53B2BF007A3C4F /* SingleButtonTableViewCell.xib */,
+				D9BC71DD1E53B465007A3C4F /* TwoButtonTableViewCell.swift */,
+				D9BC71DE1E53B465007A3C4F /* TwoButtonTableViewCell.xib */,
 				D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */,
 				D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */,
 				D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */,
@@ -2317,8 +2329,10 @@
 				D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */,
 				D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */,
 				D99F178C1BAB947E00604558 /* Secrets.plist in Resources */,
+				D9BC71E11E53B4A3007A3C4F /* TwoButtonTableViewCell.xib in Resources */,
 				D99F178A1BAB946800604558 /* Branding.plist in Resources */,
 				D99F17881BAB936100604558 /* Localizable.strings in Resources */,
+				D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */,
 				D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */,
 				D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */,
 				D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */,
@@ -2643,6 +2657,7 @@
 				D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */,
 				D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */,
 				637ABBCA1DD5312200B18DD2 /* OTROutgoingMessage.m in Sources */,
+				D9BC71DF1E53B465007A3C4F /* TwoButtonTableViewCell.swift in Sources */,
 				63D65D2E1DD68A8D00D9E52E /* OTRMessage.m in Sources */,
 				D93DDAE81BA79A2800CD8331 /* OTRUtilities.m in Sources */,
 				D93DDAE91BA79A2800CD8331 /* OTRXMPPError.m in Sources */,
@@ -2721,6 +2736,7 @@
 				D93DDB241BA79A2D00CD8331 /* OTRSocialButtonsView.m in Sources */,
 				6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */,
 				D93DDB251BA79A2D00CD8331 /* OTRTitleSubtitleView.m in Sources */,
+				D9BC71DA1E53B2BF007A3C4F /* SingleButtonTableViewCell.swift in Sources */,
 				D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */,
 				D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */,
 				632BF0401E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift in Sources */,

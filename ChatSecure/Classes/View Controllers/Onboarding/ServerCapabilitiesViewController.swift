@@ -46,7 +46,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func viewDidLoad() {
         super.viewDidLoad()
         let bundle = OTRAssets.resourcesBundle()
-        for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier()] {
+        for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier(), TwoButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.registerNib(nib, forCellReuseIdentifier: identifier)
         }
@@ -94,7 +94,16 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
-            return 1
+            guard let push = pushInfo else {
+                // shows loading cell
+                return 1
+            }
+            if !push.pushPermitted {
+                // insert push permission cell
+                return 3
+            }
+            // show reset and info
+            return 2
         case .Server:
             return capabilities.count
         }
@@ -103,20 +112,61 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch tableSections[indexPath.section] {
         case .Push:
-            guard let cell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell,
-                let xmppPush = capabilities[.XEP0357] else {
-                return UITableViewCell()
+            let emptyCell = UITableViewCell()
+            // Configure the main push account info cell
+            if indexPath.row == 0 {
+                guard let pushCell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell else {
+                        return emptyCell
+                }
+                pushCell.setPushInfo(pushInfo, pushCapabilities: capabilities[.XEP0357])
+                pushCell.infoButtonBlock = {(cell, sender) in
+                    self.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+                }
+                return pushCell
             }
-            cell.setPushInfo(pushInfo, pushCapabilities: xmppPush)
-            cell.infoButtonBlock = {(cell, sender) in
-                self.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+            guard let push = pushInfo else {
+                return emptyCell
             }
-            return cell
+            if indexPath.row == 1 {
+                // Configure the account reset/deactivate cell
+                guard let resetCell = tableView.dequeueReusableCellWithIdentifier(TwoButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? TwoButtonTableViewCell else {
+                    return emptyCell
+                }
+                resetCell.leftButton.setTitle("Reset", forState: .Normal)
+                resetCell.leftButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+                resetCell.leftAction = {(cell, sender) in
+                    // TODO: show reset prompt
+                }
+                resetCell.rightButton.setTitle("Deactivate", forState: .Normal)
+                resetCell.rightButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+                resetCell.rightAction = {(cell, sender) in
+                    // TODO: show deactivate prompt
+                }
+            } else if !push.pushPermitted && indexPath.row == 2 {
+                guard let permissionCell = tableView.dequeueReusableCellWithIdentifier(SingleButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? SingleButtonTableViewCell else {
+                    return emptyCell
+                }
+                permissionCell.button.setTitle("Fix Permissions...", forState: .Normal)
+                permissionCell.buttonAction = {(cell, sender) in
+                    // TODO: prompt to fix permissions
+                }
+                return permissionCell
+            }
+            
+            
+            return emptyCell // hopefully never get here
         case .Server:
             guard let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? ServerCapabilityTableViewCell else {
                 return UITableViewCell()
             }
-            let cellInfo = capabilitiesArray[indexPath.row]
+            var cellInfo = capabilitiesArray[indexPath.row]
+            if let pushInfo = pushInfo {
+                // If push account isnt working, show a warning here
+                if cellInfo.code == .XEP0357 && !pushInfo.pushMaybeWorks() && cellInfo.status == .Available {
+                    cellInfo = cellInfo.copy() as! ServerCapabilityInfo
+                    cellInfo.status = .Warning
+                }
+            }
             cell.setCapability(cellInfo)
             cell.infoButtonBlock = {(cell, sender) in
                 cellInfo.url.promptToShowURLFromViewController(self, sender: sender)
@@ -128,7 +178,11 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch tableSections[indexPath.section] {
         case .Push:
-            return 140
+            if indexPath.row == 0 {
+                return 140
+            } else {
+                return 44
+            }
         case .Server:
             return 91
         }

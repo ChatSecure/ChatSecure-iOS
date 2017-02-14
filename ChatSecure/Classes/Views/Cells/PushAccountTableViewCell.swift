@@ -27,18 +27,20 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
     //FIXME: unlocalized strings
     
     /// pushCapabilities must be for code == .XEP0357
-    public func setPushInfo(pushInfo: PushInfo?, pushCapabilities: ServerCapabilityInfo) {
-        assert(pushCapabilities.code == .XEP0357)
+    public func setPushInfo(pushInfo: PushInfo?, pushCapabilities: ServerCapabilityInfo?) {
+        assert(pushCapabilities?.code == .XEP0357)
         
         // Common Setup
         titleLabel.text = "Push Registration"
         extraDataLabel.textColor = UIColor.lightGrayColor()
         
         // Loading Indicator
-        guard let push = pushInfo else {
+        guard let push = pushInfo, let caps = pushCapabilities else {
             extraDataLabel.text = "Loading..."
             activityIndicator.startAnimating()
             activityIndicator.hidden = false
+            checkLabel.text = ""
+            subtitleLabel.text = ""
             return
         }
         activityIndicator.stopAnimating()
@@ -52,17 +54,20 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             lowPower = NSProcessInfo.processInfo().lowPowerModeEnabled
         }
         if  push.pushMaybeWorks() &&
-            pushCapabilities.status == .Available &&
+            caps.status == .Available &&
             !lowPower {
             checkmark = "✅"
             status = "Active"
+        } else if (!push.pushOptIn) {
+            checkmark = "❌"
+            status = "Inactive"
         } else if (!push.pushPermitted) {
             checkmark = "❌"
             status = "Permission Disabled" // prompt user to fix
         } else if (!push.hasPushAccount) {
             checkmark = "❌"
             status = "Not Registered"
-        } else if (pushCapabilities.status != .Available) {
+        } else if (caps.status != .Available) {
             checkmark = "⚠️"
             status = "XMPP Server Incompatible (see XEP-0357)"
         } else if (push.numUsedTokens == 0) {
@@ -78,9 +83,9 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             status = "Unknown Error"
         }
         titleLabel.text = "Push Registration"
-        subtitleLabel.text = "Status: " + status
+        subtitleLabel.text = "" + status
         let apiEndpoint = String(format: "%@%@", push.pushAPIURL.host ?? "", push.pushAPIURL.path ?? "")
-        extraDataLabel.text = String(format: "Endpoint: %@\nPubsub: %@\nTokens: %d used, %d unused", apiEndpoint, push.pubsubEndpoint ?? "Error", push.numUsedTokens, push.numUnusedTokens)
+        extraDataLabel.text = String(format: "%@\n%@\n%d used, %d unused tokens", apiEndpoint, push.pubsubEndpoint ?? "Error", push.numUsedTokens, push.numUnusedTokens)
         checkLabel.text = checkmark
     }
 }

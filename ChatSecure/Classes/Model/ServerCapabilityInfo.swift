@@ -13,6 +13,7 @@ public enum CapabilityStatus: UInt {
     case Unknown
     case Available
     case Unavailable
+    case Warning
 }
 
 public enum CapabilityCode: String {

@@ -50,8 +50,10 @@ extension ServerCapabilityTableViewCell {
         case .Unavailable:
             check = "❌"
             break
+        case .Warning:
+            check = "⚠️"
         default:
-            check = "❔"
+            check = "❓"
         }
         self.checkLabel.text = check
         self.titleLabel.text = capability.title
