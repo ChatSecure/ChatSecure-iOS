@@ -34,6 +34,14 @@ public class PushInfo: NSObject {
     let pushPermitted: Bool
     let pubsubEndpoint: String?
     
+    /// hasPushAccount & pushPermitted & used > 0
+    public func pushMaybeWorks() -> Bool {
+        return  pushOptIn &&
+                hasPushAccount &&
+                pushPermitted &&
+                numUsedTokens > 0
+    }
+    
     init(pushAPIURL: NSURL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?) {
         self.pushAPIURL = pushAPIURL
         self.hasPushAccount = hasPushAccount

@@ -66,6 +66,9 @@ Tokens: 5 used, 10 unused</string>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="QLD-vW-Kv7">
+                        <rect key="frame" x="25.5" y="59" width="20" height="20"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="XIs-gX-Qp3" secondAttribute="trailing" constant="16" id="4S3-QX-Ovu"/>
@@ -74,10 +77,12 @@ Tokens: 5 used, 10 unused</string>
                     <constraint firstItem="doZ-Zs-uhD" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9Ip-bk-l0w"/>
                     <constraint firstItem="sFM-BN-T3m" firstAttribute="leading" secondItem="doZ-Zs-uhD" secondAttribute="trailing" constant="16" id="BDN-0T-vwE"/>
                     <constraint firstItem="doZ-Zs-uhD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="16" id="DIy-FK-YZB"/>
+                    <constraint firstItem="QLD-vW-Kv7" firstAttribute="centerY" secondItem="doZ-Zs-uhD" secondAttribute="centerY" id="Ie0-OV-2sz"/>
                     <constraint firstItem="eAn-Sq-Dll" firstAttribute="trailing" secondItem="sFM-BN-T3m" secondAttribute="trailing" id="Tmk-1b-C2f"/>
                     <constraint firstItem="eAn-Sq-Dll" firstAttribute="top" secondItem="sFM-BN-T3m" secondAttribute="bottom" id="Vuz-06-eMf"/>
                     <constraint firstItem="XIs-gX-Qp3" firstAttribute="leading" secondItem="sFM-BN-T3m" secondAttribute="trailing" constant="18" id="YR5-oh-361"/>
                     <constraint firstItem="eAn-Sq-Dll" firstAttribute="leading" secondItem="sFM-BN-T3m" secondAttribute="leading" id="dON-Ym-pCs"/>
+                    <constraint firstItem="QLD-vW-Kv7" firstAttribute="centerX" secondItem="doZ-Zs-uhD" secondAttribute="centerX" id="hYg-db-mzj"/>
                     <constraint firstItem="uei-is-lz1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="8" id="pAV-VA-Yq3"/>
                     <constraint firstItem="XIs-gX-Qp3" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="rNy-3P-kon"/>
                     <constraint firstItem="sFM-BN-T3m" firstAttribute="top" secondItem="uei-is-lz1" secondAttribute="bottom" constant="3" id="tsl-2d-6qe"/>
@@ -85,6 +90,7 @@ Tokens: 5 used, 10 unused</string>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="activityIndicator" destination="QLD-vW-Kv7" id="rs0-Bk-vlc"/>
                 <outlet property="checkLabel" destination="doZ-Zs-uhD" id="Lil-yk-BWz"/>
                 <outlet property="extraDataLabel" destination="eAn-Sq-Dll" id="s35-gB-8Wl"/>
                 <outlet property="infoButton" destination="XIs-gX-Qp3" id="FV1-bG-0e5"/>

@@ -25,6 +25,13 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
         return "ServerCapabilityTableViewCell"
     }
     
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.text = nil
+        subtitleLabel.text = nil
+        checkLabel.text = nil
+    }
+    
     public var infoButtonBlock: ((cell: ServerCapabilityTableViewCell, sender: AnyObject) -> ())?
     
     @IBAction func infoButtonPressed(sender: AnyObject) {

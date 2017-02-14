@@ -46,13 +46,11 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func viewDidLoad() {
         super.viewDidLoad()
         let bundle = OTRAssets.resourcesBundle()
-        let serverNib = UINib(nibName: ServerCapabilityTableViewCell.cellIdentifier(), bundle: bundle)
-        let pushNib = UINib(nibName: PushAccountTableViewCell.cellIdentifier(), bundle: bundle)
-        tableView.registerNib(pushNib, forCellReuseIdentifier: PushAccountTableViewCell.cellIdentifier())
-        tableView.registerNib(serverNib, forCellReuseIdentifier: ServerCapabilityTableViewCell.cellIdentifier())
+        for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier()] {
+            let nib = UINib(nibName: identifier, bundle: bundle)
+            tableView.registerNib(nib, forCellReuseIdentifier: identifier)
+        }
 
-        
-        
         tableView.allowsSelection = false
         
         self.title = Server_String()
@@ -96,11 +94,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
-            if pushInfo != nil {
-                return 1
-            } else {
-                return 0
-            }
+            return 1
         case .Server:
             return capabilities.count
         }
@@ -109,13 +103,13 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch tableSections[indexPath.section] {
         case .Push:
-            guard let cell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell, let cellInfo = pushInfo,
+            guard let cell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell,
                 let xmppPush = capabilities[.XEP0357] else {
                 return UITableViewCell()
             }
-            cell.setPushInfo(cellInfo, pushCapabilities: xmppPush)
+            cell.setPushInfo(pushInfo, pushCapabilities: xmppPush)
             cell.infoButtonBlock = {(cell, sender) in
-                cellInfo.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+                self.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
             }
             return cell
         case .Server:
