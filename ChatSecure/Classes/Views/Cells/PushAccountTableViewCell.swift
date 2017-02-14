@@ -35,12 +35,12 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             !lowPower {
             checkmark = "✅"
             status = "Active"
-        } else if (!pushInfo.hasPushAccount) {
-            checkmark = "❌"
-            status = "Not Registered"
         } else if (!pushInfo.pushPermitted) {
             checkmark = "❌"
             status = "Permission Disabled" // prompt user to fix
+        } else if (!pushInfo.hasPushAccount) {
+            checkmark = "❌"
+            status = "Not Registered"
         } else if (pushCapabilities.status != .Available) {
             checkmark = "⚠️"
             status = "XMPP Server Incompatible (see XEP-0357)"
