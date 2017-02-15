@@ -17,7 +17,7 @@ public extension UIApplication {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0
         
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection.readWithBlock({ (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.readWithBlock({ (transaction) -> Void in
             unreadCount = transaction.numberOfUnreadMessages()
             thread = message.threadOwnerWithTransaction(transaction)
         })

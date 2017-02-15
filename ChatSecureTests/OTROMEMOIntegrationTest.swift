@@ -67,11 +67,11 @@ class OTROMEMOIntegrationTest: XCTestCase {
         buddy.username = "\(buddyName)@fake.com"
         buddy.accountUniqueId = account.uniqueId
         
-        databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
+        databaseManager.readWriteDatabaseConnection!.readWriteWithBlock { (transaction) in
             account.saveWithTransaction(transaction)
             buddy.saveWithTransaction(transaction)
         }
-        let signalOMEMOCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: account.uniqueId, databaseConnection: databaseManager.readWriteDatabaseConnection)
+        let signalOMEMOCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: account.uniqueId, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         return TestUser(account: account,buddy:buddy, databaseManager: databaseManager, signalOMEMOCoordinator: signalOMEMOCoordinator)
     }
     
@@ -114,7 +114,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.waitForExpectationsWithTimeout(30, handler: nil)
         
         var messageFound = false
-        self.aliceUser?.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
+        self.aliceUser?.databaseManager.readWriteDatabaseConnection!.readWithBlock({ (transaction) in
             transaction.enumerateKeysAndObjectsInCollection(OTRBaseMessage.collection(), usingBlock: { (key, object, stop) in
                 if let message = object as? OTRBaseMessage {
                     XCTAssertEqual(message.text, messageText)
@@ -139,13 +139,13 @@ class OTROMEMOIntegrationTest: XCTestCase {
         let deviceNumber = NSNumber(int:5)
         let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
         
-        self.bobUser?.databaseManager.readWriteDatabaseConnection.readWriteWithBlock({ (transaction) in
+        self.bobUser?.databaseManager.readWriteDatabaseConnection!.readWriteWithBlock({ (transaction) in
             
             device.saveWithTransaction(transaction)
         })
         self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
-            self.bobUser!.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
+            self.bobUser!.databaseManager.readOnlyDatabaseConnection!.readWithBlock({ (transaction) in
                 let yapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
                 let device = OTROMEMODevice.fetchObjectWithUniqueID(yapKey, transaction: transaction)
                 XCTAssertNil(device)

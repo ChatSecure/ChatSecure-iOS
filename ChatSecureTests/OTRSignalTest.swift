@@ -32,8 +32,8 @@ class OTRSignalTest: XCTestCase {
         let otherAccount = TestXMPPAccount()
         otherAccount.username = "otherAccount@something.com"
         
-        let ourDatabaseConnection = ourDatabaseManager.newConnection()
-        let otherDatabaseConnection = otherDatbaseManager.newConnection()
+        let ourDatabaseConnection = ourDatabaseManager.newConnection()!
+        let otherDatabaseConnection = otherDatbaseManager.newConnection()!
         
         ourDatabaseConnection.readWriteWithBlock { (transaction) in
             ourAccount.saveWithTransaction(transaction)
