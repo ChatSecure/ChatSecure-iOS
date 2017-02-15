@@ -32,13 +32,17 @@ public class PushInfo: NSObject {
     let numUsedTokens: UInt
     let numUnusedTokens: UInt
     let pushPermitted: Bool
+    let backgroundFetchPermitted = UIApplication.sharedApplication().backgroundRefreshStatus == .Available
+    let lowPowerMode: Bool
     let pubsubEndpoint: String?
     
-    /// hasPushAccount & pushPermitted & used > 0
+    /// all of these need to be true for push to work, but it doesn't guarantee it actually works
     public func pushMaybeWorks() -> Bool {
         return  pushOptIn &&
                 hasPushAccount &&
                 pushPermitted &&
+                backgroundFetchPermitted &&
+                !lowPowerMode &&
                 numUsedTokens > 0
     }
     
@@ -48,6 +52,11 @@ public class PushInfo: NSObject {
         self.numUsedTokens = numUsedTokens
         self.numUnusedTokens = numUnusedTokens
         self.pushPermitted = pushPermitted
+        var lowPower = false
+        if #available(iOS 9.0, *) {
+            lowPower = NSProcessInfo.processInfo().lowPowerModeEnabled
+        }
+        self.lowPowerMode = lowPower
         self.pubsubEndpoint = pubsubEndpoint
     }
 }

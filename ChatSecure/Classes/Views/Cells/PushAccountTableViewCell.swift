@@ -49,13 +49,8 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         // Push Info
         var checkmark = "❓"
         var status = "Inactive"
-        var lowPower = false
-        if #available(iOS 9.0, *) {
-            lowPower = NSProcessInfo.processInfo().lowPowerModeEnabled
-        }
         if  push.pushMaybeWorks() &&
-            caps.status == .Available &&
-            !lowPower {
+            caps.status == .Available {
             checkmark = "✅"
             status = "Active"
         } else if (!push.pushOptIn) {
@@ -63,7 +58,10 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             status = "Inactive"
         } else if (!push.pushPermitted) {
             checkmark = "❌"
-            status = "Permission Disabled" // prompt user to fix
+            status = "Push Permission Disabled" // prompt user to fix
+        } else if (!push.backgroundFetchPermitted) {
+            checkmark = "❌"
+            status = "Background Fetch Disabled" // prompt user to fix
         } else if (!push.hasPushAccount) {
             checkmark = "❌"
             status = "Not Registered"
@@ -75,7 +73,7 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             // this means no tokens have been uploaded to a xmpp server
             // or distributed to a buddy.
             status = "No Used Tokens"
-        } else if (lowPower) {
+        } else if (push.lowPowerMode) {
             checkmark = "⚠️"
             status = "Turn Off Low Power Mode"
         } else {
