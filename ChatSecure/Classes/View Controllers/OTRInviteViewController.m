@@ -22,16 +22,19 @@
 static CGFloat const kOTRInvitePadding = 10;
 
 @interface OTRInviteViewController () <MFMessageComposeViewControllerDelegate>
+@property (nonatomic, strong, readonly) UIImageView *titleImageView;
+@property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 
+@property (nonatomic, strong, nullable) NSArray <BButton*> *shareButtons;
 @property (nonatomic) BOOL addedConstraints;
 
 @end
 
 @implementation OTRInviteViewController
 
-- (instancetype)init
-{
-    if (self = [super init]) {
+- (instancetype) initWithAccount:(OTRAccount*)account {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _account = account;
         _titleImageView = [[UIImageView alloc] initForAutoLayout];
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
         _subtitleLabel.numberOfLines = 0;
@@ -39,6 +42,16 @@ static CGFloat const kOTRInvitePadding = 10;
         _subtitleLabel.textAlignment = NSTextAlignmentCenter;
     }
     return self;
+}
+
+- (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    NSAssert(NO, @"Not supported");
+    return [self initWithAccount:[[OTRAccount alloc] init]];
+}
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    NSAssert(NO, @"Not supported");
+    return [self initWithAccount:[[OTRAccount alloc] init]];
 }
 
 - (void) viewWillAppear:(BOOL)animated {

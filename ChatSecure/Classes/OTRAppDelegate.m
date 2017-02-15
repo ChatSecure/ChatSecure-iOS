@@ -76,10 +76,13 @@
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @property (nonatomic, strong) NSTimer *fetchTimer;
+@property (nonatomic, strong) NSTimer *backgroundTimer;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 
 @end
 
 @implementation OTRAppDelegate
+@synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -102,8 +105,8 @@
     UIViewController *rootViewController = nil;
     
     // Create 3 primary view controllers, settings, conversation list and messages
-    self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
-    self.messagesViewController = [self.theme messagesViewController];
+    _conversationViewController = [self.theme conversationViewController];
+    _messagesViewController = [self.theme messagesViewController];
     
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -298,8 +301,6 @@
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         application.applicationIconBadgeNumber = [transaction numberOfUnreadMessages];
     }];
-    
-    self.didShowDisconnectionWarning = NO;
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -564,7 +565,7 @@
 #pragma - mark Class Methods
 + (instancetype)appDelegate
 {
-    return [[UIApplication sharedApplication] delegate];
+    return (OTRAppDelegate*)[[UIApplication sharedApplication] delegate];
 }
 
 #pragma mark - Theming

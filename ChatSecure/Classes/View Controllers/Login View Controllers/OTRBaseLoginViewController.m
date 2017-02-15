@@ -146,8 +146,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     if (self.existingAccount) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        OTRInviteViewController *inviteVC = [[[[OTRAppDelegate appDelegate].theme inviteViewControllerClass] alloc] init];
-        inviteVC.account = self.account;
+        UIViewController *inviteVC = [[OTRAppDelegate appDelegate].theme inviteViewControllerForAccount:self.account];
         [self.navigationController pushViewController:inviteVC animated:YES];
     }
 }

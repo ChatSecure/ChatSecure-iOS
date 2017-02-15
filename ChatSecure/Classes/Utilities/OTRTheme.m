@@ -30,27 +30,19 @@
 }
 
 
-- (Class) conversationViewControllerClass {
-    return [OTRConversationViewController class];
-}
-
-- (Class) groupMessagesViewControllerClass {
-    return [OTRMessagesGroupViewController class];
+- (__kindof UIViewController*) conversationViewController {
+    return [[OTRConversationViewController alloc] init];
 }
 
 /** Override this in subclass to use a different message view controller class */
 - (JSQMessagesViewController *) groupMessagesViewController
 {
-    return [[self groupMessagesViewControllerClass] messagesViewController];
-}
-
-- (Class) messagesViewControllerClass {
-    return [OTRMessagesHoldTalkViewController class];
+    return [OTRMessagesGroupViewController messagesViewController];
 }
 
 /** Override this in subclass to use a different group message view controller class */
 - (JSQMessagesViewController *) messagesViewController{
-    return [[self messagesViewControllerClass] messagesViewController];
+    return [OTRMessagesHoldTalkViewController messagesViewController];
 }
 
 /** Returns new instance. Override this in subclass to use a different settings view controller class */
@@ -58,12 +50,12 @@
     return [[OTRSettingsViewController alloc] init];
 }
 
-- (Class)composeViewControllerClass {
-    return [OTRComposeViewController class];
+- (__kindof UIViewController *) composeViewController {
+    return [[OTRComposeViewController alloc] init];
 }
 
-- (Class)inviteViewControllerClass {
-    return [OTRInviteViewController class];
+- (__kindof UIViewController* ) inviteViewControllerForAccount:(OTRAccount*)account {
+    return [[OTRInviteViewController alloc] initWithAccount:account];
 }
 
 - (BOOL) enableOMEMO
