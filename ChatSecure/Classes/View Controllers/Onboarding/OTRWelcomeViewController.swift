@@ -12,10 +12,10 @@ import OTRAssets
 public class OTRWelcomeViewController: UIViewController {
     
     // MARK: - Views
-    @IBOutlet var logoImageView: UIImageView!
-    @IBOutlet var createAccountButton: UIButton!
-    @IBOutlet var existingAccountButton: UIButton!
-    @IBOutlet var skipButton: UIButton!
+    @IBOutlet var logoImageView: UIImageView?
+    @IBOutlet var createAccountButton: UIButton?
+    @IBOutlet var existingAccountButton: UIButton?
+    @IBOutlet var skipButton: UIButton?
     
     // MARK: - View Lifecycle
     
@@ -30,9 +30,9 @@ public class OTRWelcomeViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.createAccountButton.setTitle(CREATE_NEW_ACCOUNT_STRING(), forState: .Normal)
-        self.skipButton.setTitle(SKIP_STRING(), forState: .Normal)
-        self.existingAccountButton.setTitle(ADD_EXISTING_STRING(), forState: .Normal)
+        self.createAccountButton?.setTitle(CREATE_NEW_ACCOUNT_STRING(), forState: .Normal)
+        self.skipButton?.setTitle(SKIP_STRING(), forState: .Normal)
+        self.existingAccountButton?.setTitle(ADD_EXISTING_STRING(), forState: .Normal)
         
     }
 
