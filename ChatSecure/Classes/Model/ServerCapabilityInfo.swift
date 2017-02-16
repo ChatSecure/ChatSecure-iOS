@@ -63,15 +63,20 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
         return caps
     }
     
-    // MARK: Utility
     
+    
+}
+
+public extension OTRServerCapabilities {
+    // MARK: Utility
+
     /**
      * This will determine which features are available.
-     * Will do nothing if the module hasn't finished processing.
+     * Will return nil if the module hasn't finished processing.
      */
-    public class func markAvailable(capabilities: [CapabilityCode : ServerCapabilityInfo], serverCapabilitiesModule: OTRServerCapabilities) -> [CapabilityCode :ServerCapabilityInfo] {
-        guard let allCaps = serverCapabilitiesModule.allCapabilities, let features = serverCapabilitiesModule.streamFeatures else {
-            return capabilities
+    public func markAvailable(capabilities: [CapabilityCode : ServerCapabilityInfo]) -> [CapabilityCode :ServerCapabilityInfo]? {
+        guard let allCaps = self.allCapabilities, let features = self.streamFeatures else {
+            return nil
         }
         let allFeatures = OTRServerCapabilities.allFeaturesForCapabilities(allCaps, streamFeatures: features)
         var newCaps: [CapabilityCode : ServerCapabilityInfo] = [:]

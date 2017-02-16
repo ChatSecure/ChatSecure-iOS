@@ -42,7 +42,7 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
 
 extension ServerCapabilityTableViewCell {
     public func setCapability(capability: ServerCapabilityInfo) {
-        var check = "❔"
+        var check = "❓"
         switch capability.status {
         case .Available:
             check = "✅"

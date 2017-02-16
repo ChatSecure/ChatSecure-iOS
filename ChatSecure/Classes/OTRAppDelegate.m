@@ -140,17 +140,16 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
 
-    /*
+    
     /////////// testing invite VC
-    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
-    OTRAccount *account = [[OTRAccount alloc] init];
-    account.username = @"test@example.com";
-    inviteVC.account = account;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
-    self.window.rootViewController = nav;
+//    OTRAccount *account = [[OTRAccount alloc] init];
+//    account.username = @"test@example.com";
+//    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] initWithAccount:account];
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
+//    self.window.rootViewController = nav;
     ////////////
-    */
-     
+    
+    
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;

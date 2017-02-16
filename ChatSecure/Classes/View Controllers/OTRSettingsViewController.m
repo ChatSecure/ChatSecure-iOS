@@ -315,14 +315,16 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }];
 #warning Unlocalized string!
     UIAlertAction *serverInfoAction = [UIAlertAction actionWithTitle:@"Server Info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+        OTRServerCapabilities *caps = nil;
         if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
-            scvc.serverCapabilitiesModule = xmpp.serverCapabilities;
+            caps = xmpp.serverCapabilities;
         }
-        scvc.pushController = [OTRProtocolManager sharedInstance].pushController;
+        PushController *push = [OTRProtocolManager sharedInstance].pushController;
+        OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:caps push:push];
+        ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
         [self presentViewController:nav animated:YES completion:nil];
     }];
     

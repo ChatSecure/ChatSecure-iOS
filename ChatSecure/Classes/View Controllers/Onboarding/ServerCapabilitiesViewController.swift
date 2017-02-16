@@ -10,46 +10,32 @@ import UIKit
 import XMPPFramework
 import OTRAssets
 
-public class ServerCapabilitiesViewController: UITableViewController, OTRServerCapabilitiesDelegate {
-    
-    /// You must set this before showing view
-    public var serverCapabilitiesModule: OTRServerCapabilities?
-    /// You must set this before showing view
-    public var pushController: PushController?
+public class ServerCapabilitiesViewController: UITableViewController {
 
-    private lazy var capabilities: [CapabilityCode : ServerCapabilityInfo] = {
-        return ServerCapabilityInfo.allCapabilities()
-    }()
-    private lazy var capabilitiesArray: [ServerCapabilityInfo] = {
-        return Array(self.capabilities.values) // TODO: sort capabilities?
-    }()
-    private var pushInfo: PushInfo?
+    private let check: ServerCheck
+    private var capabilities: [ServerCapabilityInfo] = []
     private let tableSections: [TableSection] = [.Push, .Server]
+    
+    /// This will take ownership of serverCheck and overwrite whatever is in serverCheck.readyBlock
+    public init (serverCheck: ServerCheck) {
+        self.check = serverCheck
+        self.check.fetch()
+        super.init(style: .Grouped)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        guard let caps = serverCapabilitiesModule else { return }
-        caps.removeDelegate(self)
     }
     
     // MARK: - Data Loading and Refreshing
     
-    
-    /// Updates account information for push notifications
-    private func refreshPushInfo() {
-        guard let push = pushController else { return }
-        push.gatherPushInfo({ (pushInfo) in
-            self.pushInfo = pushInfo
-            self.tableView.reloadData()
-            }, callbackQueue: dispatch_get_main_queue())
-    }
-    
     /// Will refresh all data for the view
-    @objc private func refreshAllData() {
-        guard let caps = serverCapabilitiesModule else { return }
-        capabilities = ServerCapabilityInfo.markAvailable(capabilities, serverCapabilitiesModule: caps)
-        tableView.reloadData()
-        refreshPushInfo()
+    @objc private func refreshAllData(sender: AnyObject?) {
+        check.refresh()
     }
     
     // MARK: - User Interaction
@@ -74,26 +60,28 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
         
         let doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
         navigationItem.rightBarButtonItem = doneButton
-        
-        // This will allow us to refresh the permission prompts after use changes them in background
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(refreshAllData), name: UIApplicationWillEnterForegroundNotification, object: nil)
-        
+
         // Add capabilities listener
-        guard let caps = serverCapabilitiesModule else { return }
-        caps.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+        
+        self.check.readyBlock = { (pushInfo, capabilities) in
+            self.capabilities = Array(capabilities.values)
+            self.tableView.reloadData()
+        }
     }
 
     
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        refreshAllData()
+        
+        // This will allow us to refresh the permission prompts after use changes them in background
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(refreshAllData), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        refreshAllData(nil)
     }
     
     public override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        if let caps = serverCapabilitiesModule {
-            caps.removeDelegate(self)
-        }
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: - Cell configuration utilities
@@ -181,7 +169,7 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
     public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
-            return cellCountForPushInfo(pushInfo)
+            return cellCountForPushInfo(check.pushInfo)
         case .Server:
             return capabilities.count
         }
@@ -193,19 +181,20 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
             let emptyCell = UITableViewCell()
             // Configure the main push account info cell
             if indexPath.row == 0 {
-                guard let pushCell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell else {
+                guard let pushCell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell,
+                    let caps = check.capabilities else {
                         return emptyCell
                 }
-                pushCell.setPushInfo(pushInfo, pushCapabilities: capabilities[.XEP0357])
+                pushCell.setPushInfo(check.pushInfo, pushCapabilities: caps[.XEP0357])
                 pushCell.infoButtonBlock = {(cell, sender) in
-                    self.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+                    self.check.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
                 }
                 return pushCell
             }
-            guard let push = pushInfo else {
+            guard let push = check.pushInfo else {
                 return emptyCell
             }
-            let cellCount = cellCountForPushInfo(pushInfo)
+            let cellCount = cellCountForPushInfo(check.pushInfo)
             if cellCount == 2 && indexPath.row == 1 {
                 return resetCellForTableView(tableView, indexPath: indexPath, pushInfo: push)
             }
@@ -236,8 +225,8 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
             guard let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? ServerCapabilityTableViewCell else {
                 return UITableViewCell()
             }
-            var cellInfo = capabilitiesArray[indexPath.row]
-            if let pushInfo = pushInfo {
+            var cellInfo = capabilities[indexPath.row]
+            if let pushInfo = check.pushInfo {
                 // If push account isnt working, show a warning here
                 if cellInfo.code == .XEP0357 && !pushInfo.pushMaybeWorks() && cellInfo.status == .Available {
                     cellInfo = cellInfo.copy() as! ServerCapabilityInfo
@@ -263,14 +252,6 @@ public class ServerCapabilitiesViewController: UITableViewController, OTRServerC
         case .Server:
             return 91
         }
-    }
-    
-    // MARK: - OTRServerCapabilitiesDelegate
-    
-    @objc public func serverCapabilities(sender: OTRServerCapabilities, didDiscoverAllCapabilities allCapabilities: [XMPPJID : DDXMLElement]) {
-        guard let caps = serverCapabilitiesModule else { return }
-        capabilities = ServerCapabilityInfo.markAvailable(capabilities, serverCapabilitiesModule: caps)
-        tableView.reloadData()
     }
     
     // MARK: - Cell Data

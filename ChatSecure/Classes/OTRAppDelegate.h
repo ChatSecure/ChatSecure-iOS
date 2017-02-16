@@ -25,9 +25,6 @@
 #import "OTRTheme.h"
 #import "OTRMessagesViewController.h"
 #import "OTRConversationViewController.h"
-@class PushController;
-@class PushOTRListener;
-@protocol OTRThreadOwner;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate>

@@ -8,12 +8,17 @@
 
 import UIKit
 import OTRAssets
+import MBProgressHUD
 
 public class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
     public var account: OTRAccount?
     private var userLaunchedToSettings: Bool = false
+    private var hud: MBProgressHUD?
+    
+    /// You must set this before showing view
+    public var serverCheck: ServerCheck?
 
     @IBOutlet weak var enablePushButton: UIButton!
     @IBOutlet weak var textView: UITextView!
@@ -47,6 +52,8 @@ public class EnablePushViewController: UIViewController {
     }
     
     @IBAction func enablePushPressed(sender: AnyObject) {
+        hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+        PushController.setPushPreference(.Enabled)
         PushController.registerForPushNotifications()
     }
 
@@ -66,7 +73,6 @@ public class EnablePushViewController: UIViewController {
     
     func didRegisterUserNotificationSettings(notification: NSNotification) {
         if PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.Enabled)
             showNextScreen()
         } else {
             let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .Alert)

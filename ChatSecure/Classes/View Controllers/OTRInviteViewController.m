@@ -26,6 +26,7 @@ static CGFloat const kOTRInvitePadding = 10;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 
 @property (nonatomic, strong, nullable) NSArray <BButton*> *shareButtons;
+@property (nonatomic, strong, readonly) UIButton *warningButton;
 @property (nonatomic) BOOL addedConstraints;
 
 @end
@@ -72,6 +73,8 @@ static CGFloat const kOTRInvitePadding = 10;
     
     self.titleImageView.image = [UIImage imageNamed:@"invite_success" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.titleImageView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING(),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
     
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
@@ -127,15 +130,6 @@ static CGFloat const kOTRInvitePadding = 10;
         }
         [button autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.subtitleLabel withOffset:kOTRInvitePadding];
     }];
-}
-
-- (void)setAccount:(OTRAccount *)account
-{
-    if(![account isEqual:_account]) {
-        _account = account;
-        
-        self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING(),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
-    }
 }
 
 - (void)setShareButtons:(NSArray<BButton *> *)shareButtons
@@ -197,6 +191,20 @@ static CGFloat const kOTRInvitePadding = 10;
     button.titleLabel.font = [button.titleLabel.font fontWithSize:14];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return button;
+}
+
+- (void) warningButtonPressed:(id)sender {
+//    id<OTRProtocol> protocol = (OTRXMPPManager*)protocol[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+//    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+//        OTRXMPPManager *xmpp = ;
+//        scvc.check = check;
+//    }
+//    OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:<#(OTRServerCapabilities * _Nonnull)#> push:[OTRProtocolManager sharedInstance].pushController];
+//
+//    ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+//
+//    scvc.check = ;
+//    [self.navigationController pushViewController:scvc animated:YES];
 }
 
 #pragma - mark MFMessageComposeViewControllerDelegate Methods
