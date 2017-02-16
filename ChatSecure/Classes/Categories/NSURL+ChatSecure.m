@@ -155,6 +155,7 @@
 
 /** This will give a user a prompt before calling openURL */
 - (void) promptToShowURLFromViewController:(UIViewController*)viewController sender:(id)sender {
+    if (!viewController) { return; }
     UIView *view = nil;
     if ([sender isKindOfClass:[UIView class]]) {
         view = sender;

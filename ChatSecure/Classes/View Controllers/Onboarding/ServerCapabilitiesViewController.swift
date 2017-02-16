@@ -27,10 +27,6 @@ public class ServerCapabilitiesViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
     // MARK: - Data Loading and Refreshing
     
     /// Will refresh all data for the view
@@ -63,9 +59,12 @@ public class ServerCapabilitiesViewController: UITableViewController {
 
         // Add capabilities listener
         
-        self.check.readyBlock = { (pushInfo, capabilities) in
-            self.capabilities = Array(capabilities.values)
-            self.tableView.reloadData()
+        self.check.pushInfoReady = { [weak self] (pushInfo) in
+            self?.tableView.reloadData()
+        }
+        self.check.capabilitiesReady = { [weak self] (caps) in
+            self?.capabilities = Array(caps.values)
+            self?.tableView.reloadData()
         }
     }
 
@@ -114,13 +113,13 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
         resetCell.leftButton.setTitle("Reset", forState: .Normal)
         resetCell.leftButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        resetCell.leftAction = {(cell, sender) in
+        resetCell.leftAction = { [weak self] (cell, sender) in
             // TODO: show reset prompt
         }
         resetCell.rightButton.setTitle("Deactivate", forState: .Normal)
         resetCell.rightButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         resetCell.rightButton.setTitleColor(UIColor.lightGrayColor(), forState: .Disabled)
-        resetCell.rightAction = {(cell, sender) in
+        resetCell.rightAction = { [weak self] (cell, sender) in
             // TODO: show deactivate prompt
         }
         resetCell.rightButton.enabled = pushInfo.hasPushAccount
@@ -133,7 +132,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
             return UITableViewCell()
         }
         permissionCell.button.setTitle("Fix Permissions...", forState: .Normal)
-        permissionCell.buttonAction = {(cell, sender) in
+        permissionCell.buttonAction = { [weak self] (cell, sender) in
             // TODO: prompt to fix permissions
         }
         return permissionCell
@@ -145,7 +144,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
             return UITableViewCell()
         }
         fetchCell.button.setTitle("Fix Background Fetch...", forState: .Normal)
-        fetchCell.buttonAction = {(cell, sender) in
+        fetchCell.buttonAction = { [weak self] (cell, sender) in
             // TODO: prompt to fix background fetch
         }
         return fetchCell
@@ -186,8 +185,8 @@ public class ServerCapabilitiesViewController: UITableViewController {
                         return emptyCell
                 }
                 pushCell.setPushInfo(check.pushInfo, pushCapabilities: caps[.XEP0357])
-                pushCell.infoButtonBlock = {(cell, sender) in
-                    self.check.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+                pushCell.infoButtonBlock = { [weak self] (cell, sender) in
+                    self?.check.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
                 }
                 return pushCell
             }
@@ -234,8 +233,10 @@ public class ServerCapabilitiesViewController: UITableViewController {
                 }
             }
             cell.setCapability(cellInfo)
-            cell.infoButtonBlock = {(cell, sender) in
-                cellInfo.url.promptToShowURLFromViewController(self, sender: sender)
+            cell.infoButtonBlock = { [weak self] (cell, sender) in
+                if let strongSelf = self {
+                    cellInfo.url.promptToShowURLFromViewController(strongSelf, sender: sender)
+                }
             }
             return cell
         }

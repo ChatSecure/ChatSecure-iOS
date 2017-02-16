@@ -8,10 +8,6 @@
 
 import UIKit
 
-public protocol IdentifiableCell {
-    
-}
-
 @objc(ServerCapabilityTableViewCell)
 public class ServerCapabilityTableViewCell: UITableViewCell {
     

@@ -17,15 +17,14 @@ import UIKit
 @objc(OTRServerCheck)
 public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
     
-    public typealias ReadyBlock = (pushInfo: PushInfo, capabilities: [CapabilityCode : ServerCapabilityInfo]) -> ()
-
     private let capsModule: OTRServerCapabilities
     private let push: PushController
     
     public var capabilities: [CapabilityCode : ServerCapabilityInfo]?
     public var pushInfo: PushInfo?
     
-    public var readyBlock: ReadyBlock?
+    public var pushInfoReady: ((pushInfo: PushInfo) -> ())?
+    public var capabilitiesReady: ((capabilities: [CapabilityCode : ServerCapabilityInfo]) -> ())?
     
     deinit {
         capsModule.removeDelegate(self)
@@ -52,11 +51,12 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     private func checkReady() {
-        guard let caps = capabilities, let push = pushInfo, let ready = readyBlock else {
-            return
+        if let ready = pushInfoReady, let push = pushInfo {
+            ready(pushInfo: push)
         }
-        ready(pushInfo: push, capabilities: caps)
-        readyBlock = nil
+        if let ready = capabilitiesReady, let caps = capabilities {
+            ready(capabilities: caps)
+        }
     }
     
     private func refreshPush() {
