@@ -152,7 +152,7 @@
         });
     } else {
         dispatch_async(queue, ^{
-            block(OTRMessageTransportSecurityPlaintext);
+            block(OTRMessageTransportSecurityPlaintextWithOTR);
         });
     }
 }

@@ -167,6 +167,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             NSString * placeHolderString = nil;
             switch (state.messageSecurity) {
                 case OTRMessageTransportSecurityPlaintext:
+                case OTRMessageTransportSecurityPlaintextWithOTR:
                     placeHolderString = SEND_PLAINTEXT_STRING();
                     break;
                 case OTRMessageTransportSecurityOTR:
@@ -725,14 +726,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
             });
             
             switch (buddy.preferredSecurity) {
-                case OTRSessionSecurityPlaintextOnly:
+                case OTRSessionSecurityPlaintextOnly: {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+                    });
+                    break;
+                }
                 case OTRSessionSecurityPlaintextWithOTR: {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if (messageState == OTRKitMessageStateEncrypted) {
-                            strongSelf.state.messageSecurity = OTRMessageTransportSecurityOTR;
-                        } else {
-                            strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
-                        }
+                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintextWithOTR;
                     });
                     break;
                 }
