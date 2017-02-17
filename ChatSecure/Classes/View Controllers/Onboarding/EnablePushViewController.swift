@@ -75,15 +75,7 @@ public class EnablePushViewController: UIViewController {
         if PushController.canReceivePushNotifications() {
             showNextScreen()
         } else {
-            let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .Alert)
-            let settingsAction = UIAlertAction(title: SETTINGS_STRING(), style: .Default, handler: { (action: UIAlertAction) -> Void in
-                let appSettings = NSURL(string: UIApplicationOpenSettingsURLString)
-                UIApplication.sharedApplication().openURL(appSettings!)
-            })
-            let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .Cancel, handler: nil)
-            alert.addAction(settingsAction)
-            alert.addAction(cancelAction)
-            presentViewController(alert, animated: true, completion: nil)
+            showPromptForSystemSettings()
         }
     }
 

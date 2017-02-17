@@ -35,6 +35,7 @@ public class PushInfo: NSObject {
     let backgroundFetchPermitted = UIApplication.sharedApplication().backgroundRefreshStatus == .Available
     let lowPowerMode: Bool
     let pubsubEndpoint: String?
+    let device: Device?
     
     /// all of these need to be true for push to work, but it doesn't guarantee it actually works
     public func pushMaybeWorks() -> Bool {
@@ -43,10 +44,11 @@ public class PushInfo: NSObject {
                 pushPermitted &&
                 backgroundFetchPermitted &&
                 !lowPowerMode &&
-                numUsedTokens > 0
+                numUsedTokens > 0 &&
+                device != nil
     }
     
-    init(pushAPIURL: NSURL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?) {
+    init(pushAPIURL: NSURL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?, device: Device?) {
         self.pushAPIURL = pushAPIURL
         self.hasPushAccount = hasPushAccount
         self.numUsedTokens = numUsedTokens
@@ -58,6 +60,7 @@ public class PushInfo: NSObject {
         }
         self.lowPowerMode = lowPower
         self.pubsubEndpoint = pubsubEndpoint
+        self.device = device
     }
 }
 
@@ -81,6 +84,29 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         self.apiClient.account = self.storage.thisDevicePushAccount()
         self.otrListener = PushOTRListener(storage: self.storage, pushController: self, tlvHandler: tlvHandler)
         self.storage.removeAllOurExpiredUnusedTokens(self.timeBufffer, completion: nil)
+    }
+    
+    /// This will delete all your push data and disable push
+    public func deactivate(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
+        PushController.setPushPreference(.Disabled)
+        self.storage.deleteEverything(completion, callbackQueue: callbackQueue)
+    }
+    
+    /// This calls deactivate and then re-enables push
+    public func reset(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
+        deactivate({ [weak self] in
+            PushController.setPushPreference(.Enabled)
+            self?.createNewRandomPushAccount { (success, error) in
+                if success {
+                    PushController.registerForPushNotifications()
+                }
+                if let completion = completion {
+                    dispatch_async(callbackQueue ?? dispatch_get_main_queue(), {
+                        completion()
+                    })
+                }
+            }
+            }, callbackQueue: callbackQueue)
     }
     
     public func createNewRandomPushAccount(completion:(success: Bool, error: NSError?) -> Void) {
@@ -560,6 +586,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         if let custom = callbackQueue {
             queue = custom
         }
+        let device = storage.thisDevice()
         dispatch_group_notify(group, queue) {
             let newPushInfo = PushInfo(
                 pushAPIURL: self.apiClient.baseUrl,
@@ -567,7 +594,8 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                 numUsedTokens: self.storage.numberUsedTokens(),
                 numUnusedTokens: self.storage.numberUnusedTokens(),
                 pushPermitted: pushPermitted,
-                pubsubEndpoint: pubsubEndpoint)
+                pubsubEndpoint: pubsubEndpoint,
+                device: device)
             completion(newPushInfo)
         }
     }

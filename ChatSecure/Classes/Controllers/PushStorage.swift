@@ -30,6 +30,7 @@ import YapDatabase
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
     func buddy(token:String) -> OTRBuddy?
+    func deleteEverything(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?)
     
     /**
      * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
@@ -90,6 +91,17 @@ class PushStorage: NSObject, PushStorageProtocol {
         self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
             transaction.setObject(account, forKey:PushYapKeys.thisAccountKey.rawValue, inCollection:Account.yapCollection())
         }
+    }
+    
+    /// Callback defaults to main queue
+    func deleteEverything(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
+        let collections = [Account.yapCollection(), DeviceContainer.collection(), PushYapCollections.unusedTokenCollection.rawValue, TokenContainer.collection()]
+        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) -> Void in
+            for collection in collections {
+                transaction.removeAllObjectsInCollection(collection)
+            }
+        }, completionQueue: callbackQueue,
+           completionBlock: completion)
     }
     
     func saveThisDevice(device: Device) {

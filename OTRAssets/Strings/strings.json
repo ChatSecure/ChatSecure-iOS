@@ -11,6 +11,10 @@
         "comment": "Title for the accounts tab",
         "string": "Accounts"
     },
+    "ARE_YOU_SURE_STRING": {
+        "comment": "Shown to confirm destructive actions",
+        "string": "Are you sure?"
+    },
     "ACCOUNT_STRING": {
         "comment": "The string describing a buddy's account",
         "string": "Account"
@@ -127,6 +131,10 @@
         "comment": "Shows in the chat view when a message has been delivered",
         "string": "Delivered"
     },
+    "DEACTIVATE_STRING": {
+        "comment": "e.g. for deactivating your push account",
+        "string": "Deactivate"
+    },
     "DONATE_MESSAGE_STRING": {
         "comment": "Message shown when about to donate",
         "string": "Your donation will help fund the continued development of ChatSecure."
@@ -166,6 +174,14 @@
     "FACEBOOK_STRING": {
         "comment": "the name for facebook",
         "string": "Facebook"
+    },
+    "FIX_BACKGROUND_FETCH_STRING": {
+        "comment": "prompt to fix background fetch",
+        "string": "Fix Background Fetch..."
+    },
+    "FIX_PERMISSIONS_STRING": {
+        "comment": "prompt to fix permissions",
+        "string": "Fix Permissions..."
     },
     "FORGOT_PASSPHRASE_INFO_STRING": {
         "comment": "Text describing what happens when the user has forgotten the passphrase",
@@ -410,6 +426,10 @@
     "REPLY_STRING": {
         "comment": "Reply to an incoming message",
         "string": "Reply"
+    },
+    "RESET_STRING": {
+        "comment": "e.g. for resetting push account",
+        "string": "Reset"
     },
     "REQUIRED_STRING": {
         "comment": "String to let user know a certain field like a password is required to create an account",

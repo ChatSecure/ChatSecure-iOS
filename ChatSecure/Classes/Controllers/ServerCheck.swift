@@ -6,7 +6,8 @@
 //  Copyright © 2017 Chris Ballinger. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import OTRAssets
 
 /**
  * The purpose of this class is to collect and process server
@@ -17,8 +18,8 @@ import UIKit
 @objc(OTRServerCheck)
 public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
     
-    private let capsModule: OTRServerCapabilities
-    private let push: PushController
+    public let capsModule: OTRServerCapabilities
+    public let push: PushController
     
     public var capabilities: [CapabilityCode : ServerCapabilityInfo]?
     public var pushInfo: PushInfo?
@@ -78,3 +79,5 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
         checkReady()
     }
 }
+
+

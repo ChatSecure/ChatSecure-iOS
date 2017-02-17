@@ -18,6 +18,8 @@ NSString* ADD_EXISTING_STRING() { return [OTRLanguageManager translatedString:@"
 NSString* ADD_STRING() { return [OTRLanguageManager translatedString:@"Add"]; }
 /** "Advanced", String to describe advanced set of settings */
 NSString* ADVANCED_STRING() { return [OTRLanguageManager translatedString:@"Advanced"]; }
+/** "Are you sure?", Shown to confirm destructive actions */
+NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
 /** "Available", Label in buddy list for users that are available */
 NSString* AVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Available"]; }
 /** "Away", Label in buddy list for users that are away */
@@ -80,6 +82,8 @@ NSString* Crash_Detected_Message() { return [OTRLanguageManager translatedString
 NSString* Crash_Detected_Title() { return [OTRLanguageManager translatedString:@"Crash Detected"]; }
 /** "Customize Username", if you want to change your username */
 NSString* Customize_Username() { return [OTRLanguageManager translatedString:@"Customize Username"]; }
+/** "Deactivate", e.g. for deactivating your push account */
+NSString* DEACTIVATE_STRING() { return [OTRLanguageManager translatedString:@"Deactivate"]; }
 /** "Permanently delete", Ask user if they want to delete the stored account information */
 NSString* DELETE_ACCOUNT_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Permanently delete"]; }
 /** "Delete Account?", Ask user if they want to delete the stored account information */
@@ -122,6 +126,10 @@ NSString* Enable_String() { return [OTRLanguageManager translatedString:@"Enable
 NSString* Enable_Tor_String() { return [OTRLanguageManager translatedString:@"Enable Tor"]; }
 /** "Facebook", the name for facebook */
 NSString* FACEBOOK_STRING() { return [OTRLanguageManager translatedString:@"Facebook"]; }
+/** "Fix Background Fetch...", prompt to fix background fetch */
+NSString* FIX_BACKGROUND_FETCH_STRING() { return [OTRLanguageManager translatedString:@"Fix Background Fetch..."]; }
+/** "Fix Permissions...", prompt to fix permissions */
+NSString* FIX_PERMISSIONS_STRING() { return [OTRLanguageManager translatedString:@"Fix Permissions..."]; }
 /** "Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords.", Text describing what happens when the user has forgotten the passphrase */
 NSString* FORGOT_PASSPHRASE_INFO_STRING() { return [OTRLanguageManager translatedString:@"Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords."]; }
 /** "Forgot Passphrase?", Label for button when you've forgotten the passphrase */
@@ -298,6 +306,8 @@ NSString* RESEND_DESCRIPTION_STRING() { return [OTRLanguageManager translatedStr
 NSString* RESEND_MESSAGE_TITLE() { return [OTRLanguageManager translatedString:@"Resend Message"]; }
 /** "Resend", Label for button to resend message. */
 NSString* RESEND_STRING() { return [OTRLanguageManager translatedString:@"Resend"]; }
+/** "Reset", e.g. for resetting push account */
+NSString* RESET_STRING() { return [OTRLanguageManager translatedString:@"Reset"]; }
 /** "Resource", Label for text input for XMPP resource */
 NSString* RESOURCE_STRING() { return [OTRLanguageManager translatedString:@"Resource"]; }
 /** "Removed By Server",  */

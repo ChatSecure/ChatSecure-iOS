@@ -442,6 +442,7 @@
 		D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BC71D91E53B2BF007A3C4F /* SingleButtonTableViewCell.xib */; };
 		D9BC71DF1E53B465007A3C4F /* TwoButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BC71DD1E53B465007A3C4F /* TwoButtonTableViewCell.swift */; };
 		D9BC71E11E53B4A3007A3C4F /* TwoButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BC71DE1E53B465007A3C4F /* TwoButtonTableViewCell.xib */; };
+		D9BD54151E567A20007077FB /* UIViewController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */; };
 		D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BEF8DF1DCE6E12009945D1 /* OTRXMPPManager_Private.h */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
@@ -993,6 +994,7 @@
 		D9BC71D91E53B2BF007A3C4F /* SingleButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SingleButtonTableViewCell.xib; sourceTree = "<group>"; };
 		D9BC71DD1E53B465007A3C4F /* TwoButtonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwoButtonTableViewCell.swift; sourceTree = "<group>"; };
 		D9BC71DE1E53B465007A3C4F /* TwoButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwoButtonTableViewCell.xib; sourceTree = "<group>"; };
+		D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+ChatSecure.swift"; sourceTree = "<group>"; };
 		D9BE65431B6A08ED002D4136 /* XMPPServerInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPServerInfoCell.h; sourceTree = "<group>"; };
 		D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPServerInfoCell.m; sourceTree = "<group>"; };
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XMPPServerInfoCell.xib; path = Interface/XMPPServerInfoCell.xib; sourceTree = "<group>"; };
@@ -1113,6 +1115,7 @@
 		633105011A16D1A300C17BAE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */,
 				633105021A16D1A300C17BAE /* NSURL+ChatSecure.h */,
 				633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */,
 				633105041A16D1A300C17BAE /* UIActionSheet+ChatSecure.h */,
@@ -2546,6 +2549,7 @@
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
 				D93DDA7C1BA79A2400CD8331 /* UIActivityViewController+ChatSecure.m in Sources */,
+				D9BD54151E567A20007077FB /* UIViewController+ChatSecure.swift in Sources */,
 				639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */,
 				D93DDA7D1BA79A2400CD8331 /* UIImage+ChatSecure.m in Sources */,
 				D93DDA7E1BA79A2400CD8331 /* UIViewController+ChatSecure.m in Sources */,

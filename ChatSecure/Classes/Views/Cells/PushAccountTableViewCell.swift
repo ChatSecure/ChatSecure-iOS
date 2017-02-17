@@ -65,6 +65,9 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         } else if (!push.hasPushAccount) {
             checkmark = "❌"
             status = "Not Registered"
+        } else if (push.device == nil) {
+            checkmark = "⚠️"
+            status = "Device Not Registered"
         } else if (caps.status != .Available) {
             checkmark = "⚠️"
             status = "XMPP Server Incompatible (see XEP-0357)"

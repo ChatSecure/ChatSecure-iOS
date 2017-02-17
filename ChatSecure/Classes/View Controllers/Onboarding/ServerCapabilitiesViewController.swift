@@ -111,16 +111,24 @@ public class ServerCapabilitiesViewController: UITableViewController {
         guard let resetCell = tableView.dequeueReusableCellWithIdentifier(TwoButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? TwoButtonTableViewCell else {
             return UITableViewCell()
         }
-        resetCell.leftButton.setTitle("Reset", forState: .Normal)
+        resetCell.leftButton.setTitle(RESET_STRING(), forState: .Normal)
         resetCell.leftButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         resetCell.leftAction = { [weak self] (cell, sender) in
-            // TODO: show reset prompt
+            self?.showDestructivePrompt(nil, buttonTitle: RESET_STRING(), handler: { (action) in
+                self?.check.push.reset({ 
+                    self?.check.refresh()
+                    }, callbackQueue: dispatch_get_main_queue())
+            })
         }
-        resetCell.rightButton.setTitle("Deactivate", forState: .Normal)
+        resetCell.rightButton.setTitle(DEACTIVATE_STRING(), forState: .Normal)
         resetCell.rightButton.setTitleColor(UIColor.redColor(), forState: .Normal)
         resetCell.rightButton.setTitleColor(UIColor.lightGrayColor(), forState: .Disabled)
         resetCell.rightAction = { [weak self] (cell, sender) in
-            // TODO: show deactivate prompt
+            self?.showDestructivePrompt(nil, buttonTitle:  DEACTIVATE_STRING(), handler: { (action) in
+                self?.check.push.deactivate({
+                    self?.check.refresh()
+                    }, callbackQueue: dispatch_get_main_queue())
+            })
         }
         resetCell.rightButton.enabled = pushInfo.hasPushAccount
         return resetCell
@@ -131,9 +139,11 @@ public class ServerCapabilitiesViewController: UITableViewController {
         guard let permissionCell = tableView.dequeueReusableCellWithIdentifier(SingleButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? SingleButtonTableViewCell else {
             return UITableViewCell()
         }
-        permissionCell.button.setTitle("Fix Permissions...", forState: .Normal)
-        permissionCell.buttonAction = { [weak self] (cell, sender) in
-            // TODO: prompt to fix permissions
+        permissionCell.button.setTitle(FIX_PERMISSIONS_STRING(), forState: .Normal)
+        permissionCell.buttonAction = {  (cell, sender) in
+            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(appSettings)
+            }
         }
         return permissionCell
     }
@@ -143,9 +153,11 @@ public class ServerCapabilitiesViewController: UITableViewController {
         guard let fetchCell = tableView.dequeueReusableCellWithIdentifier(SingleButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? SingleButtonTableViewCell else {
             return UITableViewCell()
         }
-        fetchCell.button.setTitle("Fix Background Fetch...", forState: .Normal)
-        fetchCell.buttonAction = { [weak self] (cell, sender) in
-            // TODO: prompt to fix background fetch
+        fetchCell.button.setTitle(FIX_BACKGROUND_FETCH_STRING(), forState: .Normal)
+        fetchCell.buttonAction = { (cell, sender) in
+            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(appSettings)
+            }
         }
         return fetchCell
     }
