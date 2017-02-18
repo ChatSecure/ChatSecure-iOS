@@ -32,12 +32,12 @@ private func ==(lhs: OutstandingMessageInfo, rhs: OutstandingMessageInfo) -> Boo
     return lhs.messageKey == rhs.messageKey && lhs.messageCollection == rhs.messageCollection
 }
 
-open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStatusModuleDelegate {
+public class MessageQueueHandler:NSObject {
     
-    open var accountRetryTimeout:TimeInterval = 30
-    open var otrTimeout:TimeInterval = 7
-    open var messageRetryTimeout:TimeInterval = 10
-    open var maxFailureCount:UInt = 2
+    public var accountRetryTimeout:TimeInterval = 30
+    public var otrTimeout:TimeInterval = 7
+    public var messageRetryTimeout:TimeInterval = 10
+    public var maxFailureCount:UInt = 2
     
     let operationQueue = OperationQueue()
     let databaseConnection:YapDatabaseConnection
@@ -45,11 +45,11 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
     fileprivate var outstandingBuddies = [String:OutstandingMessageInfo]()
     fileprivate var outstandingAccounts = [String:Set<OutstandingMessageInfo>]()
     fileprivate let isolationQueue = DispatchQueue(label: "MessageQueueHandler-IsolationQueue", attributes: [])
-    var accountLoginNotificationObserver:NSObjectProtocol?
-    var messageStateDidChangeNotificationObserver:NSObjectProtocol?
+    fileprivate var accountLoginNotificationObserver:NSObjectProtocol?
+    fileprivate var messageStateDidChangeNotificationObserver:NSObjectProtocol?
     
     public init(dbConnection:YapDatabaseConnection) {
-        databaseConnection = dbConnection
+        self.databaseConnection = dbConnection
         self.operationQueue.maxConcurrentOperationCount = 1
         super.init()
         self.accountLoginNotificationObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: kOTRProtocolLoginSuccess), object: nil, queue: self.operationQueue, using: { [weak self] (notification) in
@@ -302,30 +302,6 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
 
     }
     
-    //MARK: YapTaskQueueHandler Protocol
-    public func handleNextItem(_ action: YapTaskQueueAction, completion: @escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
-        //Get the real message out of the database
-        guard let messageSendingAction = action as? OTRYapMessageSendAction else {
-            return
-        }
-        
-        let messageKey = messageSendingAction.messageKey
-        let messageCollection = messageSendingAction.messageCollection
-        var msg:OTROutgoingMessage? = nil
-        self.databaseConnection.read { (transaction) in
-            msg = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
-        }
-        
-        guard let message = msg else {
-            // Somehow we have an action without a message. This is very strange. Do not like.
-            // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
-            completion(true, 0.0)
-            return
-        }
-        
-        self.sendMessage(message, completion: completion)
-    }
-    
     //Mark: Callback for Account
     
     fileprivate func handleAccountLoginNotification(_ notification:Notification) {
@@ -369,7 +345,7 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
     }
     
     //Mark: OTR timeout
-    @objc open func otrInitatiateTimeout(_ timer:Timer) {
+    @objc public func otrInitatiateTimeout(_ timer:Timer) {
         
         guard let buddyKey = timer.userInfo as? String else {
             return
@@ -397,8 +373,14 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
         
     }
     
-    //MARK: Callback from protocol
-    open func didSendMessage(_ messageKey: String, messageCollection: String) {
+    
+    
+}
+
+//MARK: Callback from protocol
+extension MessageQueueHandler: OTRXMPPMessageStatusModuleDelegate {
+    
+    public func didSendMessage(_ messageKey: String, messageCollection: String) {
         
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
@@ -416,7 +398,7 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
         messageInfo.completion(true, 0.0)
     }
     
-    open func didFailToSendMessage(_ messageKey:String, messageCollection:String, error:NSError?) {
+    public func didFailToSendMessage(_ messageKey:String, messageCollection:String, error:NSError?) {
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
         }
@@ -424,5 +406,31 @@ open class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStat
         //Even though this action failed we need to keep the queue moving.
         messageInfo.completion(true, 0.0)
     }
+}
+      
+//MARK: YapTaskQueueHandler Protocol
+extension MessageQueueHandler: YapTaskQueueHandler {
     
+    public func handleNextItem(_ action: YapTaskQueueAction, completion: @escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        //Get the real message out of the database
+        guard let messageSendingAction = action as? OTRYapMessageSendAction else {
+            return
+        }
+        
+        let messageKey = messageSendingAction.messageKey
+        let messageCollection = messageSendingAction.messageCollection
+        var msg:OTROutgoingMessage? = nil
+        self.databaseConnection.read { (transaction) in
+            msg = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
+        }
+        
+        guard let message = msg else {
+            // Somehow we have an action without a message. This is very strange. Do not like.
+            // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
+            completion(true, 0.0)
+            return
+        }
+        
+        self.sendMessage(message, completion: completion)
+    }
 }
