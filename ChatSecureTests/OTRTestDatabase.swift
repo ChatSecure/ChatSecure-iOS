@@ -14,22 +14,22 @@ class OTRTestDatabaseManager:OTRDatabaseManager {
         return NSTemporaryDirectory()
     }
     
-    class func setupDatabaseWithName(name:String) -> OTRDatabaseManager {
+    class func setupDatabaseWithName(_ name:String) -> OTRDatabaseManager {
         let datatabseManager = OTRTestDatabaseManager()
         datatabseManager.setDatabasePassphrase("password", remember: false, error: nil)
-        datatabseManager.setupDatabaseWithName(name, withMediaStorage: false)
+        datatabseManager.setupDatabase(withName: name, withMediaStorage: false)
         return datatabseManager
     }
 }
 
-extension NSFileManager {
-    func clearDirectory(directory:String) {
+extension FileManager {
+    func clearDirectory(_ directory:String) {
         // Clear any Files in directy
         do {
-            let contents = try self.contentsOfDirectoryAtPath(directory)
+            let contents = try self.contentsOfDirectory(atPath: directory)
             try contents.forEach { (path) in
-                let fullPath = (directory as NSString).stringByAppendingPathComponent(path)
-                try NSFileManager().removeItemAtPath(fullPath)
+                let fullPath = (directory as NSString).appendingPathComponent(path)
+                try FileManager().removeItem(atPath: fullPath)
             }
         } catch {
             

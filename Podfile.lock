@@ -25,7 +25,7 @@ PODS:
   - BBlock/StoreKit (1.2.1)
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
-  - ChatSecure-Push-iOS (0.2)
+  - ChatSecure-Push-iOS (0.3)
   - CocoaAsyncSocket (7.5.1):
     - CocoaAsyncSocket/GCD (= 7.5.1)
   - CocoaAsyncSocket/GCD (7.5.1)
@@ -146,7 +146,7 @@ PODS:
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
   - OTRKit (2.0.0)
-  - ParkedTextField (0.2.1)
+  - ParkedTextField (0.3.0)
   - ProxyKit/Client (1.1.0):
     - ProxyKit/common
   - ProxyKit/common (1.1.0):
@@ -159,12 +159,12 @@ PODS:
   - SignalProtocol-ObjC (0.1.0):
     - SignalProtocolC (~> 0.1.0)
   - SignalProtocolC (0.1.0)
-  - SQLCipher (3.4.0):
-    - SQLCipher/standard (= 3.4.0)
-  - SQLCipher/common (3.4.0)
-  - SQLCipher/fts (3.4.0):
+  - SQLCipher (3.4.1):
+    - SQLCipher/standard (= 3.4.1)
+  - SQLCipher/common (3.4.1)
+  - SQLCipher/fts (3.4.1):
     - SQLCipher/common
-  - SQLCipher/standard (3.4.0):
+  - SQLCipher/standard (3.4.1):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.4)
@@ -224,7 +224,7 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapDatabase/SQLCipher/Extensions/Views (2.9.2):
     - YapDatabase/SQLCipher/Core
-  - YapTaskQueue/SQLCipher (0.1.6):
+  - YapTaskQueue/SQLCipher (0.2.0):
     - YapDatabase/SQLCipher (~> 2.9)
   - ZXingObjC (3.2.1):
     - ZXingObjC/All (= 3.2.1)
@@ -256,7 +256,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `Submodules/ParkedTextField/ParkedTextField.podspec`)
+  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, tag `0.3.0`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 4.0)
@@ -271,7 +271,7 @@ DEPENDENCIES:
   - XLForm (~> 3.3)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (~> 2.9)
-  - YapTaskQueue/SQLCipher (~> 0.1.6)
+  - YapTaskQueue/SQLCipher (~> 0.2)
   - ZXingObjC (~> 3.0)
 
 EXTERNAL SOURCES:
@@ -294,7 +294,8 @@ EXTERNAL SOURCES:
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
-    :path: Submodules/ParkedTextField/ParkedTextField.podspec
+    :git: https://github.com/gmertk/ParkedTextField.git
+    :tag: 0.3.0
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SignalProtocol-ObjC:
@@ -311,6 +312,9 @@ CHECKOUT OPTIONS:
   libsqlfs:
     :commit: 317d21a1e43e28396a62a462a8213a5f33678c2c
     :git: https://github.com/ChatSecure/libsqlfs.git
+  ParkedTextField:
+    :git: https://github.com/gmertk/ParkedTextField.git
+    :tag: 0.3.0
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -318,7 +322,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: fe8577fd81ff76b1f303dcd51a350fb0c964a6d0
+  ChatSecure-Push-iOS: 33db271446c50fe084e029ebd26b25033c8c8d22
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   CPAProxy: 3a23720ca12c0725353a6cd45673fae2b460a98a
@@ -341,7 +345,7 @@ SPEC CHECKSUMS:
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
-  ParkedTextField: 72d02a5fdadc089ff25efac04ea21dcc5a2467d3
+  ParkedTextField: e735a0a6b5343834f0e2fe7ba359d20b27768f8d
   ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
@@ -349,7 +353,7 @@ SPEC CHECKSUMS:
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
   SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
   SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
-  SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
+  SQLCipher: 43d12c0eb9c57fb438749618fc3ce0065509a559
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
@@ -357,9 +361,9 @@ SPEC CHECKSUMS:
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
   XMPPFramework: 9817d71a3015e08095cda1e8d6435fad8970059f
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
-  YapTaskQueue: 4142a372ea5971deddafe7c797193b01348a66ef
+  YapTaskQueue: 892ce14820de39ac861080798903cfc6ee0251b3
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: f5047ae97c14f284c81680d031e380b368495cff
+PODFILE CHECKSUM: 7dd9d74066763887860b1a8e21ddf65efc2d4017
 
 COCOAPODS: 1.2.0

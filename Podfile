@@ -61,6 +61,7 @@ abstract_target 'ChatSecureCorePods' do
 
   pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '0.3.0'
 
   # Local Podspecs
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
@@ -69,8 +70,7 @@ abstract_target 'ChatSecureCorePods' do
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
-  # Use this until able to push proper podspec that depends on 2.9
-  pod 'YapTaskQueue/SQLCipher', '~> 0.1.6'
+  pod 'YapTaskQueue/SQLCipher', '~> 0.2'
 
   # Submodules
 
@@ -82,8 +82,6 @@ abstract_target 'ChatSecureCorePods' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  # Waiting for Swift 2.3 changes
-  pod 'ParkedTextField', :path => 'Submodules/ParkedTextField/ParkedTextField.podspec'
 
 
   target 'ChatSecureCore'

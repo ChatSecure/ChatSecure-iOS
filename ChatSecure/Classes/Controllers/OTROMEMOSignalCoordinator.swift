@@ -13,23 +13,23 @@ import YapDatabase
 /** 
  * This is the glue between XMPP/OMEMO and Signal
  */
-@objc public class OTROMEMOSignalCoordinator: NSObject {
+@objc open class OTROMEMOSignalCoordinator: NSObject {
     
-    public let signalEncryptionManager:OTRAccountSignalEncryptionManager
-    public let omemoStorageManager:OTROMEMOStorageManager
-    public let accountYapKey:String
-    public let databaseConnection:YapDatabaseConnection
-    public weak var omemoModule:OMEMOModule?
-    public weak var omemoModuleQueue:dispatch_queue_t?
-    public var callbackQueue:dispatch_queue_t
-    public let workQueue:dispatch_queue_t
-    private var myJID:XMPPJID? {
+    open let signalEncryptionManager:OTRAccountSignalEncryptionManager
+    open let omemoStorageManager:OTROMEMOStorageManager
+    open let accountYapKey:String
+    open let databaseConnection:YapDatabaseConnection
+    open weak var omemoModule:OMEMOModule?
+    open weak var omemoModuleQueue:DispatchQueue?
+    open var callbackQueue:DispatchQueue
+    open let workQueue:DispatchQueue
+    fileprivate var myJID:XMPPJID? {
         get {
             return omemoModule?.xmppStream.myJID
         }
     }
     let preKeyCount:UInt = 100
-    private var outstandingXMPPStanzaResponseBlocks:[String: (Bool) -> Void]
+    fileprivate var outstandingXMPPStanzaResponseBlocks:[String: (Bool) -> Void]
     /**
      Create a OTROMEMOSignalCoordinator for an account. 
      
@@ -42,29 +42,29 @@ import YapDatabase
         self.accountYapKey = accountYapKey
         self.databaseConnection = databaseConnection
         self.outstandingXMPPStanzaResponseBlocks = [:]
-        self.callbackQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-callback", DISPATCH_QUEUE_SERIAL)
-        self.workQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-work", DISPATCH_QUEUE_SERIAL)
+        self.callbackQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-callback", attributes: [])
+        self.workQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-work", attributes: [])
     }
     
     /**
      Checks that a jid matches our own JID using XMPPJIDCompareBare
      */
-    private func isOurJID(jid:XMPPJID) -> Bool {
+    fileprivate func isOurJID(_ jid:XMPPJID) -> Bool {
         guard let ourJID = self.myJID else {
             return false;
         }
         
-        return jid.isEqualToJID(ourJID, options: XMPPJIDCompareBare)
+        return jid.isEqual(to: ourJID, options: XMPPJIDCompareBare)
     }
     
     /** Always call on internal work queue */
-    private func callAndRemoveOutstandingBundleBlock(elementId:String,success:Bool) {
+    fileprivate func callAndRemoveOutstandingBundleBlock(_ elementId:String,success:Bool) {
         
         guard let outstandingBlock = self.outstandingXMPPStanzaResponseBlocks[elementId] else {
             return
         }
         outstandingBlock(success)
-        self.outstandingXMPPStanzaResponseBlocks.removeValueForKey(elementId)
+        self.outstandingXMPPStanzaResponseBlocks.removeValue(forKey: elementId)
     }
     
     /** 
@@ -73,7 +73,7 @@ import YapDatabase
      - parameter buddyYapKey: The yap key for the buddy to check
      - parameter completion: The completion closure called on callbackQueue. If it successfully was able to fetch all the bundles or if it wasn't necessary. If there were no devices for this buddy it will also return flase
      */
-    public func prepareSessionForBuddy(buddyYapKey:String, completion:(Bool) -> Void) {
+    open func prepareSessionForBuddy(_ buddyYapKey:String, completion:@escaping (Bool) -> Void) {
         self.prepareSession(buddyYapKey, yapCollection: OTRBuddy.collection(), completion: completion)
     }
     
@@ -84,54 +84,54 @@ import YapDatabase
      - parameter yapCollection: The yap key for the buddy or account to check
      - parameter completion: The completion closure called on callbackQueue. If it successfully was able to fetch all the bundles or if it wasn't necessary. If there were no devices for this buddy it will also return flase
      */
-    public func prepareSession(yapKey:String, yapCollection:String, completion:(Bool) -> Void) {
+    open func prepareSession(_ yapKey:String, yapCollection:String, completion:@escaping (Bool) -> Void) {
         var devices:[OTROMEMODevice]? = nil
         var user:String? = nil
         
         //Get all the devices ID's for this buddy as well as their username for use with signal and XMPPFramework.
-        self.databaseConnection.readWithBlock { (transaction) in
-            devices = OTROMEMODevice.allDevicesForParentKey(yapKey, collection: yapCollection, transaction: transaction)
+        self.databaseConnection.read { (transaction) in
+            devices = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, transaction: transaction)
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
         guard let devs = devices, let username = user else {
-            dispatch_async(self.callbackQueue, {
+            self.callbackQueue.async(execute: {
                 completion(false)
             })
             return
         }
         
         var finalSuccess = true
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             guard let strongself = self else {
                 return
             }
             
-            let group = dispatch_group_create()
+            let group = DispatchGroup()
             //For each device Check if we have a session. If not then we need to fetch it from their XMPP server.
-            for device in devs where device.deviceId.unsignedIntValue != self?.signalEncryptionManager.registrationId {
-                if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.intValue) || device.publicIdentityKeyData == nil {
+            for device in devs where device.deviceId.uint32Value != self?.signalEncryptionManager.registrationId {
+                if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.int32Value) || device.publicIdentityKeyData == nil {
                     //No session for this buddy and device combo. We need to fetch the bundle.
                     //No public idenitty key data. We don't have enough information (for the user and UI) to encrypt this message.
                     
-                    let elementId = NSUUID().UUIDString
+                    let elementId = UUID().uuidString
                     
-                    dispatch_group_enter(group)
+                    group.enter()
                     // Hold on to a closure so that when we get the call back from OMEMOModule we can call this closure.
                     strongself.outstandingXMPPStanzaResponseBlocks[elementId] = { success in
                         if (!success) {
                             finalSuccess = false
                         }
                         
-                        dispatch_group_leave(group)
+                        group.leave()
                     }
                     //Fetch the bundle
-                    strongself.omemoModule?.fetchBundleForDeviceId(device.deviceId.unsignedIntValue, jid: XMPPJID.jidWithString(username), elementId: elementId)
+                    strongself.omemoModule?.fetchBundle(forDeviceId: device.deviceId.uint32Value, jid: XMPPJID(string:username), elementId: elementId)
                 }
             }
             
             if let cQueue = self?.callbackQueue {
-                dispatch_group_notify(group, cQueue) {
+                group.notify(queue: cQueue) {
                     completion(finalSuccess)
                 }
 
@@ -139,12 +139,12 @@ import YapDatabase
         }
     }
     
-    private func fetchUsername(yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> String? {
-        if let object = transaction.objectForKey(yapKey, inCollection: yapCollection) {
+    fileprivate func fetchUsername(_ yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> String? {
+        if let object = transaction.object(forKey: yapKey, inCollection: yapCollection) {
             if object is OTRAccount {
-                return object.username
+                return (object as AnyObject).username
             } else if object is OTRBuddy {
-                return object.username
+                return (object as AnyObject).username
             }
         }
         return nil
@@ -153,22 +153,22 @@ import YapDatabase
     /**
      Check if we have valid sessions with our other devices and if not fetch their bundles and start sessions.
      */
-    func prepareSessionWithOurDevices(completion:(success:Bool) -> Void) {
+    func prepareSessionWithOurDevices(_ completion:@escaping (_ success:Bool) -> Void) {
         self.prepareSession(self.accountYapKey, yapCollection: OTRAccount.collection(), completion: completion)
     }
     
-    private func encryptPayloadWithSignalForDevice(device:OTROMEMODevice, payload:NSData) throws -> OMEMOKeyData? {
+    fileprivate func encryptPayloadWithSignalForDevice(_ device:OTROMEMODevice, payload:Data) throws -> OMEMOKeyData? {
         var user:String? = nil
-        self.databaseConnection.readWithBlock({ (transaction) in
+        self.databaseConnection.read({ (transaction) in
             user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
         })
         if let username = user {
-            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(payload, name: username, deviceId: device.deviceId.unsignedIntValue)
+            let encryptedKeyData = try self.signalEncryptionManager.encryptToAddress(payload, name: username, deviceId: device.deviceId.uint32Value)
             var isPreKey = false
-            if (encryptedKeyData.type == .PreKeyMessage) {
+            if (encryptedKeyData.type == .preKeyMessage) {
                 isPreKey = true
             }
-            return OMEMOKeyData(deviceId: device.deviceId.unsignedIntValue, data: encryptedKeyData.data, isPreKey: isPreKey)
+            return OMEMOKeyData(deviceId: device.deviceId.uint32Value, data: encryptedKeyData.data, isPreKey: isPreKey)
         }
         return nil
     }
@@ -181,31 +181,31 @@ import YapDatabase
      - parameter messageId: The preffered XMPP element Id to be used.
      - parameter completion: The completion block is called after all the necessary omemo preperation has completed and sendKeyData:iv:toJID:payload:elementId: is invoked
      */
-    public func encryptAndSendMessage(messageBody:String, buddyYapKey:String, messageId:String?, completion:(Bool,NSError?) -> Void) {
+    open func encryptAndSendMessage(_ messageBody:String, buddyYapKey:String, messageId:String?, completion:@escaping (Bool,NSError?) -> Void) {
         // Gather bundles for buddy and account here
-        let group = dispatch_group_create()
+        let group = DispatchGroup()
         
         let prepareCompletion = { (success:Bool) in
-            dispatch_group_leave(group)
+            group.leave()
         }
         
-        dispatch_group_enter(group)
-        dispatch_group_enter(group)
+        group.enter()
+        group.enter()
         self.prepareSessionForBuddy(buddyYapKey, completion: prepareCompletion)
         self.prepareSessionWithOurDevices(prepareCompletion)
         //Even if something went wrong fetching bundles we should push ahead. We may have sessions that can be used.
         
-        dispatch_group_notify(group, self.workQueue) { [weak self] in
+        group.notify(queue: self.workQueue) { [weak self] in
             guard let strongSelf = self else {
                 return
             }
             //Strong self work here
             var bud:OTRBuddy? = nil
-            strongSelf.databaseConnection.readWithBlock { (transaction) in
-                bud = OTRBuddy.fetchObjectWithUniqueID(buddyYapKey, transaction: transaction)
+            strongSelf.databaseConnection.read { (transaction) in
+                bud = OTRBuddy.fetch(withUniqueID: buddyYapKey, transaction: transaction)
             }
             
-            guard let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.dataUsingEncoding(NSUTF8StringEncoding) , let buddy = bud else {
+            guard let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud else {
                 return
             }
             do {
@@ -216,7 +216,7 @@ import YapDatabase
                 // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
                 let encryptClosure:(OTROMEMODevice) -> (OMEMOKeyData?) = { device in
                     do {
-                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: keyData)
+                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: keyData as Data)
                     } catch {
                         return nil
                     }
@@ -228,12 +228,12 @@ import YapDatabase
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: buddy.dynamicType.collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: type(of: buddy).collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
-                    dispatch_async(strongSelf.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.NoDevicesForBuddy, userInfo: nil)
+                    strongSelf.callbackQueue.async(execute: {
+                        let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
                         completion(false,error)
                     })
                     return
@@ -246,7 +246,7 @@ import YapDatabase
                  4. Remove optional values
                  */
                 let ourDevicesKeyData = strongSelf.omemoStorageManager.getDevicesForOurAccount(true).filter({ (device) -> Bool in
-                    return device.deviceId.unsignedIntValue != strongSelf.signalEncryptionManager.registrationId
+                    return device.deviceId.uint32Value != strongSelf.signalEncryptionManager.registrationId
                 }).map(encryptClosure).flatMap{ $0 }
                 
                 // Combine teh two arrays for all key data
@@ -258,23 +258,23 @@ import YapDatabase
                         return
                     }
                     let finalPayload = NSMutableData()
-                    finalPayload.appendData(payloadData)
-                    finalPayload.appendData(authTag)
-                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, toJID: XMPPJID.jidWithString(buddy.username), payload: finalPayload, elementId: messageId)
-                    dispatch_async(strongSelf.callbackQueue, {
+                    finalPayload.append(payloadData)
+                    finalPayload.append(authTag)
+                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: XMPPJID(string: buddy.username), payload: finalPayload as Data, elementId: messageId)
+                    strongSelf.callbackQueue.async(execute: {
                         completion(true,nil)
                     })
                     return
                 } else {
-                    dispatch_async(strongSelf.callbackQueue, {
-                        let error = NSError.chatSecureError(OTROMEMOError.NoDevices, userInfo: nil)
+                    strongSelf.callbackQueue.async(execute: {
+                        let error = NSError.chatSecureError(OTROMEMOError.noDevices, userInfo: nil)
                         completion(false,error)
                     })
                     return
                 }
             } catch let err as NSError {
                 //This should only happen if we had an error encrypting the payload
-                dispatch_async(strongSelf.callbackQueue, {
+                strongSelf.callbackQueue.async(execute: {
                     completion(false,err)
                 })
                 return
@@ -288,9 +288,9 @@ import YapDatabase
      
      - parameter deviceId: The OMEMO device id
     */
-    public func removeDevice(devices:[OTROMEMODevice], completion:((Bool) -> Void)) {
+    open func removeDevice(_ devices:[OTROMEMODevice], completion:@escaping ((Bool) -> Void)) {
         
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             
             guard let accountKey = self?.accountYapKey else {
                 completion(false)
@@ -299,7 +299,7 @@ import YapDatabase
             //Array with tuple of username and the device
             //Needed to avoid nesting yap transactions
             var usernameDeviceArray = [(String,OTROMEMODevice)]()
-            self?.databaseConnection.readWriteWithBlock({ (transaction) in
+            self?.databaseConnection.readWrite({ (transaction) in
                 devices.forEach({ (device) in
                     
                     // Get the username if buddy or account. Could possibly be extracted into a extension or protocol
@@ -314,19 +314,19 @@ import YapDatabase
                     }
                     
                     //Need the parent object to get the username
-                    let buddyOrAccount = transaction.objectForKey(device.parentKey, inCollection: device.parentCollection)
+                    let buddyOrAccount = transaction.object(forKey: device.parentKey, inCollection: device.parentCollection)
                     
                     
-                    if let username = extractUsername(buddyOrAccount) {
+                    if let username = extractUsername(buddyOrAccount as AnyObject?) {
                         usernameDeviceArray.append((username,device))
                     }
-                    device.removeWithTransaction(transaction)
+                    device.remove(with: transaction)
                 })
             })
             
             //For each username device pair remove the underlying signal session
             usernameDeviceArray.forEach({ (username,device) in
-                self?.signalEncryptionManager.removeSessionRecordForUsername(username, deviceId: device.deviceId.intValue)
+                self?.signalEncryptionManager.removeSessionRecordForUsername(username, deviceId: device.deviceId.int32Value)
             })
             
             
@@ -336,7 +336,7 @@ import YapDatabase
             })
             
             if( remoteDevicesToRemove.count > 0 ) {
-                let elementId = NSUUID().UUIDString
+                let elementId = UUID().uuidString
                 let deviceIds = remoteDevicesToRemove.map({ (device) -> NSNumber in
                     return device.deviceId
                 })
@@ -350,16 +350,16 @@ import YapDatabase
         }
     }
     
-    public func processKeyData(keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
+    open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
         let aesGcmBlockLength = 16
-        guard let encryptedPayload = payload where encryptedPayload.length > aesGcmBlockLength else {
+        guard let encryptedPayload = payload, encryptedPayload.count > aesGcmBlockLength else {
             return
         }
         
         let rid = self.signalEncryptionManager.registrationId
         
         //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
-        var unencryptedKeyData: NSData?
+        var unencryptedKeyData: Data?
         for key in keyData {
             if key.deviceId == rid {
                 let keyData = key.data
@@ -376,23 +376,25 @@ import YapDatabase
         guard var aesKey = unencryptedKeyData else {
             return
         }
-        var authTag: NSData?
+        var authTag: Data?
         
         // Treat >=32 bytes OMEMO 'keys' as containing the auth tag.
         // https://github.com/ChatSecure/ChatSecure-iOS/issues/647
-        if (aesKey.length >= aesGcmBlockLength * 2) {
-            authTag = aesKey.subdataWithRange(NSMakeRange(aesGcmBlockLength, aesKey.length - aesGcmBlockLength))
-            aesKey = aesKey.subdataWithRange(NSMakeRange(0, aesGcmBlockLength))
+        if (aesKey.count >= aesGcmBlockLength * 2) {
+            
+            authTag = aesKey.subdata(in: aesGcmBlockLength..<aesKey.count)
+            aesKey = aesKey.subdata(in: 0..<aesGcmBlockLength)
         }
         
-        var tmpBody: NSData?
+        var tmpBody: Data?
         // If there's already an auth tag, that means the payload
         // doesn't contain the auth tag.
         if authTag != nil { // omemo namespace
             tmpBody = encryptedPayload
         } else { // 'siacs' namespace fallback
-            tmpBody = encryptedPayload.subdataWithRange(NSMakeRange(0, encryptedPayload.length - aesGcmBlockLength))
-            authTag = encryptedPayload.subdataWithRange(NSMakeRange(encryptedPayload.length - aesGcmBlockLength, aesGcmBlockLength))
+            
+            tmpBody = encryptedPayload.subdata(in: 0..<encryptedPayload.count - aesGcmBlockLength)
+            authTag = encryptedPayload.subdata(in: encryptedPayload.count - aesGcmBlockLength..<encryptedPayload.count)
         }
         guard let tag = authTag, let encryptedBody = tmpBody else {
             return
@@ -402,71 +404,71 @@ import YapDatabase
             guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {
                 return
             }
-            let messageString = String(data: messageBody, encoding: NSUTF8StringEncoding)
+            let messageString = String(data: messageBody, encoding: String.Encoding.utf8)
             var databaseMessage:OTRBaseMessage = OTRIncomingMessage()
             guard let ourJID = self.myJID else {
                 return
             }
-            var relatedBuddyUsername = fromJID.bare()
+            var relatedBuddyUsername = fromJID.bare() as String!
             var innerMessage = message
-            if (message.isTrustedMessageCarbonForMyJID(ourJID)) {
+            if (message.isTrustedMessageCarbon(forMyJID: ourJID)) {
                 //This came from another of our devices this is really going to be an outgoing message
-                innerMessage = message.messageCarbonForwardedMessage()
+                innerMessage = message.messageCarbonForwarded()
                 if (message.isReceivedMessageCarbon()) {
-                    relatedBuddyUsername = innerMessage.from().bare()
+                    relatedBuddyUsername = innerMessage.from().bare() as String
                 } else {
-                    relatedBuddyUsername = innerMessage.to().bare()
+                    relatedBuddyUsername = innerMessage.to().bare() as String
                     let outgoingMessage = OTROutgoingMessage()
-                    outgoingMessage.dateSent = NSDate()
-                    databaseMessage = outgoingMessage
+                    outgoingMessage?.dateSent = Date()
+                    databaseMessage = outgoingMessage!
                 }
             }
             
-            self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+            self.databaseConnection.asyncReadWrite({ (transaction) in
                 
-                guard let buddy = OTRBuddy.fetchBuddyWithUsername(relatedBuddyUsername, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
+                guard let buddyUsernmae = relatedBuddyUsername, let buddy = OTRBuddy.fetch(withUsername: buddyUsernmae, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
                 databaseMessage.text = messageString
                 databaseMessage.buddyUniqueId = buddy.uniqueId
                 
-                let deviceNumber = NSNumber(unsignedInt: senderDeviceId)
-                let deviceYapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(OMEMODevice: deviceYapKey, collection: OTROMEMODevice.collection())!
+                let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
+                let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection())!
                 if let id = innerMessage.elementID() {
                     databaseMessage.messageId = id
                 }
                 
-                databaseMessage.saveWithTransaction(transaction)
+                databaseMessage.save(with: transaction)
                 
                 // Should we be using the date of the xmpp message?
                 buddy.lastMessageId = databaseMessage.uniqueId
-                buddy.saveWithTransaction(transaction)
+                buddy.save(with: transaction)
                 
                 //Update device last received message
-                guard let device = OTROMEMODevice.fetchObjectWithUniqueID(deviceYapKey, transaction: transaction) else {
+                guard let device = OTROMEMODevice.fetch(withUniqueID: deviceYapKey, transaction: transaction) else {
                     return
                 }
-                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: NSDate())
-                newDevice.saveWithTransaction(transaction)
+                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: Date())
+                newDevice.save(with: transaction)
                 
                 // Send delivery receipt
-                guard let account = OTRAccount.fetchObjectWithUniqueID(buddy.accountUniqueId, transaction: transaction) else {
+                guard let account = OTRAccount.fetch(withUniqueID: buddy.accountUniqueId, transaction: transaction) else {
                     return
                 }
-                guard let protocolManager = OTRProtocolManager.sharedInstance().protocolForAccount(account) as? OTRXMPPManager else {
+                guard let protocolManager = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
                     return
                 }
                 
                 if let incomingMessage = databaseMessage as? OTRIncomingMessage {
-                    protocolManager.sendDeliveryReceiptForMessage(incomingMessage)
+                    protocolManager.sendDeliveryReceipt(for: incomingMessage)
                 }
                 
                 }, completionBlock: {
                     if let _ = databaseMessage.text {
                         if let messageCopy = databaseMessage.copy() as? OTRIncomingMessage {
-                            dispatch_async(dispatch_get_main_queue(), {
-                                UIApplication.sharedApplication().showLocalNotification(messageCopy)
+                            DispatchQueue.main.async(execute: {
+                                UIApplication.shared.showLocalNotification(messageCopy)
                             })
                         }
                     }
@@ -482,52 +484,52 @@ import YapDatabase
 
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     
-    public func omemo(omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         //print("publishedDeviceIds: \(responseIq)")
     }
     
-    public func omemo(omemo: OMEMOModule, failedToPublishDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToPublishDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         //print("failedToPublishDeviceIds: \(errorIq)")
     }
     
-    public func omemo(omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], fromJID: XMPPJID, incomingElement: XMPPElement) {
+    public func omemo(_ omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], from fromJID: XMPPJID, incomingElement: XMPPElement) {
         //print("deviceListUpdate: \(fromJID) \(deviceIds)")
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             if let eid = incomingElement.elementID() {
                 self?.callAndRemoveOutstandingBundleBlock(eid, success: true)
             }
         }
     }
     
-    public func omemo(omemo: OMEMOModule, failedToFetchDeviceIdsForJID fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToFetchDeviceIdsFor fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
     }
     
-    public func omemo(omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         //print("publishedBundle: \(responseIq) \(outgoingIq)")
     }
     
-    public func omemo(omemo: OMEMOModule, failedToPublishBundle bundle: OMEMOBundle, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToPublishBundle bundle: OMEMOBundle, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         //print("failedToPublishBundle: \(errorIq) \(outgoingIq)")
     }
     
-    public func omemo(omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, from fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         
         if (self.isOurJID(fromJID) && bundle.deviceId == self.signalEncryptionManager.registrationId) {
             //We fetched our own bundle
             if let ourDatabaseBundle = self.fetchMyBundle() {
                 //This bundle doesn't have the correct identity key. Something has gone wrong and we should republish
-                if !ourDatabaseBundle.identityKey.isEqualToData(bundle.identityKey) {
+                if ourDatabaseBundle.identityKey != bundle.identityKey {
                     omemo.publishBundle(ourDatabaseBundle, elementId: nil)
                 }
             }
             return;
         }
         
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             let elementId = outgoingIq.elementID()
             if (bundle.preKeys.count == 0) {
-                self?.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+                self?.callAndRemoveOutstandingBundleBlock(elementId!, success: false)
                 return
             }
             //Create incoming bundle from OMEMOBundle
@@ -538,48 +540,48 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
             self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
-            self?.callAndRemoveOutstandingBundleBlock(elementId, success: true)
+            self?.callAndRemoveOutstandingBundleBlock(elementId!, success: true)
         }
         
     }
-    public func omemo(omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: gl_uint32_t, fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: gl_uint32_t, from fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             let elementId = outgoingIq.elementID()
-            self?.callAndRemoveOutstandingBundleBlock(elementId, success: false)
+            self?.callAndRemoveOutstandingBundleBlock(elementId!, success: false)
         }
     }
     
-    public func omemo(omem: OMEMOModule, removedBundleId bundleId: gl_uint32_t, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+    public func omemo(_ omem: OMEMOModule, removedBundleId bundleId: gl_uint32_t, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         
     }
     
-    public func omemo(omemo: OMEMOModule, failedToRemoveBundleId bundleId: gl_uint32_t, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToRemoveBundleId bundleId: gl_uint32_t, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
     }
     
-    public func omemo(omemo: OMEMOModule, failedToRemoveDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, elementId: String?) {
-        dispatch_async(self.workQueue) { [weak self] in
+    public func omemo(_ omemo: OMEMOModule, failedToRemoveDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, elementId: String?) {
+        self.workQueue.async { [weak self] in
             if let eid = elementId {
                 self?.callAndRemoveOutstandingBundleBlock(eid, success: false)
             }
         }
     }
     
-    public func omemo(omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: NSData, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: NSData?, message: XMPPMessage) {
+    public func omemo(_ omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: Data, senderDeviceId: gl_uint32_t, from fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
         self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, fromJID: fromJID, payload: payload, message: message)
     }
 }
 
 extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     
-    public func configureWithParent(aParent: OMEMOModule, queue: dispatch_queue_t) -> Bool {
+    public func configure(withParent aParent: OMEMOModule, queue: DispatchQueue) -> Bool {
         self.omemoModule = aParent
         self.omemoModuleQueue = queue
         return true
     }
     
-    public func storeDeviceIds(deviceIds: [NSNumber], forJID jid: XMPPJID) {
+    public func storeDeviceIds(_ deviceIds: [NSNumber], for jid: XMPPJID) {
         
         let isOurDeviceList = self.isOurJID(jid)
         
@@ -590,7 +592,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         }
     }
     
-    public func fetchDeviceIdsForJID(jid: XMPPJID) -> [NSNumber] {
+    public func fetchDeviceIds(for jid: XMPPJID) -> [NSNumber] {
         var devices:[OTROMEMODevice]?
         if self.isOurJID(jid) {
             devices = self.omemoStorageManager.getDevicesForOurAccount(nil)
@@ -639,7 +641,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         return OMEMOBundle(deviceId: bundle.bundle.deviceId, identityKey: bundle.bundle.publicIdentityKey, signedPreKey: omemoSignedPreKey, preKeys: preKeysArray)
     }
 
-    public func isSessionValid(jid: XMPPJID, deviceId: gl_uint32_t) -> Bool {
+    public func isSessionValid(_ jid: XMPPJID, deviceId: gl_uint32_t) -> Bool {
         return self.signalEncryptionManager.sessionRecordExistsForUsername(jid.bare(), deviceId: Int32(deviceId))
     }
 }

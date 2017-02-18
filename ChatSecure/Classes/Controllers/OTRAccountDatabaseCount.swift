@@ -10,22 +10,22 @@ import Foundation
 import YapDatabase
 
 @objc public protocol OTRAccountDatabaseCountDelegate: NSObjectProtocol {
-    func accountCountChanged(counter:OTRAccountDatabaseCount)
+    func accountCountChanged(_ counter:OTRAccountDatabaseCount)
 }
 
-@objc public class OTRAccountDatabaseCount: NSObject
+@objc open class OTRAccountDatabaseCount: NSObject
 {
-    public var databaseConnection:YapDatabaseConnection {
+    open var databaseConnection:YapDatabaseConnection {
         return self.viewHandler.databaseConnection
     }
     
-    public var numberOfAccounts:UInt {
+    open var numberOfAccounts:UInt {
         return self.viewHandler.mappings?.numberOfItemsInAllGroups() ?? 0
     }
     
-    public weak var delegate:OTRAccountDatabaseCountDelegate?
+    open weak var delegate:OTRAccountDatabaseCountDelegate?
     
-    private let viewHandler:OTRYapViewHandler
+    fileprivate let viewHandler:OTRYapViewHandler
     
     public init(databaseConnection:YapDatabaseConnection, delegate:OTRAccountDatabaseCountDelegate?) {
         self.viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
@@ -39,11 +39,11 @@ import YapDatabase
 }
 
 extension OTRAccountDatabaseCount: OTRYapViewHandlerDelegateProtocol {
-    public func didSetupMappings(handler: OTRYapViewHandler) {
+    public func didSetupMappings(_ handler: OTRYapViewHandler) {
         self.delegate?.accountCountChanged(self)
     }
     
-    public func didReceiveChanges(handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
+    public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
         self.delegate?.accountCountChanged(self)
     }
 }

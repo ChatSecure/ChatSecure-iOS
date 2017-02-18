@@ -15,7 +15,7 @@ class PushSerializerTest: XCTestCase {
     
     func testSerialization() {
         
-        let date = NSDate(timeIntervalSinceNow: 100)
+        let date = Date(timeIntervalSinceNow: 100)
         
         var array = [
             Token(tokenString: "token1", type: .iOS, deviceID: "deviceid"),

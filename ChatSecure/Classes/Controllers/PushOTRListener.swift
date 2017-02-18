@@ -15,7 +15,7 @@ import ChatSecure_Push_iOS
 */
 class PushOTRListener: NSObject {
     
-    let queue = NSOperationQueue()
+    let queue = OperationQueue()
     var notification:NSObjectProtocol?
     weak var storage:PushStorageProtocol?
     weak var pushController:PushController?
@@ -30,25 +30,25 @@ class PushOTRListener: NSObject {
     }
     
     func startObserving() {
-        self.notification = NSNotificationCenter.defaultCenter().addObserverForName(OTRMessageStateDidChangeNotification, object: nil, queue: self.queue) {[weak self] (notification) -> Void in
+        self.notification = NotificationCenter.default.addObserver(forName: NSNotification.Name.OTRMessageStateDidChange, object: nil, queue: self.queue) {[weak self] (notification) -> Void in
             self?.handleNotification(notification)
         }
     }
     
-    func handleNotification(notification:NSNotification) {
+    func handleNotification(_ notification:Notification) {
         guard let buddy = notification.object as? OTRBuddy else {
             return
         }
         
         if let dictionary = notification.userInfo as? [String:AnyObject] {
             let number = dictionary[OTRMessageStateKey] as? NSNumber
-            if let enumValue = number?.unsignedLongValue where enumValue == OTREncryptionMessageState.Encrypted.rawValue {
+            if let enumValue = number?.uintValue, enumValue == OTREncryptionMessageState.encrypted.rawValue {
                 
                 
                 if let account = self.storage?.account(buddy.accountUniqueId) {
                     //Everytime we're starting a new OTR Session we resend a new fresh push token either from the server or the cache
                     self.pushController?.getNewPushToken(buddy.uniqueId, completion: {[weak self] (t, error) -> Void in
-                        if let token = t, pushToken = token.pushToken {
+                        if let token = t, let pushToken = token.pushToken {
                             do {
                                 try self?.sendOffToken(pushToken, buddyUsername: buddy.username, accountUsername: account.username, protocol: account.protocolTypeString())
                             } catch let error as NSError {
@@ -73,17 +73,17 @@ class PushOTRListener: NSObject {
         }
     }
     
-    func sendOffToken(token:Token, buddyUsername:String, accountUsername:String, `protocol`:String) throws -> Void {
+    func sendOffToken(_ token:Token, buddyUsername:String, accountUsername:String, protocol:String) throws -> Void {
         if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
             if let data = try PushSerializer.serialize([token], APIEndpoint: url) {
-                self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:accountUsername  , protocol: `protocol`)
+                self.tlvHandler?.sendPush(data, username: buddyUsername, accountName:accountUsername  , protocol: `protocol`)
             }
         }
     }
     
     deinit {
         if let token = self.notification {
-            NSNotificationCenter.defaultCenter().removeObserver(token)
+            NotificationCenter.default.removeObserver(token)
         }
     }
 

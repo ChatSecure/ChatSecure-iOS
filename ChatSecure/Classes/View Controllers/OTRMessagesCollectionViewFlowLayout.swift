@@ -11,20 +11,20 @@ import Foundation
 import JSQMessagesViewController
 
 @objc public protocol OTRMessagesCollectionViewFlowLayoutSizeProtocol {
-    func hasBubbleSizeForCellAtIndexPath(indexPath: NSIndexPath) -> Bool
+    func hasBubbleSizeForCellAtIndexPath(_ indexPath: IndexPath) -> Bool
 }
 
-public class OTRMessagesCollectionViewFlowLayout:JSQMessagesCollectionViewFlowLayout {
+open class OTRMessagesCollectionViewFlowLayout:JSQMessagesCollectionViewFlowLayout {
     
-    public weak var sizeDelegate:OTRMessagesCollectionViewFlowLayoutSizeProtocol?
+    open weak var sizeDelegate:OTRMessagesCollectionViewFlowLayoutSizeProtocol?
     
-    override public func messageBubbleSizeForItemAtIndexPath(indexPath: NSIndexPath!) -> CGSize {
-        guard let delegate = self.sizeDelegate where !delegate.hasBubbleSizeForCellAtIndexPath(indexPath) else {
-            return super.messageBubbleSizeForItemAtIndexPath(indexPath)
+    override open func messageBubbleSizeForItem(at indexPath: IndexPath!) -> CGSize {
+        guard let delegate = self.sizeDelegate, !delegate.hasBubbleSizeForCellAtIndexPath(indexPath) else {
+            return super.messageBubbleSizeForItem(at: indexPath)
         }
         
         //Set width to one because of an Assert inside of JSQMessagesViewController
-        return CGSizeMake(1, 0)
+        return CGSize(width: 1, height: 0)
     }
     
 }

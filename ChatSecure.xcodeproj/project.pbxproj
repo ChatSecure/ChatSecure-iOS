@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */; };
 		6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */; };
+		631C79931E56846700B30CB4 /* NSData+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631C79921E56846700B30CB4 /* NSData+ChatSecure.swift */; };
 		631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
+		632157DD1E57D01A00738D4E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632157DC1E57D01A00738D4E /* SnapshotHelper.swift */; };
 		63232AC71E37F13C00D84CDF /* OTRAccountDatabaseCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63232AC61E37F13C00D84CDF /* OTRAccountDatabaseCount.swift */; };
 		6323C6FE1E39547200D0FB42 /* OTRImageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */; };
 		6323C7031E396D3D00D0FB42 /* landscape.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6323C7001E396D3D00D0FB42 /* landscape.jpg */; };
@@ -76,7 +78,6 @@
 		639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */; };
 		63A1CD571DAF4E7C00527779 /* OTRDatabaseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1CD561DAF4E7C00527779 /* OTRDatabaseEntry.swift */; };
 		63A1F1C61DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1F1C51DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift */; };
-		63A6C64A1E24769C004ED91F /* SnapshotHelper2-3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A6C6491E24769C004ED91F /* SnapshotHelper2-3.swift */; };
 		63AB1A071C0D116A005FA351 /* OTRSplitViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */; };
 		63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B578631D51600300D80ED3 /* OTRSignalTest.swift */; };
 		63BA43DC1D41826F007FAF7F /* OTRSignalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BA43DB1D41826F007FAF7F /* OTRSignalStorageManager.swift */; };
@@ -505,6 +506,8 @@
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
 		6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = "<group>"; };
 		6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRAccountSignalEncryptionManager.swift; sourceTree = "<group>"; };
+		631C79921E56846700B30CB4 /* NSData+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+ChatSecure.swift"; sourceTree = "<group>"; };
+		632157DC1E57D01A00738D4E /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = snapshot/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		63232AC61E37F13C00D84CDF /* OTRAccountDatabaseCount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRAccountDatabaseCount.swift; sourceTree = "<group>"; };
 		6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRImageTest.swift; sourceTree = "<group>"; };
 		6323C7001E396D3D00D0FB42 /* landscape.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = landscape.jpg; path = TestImages/landscape.jpg; sourceTree = "<group>"; };
@@ -834,7 +837,6 @@
 		639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTouchAndHoldGestureRecognizer.m; sourceTree = "<group>"; };
 		63A1CD561DAF4E7C00527779 /* OTRDatabaseEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRDatabaseEntry.swift; sourceTree = "<group>"; };
 		63A1F1C51DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRYOTRYapMessageSendAction.swift; sourceTree = "<group>"; };
-		63A6C6491E24769C004ED91F /* SnapshotHelper2-3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SnapshotHelper2-3.swift"; path = "snapshot/SnapshotHelper2-3.swift"; sourceTree = SOURCE_ROOT; };
 		63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRSplitViewCoordinator.swift; sourceTree = "<group>"; };
 		63B578631D51600300D80ED3 /* OTRSignalTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRSignalTest.swift; sourceTree = "<group>"; };
 		63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStreamManagementYapStorage.h; sourceTree = "<group>"; };
@@ -1107,6 +1109,7 @@
 				638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */,
 				63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */,
 				63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */,
+				631C79921E56846700B30CB4 /* NSData+ChatSecure.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1521,7 +1524,7 @@
 		6365CEFD1E2453F6009E213F /* ChatSecureUITests */ = {
 			isa = PBXGroup;
 			children = (
-				63A6C6491E24769C004ED91F /* SnapshotHelper2-3.swift */,
+				632157DC1E57D01A00738D4E /* SnapshotHelper.swift */,
 				6365CEFE1E2453F6009E213F /* ChatSecureUITests.swift */,
 				6365CF001E2453F6009E213F /* Info.plist */,
 			);
@@ -2140,13 +2143,14 @@
 					6365CEFB1E2453F6009E213F = {
 						CreatedOnToolsVersion = 8.2;
 						DevelopmentTeam = SF3NXKQQ64;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6396AF991A169D54009F3E6C;
 					};
 					6396AF991A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 4T8JLQR6GR;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
@@ -2166,13 +2170,13 @@
 					6396AFB21A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 4T8JLQR6GR;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					D9227C291BA7952100B5E1D0 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 4T8JLQR6GR;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					D93027551BAA381F000CC975 = {
@@ -2454,8 +2458,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63A6C64A1E24769C004ED91F /* SnapshotHelper2-3.swift in Sources */,
 				6365CEFF1E2453F6009E213F /* ChatSecureUITests.swift in Sources */,
+				632157DD1E57D01A00738D4E /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2635,6 +2639,7 @@
 				D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */,
 				D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */,
 				D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */,
+				631C79931E56846700B30CB4 /* NSData+ChatSecure.swift in Sources */,
 				D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */,
 				D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */,
 				D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */,
@@ -2812,7 +2817,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = ChatSecure;
 			};
 			name = Debug;
@@ -2830,7 +2835,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = ChatSecure;
 			};
 			name = Release;
@@ -2963,7 +2968,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2995,7 +3000,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -3023,7 +3028,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -3044,7 +3049,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -3070,7 +3075,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -3098,7 +3103,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
