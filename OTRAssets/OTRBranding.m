@@ -7,7 +7,9 @@
 //
 
 #import "OTRBranding.h"
-#import "OTRAssets.h"
+
+NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
+NSString *const kOTRDefaultLanguageLocale = @"kOTRDefaultLanguageLocale";
 
 static NSString *const kOTRXMPPResource = @"kOTRXMPPResource";
 static NSString *const kOTRFeedbackEmail = @"kOTRFeedbackEmail";
@@ -82,6 +84,13 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return url;
 }
 
+/** Push staging server URL e.g. https://chatsecure-push.herokuapp.com/api/v1/ */
++ (NSURL *)pushStagingAPIURL {
+    NSString *urlString = [[self defaultPlist] objectForKey:@"StagingPushAPIURL"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 #pragma mark Strings
 
 /** The default XMPP resource (e.g. username@example.com/chatsecure) */
@@ -104,10 +113,6 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return [[self defaultPlist] objectForKey:GOOGLE_APP_SCOPE];
 }
 
-
-
-
-
 + (NSDictionary*) defaultPlist {
     // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];
@@ -116,6 +121,18 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
     //NSParameterAssert(plist != nil);
     return plist;
+}
+
+@end
+
+@implementation OTRAssets
+
+/** Returns OTRResources.bundle */
++ (NSBundle*) resourcesBundle {
+    NSString *folderName = @"OTRResources.bundle";
+    NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
+    NSBundle *dataBundle = [NSBundle bundleWithPath:bundlePath];
+    return dataBundle;
 }
 
 @end
