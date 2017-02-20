@@ -9,16 +9,16 @@
 import Foundation
 import XMPPFramework
 
-@objc public class OTRXMPPChangeAvatar: NSObject {
+@objc open class OTRXMPPChangeAvatar: NSObject {
     
-    public weak var xmppvCardTempModule:XMPPvCardTempModule?
-    public let photoData:NSData
-    private let workQueue = dispatch_queue_create("OTRXMPPChangeAvatar-workQueue", DISPATCH_QUEUE_SERIAL)
+    open weak var xmppvCardTempModule:XMPPvCardTempModule?
+    open let photoData:Data
+    fileprivate let workQueue = DispatchQueue(label: "OTRXMPPChangeAvatar-workQueue", attributes: [])
     
-    private var waitingForVCardFetch:Bool = false
-    private var completion:((Bool)->Void)?
+    fileprivate var waitingForVCardFetch:Bool = false
+    fileprivate var completion:((Bool)->Void)?
     
-    public init(photoData:NSData, xmppvCardTempModule:XMPPvCardTempModule?) {
+    public init(photoData:Data, xmppvCardTempModule:XMPPvCardTempModule?) {
         self.photoData = photoData
         self.xmppvCardTempModule = xmppvCardTempModule
         super.init()
@@ -28,34 +28,34 @@ import XMPPFramework
      This does the actual work of updating the vCard fot the stream's myJID.
      First it makes sure it has an up to date vCard
      **/
-    public func updatePhoto(completion:(success:Bool)->Void) -> Void {
+    open func updatePhoto(_ completion:@escaping (_ success:Bool)->Void) -> Void {
         
         //make sure the stream is authenticated
-        guard let isAuthenticated = self.xmppvCardTempModule?.xmppStream.isAuthenticated() where isAuthenticated == true else {
-            dispatch_async(dispatch_get_main_queue(), { 
-                completion(success:false)
+        guard let isAuthenticated = self.xmppvCardTempModule?.xmppStream.isAuthenticated(), isAuthenticated == true else {
+            DispatchQueue.main.async(execute: { 
+                completion(false)
                 self.completion = nil
             })
             return
         }
         self.completion = completion
         
-        dispatch_async(self.workQueue) { [weak self] in
+        self.workQueue.async { [weak self] in
             // Ensure you have the objects we need.
             // * Strong reference to self
             // * The vCardModule to do teh work of updaing and fetching
             // * myJID for fetching
             guard let strongSelf = self,
-                vCardModule = self?.xmppvCardTempModule, myJID = vCardModule.xmppStream.myJID  else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        completion(success:false)
+                let vCardModule = self?.xmppvCardTempModule, let myJID = vCardModule.xmppStream.myJID  else {
+                    DispatchQueue.main.async(execute: {
+                        completion(false)
                         self?.completion = nil
                     })
                 return
             }
             
             //Check if we get a vCard from the storage otherwise it should fetch from the server
-            guard let vCard = vCardModule.vCardTempForJID(myJID, shouldFetch: true) else {
+            guard let vCard = vCardModule.vCardTemp(for: myJID, shouldFetch: true) else {
                 // Nothing came back from the storage so we're fetching from teh server.
                 strongSelf.waitingForVCardFetch = true
                 return
@@ -65,8 +65,8 @@ import XMPPFramework
             strongSelf.waitingForVCardFetch = false
             vCard.photo = strongSelf.photoData
             vCardModule.updateMyvCardTemp(vCard)
-            dispatch_async(dispatch_get_main_queue(), {
-                completion(success:true)
+            DispatchQueue.main.async(execute: {
+                completion(true)
                 strongSelf.completion = nil
             })
         }
@@ -75,21 +75,21 @@ import XMPPFramework
 }
 
 extension OTRXMPPChangeAvatar: XMPPvCardTempModuleDelegate {
-    public func xmppvCardTempModuleDidUpdateMyvCard(vCardTempModule: XMPPvCardTempModule!) {
+    public func xmppvCardTempModuleDidUpdateMyvCard(_ vCardTempModule: XMPPvCardTempModule!) {
         //If we have a completion block
-        if let completion = self.completion where self.waitingForVCardFetch == true {
+        if let completion = self.completion, self.waitingForVCardFetch == true {
             // call update again. This time there should be a vcard in the storage and we'll be able to update
             self.updatePhoto(completion)
         }
         self.waitingForVCardFetch = false
     }
     
-    public func xmppvCardTempModule(vCardTempModule: XMPPvCardTempModule!, failedToUpdateMyvCard error: DDXMLElement!) {
+    public func xmppvCardTempModule(_ vCardTempModule: XMPPvCardTempModule!, failedToUpdateMyvCard error: DDXMLElement!) {
         
         self.waitingForVCardFetch = false
         
         if let completion = self.completion {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 completion(false)
                 self.completion = nil
             })

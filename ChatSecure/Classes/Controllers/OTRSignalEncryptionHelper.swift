@@ -20,7 +20,7 @@ class OTRSignalEncryptionHelper {
      
      returns: The encrypted data
      */
-    class func encryptData(data:NSData, key:NSData, iv:NSData) throws -> OTRCryptoData? {
+    class func encryptData(_ data:Data, key:Data, iv:Data) throws -> OTRCryptoData? {
         return try OTRCryptoUtility.encryptAESGCMData(data, key: key, iv: iv)
     }
     
@@ -33,22 +33,22 @@ class OTRSignalEncryptionHelper {
      
      returns: The Decrypted data
      */
-    class func decryptData(data:NSData, key:NSData, iv:NSData, authTag:NSData) throws -> NSData? {
+    class func decryptData(_ data:Data, key:Data, iv:Data, authTag:Data) throws -> Data? {
         let cryptoData = OTRCryptoData(data: data, authTag: authTag)
         return try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
     }
     
     /** Generates random data of length 16 bytes */
-    private class func randomDataOfBlockLength() -> NSData? {
-        return OTRPasswordGenerator.randomDataWithLength(16)
+    fileprivate class func randomDataOfBlockLength() -> Data? {
+        return OTRPasswordGenerator.randomData(withLength: 16)
     }
     
     /** Generates random key of length 16 bytes*/
-    class func generateSymmetricKey() -> NSData? {
+    class func generateSymmetricKey() -> Data? {
         return self.randomDataOfBlockLength()
     }
     /** Generates random iv of length 16 bytes */
-    class func generateIV() -> NSData? {
+    class func generateIV() -> Data? {
         return self.randomDataOfBlockLength()
     }
     

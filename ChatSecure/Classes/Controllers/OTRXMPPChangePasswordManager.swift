@@ -9,14 +9,14 @@
 import Foundation
 import XMPPFramework
 
-public class OTRXMPPChangePasswordManager:NSObject {
+open class OTRXMPPChangePasswordManager:NSObject {
     
-    private let completion:(success:Bool,error:NSError?) -> Void
-    private let registrationModule:XMPPRegistration
-    private let password:String
-    private let xmppStream:XMPPStream
+    fileprivate let completion:(_ success:Bool,_ error:NSError?) -> Void
+    fileprivate let registrationModule:XMPPRegistration
+    fileprivate let password:String
+    fileprivate let xmppStream:XMPPStream
     
-    public init(newPassword:String, xmppStream:XMPPStream, completion:(success:Bool,error:NSError?) -> Void) {
+    public init(newPassword:String, xmppStream:XMPPStream, completion:@escaping (_ success:Bool,_ error:NSError?) -> Void) {
         self.registrationModule = XMPPRegistration()
         self.xmppStream = xmppStream
         self.registrationModule.activate(self.xmppStream)
@@ -24,10 +24,10 @@ public class OTRXMPPChangePasswordManager:NSObject {
         self.completion = completion
         self.password = newPassword;
         super.init()
-        self.registrationModule.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+        self.registrationModule.addDelegate(self, delegateQueue: DispatchQueue.main)
     }
     
-    public func changePassword() -> Bool {
+    open func changePassword() -> Bool {
         return self.registrationModule.changePassword(self.password)
     }
     
@@ -39,11 +39,11 @@ public class OTRXMPPChangePasswordManager:NSObject {
 
 extension OTRXMPPChangePasswordManager:XMPPRegistrationDelegate {
     
-    public func passwordChangeSuccessful(sender: XMPPRegistration!) {
-        self.completion(success: true,error: nil)
+    public func passwordChangeSuccessful(_ sender: XMPPRegistration!) {
+        self.completion(true,nil)
     }
     
-    public func passwordChangeFailed(sender: XMPPRegistration!, withError error: NSError!) {
-        self.completion(success:false,error:error)
+    public func passwordChangeFailed(_ sender: XMPPRegistration!, withError error: Error!) {
+        self.completion(false,error as NSError)
     }
 }

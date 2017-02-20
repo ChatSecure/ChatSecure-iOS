@@ -28,20 +28,20 @@ class OTROMEMOIntegrationTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        NSFileManager.defaultManager().clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
     }
     
     /** Create two user accounts and save each other as buddies */
-    func setupTwoAccounts(name:String) {
+    func setupTwoAccounts(_ name:String) {
         let aliceName = "\(name)-alice"
         let bobName = "\(name)-bob"
         self.aliceUser = self.setupUserWithName(aliceName,buddyName: bobName)
-        self.aliceOmemoModule = OTROMEMOTestModule(OMEMOStorage: self.aliceUser!.signalOMEMOCoordinator, xmlNamespace: .ConversationsLegacy, dispatchQueue: nil)
+        self.aliceOmemoModule = OTROMEMOTestModule(omemoStorage: self.aliceUser!.signalOMEMOCoordinator, xmlNamespace: .conversationsLegacy, dispatchQueue: nil)
         self.aliceOmemoModule?.addDelegate(self.aliceUser!.signalOMEMOCoordinator, delegateQueue: self.aliceUser!.signalOMEMOCoordinator.workQueue)
         self.aliceOmemoModule?.thisUser = aliceUser
         
         self.bobUser = self.setupUserWithName(bobName,buddyName: aliceName)
-        self.bobOmemoModule = OTROMEMOTestModule(OMEMOStorage: self.bobUser!.signalOMEMOCoordinator, xmlNamespace: .ConversationsLegacy, dispatchQueue: nil)
+        self.bobOmemoModule = OTROMEMOTestModule(omemoStorage: self.bobUser!.signalOMEMOCoordinator, xmlNamespace: .conversationsLegacy, dispatchQueue: nil)
         self.bobOmemoModule?.addDelegate(self.bobUser!.signalOMEMOCoordinator, delegateQueue: self.bobUser!.signalOMEMOCoordinator.workQueue)
         self.bobOmemoModule?.thisUser = bobUser
         
@@ -58,19 +58,19 @@ class OTROMEMOIntegrationTest: XCTestCase {
      2. An account and buddy for the suesr.
      3. An OTROMEMOSignalCoordinator to do all the signal functionality.
      */
-    func setupUserWithName(name:String, buddyName:String) -> TestUser {
+    func setupUserWithName(_ name:String, buddyName:String) -> TestUser {
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(name)
-        let account = TestXMPPAccount()
+        let account = TestXMPPAccount()!
         account.username = "\(name)@fake.com"
         
-        let buddy = OTRBuddy()
+        let buddy = OTRBuddy()!
         buddy.username = "\(buddyName)@fake.com"
         buddy.accountUniqueId = account.uniqueId
         
-        databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
-            account.saveWithTransaction(transaction)
-            buddy.saveWithTransaction(transaction)
-        }
+        databaseManager.readWriteDatabaseConnection.readWrite( { (transaction) in
+            account.save(with:transaction)
+            buddy.save(with:transaction)
+        })
         let signalOMEMOCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: account.uniqueId, databaseConnection: databaseManager.readWriteDatabaseConnection)
         return TestUser(account: account,buddy:buddy, databaseManager: databaseManager, signalOMEMOCoordinator: signalOMEMOCoordinator)
     }
@@ -85,8 +85,8 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
         let buddy = self.bobUser!.buddy
         let connection = self.bobUser?.databaseManager.readOnlyDatabaseConnection
-        connection?.readWithBlock({ (transaction) in
-            let devices = OTROMEMODevice.allDevicesForParentKey(buddy.uniqueId, collection: buddy.dynamicType.collection(), transaction: transaction)
+        connection?.read({ (transaction) in
+            let devices = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection(), transaction: transaction)
             XCTAssert(devices.count > 0)
         })
     }
@@ -101,7 +101,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
     func testFetchingBundleSetup() {
         self.setupTwoAccounts(#function)
         self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
-        let expectation = self.expectationWithDescription("Sending Message")
+        let expectation = self.expectation(description: "Sending Message")
         let messageText = "This is message from Bob to Alice"
         self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(messageText, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
             
@@ -111,11 +111,11 @@ class OTROMEMOIntegrationTest: XCTestCase {
             expectation.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(30, handler: nil)
+        self.waitForExpectations(timeout: 30, handler: nil)
         
         var messageFound = false
-        self.aliceUser?.databaseManager.readWriteDatabaseConnection.readWithBlock({ (transaction) in
-            transaction.enumerateKeysAndObjectsInCollection(OTRBaseMessage.collection(), usingBlock: { (key, object, stop) in
+        self.aliceUser?.databaseManager.readWriteDatabaseConnection.read({ (transaction) in
+            transaction.enumerateKeysAndObjects(inCollection: OTRBaseMessage.collection(), using: { (key, object, stop) in
                 if let message = object as? OTRBaseMessage {
                     XCTAssertEqual(message.text, messageText)
                     messageFound = true
@@ -123,7 +123,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
                 
             })
             
-            transaction.enumerateKeysAndObjectsInCollection(OTROMEMODevice.collection(), usingBlock: { (key, object, stop) in
+            transaction.enumerateKeysAndObjects(inCollection: OTROMEMODevice.collection(), using: { (key, object, stop) in
                 let device = object as! OTROMEMODevice
                 XCTAssertNotNil(device.lastSeenDate)
             })
@@ -135,26 +135,26 @@ class OTROMEMOIntegrationTest: XCTestCase {
     func testRemoveDevice() {
         self.setupTwoAccounts(#function)
         self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
-        let expectation = self.expectationWithDescription("Remove Devices")
-        let deviceNumber = NSNumber(int:5)
-        let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.TrustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
+        let expectation = self.expectation(description: "Remove Devices")
+        let deviceNumber = NSNumber(value: 5 as Int32)
+        let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.trustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection(), publicIdentityKeyData: nil, lastSeenDate: nil)
         
-        self.bobUser?.databaseManager.readWriteDatabaseConnection.readWriteWithBlock({ (transaction) in
+        self.bobUser?.databaseManager.readWriteDatabaseConnection.readWrite({ (transaction) in
             
-            device.saveWithTransaction(transaction)
+            device.save(with:transaction)
         })
         self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
-            self.bobUser!.databaseManager.readOnlyDatabaseConnection.readWithBlock({ (transaction) in
-                let yapKey = OTROMEMODevice.yapKeyWithDeviceId(deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
-                let device = OTROMEMODevice.fetchObjectWithUniqueID(yapKey, transaction: transaction)
+            self.bobUser!.databaseManager.readOnlyDatabaseConnection.read({ (transaction) in
+                let yapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
+                let device = OTROMEMODevice.fetch(withUniqueID: yapKey, transaction: transaction)
                 XCTAssertNil(device)
             })
             
              expectation.fulfill()
         })
         
-        self.waitForExpectationsWithTimeout(10, handler: nil)
+        self.waitForExpectations(timeout: 10, handler: nil)
         
     }
 }

@@ -9,16 +9,16 @@
 import UIKit
 import YapDatabase.YapDatabaseRelationship
 
-public class OTRXMPPRoom: OTRYapDatabaseObject {
+open class OTRXMPPRoom: OTRYapDatabaseObject {
     
-    public var accountUniqueId:String?
-    public var ownJID:String?
-    public var jid:String?
-    public var joined = false
-    public var messageText:String?
-    public var lastRoomMessageId:String?
-    public var subject:String?
-    override public var uniqueId:String {
+    open var accountUniqueId:String?
+    open var ownJID:String?
+    open var jid:String?
+    open var joined = false
+    open var messageText:String?
+    open var lastRoomMessageId:String?
+    open var subject:String?
+    override open var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
                 if let jid = self.jid {
@@ -29,7 +29,7 @@ public class OTRXMPPRoom: OTRYapDatabaseObject {
         }
     }
     
-    public class func createUniqueId(accountId:String, jid:String) -> String {
+    open class func createUniqueId(_ accountId:String, jid:String) -> String {
         return accountId + jid
     }
 }
@@ -51,7 +51,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return self.accountUniqueId ?? ""
     }
     
-    public func setCurrentMessageText(text: String?) {
+    public func setCurrentMessageText(_ text: String?) {
         self.messageText = text
     }
     
@@ -60,44 +60,44 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func avatarImage() -> UIImage {
-        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
+        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
     }
     
     public func currentStatus() -> OTRThreadStatus {
         switch self.joined {
         case true:
-            return .Available
+            return .available
         default:
-            return .Offline
+            return .offline
         }
     }
     
-    public func lastMessageWithTransaction(transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
+    public func lastMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
         
         guard let viewTransaction = transaction.ext(OTRChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
             return nil
         }
         
-        let numberOfItems = viewTransaction.numberOfItemsInGroup(self.threadIdentifier())
+        let numberOfItems = viewTransaction.numberOfItems(inGroup: self.threadIdentifier())
         
         if numberOfItems == 0 {
             return nil
         }
         
-        guard let message = viewTransaction.objectAtIndex(numberOfItems-1, inGroup: self.threadIdentifier()) as? OTRMessageProtocol else {
+        guard let message = viewTransaction.object(at: numberOfItems-1, inGroup: self.threadIdentifier()) as? OTRMessageProtocol else {
             return nil
         }
         return message
     }
     
-    public func numberOfUnreadMessagesWithTransaction(transaction: YapDatabaseReadTransaction) -> UInt {
+    public func numberOfUnreadMessages(with transaction: YapDatabaseReadTransaction) -> UInt {
         guard let indexTransaction = transaction.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
         let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [self.uniqueId])
         var count:UInt = 0
-        let success = indexTransaction.getNumberOfRows(&count, matchingQuery: query)
+        let success = indexTransaction.getNumberOfRows(&count, matching: query)
         if (!success) {
             NSLog("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
         }

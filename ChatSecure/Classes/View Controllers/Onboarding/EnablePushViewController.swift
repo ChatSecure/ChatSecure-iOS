@@ -10,55 +10,55 @@ import UIKit
 import OTRAssets
 import MBProgressHUD
 
-public class EnablePushViewController: UIViewController {
+open class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
-    public var account: OTRAccount?
-    private var userLaunchedToSettings: Bool = false
+    open var account: OTRAccount?
+    fileprivate var userLaunchedToSettings: Bool = false
     private var hud: MBProgressHUD?
     
     /// You must set this before showing view
-    public var serverCheck: ServerCheck?
+    open var serverCheck: ServerCheck?
 
-    @IBOutlet weak var enablePushButton: UIButton!
-    @IBOutlet weak var textView: UITextView!
-    @IBOutlet weak var skipButton: UIButton!
+    @IBOutlet weak var enablePushButton: UIButton?
+    @IBOutlet weak var textView: UITextView?
+    @IBOutlet weak var skipButton: UIButton?
     
-    override public func viewDidDisappear(animated: Bool) {
+    override open func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         self.navigationItem.setHidesBackButton(false, animated: animated)
     }
     
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.setHidesBackButton(true, animated: animated)
     }
     
-    override public func viewDidAppear(animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if userLaunchedToSettings && PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.Enabled)
+            PushController.setPushPreference(.enabled)
             showNextScreen()
         }
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: OTRUserNotificationsChanged, object: nil)
-        self.skipButton.setTitle(SKIP_STRING(), forState: .Normal)
-        self.enablePushButton.setTitle(ENABLE_PUSH_STRING(), forState: .Normal)
-        self.skipButton.accessibilityIdentifier = "EnablePushViewSkipButton"
+        NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
+        self.skipButton?.setTitle(SKIP_STRING(), for: UIControlState())
+        self.enablePushButton?.setTitle(ENABLE_PUSH_STRING(), for: UIControlState())
+        self.skipButton?.accessibilityIdentifier = "EnablePushViewSkipButton"
     }
     
-    @IBAction func enablePushPressed(sender: AnyObject) {
+    @IBAction func enablePushPressed(_ sender: AnyObject) {
         hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         PushController.setPushPreference(.Enabled)
         PushController.registerForPushNotifications()
     }
 
-    @IBAction func skipButtonPressed(sender: AnyObject) {
-        PushController.setPushPreference(.Disabled)
+    @IBAction func skipButtonPressed(_ sender: AnyObject) {
+        PushController.setPushPreference(.disabled)
         showNextScreen()
     }
     
@@ -67,11 +67,11 @@ public class EnablePushViewController: UIViewController {
             let inviteVC = appDelegate.theme.inviteViewControllerForAccount(account)
             self.navigationController?.pushViewController(inviteVC, animated: true)
         } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
-    func didRegisterUserNotificationSettings(notification: NSNotification) {
+    func didRegisterUserNotificationSettings(_ notification: Notification) {
         if PushController.canReceivePushNotifications() {
             showNextScreen()
         } else {

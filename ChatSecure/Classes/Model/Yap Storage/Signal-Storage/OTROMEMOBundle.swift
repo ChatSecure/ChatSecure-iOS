@@ -10,19 +10,19 @@ import Foundation
 
 public struct OTROMEMOBundle {
     let deviceId:UInt32
-    let publicIdentityKey:NSData
-    let signedPublicPreKey:NSData
+    let publicIdentityKey:Data
+    let signedPublicPreKey:Data
     let signedPreKeyId:UInt32
-    let signedPreKeySignature:NSData
+    let signedPreKeySignature:Data
 }
 
 public struct OTROMEMOBundleOutgoing {
     let bundle:OTROMEMOBundle
-    let preKeys:[UInt32:NSData]
+    let preKeys:[UInt32:Data]
 }
 
 public struct OTROMEMOBundleIncoming {
     let bundle:OTROMEMOBundle
     let preKeyId:UInt32
-    let preKeyData:NSData
+    let preKeyData:Data
 }

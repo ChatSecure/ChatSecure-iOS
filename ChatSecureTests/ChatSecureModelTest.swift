@@ -15,20 +15,20 @@ class ChatSecureModelTest: XCTestCase {
     
     
     func testDeviceArchiving() {
-        let date = NSDate()
+        let date = Date()
         let id = "id"
         let reg = "reg"
         let accountID = "acctID"
         let device = Device(registrationID: reg, dateCreated: date, name: nil, deviceID: nil, id: id)
-        let container = DeviceContainer()
+        let container = DeviceContainer()!
         container.pushDevice = device
         container.pushAccountKey = accountID
         
-        let data = NSKeyedArchiver.archivedDataWithRootObject(container)
-        let newContainer = NSKeyedUnarchiver.unarchiveObjectWithData(data)!
-        XCTAssertEqual(container.pushAccountKey, newContainer.pushAccountKey)
-        XCTAssertEqual(container.pushDevice?.registrationID, newContainer.pushDevice!!.registrationID)
-        XCTAssertEqual(container.pushDevice?.id, newContainer.pushDevice!!.id)
+        let data = NSKeyedArchiver.archivedData(withRootObject: container)
+        let newContainer = NSKeyedUnarchiver.unarchiveObject(with: data)!
+        XCTAssertEqual(container.pushAccountKey, (newContainer as AnyObject).pushAccountKey)
+        XCTAssertEqual(container.pushDevice?.registrationID, (newContainer as AnyObject).pushDevice!!.registrationID)
+        XCTAssertEqual(container.pushDevice?.id, (newContainer as AnyObject).pushDevice!!.id)
     }
 }
 

@@ -23,6 +23,6 @@ class AddFriendsView: UIView {
     @IBOutlet var addFriendsButton: UIButton!
     @IBOutlet var addFriendsImage: UIImageView!
     @IBOutlet var addFriendsLabel: UILabel!
-    @IBAction func addFriendsButtonPressed(sender: AnyObject) {
+    @IBAction func addFriendsButtonPressed(_ sender: AnyObject) {
     }
 }

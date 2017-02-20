@@ -13,25 +13,25 @@ import YapDatabase
 @objc public protocol PushStorageProtocol: class {
     func thisDevicePushAccount() -> Account?
     func hasPushAccount() -> Bool
-    func saveThisAccount(account:Account)
+    func saveThisAccount(_ account:Account)
     func thisDevice() -> Device?
-    func saveThisDevice(device:Device)
+    func saveThisDevice(_ device:Device)
     func unusedToken() -> TokenContainer?
-    func removeUnusedToken(token: TokenContainer)
-    func removeToken(token: TokenContainer)
-    func associateBuddy(tokenContainer:TokenContainer, buddyKey:String)
-    func saveUnusedToken(tokenContainer:TokenContainer)
-    func saveUsedToken(tokenContainer:TokenContainer)
+    func removeUnusedToken(_ token: TokenContainer)
+    func removeToken(_ token: TokenContainer)
+    func associateBuddy(_ tokenContainer:TokenContainer, buddyKey:String)
+    func saveUnusedToken(_ tokenContainer:TokenContainer)
+    func saveUsedToken(_ tokenContainer:TokenContainer)
     func numberUnusedTokens() -> UInt
     func numberUsedTokens() -> UInt
     func unusedTokenStoreMinimum() -> UInt
-    func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
-    func numberOfTokensForBuddy(buddyKey:String, createdByThisAccount:Bool) -> Int
-    func buddy(username: String, accountName: String) -> OTRBuddy?
-    func account(accountUniqueID:String) -> OTRAccount?
-    func buddy(token:String) -> OTRBuddy?
+    func tokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
+    func numberOfTokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool) -> Int
+    func buddy(_ username: String, accountName: String) -> OTRBuddy?
+    func account(_ accountUniqueID:String) -> OTRAccount?
+    func buddy(_ token:String) -> OTRBuddy?
     func deleteEverything(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?)
-    
+
     /**
      * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
      * for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
@@ -41,7 +41,7 @@ import YapDatabase
      * expire in the next few hours or days
      * parameter completion: This is called once all the tokens have been removed and the count of total tokens remvoed
     */
-    func removeAllOurExpiredUnusedTokens(timeBuffer:NSTimeInterval, completion:((count:Int)->Void)?)
+    func removeAllOurExpiredUnusedTokens(_ timeBuffer:TimeInterval, completion:((_ count:Int)->Void)?)
 }
 
 extension Account {
@@ -53,7 +53,7 @@ extension Account {
 class PushStorage: NSObject, PushStorageProtocol {
     
     let databaseConnection: YapDatabaseConnection
-    let workQueue = dispatch_queue_create("PushStorage_Work_Queue", DISPATCH_QUEUE_SERIAL)
+    let workQueue = DispatchQueue(label: "PushStorage_Work_Queue", attributes: [])
     
     static let unusedTokenStoreSize:UInt = 5
     
@@ -73,22 +73,22 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     func thisDevicePushAccount() -> Account? {
         var account:Account? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            account = transaction.objectForKey(PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection()) as? Account
+        self.databaseConnection.read { (transaction) -> Void in
+            account = transaction.object(forKey: PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection()) as? Account
         }
         return account
     }
     
     func hasPushAccount() -> Bool {
         var hasAccount = false
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            hasAccount = transaction.hasObjectForKey(PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection())
+        self.databaseConnection.read { (transaction) -> Void in
+            hasAccount = transaction.hasObject(forKey: PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection())
         }
         return hasAccount
     }
     
-    func saveThisAccount(account: Account) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
+    func saveThisAccount(_ account: Account) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
             transaction.setObject(account, forKey:PushYapKeys.thisAccountKey.rawValue, inCollection:Account.yapCollection())
         }
     }
@@ -104,19 +104,19 @@ class PushStorage: NSObject, PushStorageProtocol {
            completionBlock: completion)
     }
     
-    func saveThisDevice(device: Device) {
+    func saveThisDevice(_ device: Device) {
         let deviceContainer = DeviceContainer()
-        deviceContainer.pushDevice = device
-        deviceContainer.pushAccountKey = PushYapKeys.thisAccountKey.rawValue
-        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) -> Void in
+        deviceContainer?.pushDevice = device
+        deviceContainer?.pushAccountKey = PushYapKeys.thisAccountKey.rawValue
+        self.databaseConnection.asyncReadWrite({ (transaction) -> Void in
             transaction.setObject(deviceContainer, forKey:PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection())
         })
     }
     
     func thisDevice() -> Device? {
         var device:Device? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            if let deviceContainer = transaction.objectForKey(PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection()) as? DeviceContainer {
+        self.databaseConnection.read { (transaction) -> Void in
+            if let deviceContainer = transaction.object(forKey: PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection()) as? DeviceContainer {
                 device = deviceContainer.pushDevice
             }
         }
@@ -125,53 +125,53 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     func unusedToken() -> TokenContainer? {
         var tokenContainer:TokenContainer? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            transaction.enumerateKeysAndObjectsInCollection(PushYapCollections.unusedTokenCollection.rawValue, usingBlock: { (key, object, stop) -> Void in
+        self.databaseConnection.read { (transaction) -> Void in
+            transaction.enumerateKeysAndObjects(inCollection: PushYapCollections.unusedTokenCollection.rawValue, using: { (key, object, stop) -> Void in
                 if let tc = object as? TokenContainer {
                     tokenContainer = tc
                 }
-                stop.initialize(true)
+                stop.initialize(to: true)
             })
         }
         return tokenContainer
     }
     
-    func removeUnusedToken(token: TokenContainer) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
-            transaction.removeObjectForKey(token.uniqueId, inCollection: PushYapCollections.unusedTokenCollection.rawValue)
+    func removeUnusedToken(_ token: TokenContainer) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
+            transaction.removeObject(forKey: token.uniqueId, inCollection: PushYapCollections.unusedTokenCollection.rawValue)
         }
     }
     
-    func removeToken(token: TokenContainer) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
-            token.removeWithTransaction(transaction)
+    func removeToken(_ token: TokenContainer) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
+            token.remove(with: transaction)
         }
     }
     
-    func associateBuddy(tokenContainer: TokenContainer, buddyKey: String) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
+    func associateBuddy(_ tokenContainer: TokenContainer, buddyKey: String) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
             tokenContainer.buddyKey = buddyKey
-            tokenContainer.saveWithTransaction(transaction)
+            tokenContainer.save(with: transaction)
         }
     }
     
-    func saveUnusedToken(tokenContainer: TokenContainer) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
+    func saveUnusedToken(_ tokenContainer: TokenContainer) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
             tokenContainer.accountKey = PushYapKeys.thisAccountKey.rawValue
             transaction.setObject(tokenContainer, forKey:tokenContainer.uniqueId, inCollection:PushYapCollections.unusedTokenCollection.rawValue)
         }
     }
     
-    func saveUsedToken(tokenContainer: TokenContainer) {
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
-            tokenContainer.saveWithTransaction(transaction)
+    func saveUsedToken(_ tokenContainer: TokenContainer) {
+        self.databaseConnection.asyncReadWrite { (transaction) -> Void in
+            tokenContainer.save(with: transaction)
         }
     }
     
     func numberUnusedTokens() -> UInt {
         var unusedTokensCount:UInt = 0
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            unusedTokensCount = transaction.numberOfKeysInCollection(PushYapCollections.unusedTokenCollection.rawValue)
+        self.databaseConnection.read { (transaction) -> Void in
+            unusedTokensCount = transaction.numberOfKeys(inCollection: PushYapCollections.unusedTokenCollection.rawValue)
         }
         return unusedTokensCount
     }
@@ -188,19 +188,19 @@ class PushStorage: NSObject, PushStorageProtocol {
         return PushStorage.unusedTokenStoreSize
     }
     
-    func tokensForBuddy(buddyKey: String, createdByThisAccount: Bool) throws -> [TokenContainer] {
+    func tokensForBuddy(_ buddyKey: String, createdByThisAccount: Bool) throws -> [TokenContainer] {
         var error:NSError? = nil
         var tokens:[TokenContainer] = []
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
+        self.databaseConnection.read { (transaction) -> Void in
+            guard let buddy = transaction.object(forKey: buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
                 error = NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
                 return
             }
             
-            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
-                relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
+            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
+                relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), using: { (edge, stop) -> Void in
                     
-                    if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
+                    if let tokenContainer = transaction.object(forKey: edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
                         if tokenContainer.accountKey != nil && createdByThisAccount {
                             tokens.append(tokenContainer)
                         } else if tokenContainer.accountKey == nil && !createdByThisAccount {
@@ -210,9 +210,9 @@ class PushStorage: NSObject, PushStorageProtocol {
                     
                 })
             }
-            tokens.sortInPlace({ (first, second) -> Bool in
-                switch first.date.compare(second.date) {
-                case .OrderedAscending:
+            tokens.sort(by: { (first, second) -> Bool in
+                switch first.date.compare(second.date as Date) {
+                case .orderedAscending:
                     return true
                 default:
                     return false
@@ -225,12 +225,12 @@ class PushStorage: NSObject, PushStorageProtocol {
         return tokens
     }
     
-    func removeAllOurExpiredUnusedTokens(timeBuffer: NSTimeInterval, completion: ((count: Int) -> Void)?) {
+    func removeAllOurExpiredUnusedTokens(_ timeBuffer: TimeInterval, completion: ((_ count: Int) -> Void)?) {
         var count:Int = 0
-        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+        self.databaseConnection.asyncReadWrite({ (transaction) in
             let collection = PushYapCollections.unusedTokenCollection.rawValue
             var removeKeyArray:[String] = []
-            transaction.enumerateKeysAndObjectsInCollection(collection, usingBlock: { (key, object, stop) in
+            transaction.enumerateKeysAndObjects(inCollection: collection, using: { (key, object, stop) in
                 if let token = object as? TokenContainer {
                     //Check that there is an expires date otherwise remove
                     guard let expiresDate = token.pushToken?.expires else {
@@ -239,19 +239,19 @@ class PushStorage: NSObject, PushStorageProtocol {
                     }
                     
                     // Check that the date is farther in the future than currentDate + timeBuffer
-                    if (NSDate(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .OrderedDescending ) {
+                    if (Date(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .orderedDescending ) {
                         removeKeyArray.append(token.uniqueId)
                     }
                 }
             })
             
             count = removeKeyArray.count
-            transaction.removeObjectsForKeys(removeKeyArray, inCollection: collection)
+            transaction.removeObjects(forKeys: removeKeyArray, inCollection: collection)
             
             }, completionQueue: self.workQueue) {
                 if let comp = completion {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        comp(count: count)
+                    DispatchQueue.main.async(execute: {
+                        comp(count)
                     })
                 }
                 
@@ -267,14 +267,14 @@ class PushStorage: NSObject, PushStorageProtocol {
      - parameter createdByThisAccount: A bool to check for the count of tokens created by this account (outgoing) or those created by the buddy (incoming)
      - returns: The number of push tokens
     */
-    func numberOfTokensForBuddy(buddyKey: String, createdByThisAccount: Bool) -> Int {
+    func numberOfTokensForBuddy(_ buddyKey: String, createdByThisAccount: Bool) -> Int {
         var count = 0
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
+        self.databaseConnection.read { (transaction) -> Void in
+            guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
                 return
             }
-            relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
-                if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
+            relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), using: { (edge, stop) -> Void in
+                if let tokenContainer = transaction.object(forKey: edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
                     if tokenContainer.accountKey != nil && createdByThisAccount {
                         count += 1
                     } else if tokenContainer.accountKey == nil && !createdByThisAccount {
@@ -287,30 +287,30 @@ class PushStorage: NSObject, PushStorageProtocol {
         return count
     }
     
-    func buddy(username: String, accountName: String) -> OTRBuddy? {
+    func buddy(_ username: String, accountName: String) -> OTRBuddy? {
         var buddy:OTRBuddy? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            buddy = OTRBuddy.fetchBuddyForUsername(username, accountName: accountName, transaction: transaction)
+        self.databaseConnection.read { (transaction) -> Void in
+            buddy = OTRBuddy.fetch(forUsername: username, accountName: accountName, transaction: transaction)
         }
         return buddy
     }
     
-    func account(accountUniqueID: String) -> OTRAccount? {
+    func account(_ accountUniqueID: String) -> OTRAccount? {
         var account:OTRAccount? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            account = OTRAccount.fetchObjectWithUniqueID(accountUniqueID, transaction: transaction)
+        self.databaseConnection.read { (transaction) -> Void in
+            account = OTRAccount.fetch(withUniqueID: accountUniqueID, transaction: transaction)
         }
         return account
     }
     
-    func buddy(token: String) -> OTRBuddy? {
+    func buddy(_ token: String) -> OTRBuddy? {
         var buddy:OTRBuddy? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
-                relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, sourceKey: token, collection: TokenContainer.collection(), usingBlock: { (edge, stop) -> Void in
-                    buddy = transaction.objectForKey(edge.destinationKey, inCollection: edge.destinationCollection) as? OTRBuddy
+        self.databaseConnection.read { (transaction) -> Void in
+            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
+                relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, sourceKey: token, collection: TokenContainer.collection(), using: { (edge, stop) -> Void in
+                    buddy = transaction.object(forKey: edge.destinationKey, inCollection: edge.destinationCollection) as? OTRBuddy
                     if buddy != nil {
-                        stop.initialize(true)
+                        stop.initialize(to: true)
                     }
                 })
             }

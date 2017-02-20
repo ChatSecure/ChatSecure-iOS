@@ -25,6 +25,3 @@
 [submodule "Submodules/SignalProtocol-ObjC"]
 	path = Submodules/SignalProtocol-ObjC
 	url = git@github.com:ChatSecure/SignalProtocol-ObjC.git
-[submodule "Submodules/ParkedTextField"]
-	path = Submodules/ParkedTextField
-	url = git@github.com:ChatSecure/ParkedTextField.git

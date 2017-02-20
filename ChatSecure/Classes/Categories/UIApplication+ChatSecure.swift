@@ -13,13 +13,13 @@ import OTRAssets
 
 public extension UIApplication {
     
-    public func showLocalNotification(message:OTRMessageProtocol) {
+    public func showLocalNotification(_ message:OTRMessageProtocol) {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0
         
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection.readWithBlock({ (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection.read({ (transaction) -> Void in
             unreadCount = transaction.numberOfUnreadMessages()
-            thread = message.threadOwnerWithTransaction(transaction)
+            thread = message.threadOwner(with: transaction)
         })
         
         guard let threadOwner = thread else {
@@ -30,7 +30,7 @@ public extension UIApplication {
         
         var text = "\(threadName)"
         if let msgTxt = message.text() {
-            if let rawMessageString = msgTxt.stringByConvertingHTMLToPlainText() {
+            if let rawMessageString = msgTxt.convertingHTMLToPlainText() {
                 text += ": \(rawMessageString)"
             }
         }
@@ -39,7 +39,7 @@ public extension UIApplication {
         self.showLocalNotificationFor(threadOwner, text: text, unreadCount: Int(unreadCount))
     }
     
-    public func showLocalNotificationForKnockFrom(thread:OTRThreadOwner?) {
+    public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
         var name = SOMEONE_STRING()
         if let threadName = thread?.threadName() {
             name = threadName
@@ -51,27 +51,27 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
-    internal func showLocalNotificationFor(thread:OTRThreadOwner?, text:String, unreadCount:Int?) {
+    internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int?) {
         // Use the new UserNotifications.framework on iOS 10+
         if #available(iOS 10.0, *) {
             let localNotification = UNMutableNotificationContent()
             localNotification.body = text
-            localNotification.badge = unreadCount ?? 0
-            localNotification.sound = UNNotificationSound.defaultSound()
+            localNotification.badge = unreadCount as NSNumber?? ?? 0
+            localNotification.sound = UNNotificationSound.default()
             if let t = thread {
                 localNotification.threadIdentifier = t.threadIdentifier()
                 localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
             }
-            let request = UNNotificationRequest(identifier: NSUUID().UUIDString, content: localNotification, trigger: nil) // Schedule the notification.
-            let center = UNUserNotificationCenter.currentNotificationCenter()
-            center.addNotificationRequest(request, withCompletionHandler: { (error: NSError?) in
-                if let error = error {
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: nil) // Schedule the notification.
+            let center = UNUserNotificationCenter.current()
+            center.add(request, withCompletionHandler: { (error: Error?) in
+                if let error = error as? NSError {
                     #if DEBUG
                     NSLog("Error scheduling notification! %@", error)
                     #endif
                 }
             })
-        } else if(self.applicationState != .Active) {
+        } else if(self.applicationState != .active) {
             let localNotification = UILocalNotification()
             localNotification.alertAction = REPLY_STRING()
             localNotification.soundName = UILocalNotificationDefaultSoundName

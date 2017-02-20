@@ -27,44 +27,44 @@ class OTRSignalTest: XCTestCase {
         let ourDatabaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
         let otherDatbaseManager = OTRTestDatabaseManager.setupDatabaseWithName("\(#function)-other")
         
-        let ourAccount = TestXMPPAccount()
+        let ourAccount = TestXMPPAccount()!
         ourAccount.username = "ourAccount@something.com"
-        let otherAccount = TestXMPPAccount()
+        let otherAccount = TestXMPPAccount()!
         otherAccount.username = "otherAccount@something.com"
         
-        let ourDatabaseConnection = ourDatabaseManager.newConnection()
-        let otherDatabaseConnection = otherDatbaseManager.newConnection()
+        let ourDatabaseConnection = ourDatabaseManager.newConnection()!
+        let otherDatabaseConnection = otherDatbaseManager.newConnection()!
         
-        ourDatabaseConnection.readWriteWithBlock { (transaction) in
-            ourAccount.saveWithTransaction(transaction)
-        }
-        otherDatabaseConnection.readWriteWithBlock { (transaction) in
-            otherAccount.saveWithTransaction(transaction)
-        }
+        ourDatabaseConnection.readWrite({ (transaction) in
+            ourAccount.save(with:transaction)
+        })
+        otherDatabaseConnection.readWrite( { (transaction) in
+            otherAccount.save(with:transaction)
+        })
         
         let ourEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: ourAccount.uniqueId, databaseConnection: ourDatabaseConnection)
         let ourOutgoingBundle = ourEncryptionManager.generateOutgoingBundle(10)
         
         let otherEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
         
-        otherDatabaseConnection.readWriteWithBlock { (transaction) in
-            let buddy = OTRBuddy()
+        otherDatabaseConnection.readWrite( { (transaction) in
+            let buddy = OTRBuddy()!
             buddy.accountUniqueId = otherAccount.uniqueId
             buddy.username = ourAccount.username
-            buddy.saveWithTransaction(transaction)
+            buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:ourOutgoingBundle!.bundle.deviceId), trustLevel: .TrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
-            device.saveWithTransaction(transaction)
-        }
-        ourDatabaseConnection.readWriteWithBlock { (transaction) in
-            let buddy = OTRBuddy()
+            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle!.bundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
+            device.save(with:transaction)
+        })
+        ourDatabaseConnection.readWrite ({ (transaction) in
+            let buddy = OTRBuddy()!
             buddy.accountUniqueId = ourAccount.uniqueId
             buddy.username = otherAccount.username
-            buddy.saveWithTransaction(transaction)
+            buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(unsignedInt:otherEncryptionManager.registrationId), trustLevel: .TrustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
-            device.saveWithTransaction(transaction)
-        }
+            let device = OTROMEMODevice(deviceId: NSNumber(value:otherEncryptionManager.registrationId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
+            device.save(with:transaction)
+        })
         
         XCTAssertNotNil(ourOutgoingBundle,"Created our bundle")
         //At this point int 'real' world we could post or outgoing bundle to OMEMO
@@ -76,14 +76,14 @@ class OTRSignalTest: XCTestCase {
         otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: incomingBundle)
         
         let firstString = "Hi buddy"
-        let data = firstString.dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = firstString.data(using: String.Encoding.utf8)!
         let encryptedData = try! otherEncryptionManager.encryptToAddress(data, name: ourAccount.username, deviceId: incomingBundle.bundle.deviceId)
         XCTAssertNotNil(encryptedData, "Created encrypted data")
         print("\(encryptedData.data)")
         
         // In the real world this encrypted data would be sent over the wire
         let decryptedData = try! ourEncryptionManager.decryptFromAddress(encryptedData.data, name: otherAccount.username, deviceId: otherEncryptionManager.registrationId)
-        let secondString = NSString(data: decryptedData, encoding: NSUTF8StringEncoding) as! String
+        let secondString = NSString(data: decryptedData, encoding: String.Encoding.utf8.rawValue) as! String
         
         XCTAssertEqual(firstString, secondString,"Equal Strings")
     
