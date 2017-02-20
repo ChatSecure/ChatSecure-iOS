@@ -15,6 +15,7 @@
 
 @class MessageQueueHandler, YapTaskQueueBroker;
 
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const OTRMessagesSecondaryIndex;
 extern NSString *const OTRYapDatabaseMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName;
@@ -27,15 +28,15 @@ extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnN
 
 @interface OTRDatabaseManager : NSObject
 
-@property (nonatomic, readonly) YapDatabase *database;
-@property (nonatomic, strong) OTRMediaServer *mediaServer;
-@property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, readonly, nullable) YapDatabase *database;
+@property (nonatomic, strong, nullable) OTRMediaServer *mediaServer;
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *readOnlyDatabaseConnection;
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *readWriteDatabaseConnection;
 
-@property (nonatomic, readonly) YapDatabaseConnection *longLivedReadOnlyConnection;
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *longLivedReadOnlyConnection;
 
-@property (nonatomic, readonly) MessageQueueHandler *messageQueueHandler;
-@property (nonatomic, readonly) YapTaskQueueBroker *messageQueueBroker;
+@property (nonatomic, readonly, nullable) MessageQueueHandler *messageQueueHandler;
+@property (nonatomic, readonly, nullable) YapTaskQueueBroker *messageQueueBroker;
 
 
 /**
@@ -48,21 +49,23 @@ extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnN
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage;
 
-- (YapDatabaseConnection *)newConnection;
+- (nullable YapDatabaseConnection *)newConnection;
 
-- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
+- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError *_Nullable*)error;
 
 
 - (BOOL)hasPassphrase;
 
-- (NSString *)databasePassphrase;
+- (nullable NSString *)databasePassphrase;
 
 + (BOOL)existsYapDatabase;
 
 + (NSString *)yapDatabaseDirectory;
-+ (NSString *)yapDatabasePathWithName:(NSString *)name;
++ (NSString *)yapDatabasePathWithName:(NSString *_Nullable)name;
 
 
 + (instancetype)sharedInstance;
+
+NS_ASSUME_NONNULL_END
 
 @end

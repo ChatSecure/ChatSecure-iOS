@@ -41,11 +41,11 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 
 @interface OTRDatabaseManager ()
 
-@property (nonatomic, strong) YapDatabase *database;
-@property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
-@property (nonatomic, strong) YapDatabaseActionManager *actionManager;
-@property (nonatomic, strong) NSString *inMemoryPassphrase;
+@property (nonatomic, strong, nullable) YapDatabase *database;
+@property (nonatomic, strong, nullable) YapDatabaseConnection *readOnlyDatabaseConnection;
+@property (nonatomic, strong, nullable) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, strong, nullable) YapDatabaseActionManager *actionManager;
+@property (nonatomic, strong, nullable) NSString *inMemoryPassphrase;
 
 @property (nonatomic, strong) id yapDatabaseNotificationToken;
 
@@ -118,6 +118,10 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
                                            serializer:nil
                                          deserializer:nil
                                               options:options];
+    // Stop trying to setup up the database. Something went wrong. Most likely the password is incorrect.
+    if (self.database == nil) {
+        return NO;
+    }
     
     self.database.defaultObjectPolicy = YapDatabasePolicyShare;
     self.database.defaultObjectCacheLimit = 10000;
@@ -180,6 +184,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [OTRDatabaseView registerChatDatabaseView];
         [OTRDatabaseView registerAllBuddiesDatabaseView];
         [OTRDatabaseView registerAllSubscriptionRequestsView];
+        
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
         _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];

@@ -44,11 +44,11 @@ class OTROmemoStorageTest: XCTestCase {
         self.databaseManager = OTRTestDatabaseManager()
         self.databaseManager.setDatabasePassphrase("help", remember: false, error: nil)
         self.databaseManager.setupDatabaseWithName(name, withMediaStorage: false)
-        self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection)
-        self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection, delegate: nil)
-        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection)
+        self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection!)
+        self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!, delegate: nil)
+        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         
-        databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
+        databaseManager.readWriteDatabaseConnection!.readWriteWithBlock { (transaction) in
             account.saveWithTransaction(transaction)
         }
     }
