@@ -10,9 +10,10 @@
 
 // This enum reperesents all the ways a message can be transported.
 typedef NS_ENUM(NSUInteger, OTRMessageTransportSecurity) {
-    OTRMessageTransportSecurityPlaintext,
-    OTRMessageTransportSecurityOTR,
-    OTRMessageTransportSecurityOMEMO
+    OTRMessageTransportSecurityPlaintext = 0,
+    OTRMessageTransportSecurityPlaintextWithOTR = 3, //This was added later so we needed to maintain the initial raw value. This is opportunistic OTR, appending special whitespace.
+    OTRMessageTransportSecurityOTR = 1,
+    OTRMessageTransportSecurityOMEMO = 2
 };
 
 @interface OTRMessageEncryptionInfo : MTLModel
