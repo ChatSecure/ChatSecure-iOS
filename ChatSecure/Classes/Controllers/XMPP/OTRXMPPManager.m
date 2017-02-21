@@ -268,11 +268,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     if ([[OTRAppDelegate appDelegate].theme enableOMEMO]) {
         self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection error:nil];
         _omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator xmlNamespace:OMEMOModuleNamespaceConversationsLegacy];
-        [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.omemoSignalCoordinator.workQueue];
-        
+        [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.workQueue];
         [self.omemoModule activate:self.xmppStream];
     }
-    
 }
 
 - (void)teardownStream

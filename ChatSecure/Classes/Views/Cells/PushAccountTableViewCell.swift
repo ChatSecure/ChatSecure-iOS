@@ -32,19 +32,19 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         
         // Common Setup
         titleLabel.text = "Push Registration"
-        extraDataLabel.textColor = UIColor.lightGrayColor()
+        extraDataLabel.textColor = UIColor.lightGray
         
         // Loading Indicator
         guard let push = pushInfo, let caps = pushCapabilities else {
             extraDataLabel.text = "Loading..."
             activityIndicator.startAnimating()
-            activityIndicator.hidden = false
+            activityIndicator.isHidden = false
             checkLabel.text = ""
             subtitleLabel.text = ""
             return
         }
         activityIndicator.stopAnimating()
-        activityIndicator.hidden = true
+        activityIndicator.isHidden = true
         
         // Push Info
         var checkmark = "❓"
@@ -85,7 +85,7 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         }
         titleLabel.text = "Push Registration"
         subtitleLabel.text = "" + status
-        let apiEndpoint = String(format: "%@%@", push.pushAPIURL.host ?? "", push.pushAPIURL.path ?? "")
+        let apiEndpoint = String(format: "%@%@", push.pushAPIURL.host ?? "", push.pushAPIURL.path)
         extraDataLabel.text = String(format: "%@\n%@\n%d used, %d unused tokens", apiEndpoint, push.pubsubEndpoint ?? "Error", push.numUsedTokens, push.numUnusedTokens)
         checkLabel.text = checkmark
     }

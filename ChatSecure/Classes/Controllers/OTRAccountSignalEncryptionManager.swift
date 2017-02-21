@@ -72,7 +72,7 @@ extension OTRAccountSignalEncryptionManager {
         guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
             return nil
         }
-        self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
+        _ = self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
         
         let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
         let deviceId = self.registrationId

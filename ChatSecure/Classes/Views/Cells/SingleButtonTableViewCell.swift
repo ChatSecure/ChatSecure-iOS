@@ -12,7 +12,7 @@ import UIKit
 public class SingleButtonTableViewCell: UITableViewCell {
 
     @IBOutlet public weak var button: UIButton!
-    public var buttonAction: ((cell: SingleButtonTableViewCell, sender: AnyObject) -> ())?
+    public var buttonAction: ((_ cell: SingleButtonTableViewCell, _ sender: AnyObject) -> ())?
 
     public class func cellIdentifier() -> String {
         return "SingleButtonTableViewCell"
@@ -20,6 +20,6 @@ public class SingleButtonTableViewCell: UITableViewCell {
     
     @IBAction private func buttonPressed(sender: AnyObject) {
         guard let action = buttonAction else { return }
-        action(cell: self, sender: sender)
+        action(self, sender)
     }
 }

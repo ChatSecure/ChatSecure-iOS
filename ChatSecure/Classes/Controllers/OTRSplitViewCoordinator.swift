@@ -84,8 +84,8 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         self.enterConversationWithThread(threadOwner, sender: conversationViewController)
     }
     
-    public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectCompose sender: AnyObject!) {
-        guard let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate else {
+    public func conversationViewController(_ conversationViewController: OTRConversationViewController!, didSelectCompose sender: Any!) {
+        guard let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate else {
             return
         }
         let composeViewController = appDelegate.theme.composeViewController()
@@ -93,7 +93,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             composeViewController.delegate = self
         }
         let modalNavigationController = UINavigationController(rootViewController: composeViewController)
-        modalNavigationController.modalPresentationStyle = .FormSheet
+        modalNavigationController.modalPresentationStyle = .formSheet
         
         //May need to use conversationViewController
         self.splitViewController?.present(modalNavigationController, animated: true, completion: nil)

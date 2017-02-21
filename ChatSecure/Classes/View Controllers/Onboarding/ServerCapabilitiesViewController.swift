@@ -20,7 +20,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     public init (serverCheck: ServerCheck) {
         self.check = serverCheck
         self.check.fetch()
-        super.init(style: .Grouped)
+        super.init(style: .grouped)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -37,7 +37,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     // MARK: - User Interaction
     
     @objc private func doneButtonPressed(sender: AnyObject?) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - View Lifecycle
@@ -47,14 +47,14 @@ public class ServerCapabilitiesViewController: UITableViewController {
         let bundle = OTRAssets.resourcesBundle()
         for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier(), TwoButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
-            tableView.registerNib(nib, forCellReuseIdentifier: identifier)
+            tableView.register(nib, forCellReuseIdentifier: identifier)
         }
 
         tableView.allowsSelection = false
         
         self.title = Server_String()
         
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneButtonPressed(_:)))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(sender:)))
         navigationItem.rightBarButtonItem = doneButton
 
         // Add capabilities listener
@@ -69,18 +69,18 @@ public class ServerCapabilitiesViewController: UITableViewController {
     }
 
     
-    public override func viewWillAppear(animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // This will allow us to refresh the permission prompts after use changes them in background
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(refreshAllData), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
-        refreshAllData(nil)
+        refreshAllData(sender: nil)
     }
     
-    public override func viewDidDisappear(animated: Bool) {
+    public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Cell configuration utilities
@@ -106,57 +106,57 @@ public class ServerCapabilitiesViewController: UITableViewController {
     }
     
     /// Returns cell that resets or deactivates account
-    private func resetCellForTableView(tableView: UITableView, indexPath: NSIndexPath, pushInfo: PushInfo) -> UITableViewCell {
+    private func resetCellForTableView(tableView: UITableView, indexPath: IndexPath, pushInfo: PushInfo) -> UITableViewCell {
         // Configure the account reset/deactivate cell
-        guard let resetCell = tableView.dequeueReusableCellWithIdentifier(TwoButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? TwoButtonTableViewCell else {
+        guard let resetCell = tableView.dequeueReusableCell(withIdentifier: TwoButtonTableViewCell.cellIdentifier(), for: indexPath) as? TwoButtonTableViewCell else {
             return UITableViewCell()
         }
-        resetCell.leftButton.setTitle(RESET_STRING(), forState: .Normal)
-        resetCell.leftButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+        resetCell.leftButton.setTitle(RESET_STRING(), for: .normal)
+        resetCell.leftButton.setTitleColor(UIColor.red, for: .normal)
         resetCell.leftAction = { [weak self] (cell, sender) in
-            self?.showDestructivePrompt(nil, buttonTitle: RESET_STRING(), handler: { (action) in
-                self?.check.push.reset({ 
+            self?.showDestructivePrompt(title: nil, buttonTitle: RESET_STRING(), handler: { (action) in
+                self?.check.push.reset(completion: {
                     self?.check.refresh()
-                    }, callbackQueue: dispatch_get_main_queue())
+                    }, callbackQueue: DispatchQueue.main)
             })
         }
-        resetCell.rightButton.setTitle(DEACTIVATE_STRING(), forState: .Normal)
-        resetCell.rightButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        resetCell.rightButton.setTitleColor(UIColor.lightGrayColor(), forState: .Disabled)
+        resetCell.rightButton.setTitle(DEACTIVATE_STRING(), for: .normal)
+        resetCell.rightButton.setTitleColor(UIColor.red, for: .normal)
+        resetCell.rightButton.setTitleColor(UIColor.lightGray, for: .disabled)
         resetCell.rightAction = { [weak self] (cell, sender) in
-            self?.showDestructivePrompt(nil, buttonTitle:  DEACTIVATE_STRING(), handler: { (action) in
-                self?.check.push.deactivate({
+            self?.showDestructivePrompt(title: nil, buttonTitle:  DEACTIVATE_STRING(), handler: { (action) in
+                self?.check.push.deactivate(completion: {
                     self?.check.refresh()
-                    }, callbackQueue: dispatch_get_main_queue())
+                    }, callbackQueue: DispatchQueue.main)
             })
         }
-        resetCell.rightButton.enabled = pushInfo.hasPushAccount
+        resetCell.rightButton.isEnabled = pushInfo.hasPushAccount
         return resetCell
     }
     
     /// Cell with button to prompt user to fix push permissions
-    private func fixPushPermissionCellForTableView(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        guard let permissionCell = tableView.dequeueReusableCellWithIdentifier(SingleButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? SingleButtonTableViewCell else {
+    private func fixPushPermissionCellForTableView(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let permissionCell = tableView.dequeueReusableCell(withIdentifier: SingleButtonTableViewCell.cellIdentifier(), for: indexPath) as? SingleButtonTableViewCell else {
             return UITableViewCell()
         }
-        permissionCell.button.setTitle(FIX_PERMISSIONS_STRING(), forState: .Normal)
+        permissionCell.button.setTitle(FIX_PERMISSIONS_STRING(), for: .normal)
         permissionCell.buttonAction = {  (cell, sender) in
-            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(appSettings)
+            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(appSettings)
             }
         }
         return permissionCell
     }
     
     /// Cell with button to prompt user to fix background fetch
-    private func fixBackgroundFetchCellForTableView(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
-        guard let fetchCell = tableView.dequeueReusableCellWithIdentifier(SingleButtonTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? SingleButtonTableViewCell else {
+    private func fixBackgroundFetchCellForTableView(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        guard let fetchCell = tableView.dequeueReusableCell(withIdentifier: SingleButtonTableViewCell.cellIdentifier(), for: indexPath) as? SingleButtonTableViewCell else {
             return UITableViewCell()
         }
-        fetchCell.button.setTitle(FIX_BACKGROUND_FETCH_STRING(), forState: .Normal)
+        fetchCell.button.setTitle(FIX_BACKGROUND_FETCH_STRING(), for: .normal)
         fetchCell.buttonAction = { (cell, sender) in
-            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(appSettings)
+            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(appSettings)
             }
         }
         return fetchCell
@@ -164,7 +164,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     // MARK: - UITableViewDataSource
     
-    public override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch tableSections[section] {
         case .Push:
             return CHATSECURE_PUSH_STRING()
@@ -173,67 +173,67 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
     }
     
-    public override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    public override func numberOfSections(in tableView: UITableView) -> Int {
         return tableSections.count
     }
     
-    public override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
-            return cellCountForPushInfo(check.pushInfo)
+            return cellCountForPushInfo(pushInfo: check.pushInfo)
         case .Server:
             return capabilities.count
         }
     }
     
-    public override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableSections[indexPath.section] {
         case .Push:
             let emptyCell = UITableViewCell()
             // Configure the main push account info cell
             if indexPath.row == 0 {
-                guard let pushCell = tableView.dequeueReusableCellWithIdentifier(PushAccountTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? PushAccountTableViewCell,
+                guard let pushCell = tableView.dequeueReusableCell(withIdentifier: PushAccountTableViewCell.cellIdentifier(), for: indexPath) as? PushAccountTableViewCell,
                     let caps = check.capabilities else {
                         return emptyCell
                 }
-                pushCell.setPushInfo(check.pushInfo, pushCapabilities: caps[.XEP0357])
+                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: caps[.XEP0357])
                 pushCell.infoButtonBlock = { [weak self] (cell, sender) in
-                    self?.check.pushInfo?.pushAPIURL.promptToShowURLFromViewController(self, sender: sender)
+                    (self?.check.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
                 }
                 return pushCell
             }
             guard let push = check.pushInfo else {
                 return emptyCell
             }
-            let cellCount = cellCountForPushInfo(check.pushInfo)
+            let cellCount = cellCountForPushInfo(pushInfo: check.pushInfo)
             if cellCount == 2 && indexPath.row == 1 {
-                return resetCellForTableView(tableView, indexPath: indexPath, pushInfo: push)
+                return resetCellForTableView(tableView: tableView, indexPath: indexPath, pushInfo: push)
             }
             if cellCount == 3 {
                 // This implies either push and background fetch are disabled
                 if indexPath.row == 1 {
                     if !push.pushPermitted {
-                        return fixPushPermissionCellForTableView(tableView, indexPath: indexPath)
+                        return fixPushPermissionCellForTableView(tableView: tableView, indexPath: indexPath)
                     } else if !push.backgroundFetchPermitted {
-                        return fixBackgroundFetchCellForTableView(tableView, indexPath: indexPath)
+                        return fixBackgroundFetchCellForTableView(tableView: tableView, indexPath: indexPath)
                     }
                 } else if indexPath.row == 2 {
-                    return resetCellForTableView(tableView, indexPath: indexPath, pushInfo: push)
+                    return resetCellForTableView(tableView: tableView, indexPath: indexPath, pushInfo: push)
                 }
             }
             if cellCount == 4 {
                 // This implies both push and background fetch are disabled
                 if indexPath.row == 1 {
-                    return fixPushPermissionCellForTableView(tableView, indexPath: indexPath)
+                    return fixPushPermissionCellForTableView(tableView: tableView, indexPath: indexPath)
                 } else if indexPath.row == 2 {
-                    return fixBackgroundFetchCellForTableView(tableView, indexPath: indexPath)
+                    return fixBackgroundFetchCellForTableView(tableView: tableView, indexPath: indexPath)
                 } else if indexPath.row == 3 {
-                    return resetCellForTableView(tableView, indexPath: indexPath, pushInfo: push)
+                    return resetCellForTableView(tableView: tableView, indexPath: indexPath, pushInfo: push)
                 }
             }
             return emptyCell // hopefully never get here
         case .Server:
-            guard let cell = tableView.dequeueReusableCellWithIdentifier(ServerCapabilityTableViewCell.cellIdentifier(), forIndexPath: indexPath) as? ServerCapabilityTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ServerCapabilityTableViewCell.cellIdentifier(), for: indexPath) as? ServerCapabilityTableViewCell else {
                 return UITableViewCell()
             }
             var cellInfo = capabilities[indexPath.row]
@@ -244,17 +244,17 @@ public class ServerCapabilitiesViewController: UITableViewController {
                     cellInfo.status = .Warning
                 }
             }
-            cell.setCapability(cellInfo)
+            cell.setCapability(capability: cellInfo)
             cell.infoButtonBlock = { [weak self] (cell, sender) in
                 if let strongSelf = self {
-                    cellInfo.url.promptToShowURLFromViewController(strongSelf, sender: sender)
+                    cellInfo.url.promptToShow(from: strongSelf, sender: sender)
                 }
             }
             return cell
         }
     }
     
-    public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableSections[indexPath.section] {
         case .Push:
             if indexPath.row == 0 {

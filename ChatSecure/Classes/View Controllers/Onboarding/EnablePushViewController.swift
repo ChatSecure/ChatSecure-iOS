@@ -52,8 +52,8 @@ open class EnablePushViewController: UIViewController {
     }
     
     @IBAction func enablePushPressed(_ sender: AnyObject) {
-        hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-        PushController.setPushPreference(.Enabled)
+        hud = MBProgressHUD.showAdded(to: view, animated: true)
+        PushController.setPushPreference(.enabled)
         PushController.registerForPushNotifications()
     }
 
@@ -63,8 +63,8 @@ open class EnablePushViewController: UIViewController {
     }
     
     func showNextScreen() {
-        if let account = account, let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate {
-            let inviteVC = appDelegate.theme.inviteViewControllerForAccount(account)
+        if let account = account, let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
+            let inviteVC = appDelegate.theme.inviteViewController(for: account)
             self.navigationController?.pushViewController(inviteVC, animated: true)
         } else {
             self.dismiss(animated: true, completion: nil)

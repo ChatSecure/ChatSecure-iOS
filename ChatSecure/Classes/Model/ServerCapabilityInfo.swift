@@ -42,7 +42,7 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
         self.url = url
     }
     
-    public func copyWithZone(zone: NSZone) -> AnyObject {
+    public func copy(with zone: NSZone? = nil) -> Any {
         return ServerCapabilityInfo(code: self.code, title: self.title, subtitle: self.subtitle, xmlns: self.xmlns, url: url)
     }
     
@@ -78,12 +78,12 @@ public extension OTRServerCapabilities {
         guard let allCaps = self.allCapabilities, let features = self.streamFeatures else {
             return nil
         }
-        let allFeatures = OTRServerCapabilities.allFeaturesForCapabilities(allCaps, streamFeatures: features)
+        let allFeatures = OTRServerCapabilities.allFeatures(forCapabilities: allCaps, streamFeatures: features)
         var newCaps: [CapabilityCode : ServerCapabilityInfo] = [:]
         for (_, var capInfo) in capabilities {
             capInfo = capInfo.copy() as! ServerCapabilityInfo
             for feature in allFeatures {
-                if feature.containsString(capInfo.xmlns) {
+                if feature.contains(capInfo.xmlns) {
                     capInfo.status = .Available
                     break
                 }

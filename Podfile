@@ -70,7 +70,8 @@ abstract_target 'ChatSecureCorePods' do
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
-  pod 'YapTaskQueue/SQLCipher', '~> 0.2'
+  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => '0.2.0-escaping-closure'
+  # pod 'YapTaskQueue/SQLCipher', '~> 0.2' # Waiting on @escaping fix upstream
 
   # Submodules
 

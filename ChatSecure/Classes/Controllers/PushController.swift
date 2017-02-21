@@ -26,13 +26,13 @@ import UserNotifications
 
 @objc(OTRPushInfo)
 public class PushInfo: NSObject {
-    let pushOptIn = PushController.getPushPreference() == .Enabled
-    let pushAPIURL: NSURL
+    let pushOptIn = PushController.getPushPreference() == .enabled
+    let pushAPIURL: URL
     let hasPushAccount: Bool
     let numUsedTokens: UInt
     let numUnusedTokens: UInt
     let pushPermitted: Bool
-    let backgroundFetchPermitted = UIApplication.sharedApplication().backgroundRefreshStatus == .Available
+    let backgroundFetchPermitted = UIApplication.shared.backgroundRefreshStatus == .available
     let lowPowerMode: Bool
     let pubsubEndpoint: String?
     let device: Device?
@@ -48,7 +48,7 @@ public class PushInfo: NSObject {
                 device != nil
     }
     
-    init(pushAPIURL: NSURL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?, device: Device?) {
+    init(pushAPIURL: URL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?, device: Device?) {
         self.pushAPIURL = pushAPIURL
         self.hasPushAccount = hasPushAccount
         self.numUsedTokens = numUsedTokens
@@ -56,7 +56,7 @@ public class PushInfo: NSObject {
         self.pushPermitted = pushPermitted
         var lowPower = false
         if #available(iOS 9.0, *) {
-            lowPower = NSProcessInfo.processInfo().lowPowerModeEnabled
+            lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
         }
         self.lowPowerMode = lowPower
         self.pubsubEndpoint = pubsubEndpoint
@@ -89,21 +89,22 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
     
     /// This will delete all your push data and disable push
-    public func deactivate(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
-        PushController.setPushPreference(.Disabled)
-        self.storage.deleteEverything(completion, callbackQueue: callbackQueue)
+    public func deactivate(completion: (()->())?, callbackQueue: DispatchQueue?) {
+        PushController.setPushPreference(.disabled)
+        self.storage.deleteEverything(completion: completion, callbackQueue: callbackQueue)
     }
     
     /// This calls deactivate and then re-enables push
-    public func reset(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
-        deactivate({ [weak self] in
-            PushController.setPushPreference(.Enabled)
+    public func reset(completion: (()->())?, callbackQueue: DispatchQueue?) {
+        deactivate(completion: { [weak self] in
+            PushController.setPushPreference(.enabled)
             self?.createNewRandomPushAccount { (success, error) in
                 if success {
                     PushController.registerForPushNotifications()
                 }
                 if let completion = completion {
-                    dispatch_async(callbackQueue ?? dispatch_get_main_queue(), {
+                    let queue = callbackQueue ?? DispatchQueue.main
+                    queue.async(execute: {
                         completion()
                     })
                 }
@@ -199,15 +200,15 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     
     open func getPubsubEndpoint(_ completion:@escaping (_ endpoint:String?,_ error:Error?) -> Void) {
         if let pubsubEndpoint = pubsubEndpoint {
-            self.callbackQueue.addOperationWithBlock({ 
-                completion(endpoint: pubsubEndpoint as String, error: nil)
+            self.callbackQueue.addOperation({ 
+                completion(pubsubEndpoint as String, nil)
             })
             return
         }
         self.apiClient.getPubsubEndpoint { (pubsubEndpoint, error) in
-            self.pubsubEndpoint = pubsubEndpoint
-            self.callbackQueue.addOperationWithBlock({
-                completion(endpoint: pubsubEndpoint, error: error)
+            self.pubsubEndpoint = pubsubEndpoint as NSString?
+            self.callbackQueue.addOperation({
+                completion(pubsubEndpoint, error)
             })
         }
     }
@@ -310,7 +311,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                     })
                 }
                 
-                group.wait(timeout: DispatchTime.distantFuture)
+                _ = group.wait(timeout: DispatchTime.distantFuture)
             }
             self?.callbackQueue.addOperation({ () -> Void in
                 var succes = false
@@ -582,24 +583,24 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     //MARK: Utility
     
     /// If callbackQueue is nil, it will complete on main queue
-    public func gatherPushInfo(completion: (PushInfo) -> (), callbackQueue: dispatch_queue_t?) {
+    public func gatherPushInfo(completion: @escaping (PushInfo) -> (), callbackQueue: DispatchQueue?) {
         var pubsubEndpoint: String?
         var pushPermitted = false
-        let group = dispatch_group_create()
-        dispatch_group_enter(group)
+        let group = DispatchGroup()
+        group.enter()
         pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
-        dispatch_group_enter(group)
-        dispatch_group_leave(group)
+        group.enter()
+        group.leave()
         getPubsubEndpoint { (endpoint, error) in
             pubsubEndpoint = endpoint
-            dispatch_group_leave(group)
+            group.leave()
         }
-        var queue = dispatch_get_main_queue()
+        var queue = DispatchQueue.main
         if let custom = callbackQueue {
             queue = custom
         }
         let device = storage.thisDevice()
-        dispatch_group_notify(group, queue) {
+        group.notify(queue: queue, execute: {
             let newPushInfo = PushInfo(
                 pushAPIURL: self.apiClient.baseUrl,
                 hasPushAccount: self.storage.hasPushAccount(),
@@ -609,7 +610,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                 pubsubEndpoint: pubsubEndpoint,
                 device: device)
             completion(newPushInfo)
-        }
+        })
     }
     
     open static func registerForPushNotifications() {

@@ -29,7 +29,7 @@ import YapDatabase
         self.streamManagementEnabled = false
     }
     
-    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, didReceiveAckForStanzaIds stanzaIds: [AnyObject]!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, didReceiveAckForStanzaIds stanzaIds: [Any]!) {
         
         self.databaseConnection.asyncReadWrite { (transaction) in
             for object in stanzaIds {

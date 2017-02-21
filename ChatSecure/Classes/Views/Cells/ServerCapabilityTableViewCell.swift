@@ -28,11 +28,11 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
         checkLabel.text = nil
     }
     
-    public var infoButtonBlock: ((cell: ServerCapabilityTableViewCell, sender: AnyObject) -> ())?
+    public var infoButtonBlock: ((_ cell: ServerCapabilityTableViewCell, _ sender: AnyObject) -> ())?
     
     @IBAction func infoButtonPressed(sender: AnyObject) {
         guard let block = infoButtonBlock else { return }
-        block(cell: self, sender: sender)
+        block(self, sender)
     }
 }
 

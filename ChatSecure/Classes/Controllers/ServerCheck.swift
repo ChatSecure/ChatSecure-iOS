@@ -24,8 +24,8 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
     public var capabilities: [CapabilityCode : ServerCapabilityInfo]?
     public var pushInfo: PushInfo?
     
-    public var pushInfoReady: ((pushInfo: PushInfo) -> ())?
-    public var capabilitiesReady: ((capabilities: [CapabilityCode : ServerCapabilityInfo]) -> ())?
+    public var pushInfoReady: ((_ pushInfo: PushInfo) -> ())?
+    public var capabilitiesReady: ((_ capabilities: [CapabilityCode : ServerCapabilityInfo]) -> ())?
     
     deinit {
         capsModule.removeDelegate(self)
@@ -35,7 +35,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
         self.push = push
         self.capsModule = capsModule
         super.init()
-        capsModule.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+        capsModule.addDelegate(self, delegateQueue: DispatchQueue.main)
         fetch()
     }
     
@@ -53,29 +53,29 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate {
     
     private func checkReady() {
         if let ready = pushInfoReady, let push = pushInfo {
-            ready(pushInfo: push)
+            ready(push)
         }
         if let ready = capabilitiesReady, let caps = capabilities {
-            ready(capabilities: caps)
+            ready(caps)
         }
     }
     
     private func refreshPush() {
-        push.gatherPushInfo({ (info) in
+        push.gatherPushInfo(completion: { (info) in
             self.pushInfo = info
             self.checkReady()
-            }, callbackQueue: dispatch_get_main_queue())
+            }, callbackQueue: DispatchQueue.main)
     }
     
     private func refreshCapabilities() {
         let caps = ServerCapabilityInfo.allCapabilities()
-        capabilities = capsModule.markAvailable(caps)
+        capabilities = capsModule.markAvailable(capabilities: caps)
         checkReady()
     }
     
     // MARK: - OTRServerCapabilitiesDelegate
     
-    @objc public func serverCapabilities(sender: OTRServerCapabilities, didDiscoverAllCapabilities allCapabilities: [XMPPJID : DDXMLElement]) {
+    @objc public func serverCapabilities(_ sender: OTRServerCapabilities, didDiscoverAllCapabilities allCapabilities: [XMPPJID : DDXMLElement]) {
         checkReady()
     }
 }

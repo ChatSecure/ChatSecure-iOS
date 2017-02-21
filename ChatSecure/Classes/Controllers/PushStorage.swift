@@ -30,7 +30,7 @@ import YapDatabase
     func buddy(_ username: String, accountName: String) -> OTRBuddy?
     func account(_ accountUniqueID:String) -> OTRAccount?
     func buddy(_ token:String) -> OTRBuddy?
-    func deleteEverything(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?)
+    func deleteEverything(completion: (()->())?, callbackQueue: DispatchQueue?)
 
     /**
      * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
@@ -94,11 +94,11 @@ class PushStorage: NSObject, PushStorageProtocol {
     }
     
     /// Callback defaults to main queue
-    func deleteEverything(completion: dispatch_block_t?, callbackQueue: dispatch_queue_t?) {
+    func deleteEverything(completion: (()->())?, callbackQueue: DispatchQueue?) {
         let collections = [Account.yapCollection(), DeviceContainer.collection(), PushYapCollections.unusedTokenCollection.rawValue, TokenContainer.collection()]
-        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) -> Void in
+        self.databaseConnection.asyncReadWrite({ (transaction) -> Void in
             for collection in collections {
-                transaction.removeAllObjectsInCollection(collection)
+                transaction.removeAllObjects(inCollection: collection)
             }
         }, completionQueue: callbackQueue,
            completionBlock: completion)
@@ -178,8 +178,8 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     func numberUsedTokens() -> UInt {
         var usedTokensCount:UInt = 0
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            usedTokensCount = transaction.numberOfKeysInCollection(PushYapCollections.unusedTokenCollection.rawValue)
+        self.databaseConnection.read { (transaction) -> Void in
+            usedTokensCount = transaction.numberOfKeys(inCollection: PushYapCollections.unusedTokenCollection.rawValue)
         }
         return usedTokensCount
     }
