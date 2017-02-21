@@ -153,4 +153,26 @@
     return [self.absoluteString containsString:@"/i/#"];
 }
 
+/** This will give a user a prompt before calling openURL */
+- (void) promptToShowURLFromViewController:(UIViewController*)viewController sender:(id)sender {
+    if (!viewController) { return; }
+    UIView *view = nil;
+    if ([sender isKindOfClass:[UIView class]]) {
+        view = sender;
+    }
+    UIAlertAction *visitURL = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL:self];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:self.absoluteString message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [alert addAction:visitURL];
+    [alert addAction:cancel];
+    
+    alert.popoverPresentationController.sourceView = view;
+    alert.popoverPresentationController.sourceRect = view.bounds;
+    
+    [viewController presentViewController:alert animated:YES completion:nil];
+}
+
 @end

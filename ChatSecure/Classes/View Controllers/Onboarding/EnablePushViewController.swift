@@ -8,12 +8,17 @@
 
 import UIKit
 import OTRAssets
+import MBProgressHUD
 
 open class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
     open var account: OTRAccount?
     fileprivate var userLaunchedToSettings: Bool = false
+    private var hud: MBProgressHUD?
+    
+    /// You must set this before showing view
+    open var serverCheck: ServerCheck?
 
     @IBOutlet weak var enablePushButton: UIButton?
     @IBOutlet weak var textView: UITextView?
@@ -47,6 +52,8 @@ open class EnablePushViewController: UIViewController {
     }
     
     @IBAction func enablePushPressed(_ sender: AnyObject) {
+        hud = MBProgressHUD.showAdded(to: view, animated: true)
+        PushController.setPushPreference(.enabled)
         PushController.registerForPushNotifications()
     }
 
@@ -56,35 +63,19 @@ open class EnablePushViewController: UIViewController {
     }
     
     func showNextScreen() {
-        if self.account != nil {
-            
-            let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate
-            var inviteVC:OTRInviteViewController? = nil
-            if let c = appDelegate?.theme.inviteViewControllerClass() as? OTRInviteViewController.Type {
-                inviteVC = c.init()
-                inviteVC!.account = self.account
-                self.navigationController?.pushViewController(inviteVC!, animated: true)
-            }
+        if let account = account, let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
+            let inviteVC = appDelegate.theme.inviteViewController(for: account)
+            self.navigationController?.pushViewController(inviteVC, animated: true)
         } else {
             self.dismiss(animated: true, completion: nil)
         }
-        
     }
     
     func didRegisterUserNotificationSettings(_ notification: Notification) {
         if PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.enabled)
             showNextScreen()
         } else {
-            let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .alert)
-            let settingsAction = UIAlertAction(title: SETTINGS_STRING(), style: .default, handler: { (action: UIAlertAction) -> Void in
-                let appSettings = URL(string: UIApplicationOpenSettingsURLString)
-                UIApplication.shared.openURL(appSettings!)
-            })
-            let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
-            alert.addAction(settingsAction)
-            alert.addAction(cancelAction)
-            present(alert, animated: true, completion: nil)
+            showPromptForSystemSettings()
         }
     }
 

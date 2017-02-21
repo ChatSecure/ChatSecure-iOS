@@ -52,6 +52,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRAttachmentPicker.h"
 #import "OTRBuddy.h"
 #import "OTRXMPPBuddy.h"
+#import "OTRServerCapabilities.h"
 #import "OTRLanguageListSettingViewController.h"
 #import "OTRListSettingViewController.h"
 #import "OTRSettingDetailViewController.h"

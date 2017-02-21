@@ -52,14 +52,14 @@ import XMPPFramework
         }
     }
     
-    open func xmppStream(_ sender: XMPPStream!, didFailToSend message: XMPPMessage!, error: NSError!) {
+    open func xmppStream(_ sender: XMPPStream!, didFailToSend message: XMPPMessage!, error: Error!) {
         
         guard let messageId = message.attributeStringValue(forName: "id"), message.isChatMessage() else {
             return
         }
         
         if let message = self.fetchMessage(messageId) {
-            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error)
+            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error as NSError?)
         }
         
     }

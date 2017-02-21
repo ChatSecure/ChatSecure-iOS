@@ -56,7 +56,12 @@
         _numberOfConnectingProtocols = 0;
         _encryptionManager = [[OTREncryptionManager alloc] init];
         
+#if DEBUG
+        NSURL *pushAPIEndpoint = [OTRBranding pushStagingAPIURL];
+#else
         NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
+#endif
+        
         // Casting here because it's easier than figuring out the
         // non-modular include spaghetti mess
         id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)self.encryptionManager.pushTLVHandler;

@@ -24,7 +24,47 @@ import UserNotifications
     case enabled
 }
 
-/** 
+@objc(OTRPushInfo)
+public class PushInfo: NSObject {
+    let pushOptIn = PushController.getPushPreference() == .enabled
+    let pushAPIURL: URL
+    let hasPushAccount: Bool
+    let numUsedTokens: UInt
+    let numUnusedTokens: UInt
+    let pushPermitted: Bool
+    let backgroundFetchPermitted = UIApplication.shared.backgroundRefreshStatus == .available
+    let lowPowerMode: Bool
+    let pubsubEndpoint: String?
+    let device: Device?
+    
+    /// all of these need to be true for push to work, but it doesn't guarantee it actually works
+    public func pushMaybeWorks() -> Bool {
+        return  pushOptIn &&
+                hasPushAccount &&
+                pushPermitted &&
+                backgroundFetchPermitted &&
+                !lowPowerMode &&
+                numUsedTokens > 0 &&
+                device != nil
+    }
+    
+    init(pushAPIURL: URL, hasPushAccount: Bool, numUsedTokens: UInt, numUnusedTokens: UInt, pushPermitted: Bool, pubsubEndpoint: String?, device: Device?) {
+        self.pushAPIURL = pushAPIURL
+        self.hasPushAccount = hasPushAccount
+        self.numUsedTokens = numUsedTokens
+        self.numUnusedTokens = numUnusedTokens
+        self.pushPermitted = pushPermitted
+        var lowPower = false
+        if #available(iOS 9.0, *) {
+            lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
+        }
+        self.lowPowerMode = lowPower
+        self.pubsubEndpoint = pubsubEndpoint
+        self.device = device
+    }
+}
+
+/**
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
 */
@@ -37,6 +77,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     var callbackQueue = OperationQueue()
     var otrListener: PushOTRListener?
     let timeBufffer:TimeInterval = 60*60*24
+    var pubsubEndpoint: NSString?
     
     public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
@@ -45,6 +86,30 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         self.apiClient.account = self.storage.thisDevicePushAccount()
         self.otrListener = PushOTRListener(storage: self.storage, pushController: self, tlvHandler: tlvHandler)
         self.storage.removeAllOurExpiredUnusedTokens(self.timeBufffer, completion: nil)
+    }
+    
+    /// This will delete all your push data and disable push
+    public func deactivate(completion: (()->())?, callbackQueue: DispatchQueue?) {
+        PushController.setPushPreference(.disabled)
+        self.storage.deleteEverything(completion: completion, callbackQueue: callbackQueue)
+    }
+    
+    /// This calls deactivate and then re-enables push
+    public func reset(completion: (()->())?, callbackQueue: DispatchQueue?) {
+        deactivate(completion: { [weak self] in
+            PushController.setPushPreference(.enabled)
+            self?.createNewRandomPushAccount { (success, error) in
+                if success {
+                    PushController.registerForPushNotifications()
+                }
+                if let completion = completion {
+                    let queue = callbackQueue ?? DispatchQueue.main
+                    queue.async(execute: {
+                        completion()
+                    })
+                }
+            }
+            }, callbackQueue: callbackQueue)
     }
     
     open func createNewRandomPushAccount(_ completion:@escaping (_ success: Bool, _ error: NSError?) -> Void) {
@@ -134,7 +199,18 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
     
     open func getPubsubEndpoint(_ completion:@escaping (_ endpoint:String?,_ error:Error?) -> Void) {
-        self.apiClient.getPubsubEndpoint(completion)
+        if let pubsubEndpoint = pubsubEndpoint {
+            self.callbackQueue.addOperation({ 
+                completion(pubsubEndpoint as String, nil)
+            })
+            return
+        }
+        self.apiClient.getPubsubEndpoint { (pubsubEndpoint, error) in
+            self.pubsubEndpoint = pubsubEndpoint as NSString?
+            self.callbackQueue.addOperation({
+                completion(pubsubEndpoint, error)
+            })
+        }
     }
     
     open func getMessagesEndpoint() -> URL {
@@ -235,7 +311,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                     })
                 }
                 
-                group.wait(timeout: DispatchTime.distantFuture)
+                _ = group.wait(timeout: DispatchTime.distantFuture)
             }
             self?.callbackQueue.addOperation({ () -> Void in
                 var succes = false
@@ -505,6 +581,37 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
     
     //MARK: Utility
+    
+    /// If callbackQueue is nil, it will complete on main queue
+    public func gatherPushInfo(completion: @escaping (PushInfo) -> (), callbackQueue: DispatchQueue?) {
+        var pubsubEndpoint: String?
+        var pushPermitted = false
+        let group = DispatchGroup()
+        group.enter()
+        pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
+        group.enter()
+        group.leave()
+        getPubsubEndpoint { (endpoint, error) in
+            pubsubEndpoint = endpoint
+            group.leave()
+        }
+        var queue = DispatchQueue.main
+        if let custom = callbackQueue {
+            queue = custom
+        }
+        let device = storage.thisDevice()
+        group.notify(queue: queue, execute: {
+            let newPushInfo = PushInfo(
+                pushAPIURL: self.apiClient.baseUrl,
+                hasPushAccount: self.storage.hasPushAccount(),
+                numUsedTokens: self.storage.numberUsedTokens(),
+                numUnusedTokens: self.storage.numberUnusedTokens(),
+                pushPermitted: pushPermitted,
+                pubsubEndpoint: pubsubEndpoint,
+                device: device)
+            completion(newPushInfo)
+        })
+    }
     
     open static func registerForPushNotifications() {
         if #available(iOS 10.0, *) {

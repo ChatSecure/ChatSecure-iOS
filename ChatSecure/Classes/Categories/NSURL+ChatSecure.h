@@ -7,6 +7,7 @@
 //
 
 @import Foundation;
+@import UIKit;
 
 @interface NSURL (ChatSecure)
 
@@ -51,5 +52,8 @@
 
 /** Checks if URL contains '/i/#' for the invite links of this style: https://chatsecure.org/i/#YWhkdmRqZW5kYmRicmVpQGR1a2dvLmNvbT9vdHI9M0EyN0FDODZBRkVGOENGMDlEOTAyMEQwNTJBNzNGMUVGMEQyOUI2Rg */
 - (BOOL) otr_isInviteLink;
+
+/** This will give a user a prompt before calling openURL */
+- (void) promptToShowURLFromViewController:(UIViewController*)viewController sender:(id)sender;
 
 @end

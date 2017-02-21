@@ -28,6 +28,7 @@
 #import "OTROutgoingMessage.h"
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
+#import "OTRServerCapabilities.h"
 
 @class OTRXMPPAccount, OTRXMPPRoomManager;
 @class OTROMEMOSignalCoordinator;
@@ -40,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
 @property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
+@property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;

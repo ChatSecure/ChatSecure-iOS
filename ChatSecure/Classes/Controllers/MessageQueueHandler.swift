@@ -410,8 +410,11 @@ extension MessageQueueHandler: OTRXMPPMessageStatusModuleDelegate {
       
 //MARK: YapTaskQueueHandler Protocol
 extension MessageQueueHandler: YapTaskQueueHandler {
+        /** This method is called when an item is available to be exectued. Call completion once finished with the action item.
+         
+         */
     
-    public func handleNextItem(_ action: YapTaskQueueAction, completion: @escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+    public func handleNextItem(_ action:YapTaskQueueAction, completion:@escaping (_ success:Bool, _ retryTimeout:TimeInterval)->Void) {
         //Get the real message out of the database
         guard let messageSendingAction = action as? OTRYapMessageSendAction else {
             return

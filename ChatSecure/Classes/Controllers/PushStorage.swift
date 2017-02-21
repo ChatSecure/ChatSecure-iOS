@@ -23,13 +23,15 @@ import YapDatabase
     func saveUnusedToken(_ tokenContainer:TokenContainer)
     func saveUsedToken(_ tokenContainer:TokenContainer)
     func numberUnusedTokens() -> UInt
+    func numberUsedTokens() -> UInt
     func unusedTokenStoreMinimum() -> UInt
     func tokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
     func numberOfTokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool) -> Int
     func buddy(_ username: String, accountName: String) -> OTRBuddy?
     func account(_ accountUniqueID:String) -> OTRAccount?
     func buddy(_ token:String) -> OTRBuddy?
-    
+    func deleteEverything(completion: (()->())?, callbackQueue: DispatchQueue?)
+
     /**
      * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
      * for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
@@ -89,6 +91,17 @@ class PushStorage: NSObject, PushStorageProtocol {
         self.databaseConnection.asyncReadWrite { (transaction) -> Void in
             transaction.setObject(account, forKey:PushYapKeys.thisAccountKey.rawValue, inCollection:Account.yapCollection())
         }
+    }
+    
+    /// Callback defaults to main queue
+    func deleteEverything(completion: (()->())?, callbackQueue: DispatchQueue?) {
+        let collections = [Account.yapCollection(), DeviceContainer.collection(), PushYapCollections.unusedTokenCollection.rawValue, TokenContainer.collection()]
+        self.databaseConnection.asyncReadWrite({ (transaction) -> Void in
+            for collection in collections {
+                transaction.removeAllObjects(inCollection: collection)
+            }
+        }, completionQueue: callbackQueue,
+           completionBlock: completion)
     }
     
     func saveThisDevice(_ device: Device) {
@@ -161,6 +174,14 @@ class PushStorage: NSObject, PushStorageProtocol {
             unusedTokensCount = transaction.numberOfKeys(inCollection: PushYapCollections.unusedTokenCollection.rawValue)
         }
         return unusedTokensCount
+    }
+    
+    func numberUsedTokens() -> UInt {
+        var usedTokensCount:UInt = 0
+        self.databaseConnection.read { (transaction) -> Void in
+            usedTokensCount = transaction.numberOfKeys(inCollection: PushYapCollections.unusedTokenCollection.rawValue)
+        }
+        return usedTokensCount
     }
     
     func unusedTokenStoreMinimum() -> UInt {

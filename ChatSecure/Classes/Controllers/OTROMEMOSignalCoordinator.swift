@@ -326,7 +326,7 @@ import YapDatabase
             
             //For each username device pair remove the underlying signal session
             usernameDeviceArray.forEach({ (username,device) in
-                self?.signalEncryptionManager.removeSessionRecordForUsername(username, deviceId: device.deviceId.int32Value)
+                _ = self?.signalEncryptionManager.removeSessionRecordForUsername(username, deviceId: device.deviceId.int32Value)
             })
             
             

@@ -25,34 +25,25 @@
 #import "OTRTheme.h"
 #import "OTRMessagesViewController.h"
 #import "OTRConversationViewController.h"
-@class PushController;
-@class PushOTRListener;
-@protocol OTRThreadOwner;
 
-
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) OTRConversationViewController *conversationViewController;
-@property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
+@property (nonatomic, strong, readonly) OTRConversationViewController *conversationViewController;
+@property (nonatomic, strong, readonly) OTRMessagesViewController *messagesViewController;
 
-@property (nonatomic, strong) PushOTRListener *pushListener;
-
-@property (nonatomic, strong) NSTimer *backgroundTimer;
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
-@property (nonatomic) BOOL didShowDisconnectionWarning;
-
+/** Only used from Database Unlock view. */
 - (void) showConversationViewController;
 
-- (NSString *)activeThreadYapKey;
-
-+ (instancetype)appDelegate;
-
+/** The yap key for the active on-screen OTRThreadOwner. This should be moved */
+@property (class, nonatomic, readonly, nullable) NSString *activeThreadYapKey;
+@property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
 #pragma mark Theming
 
-@property (nonatomic, strong, readonly) OTRTheme *theme;
+@property (nonatomic, strong, readonly) __kindof OTRTheme *theme;
 /** Override this in subclass to use a different theme class */
 - (Class) themeClass;
 
 @end
+NS_ASSUME_NONNULL_END
