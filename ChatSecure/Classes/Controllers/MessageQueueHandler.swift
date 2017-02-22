@@ -220,72 +220,20 @@ public class MessageQueueHandler:NSObject {
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus() == .connected) {
             
-            //Make sure we have some text to send
-            guard let text = message.text else {
-                return
-            }
-            
-            //Get necessary objects for OTRKit
-            if (message.messageSecurity() == .OMEMO) {
-                guard let signalCoordinator = accountProtocol.omemoSignalCoordinator else {
-                    self.databaseConnection.asyncReadWrite({ (transaction) in
-                        guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
-                            return
-                        }
-                        message.error = NSError.chatSecureError(EncryptionError.omemoNotSuported, userInfo: nil)
-                        message.save(with: transaction)
-                    })
-                    completion(true, 0.0)
-                    return
-                }
-                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
-                
-                
-                
-                signalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    
-                    if (success == false) {
-                        //Something went wrong getting ready to send the message
-                        //Save error object to message
-                        strongSelf.databaseConnection.readWrite({ (transaction) in
-                            guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
-                                return
-                            }
-                            message.error = error
-                            message.save(with: transaction)
-                        })
-                        
-                        if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection()) {
-                            //Even though we were not succesfull in sending a message. The action needs to be removed from the queue so the next message can be handled.
-                            messageInfo.completion(true, 0.0)
-                        }
-                    }
-                })
-            } else if (message.messageSecurity() == .OTR || buddy.preferredSecurity == .plaintextWithOTR) {
-                //We're connected now we need to check encryption requirements
-                let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
-                let messageState = otrKit.messageState(forUsername: buddy.username, accountName: account.username, protocol: account.protocolTypeString())
-                    
-                // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
-                if (messageState == .encrypted || buddy.preferredSecurity == .plaintextWithOTR) {
-                    self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
-                    otrKit.encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
-                } else {
-                    //We need to initiate an OTR session
-                    
-                    //Timeout at some point waiting for OTR session
-                    DispatchQueue.main.async(execute: { 
-                        let timer = Timer.scheduledTimer(timeInterval: self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
-                        self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,messageSecurity:message.messageSecurity(), timer:timer, completion: completion)
-                        otrKit.initiateEncryption(withUsername: buddy.username, accountName: account.username, protocol: account.protocolTypeString())
-                    })
-                }
-            } else if (message.messageSecurity() == .plaintext) {
+            switch message.messageSecurity() {
+            case .plaintext:
                 self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
                 OTRProtocolManager.sharedInstance().send(message)
+                break
+            case .plaintextWithOTR:
+                self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: false, completion: completion)
+                break
+            case .OTR:
+                self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: true, completion: completion)
+                break
+            case .OMEMO:
+                self.sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
+                break
             }
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
@@ -435,5 +383,83 @@ extension MessageQueueHandler: YapTaskQueueHandler {
         }
         
         self.sendMessage(message, completion: completion)
+    }
+}
+      
+// Message sending logic
+extension MessageQueueHandler {
+    typealias MessageQueueHandlerCompletion = (_ success: Bool, _ retryTimeout: TimeInterval) -> Void
+    
+    func sendOTRMessage(message:OTROutgoingMessage, buddyKey:String, buddyUsername:String, accountUsername:String, accountProtocolStrintg:String, requiresActiveSession:Bool, completion:@escaping MessageQueueHandlerCompletion) {
+        
+        guard let text = message.text else {
+            completion(true, 0.0)
+            return
+        }
+        //We're connected now we need to check encryption requirements
+        let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
+        let otrKitSend = {
+            self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection(), messageSecurity:message.messageSecurity(), completion: completion)
+            otrKit.encodeMessage(text, tlvs: nil, username:buddyUsername , accountName: accountUsername, protocol: accountProtocolStrintg, tag: message)
+        }
+        
+        if (requiresActiveSession && otrKit.messageState(forUsername: buddyUsername, accountName: accountUsername, protocol: accountProtocolStrintg) != .encrypted) {
+            //We need to initiate an OTR session
+            
+            //Timeout at some point waiting for OTR session
+            DispatchQueue.main.async {
+                let timer = Timer.scheduledTimer(timeInterval: self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddyKey, repeats: false)
+                self.waitingForBuddy(buddyKey, messageKey: message.uniqueId, messageCollection: OTROutgoingMessage.collection(),messageSecurity:message.messageSecurity(), timer:timer, completion: completion)
+                otrKit.initiateEncryption(withUsername: buddyUsername, accountName: accountUsername, protocol: accountProtocolStrintg)
+            }
+        } else {
+            // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
+            otrKitSend()
+        }
+    }
+    
+    func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:OTRXMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
+        guard let text = message.text else {
+            completion(true, 0.0)
+            return
+        }
+        
+        guard let signalCoordinator = accountProtocol.omemoSignalCoordinator else {
+            self.databaseConnection.asyncReadWrite({ (transaction) in
+                guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                    return
+                }
+                message.error = NSError.chatSecureError(EncryptionError.omemoNotSuported, userInfo: nil)
+                message.save(with: transaction)
+            })
+            completion(true, 0.0)
+            return
+        }
+        self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection(), messageSecurity:message.messageSecurity(), completion: completion)
+        
+        
+        
+        signalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if (success == false) {
+                //Something went wrong getting ready to send the message
+                //Save error object to message
+                strongSelf.databaseConnection.readWrite({ (transaction) in
+                    guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                        return
+                    }
+                    message.error = error
+                    message.save(with: transaction)
+                })
+                
+                if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection()) {
+                    //Even though we were not succesfull in sending a message. The action needs to be removed from the queue so the next message can be handled.
+                    messageInfo.completion(true, 0.0)
+                }
+            }
+            })
     }
 }

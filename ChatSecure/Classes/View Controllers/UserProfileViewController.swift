@@ -84,7 +84,7 @@ open class UserProfileViewController: XLFormViewController {
                 break
             }
         }
-        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
             for viewedDevice in devicesToSave {
                 if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
                     device = device.copy() as! OTROMEMODevice
@@ -250,7 +250,7 @@ open class UserProfileViewController: XLFormViewController {
                 preferredSecurity = .omemOandOTR
             }
             
-            OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in
+            OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in
                 guard var buddy = transaction.object(forKey: buddy.uniqueId, inCollection: type(of: buddy).collection()) as? OTRBuddy else {
                     return
                 }

@@ -109,7 +109,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
     public func senderId() -> String! {
         var result:String? = nil
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection.read { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read { (transaction) -> Void in
             if (self.state.incoming()) {
                 result = self.senderJID
             } else {

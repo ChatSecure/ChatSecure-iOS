@@ -37,29 +37,31 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
         case .delete:
             let action = YapActionItem(identifier:"delete", date: nil, retryTimeout: 30, requiresInternet: true, block: { (collection, key, object, metadata) -> Void in
                 
-                let connection = OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection
+                guard let connection = OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection else {
+                    return
+                }
                 
                 var account:OTRAccount? = nil
-                connection?.read({ (transaction) -> Void in
+                connection.read({ (transaction) -> Void in
                     account = OTRAccount.fetch(withUniqueID: buddy.accountUniqueId, transaction: transaction)
                 })
                 
                 guard let acct = account else {
-                    connection?.readWrite({ (transaction) -> Void in
+                    connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)
                     })
                     return
                 }
                 
                 guard let proto = OTRProtocolManager.sharedInstance().protocol(for: acct) else {
-                    connection?.readWrite({ (transaction) -> Void in
+                    connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)
                     })
                     return
                 }
                 if proto.connectionStatus() == .connected {
                     proto.removeBuddies([buddy])
-                    connection?.readWrite({ (transaction) -> Void in
+                    connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)
                     })
                 }
