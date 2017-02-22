@@ -45,7 +45,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ARChromeActivity', '~> 1.0'
   # We need a commit from next release
   #pod 'CocoaAsyncSocket', '~> 7.4'
-  pod 'CocoaAsyncSocket', '~> 7.5.1'
+  pod 'CocoaAsyncSocket', '~> 7.6.0'
+  pod 'ProxyKit/Client', '~> 1.2.0'
 
   pod 'JTSImageViewController', '~> 1.4'
   pod 'KVOController', '~> 1.0'
@@ -75,10 +76,8 @@ abstract_target 'ChatSecureCorePods' do
 
   # Submodules
 
-
   pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
-  pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'

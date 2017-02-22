@@ -26,9 +26,7 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
-  - CocoaAsyncSocket (7.5.1):
-    - CocoaAsyncSocket/GCD (= 7.5.1)
-  - CocoaAsyncSocket/GCD (7.5.1)
+  - CocoaAsyncSocket (7.6.0)
   - CocoaLumberjack (2.3.0):
     - CocoaLumberjack/Default (= 2.3.0)
     - CocoaLumberjack/Extensions (= 2.3.0)
@@ -59,9 +57,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
-  - KissXML (5.1.2):
-    - KissXML/Core (= 5.1.2)
-  - KissXML/Core (5.1.2)
+  - KissXML (5.2.0)
   - KSCrash (1.15.3):
     - KSCrash/Installations (= 1.15.3)
   - KSCrash/Installations (1.15.3):
@@ -147,11 +143,11 @@ PODS:
   - OpenInChrome (0.0.1)
   - OTRKit (2.0.0)
   - ParkedTextField (0.3.0)
-  - ProxyKit/Client (1.1.0):
+  - ProxyKit/Client (1.2.0):
     - ProxyKit/common
-  - ProxyKit/common (1.1.0):
-    - CocoaAsyncSocket (~> 7.4)
-    - CocoaLumberjack (~> 2.2)
+  - ProxyKit/common (1.2.0):
+    - CocoaAsyncSocket (~> 7.6)
+    - CocoaLumberjack
   - PureLayout (3.0.2)
   - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
@@ -172,9 +168,9 @@ PODS:
   - VTAcknowledgementsViewController (1.2.1)
   - XLForm (3.3.0)
   - XMPPFramework (3.7.0):
-    - CocoaAsyncSocket (~> 7.5.1)
-    - CocoaLumberjack (~> 2.0)
-    - KissXML (~> 5.1.2)
+    - CocoaAsyncSocket (~> 7.6.0)
+    - CocoaLumberjack
+    - KissXML (~> 5.2.0)
   - YapDatabase/SQLCipher (2.9.2):
     - YapDatabase/SQLCipher/Core (= 2.9.2)
     - YapDatabase/SQLCipher/Extensions (= 2.9.2)
@@ -237,7 +233,7 @@ DEPENDENCIES:
   - BBlock (~> 1.2)
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
-  - CocoaAsyncSocket (~> 7.5.1)
+  - CocoaAsyncSocket (~> 7.6.0)
   - CocoaLumberjack (~> 2.3.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - FormatterKit/TimeIntervalFormatter
@@ -257,7 +253,7 @@ DEPENDENCIES:
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, tag `0.3.0`)
-  - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
+  - ProxyKit/Client (~> 1.2.0)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
@@ -296,8 +292,6 @@ EXTERNAL SOURCES:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
-  ProxyKit:
-    :path: Submodules/ProxyKit/ProxyKit.podspec
   SignalProtocol-ObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
   SignalProtocolC:
@@ -329,7 +323,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
-  CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
+  CocoaAsyncSocket: b9d5589f07baf9de8f34cc25abd4fcba28f13805
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   CPAProxy: 3a23720ca12c0725353a6cd45673fae2b460a98a
   FormatterKit: 11ad17b983200629246a5a466f6f1bfa2df823cb
@@ -341,7 +335,7 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
-  KissXML: 246c842586bb77110e04fb88e19376d96245c856
+  KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
   KSCrash: f344875321256d5906569a0853d73c6354a9f6f4
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -352,7 +346,7 @@ SPEC CHECKSUMS:
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
   ParkedTextField: e735a0a6b5343834f0e2fe7ba359d20b27768f8d
-  ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
+  ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
@@ -365,11 +359,11 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: 9817d71a3015e08095cda1e8d6435fad8970059f
+  XMPPFramework: 71f0a5a4ad8fde5c8bd1579e8492f3386019d36c
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: 0cd69015a10cb49c192bf70f18f8798ece9aa6d2
+PODFILE CHECKSUM: 1fce2829a8a1b3ad5027b6ac20fb51b880f59bd5
 
 COCOAPODS: 1.2.0
