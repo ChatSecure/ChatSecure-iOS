@@ -30,9 +30,9 @@ open class OTRWelcomeViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.createAccountButton?.setTitle(CREATE_NEW_ACCOUNT_STRING(), for: UIControlState())
-        self.skipButton?.setTitle(SKIP_STRING(), for: UIControlState())
-        self.existingAccountButton?.setTitle(ADD_EXISTING_STRING(), for: UIControlState())
+        self.createAccountButton?.setTitle(CREATE_NEW_ACCOUNT_STRING(), for: .normal)
+        self.skipButton?.setTitle(SKIP_STRING(), for: .normal)
+        self.existingAccountButton?.setTitle(ADD_EXISTING_STRING(), for: .normal)
         
     }
 

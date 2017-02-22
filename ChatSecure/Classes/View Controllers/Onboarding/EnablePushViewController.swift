@@ -46,8 +46,8 @@ open class EnablePushViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
-        self.skipButton?.setTitle(SKIP_STRING(), for: UIControlState())
-        self.enablePushButton?.setTitle(ENABLE_PUSH_STRING(), for: UIControlState())
+        self.skipButton?.setTitle(SKIP_STRING(), for: .normal)
+        self.enablePushButton?.setTitle(ENABLE_PUSH_STRING(), for: .normal)
         self.skipButton?.accessibilityIdentifier = "EnablePushViewSkipButton"
     }
     
