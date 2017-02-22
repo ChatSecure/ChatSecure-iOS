@@ -30,7 +30,7 @@ class OTRImageTest: XCTestCase {
     func testImages() {
         let resizeImageSize:CGFloat = 120
         
-        ["small","landscape","portrait"].map { (name) -> ImageInfo in
+        ["portrait-orientation","portrait","small","landscape"].map { (name) -> ImageInfo in
             return ImageInfo(name: name, image: self.imageForName(name, type: "jpg")!)
         }.forEach { (imageInfo) in
             let minSide = min(imageInfo.image.size.height, imageInfo.image.size.width)
