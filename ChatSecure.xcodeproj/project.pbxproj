@@ -58,6 +58,7 @@
 		636767E91D83562700432B48 /* TestXMPPAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636767E81D83562700432B48 /* TestXMPPAccount.swift */; };
 		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; };
+		636DE07E1E5E476200D8D868 /* portrait-orientation.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 636DE07D1E5E476200D8D868 /* portrait-orientation.jpg */; };
 		6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */; };
 		637ABBC41DD52ABB00B18DD2 /* OTRMessageEncryptionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 637ABBC11DD5232800B18DD2 /* OTRMessageEncryptionInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		637ABBC91DD5312200B18DD2 /* OTROutgoingMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 637ABBC71DD5312200B18DD2 /* OTROutgoingMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -796,6 +797,7 @@
 		636985581BC875110083FC53 /* OTRXMPPRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPRoomManager.h; sourceTree = "<group>"; };
 		636985591BC875110083FC53 /* OTRXMPPRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPRoomManager.m; sourceTree = "<group>"; };
 		636C63201B571B56008FEE69 /* OTRURLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRURLTests.m; sourceTree = "<group>"; };
+		636DE07D1E5E476200D8D868 /* portrait-orientation.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "portrait-orientation.jpg"; path = "TestImages/portrait-orientation.jpg"; sourceTree = "<group>"; };
 		6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabase+ChatSecure.swift"; sourceTree = "<group>"; };
 		637645C81B98F9BF00B3402F /* PushController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushController.swift; sourceTree = "<group>"; };
 		637ABBC11DD5232800B18DD2 /* OTRMessageEncryptionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageEncryptionInfo.h; sourceTree = "<group>"; };
@@ -1046,6 +1048,7 @@
 		6323C6FF1E396D1900D0FB42 /* TestImages */ = {
 			isa = PBXGroup;
 			children = (
+				636DE07D1E5E476200D8D868 /* portrait-orientation.jpg */,
 				6323C7001E396D3D00D0FB42 /* landscape.jpg */,
 				6323C7011E396D3D00D0FB42 /* portrait.jpg */,
 				6323C7021E396D3D00D0FB42 /* small.jpg */,
@@ -2271,6 +2274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6323C7041E396D3D00D0FB42 /* portrait.jpg in Resources */,
+				636DE07E1E5E476200D8D868 /* portrait-orientation.jpg in Resources */,
 				635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */,
 				6323C7031E396D3D00D0FB42 /* landscape.jpg in Resources */,
 				6323C7051E396D3D00D0FB42 /* small.jpg in Resources */,
