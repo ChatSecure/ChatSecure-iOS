@@ -122,6 +122,7 @@ PODS:
   - KSCrash/Reporting/Tools (1.15.3):
     - KSCrash/Recording
   - KVOController (1.2.0)
+  - libidn (1.33)
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
@@ -171,6 +172,7 @@ PODS:
     - CocoaAsyncSocket (~> 7.6.0)
     - CocoaLumberjack
     - KissXML (~> 5.2.0)
+    - libidn (~> 1.33.0)
   - YapDatabase/SQLCipher (2.9.2):
     - YapDatabase/SQLCipher/Core (= 2.9.2)
     - YapDatabase/SQLCipher/Extensions (= 2.9.2)
@@ -338,6 +340,7 @@ SPEC CHECKSUMS:
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
   KSCrash: f344875321256d5906569a0853d73c6354a9f6f4
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
+  libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
@@ -359,7 +362,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: 71f0a5a4ad8fde5c8bd1579e8492f3386019d36c
+  XMPPFramework: c984f0cdece94ef0e298363d20b36f029484e7bc
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b

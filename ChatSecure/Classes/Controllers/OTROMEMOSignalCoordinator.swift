@@ -350,7 +350,7 @@ import YapDatabase
         }
     }
     
-    open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: gl_uint32_t, fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
+    open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
         let aesGcmBlockLength = 16
         guard let encryptedPayload = payload, encryptedPayload.count > aesGcmBlockLength else {
             return
@@ -544,7 +544,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
         
     }
-    public func omemo(_ omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: gl_uint32_t, from fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: UInt32, from fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
         self.workQueue.async { [weak self] in
             let elementId = outgoingIq.elementID()
@@ -552,11 +552,11 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
     }
     
-    public func omemo(_ omem: OMEMOModule, removedBundleId bundleId: gl_uint32_t, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, removedBundleId bundleId: UInt32, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         
     }
     
-    public func omemo(_ omemo: OMEMOModule, failedToRemoveBundleId bundleId: gl_uint32_t, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
+    public func omemo(_ omemo: OMEMOModule, failedToRemoveBundleId bundleId: UInt32, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
     }
     
@@ -568,7 +568,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
     }
     
-    public func omemo(_ omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: Data, senderDeviceId: gl_uint32_t, from fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
+    public func omemo(_ omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, from fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
         self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, fromJID: fromJID, payload: payload, message: message)
     }
 }
@@ -641,7 +641,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         return OMEMOBundle(deviceId: bundle.bundle.deviceId, identityKey: bundle.bundle.publicIdentityKey, signedPreKey: omemoSignedPreKey, preKeys: preKeysArray)
     }
 
-    public func isSessionValid(_ jid: XMPPJID, deviceId: gl_uint32_t) -> Bool {
+    public func isSessionValid(_ jid: XMPPJID, deviceId: UInt32) -> Bool {
         return self.signalEncryptionManager.sessionRecordExistsForUsername(jid.bare(), deviceId: Int32(deviceId))
     }
 }
