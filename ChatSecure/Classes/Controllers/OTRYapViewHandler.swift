@@ -32,33 +32,33 @@ private enum ViewGroups {
     case block(YapDatabaseViewMappingGroupFilter, YapDatabaseViewMappingGroupSort)
 }
 
-open class OTRYapKeyCollectionHandler:NSObject {
+public class OTRYapKeyCollectionHandler:NSObject {
     
     var storage = Dictionary<String, keyCollectionPair>()
     
-    open func observe(_ key:String, collection:String) {
+    public func observe(_ key:String, collection:String) {
         let k = key + collection
         storage.updateValue(keyCollectionPair(key: key, collection: collection), forKey: k)
     }
     
-    open func stopObserving(_ key:String, collection:String) {
+    public func stopObserving(_ key:String, collection:String) {
         let k = key + collection
         storage.removeValue(forKey: k)
     }
 }
 
 
-open class OTRYapViewHandler: NSObject {
+public class OTRYapViewHandler: NSObject {
     
     var notificationToken:NSObjectProtocol? = nil
-    open var viewName:String? = nil
-    fileprivate var groups:ViewGroups? = nil
-    open weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
-    open let keyCollectionObserver = OTRYapKeyCollectionHandler()
+    public var viewName:String? = nil
+    private var groups:ViewGroups? = nil
+    public weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
+    public let keyCollectionObserver = OTRYapKeyCollectionHandler()
     
-    open var mappings:YapDatabaseViewMappings?
+    public var mappings:YapDatabaseViewMappings?
     
-    open var databaseConnection:YapDatabaseConnection
+    public var databaseConnection:YapDatabaseConnection
     
     public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatabaseNotificationName.LongLivedTransactionChanges) {
         self.databaseConnection = databaseConnection
@@ -74,7 +74,7 @@ open class OTRYapViewHandler: NSObject {
         }
     }
     
-    open func setup(_ view:String,groups:[String]) {
+    public func setup(_ view:String,groups:[String]) {
         self.viewName = view
         let groupsArray = ViewGroups.array(groups)
         self.groups = groupsArray
@@ -82,7 +82,7 @@ open class OTRYapViewHandler: NSObject {
         self.setupMappings(view, groups: groupsArray);
     }
     
-    open func setup(_ view:String, groupBlock:@escaping YapDatabaseViewMappingGroupFilter, sortBlock:@escaping YapDatabaseViewMappingGroupSort) {
+    public func setup(_ view:String, groupBlock:@escaping YapDatabaseViewMappingGroupFilter, sortBlock:@escaping YapDatabaseViewMappingGroupSort) {
         self.viewName = view
         let groups = ViewGroups.block(groupBlock,sortBlock)
         self.groups = groups
@@ -90,7 +90,7 @@ open class OTRYapViewHandler: NSObject {
         self.setupMappings(view, groups: groups)
     }
     
-    open func groupsArray() -> [String]? {
+    public func groupsArray() -> [String]? {
         guard let groups = self.groups else {
             return nil
         }
@@ -100,7 +100,7 @@ open class OTRYapViewHandler: NSObject {
         }
     }
     
-    fileprivate func setupMappings(_ view:String,groups:ViewGroups) {
+    private func setupMappings(_ view:String,groups:ViewGroups) {
         
         self.databaseConnection.read({ (transaction) in
             // Check if extensions exists. If not then don't setup. https://github.com/yapstudios/YapDatabase/issues/203
@@ -119,7 +119,7 @@ open class OTRYapViewHandler: NSObject {
         }
     }
     
-    open func object(_ indexPath:IndexPath) -> AnyObject? {
+    public func object(_ indexPath:IndexPath) -> AnyObject? {
         var object:AnyObject? = nil
         self.databaseConnection.read { (transaction) -> Void in
             guard let viewName = self.mappings?.view else {

@@ -102,6 +102,7 @@
 		63DC417B1BB3767100D42857 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DC417A1BB3767000D42857 /* Errors.swift */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
+		63DF75F51E5FBE550032950B /* OTRYapViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF75F41E5FBE550032950B /* OTRYapViewTest.swift */; };
 		63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */; };
 		63E353B71BB9D83B005C54C3 /* OTRPushTLVHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E353B51BB9D83B005C54C3 /* OTRPushTLVHandler.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		63E353B81BB9D83B005C54C3 /* OTRPushTLVHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E353B61BB9D83B005C54C3 /* OTRPushTLVHandler.m */; };
@@ -895,6 +896,7 @@
 		63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaServer.m; sourceTree = "<group>"; };
 		63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaTests.m; sourceTree = "<group>"; };
 		63DDD8B91A9E9BD900C0A918 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
+		63DF75F41E5FBE550032950B /* OTRYapViewTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRYapViewTest.swift; sourceTree = "<group>"; };
 		63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSerializerTest.swift; sourceTree = "<group>"; };
 		63E353B51BB9D83B005C54C3 /* OTRPushTLVHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushTLVHandler.h; sourceTree = "<group>"; };
 		63E353B61BB9D83B005C54C3 /* OTRPushTLVHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushTLVHandler.m; sourceTree = "<group>"; };
@@ -1652,6 +1654,7 @@
 				63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */,
 				635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */,
 				635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */,
+				63DF75F41E5FBE550032950B /* OTRYapViewTest.swift */,
 				63917C3D1DFA20D900341D96 /* OTRModelTest.swift */,
 				6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */,
 				6323C6FF1E396D1900D0FB42 /* TestImages */,
@@ -2524,6 +2527,7 @@
 				635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */,
 				63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */,
 				63917C3E1DFA20D900341D96 /* OTRModelTest.swift in Sources */,
+				63DF75F51E5FBE550032950B /* OTRYapViewTest.swift in Sources */,
 				63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */,
 				639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
