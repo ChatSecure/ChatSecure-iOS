@@ -290,7 +290,7 @@
 		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB701BA79A7E00CD8331 /* OTRDomainCellInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058F1A16D1A300C17BAE /* OTRDomainCellInfo.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105911A16D1A300C17BAE /* OTROpenInFacebookActivity.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -328,7 +328,7 @@
 		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB971BA79A9900CD8331 /* OTRColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EC1A16D1A300C17BAE /* OTRColors.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F01A16D1A300C17BAE /* OTRImages.h */; settings = {ATTRIBUTES = (Public, ); }; };
