@@ -76,6 +76,8 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRChooseAccountViewController.h"
 #import "OTRTitleSubtitleView.h"
 #import "OTRDatabaseUnlockViewController.h"
+#import "OTRCertificatePinning.h"
+#import "OTRXMPPServerInfo.h"
 
 //Signal Models
 #import "OTRAccountSignalIdentity.h"
