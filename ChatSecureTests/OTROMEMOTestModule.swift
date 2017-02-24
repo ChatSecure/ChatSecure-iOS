@@ -11,7 +11,7 @@ import XMPPFramework
 
 protocol OTROMEMOTestModuleProtocol: class {
     func username() -> String
-    func receiveKeyData(_ keyData: [OMEMOKeyData], iv: Data, fromJID: XMPPJID, senderDeviceId: gl_uint32_t, payload: Data?, elementId: String?)
+    func receiveKeyData(_ keyData: [OMEMOKeyData], iv: Data, fromJID: XMPPJID, senderDeviceId: UInt32, payload: Data?, elementId: String?)
     func bundle() -> OMEMOBundle
 }
 
@@ -43,7 +43,7 @@ class OTROMEMOTestModule: OMEMOModule {
     }
     
     /** When fetching a bundle for device and jid we return that device given to us in the other user struct*/
-    override func fetchBundle(forDeviceId deviceId: gl_uint32_t, jid: XMPPJID, elementId: String?) {
+    override func fetchBundle(forDeviceId deviceId: UInt32, jid: XMPPJID, elementId: String?) {
         self.moduleQueue.async { 
             if self.otherUser?.bundle().deviceId == deviceId {
                 let multicastDelegate = self.value(forKey: "multicastDelegate")!
@@ -77,7 +77,7 @@ extension OTROMEMOTestModule: OTROMEMOTestModuleProtocol {
         return self.thisUser.account.username
     }
     
-    func receiveKeyData(_ keyData: [OMEMOKeyData], iv: Data, fromJID: XMPPJID, senderDeviceId:gl_uint32_t, payload: Data?, elementId: String?) {
+    func receiveKeyData(_ keyData: [OMEMOKeyData], iv: Data, fromJID: XMPPJID, senderDeviceId:UInt32, payload: Data?, elementId: String?) {
         let dummyMessage = XMPPMessage(type: "chat", elementID: "1234")
         self.thisUser.signalOMEMOCoordinator.omemo(self, receivedKeyData: keyData, iv: iv, senderDeviceId: senderDeviceId, from: fromJID, payload: payload, message: dummyMessage!)
     }
