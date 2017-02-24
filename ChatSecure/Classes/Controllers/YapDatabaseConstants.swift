@@ -58,7 +58,6 @@ import Foundation
 
 public class DatabaseNotificationName:NSObject {
     public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
-    public static let RegisteredExtension = "DatabaseNotificationName.RegisteredExtension"
 }
 
 public class DatabaseNotificationKey:NSObject {

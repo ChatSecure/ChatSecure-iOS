@@ -38,9 +38,9 @@ NSString *OTRPushAccountGroup = @"Account";
 
 
 
-+ (BOOL)registerConversationDatabaseView
++ (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database
 {
-    YapDatabaseView *conversationView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRConversationDatabaseViewExtensionName];
+    YapDatabaseView *conversationView = [database registeredExtension:OTRConversationDatabaseViewExtensionName];
     if (conversationView) {
         return YES;
     }
@@ -109,15 +109,15 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"6"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName sendNotification:YES];
+    return [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
 }
 
 
 
 
-+ (BOOL)registerAllAccountsDatabaseView
++ (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database
 {
-    YapDatabaseView *accountView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllAccountDatabaseViewExtensionName];
+    YapDatabaseView *accountView = [database registeredExtension:OTRAllAccountDatabaseViewExtensionName];
     if (accountView) {
         return YES;
     }
@@ -152,12 +152,12 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"1"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName sendNotification:YES];
+    return [database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
 }
 
-+ (BOOL)registerChatDatabaseView
++ (BOOL)registerChatDatabaseViewWithDatabase:(YapDatabase *)database
 {
-    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRChatDatabaseViewExtensionName]) {
+    if ([database registeredExtension:OTRChatDatabaseViewExtensionName]) {
         return YES;
     }
     
@@ -191,12 +191,12 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"1"
                                                               options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName sendNotification:YES];
+    return [database registerExtension:view withName:OTRChatDatabaseViewExtensionName];
 }
 
-+ (BOOL)registerAllBuddiesDatabaseView
++ (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database
 {
-    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllBuddiesDatabaseViewExtensionName]) {
+    if ([database registeredExtension:OTRAllBuddiesDatabaseViewExtensionName]) {
         return YES;
     }
     
@@ -256,13 +256,13 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"3"
                                                               options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName sendNotification:YES];
+    return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
 
 }
 
-+ (BOOL)registerAllSubscriptionRequestsView
++ (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database
 {
-    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllSubscriptionRequestsViewExtensionName]) {
+    if ([database registeredExtension:OTRAllSubscriptionRequestsViewExtensionName]) {
         return YES;
     }
     
@@ -296,7 +296,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"1"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName sendNotification:YES];
+    return [database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
 }
 
 @end
