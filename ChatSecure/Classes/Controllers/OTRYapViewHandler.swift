@@ -159,20 +159,18 @@ public class OTRYapViewHandler: NSObject {
             return
         }
         
+        if notifications.count == 0 {
+            return
+        }
+        
         guard let databaseView = self.databaseConnection.ext(mappings.view) as? YapDatabaseViewConnection else {
             return
         }
         
-        let sectionChanges:AutoreleasingUnsafeMutablePointer<NSArray>? = nil
-        let rowChanges:AutoreleasingUnsafeMutablePointer<NSArray>? = nil
+        let src = databaseView.otr_getSectionRowChanges(for: notifications, with: mappings)
         
-        databaseView.getSectionChanges(sectionChanges, rowChanges: rowChanges, for: notifications, with: mappings)
-        
-        let sc = sectionChanges?.pointee as? [YapDatabaseViewSectionChange] ?? [YapDatabaseViewSectionChange]()
-        let rc = rowChanges?.pointee as? [YapDatabaseViewRowChange] ?? [YapDatabaseViewRowChange]()
-        
-        if sc.count > 0 || rc.count > 0 {
-            self.delegate?.didReceiveChanges?(self, sectionChanges: sc, rowChanges: rc)
+        if src.sectionChanges.count > 0 || src.rowChanges.count > 0 {
+            self.delegate?.didReceiveChanges?(self, sectionChanges: src.sectionChanges, rowChanges: src.rowChanges)
         }
     }
 }

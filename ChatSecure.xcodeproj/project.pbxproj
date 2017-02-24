@@ -407,6 +407,8 @@
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */; };
 		D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */; };
+		D97175531E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -965,6 +967,8 @@
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAccountTableViewCell.swift; sourceTree = "<group>"; };
 		D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushAccountTableViewCell.xib; sourceTree = "<group>"; };
+		D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YapDatabaseViewConnection+ChatSecure.h"; sourceTree = "<group>"; };
+		D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "YapDatabaseViewConnection+ChatSecure.m"; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
 		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
@@ -1117,6 +1121,8 @@
 		633105011A16D1A300C17BAE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */,
+				D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */,
 				D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */,
 				633105021A16D1A300C17BAE /* NSURL+ChatSecure.h */,
 				633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */,
@@ -1921,6 +1927,7 @@
 				D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */,
 				639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */,
 				D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */,
+				D97175531E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h in Headers */,
 				D93DDB311BA79A7000CD8331 /* UIViewController+ChatSecure.h in Headers */,
 				D93DDB301BA79A7000CD8331 /* UIImage+ChatSecure.h in Headers */,
 				D93DDB2F1BA79A7000CD8331 /* UIActivityViewController+ChatSecure.h in Headers */,
@@ -2612,6 +2619,7 @@
 				63D639E21D12124F002B4175 /* OTRStreamManagementDelegate.swift in Sources */,
 				D93DDABF1BA79A2500CD8331 /* OTRToastOptions.m in Sources */,
 				D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */,
+				D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */,
 				D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */,
 				D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */,
 				D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */,

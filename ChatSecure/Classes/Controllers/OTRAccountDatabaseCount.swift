@@ -39,6 +39,7 @@ import YapDatabase
 }
 
 extension OTRAccountDatabaseCount: OTRYapViewHandlerDelegateProtocol {
+
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
         self.delegate?.accountCountChanged(self)
     }

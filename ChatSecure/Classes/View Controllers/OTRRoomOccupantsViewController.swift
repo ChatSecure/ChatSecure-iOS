@@ -41,6 +41,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
 }
 
 extension OTRRoomOccupantsViewController:OTRYapViewHandlerDelegateProtocol {
+
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
         self.tableView.reloadData()
     }
