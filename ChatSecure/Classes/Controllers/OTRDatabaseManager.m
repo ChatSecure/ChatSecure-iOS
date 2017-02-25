@@ -162,13 +162,12 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     
     // Register realtionship extension
     YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
-    [self.database asyncRegisterExtension:databaseRelationship
-                            extensionName:DatabaseExtensionNameRelationshipExtensionName
-                         sendNotification:YES completion:nil];
+    
+    [self.database asyncRegisterExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName] completionBlock:nil];
     
     // Register Secondary Index
     YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
-    [self.database asyncRegisterExtension:secondaryIndex extensionName:DatabaseExtensionNameSecondaryIndexName sendNotification:YES completion:nil];
+    [self.database asyncRegisterExtension:secondaryIndex withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameSecondaryIndexName] completionBlock:nil];
     YapDatabaseSecondaryIndex *messageIndex = [self setupMessageSecondaryIndexes];
     [self.database asyncRegisterExtension:messageIndex withName:OTRMessagesSecondaryIndex completionBlock:nil];
     
@@ -179,11 +178,11 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     
     //Async register all the views
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [OTRDatabaseView registerAllAccountsDatabaseView];
-        [OTRDatabaseView registerConversationDatabaseView];
-        [OTRDatabaseView registerChatDatabaseView];
-        [OTRDatabaseView registerAllBuddiesDatabaseView];
-        [OTRDatabaseView registerAllSubscriptionRequestsView];
+        [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerAllSubscriptionRequestsViewWithDatabase:self.database];
         
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
