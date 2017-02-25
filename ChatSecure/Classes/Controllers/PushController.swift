@@ -90,13 +90,16 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     
     /// This will delete all your push data and disable push
     public func deactivate(completion: (()->())?, callbackQueue: DispatchQueue?) {
-        PushController.setPushPreference(.disabled)
-        self.storage.deleteEverything(completion: completion, callbackQueue: callbackQueue)
+        apiClient.unregister { (success, error) in
+            PushController.setPushPreference(.disabled)
+            self.storage.deleteEverything(completion: completion, callbackQueue: callbackQueue)
+            self.apiClient.account = nil
+        }
     }
     
     /// This calls deactivate and then re-enables push
     public func reset(completion: (()->())?, callbackQueue: DispatchQueue?) {
-        deactivate(completion: { [weak self] in
+        self.deactivate(completion: { [weak self] in
             PushController.setPushPreference(.enabled)
             self?.createNewRandomPushAccount { (success, error) in
                 if success {

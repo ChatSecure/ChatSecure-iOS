@@ -12,7 +12,7 @@ import UIKit
 @objc(TwoButtonTableViewCell)
 public class TwoButtonTableViewCell: UITableViewCell {
     
-    public typealias ButtonBlock = (_ cell: TwoButtonTableViewCell, _ sender: AnyObject) -> ()
+    public typealias ButtonBlock = (_ cell: TwoButtonTableViewCell, _ sender: Any) -> ()
 
     @IBOutlet public weak var leftButton: UIButton!
     @IBOutlet public weak var rightButton: UIButton!
@@ -24,12 +24,12 @@ public class TwoButtonTableViewCell: UITableViewCell {
         return "TwoButtonTableViewCell"
     }
     
-    @IBAction private func leftButtonPressed(sender: AnyObject) {
+    @IBAction private func leftButtonPressed(_ sender: Any) {
         guard let block = leftAction else { return }
         block(self, sender)
     }
     
-    @IBAction private func rightButtonPressed(sender: AnyObject) {
+    @IBAction private func rightButtonPressed(_ sender: Any) {
         guard let block = rightAction else { return }
         block(self, sender)
     }

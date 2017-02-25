@@ -179,7 +179,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     func numberUsedTokens() -> UInt {
         var usedTokensCount:UInt = 0
         self.databaseConnection.read { (transaction) -> Void in
-            usedTokensCount = transaction.numberOfKeys(inCollection: PushYapCollections.unusedTokenCollection.rawValue)
+            usedTokensCount = transaction.numberOfKeys(inCollection: TokenContainer.collection())
         }
         return usedTokensCount
     }

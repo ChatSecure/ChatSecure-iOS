@@ -28,9 +28,9 @@ public class ServerCapabilityTableViewCell: UITableViewCell {
         checkLabel.text = nil
     }
     
-    public var infoButtonBlock: ((_ cell: ServerCapabilityTableViewCell, _ sender: AnyObject) -> ())?
+    public var infoButtonBlock: ((_ cell: ServerCapabilityTableViewCell, _ sender: Any) -> ())?
     
-    @IBAction func infoButtonPressed(sender: AnyObject) {
+    @IBAction func infoButtonPressed(_ sender: Any) {
         guard let block = infoButtonBlock else { return }
         block(self, sender)
     }
