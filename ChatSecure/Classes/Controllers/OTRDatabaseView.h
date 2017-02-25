@@ -9,6 +9,8 @@
 @import Foundation;
 @import YapDatabase;
 
+NS_ASSUME_NONNULL_BEGIN
+
 
 //Extension Strings
 extern NSString *OTRConversationDatabaseViewExtensionName;
@@ -33,9 +35,9 @@ extern NSString *OTRPushTokenGroup;
 @interface OTRDatabaseView : NSObject
 
 
-+ (BOOL)registerConversationDatabaseView;
++ (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllAccountsDatabaseView;
++ (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database;
 
 
 /**
@@ -43,10 +45,11 @@ extern NSString *OTRPushTokenGroup;
  by buddyUniqueID. For OTRXMPPRoomMessage they are grouped by roomUniqueID. In both cases they are
  sorted by date.
  */
-+ (BOOL)registerChatDatabaseView;
++ (BOOL)registerChatDatabaseViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllBuddiesDatabaseView;
++ (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllSubscriptionRequestsView;
++ (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database;
 
 @end
+NS_ASSUME_NONNULL_END

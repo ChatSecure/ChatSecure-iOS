@@ -21,8 +21,6 @@
 
 + (UIImage *)otr_squareCropImage:(UIImage *)image
 {
-    
-    
     CGFloat width = image.size.width;
     CGFloat height = image.size.height;
     
@@ -38,6 +36,10 @@
     CGFloat y = roundf((height - size) / 2.0);
     //Create rect to crop with
     CGRect cropRect = CGRectMake(x, y, size, size);
+    CGAffineTransform rectTransform = [self otr_imageTransform:image];
+    cropRect = CGRectApplyAffineTransform(cropRect, rectTransform);
+    //Issues with floats being ever so slightly off and then CGRectIntegral changing our size to non-square
+    cropRect = CGRectMake(roundf(cropRect.origin.x), roundf(cropRect.origin.y), roundf(cropRect.size.width), roundf(cropRect.size.height));
     
     //Do the actual crop
     CGImageRef newImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
@@ -46,6 +48,27 @@
     CGImageRelease(newImageRef);
     
     return newImage;
+}
+
+//https://github.com/gekitz/GKImagePicker/blob/e788d9f3fba5595c98dfa0bbbc1dd4e897c1ccf8/GKClasses/GKImageCropView.m#L149
++ (CGAffineTransform)otr_imageTransform:(UIImage *)image {
+    CGAffineTransform rectTransform;
+    switch (image.imageOrientation)
+    {
+        case UIImageOrientationLeft:
+            rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(M_PI_2), 0, -image.size.height);
+            break;
+        case UIImageOrientationRight:
+            rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(-M_PI_2), -image.size.width, 0);
+            break;
+        case UIImageOrientationDown:
+            rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(-M_PI), -image.size.width, -image.size.height);
+            break;
+        default:
+            rectTransform = CGAffineTransformIdentity;
+    };
+    
+    return CGAffineTransformScale(rectTransform, image.scale, image.scale);
 }
 
 + (UIImage *)otr_prepareForAvatarUpload:(UIImage *)image maxSize:(CGFloat)size

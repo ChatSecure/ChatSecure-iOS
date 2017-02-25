@@ -84,33 +84,4 @@ public extension YapDatabase {
         
         self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
-    
-    /// The same as the normal asyncRegisterExtension except this will send out an NSNotification when registered
-    public func asyncRegisterExtension(_ extension:YapDatabaseExtension, extensionName:DatabaseExtensionName, sendNotification:Bool = true, completion:((_ ready:Bool) -> Void)?) {
-        self.asyncRegister(`extension`, withName: extensionName.name(), completionQueue: DispatchQueue.main, completionBlock: { (ready) -> Void in
-            
-            if ready && sendNotification {
-                self.sendExtensionRegisteredNotification(extensionName.name())
-            }
-            
-            completion?(ready)
-        })
-    }
-    
-    public func registerExtension(_ extension:YapDatabaseExtension, withName name:String, sendNotification:Bool = true) -> Bool {
-        let success = self.register(`extension`, withName: name, connection: nil)
-        if success && sendNotification {
-            self.sendExtensionRegisteredNotification(name)
-        }
-        return success
-    }
-    
-    fileprivate func sendExtensionRegisteredNotification(_ extensionName: String) {
-        DispatchQueue.main.async {
-            let name = DatabaseNotificationName.RegisteredExtension
-            let userInfo = [DatabaseNotificationKey.ExtensionName:extensionName]
-            NotificationCenter.default.post(name: Notification.Name(rawValue: name), object: self, userInfo: userInfo)
-        }
-
-    }
 }

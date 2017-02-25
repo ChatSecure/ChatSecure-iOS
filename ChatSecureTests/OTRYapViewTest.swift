@@ -11,8 +11,8 @@ import ChatSecureCore
 
 class ViewHandlerTestDelegate:NSObject {
     let didSetup: () -> Void
-    let didReceiveObjectChanges: (_ key:String, _ collection:String) -> Void
-    let didReceiveViewChanges: (_ row:[YapDatabaseViewRowChange], _ section:[YapDatabaseViewSectionChange]) -> Void
+    let didReceiveObjectChanges: (_ key:String,_ collection:String) -> Void
+    let didReceiveViewChanges: (_ row:[YapDatabaseViewRowChange],_ section:[YapDatabaseViewSectionChange]) -> Void
     
     init(didSetup: @escaping () -> Void, objectChanges: @escaping (_ key:String, _ collection:String) -> Void, viewChanges: @escaping (_ row:[YapDatabaseViewRowChange], _ section:[YapDatabaseViewSectionChange]) -> Void) {
         self.didSetup = didSetup
@@ -39,17 +39,19 @@ class OTRYapViewTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        
+        
         FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
-    }
-    
-    override func tearDown() {
+        }
+        
+        override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
-    }
-    
-    func testViewHandlerUpdate() {
-        let setupExpecation = self.expectation(description: "Setup Mappings")
-        let viewChangeExpectation = self.expectation(description: "Insert buddy")
+        }
+        
+        func testViewHandlerUpdate() {
+            let setupExpecation = self.expectation(description: "Setup Mappings")
+            let viewChangeExpectation = self.expectation(description: "Insert buddy")
         
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
         let viewHandler = OTRYapViewHandler(databaseConnection: databaseManager.longLivedReadOnlyConnection!, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
@@ -60,20 +62,20 @@ class OTRYapViewTest: XCTestCase {
             //Once our view handler is ready we need to make a change to the database that will be reflected in the view.
             databaseManager.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
                 let buddy = OTRBuddy()!
+                let account = OTRAccount()!
                 buddy.username = "test@test.com"
+                buddy.accountUniqueId = account.uniqueId
+                account.save(with: transaction)
                 buddy.save(with: transaction)
+                
             })
-            
-        }, objectChanges: { (key, collection) in
-            
-        }) { (rowChanges, sectionChanges) in
-            viewChangeExpectation.fulfill()
-        }
+        
+            }, objectChanges: { (key, collection) in
+        
+            }) { (rowChanges, sectionChanges) in
+                viewChangeExpectation.fulfill()
+            }
         viewHandler.delegate = delegate
-        
-        
-        
-        
         self.waitForExpectations(timeout: 300, handler: nil)
     }
 }
