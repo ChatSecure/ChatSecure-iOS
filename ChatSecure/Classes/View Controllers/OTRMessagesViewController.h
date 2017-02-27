@@ -44,6 +44,8 @@
 
 - (nullable UIBarButtonItem *)rightBarButtonItem;
 
+- (void)infoButtonPressed:(nullable id)sender;
+
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
