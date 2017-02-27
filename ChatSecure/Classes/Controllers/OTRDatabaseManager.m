@@ -87,7 +87,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     
     self.mediaServer = [OTRMediaServer sharedInstance];
     NSError *error = nil;
-    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
+    BOOL mediaServerStarted = [self.mediaServer startOnPort:0 error:&error];
     if (!mediaServerStarted) {
         DDLogError(@"Error starting media server: %@",error);
     }
