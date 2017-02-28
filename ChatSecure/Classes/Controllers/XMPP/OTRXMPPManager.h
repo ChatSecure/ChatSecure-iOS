@@ -32,6 +32,7 @@
 
 @class OTRXMPPAccount, OTRXMPPRoomManager;
 @class OTROMEMOSignalCoordinator;
+@class XMPPPushModule;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
@@ -42,6 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
+/** This will be nil for Tor accounts */
+@property (nonatomic, strong, readonly, nullable) XMPPPushModule *xmppPushModule;
+
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;
