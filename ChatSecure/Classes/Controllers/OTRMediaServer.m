@@ -41,8 +41,7 @@
                           __strong typeof(weakSelf)strongSelf = weakSelf;
                           [strongSelf handleMediaRequest:request completion:completionBlock];
                       }];
-    return [self.webServer startWithOptions:@{GCDWebServerOption_BindToLocalhost: @(YES),
-                                              GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
+    return [self.webServer startWithOptions:@{GCDWebServerOption_BindToLocalhost: @(YES)}
                                       error:error];
     
 }
