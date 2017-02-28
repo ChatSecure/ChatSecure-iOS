@@ -35,6 +35,7 @@ completionQueue:(dispatch_queue_t)completionQueue;
      completionQueue:(dispatch_queue_t)completionQueue;
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;
 
 + (instancetype)sharedInstance;
 

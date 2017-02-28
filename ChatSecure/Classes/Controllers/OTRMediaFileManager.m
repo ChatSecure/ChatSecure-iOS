@@ -165,8 +165,17 @@ NSString *const kOTRRootMediaDirectory = @"media";
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
 {
+    return [self pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId withLeadingSlash:YES];
+}
+
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash
+{
     if ([buddyUniqueId length] && [mediaItem.uniqueId length] && [mediaItem.filename length]) {
-        return [NSString pathWithComponents:@[@"/",kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
+        NSString *path = [NSString pathWithComponents:@[kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
+        if (includeLeadingSlash) {
+            return [NSString stringWithFormat:@"/%@",path];
+        }
+        return path;
     }
     return nil;
 }
