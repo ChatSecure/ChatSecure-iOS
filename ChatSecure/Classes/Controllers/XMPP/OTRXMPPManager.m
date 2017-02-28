@@ -55,6 +55,7 @@
 #import "OTRXMPPManager_Private.h"
 #import "OTRBuddyCache.h"
 #import "UIImage+ChatSecure.h"
+#import "XMPPPushModule.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -203,14 +204,20 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     _serverCapabilities = [[OTRServerCapabilities alloc] init];
     [self.serverCapabilities activate:self.xmppStream];
-	
-	_xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
+    
+    _xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
     _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
     
     self.xmppCapabilities.autoFetchHashedCapabilities = YES;
     self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
     
+    // Add push registration module, if this isn't a Tor account
+    if (self.account.accountType != OTRAccountTypeXMPPTor) {
+        _xmppPushModule = [[XMPPPushModule alloc] init];
+        [self.xmppPushModule activate:self.xmppStream];
+        [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
+    }
     
 	// Activate xmpp modules
     
@@ -279,7 +286,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_xmppRoster removeDelegate:self];
     [_xmppCapabilities removeDelegate:self];
     [_xmppvCardTempModule removeDelegate:self];
+    [_xmppPushModule removeDelegate:self];
 
+    [_xmppPushModule deactivate];
     [_xmppReconnect         deactivate];
     [_xmppRoster            deactivate];
     [_xmppvCardTempModule   deactivate];
@@ -862,54 +871,31 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
 }
 
-#pragma mark XMPPCapabilitiesDelegate
+#pragma mark XMPPPushDelegate
 
-- (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
-    DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
-    NSString *myDomain = [self.xmppStream.myJID domain];
-    if ([[jid bare] isEqualToString:[jid domain]]) {
-        if (![[jid domain] isEqualToString:myDomain]) {
-            // You're checking the server's capabilities but it's not your server(?)
-            return;
-        }
-    } else {
-        if (![[self.xmppStream.myJID bare] isEqualToString:[jid bare]]) {
-            // You're checking someone else's capabilities
-            return;
-        }
-    }
+- (void)pushModuleReady:(XMPPPushModule*)module {
     // Enable XEP-0357 push bridge if server supports it
     // ..but don't register for Tor accounts
     if (self.account.accountType == OTRAccountTypeXMPPTor) {
         return;
     }
-    
-    __block BOOL supportsPushXEP = NO;
-    NSArray <NSXMLElement*> *featureElements = [caps elementsForName:@"feature"];
-    [featureElements enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *featureName = [obj attributeStringValueForName:@"var"];
-        if ([featureName isEqualToString:XMPPPushXMLNS]){
-            supportsPushXEP = YES;
-            *stop = YES;
+    BOOL hasPushAccount = [[OTRProtocolManager sharedInstance].pushController.pushStorage hasPushAccount];
+    if (!hasPushAccount) {
+        return;
+    }
+    [[OTRProtocolManager sharedInstance].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
+        if (endpoint) {
+            [[OTRProtocolManager sharedInstance].pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
+                if (token) {
+                    [self enablePushWithToken:token endpoint:endpoint];
+                } else if (error) {
+                    DDLogError(@"fetch token error: %@", error);
+                }
+            }];
+        } else if (error) {
+            DDLogError(@"357 pubsub Error: %@", error);
         }
     }];
-    BOOL hasPushAccount = [[OTRProtocolManager sharedInstance].pushController.pushStorage hasPushAccount];
-    
-    if (supportsPushXEP && hasPushAccount) {
-        [[OTRProtocolManager sharedInstance].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
-            if (endpoint) {
-                [[OTRProtocolManager sharedInstance].pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
-                    if (token) {
-                        [self enablePushWithToken:token endpoint:endpoint];
-                    } else if (error) {
-                        DDLogError(@"fetch token error: %@", error);
-                    }
-                }];
-            } else if (error) {
-                DDLogError(@"357 pubsub Error: %@", error);
-            }
-        }];
-    }
 }
 
 - (void) enablePushWithToken:(TokenContainer*)token endpoint:(NSString*)endpoint {
@@ -924,7 +910,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         }
         [transaction setObject:account forKey:key inCollection:collection];
     }];
-    XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
+    XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint];
     NSString *tokenString = token.pushToken.tokenString;
     if (tokenString.length > 0) {
         NSString *pushEndpointURLString = [[OTRProtocolManager sharedInstance].pushController getMessagesEndpoint].absoluteString;
@@ -933,12 +919,39 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         if (pushEndpointURLString) {
             [options setObject:pushEndpointURLString forKey:@"endpoint"];
         }
-        XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:options];
-        [self.xmppStream sendElement:enableElement];
-    } else {
-        DDLogError(@"Token string length 0!");
+        XMPPPushOptions *pushOptions = [[XMPPPushOptions alloc] initWithServerJID:nodeJID node:account.pushPubsubNode formOptions:options];
+        [self.xmppPushModule registerForPushWithOptions:pushOptions elementId:nil];
     }
 }
+
+- (void)pushModule:(XMPPPushModule*)module
+didRegisterWithResponseIq:(XMPPIQ*)responseIq
+        outgoingIq:(XMPPIQ*)outgoingIq {
+    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, responseIq, outgoingIq);
+}
+
+- (void)pushModule:(XMPPPushModule*)module
+failedToRegisterWithErrorIq:(nullable XMPPIQ*)errorIq
+        outgoingIq:(XMPPIQ*)outgoingIq {
+    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, errorIq, outgoingIq);
+}
+
+- (void)pushModule:(XMPPPushModule*)module
+disabledPushForServerJID:(XMPPJID*)serverJID
+              node:(nullable NSString*)node
+        responseIq:(XMPPIQ*)responseIq
+        outgoingIq:(XMPPIQ*)outgoingIq {
+    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, responseIq, outgoingIq);
+}
+
+- (void)pushModule:(XMPPPushModule*)module
+failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
+         serverJID:(XMPPJID*)serverJID
+              node:(nullable NSString*)node
+        outgoingIq:(XMPPIQ*)outgoingIq {
+    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, errorIq, outgoingIq);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark OTRProtocol
