@@ -317,12 +317,14 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIAlertAction *serverInfoAction = [UIAlertAction actionWithTitle:@"Server Info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
         OTRServerCapabilities *caps = nil;
+        XMPPPushModule *xmppPush = nil;
         if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
             caps = xmpp.serverCapabilities;
+            xmppPush = xmpp.xmppPushModule;
         }
         PushController *push = [OTRProtocolManager sharedInstance].pushController;
-        OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:caps push:push];
+        OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:caps push:push xmppPush:xmppPush];
         ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
         [self presentViewController:nav animated:YES completion:nil];

@@ -15,6 +15,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     private let check: ServerCheck
     private var capabilities: [ServerCapabilityInfo] = []
     private let tableSections: [TableSection] = [.Push, .Server]
+    private var xmppPushStatus: XMPPPushStatus = .unknown
     
     /// This will take ownership of serverCheck and overwrite whatever is in serverCheck.readyBlock
     public init (serverCheck: ServerCheck) {
@@ -30,13 +31,24 @@ public class ServerCapabilitiesViewController: UITableViewController {
     // MARK: - Data Loading and Refreshing
     
     /// Will refresh all data for the view
-    @objc private func refreshAllData(sender: AnyObject?) {
+    @objc private func refreshAllData(_ sender: Any?) {
         check.refresh()
+    }
+    
+    /// This will delete ALL your XEP-0357 push registration for this pubsub node
+    private func unregisterForXMPPPush(_ sender: Any?) {
+        guard let push = check.pushInfo else {
+            return
+        }
+        guard let jid = XMPPJID(user: nil, domain: push.pubsubEndpoint, resource: nil) else {
+            return
+        }
+        check.xmppPush.disablePush(forServerJID: jid, node: nil, elementId: nil)
     }
     
     // MARK: - User Interaction
     
-    @objc private func doneButtonPressed(sender: AnyObject?) {
+    @objc private func doneButtonPressed(_ sender: Any?) {
         dismiss(animated: true, completion: nil)
     }
     
@@ -54,7 +66,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
         
         self.title = Server_String()
         
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(sender:)))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
         navigationItem.rightBarButtonItem = doneButton
 
         // Add capabilities listener
@@ -66,6 +78,10 @@ public class ServerCapabilitiesViewController: UITableViewController {
             self?.capabilities = Array(caps.values)
             self?.tableView.reloadData()
         }
+        self.check.pushStatusUpdate = { [weak self] (status) in
+            self?.xmppPushStatus = status
+            self?.tableView.reloadData()
+        }
     }
 
     
@@ -75,7 +91,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
         // This will allow us to refresh the permission prompts after use changes them in background
         NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
-        refreshAllData(sender: nil)
+        refreshAllData(nil)
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
@@ -115,8 +131,10 @@ public class ServerCapabilitiesViewController: UITableViewController {
         resetCell.leftButton.setTitleColor(UIColor.red, for: .normal)
         resetCell.leftAction = { [weak self] (cell, sender) in
             self?.showDestructivePrompt(title: nil, buttonTitle: RESET_STRING(), handler: { (action) in
+                self?.unregisterForXMPPPush(sender)
                 self?.check.push.reset(completion: {
                     self?.check.refresh()
+                    self?.check.xmppPush.refresh()
                     }, callbackQueue: DispatchQueue.main)
             })
         }
@@ -125,6 +143,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
         resetCell.rightButton.setTitleColor(UIColor.lightGray, for: .disabled)
         resetCell.rightAction = { [weak self] (cell, sender) in
             self?.showDestructivePrompt(title: nil, buttonTitle:  DEACTIVATE_STRING(), handler: { (action) in
+                self?.unregisterForXMPPPush(sender)
                 self?.check.push.deactivate(completion: {
                     self?.check.refresh()
                     }, callbackQueue: DispatchQueue.main)
@@ -196,7 +215,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
                     let caps = check.capabilities else {
                         return emptyCell
                 }
-                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: caps[.XEP0357])
+                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: caps[.XEP0357], pushStatus: xmppPushStatus)
                 pushCell.infoButtonBlock = { [weak self] (cell, sender) in
                     (self?.check.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
                 }
@@ -239,9 +258,11 @@ public class ServerCapabilitiesViewController: UITableViewController {
             var cellInfo = capabilities[indexPath.row]
             if let pushInfo = check.pushInfo {
                 // If push account isnt working, show a warning here
-                if cellInfo.code == .XEP0357 && !pushInfo.pushMaybeWorks() && cellInfo.status == .Available {
-                    cellInfo = cellInfo.copy() as! ServerCapabilityInfo
-                    cellInfo.status = .Warning
+                if cellInfo.code == .XEP0357 && cellInfo.status == .Available {
+                    if !pushInfo.pushMaybeWorks() || xmppPushStatus != .registered {
+                        cellInfo = cellInfo.copy() as! ServerCapabilityInfo
+                        cellInfo.status = .Warning
+                    }
                 }
             }
             cell.setCapability(capability: cellInfo)

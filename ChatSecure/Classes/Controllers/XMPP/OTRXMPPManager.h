@@ -43,9 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
-/** This will be nil for Tor accounts */
-@property (nonatomic, strong, readonly, nullable) XMPPPushModule *xmppPushModule;
-
+@property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;

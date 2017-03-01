@@ -20,12 +20,35 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 /** Only access this from within the moduleQueue */
 @property (nonatomic, strong, readonly) NSMutableSet <XMPPCapabilities*> *capabilitiesModules;
 /** Prevents multiple requests. Only access this from within the moduleQueue */
-@property (nonatomic) BOOL isRegistering;
+@property (nonatomic, strong, readonly) NSMutableDictionary<XMPPJID*,NSNumber*> *registrationStatus;
 @end
 
 @implementation XMPPPushModule
 
 #pragma mark Public API
+
+/**
+ * This value only reflects local in-memory status and will not check the server. It is reset to XMPPPushStatusUnknown after
+ * re-authentication because some servers clear this value on new streams.
+ */
+- (XMPPPushStatus) registrationStatusForServerJID:(XMPPJID*)serverJID {
+    NSParameterAssert(serverJID != nil);
+    if (!serverJID) { return XMPPPushStatusUnknown; }
+    __block XMPPPushStatus status = XMPPPushStatusUnknown;
+    [self performBlock:^{
+        NSNumber *number = [self.registrationStatus objectForKey:serverJID];
+        status = number.unsignedIntegerValue;
+    }];
+    return status;
+}
+
+- (void) setRegistrationStatus:(XMPPPushStatus)registrationStatus forServerJID:(XMPPJID*)serverJID {
+    NSParameterAssert(serverJID != nil);
+    if (!serverJID) { return; }
+    [self performBlockAsync:^{
+        [self.registrationStatus setObject:@(registrationStatus) forKey:serverJID];
+    }];
+}
 
 /** Manually refresh your push registration */
 - (void) registerForPushWithOptions:(XMPPPushOptions*)options
@@ -33,7 +56,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
     __weak typeof(self) weakSelf = self;
     __weak id weakMulticast = multicastDelegate;
     [self performBlockAsync:^{
-        if (self.isRegistering) {
+        if ([self registrationStatusForServerJID:options.serverJID] == XMPPPushStatusRegistering) {
             XMPPLogVerbose(@"Already registering push options...");
             return;
         }
@@ -42,16 +65,17 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
         [self.tracker addElement:enableElement block:^(XMPPIQ *responseIq, id<XMPPTrackingInfo> info) {
             __typeof__(self) strongSelf = weakSelf;
             if (!strongSelf) { return; }
-            strongSelf.isRegistering = NO;
             if (!responseIq || [responseIq isErrorIQ]) {
                 // timeout
                 XMPPLogWarn(@"refreshRegistration error: %@ %@", enableElement, responseIq);
+                [strongSelf setRegistrationStatus:XMPPPushStatusError forServerJID:options.serverJID];
                 [weakMulticast pushModule:strongSelf failedToRegisterWithErrorIq:responseIq outgoingIq:enableElement];
                 return;
             }
+            [strongSelf setRegistrationStatus:XMPPPushStatusRegistered forServerJID:options.serverJID];
             [weakMulticast pushModule:strongSelf didRegisterWithResponseIq:responseIq outgoingIq:enableElement];
         } timeout:30];
-        self.isRegistering = YES;
+        [self setRegistrationStatus:XMPPPushStatusRegistering forServerJID:options.serverJID];
         [xmppStream sendElement:enableElement];
     }];
 }
@@ -64,7 +88,6 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
     __weak id weakMulticast = multicastDelegate;
     [self performBlockAsync:^{
         NSString *eid = [self fixElementId:elementId];
-        
         XMPPIQ *disableElement = [XMPPIQ disableNotificationsElementWithJID:serverJID node:node elementId:eid];
         [self.tracker addElement:disableElement block:^(XMPPIQ *responseIq, id<XMPPTrackingInfo> info) {
             __typeof__(self) strongSelf = weakSelf;
@@ -72,9 +95,11 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
             if (!responseIq || [responseIq isErrorIQ]) {
                 // timeout
                 XMPPLogWarn(@"disablePush error: %@ %@", disableElement, responseIq);
+                [strongSelf setRegistrationStatus:XMPPPushStatusError forServerJID:serverJID];
                 [weakMulticast pushModule:strongSelf failedToDisablePushWithErrorIq:responseIq serverJID:serverJID node:node outgoingIq:disableElement];
                 return;
             }
+            [strongSelf setRegistrationStatus:XMPPPushStatusNotRegistered forServerJID:serverJID];
             [weakMulticast pushModule:strongSelf disabledPushForServerJID:serverJID node:node responseIq:responseIq outgoingIq:disableElement];
         } timeout:30];
         [xmppStream sendElement:disableElement];
@@ -88,6 +113,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
     if ([super activate:aXmppStream])
     {
         [self performBlock:^{
+            _registrationStatus = [NSMutableDictionary dictionary];
             _capabilitiesModules = [NSMutableSet set];
             [xmppStream autoAddDelegate:self delegateQueue:moduleQueue toModulesOfClass:[XMPPCapabilities class]];
             _tracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:moduleQueue];
@@ -110,17 +136,17 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
         _tracker = nil;
         [xmppStream removeAutoDelegate:self delegateQueue:moduleQueue fromModulesOfClass:[XMPPCapabilities class]];
         _capabilitiesModules = nil;
-        _isRegistering = NO;
+        _registrationStatus = nil;
     }];
     [super deactivate];
 }
 
 #pragma mark XMPPStream Delegate
 
-- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
-{
+- (void) refresh {
     [self performBlockAsync:^{
-        XMPPJID *jid = sender.myJID.bareJID;
+        [self.registrationStatus removeAllObjects];
+        XMPPJID *jid = xmppStream.myJID.bareJID;
         __block BOOL supportsPush = NO;
         [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull capsModule, BOOL * _Nonnull stop) {
             id <XMPPCapabilitiesStorage> storage = capsModule.xmppCapabilitiesStorage;
@@ -139,6 +165,11 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
             [multicastDelegate pushModuleReady:self];
         }
     }];
+}
+
+- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
+{
+    [self refresh];
 }
 
 

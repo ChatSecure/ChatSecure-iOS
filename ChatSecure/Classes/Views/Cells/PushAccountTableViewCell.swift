@@ -27,7 +27,7 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
     //FIXME: unlocalized strings
     
     /// pushCapabilities must be for code == .XEP0357
-    public func setPushInfo(pushInfo: PushInfo?, pushCapabilities: ServerCapabilityInfo?) {
+    public func setPushInfo(pushInfo: PushInfo?, pushCapabilities: ServerCapabilityInfo?, pushStatus: XMPPPushStatus) {
         assert(pushCapabilities?.code == .XEP0357)
         
         // Common Setup
@@ -76,6 +76,11 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
             // this means no tokens have been uploaded to a xmpp server
             // or distributed to a buddy.
             status = "No Used Tokens"
+        } else if (pushStatus != .registered) {
+            checkmark = "⚠️"
+            // this will happen if the server supports push
+            // but there was an error during registration
+            status = "XMPP Server Error (see XEP-0357)"
         } else if (push.lowPowerMode) {
             checkmark = "⚠️"
             status = "Turn Off Low Power Mode"

@@ -212,12 +212,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
     
-    // Add push registration module, if this isn't a Tor account
-    if (self.account.accountType != OTRAccountTypeXMPPTor) {
-        _xmppPushModule = [[XMPPPushModule alloc] init];
-        [self.xmppPushModule activate:self.xmppStream];
-        [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
-    }
+    // Add push registration module
+    _xmppPushModule = [[XMPPPushModule alloc] init];
+    [self.xmppPushModule activate:self.xmppStream];
+    [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
     
 	// Activate xmpp modules
     
@@ -278,6 +276,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.workQueue];
         [self.omemoModule activate:self.xmppStream];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:[OTRProtocolManager sharedInstance].pushController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
 }
 
 - (void)teardownStream
@@ -872,6 +873,22 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 }
 
 #pragma mark XMPPPushDelegate
+
+- (void) pushAccountChanged:(NSNotification*)notif {
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        NSString *collection = [self.account.class collection];
+        NSString *key = self.account.uniqueId;
+        account = [transaction objectForKey:key inCollection:collection];
+    }];
+    if (!account) { return; }
+    XMPPJID *serverJID = [XMPPJID jidWithUser:nil domain:account.pushPubsubEndpoint resource:nil];
+    XMPPPushStatus status = [self.xmppPushModule registrationStatusForServerJID:serverJID];
+    if (status != XMPPPushStatusRegistered &&
+        status != XMPPPushStatusRegistering) {
+        [self.xmppPushModule refresh];
+    }
+}
 
 - (void)pushModuleReady:(XMPPPushModule*)module {
     // Enable XEP-0357 push bridge if server supports it

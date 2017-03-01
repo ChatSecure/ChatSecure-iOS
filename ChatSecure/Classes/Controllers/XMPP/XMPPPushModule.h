@@ -10,8 +10,22 @@
 
 @class XMPPPushOptions;
 
+typedef NS_ENUM(NSUInteger, XMPPPushStatus) {
+    XMPPPushStatusUnknown,
+    XMPPPushStatusNotRegistered,
+    XMPPPushStatusRegistering,
+    XMPPPushStatusRegistered,
+    XMPPPushStatusError
+};
+
 NS_ASSUME_NONNULL_BEGIN
 @interface XMPPPushModule : XMPPModule
+
+/** 
+ * This value only reflects local in-memory status and will not check the server. It is reset to XMPPPushStatusUnknown after
+ * re-authentication because some servers clear this value on new streams.
+ */
+- (XMPPPushStatus) registrationStatusForServerJID:(XMPPJID*)serverJID;
 
 /** Manually update your push registration. */
 - (void) registerForPushWithOptions:(XMPPPushOptions*)options
@@ -21,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) disablePushForServerJID:(XMPPJID*)serverJID
                             node:(nullable NSString*)node
                        elementId:(nullable NSString*)elementId;
+
+/** This will trigger the same logic as xmppStreamDidAuthenticate: */
+- (void) refresh;
 
 @end
 

@@ -67,6 +67,11 @@ extern NSString *const OTRYapDatabaseName;
 extern NSString *const kOTRNotificationThreadKey;
 extern NSString *const kOTRNotificationThreadCollection;
 extern NSString *const OTRUserNotificationsChanged;
+/** This is fired when you have a change to a device on a push account */
+extern NSString *const OTRPushAccountDeviceChanged;
+/** This is fired when you have a change to your tokens */
+extern NSString *const OTRPushAccountTokensChanged;
+
 
 extern NSString *const OTRUserNotificationsUNTextInputReply;
 

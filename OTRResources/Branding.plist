@@ -29,6 +29,6 @@
 	<key>pushAPIURL</key>
 	<string>https://push.chatsecure.org/api/v1/</string>
 	<key>StagingPushAPIURL</key>
-	<string>https://chatsecure-push-staging.herokuapp.com/api/v1/</string>
+	<string>https://push-staging.chatsecure.org/api/v1/</string>
 </dict>
 </plist>

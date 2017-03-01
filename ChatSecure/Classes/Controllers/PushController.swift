@@ -165,6 +165,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                     completion(false, error)
                 })
             }
+            NotificationCenter.default.post(name: Notification.Name(rawValue: OTRPushAccountDeviceChanged), object: self, userInfo:nil)
         }
     }
     
@@ -196,7 +197,8 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                         completion(false, error)
                     })
                 }
-                })
+                NotificationCenter.default.post(name: Notification.Name(rawValue: OTRPushAccountDeviceChanged), object: self, userInfo:nil)
+            })
         }
         
     }
@@ -238,9 +240,12 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
             self?.storage.removeUnusedToken(tokenContainer)
             if let buddyKey = buddyKey {
                 self?.storage.associateBuddy(tokenContainer, buddyKey: buddyKey)
+            } else {
+                self?.storage.saveUsedToken(tokenContainer)
             }
             self?.callbackQueue.addOperation({ () -> Void in
                 completion(tokenContainer, nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: OTRPushAccountTokensChanged), object: self, userInfo:nil)
             })
         }
     }
