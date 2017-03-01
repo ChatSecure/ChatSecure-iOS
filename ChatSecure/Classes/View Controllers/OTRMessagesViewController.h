@@ -46,6 +46,7 @@
 
 - (void)infoButtonPressed:(nullable id)sender;
 
+
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
@@ -59,5 +60,8 @@
 
 /** Currently uses clock for queued, and checkmark for delivered. */
 - (nullable NSString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)message;
+
+/** override this method to customize what should be shown at the beginning of the message status */
+- (nullable NSAttributedString *) encryptionStatusStringForMesage:(nonnull id<OTRMessageProtocol>)message;
 
 @end
