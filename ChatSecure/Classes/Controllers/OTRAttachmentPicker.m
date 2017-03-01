@@ -31,7 +31,7 @@
     return self;
 }
 
-- (void)showAlertControllerWithCompletion:(void (^)(void))completion
+- (void)showAlertControllerFromSourceView:(UIView *)senderView withCompletion:(void (^)(void))completion
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -59,6 +59,11 @@
     [alertController addAction:cancelAlertAction];
     
     alertController.popoverPresentationController.delegate = self.parentViewController;
+    if (!senderView) {
+        senderView = self.parentViewController.view;
+    }
+    alertController.popoverPresentationController.sourceView = senderView;
+    alertController.popoverPresentationController.sourceRect = senderView.bounds;
     
     [self.parentViewController presentViewController:alertController animated:YES completion:completion];
 }
