@@ -1181,7 +1181,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
     if ([sender isEqual:self.cameraButton]) {
-        [self.attachmentPicker showAlertControllerWithCompletion:nil];
+        [self.attachmentPicker showAlertControllerFromSourceView:sender withCompletion:nil];
     }
 }
 
