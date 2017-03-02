@@ -46,6 +46,15 @@ public class ServerCapabilitiesViewController: UITableViewController {
         check.xmppPush.disablePush(forServerJID: jid, node: nil, elementId: nil)
     }
     
+    func didRegisterUserNotificationSettings(_ notification: Notification) {
+        tableView.reloadData()
+        if !PushController.canReceivePushNotifications() {
+            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(appSettings)
+            }
+        }
+    }
+    
     // MARK: - User Interaction
     
     @objc private func doneButtonPressed(_ sender: Any?) {
@@ -87,10 +96,9 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         // This will allow us to refresh the permission prompts after use changes them in background
         NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
         refreshAllData(nil)
     }
     
@@ -160,9 +168,8 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
         permissionCell.button.setTitle(FIX_PERMISSIONS_STRING(), for: .normal)
         permissionCell.buttonAction = {  (cell, sender) in
-            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(appSettings)
-            }
+            PushController.setPushPreference(.enabled)
+            PushController.registerForPushNotifications()
         }
         return permissionCell
     }
