@@ -28,14 +28,17 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
     
     /// pushCapabilities must be for code == .XEP0357
     public func setPushInfo(pushInfo: PushInfo?, pushCapabilities: ServerCapabilityInfo?, pushStatus: XMPPPushStatus) {
-        assert(pushCapabilities?.code == .XEP0357)
+        var xep0357 = false
+        if let caps = pushCapabilities, caps.code == .XEP0357 && caps.status == .Available {
+            xep0357 = true
+        }
         
         // Common Setup
         titleLabel.text = "Push Registration"
         extraDataLabel.textColor = UIColor.lightGray
         
         // Loading Indicator
-        guard let push = pushInfo, let caps = pushCapabilities else {
+        guard let push = pushInfo else {
             extraDataLabel.text = "Loading..."
             activityIndicator.startAnimating()
             activityIndicator.isHidden = false
@@ -50,7 +53,7 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         var checkmark = "❓"
         var status = "Inactive"
         if  push.pushMaybeWorks() &&
-            caps.status == .Available {
+            xep0357 {
             checkmark = "✅"
             status = "Active"
         } else if (!push.pushOptIn) {
@@ -68,7 +71,7 @@ public class PushAccountTableViewCell: ServerCapabilityTableViewCell {
         } else if (push.device == nil) {
             checkmark = "⚠️"
             status = "Device Not Registered"
-        } else if (caps.status != .Available) {
+        } else if (!xep0357) {
             checkmark = "⚠️"
             status = "XMPP Server Incompatible (see XEP-0357)"
         } else if (push.numUsedTokens == 0) {

@@ -147,6 +147,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
     [self performBlockAsync:^{
         [self.registrationStatus removeAllObjects];
         XMPPJID *jid = xmppStream.myJID.bareJID;
+        if (!jid) { return; }
         __block BOOL supportsPush = NO;
         [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull capsModule, BOOL * _Nonnull stop) {
             id <XMPPCapabilitiesStorage> storage = capsModule.xmppCapabilitiesStorage;

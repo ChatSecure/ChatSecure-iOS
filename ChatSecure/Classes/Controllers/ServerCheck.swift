@@ -24,6 +24,10 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     
     public var capabilities: [CapabilityCode : ServerCapabilityInfo]?
     public var pushInfo: PushInfo?
+    public var pushStatus: XMPPPushStatus?
+    
+    /** ServerCheckStatus combines all other variables */
+    public var checkStatusUpdate: ((_ checkStatus: ServerCheckStatus) -> ())?
     
     public var pushInfoReady: ((_ pushInfo: PushInfo) -> ())?
     public var capabilitiesReady: ((_ capabilities: [CapabilityCode : ServerCapabilityInfo]) -> ())?
@@ -33,6 +37,10 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
         capsModule.removeDelegate(self)
         xmppPush.removeDelegate(self)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    public convenience init(xmppManager: OTRXMPPManager, push: PushController) {
+        self.init(capsModule: xmppManager.serverCapabilities, push: push, xmppPush: xmppManager.xmppPushModule)
     }
     
     public init(capsModule: OTRServerCapabilities, push: PushController, xmppPush: XMPPPushModule) {
@@ -47,11 +55,40 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
         fetch()
     }
     
+    /** This lets you collect all push info in one place */
+    public func getStatus() -> ServerCheckStatus {
+        var checkStatus: ServerCheckStatus = .unknown
+        if let pushInfo = pushInfo, !pushInfo.pushMaybeWorks() {
+            return .broken
+        }
+        if let pushStatus = pushStatus, pushStatus != .registered {
+            return .broken
+        }
+        if let pushCap = capabilities?[.XEP0357], pushCap.status != .Available {
+            return .broken
+        }
+        guard let caps = capabilities, let push = pushInfo, let status = pushStatus else {
+            return .unknown
+        }
+        var xepExists = false
+        if let pushCap = caps[.XEP0357], pushCap.status == .Available {
+            xepExists = true
+        }
+        let pushAcctWorks = push.pushMaybeWorks()
+        let xmppWorks = status == .registered
+        if xepExists && pushAcctWorks && xmppWorks {
+            checkStatus = .working
+        } else {
+            checkStatus = .broken
+        }
+        return checkStatus
+    }
+    
     /// set pushInfoReady, capabilitiesReady, pushStatusUpdate to get result
     public func fetch() {
         refreshPush()
         refreshCapabilities()
-        updatePushStatus()
+        checkReady()
     }
     
     /// Must be called from main queue
@@ -67,6 +104,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
             let update = pushStatusUpdate {
             let status = xmppPush.registrationStatus(forServerJID: jid)
             update(status)
+            self.pushStatus = status
         }
     }
     
@@ -86,6 +124,14 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
             ready(caps)
         }
         updatePushStatus()
+        updateServerCheckStatus()
+    }
+    
+    private func updateServerCheckStatus() {
+        if let statusUpdate = checkStatusUpdate {
+            let status = getStatus()
+            statusUpdate(status)
+        }
     }
     
     private func refreshPush() {
@@ -110,25 +156,30 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     // MARK: - XMPPPushDelegate
     
     public func pushModule(_ module: XMPPPushModule, didRegisterWithResponseIq responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        updatePushStatus()
+        checkReady()
     }
     
     public func pushModule(_ module: XMPPPushModule, failedToRegisterWithErrorIq errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
-        updatePushStatus()
+        checkReady()
     }
     
     public func pushModule(_ module: XMPPPushModule, disabledPushForServerJID serverJID: XMPPJID, node: String?, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        updatePushStatus()
+        checkReady()
     }
     
     public func pushModule(_ module: XMPPPushModule, failedToDisablePushWithErrorIq errorIq: XMPPIQ?, serverJID: XMPPJID, node: String?, outgoingIq: XMPPIQ) {
-        updatePushStatus()
+        checkReady()
     }
     
     public func pushModuleReady(_ module: XMPPPushModule) {
-        updatePushStatus()
+        checkReady()
     }
-    
 }
 
+@objc
+public enum ServerCheckStatus: UInt {
+    case unknown
+    case broken
+    case working
+}
 

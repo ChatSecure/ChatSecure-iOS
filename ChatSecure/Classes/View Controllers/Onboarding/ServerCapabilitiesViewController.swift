@@ -32,6 +32,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     /// Will refresh all data for the view
     @objc private func refreshAllData(_ sender: Any?) {
+        tableView.reloadData()
         check.refresh()
     }
     
@@ -218,11 +219,10 @@ public class ServerCapabilitiesViewController: UITableViewController {
             let emptyCell = UITableViewCell()
             // Configure the main push account info cell
             if indexPath.row == 0 {
-                guard let pushCell = tableView.dequeueReusableCell(withIdentifier: PushAccountTableViewCell.cellIdentifier(), for: indexPath) as? PushAccountTableViewCell,
-                    let caps = check.capabilities else {
+                guard let pushCell = tableView.dequeueReusableCell(withIdentifier: PushAccountTableViewCell.cellIdentifier(), for: indexPath) as? PushAccountTableViewCell else {
                         return emptyCell
                 }
-                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: caps[.XEP0357], pushStatus: xmppPushStatus)
+                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: check.capabilities?[.XEP0357], pushStatus: xmppPushStatus)
                 pushCell.infoButtonBlock = { [weak self] (cell, sender) in
                     (self?.check.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
                 }

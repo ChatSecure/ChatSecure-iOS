@@ -139,16 +139,14 @@
     }
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
-
     
-    /////////// testing invite VC
-//    OTRAccount *account = [[OTRAccount alloc] init];
+    /////////// testing VCs
+//    OTRXMPPAccount *account = [[OTRXMPPAccount alloc] init];
 //    account.username = @"test@example.com";
-//    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] initWithAccount:account];
-//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
+//    OTRInviteViewController *vc = [[OTRInviteViewController alloc] initWithAccount:account];
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
 //    self.window.rootViewController = nav;
     ////////////
-    
     
     [self.window makeKeyAndVisible];
     

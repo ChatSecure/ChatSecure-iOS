@@ -16,9 +16,6 @@ open class EnablePushViewController: UIViewController {
     open var account: OTRAccount?
     fileprivate var userLaunchedToSettings: Bool = false
     private var hud: MBProgressHUD?
-    
-    /// You must set this before showing view
-    open var serverCheck: ServerCheck?
 
     @IBOutlet weak var enablePushButton: UIButton?
     @IBOutlet weak var textView: UITextView?
