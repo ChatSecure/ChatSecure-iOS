@@ -10,15 +10,15 @@ import XCTest
 
 
 // https://github.com/fastlane-old/snapshot/issues/321#issuecomment-159660882
-func localizedString(key:String) -> String {
-    let bundle = NSBundle(forClass: ChatSecureUITests.self)
-    let locale = NSBundle.preferredLocalizationsFromArray(bundle.localizations, forPreferences: nil).first ?? "Base"
-    let path =  bundle.pathForResource("Localizable", ofType: "strings", inDirectory: nil, forLocalization: locale)
+func localizedString(_ key:String) -> String {
+    let bundle = Bundle(for: ChatSecureUITests.self)
+    let locale = Bundle.preferredLocalizations(from: bundle.localizations, forPreferences: nil).first ?? "Base"
+    let path =  bundle.path(forResource: "Localizable", ofType: "strings", inDirectory: nil, forLocalization: locale)
     
     var foreignBundle = bundle
     if let path = path {
-        let bundlePath = (path as NSString).stringByDeletingLastPathComponent
-        foreignBundle = NSBundle(path: bundlePath)!
+        let bundlePath = (path as NSString).deletingLastPathComponent
+        foreignBundle = Bundle(path: bundlePath)!
     }
     
     let result = NSLocalizedString(key, tableName: nil, bundle: foreignBundle, comment: "")
@@ -28,7 +28,7 @@ func localizedString(key:String) -> String {
 /*2 Replace this with a class from your UI Tests */
 /*3 Gets the localized string from the bundle */
 
-func skipEnablePush(app:XCUIApplication) {
+func skipEnablePush(_ app:XCUIApplication) {
     if (app.buttons["EnablePushViewSkipButton"].exists) {
         app.buttons["EnablePushViewSkipButton"].tap()
     }
@@ -68,16 +68,16 @@ class ChatSecureUITests: XCTestCase {
         app.buttons[localizedString("Create New Account")].tap()
         
         let tablesQuery = app.tables
-        tablesQuery.cells.containingType(.StaticText, identifier:localizedString("Nickname")).childrenMatchingType(.TextField).element.typeText("Alice")
+        tablesQuery.cells.containing(.staticText, identifier:localizedString("Nickname")).children(matching: .textField).element.typeText("Alice")
         
         //This is the done button really
 
-        switch UIDevice.currentDevice().userInterfaceIdiom  {
-        case .Phone:
-            XCUIApplication().toolbars.buttons.elementBoundByIndex(2).tap()
+        switch UIDevice.current.userInterfaceIdiom  {
+        case .phone:
+            XCUIApplication().toolbars.buttons.element(boundBy: 2).tap()
             break
-        case .Pad:
-            XCUIApplication().toolbars.buttons.elementBoundByIndex(3).tap()
+        case .pad:
+            XCUIApplication().toolbars.buttons.element(boundBy: 3).tap()
             break
         default:
             break
@@ -97,19 +97,19 @@ class ChatSecureUITests: XCTestCase {
         app.launch()
         skipEnablePush(app)
         
-        switch UIDevice.currentDevice().userInterfaceIdiom  {
-        case .Phone:
+        switch UIDevice.current.userInterfaceIdiom  {
+        case .phone:
             snapshot("02ConversationListScreen")
             break
-        case .Pad:
-            XCUIDevice.sharedDevice().orientation = .LandscapeLeft
+        case .pad:
+            XCUIDevice.shared().orientation = .landscapeLeft
             break
         default:
             break
         }
         sleep(2)
         skipEnablePush(app)
-        XCUIApplication().tables["conversationTableView"].childrenMatchingType(.Any).elementBoundByIndex(0).tap()
+        XCUIApplication().tables["conversationTableView"].children(matching: .any).element(boundBy: 0).tap()
         snapshot("03ChatScreen")
         XCUIApplication().buttons["profileButton"].tap()
         snapshot("04ProfileScreen")

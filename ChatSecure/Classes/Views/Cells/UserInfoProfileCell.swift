@@ -10,13 +10,13 @@ import UIKit
 import XLForm
 
 @objc(UserInfoProfileCell)
-public class UserInfoProfileCell: XLFormBaseCell {
+open class UserInfoProfileCell: XLFormBaseCell {
 
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     
-    public override func update() {
+    open override func update() {
         super.update()
         guard let userInfo = rowDescriptor.value as? OTRUserInfoProfile else {
             return
@@ -28,17 +28,17 @@ public class UserInfoProfileCell: XLFormBaseCell {
         usernameLabel.text = userInfo.username
         displayNameLabel.text = displayName
         avatarImageView.image = userInfo.avatarImage
-        avatarImageView.layer.cornerRadius = CGRectGetHeight(self.avatarImageView.frame)/2
+        avatarImageView.layer.cornerRadius = self.avatarImageView.frame.height/2
         avatarImageView.layer.masksToBounds = true
         if let avatarBorderColor = userInfo.avatarBorderColor {
             self.avatarImageView.layer.borderWidth = 1.5
-            self.avatarImageView.layer.borderColor = avatarBorderColor.CGColor
+            self.avatarImageView.layer.borderColor = avatarBorderColor.cgColor
         } else {
             self.avatarImageView.layer.borderWidth = 0
         }
     }
     
-    public override class func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
+    open override class func formDescriptorCellHeight(for rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
         return 90
     }
     

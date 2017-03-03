@@ -8,6 +8,18 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+FOUNDATION_EXPORT NSString *const kOTRDefaultLanguageLocale;
+FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
+
+/** Stub class for identifying asset framework bundle via bundleForClass: */
+@interface OTRAssets : NSObject
+
+/** Returns OTRResources.bundle */
++ (NSBundle*) resourcesBundle;
+
+@end
+
 @interface OTRBranding : NSObject
 
 #pragma mark Strings
@@ -50,7 +62,12 @@
 /** Share Base URL e.g. https://chatsecure.org/i/# */
 + (NSURL*) shareBaseURL;
 
-/** Push server URL e.g. https://chatsecure-push.herokuapp.com/api/v1/ */
+/** Push server URL e.g. https://push.example.com/api/v1/ */
 + (NSURL *)pushAPIURL;
 
+/** Push staging server URL e.g. https://staging.push.example.com/api/v1/ */
++ (nullable NSURL *)pushStagingAPIURL;
+
+
 @end
+NS_ASSUME_NONNULL_END

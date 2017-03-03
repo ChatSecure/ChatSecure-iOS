@@ -9,19 +9,19 @@
 import Foundation
 
 ///A simple message object to mark when push or knock messages were sent off
-public class PushMessage: OTRYapDatabaseObject {
+open class PushMessage: OTRYapDatabaseObject {
     
     /// The buddy the knock was sent to
-    public var buddyKey:String?
+    open var buddyKey:String?
     
     /// Any error from the ChatSecure-Push-Server
-    public var error:NSError?
+    open var error:NSError?
     
     /// the date the push was sent, used for sorting
-    public var pushDate:NSDate = NSDate()
+    open var pushDate:Date = Date()
     
     ///Send it to the same collection of other messages
-    public class override func collection() -> String {
+    open class override func collection() -> String {
         return OTRBaseMessage.collection()
     }
     
@@ -48,19 +48,19 @@ extension PushMessage: OTRMessageProtocol {
         return nil
     }
     
-    public func messageError() -> NSError? {
+    public func messageError() -> Error? {
         return self.error
     }
     
     public func messageSecurity() -> OTRMessageTransportSecurity {
-        return .Plaintext
+        return .plaintext
     }
     
     public func messageRead() -> Bool {
         return true
     }
     
-    public func date() -> NSDate {
+    public func date() -> Date {
         return self.pushDate
     }
     
@@ -72,11 +72,11 @@ extension PushMessage: OTRMessageProtocol {
         return nil
     }
     
-    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
+    public func threadOwner(with transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
         guard let key = self.buddyKey else {
             return nil
         }
-        return OTRBuddy.fetchObjectWithUniqueID(key, transaction: transaction)
+        return OTRBuddy.fetch(withUniqueID: key, transaction: transaction)
     }
 }
 
@@ -85,7 +85,7 @@ extension PushMessage: YapDatabaseRelationshipNode {
         
         if let destinationKey = self.buddyKey {
             let name = "buddy"
-            return [YapDatabaseRelationshipEdge(name: name, destinationKey: destinationKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)]
+            return [YapDatabaseRelationshipEdge(name: name, destinationKey: destinationKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)]
         }
         return nil
         
@@ -95,10 +95,10 @@ extension PushMessage: YapDatabaseRelationshipNode {
 extension PushMessage {
     func account() -> OTRAccount? {
         var account:OTRAccount? = nil
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.readWithBlock { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read { (transaction) -> Void in
             if let buddyKey = self.buddyKey {
-                if let buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction) {
-                    account = buddy.accountWithTransaction(transaction)
+                if let buddy = OTRBuddy.fetch(withUniqueID: buddyKey, transaction: transaction) {
+                    account = buddy.account(with: transaction)
                 }
             }
         }

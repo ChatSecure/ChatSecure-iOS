@@ -18,6 +18,8 @@ FOUNDATION_EXPORT NSString* ADD_EXISTING_STRING();
 FOUNDATION_EXPORT NSString* ADD_STRING();
 /** "Advanced", String to describe advanced set of settings */
 FOUNDATION_EXPORT NSString* ADVANCED_STRING();
+/** "Are you sure?", Shown to confirm destructive actions */
+FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
 /** "Available", Label in buddy list for users that are available */
 FOUNDATION_EXPORT NSString* AVAILABLE_STRING();
 /** "Away", Label in buddy list for users that are away */
@@ -80,6 +82,8 @@ FOUNDATION_EXPORT NSString* Crash_Detected_Message();
 FOUNDATION_EXPORT NSString* Crash_Detected_Title();
 /** "Customize Username", if you want to change your username */
 FOUNDATION_EXPORT NSString* Customize_Username();
+/** "Deactivate", e.g. for deactivating your push account */
+FOUNDATION_EXPORT NSString* DEACTIVATE_STRING();
 /** "Permanently delete", Ask user if they want to delete the stored account information */
 FOUNDATION_EXPORT NSString* DELETE_ACCOUNT_MESSAGE_STRING();
 /** "Delete Account?", Ask user if they want to delete the stored account information */
@@ -122,6 +126,10 @@ FOUNDATION_EXPORT NSString* Enable_String();
 FOUNDATION_EXPORT NSString* Enable_Tor_String();
 /** "Facebook", the name for facebook */
 FOUNDATION_EXPORT NSString* FACEBOOK_STRING();
+/** "Fix Background Fetch...", prompt to fix background fetch */
+FOUNDATION_EXPORT NSString* FIX_BACKGROUND_FETCH_STRING();
+/** "Fix Permissions...", prompt to fix permissions */
+FOUNDATION_EXPORT NSString* FIX_PERMISSIONS_STRING();
 /** "Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords.", Text describing what happens when the user has forgotten the passphrase */
 FOUNDATION_EXPORT NSString* FORGOT_PASSPHRASE_INFO_STRING();
 /** "Forgot Passphrase?", Label for button when you've forgotten the passphrase */
@@ -208,6 +216,8 @@ FOUNDATION_EXPORT NSString* ONBOARDING_SUCCESS_STRING();
 FOUNDATION_EXPORT NSString* OPEN_IN_CHROME();
 /** "Open in Facebook", Label for button to open link in facebook app */
 FOUNDATION_EXPORT NSString* OPEN_IN_FACEBOOK_STRING();
+/** "Open in Safari", Label to open link in the Safari web browser */
+FOUNDATION_EXPORT NSString* OPEN_IN_SAFARI();
 /** "Open in Twitter", Label for button to open link in twitter app */
 FOUNDATION_EXPORT NSString* OPEN_IN_TWITTER_STRING();
 /** "Optional", Hint text for domain field telling user this field is not required */
@@ -296,6 +306,8 @@ FOUNDATION_EXPORT NSString* RESEND_DESCRIPTION_STRING();
 FOUNDATION_EXPORT NSString* RESEND_MESSAGE_TITLE();
 /** "Resend", Label for button to resend message. */
 FOUNDATION_EXPORT NSString* RESEND_STRING();
+/** "Reset", e.g. for resetting push account */
+FOUNDATION_EXPORT NSString* RESET_STRING();
 /** "Resource", Label for text input for XMPP resource */
 FOUNDATION_EXPORT NSString* RESOURCE_STRING();
 /** "Removed By Server",  */

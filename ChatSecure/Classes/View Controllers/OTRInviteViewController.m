@@ -20,25 +20,57 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static CGFloat const kOTRInvitePadding = 10;
+static CGFloat const kOTRButtonHeight = 40;
+
 
 @interface OTRInviteViewController () <MFMessageComposeViewControllerDelegate>
+@property (nonatomic, strong, readonly) UIImageView *titleImageView;
+@property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 
+@property (nonatomic, strong, nullable) NSArray <BButton*> *shareButtons;
+@property (nonatomic, strong, readonly) UIButton *warningButton;
 @property (nonatomic) BOOL addedConstraints;
-
+@property (nonatomic, strong, readonly) OTRServerCheck *serverCheck;
 @end
 
 @implementation OTRInviteViewController
 
-- (instancetype)init
-{
-    if (self = [super init]) {
+- (instancetype) initWithAccount:(OTRAccount*)account {
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _account = account;
         _titleImageView = [[UIImageView alloc] initForAutoLayout];
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
         _subtitleLabel.numberOfLines = 0;
         _subtitleLabel.textColor = [OTRAppDelegate appDelegate].theme.buttonLabelColor;
         _subtitleLabel.textAlignment = NSTextAlignmentCenter;
+        [self setupServerCheck];
     }
     return self;
+}
+
+- (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    NSAssert(NO, @"Not supported");
+    return [self initWithAccount:[[OTRAccount alloc] init]];
+}
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    NSAssert(NO, @"Not supported");
+    return [self initWithAccount:[[OTRAccount alloc] init]];
+}
+
+- (void) setupServerCheck {
+    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+    OTRXMPPManager *xmpp = nil;
+    PushController *push = nil;
+    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+        xmpp = (OTRXMPPManager*)protocol;
+        push = [OTRProtocolManager sharedInstance].pushController;
+    }
+    if (!xmpp || !push) {
+        return;
+    }
+    _serverCheck = [[OTRServerCheck alloc] initWithXmppManager:xmpp push:push];
+    NSParameterAssert(_serverCheck != nil);
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -60,6 +92,8 @@ static CGFloat const kOTRInvitePadding = 10;
     self.titleImageView.image = [UIImage imageNamed:@"invite_success" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.titleImageView.contentMode = UIViewContentModeScaleAspectFit;
     
+    self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING(),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
+    
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
     
@@ -69,13 +103,37 @@ static CGFloat const kOTRInvitePadding = 10;
     
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:2];
     
-    [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:INVITE_LINK_STRING() action:@selector(linkShareButtonPressed:)]];
-    [shareButtons addObject:[self shareButtonWithIcon:FACamera title:SCAN_QR_STRING() action:@selector(qrButtonPressed:)]];
-    
+    [shareButtons addObject:[self buttonWithIcon:FAEnvelope title:INVITE_LINK_STRING() type:BButtonTypeDefault action:@selector(linkShareButtonPressed:)]];
+    [shareButtons addObject:[self buttonWithIcon:FACamera title:SCAN_QR_STRING() type:BButtonTypeDefault action:@selector(qrButtonPressed:)]];
     
     self.shareButtons = shareButtons;
     
+    [self setupWarningButton];
+    
     [self.view setNeedsUpdateConstraints];
+}
+
+- (void) setupWarningButton {
+#warning Non-localized String
+    _warningButton = [self buttonWithIcon:FAWarning title:@"Push Warning" type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
+    
+    __weak typeof(self) weakSelf = self;
+    self.serverCheck.checkStatusUpdate = ^(ServerCheckStatus status) {
+        __typeof__(self) strongSelf = weakSelf;
+        if (!strongSelf) { return; }
+        [strongSelf refreshWarningButton:status];
+    };
+    ServerCheckStatus status = [self.serverCheck getStatus];
+    [self refreshWarningButton:status];
+    [self.view addSubview:self.warningButton];
+}
+
+- (void) refreshWarningButton:(ServerCheckStatus)status {
+    if (status == ServerCheckStatusBroken) {
+        self.warningButton.hidden = NO;
+    } else {
+        self.warningButton.hidden = YES;
+    }
 }
 
 - (void)updateViewConstraints
@@ -91,6 +149,11 @@ static CGFloat const kOTRInvitePadding = 10;
         [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kOTRInvitePadding];
         [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kOTRInvitePadding];
         
+        [self.warningButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:kOTRInvitePadding * 2];
+        [self.warningButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.warningButton autoSetDimension:ALDimensionHeight toSize:kOTRButtonHeight];
+        [self.warningButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.shareButtons.firstObject];
+        
         self.addedConstraints = YES;
     }
 }
@@ -99,7 +162,7 @@ static CGFloat const kOTRInvitePadding = 10;
 {
     
     BButton *button = [self.shareButtons firstObject];
-    [button autoSetDimension:ALDimensionHeight toSize:40];
+    [button autoSetDimension:ALDimensionHeight toSize:kOTRButtonHeight];
     [self.shareButtons enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
         if (idx == 0){
             [button autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kOTRInvitePadding];
@@ -114,15 +177,6 @@ static CGFloat const kOTRInvitePadding = 10;
         }
         [button autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.subtitleLabel withOffset:kOTRInvitePadding];
     }];
-}
-
-- (void)setAccount:(OTRAccount *)account
-{
-    if(![account isEqual:_account]) {
-        _account = account;
-        
-        self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@!\n\n%@",ONBOARDING_SUCCESS_STRING(),[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
-    }
 }
 
 - (void)setShareButtons:(NSArray<BButton *> *)shareButtons
@@ -175,15 +229,22 @@ static CGFloat const kOTRInvitePadding = 10;
     [ShareController shareAccount:self.account sender:sender viewController:self];
 }
 
-- (UIButton *)shareButtonWithIcon:(FAIcon)icon title:(NSString *)title action:(SEL)action
+- (UIButton *)buttonWithIcon:(FAIcon)icon title:(NSString *)title type:(BButtonType)type action:(SEL)action
 {
     
-    BButton *button = [[BButton alloc] initWithFrame:CGRectZero type:BButtonTypeDefault style:BButtonStyleBootstrapV3];
+    BButton *button = [[BButton alloc] initWithFrame:CGRectZero type:type style:BButtonStyleBootstrapV3];
     [button setTitle:title forState:UIControlStateNormal];
     [button addAwesomeIcon:icon beforeTitle:YES];
     button.titleLabel.font = [button.titleLabel.font fontWithSize:14];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return button;
+}
+
+- (void) warningButtonPressed:(id)sender {
+    // Create a new ServerCheck object because ServerCapabilitiesViewController takes ownership
+    OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:self.serverCheck.capsModule push:self.serverCheck.push xmppPush:self.serverCheck.xmppPush];
+    ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
+    [self.navigationController pushViewController:scvc animated:YES];
 }
 
 #pragma - mark MFMessageComposeViewControllerDelegate Methods

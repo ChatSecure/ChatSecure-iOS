@@ -11,10 +11,10 @@ import ChatSecureCore
 
 class ViewHandlerTestDelegate:NSObject {
     let didSetup: () -> Void
-    let didReceiveObjectChanges: (key:String,collection:String) -> Void
-    let didReceiveViewChanges: (row:[YapDatabaseViewRowChange],section:[YapDatabaseViewSectionChange]) -> Void
+    let didReceiveObjectChanges: (_ key:String,_ collection:String) -> Void
+    let didReceiveViewChanges: (_ row:[YapDatabaseViewRowChange],_ section:[YapDatabaseViewSectionChange]) -> Void
     
-    init(didSetup: () -> Void, objectChanges: (key:String, collection:String) -> Void, viewChanges: (row:[YapDatabaseViewRowChange], section:[YapDatabaseViewSectionChange]) -> Void) {
+    init(didSetup: @escaping () -> Void, objectChanges: @escaping (_ key:String, _ collection:String) -> Void, viewChanges: @escaping (_ row:[YapDatabaseViewRowChange], _ section:[YapDatabaseViewSectionChange]) -> Void) {
         self.didSetup = didSetup
         self.didReceiveObjectChanges = objectChanges
         self.didReceiveViewChanges = viewChanges
@@ -22,16 +22,16 @@ class ViewHandlerTestDelegate:NSObject {
 }
 
 extension ViewHandlerTestDelegate: OTRYapViewHandlerDelegateProtocol {
-    func didSetupMappings(handler: OTRYapViewHandler) {
+    func didSetupMappings(_ handler: OTRYapViewHandler) {
         self.didSetup()
     }
     
-    func didReceiveChanges(handler: OTRYapViewHandler, key: String, collection: String) {
-        self.didReceiveObjectChanges(key: key, collection: collection)
+    func didReceiveChanges(_ handler: OTRYapViewHandler, key: String, collection: String) {
+        self.didReceiveObjectChanges(key, collection)
     }
     
-    func didReceiveChanges(handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
-        self.didReceiveViewChanges(row: rowChanges,section: sectionChanges)
+    func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
+        self.didReceiveViewChanges(rowChanges,sectionChanges)
     }
 }
 
@@ -41,7 +41,7 @@ class OTRYapViewTest: XCTestCase {
         super.setUp()
         
         
-        NSFileManager.defaultManager().clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
         }
         
         override func tearDown() {
@@ -50,8 +50,8 @@ class OTRYapViewTest: XCTestCase {
         }
         
         func testViewHandlerUpdate() {
-            let setupExpecation = self.expectationWithDescription("Setup Mappings")
-            let viewChangeExpectation = self.expectationWithDescription("Insert buddy")
+            let setupExpecation = self.expectation(description: "Setup Mappings")
+            let viewChangeExpectation = self.expectation(description: "Insert buddy")
         
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
         let viewHandler = OTRYapViewHandler(databaseConnection: databaseManager.longLivedReadOnlyConnection!, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
@@ -60,13 +60,13 @@ class OTRYapViewTest: XCTestCase {
         let delegate = ViewHandlerTestDelegate(didSetup: {
             setupExpecation.fulfill()
             //Once our view handler is ready we need to make a change to the database that will be reflected in the view.
-            databaseManager.readWriteDatabaseConnection?.asyncReadWriteWithBlock({ (transaction) in
+            databaseManager.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
                 let buddy = OTRBuddy()!
                 let account = OTRAccount()!
                 buddy.username = "test@test.com"
                 buddy.accountUniqueId = account.uniqueId
-                account.saveWithTransaction(transaction)
-                buddy.saveWithTransaction(transaction)
+                account.save(with: transaction)
+                buddy.save(with: transaction)
                 
             })
         
@@ -76,9 +76,6 @@ class OTRYapViewTest: XCTestCase {
                 viewChangeExpectation.fulfill()
             }
         viewHandler.delegate = delegate
-        
-        
-        
-        self.waitForExpectationsWithTimeout(300, handler: nil)
-        }
+        self.waitForExpectations(timeout: 300, handler: nil)
+    }
 }

@@ -10,12 +10,12 @@ import Foundation
 import OTRAssets
 
 public extension NSError {
-    class func XMPPXMLError(error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
+    class func XMPPXMLError(_ error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
         return self.chatSecureError(error, userInfo: userInfo)
     }
     
-    class func chatSecureError(error:ChatSecureErrorProtocol, userInfo:[String:AnyObject]?) -> NSError {
-        var tempUserInfo:[String:AnyObject] = [NSLocalizedDescriptionKey:error.localizedDescription()]
+    class func chatSecureError(_ error:ChatSecureErrorProtocol, userInfo:[String:AnyObject]?) -> NSError {
+        var tempUserInfo:[String:AnyObject] = [NSLocalizedDescriptionKey:error.localizedDescription() as AnyObject]
         
         if let additionalDictionary = error.additionalUserInfo() {
             additionalDictionary.forEach { tempUserInfo.updateValue($1, forKey: $0) }
@@ -81,15 +81,15 @@ extension PushError: ChatSecureErrorProtocol {
 
 /** Error types for encryption*/
 enum EncryptionError: Int {
-    case UnableToCreateOTRSession = 350
-    case OMEMONotSuported         = 351
+    case unableToCreateOTRSession = 350
+    case omemoNotSuported         = 351
 }
 
 extension EncryptionError: ChatSecureErrorProtocol {
     func localizedDescription() -> String {
         switch self {
-        case UnableToCreateOTRSession: return "Unable to create OTR session"
-        case .OMEMONotSuported: return "OMEMO not supported"
+        case .unableToCreateOTRSession: return "Unable to create OTR session"
+        case .omemoNotSuported: return "OMEMO not supported"
         }
     }
     
@@ -104,10 +104,10 @@ extension EncryptionError: ChatSecureErrorProtocol {
 
 
 @objc public enum OTRXMPPXMLError: Int {
-    case UnkownError     = 1000
-    case Conflict        = 1001
-    case NotAcceptable   = 1002
-    case PolicyViolation = 1003
+    case unkownError     = 1000
+    case conflict        = 1001
+    case notAcceptable   = 1002
+    case policyViolation = 1003
 }
 
 extension OTRXMPPXMLError: ChatSecureErrorProtocol {
@@ -117,13 +117,13 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
     
     public func localizedDescription() -> String {
         switch self {
-        case .UnkownError:
+        case .unkownError:
             return "Unknown Error"
-        case .Conflict:
+        case .conflict:
             return "There's a conflict with the username"
-        case .NotAcceptable:
+        case .notAcceptable:
             return "Not enough information provided"
-        case .PolicyViolation:
+        case .policyViolation:
             return "Server policy violation"
         }
     }
@@ -134,9 +134,9 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
 }
 
 @objc public enum OTROMEMOError: Int {
-    case UnknownError      = 1100
-    case NoDevicesForBuddy = 1101
-    case NoDevices         = 1102
+    case unknownError      = 1100
+    case noDevicesForBuddy = 1101
+    case noDevices         = 1102
 }
 
 extension OTROMEMOError: ChatSecureErrorProtocol {
@@ -146,11 +146,11 @@ extension OTROMEMOError: ChatSecureErrorProtocol {
     
     public func localizedDescription() -> String {
         switch self {
-        case .UnknownError:
+        case .unknownError:
             return UNKNOWN_ERROR_STRING()
-        case .NoDevicesForBuddy:
+        case .noDevicesForBuddy:
             return NO_DEVICES_BUDDY_ERROR_STRING()
-        case .NoDevices:
+        case .noDevices:
             return NO_DEVICES_ACCOUNT_ERROR_STRING()
         }
     }

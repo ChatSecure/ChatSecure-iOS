@@ -10,19 +10,19 @@ import Foundation
 import XMPPFramework
 
 @objc public protocol OTRXMPPMessageStatusModuleDelegate {
-    func didSendMessage(messageKey:String, messageCollection:String)
-    func didFailToSendMessage(messageKey:String, messageCollection:String, error:NSError?)
+    func didSendMessage(_ messageKey:String, messageCollection:String)
+    func didFailToSendMessage(_ messageKey:String, messageCollection:String, error:NSError?)
 }
 
 /**
  This is a simple XMPP module that translates xmpp message events to OTRMessageEvents for the delegate. 
  Should be used in coordination with MessageQueueHandler.
  */
-@objc public class OTRXMPPMessageStatusModule:XMPPModule,XMPPStreamDelegate {
+@objc open class OTRXMPPMessageStatusModule:XMPPModule,XMPPStreamDelegate {
     
     let databaseConnection:YapDatabaseConnection
     var delegate:OTRXMPPMessageStatusModuleDelegate?
-    var delegateQueue = dispatch_queue_create("OTRXMPPMessageStatusModuleDelegate", DISPATCH_QUEUE_SERIAL)
+    var delegateQueue = DispatchQueue(label: "OTRXMPPMessageStatusModuleDelegate", attributes: [])
     
     public init(databaseConnection:YapDatabaseConnection, delegate:OTRXMPPMessageStatusModuleDelegate?) {
         self.delegate = delegate
@@ -32,18 +32,18 @@ import XMPPFramework
     
     //Mark: YapDatbase functions
     
-    private func fetchMessage(XMPPId:String) -> OTRMessageProtocol? {
+    fileprivate func fetchMessage(_ XMPPId:String) -> OTRMessageProtocol? {
         var message:OTRMessageProtocol? = nil
-        self.databaseConnection.readWithBlock { (transaction) in
-            message = OTRBaseMessage.messageForMessageId(XMPPId, incoming: false, transaction: transaction)
+        self.databaseConnection.read { (transaction) in
+            message = OTRBaseMessage.message(forMessageId: XMPPId, incoming: false, transaction: transaction)
         }
         return message
     }
     
     //Mark: XMPPStream delegate functions
-    public func xmppStream(sender: XMPPStream!, didSendMessage message: XMPPMessage!) {
+    open func xmppStream(_ sender: XMPPStream!, didSend message: XMPPMessage!) {
         
-        guard let messageId = message.attributeStringValueForName("id") where message.isChatMessage() else {
+        guard let messageId = message.attributeStringValue(forName: "id"), message.isChatMessage() else {
             return
         }
         
@@ -52,14 +52,14 @@ import XMPPFramework
         }
     }
     
-    public func xmppStream(sender: XMPPStream!, didFailToSendMessage message: XMPPMessage!, error: NSError!) {
+    open func xmppStream(_ sender: XMPPStream!, didFailToSend message: XMPPMessage!, error: Error!) {
         
-        guard let messageId = message.attributeStringValueForName("id") where message.isChatMessage() else {
+        guard let messageId = message.attributeStringValue(forName: "id"), message.isChatMessage() else {
             return
         }
         
         if let message = self.fetchMessage(messageId) {
-            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error)
+            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error as NSError?)
         }
         
     }

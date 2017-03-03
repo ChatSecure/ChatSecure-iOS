@@ -8,83 +8,71 @@
 
 import UIKit
 import OTRAssets
+import MBProgressHUD
 
-public class EnablePushViewController: UIViewController {
+open class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
-    public var account: OTRAccount?
-    private var userLaunchedToSettings: Bool = false
+    open var account: OTRAccount?
+    fileprivate var userLaunchedToSettings: Bool = false
+    private var hud: MBProgressHUD?
 
     @IBOutlet weak var enablePushButton: UIButton?
     @IBOutlet weak var textView: UITextView?
     @IBOutlet weak var skipButton: UIButton?
     
-    override public func viewDidDisappear(animated: Bool) {
+    override open func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         self.navigationItem.setHidesBackButton(false, animated: animated)
     }
     
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.setHidesBackButton(true, animated: animated)
     }
     
-    override public func viewDidAppear(animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if userLaunchedToSettings && PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.Enabled)
+            PushController.setPushPreference(.enabled)
             showNextScreen()
         }
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: OTRUserNotificationsChanged, object: nil)
-        self.skipButton?.setTitle(SKIP_STRING(), forState: .Normal)
-        self.enablePushButton?.setTitle(ENABLE_PUSH_STRING(), forState: .Normal)
+        NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
+        self.skipButton?.setTitle(SKIP_STRING(), for: .normal)
+        self.enablePushButton?.setTitle(ENABLE_PUSH_STRING(), for: .normal)
         self.skipButton?.accessibilityIdentifier = "EnablePushViewSkipButton"
     }
     
-    @IBAction func enablePushPressed(sender: AnyObject) {
+    @IBAction func enablePushPressed(_ sender: AnyObject) {
+        hud = MBProgressHUD.showAdded(to: view, animated: true)
+        PushController.setPushPreference(.enabled)
         PushController.registerForPushNotifications()
     }
 
-    @IBAction func skipButtonPressed(sender: AnyObject) {
-        PushController.setPushPreference(.Disabled)
+    @IBAction func skipButtonPressed(_ sender: AnyObject) {
+        PushController.setPushPreference(.disabled)
         showNextScreen()
     }
     
     func showNextScreen() {
-        if self.account != nil {
-            
-            let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate
-            var inviteVC:OTRInviteViewController? = nil
-            if let c = appDelegate?.theme.inviteViewControllerClass() as? OTRInviteViewController.Type {
-                inviteVC = c.init()
-                inviteVC!.account = self.account
-                self.navigationController?.pushViewController(inviteVC!, animated: true)
-            }
+        if let account = account, let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
+            let inviteVC = appDelegate.theme.inviteViewController(for: account)
+            self.navigationController?.pushViewController(inviteVC, animated: true)
         } else {
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
-        
     }
     
-    func didRegisterUserNotificationSettings(notification: NSNotification) {
+    func didRegisterUserNotificationSettings(_ notification: Notification) {
         if PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.Enabled)
             showNextScreen()
         } else {
-            let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .Alert)
-            let settingsAction = UIAlertAction(title: SETTINGS_STRING(), style: .Default, handler: { (action: UIAlertAction) -> Void in
-                let appSettings = NSURL(string: UIApplicationOpenSettingsURLString)
-                UIApplication.sharedApplication().openURL(appSettings!)
-            })
-            let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .Cancel, handler: nil)
-            alert.addAction(settingsAction)
-            alert.addAction(cancelAction)
-            presentViewController(alert, animated: true, completion: nil)
+            showPromptForSystemSettings()
         }
     }
 

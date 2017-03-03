@@ -9,24 +9,24 @@
 import UIKit
 import OTRAssets
 
-public class ShareControllerURLSource: NSObject, UIActivityItemSource {
-    public var account: OTRAccount?
-    public var url:NSURL?
+open class ShareControllerURLSource: NSObject, UIActivityItemSource {
+    open var account: OTRAccount?
+    open var url:URL?
     
-    public init(account: OTRAccount, url: NSURL) {
+    public init(account: OTRAccount, url: URL) {
         self.account = account
         self.url = url
     }
     
-    public func activityViewControllerPlaceholderItem(activityViewController: UIActivityViewController) -> AnyObject {
+    open func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
         return self.url!
     }
     
-    public func activityViewController(activityViewController: UIActivityViewController, itemForActivityType activityType: String) -> AnyObject? {
+    open func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
         return self.url
     }
     
-    public func activityViewController(activityViewController: UIActivityViewController, subjectForActivityType activityType: String?) -> String {
+    open func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
         var name = SOMEONE_STRING()
         if let displayName = account?.username {
             name = displayName
@@ -37,14 +37,18 @@ public class ShareControllerURLSource: NSObject, UIActivityItemSource {
     }
 }
 
-public class ShareController: NSObject {
-    public static func shareAccount(account: OTRAccount, sender: AnyObject, viewController: UIViewController) {
-        let fingerprintTypes = Set([NSNumber(int: OTRFingerprintType.OTR.rawValue)])
+open class ShareController: NSObject {
+    open static func shareAccount(_ account: OTRAccount, sender: AnyObject, viewController: UIViewController) {
+        let fingerprintTypes = Set([NSNumber(value: OTRFingerprintType.OTR.rawValue as Int32)])
         
-        account.generateShareURLWithFingerprintTypes(fingerprintTypes, completion: { (url: NSURL!, error: NSError!) -> Void in
+        account.generateShareURL(withFingerprintTypes: fingerprintTypes, completion: { (url: URL?, error: Error?) -> Void in
+            guard let url = url else {
+                return
+            }
+            
             let qrCodeActivity = OTRQRCodeActivity()
             let activityViewController = UIActivityViewController(activityItems: [self.getShareSource(account, url: url)], applicationActivities: [qrCodeActivity])
-            activityViewController.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList]
+            activityViewController.excludedActivityTypes = [UIActivityType.print, UIActivityType.saveToCameraRoll, UIActivityType.addToReadingList]
             if let ppc = activityViewController.popoverPresentationController {
                 if let view = sender as? UIView {
                     ppc.sourceView = view
@@ -52,12 +56,12 @@ public class ShareController: NSObject {
                 }
             }
             
-            viewController.presentViewController(activityViewController, animated: true, completion: nil)
+            viewController.present(activityViewController, animated: true, completion: nil)
         })
         
     }
     
-    public static func getShareSource(account: OTRAccount, url: NSURL) -> AnyObject {
+    open static func getShareSource(_ account: OTRAccount, url: URL) -> AnyObject {
         return ShareControllerURLSource(account: account, url: url)
     }
 }

@@ -13,33 +13,33 @@ import YapDatabase
 /**
  * The purpose of this class is to know if XEP-0198 is enabled and to mark messages when they are acknowledged by the server with the correct date
  */
-@objc public class OTRStreamManagementDelegate:NSObject, XMPPStreamManagementDelegate {
+@objc open class OTRStreamManagementDelegate:NSObject, XMPPStreamManagementDelegate {
     
-    private(set) public var streamManagementEnabled = false
-    private let databaseConnection:YapDatabaseConnection
+    fileprivate(set) open var streamManagementEnabled = false
+    fileprivate let databaseConnection:YapDatabaseConnection
     
     public init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
     }
     
-    @objc public func xmppStreamManagement(sender: XMPPStreamManagement!, wasEnabled enabled: DDXMLElement!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, wasEnabled enabled: DDXMLElement!) {
         self.streamManagementEnabled = true
     }
-    @objc public func xmppStreamManagement(sender: XMPPStreamManagement!, wasNotEnabled failed: DDXMLElement!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, wasNotEnabled failed: DDXMLElement!) {
         self.streamManagementEnabled = false
     }
     
-    @objc public func xmppStreamManagement(sender: XMPPStreamManagement!, didReceiveAckForStanzaIds stanzaIds: [AnyObject]!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, didReceiveAckForStanzaIds stanzaIds: [Any]!) {
         
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) in
+        self.databaseConnection.asyncReadWrite { (transaction) in
             for object in stanzaIds {
                 guard let stanzaId = object as? String else {
                     return
                 }
                 
-                if let message = OTROutgoingMessage.messageForMessageId(stanzaId, transaction: transaction) as? OTROutgoingMessage{
-                    message.dateAcked = NSDate()
-                    message.saveWithTransaction(transaction)
+                if let message = OTROutgoingMessage.message(forMessageId: stanzaId, transaction: transaction) as? OTROutgoingMessage{
+                    message.dateAcked = Date()
+                    message.save(with: transaction)
                 }
             }
         }

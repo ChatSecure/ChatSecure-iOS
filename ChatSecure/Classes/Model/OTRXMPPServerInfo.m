@@ -26,7 +26,17 @@
  }
  */
 
+static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
+
 @implementation OTRXMPPServerInfo
+@synthesize portNumber = _portNumber;
+
+- (instancetype) initWithDomain:(NSString*)domain {
+    if (self = [super init]) {
+        _domain = [domain copy];
+    }
+    return self;
+}
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
@@ -73,6 +83,13 @@
     return image;
 }
 
+- (in_port_t) portNumber {
+    if (_portNumber > 0) {
+        return _portNumber;
+    }
+    return 5222;
+}
+
 + (NSBundle*)serverBundle {
     NSString *folderName = @"xmpp-server-list";
     NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
@@ -83,12 +100,16 @@
 
 + (NSArray *)defaultServerList
 {
+    if (_defaultServerList) {
+        return _defaultServerList;
+    }
     NSBundle *dataBundle = [self serverBundle];
     NSURL *url = [dataBundle URLForResource:@"servers" withExtension:@"json"];
     NSParameterAssert(url != nil);
     
     NSData *jsonData = [[NSData alloc] initWithContentsOfURL:url];
-    return [self serverListFromJSONData:jsonData];
+    _defaultServerList = [self serverListFromJSONData:jsonData];
+    return _defaultServerList;
 }
 
 + (NSArray *)serverListFromJSONData:(NSData*)jsonData {

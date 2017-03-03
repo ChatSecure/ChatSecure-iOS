@@ -10,6 +10,8 @@
 @import UIKit;
 @import JSQMessagesViewController;
 
+@class OTRAccount;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRTheme : NSObject
 
@@ -20,14 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Set global app appearance via UIAppearance */
 - (void) setupGlobalTheme;
 
-/** Override this in subclass to use a different conversation view controller class */
-- (Class) conversationViewControllerClass;
-
-/** Override this in subclass to use a different message view controller class */
-- (Class) messagesViewControllerClass;
-
-/** Override this in subclass to use a different group message view controller class */
-- (Class) groupMessagesViewControllerClass;
+/** Returns new instance. Override this in subclass to use a different conversation view controller class */
+- (__kindof UIViewController*) conversationViewController;
 
 /** Returns new instance. Override this in subclass to use a different message view controller class */
 - (__kindof JSQMessagesViewController *) messagesViewController;
@@ -38,15 +34,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns new instance. Override this in subclass to use a different settings view controller class */
 - (__kindof UIViewController *) settingsViewController;
 
-/** Override this in subclass to use a different compose view controller class */
-- (Class) composeViewControllerClass;
+/** Returns new instance. Override this in subclass to use a different compose view controller class */
+- (__kindof UIViewController *) composeViewController;
 
-/** Override this in subclass to use a different invite view controller class */
-- (Class) inviteViewControllerClass;
+/** Returns new instance. Override this in subclass to use a different invite view controller class */
+- (__kindof UIViewController* ) inviteViewControllerForAccount:(OTRAccount*)account;
 
-/** Ovverride this to disable OMEMO message encryption. default: YES */
+/** Override this to disable OMEMO message encryption. default: YES */
 - (BOOL) enableOMEMO;
-
 
 @end
 NS_ASSUME_NONNULL_END

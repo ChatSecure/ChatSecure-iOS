@@ -12,9 +12,9 @@ import YapDatabase.YapDatabaseView
 @objc public protocol OTRYapViewHandlerDelegateProtocol:NSObjectProtocol {
     
     /** Recommeded to do a reload data here*/
-    optional func didSetupMappings(handler:OTRYapViewHandler)
-    optional func didReceiveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
-    optional func didReceiveChanges(handler:OTRYapViewHandler, key:String, collection:String)
+    @objc optional func didSetupMappings(_ handler:OTRYapViewHandler)
+    @objc optional func didReceiveChanges(_ handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
+    @objc optional func didReceiveChanges(_ handler:OTRYapViewHandler, key:String, collection:String)
 }
 
 public struct keyCollectionPair {
@@ -28,22 +28,22 @@ public struct keyCollectionPair {
 }
 
 private enum ViewGroups {
-    case Array([String])
-    case Block(YapDatabaseViewMappingGroupFilter, YapDatabaseViewMappingGroupSort)
+    case array([String])
+    case block(YapDatabaseViewMappingGroupFilter, YapDatabaseViewMappingGroupSort)
 }
 
 public class OTRYapKeyCollectionHandler:NSObject {
     
     var storage = Dictionary<String, keyCollectionPair>()
     
-    public func observe(key:String, collection:String) {
+    public func observe(_ key:String, collection:String) {
         let k = key + collection
         storage.updateValue(keyCollectionPair(key: key, collection: collection), forKey: k)
     }
     
-    public func stopObserving(key:String, collection:String) {
+    public func stopObserving(_ key:String, collection:String) {
         let k = key + collection
-        storage.removeValueForKey(k)
+        storage.removeValue(forKey: k)
     }
 }
 
@@ -63,28 +63,28 @@ public class OTRYapViewHandler: NSObject {
     public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatabaseNotificationName.LongLivedTransactionChanges) {
         self.databaseConnection = databaseConnection
         super.init()
-        self.notificationToken = NSNotificationCenter.defaultCenter().addObserverForName(databaseChangeNotificationName, object: self.databaseConnection, queue: NSOperationQueue.mainQueue()) {[weak self] (notification) -> Void in
+        self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: databaseChangeNotificationName), object: self.databaseConnection, queue: OperationQueue.main) {[weak self] (notification) -> Void in
             self?.yapDatbaseModified(notification)
         }
     }
     
     deinit {
         if let token = self.notificationToken {
-            NSNotificationCenter.defaultCenter().removeObserver(token)
+            NotificationCenter.default.removeObserver(token)
         }
     }
     
-    public func setup(view:String,groups:[String]) {
+    public func setup(_ view:String,groups:[String]) {
         self.viewName = view
-        let groupsArray = ViewGroups.Array(groups)
+        let groupsArray = ViewGroups.array(groups)
         self.groups = groupsArray
         self.mappings = nil;
         self.setupMappings(view, groups: groupsArray);
     }
     
-    public func setup(view:String, groupBlock:YapDatabaseViewMappingGroupFilter, sortBlock:YapDatabaseViewMappingGroupSort) {
+    public func setup(_ view:String, groupBlock:@escaping YapDatabaseViewMappingGroupFilter, sortBlock:@escaping YapDatabaseViewMappingGroupSort) {
         self.viewName = view
-        let groups = ViewGroups.Block(groupBlock,sortBlock)
+        let groups = ViewGroups.block(groupBlock,sortBlock)
         self.groups = groups
         self.mappings = nil
         self.setupMappings(view, groups: groups)
@@ -95,23 +95,23 @@ public class OTRYapViewHandler: NSObject {
             return nil
         }
         switch groups {
-            case .Array(let array): return array
+            case .array(let array): return array
             default: return nil
         }
     }
     
-    private func setupMappings(view:String,groups:ViewGroups) {
+    private func setupMappings(_ view:String,groups:ViewGroups) {
         
-        self.databaseConnection.readWithBlock({ (transaction) in
+        self.databaseConnection.read({ (transaction) in
             // Check if extensions exists. If not then don't setup. https://github.com/yapstudios/YapDatabase/issues/203
             if let _ = transaction.ext(view) {
                 switch groups {
-                case .Array(let array):
+                case .array(let array):
                     self.mappings = YapDatabaseViewMappings(groups: array, view: view)
-                case .Block(let filterBlock, let sortBlock):
+                case .block(let filterBlock, let sortBlock):
                     self.mappings = YapDatabaseViewMappings(groupFilterBlock: filterBlock, sortBlock: sortBlock, view: view)
                 }
-                self.mappings?.updateWithTransaction(transaction)
+                self.mappings?.update(with: transaction)
             }
         })
         if(self.mappings != nil) {
@@ -119,9 +119,9 @@ public class OTRYapViewHandler: NSObject {
         }
     }
     
-    public func object(indexPath:NSIndexPath) -> AnyObject? {
+    public func object(_ indexPath:IndexPath) -> AnyObject? {
         var object:AnyObject? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
+        self.databaseConnection.read { (transaction) -> Void in
             guard let viewName = self.mappings?.view else {
                 return
             }
@@ -133,21 +133,21 @@ public class OTRYapViewHandler: NSObject {
             let row = UInt(indexPath.row)
             let section = UInt(indexPath.section)
             
-            if let mappings = self.mappings where row < mappings.numberOfItemsInSection(section) {
-                object = viewTransaction.objectAtRow(row, inSection: section, withMappings: mappings)
+            if let mappings = self.mappings, row < mappings.numberOfItems(inSection: section) {
+                object = viewTransaction.object(atRow: row, inSection: section, with: mappings) as AnyObject?
             }
         }
         
         return object;
     }
     
-    func yapDatbaseModified(notification:NSNotification) {
-        guard let notifications = notification.userInfo? [DatabaseNotificationKey.ConnectionChanges] as? [NSNotification] else {
+    func yapDatbaseModified(_ notification:Notification) {
+        guard let notifications = notification.userInfo? [DatabaseNotificationKey.ConnectionChanges] as? [Notification] else {
             return
         }
         
         for (_,value) in self.keyCollectionObserver.storage {
-            if self.databaseConnection.hasChangeForKey(value.key, inCollection: value.collection, inNotifications: notifications) {
+            if self.databaseConnection.hasChange(forKey: value.key, inCollection: value.collection, in: notifications) {
                 self.delegate?.didReceiveChanges?(self, key: value.key, collection: value.collection)
             }
         }
@@ -159,20 +159,18 @@ public class OTRYapViewHandler: NSObject {
             return
         }
         
+        if notifications.count == 0 {
+            return
+        }
+        
         guard let databaseView = self.databaseConnection.ext(mappings.view) as? YapDatabaseViewConnection else {
             return
         }
         
-        var sectionChanges:NSArray? = nil
-        var rowChanges:NSArray? = nil
+        let src = databaseView.otr_getSectionRowChanges(for: notifications, with: mappings)
         
-        databaseView.getSectionChanges(&sectionChanges, rowChanges: &rowChanges, forNotifications: notifications, withMappings: mappings)
-        
-        let sc = sectionChanges as? [YapDatabaseViewSectionChange] ?? [YapDatabaseViewSectionChange]()
-        let rc = rowChanges as? [YapDatabaseViewRowChange] ?? [YapDatabaseViewRowChange]()
-        
-        if sc.count > 0 || rc.count > 0 {
-            self.delegate?.didReceiveChanges?(self, sectionChanges: sc, rowChanges: rc)
+        if src.sectionChanges.count > 0 || src.rowChanges.count > 0 {
+            self.delegate?.didReceiveChanges?(self, sectionChanges: src.sectionChanges, rowChanges: src.rowChanges)
         }
     }
 }

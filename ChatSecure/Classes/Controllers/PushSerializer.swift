@@ -16,9 +16,9 @@ enum jsonKeys: String {
     case dateExpires = "date_expires"
 }
 
-public class PushSerializer: NSObject {
+open class PushSerializer: NSObject {
     
-    public class func serialize(tokens:[Token], APIEndpoint:String) throws -> NSData? {
+    open class func serialize(_ tokens:[Token], APIEndpoint:String) throws -> Data? {
         if tokens.count < 1 {
             return nil
         }
@@ -30,15 +30,15 @@ public class PushSerializer: NSObject {
                 throw NSError.chatSecureError(PushError.misingExpiresDate, userInfo: nil)
             }
             
-            let dateString = Deserializer.dateFormatter().stringFromDate(date)
+            let dateString = Deserializer.dateFormatter().string(from: date)
             expiresDate.append(dateString)
         }
         
-        let jsonDictionary = [jsonKeys.endpoint.rawValue: APIEndpoint, jsonKeys.tokens.rawValue: tokenStrings]
+        let jsonDictionary = [jsonKeys.endpoint.rawValue: APIEndpoint, jsonKeys.tokens.rawValue: tokenStrings] as [String : Any]
         
-        var data:NSData? = nil
+        var data:Data? = nil
         do {
-            data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: NSJSONWritingOptions())
+            data = try JSONSerialization.data(withJSONObject: jsonDictionary, options: JSONSerialization.WritingOptions())
         }catch {
             NSLog("JSON serialization Error")
         }

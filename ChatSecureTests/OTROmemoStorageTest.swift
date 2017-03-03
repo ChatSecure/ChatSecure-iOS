@@ -23,7 +23,7 @@ class OTROmemoStorageTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        NSFileManager.defaultManager().clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
     }
     
     override func tearDown() {
@@ -35,22 +35,22 @@ class OTROmemoStorageTest: XCTestCase {
      * This creates teh necessary database and signal managers. Also creates an account which is required for all the above objects
      *
      */
-    func setupDatabase(name:String) {
-        let account = TestXMPPAccount()
+    func setupDatabase(_ name:String) {
+        let account = TestXMPPAccount()!
         self.accountKey = account.uniqueId
         self.accountCollection = OTRXMPPAccount.collection()
         
         
         self.databaseManager = OTRTestDatabaseManager()
         self.databaseManager.setDatabasePassphrase("help", remember: false, error: nil)
-        self.databaseManager.setupDatabaseWithName(name, withMediaStorage: false)
+        self.databaseManager.setupDatabase(withName: name, withMediaStorage: false)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!, delegate: nil)
         self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         
-        databaseManager.readWriteDatabaseConnection!.readWriteWithBlock { (transaction) in
-            account.saveWithTransaction(transaction)
-        }
+        databaseManager.readWriteDatabaseConnection?.readWrite( { (transaction) in
+            account.save(with: transaction)
+        })
     }
     
     /**
@@ -62,15 +62,14 @@ class OTROmemoStorageTest: XCTestCase {
         let firstStoredDevices = omemoStorage.getDevicesForOurAccount(nil)
         XCTAssertEqual(firstStoredDevices.count, self.initialDevices.count)
         firstStoredDevices.forEach { (device) in
-            XCTAssert(device.trustLevel == .TrustedTofu)
+            XCTAssert(device.trustLevel == .trustedTofu)
             XCTAssertEqual(device.parentKey, self.accountKey)
             XCTAssertEqual(device.parentCollection, self.accountCollection)
         }
         let firstStoredDeviceId = firstStoredDevices.map { (device) -> NSNumber in
             return device.deviceId
         }
-        let difference = Set(self.initialDevices).subtract(Set(firstStoredDeviceId))
-        XCTAssertEqual(difference.count, 0)
+        XCTAssertEqual(Set(self.initialDevices), Set(firstStoredDeviceId))
     }
     
     
@@ -90,20 +89,19 @@ class OTROmemoStorageTest: XCTestCase {
             XCTAssertEqual(device.parentCollection, accountCollection)
             switch device.deviceId {
             case 3:
-                XCTAssert(device.trustLevel == .Removed)
+                XCTAssert(device.trustLevel == .removed)
             case 4:
                 fallthrough
             case 5:
-                XCTAssert(device.trustLevel == .UntrustedNew)
+                XCTAssert(device.trustLevel == .untrustedNew)
             default:
-                XCTAssert(device.trustLevel == .TrustedTofu,"Device \(device.deviceId) Should be Tofu")
+                XCTAssert(device.trustLevel == .trustedTofu,"Device \(device.deviceId) Should be Tofu")
             }
         }
         let secondStoredDeviceId = secondStoredDevices.map { (device) -> NSNumber in
             return device.deviceId
         }
-        let secondDifference = Set(secondDeviceNumbers).subtract(Set(secondStoredDeviceId))
-        XCTAssertEqual(secondDifference.count, 0)
+        XCTAssertEqual(Set([1,2,3,4,5]), Set(secondStoredDeviceId))
     }
     
     func testOmemoFirstDevicesStorage() {
@@ -146,16 +144,17 @@ class OTROmemoStorageTest: XCTestCase {
         //Normally these should be sequential but shouldn't matter
         let keyIds:[UInt32] =  [1,2,100]
         keyIds.forEach { (id) in
-            self.signalStorage.storePreKey(NSData(), preKeyId: id)
+            let result = self.signalStorage.storePreKey(Data(), preKeyId: id)
+            XCTAssertTrue(result)
         }
         
         XCTAssertEqual(self.signalStorage.currentMaxPreKeyId(),100)
         
         // Delete a prekey. In this case it's the max id but that shouldn't matter either.
-        self.signalStorage.deletePreKeyWithId(100)
-        XCTAssertFalse(self.signalStorage.containsPreKeyWithId(100))
-        XCTAssertFalse(self.signalStorage.containsPreKeyWithId(999))
-        XCTAssertTrue(self.signalStorage.containsPreKeyWithId(2))
+        XCTAssertTrue(self.signalStorage.deletePreKey(withId:100))
+        XCTAssertFalse(self.signalStorage.containsPreKey(withId:100))
+        XCTAssertFalse(self.signalStorage.containsPreKey(withId:999))
+        XCTAssertTrue(self.signalStorage.containsPreKey(withId:2))
         
         let result = self.signalStorage.currentMaxPreKeyId()!
         XCTAssertEqual(result, 100)
@@ -182,20 +181,20 @@ class OTROmemoStorageTest: XCTestCase {
         let firstFetch = self.signalCoordinator.fetchMyBundle()!
         XCTAssertNotNil(firstFetch)
         
-        var firstPreKeyFetch = [UInt32:NSData]()
+        var firstPreKeyFetch = [UInt32:Data]()
         firstFetch.preKeys.forEach { (preKey) in
             firstPreKeyFetch.updateValue(preKey.publicKey, forKey: preKey.preKeyId)
         }
         
         //Remove some pre keys
-        self.signalStorage.deletePreKeyWithId(22)
-        self.signalStorage.deletePreKeyWithId(25)
+        XCTAssertTrue(self.signalStorage.deletePreKey(withId:22))
+        XCTAssertTrue(self.signalStorage.deletePreKey(withId:25))
         
         //Fetch again
         let secondFetch = self.signalCoordinator.fetchMyBundle()!
         XCTAssertNotNil(secondFetch)
         
-        var secondPreKeyFetch = [UInt32:NSData]()
+        var secondPreKeyFetch = [UInt32:Data]()
         secondFetch.preKeys.forEach { (preKey) in
             secondPreKeyFetch.updateValue(preKey.publicKey, forKey: preKey.preKeyId)
         }
@@ -207,8 +206,8 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertEqual(firstFetch.signedPreKey.publicKey, secondFetch.signedPreKey.publicKey,"Same prekey public key")
         //Checking Pre Keys
         
-        let firstIdArray = Array(firstPreKeyFetch.keys).sort()
-        let secondIdArray = Array(secondPreKeyFetch.keys).sort()
+        let firstIdArray = Array(firstPreKeyFetch.keys).sorted()
+        let secondIdArray = Array(secondPreKeyFetch.keys).sorted()
         //The two deleted keys should not show up in the second key fetch
         XCTAssertFalse(secondIdArray.contains(22),"Should not contain this key id")
         XCTAssertFalse(secondIdArray.contains(25),"Should not contain this key id")
@@ -232,9 +231,9 @@ class OTROmemoStorageTest: XCTestCase {
         }
         
         //Double check to make sure that the key information is there or not there depending on added and removed keys.
-        XCTAssertNil(self.signalStorage.loadPreKeyWithId(22))
-        XCTAssertNil(self.signalStorage.loadPreKeyWithId(25))
-        XCTAssertNotNil(self.signalStorage.loadPreKeyWithId(101))
-        XCTAssertNotNil(self.signalStorage.loadPreKeyWithId(102))
+        XCTAssertNil(self.signalStorage.loadPreKey(withId:22))
+        XCTAssertNil(self.signalStorage.loadPreKey(withId:25))
+        XCTAssertNotNil(self.signalStorage.loadPreKey(withId:101))
+        XCTAssertNotNil(self.signalStorage.loadPreKey(withId:102))
     }
 }

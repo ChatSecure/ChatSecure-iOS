@@ -7,6 +7,7 @@
 //
 
 #import "XMPPServerInfoCell.h"
+#import "NSURL+ChatSecure.h"
 @import OTRAssets;
 
 NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTypeXMPPServer";
@@ -19,12 +20,6 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
     self.onionImageView.layer.minificationFilter = kCAFilterTrilinear;
     self.logoImageView.layer.minificationFilter = kCAFilterTrilinear;
     self.countryImageView.layer.minificationFilter = kCAFilterTrilinear;
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 + (void)load
@@ -49,22 +44,40 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
     self.twitterAction = nil;
 }
 
-- (void)configure
-{
-    [super configure];
+- (void) setServerInfo:(OTRXMPPServerInfo*)serverInfo parentViewController:(UIViewController*)parentViewController {
+    [self setServerInfo:serverInfo];
+    [self setDomainAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
+        NSURL *url = serverInfo.websiteURL;
+        // If there's no website URL, try using the domain
+        if (!url) {
+            NSString *urlString = [NSString stringWithFormat:@"https://%@", serverInfo.domain];
+            url = [NSURL URLWithString:urlString];
+        }
+        [url promptToShowURLFromViewController:parentViewController sender:sender];
+    }];
+    [self setPrivacyPolicyAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
+        [serverInfo.privacyPolicyURL  promptToShowURLFromViewController:parentViewController sender:sender];
+    }];
+    [self setOnionAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
+        // TODO: show Tor info
+    }];
+    [self setTwitterAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
+        [serverInfo.twitterURL promptToShowURLFromViewController:parentViewController sender:sender];
+    }];
 }
 
-- (void)update
-{
-    [super update];
-    OTRXMPPServerInfo *info = self.rowDescriptor.value;
-    
+- (void) setServerInfo:(OTRXMPPServerInfo*)info {
+    if (!info) { return; }
     UIImage *image = info.logoImage;
     if (!image) {
         image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     }
     self.logoImageView.image = info.logoImage;
-    self.serverNameLabel.text = info.name;
+    NSString *name = info.name;
+    if (!info.name) {
+        name = CUSTOM_STRING();
+    }
+    self.serverNameLabel.text = name;
     self.serverDescriptionLabel.text = info.serverDescription;
     NSString *domainButtonTitle = [NSString stringWithFormat:@"@%@", info.domain];
     [self.domainButton setTitle:domainButtonTitle forState:UIControlStateNormal];
@@ -92,7 +105,19 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
         self.privacyPolicyButton.hidden = YES;
     }
     UIImage *countryImage = [UIImage imageNamed:info.countryCode inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+    if (countryImage) {
+        self.countryImageView.hidden = NO;
+    } else {
+        self.countryImageView.hidden = YES;
+    }
     self.countryImageView.image = countryImage;
+}
+
+- (void)update
+{
+    [super update];
+    OTRXMPPServerInfo *info = self.rowDescriptor.value;
+    [self setServerInfo:info];
 }
 
 - (void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
@@ -108,26 +133,39 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 
 - (IBAction)domainButtonPressed:(id)sender {
     if (self.domainAction) {
-        self.domainAction(self, self.rowDescriptor.value);
+        self.domainAction(self, sender);
     }
 }
 
 - (IBAction)privacyPolicyButtonPressed:(id)sender {
     if (self.privacyPolicyAction) {
-        self.privacyPolicyAction(self, self.rowDescriptor.value);
+        self.privacyPolicyAction(self, sender);
     }
 }
 
 - (IBAction)onionButtonPressed:(id)sender {
     if (self.onionAction) {
-        self.onionAction(self, self.rowDescriptor.value);
+        self.onionAction(self, sender);
     }
 }
 
 - (IBAction)twitterButtonPressed:(id)sender {
     if (self.twitterAction) {
-        self.twitterAction(self, self.rowDescriptor.value);
+        self.twitterAction(self, sender);
     }
 }
 
+@end
+
+@implementation XMPPServerInfoCell(XLForm)
+/** This is a wrapper for setServerInfo:parentViewController: that only works when used within an XLFormViewController */
+- (void) setupWithParentViewController:(UIViewController*)parentViewController {
+    OTRXMPPServerInfo *info = nil;
+    if ([self.rowDescriptor.value isKindOfClass:[OTRXMPPServerInfo class]]) {
+        info = self.rowDescriptor.value;
+    }
+    if (info) {
+        [self setServerInfo:info parentViewController:parentViewController];
+    }
+}
 @end

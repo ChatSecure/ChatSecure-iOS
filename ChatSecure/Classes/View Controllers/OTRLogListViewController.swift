@@ -18,7 +18,7 @@ class LogInfoCell: UITableViewCell {
     static let reuseIdentifier = "LogInfoCell"
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -26,18 +26,18 @@ class LogInfoCell: UITableViewCell {
     }
 }
 
-public
+open
 class OTRLogListViewController: UIViewController {
     
     let files = getAllLogFiles()
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Log List Viewer"
         
-        let tableView = UITableView(frame: CGRectZero, style: .Plain)
-        tableView.registerClass(LogInfoCell.self, forCellReuseIdentifier: LogInfoCell.reuseIdentifier)
+        let tableView = UITableView(frame: CGRect.zero, style: .plain)
+        tableView.register(LogInfoCell.self, forCellReuseIdentifier: LogInfoCell.reuseIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
         self.view.addSubview(tableView)
@@ -47,30 +47,30 @@ class OTRLogListViewController: UIViewController {
 
 extension OTRLogListViewController: UITableViewDataSource, UITableViewDelegate {
     
-    public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.files?.count ?? 0
     }
     
-    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(LogInfoCell.reuseIdentifier, forIndexPath: indexPath);
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: LogInfoCell.reuseIdentifier, for: indexPath);
         
         if let info = self.files?[indexPath.row] {
             cell.textLabel?.text = info.fileName
-            cell.detailTextLabel?.text = NSDateFormatter.localizedStringFromDate(info.modificationDate, dateStyle: .LongStyle, timeStyle: .LongStyle)
+            cell.detailTextLabel?.text = DateFormatter.localizedString(from: info.modificationDate, dateStyle: .long, timeStyle: .long)
         }
         
         return cell
     }
     
-    public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         guard let info = self.files?[indexPath.row] else {
             return
         }
-        let url = NSURL(fileURLWithPath: info.filePath)
+        let url = URL(fileURLWithPath: info.filePath)
         
         
         let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        self.presentViewController(activityViewController, animated: true, completion: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }

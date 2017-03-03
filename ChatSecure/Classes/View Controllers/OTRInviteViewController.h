@@ -11,13 +11,12 @@
 @class OTRAccount;
 @class BButton;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRInviteViewController : UIViewController
 
-@property (nonatomic, strong, readonly) UIImageView *titleImageView;
-@property (nonatomic, strong, readonly) UILabel *subtitleLabel;
+@property (nonatomic, strong, readonly) OTRAccount *account;
 
-@property (nonatomic, strong) NSArray <BButton*> *shareButtons;
-
-@property (nonatomic ,strong) OTRAccount *account;
+- (instancetype) initWithAccount:(OTRAccount*)account NS_DESIGNATED_INITIALIZER;
 
 @end
+NS_ASSUME_NONNULL_END

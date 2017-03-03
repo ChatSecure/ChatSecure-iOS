@@ -10,15 +10,15 @@ import Foundation
 import YapDatabase.YapDatabaseActionManager
 
 @objc public enum BuddyActionType: Int {
-    case Delete
+    case delete
 }
 
-public class BuddyAction: OTRYapDatabaseObject, YapActionable {
+open class BuddyAction: OTRYapDatabaseObject, YapActionable {
     
-    public var action:BuddyActionType = .Delete
-    public var buddy:OTRBuddy?
+    open var action:BuddyActionType = .delete
+    open var buddy:OTRBuddy?
     
-    public func yapActionItems() -> [YapActionItem]? {
+    open func yapActionItems() -> [YapActionItem]? {
         
         guard let buddy = self.buddy else {
             return nil
@@ -27,14 +27,14 @@ public class BuddyAction: OTRYapDatabaseObject, YapActionable {
         return BuddyAction.actions(buddy, action: self.action)
     }
     
-    public func hasYapActionItems() -> Bool {
+    open func hasYapActionItems() -> Bool {
         return true
     }
     
-    public class func actions(buddy:OTRBuddy, action:BuddyActionType) -> [YapActionItem] {
+    open class func actions(_ buddy:OTRBuddy, action:BuddyActionType) -> [YapActionItem] {
         
         switch action {
-        case .Delete:
+        case .delete:
             let action = YapActionItem(identifier:"delete", date: nil, retryTimeout: 30, requiresInternet: true, block: { (collection, key, object, metadata) -> Void in
                 
                 guard let connection = OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection else {
@@ -42,27 +42,27 @@ public class BuddyAction: OTRYapDatabaseObject, YapActionable {
                 }
                 
                 var account:OTRAccount? = nil
-                connection.readWithBlock({ (transaction) -> Void in
-                    account = OTRAccount.fetchObjectWithUniqueID(buddy.accountUniqueId, transaction: transaction)
+                connection.read({ (transaction) -> Void in
+                    account = OTRAccount.fetch(withUniqueID: buddy.accountUniqueId, transaction: transaction)
                 })
                 
                 guard let acct = account else {
-                    connection.readWriteWithBlock({ (transaction) -> Void in
-                        transaction.removeObjectForKey(key, inCollection: collection)
+                    connection.readWrite({ (transaction) -> Void in
+                        transaction.removeObject(forKey: key, inCollection: collection)
                     })
                     return
                 }
                 
-                guard let proto = OTRProtocolManager.sharedInstance().protocolForAccount(acct) else {
-                    connection.readWriteWithBlock({ (transaction) -> Void in
-                        transaction.removeObjectForKey(key, inCollection: collection)
+                guard let proto = OTRProtocolManager.sharedInstance().protocol(for: acct) else {
+                    connection.readWrite({ (transaction) -> Void in
+                        transaction.removeObject(forKey: key, inCollection: collection)
                     })
                     return
                 }
-                if proto.connectionStatus() == .Connected {
+                if proto.connectionStatus() == .connected {
                     proto.removeBuddies([buddy])
-                    connection.readWriteWithBlock({ (transaction) -> Void in
-                        transaction.removeObjectForKey(key, inCollection: collection)
+                    connection.readWrite({ (transaction) -> Void in
+                        transaction.removeObject(forKey: key, inCollection: collection)
                     })
                 }
                 

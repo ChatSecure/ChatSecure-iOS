@@ -11,8 +11,8 @@ import XLForm
 import ParkedTextField
 import OTRAssets
 
-public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
-    public func isValid(row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
+open class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
+    open func isValid(_ row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
         var isValid = false
         if let value = row.value as? String {
             let (username, domain) = OTRUsernameCell.splitJID(value)
@@ -26,7 +26,7 @@ public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
 }
 
 @objc(OTRUsernameCell)
-public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
+open class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
 
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var usernameField: ParkedTextField!
@@ -35,40 +35,40 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         self.usernameField.delegate = nil
     }
     
-    override public func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         self.usernameField.delegate = self
     }
     
-    override public class func initialize() {
+    override open class func initialize() {
         // Register xib
         registerCellClass(defaultRowDescriptorType())
     }
     
     // MARK: XLFormBaseCell overrides
     
-    override public func configure() {
+    override open func configure() {
         super.configure()
-        self.selectionStyle = UITableViewCellSelectionStyle.None
+        self.selectionStyle = UITableViewCellSelectionStyle.none
     }
     
     
-    override public func highlight() {
+    override open func highlight() {
         super.highlight()
         self.usernameLabel.textColor = self.tintColor
     }
     
-    override public func unhighlight() {
+    override open func unhighlight() {
         super.unhighlight()
         self.formViewController().updateFormRow(self.rowDescriptor)
     }
     
    
-    override public func update() {
+    override open func update() {
         super.update()
         self.usernameField.delegate = self
-        self.usernameLabel.textColor = UIColor.darkTextColor()
+        self.usernameLabel.textColor = UIColor.darkText
         
         if let value = self.rowDescriptor!.value as? NSString {
             let (username, domain) = OTRUsernameCell.splitJID(value as String)
@@ -83,47 +83,47 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     // MARK: XLFormDescriptorCell
     
-    override public static func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
+    override open static func formDescriptorCellHeight(for rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
         return 43
     }
     
-    override public func formDescriptorCellCanBecomeFirstResponder() -> Bool {
+    override open func formDescriptorCellCanBecomeFirstResponder() -> Bool {
         return !self.rowDescriptor!.isDisabled()
     }
     
-    override public func formDescriptorCellBecomeFirstResponder() -> Bool {
+    override open func formDescriptorCellBecomeFirstResponder() -> Bool {
         self.highlight()
         return self.usernameField.becomeFirstResponder()
     }
     
     // MARK: UITextFieldDelegate
     
-    public func textFieldShouldClear(textField: UITextField) -> Bool {
+    open func textFieldShouldClear(_ textField: UITextField) -> Bool {
         return self.formViewController().textFieldShouldClear(textField)
     }
     
-    public func textFieldShouldReturn(textField: UITextField) -> Bool {
+    open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.formViewController().textFieldShouldReturn(textField)
     }
     
-    public func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return self.formViewController().textFieldShouldBeginEditing(textField)
     }
     
-    public func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+    open func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return self.formViewController().textFieldShouldEndEditing(textField)
     }
     
-    public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        return self.formViewController().textField(textField, shouldChangeCharactersInRange: range, replacementString: string)
+    open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return self.formViewController().textField(textField, shouldChangeCharactersIn: range, replacementString: string)
     }
    
-    public func textFieldDidBeginEditing(textField: UITextField) {
+    open func textFieldDidBeginEditing(_ textField: UITextField) {
         self.formViewController().beginEditing(self.rowDescriptor)
         self.formViewController().textFieldDidBeginEditing(textField)
     }
     
-    public func textFieldDidEndEditing(textField: UITextField) {
+    open func textFieldDidEndEditing(_ textField: UITextField) {
         self.textFieldValueChanged(self.usernameField)
         self.formViewController().endEditing(self.rowDescriptor)
         self.formViewController().textFieldDidEndEditing(textField)
@@ -131,7 +131,7 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     // MARK: UITextField value changes
     
-    @IBAction func textFieldValueChanged(sender: ParkedTextField) {
+    @IBAction func textFieldValueChanged(_ sender: ParkedTextField) {
         let value = sender.typedText + sender.parkedText
         rowDescriptor?.value = value
     }
@@ -139,12 +139,12 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     // MARK: Private methods
     
     
-    private static func splitJID(jid: String) -> (username: String, domain: String) {
+    fileprivate static func splitJID(_ jid: String) -> (username: String, domain: String) {
         let value = jid as NSString
         var username: String = ""
         var domain: String = ""
-        if value.containsString("@") {
-            let components = value.componentsSeparatedByString("@")
+        if value.contains("@") {
+            let components = value.components(separatedBy: "@")
             username = components.first ?? ""
             domain = components.last ?? ""
         } else {

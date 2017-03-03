@@ -9,7 +9,7 @@
 import UIKit
 import OTRAssets
 
-public class OTRWelcomeViewController: UIViewController {
+open class OTRWelcomeViewController: UIViewController {
     
     // MARK: - Views
     @IBOutlet var logoImageView: UIImageView?
@@ -19,24 +19,24 @@ public class OTRWelcomeViewController: UIViewController {
     
     // MARK: - View Lifecycle
     
-    override public func viewWillAppear(animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         self.navigationController!.setNavigationBarHidden(true, animated: animated)
     }
     
-    override public func viewWillDisappear(animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         self.navigationController!.setNavigationBarHidden(false, animated: animated)
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.createAccountButton?.setTitle(CREATE_NEW_ACCOUNT_STRING(), forState: .Normal)
-        self.skipButton?.setTitle(SKIP_STRING(), forState: .Normal)
-        self.existingAccountButton?.setTitle(ADD_EXISTING_STRING(), forState: .Normal)
+        self.createAccountButton?.setTitle(CREATE_NEW_ACCOUNT_STRING(), for: .normal)
+        self.skipButton?.setTitle(SKIP_STRING(), for: .normal)
+        self.existingAccountButton?.setTitle(ADD_EXISTING_STRING(), for: .normal)
         
     }
 
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -44,15 +44,15 @@ public class OTRWelcomeViewController: UIViewController {
     
     // MARK: - Navigation
 
-    override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override open func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "createNewAccountSegue" {
-            let createAccountVC: OTRBaseLoginViewController = segue.destinationViewController as! OTRBaseLoginViewController
-            createAccountVC.form = OTRXLFormCreator.formForAccountType(OTRAccountType.Jabber, createAccount: true)
+            let createAccountVC: OTRBaseLoginViewController = segue.destination as! OTRBaseLoginViewController
+            createAccountVC.form = OTRXLFormCreator.form(for: OTRAccountType.jabber, createAccount: true)
             createAccountVC.loginHandler = OTRXMPPCreateAccountHandler()
         }
     }
     
-    @IBAction func skipButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func skipButtonPressed(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

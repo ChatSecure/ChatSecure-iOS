@@ -14,13 +14,13 @@ let kDeviceAccountRelationshipEdgeName = "OTRPushDeviceAccountRelationshipEdgeNa
 let kBuddyTokenRelationshipEdgeName = "OTRPushBuddyTokenRelationshipEdgeName"
 let kAccountTokenRelationshipEdgeName = "OTRPushAccountTokenRelationshipEdgeName"
 
-public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
+open class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
     var pushDevice:Device?
     var pushAccountKey:String?
     
     
     
-    override public var uniqueId:String {
+    override open var uniqueId:String {
         get {
             if let id = self.pushDevice?.id {
                 return id
@@ -30,7 +30,7 @@ public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode 
         }
     }
     
-    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+    open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         if let accountKey = self.pushAccountKey {
             let accountEdge = YapDatabaseRelationshipEdge(name: kDeviceAccountRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules())
             return [accountEdge]
@@ -39,14 +39,14 @@ public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode 
     }
 }
 
-public class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
-    public var pushToken:Token?
-    var date = NSDate()
+open class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
+    open var pushToken:Token?
+    var date = Date()
     var accountKey: String?
     var buddyKey: String?
-    var endpoint:NSURL?
+    var endpoint:URL?
     
-    override public var uniqueId:String {
+    override open var uniqueId:String {
         get {
             if let id = self.pushToken?.tokenString {
                 return id
@@ -56,15 +56,15 @@ public class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
         }
     }
     
-    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+    open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         var edges:[YapDatabaseRelationshipEdge] = []
         if let buddyKey = self.buddyKey {
-            let buddyEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)
+            let buddyEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             edges.append(buddyEdge)
         }
         
         if let accountKey = self.accountKey {
-            let accountEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)
+            let accountEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             edges.append(accountEdge)
         }
         

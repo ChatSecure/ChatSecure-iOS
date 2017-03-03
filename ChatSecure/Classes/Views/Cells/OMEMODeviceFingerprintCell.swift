@@ -15,10 +15,10 @@ import OTRKit
 
 private extension String {
     //http://stackoverflow.com/a/34454633/805882
-    func splitEvery(n: Int) -> [String] {
+    func splitEvery(_ n: Int) -> [String] {
         var result: [String] = []
         let chars = Array(characters)
-        for index in 0.stride(to: chars.count, by: n) {
+        for index in stride(from: 0, to: chars.count, by: n) {
             result.append(String(chars[index..<min(index+n, chars.count)]))
         }
         return result
@@ -27,8 +27,8 @@ private extension String {
 
 public extension NSData {
     /// hex, split every 8 bytes by a space
-    public func humanReadableFingerprint() -> String {
-        return self.xmpp_hexStringValue().splitEvery(8).joinWithSeparator(" ")
+    @objc public func humanReadableFingerprint() -> String {
+        return (self as NSData).xmpp_hexStringValue().splitEvery(8).joined(separator: " ")
     }
 }
 
@@ -39,30 +39,32 @@ public extension XLFormBaseCell {
         return type
     }
     
-    public class func registerCellClass(forType: String) {
+    public class func registerCellClass(_ forType: String) {
         let bundle = OTRAssets.resourcesBundle()
         let path = bundle.bundlePath
-        let bundleName = (path as NSString).lastPathComponent
+        guard let bundleName = (path as NSString?)?.lastPathComponent else {
+            return
+        }
         let className = bundleName + "/" + NSStringFromClass(self)
-        XLFormViewController.cellClassesForRowDescriptorTypes().setObject(className, forKey: forType)
+        XLFormViewController.cellClassesForRowDescriptorTypes().setObject(className, forKey: forType as NSString)
     }
 }
 
 @objc(OMEMODeviceFingerprintCell)
-public class OMEMODeviceFingerprintCell: XLFormBaseCell {
+open class OMEMODeviceFingerprintCell: XLFormBaseCell {
     
     @IBOutlet weak var fingerprintLabel: UILabel!
     @IBOutlet weak var trustSwitch: UISwitch!
     @IBOutlet weak var lastSeenLabel: UILabel!
     @IBOutlet weak var trustLevelLabel: UILabel!
     
-    private static let intervalFormatter = TTTTimeIntervalFormatter()
+    fileprivate static let intervalFormatter = TTTTimeIntervalFormatter()
     
-    public override class func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
+    open override class func formDescriptorCellHeight(for rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
         return 90
     }
     
-    public override func update() {
+    open override func update() {
         super.update()
         if let device = rowDescriptor.value as? OTROMEMODevice {
             updateCellFromDevice(device)
@@ -71,12 +73,12 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
             updateCellFromFingerprint(fingerprint)
         }
         let enabled = !rowDescriptor.isDisabled()
-        trustSwitch.enabled = enabled
-        fingerprintLabel.enabled = enabled
-        lastSeenLabel.enabled = enabled
+        trustSwitch.isEnabled = enabled
+        fingerprintLabel.isEnabled = enabled
+        lastSeenLabel.isEnabled = enabled
     }
     
-    @IBAction func switchValueChanged(sender: UISwitch) {
+    @IBAction func switchValueChanged(_ sender: UISwitch) {
         if let device = rowDescriptor.value as? OTROMEMODevice {
             switchValueWithDevice(device)
         }
@@ -85,66 +87,66 @@ public class OMEMODeviceFingerprintCell: XLFormBaseCell {
         }
     }
     
-    private func updateCellFromDevice(device: OTROMEMODevice) {
+    fileprivate func updateCellFromDevice(_ device: OTROMEMODevice) {
         let trusted = device.isTrusted()
-        trustSwitch.on = trusted
+        trustSwitch.isOn = trusted
         
         // we've already filtered out devices w/o public keys
         // so publicIdentityKeyData should never be nil
         let fingerprint = device.humanReadableFingerprint
         
         fingerprintLabel.text = fingerprint
-        let interval = -NSDate().timeIntervalSinceDate(device.lastSeenDate)
-        let since = self.dynamicType.intervalFormatter.stringForTimeInterval(interval)
-        let lastSeen = "OMEMO: " + since
+        let interval = -Date().timeIntervalSince(device.lastSeenDate)
+        let since = type(of: self).intervalFormatter.string(forTimeInterval: interval)
+        let lastSeen = "OMEMO: " + since!
         lastSeenLabel.text = lastSeen
-        if (device.trustLevel == .TrustedTofu) {
+        if (device.trustLevel == .trustedTofu) {
             trustLevelLabel.text = "TOFU"
-        } else if (device.trustLevel == .TrustedUser) {
+        } else if (device.trustLevel == .trustedUser) {
             trustLevelLabel.text = VERIFIED_STRING()
-        } else if (device.trustLevel == .Removed) {
+        } else if (device.trustLevel == .removed) {
             trustLevelLabel.text = Removed_By_Server()
         } else {
             trustLevelLabel.text = UNTRUSTED_DEVICE_STRING()
         }
     }
     
-    private func switchValueWithDevice(device: OTROMEMODevice) {
-        if (trustSwitch.on) {
-            device.trustLevel = .TrustedUser
+    fileprivate func switchValueWithDevice(_ device: OTROMEMODevice) {
+        if (trustSwitch.isOn) {
+            device.trustLevel = .trustedUser
             if (device.isExpired()){
-                device.lastSeenDate = NSDate()
+                device.lastSeenDate = Date()
             }
         } else {
-            device.trustLevel = .Untrusted
+            device.trustLevel = .untrusted
         }
         rowDescriptor.value = device
         updateCellFromDevice(device)
     }
     
-    private func updateCellFromFingerprint(fingerprint: OTRFingerprint) {
-        fingerprintLabel.text = fingerprint.fingerprint.humanReadableFingerprint()
+    fileprivate func updateCellFromFingerprint(_ fingerprint: OTRFingerprint) {
+        fingerprintLabel.text = (fingerprint.fingerprint as NSData).humanReadableFingerprint()
         lastSeenLabel.text = "OTR"
-        if (fingerprint.trustLevel == .TrustedUser ||
-            fingerprint.trustLevel == .TrustedTofu) {
-            trustSwitch.on = true
+        if (fingerprint.trustLevel == .trustedUser ||
+            fingerprint.trustLevel == .trustedTofu) {
+            trustSwitch.isOn = true
         } else {
-            trustSwitch.on = false
+            trustSwitch.isOn = false
         }
-        if (fingerprint.trustLevel == .TrustedTofu) {
+        if (fingerprint.trustLevel == .trustedTofu) {
             trustLevelLabel.text = "TOFU"
-        } else if (fingerprint.trustLevel == .TrustedUser) {
+        } else if (fingerprint.trustLevel == .trustedUser) {
             trustLevelLabel.text = VERIFIED_STRING()
         } else {
             trustLevelLabel.text = UNTRUSTED_DEVICE_STRING()
         }
     }
     
-    private func switchValueWithFingerprint(fingerprint: OTRFingerprint) {
-        if (trustSwitch.on) {
-            fingerprint.trustLevel = .TrustedUser
+    fileprivate func switchValueWithFingerprint(_ fingerprint: OTRFingerprint) {
+        if (trustSwitch.isOn) {
+            fingerprint.trustLevel = .trustedUser
         } else {
-            fingerprint.trustLevel = .UntrustedUser
+            fingerprint.trustLevel = .untrustedUser
         }
         rowDescriptor.value = fingerprint
         updateCellFromFingerprint(fingerprint)
