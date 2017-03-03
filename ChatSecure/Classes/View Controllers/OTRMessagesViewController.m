@@ -1181,7 +1181,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
     if ([sender isEqual:self.cameraButton]) {
-        [self.attachmentPicker showAlertControllerWithCompletion:nil];
+        [self.attachmentPicker showAlertControllerFromSourceView:sender withCompletion:nil];
     }
 }
 
@@ -1486,19 +1486,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return deliveryStatusString;
 }
 
-
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
-    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
-    
-    UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
-    if (!font) {
-        font = [UIFont systemFontOfSize:12];
-    }
-    NSDictionary *iconAttributes = @{NSFontAttributeName: font};
-    NSDictionary *lockAttributes = [iconAttributes copy];
-    
-    ////// Lock Icon //////
+- (nullable NSAttributedString *) encryptionStatusStringForMesage:(nonnull id<OTRMessageProtocol>)message {
     NSString *lockString = nil;
     if (message.messageSecurity == OTRMessageTransportSecurityOTR) {
         lockString = [NSString stringWithFormat:@"%@ OTR ",[NSString fa_stringForFontAwesomeIcon:FALock]];
@@ -1508,6 +1496,34 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
     }
+    UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
+    if (!font) {
+        font = [UIFont systemFontOfSize:12];
+    }
+    return [[NSAttributedString alloc] initWithString:lockString attributes:@{NSFontAttributeName: font}];
+}
+
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
+    if (!message) {
+        return [[NSAttributedString alloc] initWithString:@""];
+    }
+    
+    UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
+    if (!font) {
+        font = [UIFont systemFontOfSize:12];
+    }
+    NSDictionary *iconAttributes = @{NSFontAttributeName: font};
+    NSDictionary *lockAttributes = [iconAttributes copy];
+    
+    ////// Lock Icon //////
+    NSAttributedString *lockString = [self encryptionStatusStringForMesage:message];
+    if (!lockString) {
+        lockString = [[NSAttributedString alloc] initWithString:@""];
+    }
+    NSMutableAttributedString *attributedString = [lockString mutableCopy];
     
     BOOL trusted = YES;
     if([message isKindOfClass:[OTRBaseMessage class]]) {
@@ -1519,8 +1535,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [mutableCopy setObject:[UIColor redColor] forKey:NSForegroundColorAttributeName];
         lockAttributes = mutableCopy;
     }
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:lockAttributes];
 
     if ([message isKindOfClass:[OTROutgoingMessage class]]) {
         OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;

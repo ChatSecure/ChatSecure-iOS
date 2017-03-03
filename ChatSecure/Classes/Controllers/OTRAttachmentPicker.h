@@ -36,7 +36,7 @@
 
 - (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)parentViewController delegate:(id<OTRAttachmentPickerDelegate>)delegate;
 
-- (void)showAlertControllerWithCompletion:(void (^)(void))completion;
+- (void)showAlertControllerFromSourceView:(UIView *)senderView withCompletion:(void (^)(void))completion;
 
 
 @end
