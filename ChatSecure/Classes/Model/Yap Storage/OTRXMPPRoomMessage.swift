@@ -99,7 +99,7 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         guard let key = self.threadId() else {
             return nil
         }
-        return OTRXMPPRoom.fetch(withUniqueID: key, transaction: transaction)
+        return OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction)
     }
 }
 

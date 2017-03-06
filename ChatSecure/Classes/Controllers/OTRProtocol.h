@@ -48,8 +48,7 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 NS_ASSUME_NONNULL_BEGIN
 @protocol OTRProtocol <NSObject>
 
-- (OTRAccount *)account;
-- (OTRProtocolConnectionStatus)connectionStatus;
+@property (nonatomic, readonly) OTRProtocolConnectionStatus connectionStatus;
 
 - (void) sendMessage:(OTROutgoingMessage*)message;
 

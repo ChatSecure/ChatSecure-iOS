@@ -62,7 +62,7 @@ open class OTRSignalStorageManager: NSObject {
     fileprivate func accountSignalIdentity() -> OTRAccountSignalIdentity? {
         var identityKeyPair:OTRAccountSignalIdentity? = nil
         self.databaseConnection.read { (transaction) in
-            identityKeyPair = OTRAccountSignalIdentity.fetch(withUniqueID: self.accountKey, transaction: transaction)
+            identityKeyPair = OTRAccountSignalIdentity.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
         }
         
         return identityKeyPair
@@ -164,8 +164,8 @@ open class OTRSignalStorageManager: NSObject {
         //Fetch and create the base bundle
         self.databaseConnection.read { (transaction) in
             do {
-                guard let identityKeyPair = OTRAccountSignalIdentity.fetch(withUniqueID: self.accountKey, transaction: transaction),
-                    let signedPreKeyDataObject = OTRSignalSignedPreKey.fetch(withUniqueID: self.accountKey, transaction: transaction) else {
+                guard let identityKeyPair = OTRAccountSignalIdentity.fetchObject(withUniqueID: self.accountKey, transaction: transaction),
+                    let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObject(withUniqueID: self.accountKey, transaction: transaction) else {
                         return
                 }
                 let signedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
@@ -208,7 +208,7 @@ open class OTRSignalStorageManager: NSObject {
         
         let deviceNumber = NSNumber(value: signalAddress.deviceId as Int32)
         let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: parentEntry.key, parentCollection: parentEntry.collection)
-        guard let device = OTROMEMODevice.fetch(withUniqueID: deviceYapKey, transaction: transaction) else {
+        guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction) else {
             return nil
         }
         return device
@@ -218,7 +218,7 @@ open class OTRSignalStorageManager: NSObject {
         var parentKey:String? = nil
         var parentCollection:String? = nil
         
-        let ourAccount = OTRAccount.fetch(withUniqueID: self.accountKey, transaction: transaction)
+        let ourAccount = OTRAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
         if ourAccount?.username == signalAddress.name {
             
             parentKey = self.accountKey
@@ -244,7 +244,7 @@ extension OTRSignalStorageManager: SignalStore {
         let yapKey = OTRSignalSession.uniqueKey(forAccountKey: self.accountKey, name: address.name, deviceId: address.deviceId)
         var sessionData:Data? = nil
         self.databaseConnection.read { (transaction) in
-            sessionData = OTRSignalSession.fetch(withUniqueID: yapKey, transaction: transaction)?.sessionData
+            sessionData = OTRSignalSession.fetchObject(withUniqueID: yapKey, transaction: transaction)?.sessionData
         }
         return sessionData
     }
@@ -305,7 +305,7 @@ extension OTRSignalStorageManager: SignalStore {
         var preKeyData:Data? = nil
         self.databaseConnection.read { (transaction) in
             let yapKey = OTRSignalPreKey.uniqueKey(forAccountKey: self.accountKey, keyId: preKeyId)
-            if let signedPreKey = OTRSignalPreKey.fetch(withUniqueID: yapKey, transaction: transaction) {
+            if let signedPreKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction) {
                 preKeyData = signedPreKey.keyData
             }
         }
@@ -331,7 +331,7 @@ extension OTRSignalStorageManager: SignalStore {
     public func deletePreKey(withId preKeyId: UInt32) -> Bool {
         self.databaseConnection.readWrite { (transaction) in
             let yapKey = OTRSignalPreKey.uniqueKey(forAccountKey: self.accountKey, keyId: preKeyId)
-            let preKey = OTRSignalPreKey.fetch(withUniqueID: yapKey, transaction: transaction)
+            let preKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction)
             preKey?.keyData = nil
             preKey?.save(with: transaction)
         }
@@ -342,7 +342,7 @@ extension OTRSignalStorageManager: SignalStore {
     public func loadSignedPreKey(withId signedPreKeyId: UInt32) -> Data? {
         var preKeyData:Data? = nil
         self.databaseConnection.read { (transaction) in
-            if let signedPreKey = OTRSignalSignedPreKey.fetch(withUniqueID: self.accountKey, transaction: transaction) {
+            if let signedPreKey = OTRSignalSignedPreKey.fetchObject(withUniqueID: self.accountKey, transaction: transaction) {
                 preKeyData = signedPreKey.keyData
             }
         }
@@ -468,7 +468,7 @@ extension OTRSignalStorageManager: SignalStore {
         var senderKeyData:Data? = nil
         self.databaseConnection.read { (transaction) in
             let yapKey = OTRSignalSenderKey.uniqueKey(fromAccountKey: self.accountKey, name: address.name, deviceId: address.deviceId, groupId: groupId)
-            let senderKey = OTRSignalSenderKey.fetch(withUniqueID: yapKey, transaction: transaction)
+            let senderKey = OTRSignalSenderKey.fetchObject(withUniqueID: yapKey, transaction: transaction)
             senderKeyData = senderKey?.senderKey
         }
         return senderKeyData

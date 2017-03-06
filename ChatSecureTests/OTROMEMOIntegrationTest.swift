@@ -147,7 +147,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             XCTAssertTrue(result)
             self.bobUser!.databaseManager.readOnlyDatabaseConnection?.read({ (transaction) in
                 let yapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
-                let device = OTROMEMODevice.fetch(withUniqueID: yapKey, transaction: transaction)
+                let device = OTROMEMODevice.fetchObject(withUniqueID: yapKey, transaction: transaction)
                 XCTAssertNil(device)
             })
             

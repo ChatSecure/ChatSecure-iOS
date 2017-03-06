@@ -37,7 +37,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
     open func enterConversationWithBuddy(_ buddyKey:String) {
         var buddy:OTRThreadOwner? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            buddy = OTRBuddy.fetch(withUniqueID: buddyKey, transaction: transaction)
+            buddy = OTRBuddy.fetchObject(withUniqueID: buddyKey, transaction: transaction)
         }
         if let b = buddy {
             self.enterConversationWithThread(b, sender: nil)

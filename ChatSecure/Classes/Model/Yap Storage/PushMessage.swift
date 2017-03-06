@@ -76,7 +76,7 @@ extension PushMessage: OTRMessageProtocol {
         guard let key = self.buddyKey else {
             return nil
         }
-        return OTRBuddy.fetch(withUniqueID: key, transaction: transaction)
+        return OTRBuddy.fetchObject(withUniqueID: key, transaction: transaction)
     }
 }
 
@@ -97,7 +97,7 @@ extension PushMessage {
         var account:OTRAccount? = nil
         OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read { (transaction) -> Void in
             if let buddyKey = self.buddyKey {
-                if let buddy = OTRBuddy.fetch(withUniqueID: buddyKey, transaction: transaction) {
+                if let buddy = OTRBuddy.fetchObject(withUniqueID: buddyKey, transaction: transaction) {
                     account = buddy.account(with: transaction)
                 }
             }

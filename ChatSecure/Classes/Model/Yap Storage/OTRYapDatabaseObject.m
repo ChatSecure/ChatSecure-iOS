@@ -7,6 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+#import "OTRLog.h"
 
 @interface OTRYapDatabaseObject ()
 
@@ -44,6 +45,12 @@
     [transaction removeObjectForKey:self.uniqueId inCollection:[[self class] collection]];
 }
 
+/** This will fetch an updated instance of the object */
+- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction {
+    id object = [[self class] fetchObjectWithUniqueID:self.uniqueId transaction:transaction];
+    return object;
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection
@@ -51,8 +58,10 @@
     return NSStringFromClass([self class]);
 }
 
-+ (instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
-    return [transaction objectForKey:uniqueID inCollection:[self collection]];
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    id object = [transaction objectForKey:uniqueID inCollection:[self collection]];
+    NSParameterAssert([object isKindOfClass:[self class]]);
+    return object;
 }
 
 @end

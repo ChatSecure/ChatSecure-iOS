@@ -10,7 +10,7 @@
 @class XMPPvCardTemp;
 #import "OTRYapDatabaseObject.h"
 
-@protocol OTRvCard <OTRYapDatabaseObject>
+@protocol OTRvCard <OTRYapDatabaseObjectProtocol>
 
 @property (nonatomic, strong) XMPPvCardTemp *vCardTemp;
 @property (nonatomic, strong) NSDate *lastUpdatedvCardTemp;
