@@ -18,14 +18,14 @@ enum TableSections: Int {
     case account
     case invite
     case details
+    case loginlogout
     case delete
-    static let allValues = [account, invite, details, delete]
+    static let allValues = [account, invite, details, loginlogout, delete]
 }
 
 enum AccountRows: Int {
     case account
-    case loginlogout
-    static let allValues = [account, loginlogout]
+    static let allValues = [account]
 }
 
 @objc(OTRAccountDetailViewController)
@@ -50,7 +50,7 @@ public class AccountDetailViewController: UITableViewController {
     }
     
     public convenience init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, push: PushController, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
-        let serverCheck = ServerCheck(xmppManager: xmpp, push: push)
+        let serverCheck = ServerCheck(xmpp: xmpp, push: push)
         self.init(account: account, xmpp: xmpp, serverCheck: serverCheck, longLivedReadConnection: longLivedReadConnection, writeConnection: writeConnection)
     }
     
@@ -70,8 +70,6 @@ public class AccountDetailViewController: UITableViewController {
             tableView.register(nib, forCellReuseIdentifier: identifier)
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: DetailCellIdentifier)
-        
-        
         
         detailCells = [
             DetailCellInfo(title: "Edit Account", action: { [weak self] (_, _) -> (Void) in
@@ -153,11 +151,9 @@ public class AccountDetailViewController: UITableViewController {
         switch tableSection {
         case .account:
             return AccountRows.allValues.count
-        case .invite:
-            return 1
         case .details:
             return detailCells.count
-        case .delete:
+        case .delete, .loginlogout, .invite:
             return 1
         }
     }
@@ -173,8 +169,6 @@ public class AccountDetailViewController: UITableViewController {
                 switch row {
                 case .account:
                     return accountCell(account: account, tableView: tableView, indexPath: indexPath)
-                case .loginlogout:
-                    return loginLogoutCell(account: account, tableView: tableView, indexPath: indexPath)
                 }
             }
         case .details:
@@ -183,6 +177,8 @@ public class AccountDetailViewController: UITableViewController {
             return inviteCell(account: account, tableView: tableView, indexPath: indexPath)
         case .delete:
             return deleteCell(account: account, tableView: tableView, indexPath: indexPath)
+        case .loginlogout:
+            return loginLogoutCell(account: account, tableView: tableView, indexPath: indexPath)
         }
         return UITableViewCell() // this should never be reached
     }
@@ -197,8 +193,6 @@ public class AccountDetailViewController: UITableViewController {
                 switch row {
                 case .account:
                     break
-                case .loginlogout:
-                    break
                 }
             }
         case .details:
@@ -208,6 +202,8 @@ public class AccountDetailViewController: UITableViewController {
         case .invite:
             break
         case .delete:
+            break
+        case .loginlogout:
             break
         }
     }
@@ -224,15 +220,9 @@ public class AccountDetailViewController: UITableViewController {
                 case .account:
                     height = XMPPAccountCell.cellHeight()
                     break
-                case .loginlogout:
-                    break
                 }
             }
-        case .details:
-            break
-        case .invite:
-            break
-        case .delete:
+        case .details, .invite, .delete, .loginlogout:
             break
         }
         return height

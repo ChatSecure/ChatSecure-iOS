@@ -32,7 +32,7 @@
 
 @class OTRXMPPAccount, OTRXMPPRoomManager;
 @class OTROMEMOSignalCoordinator;
-@class XMPPPushModule;
+@class XMPPPushModule, OTRServerCheck;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
 @property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
+@property (nonatomic, strong, readonly) OTRServerCheck *serverCheck;
+
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;

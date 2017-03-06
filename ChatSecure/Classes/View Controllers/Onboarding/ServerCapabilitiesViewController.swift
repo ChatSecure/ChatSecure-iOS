@@ -17,7 +17,6 @@ public class ServerCapabilitiesViewController: UITableViewController {
     private let tableSections: [TableSection] = [.Push, .Server]
     private var xmppPushStatus: XMPPPushStatus = .unknown
     
-    /// This will take ownership of serverCheck and overwrite whatever is in serverCheck.readyBlock
     public init (serverCheck: ServerCheck) {
         self.check = serverCheck
         self.check.fetch()
@@ -38,13 +37,13 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     /// This will delete ALL your XEP-0357 push registration for this pubsub node
     private func unregisterForXMPPPush(_ sender: Any?) {
-        guard let push = check.pushInfo else {
+        guard let push = check.result.pushInfo else {
             return
         }
         guard let jid = XMPPJID(user: nil, domain: push.pubsubEndpoint, resource: nil) else {
             return
         }
-        check.xmppPush.disablePush(forServerJID: jid, node: nil, elementId: nil)
+        check.xmpp?.xmppPushModule.disablePush(forServerJID: jid, node: nil, elementId: nil)
     }
     
     func didRegisterUserNotificationSettings(_ notification: Notification) {
@@ -54,6 +53,16 @@ public class ServerCapabilitiesViewController: UITableViewController {
                 UIApplication.shared.openURL(appSettings)
             }
         }
+    }
+    
+    func serverCheckUpdate(_ notification: Notification) {
+        if let caps = check.result.capabilities {
+            capabilities = Array(caps.values)
+        }
+        if let status = check.result.pushStatus {
+            xmppPushStatus = status
+        }
+        tableView.reloadData()
     }
     
     // MARK: - User Interaction
@@ -78,20 +87,6 @@ public class ServerCapabilitiesViewController: UITableViewController {
         
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
         navigationItem.rightBarButtonItem = doneButton
-
-        // Add capabilities listener
-        
-        self.check.pushInfoReady = { [weak self] (pushInfo) in
-            self?.tableView.reloadData()
-        }
-        self.check.capabilitiesReady = { [weak self] (caps) in
-            self?.capabilities = Array(caps.values)
-            self?.tableView.reloadData()
-        }
-        self.check.pushStatusUpdate = { [weak self] (status) in
-            self?.xmppPushStatus = status
-            self?.tableView.reloadData()
-        }
     }
 
     
@@ -100,6 +95,8 @@ public class ServerCapabilitiesViewController: UITableViewController {
         // This will allow us to refresh the permission prompts after use changes them in background
         NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
+        // Add capabilities listener
+        NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: check)
         refreshAllData(nil)
     }
     
@@ -143,7 +140,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
                 self?.unregisterForXMPPPush(sender)
                 self?.check.push.reset(completion: {
                     self?.check.refresh()
-                    self?.check.xmppPush.refresh()
+                    self?.check.xmpp?.xmppPushModule.refresh()
                     }, callbackQueue: DispatchQueue.main)
             })
         }
@@ -207,7 +204,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
-            return cellCountForPushInfo(pushInfo: check.pushInfo)
+            return cellCountForPushInfo(pushInfo: check.result.pushInfo)
         case .Server:
             return capabilities.count
         }
@@ -222,16 +219,16 @@ public class ServerCapabilitiesViewController: UITableViewController {
                 guard let pushCell = tableView.dequeueReusableCell(withIdentifier: PushAccountTableViewCell.cellIdentifier(), for: indexPath) as? PushAccountTableViewCell else {
                         return emptyCell
                 }
-                pushCell.setPushInfo(pushInfo: check.pushInfo, pushCapabilities: check.capabilities?[.XEP0357], pushStatus: xmppPushStatus)
+                pushCell.setPushInfo(pushInfo: check.result.pushInfo, pushCapabilities: check.result.capabilities?[.XEP0357], pushStatus: xmppPushStatus)
                 pushCell.infoButtonBlock = { [weak self] (cell, sender) in
-                    (self?.check.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
+                    (self?.check.result.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
                 }
                 return pushCell
             }
-            guard let push = check.pushInfo else {
+            guard let push = check.result.pushInfo else {
                 return emptyCell
             }
-            let cellCount = cellCountForPushInfo(pushInfo: check.pushInfo)
+            let cellCount = cellCountForPushInfo(pushInfo: check.result.pushInfo)
             if cellCount == 2 && indexPath.row == 1 {
                 return resetCellForTableView(tableView: tableView, indexPath: indexPath, pushInfo: push)
             }
@@ -263,7 +260,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
                 return UITableViewCell()
             }
             var cellInfo = capabilities[indexPath.row]
-            if let pushInfo = check.pushInfo {
+            if let pushInfo = check.result.pushInfo {
                 // If push account isnt working, show a warning here
                 if cellInfo.code == .XEP0357 && cellInfo.status == .Available {
                     if !pushInfo.pushMaybeWorks() || xmppPushStatus != .registered {
