@@ -43,6 +43,13 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
         fetch()
     }
     
+    public func getCombinedPushStatus() -> ServerCheckPushStatus {
+        if let xmpp = xmpp, xmpp.connectionStatus != .connected {
+            return .unknown
+        }
+        return result.getCombinedPushStatus()
+    }
+    
     
     
     /// set pushInfoReady, capabilitiesReady, pushStatusUpdate to get result
@@ -144,7 +151,7 @@ public class ServerCheckResult: NSObject {
     public var pushStatus: XMPPPushStatus?
     
     /** This lets you collect all push info in one place */
-    public func getCombinedPushStatus() -> ServerCheckPushStatus {
+    fileprivate func getCombinedPushStatus() -> ServerCheckPushStatus {
         var checkStatus: ServerCheckPushStatus = .unknown
         if let pushInfo = pushInfo, !pushInfo.pushMaybeWorks() {
             return .broken

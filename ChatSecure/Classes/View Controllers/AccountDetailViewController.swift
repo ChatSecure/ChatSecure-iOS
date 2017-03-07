@@ -71,6 +71,14 @@ public class AccountDetailViewController: UITableViewController {
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: DetailCellIdentifier)
         
+        setupDetailCells()
+    }
+    
+    private func setupDetailCells() {
+        var serverInfoText = "Server Information"
+        if serverCheck.getCombinedPushStatus() == .broken {
+            serverInfoText = "\(serverInfoText)  ⚠️"
+        }
         detailCells = [
             DetailCellInfo(title: "Edit Account", action: { [weak self] (_, _) -> (Void) in
                 guard let strongSelf = self else { return }
@@ -80,7 +88,7 @@ public class AccountDetailViewController: UITableViewController {
                 guard let strongSelf = self else { return }
                 strongSelf.showKeyManagement(account: strongSelf.account)
             }),
-            DetailCellInfo(title: "Server Information", action: { [weak self] (_, _) -> (Void) in
+            DetailCellInfo(title: serverInfoText, action: { [weak self] (_, _) -> (Void) in
                 guard let strongSelf = self else { return }
                 strongSelf.showServerInfo(account: strongSelf.account)
             })
@@ -90,6 +98,7 @@ public class AccountDetailViewController: UITableViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(loginStatusChanged(_:)), name: NSNotification.Name(rawValue: OTRXMPPLoginStatusNotificationName), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: serverCheck)
         tableView.reloadData()
     }
     
@@ -99,6 +108,11 @@ public class AccountDetailViewController: UITableViewController {
     }
     
     // MARK: - Notifications
+    
+    @objc func serverCheckUpdate(_ notification: Notification) {
+        setupDetailCells() // refresh server info warning label
+        tableView.reloadData()
+    }
     
     @objc func loginStatusChanged(_ notification: Notification) {
         tableView.reloadData()

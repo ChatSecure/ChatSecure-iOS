@@ -168,8 +168,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         }
         else {
             OTRXMPPAccount *account = [self accountAtIndexPath:indexPath];
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
             XMPPAccountCell *accountCell = [tableView dequeueReusableCellWithIdentifier:[XMPPAccountCell cellIdentifier] forIndexPath:indexPath];
             [accountCell setAppearanceWithAccount:account];
+            
+            if (xmpp.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
+                accountCell.accountNameLabel.text = [NSString stringWithFormat:@"%@  ⚠️",accountCell.accountNameLabel.text];
+            }
             
             accountCell.infoButtonAction = ^(UITableViewCell *cell, id sender) {
                 [self showAccountDetailsView:account];

@@ -14,7 +14,7 @@ public typealias CellButtonBlock = (_ cell: UITableViewCell, _ sender: Any) -> (
 public class XMPPAccountCell: UITableViewCell {
     @IBOutlet weak var avatarButton: UIButton!
     @IBOutlet weak var displayNameLabel: UILabel!
-    @IBOutlet weak var accountNameLabel: UILabel!
+    @IBOutlet public weak var accountNameLabel: UILabel!
     @IBOutlet weak var infoButton: UIButton!
     
     public var infoButtonAction: CellButtonBlock?

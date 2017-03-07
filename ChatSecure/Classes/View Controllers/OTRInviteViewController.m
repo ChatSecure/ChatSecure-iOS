@@ -124,12 +124,7 @@ static CGFloat const kOTRButtonHeight = 40;
 }
 
 - (void) refreshWarningButton {
-    OTRServerCheckResult *result = self.serverCheck.result;
-    if (!result) {
-        return;
-    }
-    ServerCheckPushStatus status = result.getCombinedPushStatus;
-    if (status == ServerCheckPushStatusBroken) {
+    if (self.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
         self.warningButton.hidden = NO;
     } else {
         self.warningButton.hidden = YES;
