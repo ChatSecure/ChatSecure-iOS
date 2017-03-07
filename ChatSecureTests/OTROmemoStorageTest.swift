@@ -36,7 +36,7 @@ class OTROmemoStorageTest: XCTestCase {
      *
      */
     func setupDatabase(_ name:String) {
-        let account = TestXMPPAccount()!
+        let account = TestXMPPAccount(username: "", accountType: .jabber)!
         self.accountKey = account.uniqueId
         self.accountCollection = OTRXMPPAccount.collection()
         

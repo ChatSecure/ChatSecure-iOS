@@ -110,8 +110,7 @@
         //Authenicate and go through google oauth
         GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:[OTRBranding googleAppScope] clientID:[OTRBranding googleAppId] clientSecret:[OTRSecrets googleAppSecret] keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
             if (!error) {
-                OTRGoogleOAuthXMPPAccount *googleAccount = [[OTRGoogleOAuthXMPPAccount alloc] initWithAccountType:OTRAccountTypeGoogleTalk];
-                googleAccount.username = auth.userEmail;
+                OTRGoogleOAuthXMPPAccount *googleAccount = [[OTRGoogleOAuthXMPPAccount alloc] initWithUsername:auth.userEmail accountType:OTRAccountTypeGoogleTalk];
                 googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

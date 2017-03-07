@@ -262,6 +262,9 @@ public class AccountDetailViewController: UITableViewController {
             cell.button.setTitle("Login", for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
+                if let _ = strongSelf.account.password {
+                    
+                }
                 strongSelf.showLoginView(account: strongSelf.account)
             }
             break

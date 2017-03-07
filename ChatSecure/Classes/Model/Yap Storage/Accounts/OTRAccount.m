@@ -30,9 +30,6 @@ NSString *const OTRXMPPImageName              = @"xmpp.png";
 NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 @interface OTRAccount ()
-
-//@property (nonatomic) OTRAccountType accountType;
-
 @end
 
 @implementation OTRAccount
@@ -47,26 +44,46 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     }
 }
 
-- (id)init
-{
-    if(self = [super init])
-    {
-        _accountType = OTRAccountTypeNone;
+- (nullable instancetype)initWithUsername:(NSString*)username
+                              accountType:(OTRAccountType)accountType {
+    NSParameterAssert(username != nil);
+    NSParameterAssert([self class] == [[self class] accountClassForAccountType:accountType]);
+    if (!username) {
+        return nil;
+    }
+    if ([self class] != [[self class] accountClassForAccountType:accountType]) {
+        return nil;
+    }
+    if (self = [super init]) {
+        _username = [username copy];
+        _accountType = accountType;
     }
     return self;
 }
 
-- (id)initWithAccountType:(OTRAccountType)acctType
-{
-    if (self = [self init]) {
-        
-        _accountType = acctType;
++ (nullable Class) accountClassForAccountType:(OTRAccountType)accountType {
+    switch(accountType) {
+        case OTRAccountTypeGoogleTalk:
+            return [OTRGoogleOAuthXMPPAccount class];
+        case OTRAccountTypeJabber:
+            return [OTRXMPPAccount class];
+        case OTRAccountTypeXMPPTor:
+            return [OTRXMPPTorAccount class];
+        default:
+            return nil;
     }
-    return self;
 }
 
 - (OTRProtocolType)protocolType
 {
+    switch(self.accountType) {
+        case OTRAccountTypeGoogleTalk:
+        case OTRAccountTypeJabber:
+        case OTRAccountTypeXMPPTor:
+            return OTRProtocolTypeXMPP;
+        default:
+            return OTRProtocolTypeNone;
+    }
     return OTRProtocolTypeNone;
 }
 
@@ -75,13 +92,14 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return nil;
 }
 
-- (NSString *)accountDisplayName
-{
-    return @"";
-}
-
 - (NSString *)protocolTypeString
 {
+    switch(self.protocolType) {
+        case OTRProtocolTypeXMPP:
+            return kOTRProtocolTypeXMPP;
+        default:
+            return @"";
+    }
     return @"";
 }
 
@@ -123,6 +141,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 }
 
 - (Class)protocolClass {
+    NSAssert(NO, @"Must implement in subclass.");
     return nil;
 }
 
@@ -193,19 +212,16 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 #pragma - mark Class Methods
 
-+(OTRAccount *)accountForAccountType:(OTRAccountType)accountType
++ (nullable instancetype)accountWithUsername:(NSString*)username
+                                 accountType:(OTRAccountType)accountType
 {
-    OTRAccount *account = nil;
-    if (accountType == OTRAccountTypeJabber) {
-        account = [[OTRXMPPAccount alloc] initWithAccountType:accountType];
+    NSParameterAssert(username != nil);
+    if (!username) { return nil; }
+    Class accountClass = [self accountClassForAccountType:accountType];
+    if (!accountClass) {
+        return nil;
     }
-    else if (accountType == OTRAccountTypeXMPPTor) {
-        account = [[OTRXMPPTorAccount alloc] initWithAccountType:accountType];
-    }
-    else if (accountType == OTRAccountTypeGoogleTalk) {
-        account = [[OTRGoogleOAuthXMPPAccount alloc] initWithAccountType:accountType];
-    }
-    
+    OTRAccount *account = [[accountClass alloc] initWithUsername:username accountType:accountType];
     return account;
 }
 

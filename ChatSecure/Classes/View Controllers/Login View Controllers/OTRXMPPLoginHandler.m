@@ -51,15 +51,21 @@
     [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:account.resource];
 }
 
-- (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
+- (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)intoAccount
 {
-    if (!account) {
+    OTRXMPPAccount *account = nil;
+    if (!intoAccount) {
          BOOL useTor = [[form formRowWithTag:kOTRXLFormUseTorTag].value boolValue];
+        OTRAccountType accountType = OTRAccountTypeJabber;
         if (useTor) {
-            account = [[OTRXMPPTorAccount alloc] initWithAccountType:OTRAccountTypeXMPPTor];
-        } else {
-            account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+            accountType = OTRAccountTypeXMPPTor;
         }
+        account = [OTRAccount accountWithUsername:@"" accountType:accountType];
+        if (!account) {
+            return nil;
+        }
+    } else {
+        account = [intoAccount copy];
     }
     NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
     

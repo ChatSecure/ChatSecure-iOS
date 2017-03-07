@@ -50,12 +50,14 @@ static CGFloat const kOTRButtonHeight = 40;
 
 - (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     NSAssert(NO, @"Not supported");
-    return [self initWithAccount:[[OTRAccount alloc] init]];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
+    return [self initWithAccount:[OTRAccount accountWithUsername:@"" accountType:OTRAccountTypeNone]];
 }
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder {
     NSAssert(NO, @"Not supported");
-    return [self initWithAccount:[[OTRAccount alloc] init]];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
+    return [self initWithAccount:[OTRAccount accountWithUsername:@"" accountType:OTRAccountTypeNone]];
 }
 
 - (void) setupServerCheck {

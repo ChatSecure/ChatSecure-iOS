@@ -27,10 +27,8 @@ class OTRSignalTest: XCTestCase {
         let ourDatabaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
         let otherDatbaseManager = OTRTestDatabaseManager.setupDatabaseWithName("\(#function)-other")
         
-        let ourAccount = TestXMPPAccount()!
-        ourAccount.username = "ourAccount@something.com"
-        let otherAccount = TestXMPPAccount()!
-        otherAccount.username = "otherAccount@something.com"
+        let ourAccount = TestXMPPAccount(username: "ourAccount@something.com", accountType: .jabber)!
+        let otherAccount = TestXMPPAccount(username: "otherAccount@something.com", accountType: .jabber)!
         
         let ourDatabaseConnection = ourDatabaseManager.newConnection()!
         let otherDatabaseConnection = otherDatbaseManager.newConnection()!
