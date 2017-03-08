@@ -183,23 +183,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
                 
             };
             accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-            /*
-            OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[OTRAccountTableViewCell cellIdentifier] forIndexPath:indexPath];
-            [accountCell.shareButton addTarget:self action:@selector(accountCellShareButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [accountCell setAccount:account];
-            
-            if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:account]) {
-                id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                if (protocol) {
-                    [accountCell setConnectedText:[protocol connectionStatus]];
-                }
-            }
-            else {
-                [accountCell setConnectedText:OTRProtocolConnectionStatusDisconnected];
-            }*/
-
             cell = accountCell;
         }
         return cell;
@@ -261,17 +244,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (indexPath.section == 0) { // Accounts
         if (indexPath.row == [self.viewHandler.mappings numberOfItemsInSection:0]) {
             [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
-        } else {
-            /*
-            OTRAccount *account = [self accountAtIndexPath:indexPath];
-            
-            BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
-            if (!connected) {
-                [self showAccountDetailsView:account];
-            } else {
-                [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
-            }*/
-            
         }
     } else {
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
@@ -342,45 +314,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
 }
 
-- (void)logoutAccount:(OTRAccount *)account sender:(id)sender
-{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING() style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        [protocol disconnect];
-    }];
-    
-    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [ShareController shareAccount:account sender:sender viewController:self];
-    }];
-#warning Unlocalized string!
-    UIAlertAction *serverInfoAction = [UIAlertAction actionWithTitle:@"Server Info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        OTRXMPPManager *xmpp = nil;
-        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            xmpp = (OTRXMPPManager*)protocol;
-        }
-        OTRServerCheck *check = xmpp.serverCheck;
-        ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
-        [self presentViewController:nav animated:YES completion:nil];
-    }];
-    
-    [alertController addAction:serverInfoAction];
-    [alertController addAction:shareAction];
-    [alertController addAction:logoutAlertAction];
-    [alertController addAction:cancelAlertAction];
-    
-    if ([sender isKindOfClass:[UIView class]]) {
-        UIView *senderView = (UIView *)sender;
-        alertController.popoverPresentationController.sourceRect = senderView.bounds;
-        alertController.popoverPresentationController.sourceView = senderView;
-    }
-    
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
 - (void) addAccount:(id)sender {
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
@@ -427,10 +360,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-#warning Hardcoded Whitelabel Value
-    NSURL *paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"];
-#warning Hardcoded Whitelabel Value
-    NSURL *bitcoinURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
+    NSURL *paypalURL = [OTRBranding paypalURL];
+    NSURL *bitcoinURL = [OTRBranding bitcoinURL];
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -493,8 +424,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-#warning Hardcoded Whitelabel Value
-        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+        UVConfig *config = [UVConfig configWithSite:[OTRBranding userVoiceSite]];
         [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
     }];
     
