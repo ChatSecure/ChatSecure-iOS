@@ -118,8 +118,7 @@ static CGFloat const kOTRButtonHeight = 40;
 }
 
 - (void) setupWarningButton {
-#warning Non-localized String
-    _warningButton = [self buttonWithIcon:FAWarning title:@"Push Warning" type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
+    _warningButton = [self buttonWithIcon:FAWarning title:PUSH_WARNING_STRING() type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
     self.warningButton.hidden = YES;
     [self.view addSubview:self.warningButton];
     [self refreshWarningButton];

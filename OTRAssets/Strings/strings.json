@@ -115,6 +115,10 @@
         "comment": "Ask user if they want to delete the stored account information",
         "string": "Permanently delete"
     },
+    "DELETE_ACCOUNT_BUTTON_STRING": {
+        "comment": "Button to delete account",
+        "string": "Delete Account"
+    },
     "DELETE_ACCOUNT_TITLE_STRING": {
         "comment": "Ask user if they want to delete the stored account information",
         "string": "Delete Account?"
@@ -150,6 +154,10 @@
     "DO_NOT_DISTURB_STRING": {
         "comment": "Default message when a user status is set to do not disturb",
         "string": "Do Not Disturb"
+    },
+    "EDIT_ACCOUNT_STRING": {
+        "comment": "Button to edit account details",
+        "string": "Edit Account"
     },
     "EMAIL_STRING": {
         "comment": "The string describing account name or email address for a buddy",
@@ -211,6 +219,10 @@
         "comment": "Short for information, button title to get more information",
         "string": "Info"
     },
+    "INVITE_FRIENDS_STRING": {
+        "comment": "Button to invite friends",
+        "string": "Invite Friends"
+    },
     "INVALID_EMAIL_DETAIL_STRING": {
         "comment": "detail title label for invalid email",
         "string": "Please choose a valid email address"
@@ -242,6 +254,10 @@
     "LOGOUT_STRING": {
         "comment": "log out from account",
         "string": "Log Out"
+    },
+    "MANAGE_MY_KEYS": {
+        "comment": "Button to manage your OTR and OMEMO keys",
+        "string": "Manage My Keys"
     },
     "MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING": {
         "comment": "Title for button to manage ChatSecure Push account",
@@ -390,6 +406,10 @@
     "PUBLIC_KEY_ERROR_STRING": {
         "comment": "Error message when cannot get public key from SSL certificate",
         "string": "Could not retrieve public key from certificate"
+    },
+    "PUSH_WARNING_STRING": {
+        "comment": "Button title to show more information about Push messaging might not be working",
+        "string": "Push Warning"
     },
     "PUSH_TITLE_STRING": {
         "comment": "Title for push-messaging related settings",
@@ -959,6 +979,9 @@
     }, "Server_String": {
         "comment": "server selection section title",
         "string": "Server"
+    }, "SERVER_INFORMATION_STRING": {
+        "comment": "button to show more information about your XMPP server",
+        "string": "Server Information"
     }, "Server_String_Hint": {
         "comment": "server selection footer",
         "string": "Choose from our list of trusted servers, or use your own."

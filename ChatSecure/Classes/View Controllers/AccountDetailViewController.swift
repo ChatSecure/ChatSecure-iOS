@@ -11,7 +11,7 @@ import OTRAssets
 
 struct DetailCellInfo {
     let title: String
-    let action: (_ tableView: UITableView, _ indexPath: IndexPath) -> (Void)
+    let action: (_ tableView: UITableView, _ indexPath: IndexPath, _ sender: Any) -> (Void)
 }
 
 enum TableSections: Int {
@@ -75,22 +75,22 @@ public class AccountDetailViewController: UITableViewController {
     }
     
     private func setupDetailCells() {
-        var serverInfoText = "Server Information"
+        var serverInfoText = SERVER_INFORMATION_STRING()
         if serverCheck.getCombinedPushStatus() == .broken {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
         detailCells = [
-            DetailCellInfo(title: "Edit Account", action: { [weak self] (_, _) -> (Void) in
+            DetailCellInfo(title: EDIT_ACCOUNT_STRING(), action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
-                strongSelf.showLoginView(account: strongSelf.account)
+                strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
             }),
-            DetailCellInfo(title: "Manage My Keys", action: { [weak self] (_, _) -> (Void) in
+            DetailCellInfo(title: MANAGE_MY_KEYS(), action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
-                strongSelf.showKeyManagement(account: strongSelf.account)
+                strongSelf.pushKeyManagementView(account: strongSelf.account, sender: sender)
             }),
-            DetailCellInfo(title: serverInfoText, action: { [weak self] (_, _) -> (Void) in
+            DetailCellInfo(title: serverInfoText, action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
-                strongSelf.showServerInfo(account: strongSelf.account)
+                strongSelf.pushServerInfoView(account: strongSelf.account, sender: sender)
             })
         ]
     }
@@ -120,35 +120,60 @@ public class AccountDetailViewController: UITableViewController {
     
     // MARK: - User Actions
     
-    func showDeleteDialog(account: OTRXMPPAccount) {
-        
+    func showDeleteDialog(account: OTRXMPPAccount, sender: Any) {
+        let alert = UIAlertController(title: "\(DELETE_ACCOUNT_MESSAGE_STRING()) \(account.username)?", message: nil, preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
+        let delete = UIAlertAction(title: DELETE_ACCOUNT_BUTTON_STRING(), style: .destructive) { (action) in
+            let protocols = OTRProtocolManager.sharedInstance()
+            if let xmpp = protocols.protocol(for: account) as? OTRXMPPManager,
+                xmpp.connectionStatus != .disconnected {
+                xmpp.disconnect()
+            }
+            protocols.removeProtocol(for: account)
+            OTRAccountsManager.remove(account)
+            self.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(cancel)
+        alert.addAction(delete)
+        present(alert, animated: true, completion: nil)
     }
     
-    func showLogoutDialog(account: OTRXMPPAccount) {
-        
+    func showLogoutDialog(account: OTRXMPPAccount, sender: Any) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
+        let logout = UIAlertAction(title: LOGOUT_STRING(), style: .destructive) { (action) in
+            let protocols = OTRProtocolManager.sharedInstance()
+            if let xmpp = protocols.protocol(for: account) as? OTRXMPPManager,
+                xmpp.connectionStatus != .disconnected {
+                xmpp.disconnect()
+            }
+        }
+        alert.addAction(cancel)
+        alert.addAction(logout)
+        present(alert, animated: true, completion: nil)
     }
     
-    func inviteFriends(account: OTRXMPPAccount) {
-        
+    func showInviteFriends(account: OTRXMPPAccount, sender: Any) {
+        ShareController.shareAccount(account, sender: sender, viewController: self)
     }
     
-    func showLoginView(account: OTRXMPPAccount) {
+    func pushLoginView(account: OTRXMPPAccount, sender: Any) {
         guard let login = OTRBaseLoginViewController(for: account) else { return }
         navigationController?.pushViewController(login, animated: true)
     }
     
-    func showKeyManagement(account: OTRXMPPAccount) {
+    func pushKeyManagementView(account: OTRXMPPAccount, sender: Any) {
         let form = UserProfileViewController.profileFormDescriptorForAccount(account, buddies: [], connection: writeConnection)
         let keys = UserProfileViewController(accountKey: account.uniqueId, connection: writeConnection, form: form)
         navigationController?.pushViewController(keys, animated: true)
     }
     
-    func showServerInfo(account: OTRXMPPAccount) {
+    func pushServerInfoView(account: OTRXMPPAccount, sender: Any) {
         let scvc = ServerCapabilitiesViewController(serverCheck: serverCheck)
         navigationController?.pushViewController(scvc, animated: true)
     }
     
-    @objc private func doneButtonPressed(_ sender: Any?) {
+    @objc private func doneButtonPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
@@ -211,13 +236,10 @@ public class AccountDetailViewController: UITableViewController {
             }
         case .details:
             let detail = detailCells[indexPath.row]
-            detail.action(tableView, indexPath)
+            let cell = self.tableView(tableView, cellForRowAt: indexPath)
+            detail.action(tableView, indexPath, cell)
             return
-        case .invite:
-            break
-        case .delete:
-            break
-        case .loginlogout:
+        case .invite, .delete, .loginlogout:
             break
         }
     }
@@ -258,21 +280,26 @@ public class AccountDetailViewController: UITableViewController {
         let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
         
         switch xmpp.connectionStatus {
-        case .disconnected, .connecting:
-            cell.button.setTitle("Login", for: .normal)
+        case .connecting:
+            cell.button.setTitle("\(CONNECTING_STRING())...", for: .normal)
+            cell.button.isEnabled = false
+        case .disconnected:
+            cell.button.setTitle(LOGIN_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
+                let protocols = OTRProtocolManager.sharedInstance()
                 if let _ = strongSelf.account.password {
-                    
+                    protocols.loginAccount(strongSelf.account)
+                } else {
+                    strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
                 }
-                strongSelf.showLoginView(account: strongSelf.account)
             }
             break
         case .connected:
-            cell.button.setTitle("Logout", for: .normal)
+            cell.button.setTitle(LOGOUT_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
-                strongSelf.showLogoutDialog(account: strongSelf.account)
+                strongSelf.showLogoutDialog(account: strongSelf.account, sender: sender)
             }
             cell.button.setTitleColor(UIColor.red, for: .normal)
             break
@@ -294,25 +321,26 @@ public class AccountDetailViewController: UITableViewController {
         }
         cell.button.setTitleColor(nil, for: .normal)
         cell.selectionStyle = .none
+        cell.button.isEnabled = true
         return cell
     }
     
     func inviteCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
         let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
-        cell.button.setTitle("Invite Friends", for: .normal)
+        cell.button.setTitle(INVITE_FRIENDS_STRING(), for: .normal)
         cell.buttonAction = { [weak self] (cell, sender) in
             guard let strongSelf = self else { return }
-            strongSelf.inviteFriends(account: strongSelf.account)
+            strongSelf.showInviteFriends(account: strongSelf.account, sender: sender)
         }
         return cell
     }
     
     func deleteCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
         let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
-        cell.button.setTitle("Delete Account", for: .normal)
+        cell.button.setTitle(DELETE_ACCOUNT_BUTTON_STRING(), for: .normal)
         cell.buttonAction = { [weak self] (cell, sender) in
             guard let strongSelf = self else { return }
-            strongSelf.showDeleteDialog(account: strongSelf.account)
+            strongSelf.showDeleteDialog(account: strongSelf.account, sender: sender)
         }
         cell.button.setTitleColor(UIColor.red, for: .normal)
         return cell

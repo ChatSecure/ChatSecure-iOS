@@ -84,6 +84,8 @@ FOUNDATION_EXPORT NSString* Crash_Detected_Title();
 FOUNDATION_EXPORT NSString* Customize_Username();
 /** "Deactivate", e.g. for deactivating your push account */
 FOUNDATION_EXPORT NSString* DEACTIVATE_STRING();
+/** "Delete Account", Button to delete account */
+FOUNDATION_EXPORT NSString* DELETE_ACCOUNT_BUTTON_STRING();
 /** "Permanently delete", Ask user if they want to delete the stored account information */
 FOUNDATION_EXPORT NSString* DELETE_ACCOUNT_MESSAGE_STRING();
 /** "Delete Account?", Ask user if they want to delete the stored account information */
@@ -104,6 +106,8 @@ FOUNDATION_EXPORT NSString* DONE_STRING();
 FOUNDATION_EXPORT NSString* DO_NOT_DISTURB_STRING();
 /** "Database Error",  */
 FOUNDATION_EXPORT NSString* Database_Error_String();
+/** "Edit Account", Button to edit account details */
+FOUNDATION_EXPORT NSString* EDIT_ACCOUNT_STRING();
 /** "Email", The string describing account name or email address for a buddy */
 FOUNDATION_EXPORT NSString* EMAIL_STRING();
 /** "Enable Push in Settings", button for enabling push messages in iOS system settings */
@@ -160,6 +164,8 @@ FOUNDATION_EXPORT NSString* INFO_STRING();
 FOUNDATION_EXPORT NSString* INVALID_EMAIL_DETAIL_STRING();
 /** "Invalid Email", title label for invalid email */
 FOUNDATION_EXPORT NSString* INVALID_EMAIL_TITLE_STRING();
+/** "Invite Friends", Button to invite friends */
+FOUNDATION_EXPORT NSString* INVITE_FRIENDS_STRING();
 /** "Share Invite", Label for inviting friends via URL */
 FOUNDATION_EXPORT NSString* INVITE_LINK_STRING();
 /** "The XMPP server does not support in-band registration", Error message for when in band registration is not supported */
@@ -180,6 +186,8 @@ FOUNDATION_EXPORT NSString* LOGIN_STRING();
 FOUNDATION_EXPORT NSString* LOGOUT_STRING();
 /** "Manage ChatSecure Push account", Title for button to manage ChatSecure Push account */
 FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
+/** "Manage My Keys", Button to manage your OTR and OMEMO keys */
+FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
 /** "My QR Code", Your QR code */
 FOUNDATION_EXPORT NSString* MY_QR_CODE();
 /** "Me",  */
@@ -272,6 +280,8 @@ FOUNDATION_EXPORT NSString* PORT_STRING();
 FOUNDATION_EXPORT NSString* PUBLIC_KEY_ERROR_STRING();
 /** "Push", Title for push-messaging related settings */
 FOUNDATION_EXPORT NSString* PUSH_TITLE_STRING();
+/** "Push Warning", Button title to show more information about Push messaging might not be working */
+FOUNDATION_EXPORT NSString* PUSH_WARNING_STRING();
 /** "Plaintext Only",  */
 FOUNDATION_EXPORT NSString* Plaintext_Only();
 /** "Plaintext (Opportunistic OTR)",  */
@@ -332,6 +342,8 @@ FOUNDATION_EXPORT NSString* SEND_ENCRYPTED_STRING();
 FOUNDATION_EXPORT NSString* SEND_FEEDBACK_STRING();
 /** "Send plaintext message", The placeholder text in the chat view where the message should go */
 FOUNDATION_EXPORT NSString* SEND_PLAINTEXT_STRING();
+/** "Server Information", button to show more information about your XMPP server */
+FOUNDATION_EXPORT NSString* SERVER_INFORMATION_STRING();
 /** "Settings", Title for the Settings screen */
 FOUNDATION_EXPORT NSString* SETTINGS_STRING();
 /** "Chat with me securely", Body of SMS or email when sharing a link to the app */

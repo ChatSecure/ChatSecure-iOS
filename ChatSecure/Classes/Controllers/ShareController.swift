@@ -38,7 +38,7 @@ open class ShareControllerURLSource: NSObject, UIActivityItemSource {
 }
 
 open class ShareController: NSObject {
-    open static func shareAccount(_ account: OTRAccount, sender: AnyObject, viewController: UIViewController) {
+    open static func shareAccount(_ account: OTRAccount, sender: Any, viewController: UIViewController) {
         let fingerprintTypes = Set([NSNumber(value: OTRFingerprintType.OTR.rawValue as Int32)])
         
         account.generateShareURL(withFingerprintTypes: fingerprintTypes, completion: { (url: URL?, error: Error?) -> Void in

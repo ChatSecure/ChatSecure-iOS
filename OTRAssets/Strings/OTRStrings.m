@@ -84,6 +84,8 @@ NSString* Crash_Detected_Title() { return [OTRLanguageManager translatedString:@
 NSString* Customize_Username() { return [OTRLanguageManager translatedString:@"Customize Username"]; }
 /** "Deactivate", e.g. for deactivating your push account */
 NSString* DEACTIVATE_STRING() { return [OTRLanguageManager translatedString:@"Deactivate"]; }
+/** "Delete Account", Button to delete account */
+NSString* DELETE_ACCOUNT_BUTTON_STRING() { return [OTRLanguageManager translatedString:@"Delete Account"]; }
 /** "Permanently delete", Ask user if they want to delete the stored account information */
 NSString* DELETE_ACCOUNT_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Permanently delete"]; }
 /** "Delete Account?", Ask user if they want to delete the stored account information */
@@ -104,6 +106,8 @@ NSString* DONE_STRING() { return [OTRLanguageManager translatedString:@"Done"]; 
 NSString* DO_NOT_DISTURB_STRING() { return [OTRLanguageManager translatedString:@"Do Not Disturb"]; }
 /** "Database Error",  */
 NSString* Database_Error_String() { return [OTRLanguageManager translatedString:@"Database Error"]; }
+/** "Edit Account", Button to edit account details */
+NSString* EDIT_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Edit Account"]; }
 /** "Email", The string describing account name or email address for a buddy */
 NSString* EMAIL_STRING() { return [OTRLanguageManager translatedString:@"Email"]; }
 /** "Enable Push in Settings", button for enabling push messages in iOS system settings */
@@ -160,6 +164,8 @@ NSString* INFO_STRING() { return [OTRLanguageManager translatedString:@"Info"]; 
 NSString* INVALID_EMAIL_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"Please choose a valid email address"]; }
 /** "Invalid Email", title label for invalid email */
 NSString* INVALID_EMAIL_TITLE_STRING() { return [OTRLanguageManager translatedString:@"Invalid Email"]; }
+/** "Invite Friends", Button to invite friends */
+NSString* INVITE_FRIENDS_STRING() { return [OTRLanguageManager translatedString:@"Invite Friends"]; }
 /** "Share Invite", Label for inviting friends via URL */
 NSString* INVITE_LINK_STRING() { return [OTRLanguageManager translatedString:@"Share Invite"]; }
 /** "The XMPP server does not support in-band registration", Error message for when in band registration is not supported */
@@ -180,6 +186,8 @@ NSString* LOGIN_STRING() { return [OTRLanguageManager translatedString:@"Log In"
 NSString* LOGOUT_STRING() { return [OTRLanguageManager translatedString:@"Log Out"]; }
 /** "Manage ChatSecure Push account", Title for button to manage ChatSecure Push account */
 NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Manage ChatSecure Push account"]; }
+/** "Manage My Keys", Button to manage your OTR and OMEMO keys */
+NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
 /** "My QR Code", Your QR code */
 NSString* MY_QR_CODE() { return [OTRLanguageManager translatedString:@"My QR Code"]; }
 /** "Me",  */
@@ -272,6 +280,8 @@ NSString* PORT_STRING() { return [OTRLanguageManager translatedString:@"Port"]; 
 NSString* PUBLIC_KEY_ERROR_STRING() { return [OTRLanguageManager translatedString:@"Could not retrieve public key from certificate"]; }
 /** "Push", Title for push-messaging related settings */
 NSString* PUSH_TITLE_STRING() { return [OTRLanguageManager translatedString:@"Push"]; }
+/** "Push Warning", Button title to show more information about Push messaging might not be working */
+NSString* PUSH_WARNING_STRING() { return [OTRLanguageManager translatedString:@"Push Warning"]; }
 /** "Plaintext Only",  */
 NSString* Plaintext_Only() { return [OTRLanguageManager translatedString:@"Plaintext Only"]; }
 /** "Plaintext (Opportunistic OTR)",  */
@@ -332,6 +342,8 @@ NSString* SEND_ENCRYPTED_STRING() { return [OTRLanguageManager translatedString:
 NSString* SEND_FEEDBACK_STRING() { return [OTRLanguageManager translatedString:@"Send Feedback"]; }
 /** "Send plaintext message", The placeholder text in the chat view where the message should go */
 NSString* SEND_PLAINTEXT_STRING() { return [OTRLanguageManager translatedString:@"Send plaintext message"]; }
+/** "Server Information", button to show more information about your XMPP server */
+NSString* SERVER_INFORMATION_STRING() { return [OTRLanguageManager translatedString:@"Server Information"]; }
 /** "Settings", Title for the Settings screen */
 NSString* SETTINGS_STRING() { return [OTRLanguageManager translatedString:@"Settings"]; }
 /** "Chat with me securely", Body of SMS or email when sharing a link to the app */
