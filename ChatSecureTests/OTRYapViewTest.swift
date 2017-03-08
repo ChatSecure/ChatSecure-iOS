@@ -61,11 +61,11 @@ class OTRYapViewTest: XCTestCase {
             setupExpecation.fulfill()
             //Once our view handler is ready we need to make a change to the database that will be reflected in the view.
             databaseManager.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
-                guard let account = OTRAccount(username: "account@test.com", accountType: .jabber) else {
+                guard let account = OTRXMPPAccount(username: "account@test.com", accountType: .jabber) else {
                     XCTFail()
                     return
                 }
-                let buddy = OTRBuddy()!
+                let buddy = OTRXMPPBuddy()!
                 buddy.username = "test@test.com"
                 buddy.accountUniqueId = account.uniqueId
                 account.save(with: transaction)
