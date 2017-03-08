@@ -288,7 +288,8 @@ public class AccountDetailViewController: UITableViewController {
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
                 let protocols = OTRProtocolManager.sharedInstance()
-                if let _ = strongSelf.account.password {
+                if let _ = strongSelf.account.password,
+                    strongSelf.account.accountType != .xmppTor {
                     protocols.loginAccount(strongSelf.account)
                 } else {
                     strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
