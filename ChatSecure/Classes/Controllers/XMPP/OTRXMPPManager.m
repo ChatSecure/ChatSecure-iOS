@@ -279,6 +279,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:[OTRProtocolManager sharedInstance].pushController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
+    
+    _serverCheck = [[OTRServerCheck alloc] initWithXmpp:self push:[OTRProtocolManager sharedInstance].pushController];
 }
 
 - (void)teardownStream
@@ -306,6 +308,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_messageStatusModule deactivate];
     [_omemoModule deactivate];
     [_serverCapabilities deactivate];
+    _serverCheck = nil;
 
     [_xmppStream disconnect];
 }

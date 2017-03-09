@@ -161,7 +161,7 @@ public class MessageQueueHandler:NSObject {
     
     fileprivate func fetchSendingAction(_ messageKey:String, messageCollection:String, transaction:YapDatabaseReadTransaction) -> OTRYapMessageSendAction? {
         let key = OTRYapMessageSendAction.actionKey(forMessageKey: messageKey, messageCollection: messageCollection)
-        guard let action = OTRYapMessageSendAction.fetch(withUniqueID: key, transaction: transaction) else {
+        guard let action = OTRYapMessageSendAction.fetchObject(withUniqueID: key, transaction: transaction) else {
             return nil
         }
         return action
@@ -191,9 +191,9 @@ public class MessageQueueHandler:NSObject {
         var bud:OTRBuddy? = nil
         var acc:OTRAccount? = nil
         self.databaseConnection.read({ (transaction) in
-            bud = OTRBuddy.fetch(withUniqueID: message.buddyUniqueId, transaction: transaction)
+            bud = OTRBuddy.fetchObject(withUniqueID: message.buddyUniqueId, transaction: transaction)
             if let accountKey = bud?.accountUniqueId {
-                acc = OTRAccount.fetch(withUniqueID: accountKey, transaction: transaction)
+                acc = OTRAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
             }
             
         })
@@ -218,7 +218,7 @@ public class MessageQueueHandler:NSObject {
         
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus() == .connected) {
+        if (accountProtocol.connectionStatus == .connected) {
             
             switch message.messageSecurity() {
             case .plaintext:
@@ -426,7 +426,7 @@ extension MessageQueueHandler {
         
         guard let signalCoordinator = accountProtocol.omemoSignalCoordinator else {
             self.databaseConnection.asyncReadWrite({ (transaction) in
-                guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                guard let message = OTROutgoingMessage.fetchObject(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
                     return
                 }
                 message.error = NSError.chatSecureError(EncryptionError.omemoNotSuported, userInfo: nil)
@@ -448,7 +448,7 @@ extension MessageQueueHandler {
                 //Something went wrong getting ready to send the message
                 //Save error object to message
                 strongSelf.databaseConnection.readWrite({ (transaction) in
-                    guard let message = OTROutgoingMessage.fetch(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                    guard let message = OTROutgoingMessage.fetchObject(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
                         return
                     }
                     message.error = error

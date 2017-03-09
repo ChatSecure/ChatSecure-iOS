@@ -68,6 +68,14 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** Push staging server URL e.g. https://staging.push.example.com/api/v1/ */
 + (nullable NSURL *)pushStagingAPIURL;
 
+/** UserVoice Site */
++ (nullable NSString*) userVoiceSite;
+
+/** PayPal donation URL */
++ (nullable NSURL*) paypalURL;
+
+/** Bitcoin donation URL (e.g. Coinbase) */
++ (nullable NSURL*) bitcoinURL;
 
 @end
 NS_ASSUME_NONNULL_END

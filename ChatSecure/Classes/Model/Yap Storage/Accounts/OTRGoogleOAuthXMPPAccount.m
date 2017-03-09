@@ -22,10 +22,6 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 {
     return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
-- (NSString *)accountDisplayName
-{
-    return GOOGLE_TALK_STRING();
-}
 
 -(NSString *)accessTokenString {
     return [self authToken].accessToken;

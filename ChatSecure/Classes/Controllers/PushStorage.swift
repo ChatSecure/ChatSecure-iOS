@@ -298,7 +298,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     func account(_ accountUniqueID: String) -> OTRAccount? {
         var account:OTRAccount? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            account = OTRAccount.fetch(withUniqueID: accountUniqueID, transaction: transaction)
+            account = OTRAccount.fetchObject(withUniqueID: accountUniqueID, transaction: transaction)
         }
         return account
     }

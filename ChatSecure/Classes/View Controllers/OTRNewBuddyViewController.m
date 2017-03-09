@@ -23,6 +23,7 @@
 @import XMPPFramework;
 
 #import "NSURL+ChatSecure.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
 
@@ -272,8 +273,12 @@
         if (username.length) {
             self.accountNameTextField.text = username;
         }
-#warning TODO: Process OTR fingerprint
-        // this is where you'd add the OTR (or Axolotl) fingerprint to the trusted store
+        // add the OTR fingerprint to the trusted store
+        NSData *fprintData = [fingerprint dataFromHex];
+        if (fprintData) {
+            OTRFingerprint *otrFingerprint = [[OTRFingerprint alloc] initWithUsername:username accountName:self.account.username protocol:self.account.protocolTypeString fingerprint:fprintData trustLevel:OTRTrustLevelTrustedUser];
+            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit saveFingerprint:otrFingerprint];
+        }
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:Unrecognized_Invite_Format() message:nil preferredStyle:UIAlertControllerStyleAlert];
         [self presentViewController:alert animated:YES completion:nil];

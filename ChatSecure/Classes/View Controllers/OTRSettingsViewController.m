@@ -50,6 +50,7 @@
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
+@import MobileCoreServices;
 
 #import "NSURL+ChatSecure.h"
 
@@ -92,6 +93,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [self.view addSubview:self.tableView];
     [self.tableView registerClass:[OTRAccountTableViewCell class] forCellReuseIdentifier:[OTRAccountTableViewCell cellIdentifier]];
     
+    NSBundle *bundle = [OTRAssets resourcesBundle];
+    UINib *nib = [UINib nibWithNibName:[XMPPAccountCell cellIdentifier] bundle:bundle];
+    [self.tableView registerNib:nib forCellReuseIdentifier:[XMPPAccountCell cellIdentifier]];
+    
+    
     UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
     [infoButton addTarget:self action:@selector(showAboutScreen:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
@@ -126,9 +132,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
 }
 
-- (OTRAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
+- (OTRXMPPAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRAccount *account = [self.viewHandler object:indexPath];
+    OTRXMPPAccount *account = [self.viewHandler object:indexPath];
     return account;
 }
 
@@ -161,22 +167,22 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             }
         }
         else {
-            OTRAccount *account = [self accountAtIndexPath:indexPath];
-            OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[OTRAccountTableViewCell cellIdentifier] forIndexPath:indexPath];
-            [accountCell.shareButton addTarget:self action:@selector(accountCellShareButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            OTRXMPPAccount *account = [self accountAtIndexPath:indexPath];
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            XMPPAccountCell *accountCell = [tableView dequeueReusableCellWithIdentifier:[XMPPAccountCell cellIdentifier] forIndexPath:indexPath];
+            [accountCell setAppearanceWithAccount:account];
             
-            [accountCell setAccount:account];
+            if (xmpp.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
+                accountCell.accountNameLabel.text = [NSString stringWithFormat:@"%@  ⚠️",accountCell.accountNameLabel.text];
+            }
             
-            if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:account]) {
-                id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                if (protocol) {
-                    [accountCell setConnectedText:[protocol connectionStatus]];
-                }
-            }
-            else {
-                [accountCell setConnectedText:OTRProtocolConnectionStatusDisconnected];
-            }
-
+            accountCell.infoButtonAction = ^(UITableViewCell *cell, id sender) {
+                [self showAccountDetailsView:account];
+            };
+            accountCell.avatarButtonAction = ^(UITableViewCell *cell, id sender) {
+                
+            };
+            accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell = accountCell;
         }
         return cell;
@@ -218,6 +224,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 0) {
+        if (indexPath.row == [self.viewHandler.mappings numberOfItemsInSection:indexPath.section]) {
+            return 50.0;
+        } else {
+            return [XMPPAccountCell cellHeight];
+        }
+    }
     return 50.0;
 }
 
@@ -231,19 +244,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (indexPath.section == 0) { // Accounts
         if (indexPath.row == [self.viewHandler.mappings numberOfItemsInSection:0]) {
             [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
-        } else {
-            OTRAccount *account = [self accountAtIndexPath:indexPath];
-            
-            BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
-            if (!connected) {
-                OTRBaseLoginViewController *baseLoginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
-                baseLoginViewController.showsCancelButton = YES;
-                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:baseLoginViewController];
-                navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-                [self presentViewController:navigationController animated:YES completion:nil];
-            } else {
-                [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
-            }
         }
     } else {
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
@@ -286,6 +286,19 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma - mark Other Methods
 
+- (void) showAccountDetailsView:(OTRXMPPAccount*)account {
+    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    OTRXMPPManager *xmpp = nil;
+    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+        xmpp = (OTRXMPPManager*)protocol;
+    }
+    OTRServerCheck *check = xmpp.serverCheck;
+    OTRAccountDetailViewController *detailVC = [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp serverCheck:check longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
+    navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
+
 -(void)showAboutScreen:(id)sender
 {
     OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
@@ -299,49 +312,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
        [self.navigationController pushViewController:aboutController animated:YES];
     }
     
-}
-
-- (void)logoutAccount:(OTRAccount *)account sender:(id)sender
-{
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING() style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        [protocol disconnect];
-    }];
-    
-    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [ShareController shareAccount:account sender:sender viewController:self];
-    }];
-#warning Unlocalized string!
-    UIAlertAction *serverInfoAction = [UIAlertAction actionWithTitle:@"Server Info" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        OTRServerCapabilities *caps = nil;
-        XMPPPushModule *xmppPush = nil;
-        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
-            caps = xmpp.serverCapabilities;
-            xmppPush = xmpp.xmppPushModule;
-        }
-        PushController *push = [OTRProtocolManager sharedInstance].pushController;
-        OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:caps push:push xmppPush:xmppPush];
-        ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:scvc];
-        [self presentViewController:nav animated:YES completion:nil];
-    }];
-    
-    [alertController addAction:serverInfoAction];
-    [alertController addAction:shareAction];
-    [alertController addAction:logoutAlertAction];
-    [alertController addAction:cancelAlertAction];
-    
-    if ([sender isKindOfClass:[UIView class]]) {
-        UIView *senderView = (UIView *)sender;
-        alertController.popoverPresentationController.sourceRect = senderView.bounds;
-        alertController.popoverPresentationController.sourceView = senderView;
-    }
-    
-    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void) addAccount:(id)sender {
@@ -390,10 +360,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-#warning Hardcoded Whitelabel Value
-    NSURL *paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"];
-#warning Hardcoded Whitelabel Value
-    NSURL *bitcoinURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
+    NSURL *paypalURL = [OTRBranding paypalURL];
+    NSURL *bitcoinURL = [OTRBranding bitcoinURL];
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -417,6 +385,19 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     alertController.popoverPresentationController.sourceRect = cell.bounds;
     
     [self presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma - mark OTRAttachmentPickerDelegate
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info {
+    
+}
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL { }
+
+- (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
+{
+    return @[(NSString*)kUTTypeImage];
 }
 
 #pragma - mark OTRShareSettingDelegate Method
@@ -443,8 +424,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-#warning Hardcoded Whitelabel Value
-        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+        UVConfig *config = [UVConfig configWithSite:[OTRBranding userVoiceSite]];
         [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
     }];
     

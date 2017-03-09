@@ -113,6 +113,25 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return [[self defaultPlist] objectForKey:GOOGLE_APP_SCOPE];
 }
 
+/** UserVoice Site */
++ (nullable NSString*) userVoiceSite {
+    return [[self defaultPlist] objectForKey:@"UserVoiceSite"];
+}
+
+/** PayPal donation URL */
++ (nullable NSURL*) paypalURL {
+    NSString *urlString = [[self defaultPlist] objectForKey:@"PayPalURL"];
+    if (!urlString) { return nil; }
+    return [NSURL URLWithString:urlString];
+}
+
+/** Bitcoin donation URL (e.g. Coinbase) */
++ (nullable NSURL*) bitcoinURL {
+    NSString *urlString = [[self defaultPlist] objectForKey:@"BitcoinURL"];
+    if (!urlString) { return nil; }
+    return [NSURL URLWithString:urlString];
+}
+
 + (NSDictionary*) defaultPlist {
     // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];

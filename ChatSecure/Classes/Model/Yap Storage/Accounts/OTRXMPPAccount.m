@@ -21,9 +21,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 @synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
 @synthesize photoHash = _photoHash;
 
-- (instancetype)init
-{
-    if (self = [super init]) {
+- (instancetype) initWithUsername:(NSString *)username accountType:(OTRAccountType)accountType {
+    if (self = [super initWithUsername:username accountType:accountType]) {
         _port = [[self class] defaultPort];
         _resource = [[self class] newResource];
         self.autologin = YES;
@@ -32,23 +31,9 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return self;
 }
 
-- (OTRProtocolType)protocolType
-{
-    return OTRProtocolTypeXMPP;
-}
-
-- (NSString *)protocolTypeString
-{
-    return kOTRProtocolTypeXMPP;
-}
-
 - (UIImage *)accountImage
 {
     return [UIImage imageNamed:OTRXMPPImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
-}
-- (NSString *)accountDisplayName
-{
-    return JABBER_STRING();
 }
 
 - (Class)protocolClass {

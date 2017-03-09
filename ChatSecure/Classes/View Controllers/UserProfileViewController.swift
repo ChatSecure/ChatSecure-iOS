@@ -28,7 +28,7 @@ open class UserProfileViewController: XLFormViewController {
     lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
         var account:OTRAccount? = nil
         self.connection.read { (transaction) in
-            account = OTRAccount.fetch(withUniqueID: self.accountKey, transaction: transaction)
+            account = OTRAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
         }
         
         guard let acct = account else {

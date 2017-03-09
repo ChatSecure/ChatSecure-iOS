@@ -37,8 +37,7 @@
         
         [transaction removeAllObjectsInAllCollections];
         
-        OTRXMPPAccount *account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-        account.username = accountName;
+        OTRXMPPAccount *account = [[OTRXMPPAccount alloc] initWithUsername:accountName accountType:OTRAccountTypeJabber];
         [account saveWithTransaction:transaction];
         
         NSArray *avatarImageNames = @[@"avatar_fox",@"avatar_otter",@"avatar_badger"];

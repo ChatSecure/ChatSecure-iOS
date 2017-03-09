@@ -202,7 +202,7 @@ import YapDatabase
             //Strong self work here
             var bud:OTRBuddy? = nil
             strongSelf.databaseConnection.read { (transaction) in
-                bud = OTRBuddy.fetch(withUniqueID: buddyYapKey, transaction: transaction)
+                bud = OTRBuddy.fetchObject(withUniqueID: buddyYapKey, transaction: transaction)
             }
             
             guard let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud else {
@@ -446,14 +446,14 @@ import YapDatabase
                 buddy.save(with: transaction)
                 
                 //Update device last received message
-                guard let device = OTROMEMODevice.fetch(withUniqueID: deviceYapKey, transaction: transaction) else {
+                guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction) else {
                     return
                 }
                 let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: Date())
                 newDevice.save(with: transaction)
                 
                 // Send delivery receipt
-                guard let account = OTRAccount.fetch(withUniqueID: buddy.accountUniqueId, transaction: transaction) else {
+                guard let account = OTRAccount.fetchObject(withUniqueID: buddy.accountUniqueId, transaction: transaction) else {
                     return
                 }
                 guard let protocolManager = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {

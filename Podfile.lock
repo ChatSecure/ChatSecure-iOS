@@ -35,7 +35,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
-  - CPAProxy (1.1.0):
+  - CPAProxy (1.2.0):
     - CocoaAsyncSocket
   - FormatterKit/Resources (1.8.1)
   - FormatterKit/TimeIntervalFormatter (1.8.1):
@@ -327,7 +327,7 @@ SPEC CHECKSUMS:
   ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
   CocoaAsyncSocket: b9d5589f07baf9de8f34cc25abd4fcba28f13805
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  CPAProxy: 3a23720ca12c0725353a6cd45673fae2b460a98a
+  CPAProxy: 6aab2d0b62b74baf534b791b8d95acf7a10e950d
   FormatterKit: 11ad17b983200629246a5a466f6f1bfa2df823cb
   GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
@@ -362,7 +362,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: c984f0cdece94ef0e298363d20b36f029484e7bc
+  XMPPFramework: 544da7ab3faf7005de303708630a4e9741efb907
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b

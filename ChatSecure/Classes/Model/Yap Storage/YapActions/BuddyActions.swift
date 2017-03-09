@@ -43,7 +43,7 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
                 
                 var account:OTRAccount? = nil
                 connection.read({ (transaction) -> Void in
-                    account = OTRAccount.fetch(withUniqueID: buddy.accountUniqueId, transaction: transaction)
+                    account = OTRAccount.fetchObject(withUniqueID: buddy.accountUniqueId, transaction: transaction)
                 })
                 
                 guard let acct = account else {
@@ -59,7 +59,7 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
                     })
                     return
                 }
-                if proto.connectionStatus() == .connected {
+                if proto.connectionStatus == .connected {
                     proto.removeBuddies([buddy])
                     connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)

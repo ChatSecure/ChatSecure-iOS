@@ -58,6 +58,10 @@
         
 #if DEBUG
         NSURL *pushAPIEndpoint = [OTRBranding pushStagingAPIURL];
+        if (!pushAPIEndpoint) {
+            // This should only happen within test environment
+            pushAPIEndpoint = [NSURL new];
+        }
 #else
         NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
 #endif

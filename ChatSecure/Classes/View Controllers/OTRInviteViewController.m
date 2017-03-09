@@ -50,36 +50,36 @@ static CGFloat const kOTRButtonHeight = 40;
 
 - (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     NSAssert(NO, @"Not supported");
-    return [self initWithAccount:[[OTRAccount alloc] init]];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
+    return [self initWithAccount:[OTRAccount accountWithUsername:@"" accountType:OTRAccountTypeNone]];
 }
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder {
     NSAssert(NO, @"Not supported");
-    return [self initWithAccount:[[OTRAccount alloc] init]];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil];
+    return [self initWithAccount:[OTRAccount accountWithUsername:@"" accountType:OTRAccountTypeNone]];
 }
 
 - (void) setupServerCheck {
     id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
     OTRXMPPManager *xmpp = nil;
-    PushController *push = nil;
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
-        push = [OTRProtocolManager sharedInstance].pushController;
+        _serverCheck = xmpp.serverCheck;
     }
-    if (!xmpp || !push) {
-        return;
-    }
-    _serverCheck = [[OTRServerCheck alloc] initWithXmppManager:xmpp push:push];
     NSParameterAssert(_serverCheck != nil);
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationItem setHidesBackButton:YES animated:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:OTRServerCheck.UpdateNotificationName object:self.serverCheck];
+    [self refreshWarningButton];
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.navigationItem setHidesBackButton:NO animated:animated];
 }
 
@@ -113,23 +113,19 @@ static CGFloat const kOTRButtonHeight = 40;
     [self.view setNeedsUpdateConstraints];
 }
 
-- (void) setupWarningButton {
-#warning Non-localized String
-    _warningButton = [self buttonWithIcon:FAWarning title:@"Push Warning" type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
-    
-    __weak typeof(self) weakSelf = self;
-    self.serverCheck.checkStatusUpdate = ^(ServerCheckStatus status) {
-        __typeof__(self) strongSelf = weakSelf;
-        if (!strongSelf) { return; }
-        [strongSelf refreshWarningButton:status];
-    };
-    ServerCheckStatus status = [self.serverCheck getStatus];
-    [self refreshWarningButton:status];
-    [self.view addSubview:self.warningButton];
+- (void) serverCheckUpdate:(NSNotification*)notification {
+    [self refreshWarningButton];
 }
 
-- (void) refreshWarningButton:(ServerCheckStatus)status {
-    if (status == ServerCheckStatusBroken) {
+- (void) setupWarningButton {
+    _warningButton = [self buttonWithIcon:FAWarning title:PUSH_WARNING_STRING() type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
+    self.warningButton.hidden = YES;
+    [self.view addSubview:self.warningButton];
+    [self refreshWarningButton];
+}
+
+- (void) refreshWarningButton {
+    if (self.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
         self.warningButton.hidden = NO;
     } else {
         self.warningButton.hidden = YES;
@@ -242,8 +238,7 @@ static CGFloat const kOTRButtonHeight = 40;
 
 - (void) warningButtonPressed:(id)sender {
     // Create a new ServerCheck object because ServerCapabilitiesViewController takes ownership
-    OTRServerCheck *check = [[OTRServerCheck alloc] initWithCapsModule:self.serverCheck.capsModule push:self.serverCheck.push xmppPush:self.serverCheck.xmppPush];
-    ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:check];
+    ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:self.serverCheck];
     [self.navigationController pushViewController:scvc animated:YES];
 }
 

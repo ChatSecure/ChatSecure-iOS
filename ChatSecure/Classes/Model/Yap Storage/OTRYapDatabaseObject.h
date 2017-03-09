@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol OTRYapDatabaseObject <NSObject>
+@protocol OTRYapDatabaseObjectProtocol <NSObject, NSCoding, NSCopying>
 
 @property (nonatomic, readonly) NSString *uniqueId;
 
@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)saveWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 - (void)removeWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
+/** This will fetch an updated instance of the object. If nil, it means it was deleted or not present in the db. */
+- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 
 + (nonnull NSString *)collection;
 
@@ -28,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObject>
+@interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObjectProtocol>
 
 @end
 

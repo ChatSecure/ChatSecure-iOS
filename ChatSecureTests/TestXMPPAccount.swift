@@ -12,6 +12,9 @@ import Foundation
 
 class TestXMPPAccount: OTRXMPPAccount {
     
+    override class func accountClass(for accountType: OTRAccountType) -> Swift.AnyClass? {
+        return self
+    }
     
     override class func newResource() -> String {
         return "\(arc4random())"

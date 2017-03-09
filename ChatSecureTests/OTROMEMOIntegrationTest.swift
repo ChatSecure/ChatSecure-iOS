@@ -60,8 +60,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
      */
     func setupUserWithName(_ name:String, buddyName:String) -> TestUser {
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(name)
-        let account = TestXMPPAccount()!
-        account.username = "\(name)@fake.com"
+        let account = TestXMPPAccount(username: "\(name)@fake.com", accountType: .jabber)!
         
         let buddy = OTRBuddy()!
         buddy.username = "\(buddyName)@fake.com"
@@ -147,7 +146,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             XCTAssertTrue(result)
             self.bobUser!.databaseManager.readOnlyDatabaseConnection?.read({ (transaction) in
                 let yapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection())
-                let device = OTROMEMODevice.fetch(withUniqueID: yapKey, transaction: transaction)
+                let device = OTROMEMODevice.fetchObject(withUniqueID: yapKey, transaction: transaction)
                 XCTAssertNil(device)
             })
             
