@@ -25,5 +25,6 @@
 @property (nonatomic, strong, readonly) UILabel *textLabel;
 
 @property (nonatomic, weak) id <OTRHoldToTalkViewStateDelegate> delegate;
+- (BOOL) isInTouch;
 
 @end
