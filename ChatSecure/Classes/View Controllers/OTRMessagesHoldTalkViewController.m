@@ -280,7 +280,9 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
     //start Recording
     [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (granted) {
+            if (![view isInTouch]) {
+                // Abort this, no longer in touch
+            } else if (granted) {
                 [self addRecordingBackgroundView];
                 [self addTrashViewItems];
                 NSString *temporaryPath = NSTemporaryDirectory();
