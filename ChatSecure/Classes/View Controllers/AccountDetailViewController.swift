@@ -135,6 +135,10 @@ public class AccountDetailViewController: UITableViewController {
         }
         alert.addAction(cancel)
         alert.addAction(delete)
+        if let sourceView = sender as? UIView {
+            alert.popoverPresentationController?.sourceView = sourceView;
+            alert.popoverPresentationController?.sourceRect = sourceView.bounds;
+        }
         present(alert, animated: true, completion: nil)
     }
     
@@ -150,6 +154,10 @@ public class AccountDetailViewController: UITableViewController {
         }
         alert.addAction(cancel)
         alert.addAction(logout)
+        if let sourceView = sender as? UIView {
+            alert.popoverPresentationController?.sourceView = sourceView;
+            alert.popoverPresentationController?.sourceRect = sourceView.bounds;
+        }
         present(alert, animated: true, completion: nil)
     }
     
@@ -240,6 +248,10 @@ public class AccountDetailViewController: UITableViewController {
             detail.action(tableView, indexPath, cell)
             return
         case .invite, .delete, .loginlogout:
+            self.tableView.deselectRow(at: indexPath, animated: true)
+            if let cell = self.tableView(tableView, cellForRowAt: indexPath) as? SingleButtonTableViewCell, let action = cell.buttonAction {
+                action(cell, cell.button)
+            }
             break
         }
     }
@@ -321,7 +333,7 @@ public class AccountDetailViewController: UITableViewController {
             return SingleButtonTableViewCell()
         }
         cell.button.setTitleColor(nil, for: .normal)
-        cell.selectionStyle = .none
+        cell.selectionStyle = .default
         cell.button.isEnabled = true
         return cell
     }
