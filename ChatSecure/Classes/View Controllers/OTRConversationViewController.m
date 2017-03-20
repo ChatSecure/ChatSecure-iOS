@@ -281,8 +281,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     XMPPJID *jid = [XMPPJID jidWithString:request.jid];
     if (approved) {
         // Create new buddy in database so it can be shown immediately in list
+        __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:request.jid withAccountUniqueId:account.uniqueId transaction:transaction];
+            buddy = [OTRXMPPBuddy fetchBuddyWithUsername:request.jid withAccountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = request.jid;
@@ -294,13 +295,20 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             [buddy saveWithTransaction:transaction];
         }];
         [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [request removeWithTransaction:transaction];
+            if (buddy != nil && [self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate conversationViewController:self didSelectThread:buddy];
+                });
+            }
+        }];
     } else {
         [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [request removeWithTransaction:transaction];
+        }];
     }
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [request removeWithTransaction:transaction];
-    }];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
