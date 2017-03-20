@@ -384,7 +384,9 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         NSArray<NSXMLElement*> *features = [query elementsForName:@"feature"];
         [features enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull feature, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *value = [feature attributeStringValueForName:@"var"];
-            [allFeatures addObject:value];
+            if (value) {
+                [allFeatures addObject:value];
+            }
         }];
     }];
     [streamFeatures.children enumerateObjectsUsingBlock:^(NSXMLNode * _Nonnull node, NSUInteger idx, BOOL * _Nonnull stop) {
