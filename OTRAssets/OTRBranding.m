@@ -132,6 +132,12 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return [NSURL URLWithString:urlString];
 }
 
+/** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
++ (BOOL) shouldShowPushWarning {
+    BOOL result = [[[self defaultPlist] objectForKey:@"ShouldShowPushWarning"] boolValue];
+    return result;
+}
+
 + (NSDictionary*) defaultPlist {
     // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];

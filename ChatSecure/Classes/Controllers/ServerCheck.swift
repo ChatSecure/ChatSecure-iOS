@@ -62,6 +62,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     /// Must be called from main queue
     public func refresh() {
         result.pushInfo = nil
+        xmpp?.serverCapabilities.fetchAllCapabilities()
         fetch()
     }
     
@@ -110,7 +111,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     
     // MARK: - OTRServerCapabilitiesDelegate
     
-    @objc public func serverCapabilities(_ sender: OTRServerCapabilities, didDiscoverAllCapabilities allCapabilities: [XMPPJID : XMLElement]) {
+    @objc public func serverCapabilities(_ sender: OTRServerCapabilities, didDiscoverCapabilities capabilities: [XMPPJID : XMLElement]) {
         checkReady()
     }
     
@@ -132,7 +133,12 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
         checkReady()
     }
     
-    public func pushModuleReady(_ module: XMPPPushModule) {
+    public func pushModule(_ module: XMPPPushModule, readyWithCapabilities caps: XMLElement, jid: XMPPJID) {
+        // This _should_ be handled elsewhere in OTRServerCapabilities
+        // Not sure why it's not working properly
+        if var caps = result.capabilities {
+            caps[.XEP0357]?.status = .Available
+        }
         checkReady()
     }
 }

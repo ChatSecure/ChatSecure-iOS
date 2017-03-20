@@ -77,5 +77,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** Bitcoin donation URL (e.g. Coinbase) */
 + (nullable NSURL*) bitcoinURL;
 
+/** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
++ (BOOL) shouldShowPushWarning;
+
 @end
 NS_ASSUME_NONNULL_END

@@ -116,10 +116,14 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:OTRServerCheck.UpdateNotificationName object:nil];
     self.tableView.frame = self.view.bounds;
     [self.settingsManager populateSettings];
     [self.tableView reloadData];
+}
+
+- (void) serverCheckUpdate:(NSNotification*)notification {
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -173,7 +177,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             [accountCell setAppearanceWithAccount:account];
             
             if (xmpp.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
-                accountCell.accountNameLabel.text = [NSString stringWithFormat:@"%@  ⚠️",accountCell.accountNameLabel.text];
+                NSString *labelString = accountCell.accountNameLabel.text;
+                if ([OTRBranding shouldShowPushWarning]) {
+                    labelString = [labelString stringByAppendingString:@"  ⚠️"];
+                }
+                accountCell.accountNameLabel.text = labelString;
             }
             
             accountCell.infoButtonAction = ^(UITableViewCell *cell, id sender) {

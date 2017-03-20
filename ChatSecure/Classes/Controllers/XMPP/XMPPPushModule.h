@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /** This is called after capabilities are processed so you can safely call registerForPushWithOptions or  disablePush */
-- (void)pushModuleReady:(XMPPPushModule*)module;
+- (void)pushModule:(XMPPPushModule*)module readyWithCapabilities:(NSXMLElement *)caps jid:(XMPPJID *)jid;
 
 - (void)pushModule:(XMPPPushModule*)module
 didRegisterWithResponseIq:(XMPPIQ*)responseIq

@@ -36,5 +36,7 @@
 	<string>https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6YFSLLQGDZFXY</string>
 	<key>BitcoinURL</key>
 	<string>https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7</string>
+	<key>ShouldShowPushWarning</key>
+	<true/>
 </dict>
 </plist>

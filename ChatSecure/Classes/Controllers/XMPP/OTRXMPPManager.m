@@ -205,17 +205,17 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _serverCapabilities = [[OTRServerCapabilities alloc] init];
     [self.serverCapabilities activate:self.xmppStream];
     
-    _xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
-    _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
-    
-    self.xmppCapabilities.autoFetchHashedCapabilities = YES;
-    self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
-    self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
-    
     // Add push registration module
     _xmppPushModule = [[XMPPPushModule alloc] init];
     [self.xmppPushModule activate:self.xmppStream];
     [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
+    
+    _xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
+    _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
+    
+    self.xmppCapabilities.autoFetchHashedCapabilities = YES;
+    self.xmppCapabilities.autoFetchNonHashedCapabilities = YES;
+    self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
     
 	// Activate xmpp modules
     
@@ -884,8 +884,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         NSString *key = self.account.uniqueId;
         account = [transaction objectForKey:key inCollection:collection];
     }];
-    if (!account) { return; }
+    if (!account.pushPubsubEndpoint) { return; }
     XMPPJID *serverJID = [XMPPJID jidWithUser:nil domain:account.pushPubsubEndpoint resource:nil];
+    if (!serverJID) { return; }
     XMPPPushStatus status = [self.xmppPushModule registrationStatusForServerJID:serverJID];
     if (status != XMPPPushStatusRegistered &&
         status != XMPPPushStatusRegistering) {
@@ -893,7 +894,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     }
 }
 
-- (void)pushModuleReady:(XMPPPushModule*)module {
+- (void)pushModule:(XMPPPushModule*)module readyWithCapabilities:(NSXMLElement *)caps jid:(XMPPJID *)jid {
     // Enable XEP-0357 push bridge if server supports it
     // ..but don't register for Tor accounts
     if (self.account.accountType == OTRAccountTypeXMPPTor) {

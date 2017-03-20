@@ -145,15 +145,20 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 
 - (void) refresh {
     [self performBlockAsync:^{
+        if (xmppStream.state != STATE_XMPP_CONNECTED) {
+            XMPPLogError(@"XMPPPushModule: refresh error - not connected. %@", self);
+            return;
+        }
         [self.registrationStatus removeAllObjects];
         XMPPJID *jid = xmppStream.myJID.bareJID;
         if (!jid) { return; }
         __block BOOL supportsPush = NO;
+        __block NSXMLElement *capabilities = nil;
         [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull capsModule, BOOL * _Nonnull stop) {
             id <XMPPCapabilitiesStorage> storage = capsModule.xmppCapabilitiesStorage;
             BOOL fetched = [storage areCapabilitiesKnownForJID:jid xmppStream:xmppStream];
             if (fetched) {
-                NSXMLElement *capabilities = [storage capabilitiesForJID:jid xmppStream:xmppStream];
+                capabilities = [storage capabilitiesForJID:jid xmppStream:xmppStream];
                 if (capabilities) {
                     supportsPush = [self supportsPushFromCaps:capabilities];
                     *stop = YES;
@@ -163,7 +168,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
             }
         }];
         if (supportsPush) {
-            [multicastDelegate pushModuleReady:self];
+            [multicastDelegate pushModule:self readyWithCapabilities:capabilities jid:jid];
         }
     }];
 }
@@ -225,7 +230,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
     }
     BOOL supportsXEP = [self supportsPushFromCaps:caps];
     if (supportsXEP) {
-        [multicastDelegate pushModuleReady:self];
+        [multicastDelegate pushModule:self readyWithCapabilities:caps jid:jid];
     }
 }
 

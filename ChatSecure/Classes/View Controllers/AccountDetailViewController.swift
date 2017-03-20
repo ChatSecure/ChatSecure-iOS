@@ -76,7 +76,8 @@ public class AccountDetailViewController: UITableViewController {
     
     private func setupDetailCells() {
         var serverInfoText = SERVER_INFORMATION_STRING()
-        if serverCheck.getCombinedPushStatus() == .broken {
+        if serverCheck.getCombinedPushStatus() == .broken &&
+           OTRBranding.shouldShowPushWarning() {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
         detailCells = [

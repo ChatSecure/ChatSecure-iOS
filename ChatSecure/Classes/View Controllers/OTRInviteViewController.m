@@ -28,7 +28,7 @@ static CGFloat const kOTRButtonHeight = 40;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 
 @property (nonatomic, strong, nullable) NSArray <BButton*> *shareButtons;
-@property (nonatomic, strong, readonly) UIButton *warningButton;
+@property (nonatomic, strong, readonly) BButton *serverInfoButton;
 @property (nonatomic) BOOL addedConstraints;
 @property (nonatomic, strong, readonly) OTRServerCheck *serverCheck;
 @end
@@ -74,7 +74,7 @@ static CGFloat const kOTRButtonHeight = 40;
     [super viewWillAppear:animated];
     [self.navigationItem setHidesBackButton:YES animated:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:OTRServerCheck.UpdateNotificationName object:self.serverCheck];
-    [self refreshWarningButton];
+    [self refreshServerInfoButton];
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
@@ -108,27 +108,31 @@ static CGFloat const kOTRButtonHeight = 40;
     
     self.shareButtons = shareButtons;
     
-    [self setupWarningButton];
+    [self setupServerInfoButton];
     
     [self.view setNeedsUpdateConstraints];
 }
 
 - (void) serverCheckUpdate:(NSNotification*)notification {
-    [self refreshWarningButton];
+    [self refreshServerInfoButton];
 }
 
-- (void) setupWarningButton {
-    _warningButton = [self buttonWithIcon:FAWarning title:PUSH_WARNING_STRING() type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
-    self.warningButton.hidden = YES;
-    [self.view addSubview:self.warningButton];
-    [self refreshWarningButton];
+- (void) setupServerInfoButton {
+    _serverInfoButton = [self buttonWithIcon:FAInfoCircle title:    SERVER_INFORMATION_STRING() type:BButtonTypeDefault action:@selector(warningButtonPressed:)];
+    [self.view addSubview:self.serverInfoButton];
+    [self refreshServerInfoButton];
 }
 
-- (void) refreshWarningButton {
+- (void) refreshServerInfoButton {
+    if (![OTRBranding shouldShowPushWarning]) {
+        return;
+    }
     if (self.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
-        self.warningButton.hidden = NO;
+        [self.serverInfoButton setTitle:PUSH_WARNING_STRING() forState:UIControlStateNormal];
+        [self.serverInfoButton addAwesomeIcon:FAWarning beforeTitle:YES];
     } else {
-        self.warningButton.hidden = YES;
+        [self.serverInfoButton setTitle:SERVER_INFORMATION_STRING() forState:UIControlStateNormal];
+        [self.serverInfoButton addAwesomeIcon:FAInfoCircle beforeTitle:YES];
     }
 }
 
@@ -145,10 +149,10 @@ static CGFloat const kOTRButtonHeight = 40;
         [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kOTRInvitePadding];
         [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kOTRInvitePadding];
         
-        [self.warningButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:kOTRInvitePadding * 2];
-        [self.warningButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
-        [self.warningButton autoSetDimension:ALDimensionHeight toSize:kOTRButtonHeight];
-        [self.warningButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.shareButtons.firstObject];
+        [self.serverInfoButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:kOTRInvitePadding * 2];
+        [self.serverInfoButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.serverInfoButton autoSetDimension:ALDimensionHeight toSize:kOTRButtonHeight];
+        [self.serverInfoButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.shareButtons.firstObject];
         
         self.addedConstraints = YES;
     }
@@ -225,7 +229,7 @@ static CGFloat const kOTRButtonHeight = 40;
     [ShareController shareAccount:self.account sender:sender viewController:self];
 }
 
-- (UIButton *)buttonWithIcon:(FAIcon)icon title:(NSString *)title type:(BButtonType)type action:(SEL)action
+- (BButton *)buttonWithIcon:(FAIcon)icon title:(NSString *)title type:(BButtonType)type action:(SEL)action
 {
     
     BButton *button = [[BButton alloc] initWithFrame:CGRectZero type:type style:BButtonStyleBootstrapV3];

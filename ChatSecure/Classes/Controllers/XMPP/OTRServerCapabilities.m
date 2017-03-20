@@ -193,6 +193,10 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
  */
 - (void)fetchAllCapabilities {
     [self performBlockAsync:^{
+        if (xmppStream.state != STATE_XMPP_CONNECTED) {
+            XMPPLogError(@"OTRServerCapabilities: fetchAllCapabilities error - not connected. %@", self);
+            return;
+        }
         [self discoverServices];
         [self fetchCapabilitiesForJIDs:self.allJIDs];
     }];
@@ -207,6 +211,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         if (myJID) {
             // keep track of JIDs we care about
             [self.allJIDs addObject:myJID.bareJID]; // the spec says to use full, but I disagree
+            // [self.allJIDs addObject:myJID];
             [self.allJIDs addObject:myJID.domainJID];
         }
         if (!_autoDiscoverServices) {
@@ -291,7 +296,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
             // but for whatever reason fetching services fails.
             NSSet *allCaps = [NSSet setWithArray:self.allCapabilities.allKeys];
             if ([self.allJIDs isEqualToSet:allCaps]) {
-                [multicastDelegate serverCapabilities:self didDiscoverAllCapabilities:self.allCapabilities];
+                [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
             }
             return;
         }
@@ -317,6 +322,36 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 
 #pragma mark XMPPCapabilitiesDelegate
 
+/**
+ * Invoked when capabilities fetch has timed out.
+ *
+ * This code depends on pending upstream XMPPFramework changes
+ **/
+//- (void)xmppCapabilities:(XMPPCapabilities *)sender fetchFailedForJID:(XMPPJID *)jid {
+//    XMPPLogInfo(@"OTRServerCapabilities: Fetch failed for jid %@", [jid full]);
+//    return;
+//    [self performBlockAsync:^{
+//        NSSet<XMPPJID*>* jids = self.allJIDs;
+//        if (!jids.count) {
+//            return;
+//        }
+//        // Check if this is something we care about
+//        if (![jids containsObject:jid]) {
+//            return;
+//        }
+//        // Skip caps we've already fetched
+//        NSXMLElement *existingCaps = [self.allCapabilities objectForKey:jid];
+//        if (existingCaps) {
+//            return;
+//        }
+//        // This seems to be needed because fetching your own capabilities has been failing on the first try, but works on second try.
+//        // TODO: limit number of retries
+//        [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull obj, BOOL * _Nonnull stop) {
+//            [obj fetchCapabilitiesForJID:jid];
+//        }];
+//    }];
+//}
+
 - (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
     [self performBlockAsync:^{
         NSSet<XMPPJID*>* jids = self.allJIDs;
@@ -327,20 +362,14 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         if (![jids containsObject:jid]) {
             return;
         }
-        XMPPLogInfo(@"OTRServerCapabilities: Discovered capabilities for service %@:\n%@", [jid full], caps.prettyXMLString);
-        NSDictionary<XMPPJID*, NSXMLElement *> *oldCaps = [_allCapabilities copy];
-        NSMutableDictionary<XMPPJID*, NSXMLElement *> *newCaps = [oldCaps mutableCopy];
+        XMPPLogInfo(@"OTRServerCapabilities: Discovered capabilities for jid %@:\n%@", [jid full], caps.prettyXMLString);
+        NSMutableDictionary<XMPPJID*, NSXMLElement *> *newCaps = [self.allCapabilities mutableCopy];
         if (!newCaps) {
             newCaps = [NSMutableDictionary dictionaryWithCapacity:jids.count];
         }
         [newCaps setObject:caps forKey:jid];
         self.allCapabilities = newCaps;
-        NSSet<XMPPJID*> *fetchedJIDs = [NSSet setWithArray:newCaps.allKeys];
-        if ([fetchedJIDs isEqualToSet:jids] && ![oldCaps isEqualToDictionary:newCaps] &&
-            !_hasRequestedServices) {
-            XMPPLogInfo(@"OTRServerCapabilities: didDiscoverAllCapabilities for JIDs %@: %@", jids, self.allCapabilities);
-            [multicastDelegate serverCapabilities:self didDiscoverAllCapabilities:self.allCapabilities];
-        }
+        [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
     }];
 }
 
@@ -397,6 +426,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         }];
     }];
     self.allCapabilities = newCaps;
+    [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
+
 }
 
 - (NSSet<XMPPJID*>*) jidsFromItems:(NSArray<NSXMLElement*>*)items {
