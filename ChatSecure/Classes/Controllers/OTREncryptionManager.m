@@ -657,6 +657,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTROutgoingMessage *tagMessage = transfer.tag;
             OTROutgoingMessage *message = [OTROutgoingMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
             message.delivered = YES;
+            if (message.dateSent == nil) {
+                message.dateSent = [NSDate date];
+            }
             message.dateDelivered = [NSDate date];
             
             OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.uniqueId transaction:transaction];
