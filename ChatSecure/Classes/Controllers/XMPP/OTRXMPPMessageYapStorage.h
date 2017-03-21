@@ -11,7 +11,7 @@
 @class XMPPMessage;
 
 NS_ASSUME_NONNULL_BEGIN
-@interface OTRXMPPMessageYapStroage : XMPPModule
+@interface OTRXMPPMessageYapStorage : XMPPModule <XMPPMessageCarbonsDelegate>
 
 @property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, readonly) dispatch_queue_t moduleDelegateQueue;

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRXMPPMessageYapStroage.h"
+#import "OTRXMPPMessageYapStorage.h"
 @import XMPPFramework;
 #import "OTRLog.h"
 @import OTRKit;
@@ -19,7 +19,7 @@
 #import "OTRThreadOwner.h"
 #import "OTRBuddyCache.h"
 
-@implementation OTRXMPPMessageYapStroage
+@implementation OTRXMPPMessageYapStorage
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)connection
 {
@@ -221,6 +221,8 @@
 }
 
 #pragma - mark XMPPMessageCarbonsDelegate
+
+- (void)xmppMessageCarbons:(XMPPMessageCarbons *)xmppMessageCarbons willReceiveMessage:(XMPPMessage *)message outgoing:(BOOL)isOutgoing { }
 
 - (void)xmppMessageCarbons:(XMPPMessageCarbons *)xmppMessageCarbons didReceiveMessage:(XMPPMessage *)message outgoing:(BOOL)isOutgoing
 {
