@@ -188,6 +188,8 @@ NSString* LOGOUT_STRING() { return [OTRLanguageManager translatedString:@"Log Ou
 NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Manage ChatSecure Push account"]; }
 /** "Manage My Keys", Button to manage your OTR and OMEMO keys */
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
+/** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
+NSString* MESSAGE_COULD_NOT_BE_SENT_STRING() { return [OTRLanguageManager translatedString:@"The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."]; }
 /** "My QR Code", Your QR code */
 NSString* MY_QR_CODE() { return [OTRLanguageManager translatedString:@"My QR Code"]; }
 /** "Me",  */

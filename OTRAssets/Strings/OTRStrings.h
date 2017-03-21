@@ -188,6 +188,8 @@ FOUNDATION_EXPORT NSString* LOGOUT_STRING();
 FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
 /** "Manage My Keys", Button to manage your OTR and OMEMO keys */
 FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
+/** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
+FOUNDATION_EXPORT NSString* MESSAGE_COULD_NOT_BE_SENT_STRING();
 /** "My QR Code", Your QR code */
 FOUNDATION_EXPORT NSString* MY_QR_CODE();
 /** "Me",  */

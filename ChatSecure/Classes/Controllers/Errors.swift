@@ -104,10 +104,11 @@ extension EncryptionError: ChatSecureErrorProtocol {
 
 
 @objc public enum OTRXMPPXMLError: Int {
-    case unkownError     = 1000
+    case unknownError     = 1000
     case conflict        = 1001
     case notAcceptable   = 1002
     case policyViolation = 1003
+    case serviceUnavailable = 1004
 }
 
 extension OTRXMPPXMLError: ChatSecureErrorProtocol {
@@ -117,7 +118,7 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
     
     public func localizedDescription() -> String {
         switch self {
-        case .unkownError:
+        case .unknownError:
             return "Unknown Error"
         case .conflict:
             return "There's a conflict with the username"
@@ -125,6 +126,8 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
             return "Not enough information provided"
         case .policyViolation:
             return "Server policy violation"
+        case .serviceUnavailable:
+            return MESSAGE_COULD_NOT_BE_SENT_STRING()
         }
     }
     

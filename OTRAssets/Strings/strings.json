@@ -263,6 +263,10 @@
         "comment": "Title for button to manage ChatSecure Push account",
         "string": "Manage ChatSecure Push account"
     },
+    "MESSAGE_COULD_NOT_BE_SENT_STRING": {
+        "comment": "Explanation for why a message could not be sent.",
+        "string": "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."
+    },
     "NAME_STRING": {
         "comment": "The string describing a buddy's display name",
         "string": "Name"

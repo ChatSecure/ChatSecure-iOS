@@ -18,6 +18,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRThreadOwner.h"
 #import "OTRBuddyCache.h"
+#import "OTRXMPPError.h"
 
 @implementation OTRXMPPMessageYapStorage
 
@@ -73,61 +74,62 @@
         [xmppMessage elementForName:@"x" xmlns:@"jabber:x:conference"]) {
         return;
     }
-    
+    // We handle carbons elsewhere via XMPPMessageCarbonsDelegate
     if ([xmppMessage isMessageCarbon]) {
         return;
     }
-    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        if ([stream.tag isKindOfClass:[NSString class]]) {
-            NSString *username = [[xmppMessage from] bare];
-            
-            [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];
-            [self handleDeliverResponse:xmppMessage transaction:transaction];
-            
-            OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
-            if (!messageBuddy) {
-                // message from server
-                DDLogWarn(@"No buddy for message: %@", xmppMessage);
-                return;
-            }
-            
-            OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
-            NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
-            if([activeThreadYapKey isEqualToString:message.threadId]) {
-                message.read = YES;
-            }
-            OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
-            
-            
-            if ([xmppMessage isErrorMessage]) {
-                NSError *error = [xmppMessage errorMessage];
-                message.error = error;
+        if (![stream.tag isKindOfClass:[NSString class]]) {
+            DDLogError(@"Error - No account tag on stream %@", stream);
+            return;
+        }
+        NSString *accountId = stream.tag;
+        NSString *username = [[xmppMessage from] bare];
+        OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        if (!account) {
+            DDLogWarn(@"No account for message: %@", xmppMessage);
+            return;
+        }
+        OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
+        if (!messageBuddy) {
+            // message from server
+            DDLogWarn(@"No buddy for message: %@", xmppMessage);
+            return;
+        }
+        [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];
+        [self handleDeliverResponse:xmppMessage transaction:transaction];
+        
+        // Check if this is a bounced outgoing message / error
+        NSString *eid = [xmppMessage elementID];
+        if (eid && [xmppMessage isErrorMessage]) {
+            id<OTRMessageProtocol> existingMessage = [OTROutgoingMessage messageForMessageId:eid transaction:transaction];            
+            if ([existingMessage isKindOfClass:[OTROutgoingMessage class]]) {
+                OTROutgoingMessage *message = (OTROutgoingMessage*)existingMessage;
+                message.error = [OTRXMPPError errorForXMLElement:xmppMessage];
+                [message saveWithTransaction:transaction];
+            } else if ([existingMessage isKindOfClass:[OTRIncomingMessage class]]) {
                 NSString *errorText = [[xmppMessage elementForName:@"error"] elementForName:@"text"].stringValue;
-                if (!message.text) {
-                    if (errorText) {
-                        message.text = errorText;
-                    } else {
-                        message.text = error.localizedDescription;
-                    }
-                }
                 if ([errorText containsString:@"OTR Error"]) {
                     // automatically renegotiate a new session when there's an error
                     [[OTRProtocolManager sharedInstance].encryptionManager.otrKit initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
                 }
-                // Suppress error messages for now...
-                // [message saveWithTransaction:transaction];
-                return;
             }
-            
-            if ([self duplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
-                DDLogWarn(@"Duplicate message received: %@", xmppMessage);
-                return;
-            }
-            
-            if (message.text) {
-                [[OTRProtocolManager sharedInstance].encryptionManager.otrKit decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
-            }
+            return;
+        }
+
+        OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
+        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+        if([activeThreadYapKey isEqualToString:message.threadId]) {
+            message.read = YES;
+        }
+        
+        if ([self isDuplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
+            DDLogWarn(@"Duplicate message received: %@", xmppMessage);
+            return;
+        }
+        
+        if (message.text) {
+            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
         }
     }];
 }
@@ -162,7 +164,7 @@
     }
 }
 
-- (BOOL)duplicateMessage:(XMPPMessage *)message buddyUniqueId:(NSString *)buddyUniqueId transaction:(YapDatabaseReadWriteTransaction *)transaction
+- (BOOL)isDuplicateMessage:(XMPPMessage *)message buddyUniqueId:(NSString *)buddyUniqueId transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     __block BOOL result = NO;
     if ([message.elementID length]) {
@@ -197,7 +199,7 @@
         if (!buddy) {
             return;
         }
-        if (![self duplicateMessage:forwardedMessage buddyUniqueId:buddy.uniqueId transaction:transaction]) {
+        if (![self isDuplicateMessage:forwardedMessage buddyUniqueId:buddy.uniqueId transaction:transaction]) {
             if (incoming) {
                 [self handleChatState:forwardedMessage username:username stream:stream transaction:transaction];
                 [self handleDeliverResponse:forwardedMessage transaction:transaction];
