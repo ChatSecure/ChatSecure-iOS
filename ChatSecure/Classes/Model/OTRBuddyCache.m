@@ -17,14 +17,15 @@
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSString*> *statusMessages;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDictionary<NSString*, NSNumber*>*> *threadStatuses;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *waitingForvCardTempFetch;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDate*> *lastSeenDates;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t queue;
 
-/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
-- (void) performBlockAsync:(dispatch_block_t)block;
+/** Uses dispatch_barrier_async. Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
+- (void) performAsyncWrite:(dispatch_block_t)block;
 
-/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
-- (void) performBlock:(dispatch_block_t)block;
+/** Uses dispatch_sync. Will perform block synchronously on the internalQueue and block for result if called on another queue. */
+- (void) performSyncRead:(dispatch_block_t)block;
 
 @end
 
@@ -32,7 +33,8 @@
 
 - (instancetype) init {
     if (self = [super init]) {
-        _queue = dispatch_queue_create("OTRBuddyCache", 0);
+        // We use dispatch_barrier_async with a concurrent queue to allow for multiple-read single-write.
+        _queue = dispatch_queue_create("OTRBuddyCache", DISPATCH_QUEUE_CONCURRENT);
         
         // For safe usage of dispatch_sync
         IsOnInternalQueueKey = &IsOnInternalQueueKey;
@@ -44,6 +46,7 @@
         _statusMessages = [NSMutableDictionary dictionary];
         _threadStatuses = [NSMutableDictionary dictionary];
         _waitingForvCardTempFetch = [NSMutableDictionary dictionary];
+        _lastSeenDates = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -64,7 +67,7 @@
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
     
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         [self.chatStates setObject:@(chatState) forKey:buddy.uniqueId];
         [self touchBuddy:buddy];
     }];
@@ -75,7 +78,7 @@
     if (!buddy.uniqueId) { return OTRChatStateUnknown; }
     
     __block OTRChatState chatState = OTRChatStateUnknown;
-    [self performBlock:^{
+    [self performSyncRead:^{
         chatState = [self.chatStates objectForKey:buddy.uniqueId].unsignedIntegerValue;
     }];
     return chatState;
@@ -85,7 +88,7 @@
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
     
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         [self.lastSentChatStates setObject:@(lastSentChatState) forKey:buddy.uniqueId];
         [self touchBuddy:buddy];
     }];
@@ -96,7 +99,7 @@
     if (!buddy.uniqueId) { return OTRChatStateUnknown; }
     
     __block OTRChatState lastSentChatState = OTRChatStateUnknown;
-    [self performBlock:^{
+    [self performSyncRead:^{
         lastSentChatState = [self.lastSentChatStates objectForKey:buddy.uniqueId].unsignedIntegerValue;
     }];
     return lastSentChatState;
@@ -106,7 +109,7 @@
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
     
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         if (!statusMessage) {
             [self.statusMessages removeObjectForKey:buddy.uniqueId];
         } else {
@@ -121,7 +124,7 @@
     if (!buddy.uniqueId) { return nil; }
     
     __block NSString *statusMessage = nil;
-    [self performBlock:^{
+    [self performSyncRead:^{
         statusMessage = [self.statusMessages objectForKey:buddy.uniqueId];
     }];
     return statusMessage;
@@ -130,7 +133,7 @@
 - (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy resource:(NSString *)_resource {
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         NSString *resource = [_resource copy];
         if (!resource) {
             [self.threadStatuses removeObjectForKey:buddy.uniqueId];
@@ -148,7 +151,7 @@
     
     __block NSDictionary <NSString*,NSNumber*> *resourceInfo = nil;
 
-    [self performBlock:^{
+    [self performSyncRead:^{
         resourceInfo = [self.threadStatuses objectForKey:buddy.uniqueId];
     }];
     
@@ -175,7 +178,7 @@
 - (void)setWaitingForvCardTempFetch:(BOOL)waiting forBuddy:(OTRXMPPBuddy*)buddy {
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         [self.waitingForvCardTempFetch setObject:@(waiting) forKey:buddy.uniqueId];
         [self touchBuddy:buddy];
     }];
@@ -185,10 +188,36 @@
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return NO; }
     __block BOOL waiting = NO;
-    [self performBlock:^{
+    [self performSyncRead:^{
         waiting = [self.waitingForvCardTempFetch objectForKey:buddy.uniqueId].boolValue;
     }];
     return waiting;
+}
+
+/**
+ * Last Seen is associated with querying a presence with delayed delivery. See https://xmpp.org/extensions/xep-0318.html
+ */
+- (nullable NSDate*) lastSeenDateForBuddy:(OTRBuddy*)buddy {
+    NSParameterAssert(buddy.uniqueId);
+    if (!buddy.uniqueId) { return nil; }
+    __block NSDate *date = nil;
+    [self performSyncRead:^{
+        date = [self.lastSeenDates objectForKey:buddy.uniqueId];
+    }];
+    return date;
+}
+
+- (void) setLastSeenDate:(nullable NSDate*)date forBuddy:(OTRBuddy*)buddy {
+    NSParameterAssert(buddy.uniqueId);
+    if (!buddy.uniqueId) { return; }
+    [self performAsyncWrite:^{
+        if (date) {
+            [self.lastSeenDates setObject:date forKey:buddy.uniqueId];
+        } else {
+            [self.lastSeenDates removeObjectForKey:buddy.uniqueId];
+        }
+        [self touchBuddy:buddy];
+    }];
 }
 
 /** Clears everything for a buddy */
@@ -198,7 +227,7 @@
         return;
     }
     
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         [buddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
             [self.chatStates removeObjectForKey:buddy.uniqueId];
             [self.lastSentChatStates removeObjectForKey:buddy.uniqueId];
@@ -208,7 +237,7 @@
         }];
     }];
     
-    [self performBlockAsync:^{
+    [self performAsyncWrite:^{
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             [buddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
                 [self touchBuddy:buddy withTransaction:transaction];
@@ -234,7 +263,7 @@
 }
 
 /** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
-- (void) performBlock:(dispatch_block_t)block {
+- (void) performSyncRead:(dispatch_block_t)block {
     NSParameterAssert(block != nil);
     if (!block) { return; }
     if (dispatch_get_specific(IsOnInternalQueueKey)) {
@@ -245,13 +274,13 @@
 }
 
 /** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
-- (void) performBlockAsync:(dispatch_block_t)block {
+- (void) performAsyncWrite:(dispatch_block_t)block {
     NSParameterAssert(block != nil);
     if (!block) { return; }
     if (dispatch_get_specific(IsOnInternalQueueKey)) {
         block();
     } else {
-        dispatch_async(_queue, block);
+        dispatch_barrier_async(_queue, block);
     }
 }
 

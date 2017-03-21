@@ -37,5 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setWaitingForvCardTempFetch:(BOOL)waiting forBuddy:(OTRXMPPBuddy*)buddy;
 - (BOOL)waitingForvCardTempFetchForBuddy:(OTRXMPPBuddy*)buddy;
 
+/** 
+ * Last Seen is associated with querying a presence with delayed delivery. See https://xmpp.org/extensions/xep-0318.html
+ */
+- (nullable NSDate*) lastSeenDateForBuddy:(OTRBuddy*)buddy;
+- (void) setLastSeenDate:(nullable NSDate*)date forBuddy:(OTRBuddy*)buddy;
+
 @end
 NS_ASSUME_NONNULL_END
