@@ -51,7 +51,7 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
-    internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int?) {
+    func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int?) {
         // Use the new UserNotifications.framework on iOS 10+
         if #available(iOS 10.0, *) {
             let localNotification = UNMutableNotificationContent()
