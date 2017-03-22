@@ -11,6 +11,8 @@
 
 @class XMPPvCardTemp;
 
+extern NSString * _Nonnull const OTRBuddyPendingApprovalDidChangeNotification;
+
 @interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
 
 

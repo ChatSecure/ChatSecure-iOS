@@ -11,6 +11,8 @@
 @import XMPPFramework;
 @import OTRAssets;
 
+NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPendingApprovalDidChangeNotification";
+
 @implementation OTRXMPPBuddy
 @synthesize vCardTemp = _vCardTemp;
 @synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
