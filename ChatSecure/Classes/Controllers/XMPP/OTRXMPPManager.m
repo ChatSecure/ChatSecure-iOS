@@ -833,14 +833,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         OTRXMPPPresenceSubscriptionRequest *request = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidStrBare accontUniqueId:self.account.uniqueId transaction:transaction];
         if (!request) {
             request = [[OTRXMPPPresenceSubscriptionRequest alloc] init];
+            [[UIApplication sharedApplication] showLocalNotificationForSubscriptionRequestFrom:jidStrBare];
         }
         
         request.jid = jidStrBare;
         request.accountUniqueId = self.account.uniqueId;
         
         [request saveWithTransaction:transaction];
-        
-        [[UIApplication sharedApplication] showLocalNotificationForSubscriptionRequestFrom:jidStrBare];
     }];
 }
 
