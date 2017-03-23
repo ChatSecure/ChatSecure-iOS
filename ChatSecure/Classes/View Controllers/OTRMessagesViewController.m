@@ -865,6 +865,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
+        if (thread == nil) {
+            // this can happen when we've just approved a contact, then the thread key
+            // might have changed.
+            return;
+        }
         [thread setCurrentMessageText:text];
         [transaction setObject:thread forKey:key inCollection:collection];
         
