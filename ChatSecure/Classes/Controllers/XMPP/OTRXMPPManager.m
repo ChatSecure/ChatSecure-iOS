@@ -165,9 +165,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    OTRYapDatabaseRosterStorage * rosterStorage = [[OTRYapDatabaseRosterStorage alloc] init];
+    _xmppRosterStorage = [[OTRYapDatabaseRosterStorage alloc] init];
 	
-	_xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
+	_xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:self.xmppRosterStorage];
 	
 	self.xmppRoster.autoFetchRoster = YES;
     self.xmppRoster.autoClearAllUsersAndResources = NO;
@@ -279,12 +279,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:[OTRProtocolManager sharedInstance].pushController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buddyPendingApprovalStateChanged:) name:OTRBuddyPendingApprovalDidChangeNotification object:self.xmppRosterStorage];
     
     _serverCheck = [[OTRServerCheck alloc] initWithXmpp:self push:[OTRProtocolManager sharedInstance].pushController];
 }
 
 - (void)teardownStream
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRBuddyPendingApprovalDidChangeNotification object:self.xmppRosterStorage];
+
     [_xmppStream removeDelegate:self];
     [_xmppRoster removeDelegate:self];
     [_xmppCapabilities removeDelegate:self];
@@ -1265,6 +1268,16 @@ managedBuddyObjectID
         XMPPMessage *receiptMessage = [tempMessage generateReceiptResponse];
         [self.xmppStream sendElement:receiptMessage];
     }];
+}
+
+// A new buddy has approved us, show a local notification
+- (void) buddyPendingApprovalStateChanged:(NSNotification*)notif {
+    if (notif != nil && notif.userInfo != nil) {
+        OTRBuddy *buddy = [notif.userInfo objectForKey:@"buddy"];
+        if (buddy != nil) {
+            [[UIApplication sharedApplication] showLocalNotificationForApprovedBuddy:buddy];
+        }
+    }
 }
 
 @end

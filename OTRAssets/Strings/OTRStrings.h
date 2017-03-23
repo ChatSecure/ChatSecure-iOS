@@ -34,6 +34,8 @@ FOUNDATION_EXPORT NSString* BASIC_STRING();
 FOUNDATION_EXPORT NSString* BLOCK_AND_REMOVE_STRING();
 /** "Block", The String for a button to block a buddy */
 FOUNDATION_EXPORT NSString* BLOCK_STRING();
+/** "You and %@ are now friends.", Notification message when buddy has approved you */
+FOUNDATION_EXPORT NSString* BUDDY_APPROVED_STRING();
 /** "Buddy Info", The title for the view that shows detailed buddy info */
 FOUNDATION_EXPORT NSString* BUDDY_INFO_STRING();
 /** "Basic Setup", username section */

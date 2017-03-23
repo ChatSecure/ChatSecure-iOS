@@ -51,6 +51,10 @@
         "comment": "The String for a button to block a buddy",
         "string": "Block"
     },
+    "BUDDY_APPROVED_STRING": {
+        "comment": "Notification message when buddy has approved you",
+        "string": "You and %@ are now friends."
+    },
     "BUDDY_INFO_STRING": {
         "comment": "The title for the view that shows detailed buddy info",
         "string": "Buddy Info"
