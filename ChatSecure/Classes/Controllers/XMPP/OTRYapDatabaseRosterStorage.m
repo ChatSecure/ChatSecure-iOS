@@ -182,8 +182,8 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }];
     
     if (buddy.pendingApproval && !newBuddy.pendingApproval) {
-        // Buddy was approved
-        [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:buddy userInfo:nil];
+        // Buddy has approved us
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": newBuddy}];
     }
 }
 

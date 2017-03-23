@@ -11,6 +11,7 @@
 
 @class XMPPvCardTemp;
 
+/** Contains userInfo with buddy object in "buddy" key */
 extern NSString * _Nonnull const OTRBuddyPendingApprovalDidChangeNotification;
 
 @interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
