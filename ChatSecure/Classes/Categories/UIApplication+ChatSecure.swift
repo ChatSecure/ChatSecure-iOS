@@ -51,6 +51,18 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
+    public func showLocalNotificationForSubscriptionRequestFrom(_ jid:String?) {
+        var name = SOMEONE_STRING()
+        if let jidName = jid {
+            name = jidName
+        }
+        
+        let chatString = WANTS_TO_CHAT_STRING()
+        let text = "\(name) \(chatString)"
+        let unreadCount = self.applicationIconBadgeNumber + 1
+        self.showLocalNotificationFor(nil, text: text, unreadCount: unreadCount)
+    }
+    
     public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
         var name = SOMEONE_STRING()
         if let buddyName = (thread as? OTRBuddy)?.displayName {

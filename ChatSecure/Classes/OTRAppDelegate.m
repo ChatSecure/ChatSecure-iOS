@@ -498,6 +498,11 @@
     }
 }
 
+- (void) showSubscriptionRequestForBuddy:(NSDictionary*)userInfo {
+    // This is probably in response to a user requesting subscriptions from us
+    [self.splitViewCoordinator showConversationsViewController];
+}
+
 - (void) enterThreadWithUserInfo:(NSDictionary*)userInfo {
     NSString *threadKey = userInfo[kOTRNotificationThreadKey];
     NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
@@ -555,7 +560,12 @@
 
 - (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    [self enterThreadWithUserInfo:userInfo];
+    if (userInfo[kOTRNotificationThreadKey] == nil) {
+        // This is a subscription request
+        [self showSubscriptionRequestForBuddy:userInfo];
+    } else {
+        [self enterThreadWithUserInfo:userInfo];
+    }
     completionHandler();
 }
 

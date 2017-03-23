@@ -128,6 +128,12 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
     open func controllerDidCancel(_ viewController: OTRComposeViewController) {
         self.splitViewController?.dismiss(animated: true, completion: nil)
     }
+    
+    open func showConversationsViewController() {
+        if self.splitViewController?.presentedViewController != nil {
+            self.splitViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
 }
 
 /*

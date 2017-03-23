@@ -839,6 +839,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         request.accountUniqueId = self.account.uniqueId;
         
         [request saveWithTransaction:transaction];
+        
+        [[UIApplication sharedApplication] showLocalNotificationForSubscriptionRequestFrom:jidStrBare];
     }];
 }
 
