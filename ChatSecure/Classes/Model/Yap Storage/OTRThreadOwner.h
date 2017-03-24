@@ -9,11 +9,12 @@
 #import "OTRBaseMessage.h"
 
 typedef NS_ENUM(NSInteger, OTRThreadStatus) {
-    OTRThreadStatusAvailable    = 0,
-    OTRThreadStatusAway         = 1,
-    OTRThreadStatusDoNotDisturb = 2,
-    OTRThreadStatusExtendedAway = 3,
-    OTRThreadStatusOffline      = 4
+    OTRThreadStatusUnknown      = 0,
+    OTRThreadStatusAvailable    = 1,
+    OTRThreadStatusAway         = 2,
+    OTRThreadStatusDoNotDisturb = 3,
+    OTRThreadStatusExtendedAway = 4,
+    OTRThreadStatusOffline      = 5
 };
 
 @protocol OTRThreadOwner <NSObject>

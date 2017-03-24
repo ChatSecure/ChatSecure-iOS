@@ -129,22 +129,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.deliveryReceipts.autoSendMessageDeliveryRequests = YES;
     [self.deliveryReceipts activate:self.xmppStream];
 	
-#if !TARGET_IPHONE_SIMULATOR
-	{
-		// Want xmpp to run in the background?
-		// 
-		// P.S. - The simulator doesn't support backgrounding yet.
-		//        When you try to set the associated property on the simulator, it simply fails.
-		//        And when you background an app on the simulator,
-		//        it just queues network traffic til the app is foregrounded again.
-		//        We are patiently waiting for a fix from Apple.
-		//        If you do enableBackgroundingOnSocket on the simulator,
-		//        you will simply see an error message from the xmpp stack when it fails to set the property.
-		
-		self.xmppStream.enableBackgroundingOnSocket = YES;
-	}
-#endif
-	
 	// Setup reconnect
 	// 
 	// The XMPPReconnect module monitors for "accidental disconnections" and
@@ -280,7 +264,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:[OTRProtocolManager sharedInstance].pushController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
     
-    _serverCheck = [[OTRServerCheck alloc] initWithXmpp:self push:[OTRProtocolManager sharedInstance].pushController];
+    _serverCheck = [[ServerCheck alloc] initWithXmpp:self push:[OTRProtocolManager sharedInstance].pushController];
 }
 
 - (void)teardownStream
@@ -313,28 +297,52 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_xmppStream disconnect];
 }
 
+- (void) addIdleDate:(NSDate*)date toPresence:(XMPPPresence*)presence {
+    // Don't leak any extra info over Tor
+    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+        return;
+    }
+    NSString *nowString = [date xmppDateTimeString];
+    if (nowString) {
+        /*
+         <presence from='juliet@capulet.com/balcony'>
+         <show>away</show>
+         <idle xmlns='urn:xmpp:idle:1' since='1969-07-21T02:56:15Z'/>
+         </presence>
+         */
+        // https://xmpp.org/extensions/xep-0319.html
+        NSXMLElement *idle = [NSXMLElement elementWithName:@"idle" xmlns:@"urn:xmpp:idle:1"];
+        [idle addAttributeWithName:@"since" stringValue:nowString];
+        [presence addChild:idle];
+    }
+}
+
+/** Sends "away" presence with last idle time */
+- (void) goAway {
+    // Don't leak any extra info over Tor
+    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+        return;
+    }
+    XMPPPresence *presence = [XMPPPresence presence];
+    NSXMLElement *show = [NSXMLElement elementWithName:@"show" stringValue:@"away"];
+    [presence addChild:show];
+    NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
+    [self addIdleDate:idleDate toPresence:presence];
+    [self.xmppStream sendElement:presence];
+}
+
 - (void)goOnline
 {
-    self.connectionStatus = OTRProtocolConnectionStatusConnected;
-    NSString *accountKey = self.account.uniqueId;
-    NSString *accountCollection = [[self.account class] collection];
-    NSDictionary *userInfo = nil;
-    if(accountKey && accountCollection) {
-        userInfo = @{kOTRNotificationAccountUniqueIdKey:accountKey,kOTRNotificationAccountCollectionKey:accountCollection};
-    }
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginSuccess
-     object:self userInfo:userInfo];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
-	
-	[[self xmppStream] sendElement:presence];
+	[self.xmppStream sendElement:presence];
 }
 
 - (void)goOffline
 {
 	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
-	
-	[[self xmppStream] sendElement:presence];
+    NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
+    [self addIdleDate:idleDate toPresence:presence]; // I don't think this does anything
+	[self.xmppStream sendElement:presence];
 }
 
 - (NSString *)accountDomainWithError:(id)error;
@@ -440,7 +448,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
-        [self.xmppStream disconnect];
+        [self goAway];
+        [self.xmppStream disconnectAfterSending];
         self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
         return;
     }
@@ -499,6 +508,17 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 }
 
 #pragma mark Public Methods
+
+/** Will send a probe to fetch last seen */
+- (void) sendPresenceProbeForBuddy:(OTRBuddy*)buddy {
+    // https://xmpp.org/extensions/xep-0318.html
+    // <presence from='juliet@capulet.com/balcony' to='romeo@montague.com' type='probe' />
+    XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
+    if (!jid) { return; }
+    XMPPPresence *probe = [XMPPPresence presenceWithType:@"probe" to:jid];
+    if (!probe) { return; }
+    [self.xmppStream sendElement:probe];
+}
 
 - (void)setAvatar:(UIImage *)avatarImage completion:(void (^)(BOOL success))completion
 {
@@ -650,13 +670,23 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     }
     
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
-	[self goOnline];
-    
+    NSString *accountKey = self.account.uniqueId;
+    NSString *accountCollection = [[self.account class] collection];
+    NSDictionary *userInfo = nil;
+    if(accountKey && accountCollection) {
+        userInfo = @{kOTRNotificationAccountUniqueIdKey:accountKey,kOTRNotificationAccountCollectionKey:accountCollection};
+    }
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolLoginSuccess
+     object:self userInfo:userInfo];
     
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
-    // Refetch capabilities to check for XEP-0357 support
-    [self.xmppCapabilities fetchCapabilitiesForJID:self.xmppStream.myJID.bareJID];
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        [self goOnline];
+    } else {
+        [self goAway];
+    }
     
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
@@ -705,7 +735,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
+	DDLogVerbose(@"%@: %@\n%@", THIS_FILE, THIS_METHOD, presence.prettyXMLString);
+    
+    
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
@@ -1013,11 +1045,13 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 
 - (void) connectUserInitiated:(BOOL)userInitiated
 {
+    self.userInitiatedConnection = userInitiated;
     // Don't issue a reconnect if we're already connected and authenticated
     if ([self.xmppStream isConnected] && [self.xmppStream isAuthenticated]) {
+        XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
+        [[self xmppStream] sendElement:presence];
         return;
     }
-    self.userInitiatedConnection = userInitiated;
     [self startConnection];
     if (self.userInitiatedConnection) {
         [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];

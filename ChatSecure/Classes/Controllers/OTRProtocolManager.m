@@ -44,6 +44,7 @@
 @end
 
 @implementation OTRProtocolManager
+@synthesize lastInteractionDate = _lastInteractionDate;
 
 -(instancetype)init
 {
@@ -91,6 +92,23 @@
     [self.KVOController unobserve:protocol];
     @synchronized (self) {
         [self.protocolManagers removeObjectForKey:account.uniqueId];
+    }
+}
+
+- (NSDate*) lastInteractionDate {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        return [NSDate date];
+    }
+    @synchronized (self) {
+        return _lastInteractionDate;
+    }
+}
+
+- (void)setLastInteractionDate:(NSDate *)lastInteractionDate {
+    NSParameterAssert(lastInteractionDate != nil);
+    if (!lastInteractionDate) { return; }
+    @synchronized (self) {
+        _lastInteractionDate = lastInteractionDate;
     }
 }
 
@@ -143,8 +161,7 @@
     if (!account) { return; }
     id <OTRProtocol> protocol = [self protocolForAccount:account];
     if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
-        DDLogError(@"Account already connected %@", account);
-        return;
+        DDLogWarn(@"Account already connected %@", account);
     }
     
     if([account isKindOfClass:[OTROAuthXMPPAccount class]])
@@ -175,6 +192,17 @@
     [accounts enumerateObjectsUsingBlock:^(OTRAccount * account, NSUInteger idx, BOOL *stop) {
         [self loginAccount:account];
     }];
+}
+
+- (void)goAwayForAllAccounts {
+    @synchronized (self) {
+        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+            if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+                OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
+                [xmpp goAway];
+            }
+        }];
+    }
 }
 
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {

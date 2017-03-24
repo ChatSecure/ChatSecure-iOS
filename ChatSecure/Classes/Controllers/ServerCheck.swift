@@ -15,7 +15,6 @@ import OTRAssets
  *
  * All public members must be accessed from the main queue.
  */
-@objc(OTRServerCheck)
 public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDelegate {
     
     public weak var xmpp: OTRXMPPManager?

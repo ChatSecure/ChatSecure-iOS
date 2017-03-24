@@ -15,6 +15,7 @@
     UIColor *color = nil;
     switch(status)
     {
+        case OTRThreadStatusUnknown:
         case OTRThreadStatusOffline:
             //color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
             return nil;

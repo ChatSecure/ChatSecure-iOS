@@ -264,7 +264,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
                 break;
             case 3  :
             case 4  :
-                newStatus =OTRThreadStatusAvailable;
+                newStatus = OTRThreadStatusAvailable;
                 newStatusMessage = AVAILABLE_STRING();
                 break;
             default :
@@ -280,6 +280,25 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }
     [[OTRBuddyCache sharedInstance] setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
+    // Update Last Seen
+    NSDate *lastSeen = nil;
+    NSDate *idleDate = nil;
+    NSDate *delayedDeliveryDate = [presence delayedDeliveryDate];
+    NSXMLElement *idleElement = [presence elementForName:@"idle" xmlns:@"urn:xmpp:idle:1"];
+    NSString *idleDateString = [idleElement attributeStringValueForName:@"since"];
+    if (idleDateString) {
+        idleDate = [NSDate dateWithXmppDateTimeString:idleDateString];
+    }
+    if (newStatus == OTRThreadStatusAvailable) {
+        lastSeen = [NSDate date];
+    } else if (idleDate) {
+        lastSeen = idleDate;
+    } else if (delayedDeliveryDate) {
+        lastSeen = delayedDeliveryDate;
+    }
+    if (lastSeen) {
+        [[OTRBuddyCache sharedInstance] setLastSeenDate:lastSeen forBuddy:newBuddy];
+    }
     
     // Save if it's a new buddy
     if (newlyCreatedBuddy) {

@@ -30,7 +30,7 @@ static CGFloat const kOTRButtonHeight = 40;
 @property (nonatomic, strong, nullable) NSArray <BButton*> *shareButtons;
 @property (nonatomic, strong, readonly) BButton *serverInfoButton;
 @property (nonatomic) BOOL addedConstraints;
-@property (nonatomic, strong, readonly) OTRServerCheck *serverCheck;
+@property (nonatomic, strong, readonly) ServerCheck *serverCheck;
 @end
 
 @implementation OTRInviteViewController
@@ -73,7 +73,7 @@ static CGFloat const kOTRButtonHeight = 40;
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationItem setHidesBackButton:YES animated:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:OTRServerCheck.UpdateNotificationName object:self.serverCheck];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:ServerCheck.UpdateNotificationName object:self.serverCheck];
     [self refreshServerInfoButton];
 }
 
@@ -241,8 +241,7 @@ static CGFloat const kOTRButtonHeight = 40;
 }
 
 - (void) warningButtonPressed:(id)sender {
-    // Create a new ServerCheck object because ServerCapabilitiesViewController takes ownership
-    ServerCapabilitiesViewController *scvc = [[ServerCapabilitiesViewController alloc] initWithServerCheck:self.serverCheck];
+    OTRServerCapabilitiesViewController *scvc = [[OTRServerCapabilitiesViewController alloc] initWithServerCheck:self.serverCheck];
     [self.navigationController pushViewController:scvc animated:YES];
 }
 

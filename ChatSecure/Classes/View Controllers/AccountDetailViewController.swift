@@ -8,6 +8,7 @@
 
 import UIKit
 import OTRAssets
+import PureLayout
 
 struct DetailCellInfo {
     let title: String
@@ -29,8 +30,9 @@ enum AccountRows: Int {
 }
 
 @objc(OTRAccountDetailViewController)
-public class AccountDetailViewController: UITableViewController {
+public class AccountDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let tableView: UITableView
     var account: OTRXMPPAccount
     let longLivedReadConnection: YapDatabaseConnection
     let writeConnection: YapDatabaseConnection
@@ -38,20 +40,14 @@ public class AccountDetailViewController: UITableViewController {
     let DetailCellIdentifier = "DetailCellIdentifier"
     
     let xmpp: OTRXMPPManager
-    public var serverCheck: ServerCheck
     
-    public init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, serverCheck: ServerCheck, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
+    public init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
         self.account = account
         self.longLivedReadConnection = longLivedReadConnection
         self.writeConnection = writeConnection
         self.xmpp = xmpp
-        self.serverCheck = serverCheck
-        super.init(style: .grouped)
-    }
-    
-    public convenience init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, push: PushController, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
-        let serverCheck = ServerCheck(xmpp: xmpp, push: push)
-        self.init(account: account, xmpp: xmpp, serverCheck: serverCheck, longLivedReadConnection: longLivedReadConnection, writeConnection: writeConnection)
+        self.tableView = UITableView(frame: CGRect.zero, style: .grouped)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -63,20 +59,27 @@ public class AccountDetailViewController: UITableViewController {
         self.title = ACCOUNT_STRING()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
         navigationItem.rightBarButtonItem = doneButton
-        
+        setupTableView()
+        setupDetailCells()
+    }
+    
+    private func setupTableView() {
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.autoPinEdgesToSuperviewEdges()
         let bundle = OTRAssets.resourcesBundle()
         for identifier in [XMPPAccountCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.register(nib, forCellReuseIdentifier: identifier)
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: DetailCellIdentifier)
-        
-        setupDetailCells()
     }
     
     private func setupDetailCells() {
         var serverInfoText = SERVER_INFORMATION_STRING()
-        if serverCheck.getCombinedPushStatus() == .broken &&
+        if xmpp.serverCheck.getCombinedPushStatus() == .broken &&
            OTRBranding.shouldShowPushWarning() {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
@@ -99,7 +102,7 @@ public class AccountDetailViewController: UITableViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(loginStatusChanged(_:)), name: NSNotification.Name(rawValue: OTRXMPPLoginStatusNotificationName), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: serverCheck)
+        NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: xmpp.serverCheck)
         tableView.reloadData()
     }
     
@@ -178,7 +181,7 @@ public class AccountDetailViewController: UITableViewController {
     }
     
     func pushServerInfoView(account: OTRXMPPAccount, sender: Any) {
-        let scvc = ServerCapabilitiesViewController(serverCheck: serverCheck)
+        let scvc = ServerCapabilitiesViewController(serverCheck: xmpp.serverCheck)
         navigationController?.pushViewController(scvc, animated: true)
     }
     
@@ -188,11 +191,11 @@ public class AccountDetailViewController: UITableViewController {
 
     // MARK: - Table view data source & delegate
 
-    override public func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return TableSections.allValues.count
     }
 
-    override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let tableSection = TableSections(rawValue: section) else {
             return 0
         }
@@ -207,7 +210,7 @@ public class AccountDetailViewController: UITableViewController {
     }
 
     
-    override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
@@ -231,7 +234,7 @@ public class AccountDetailViewController: UITableViewController {
         return UITableViewCell() // this should never be reached
     }
     
-    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return
         }
@@ -257,8 +260,8 @@ public class AccountDetailViewController: UITableViewController {
         }
     }
     
-    public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height = super.tableView(tableView, heightForRowAt: indexPath)
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var height = UITableViewAutomaticDimension
         guard let section = TableSections(rawValue: indexPath.section) else {
             return height
         }

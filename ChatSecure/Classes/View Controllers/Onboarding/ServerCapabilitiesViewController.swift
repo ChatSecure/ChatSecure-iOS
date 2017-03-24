@@ -10,8 +10,10 @@ import UIKit
 import XMPPFramework
 import OTRAssets
 
-public class ServerCapabilitiesViewController: UITableViewController {
+@objc(OTRServerCapabilitiesViewController)
+public class ServerCapabilitiesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    private let tableView: UITableView
     private let check: ServerCheck
     private var capabilities: [ServerCapabilityInfo] = []
     private let tableSections: [TableSection] = [.Push, .Server]
@@ -20,7 +22,8 @@ public class ServerCapabilitiesViewController: UITableViewController {
     public init (serverCheck: ServerCheck) {
         self.check = serverCheck
         self.check.fetch()
-        super.init(style: .grouped)
+        self.tableView = UITableView(frame: CGRect.zero, style: .grouped)
+        super.init(nibName: nil, bundle: nil)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -75,18 +78,24 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupTableView()
+        self.title = Server_String()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    private func setupTableView() {
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.autoPinEdgesToSuperviewEdges()
         let bundle = OTRAssets.resourcesBundle()
         for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier(), TwoButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.register(nib, forCellReuseIdentifier: identifier)
         }
-
         tableView.allowsSelection = false
-        
-        self.title = Server_String()
-        
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
-        navigationItem.rightBarButtonItem = doneButton
     }
 
     
@@ -188,7 +197,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
     
     // MARK: - UITableViewDataSource
     
-    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch tableSections[section] {
         case .Push:
             return CHATSECURE_PUSH_STRING()
@@ -197,11 +206,11 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
     }
     
-    public override func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return tableSections.count
     }
     
-    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableSections[section] {
         case .Push:
             return cellCountForPushInfo(pushInfo: check.result.pushInfo)
@@ -210,7 +219,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
     }
     
-    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableSections[indexPath.section] {
         case .Push:
             let emptyCell = UITableViewCell()
@@ -279,7 +288,7 @@ public class ServerCapabilitiesViewController: UITableViewController {
         }
     }
     
-    public override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableSections[indexPath.section] {
         case .Push:
             if indexPath.row == 0 {

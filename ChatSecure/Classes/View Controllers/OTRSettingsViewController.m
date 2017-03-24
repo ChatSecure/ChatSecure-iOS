@@ -116,7 +116,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:OTRServerCheck.UpdateNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serverCheckUpdate:) name:ServerCheck.UpdateNotificationName object:nil];
     self.tableView.frame = self.view.bounds;
     [self.settingsManager populateSettings];
     [self.tableView reloadData];
@@ -300,8 +300,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
     }
-    OTRServerCheck *check = xmpp.serverCheck;
-    OTRAccountDetailViewController *detailVC = [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp serverCheck:check longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+    OTRAccountDetailViewController *detailVC = [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];

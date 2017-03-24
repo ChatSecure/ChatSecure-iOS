@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, readonly) NSUInteger numberOfConnectedProtocols;
 @property (atomic, readonly) NSUInteger numberOfConnectingProtocols;
 
+/** The last time user interacted with the application in the foreground */
+@property (atomic, strong, readwrite) NSDate *lastInteractionDate;
+
 @property (nonatomic, strong, readonly) OTREncryptionManager *encryptionManager;
 @property (nonatomic, strong, readonly) PushController *pushController;
 
@@ -47,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loginAccount:(OTRAccount *)account;
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated;
 - (void)loginAccounts:(NSArray<OTRAccount*> *)accounts;
+- (void)goAwayForAllAccounts;
 - (void)disconnectAllAccounts;
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
 

@@ -44,11 +44,6 @@
     [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
-- (OTRAccount *)accountWithTransaction:(YapDatabaseReadTransaction *)transaction {
-    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
-    return account;
-}
-
 // Override superclass
 - (void)setupInfoButton {
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];

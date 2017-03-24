@@ -99,6 +99,14 @@
         [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];
         [self handleDeliverResponse:xmppMessage transaction:transaction];
         
+        // If we receive a message from an online buddy that counts as them interacting with us
+        OTRThreadStatus status = [[OTRBuddyCache sharedInstance] threadStatusForBuddy:messageBuddy];
+        if (status != OTRThreadStatusOffline &&
+            ![xmppMessage hasReceiptResponse] &&
+            ![xmppMessage isErrorMessage]) {
+            [[OTRBuddyCache sharedInstance] setLastSeenDate:[NSDate date] forBuddy:messageBuddy];
+        }
+        
         // Check if this is a bounced outgoing message / error
         NSString *eid = [xmppMessage elementID];
         if (eid && [xmppMessage isErrorMessage]) {

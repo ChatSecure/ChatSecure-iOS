@@ -1001,5 +1001,8 @@
     }, "Crash_Detected_Message": {
         "comment": "",
         "string": "The app crashed last time it was launched. Send a crash report?"
+    }, "ACTIVE_STRING": {
+        "comment": "This will be displayed in the UI as 'Active 10m ago' ",
+        "string": "Active"
     }
 }

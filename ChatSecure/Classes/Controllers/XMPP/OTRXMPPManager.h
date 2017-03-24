@@ -32,7 +32,7 @@
 
 @class OTRXMPPAccount, OTRXMPPRoomManager;
 @class OTROMEMOSignalCoordinator;
-@class XMPPPushModule, OTRServerCheck;
+@class XMPPPushModule, ServerCheck;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
 @property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
-@property (nonatomic, strong, readonly) OTRServerCheck *serverCheck;
+@property (nonatomic, strong, readonly) ServerCheck *serverCheck;
 
 
 /** Call this if you want to register a new account on a compatible server */
@@ -72,6 +72,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL success))completion;
 
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
+
+/** Will send a probe to fetch last seen */
+- (void) sendPresenceProbeForBuddy:(OTRBuddy*)buddy;
+
+/** Will send an away presence with your last idle timestamp */
+- (void) goAway;
+
+/** Will send an available presence */
+- (void) goOnline;
 
 @end
 

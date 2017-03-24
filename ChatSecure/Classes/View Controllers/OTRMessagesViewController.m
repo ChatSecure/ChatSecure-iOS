@@ -25,6 +25,7 @@
 @import OTRAssets;
 #import "OTRTitleSubtitleView.h"
 @import OTRKit;
+@import FormatterKit;
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
@@ -49,6 +50,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapMessageSendAction.h"
 #import "UIViewController+ChatSecure.h"
+#import "OTRBuddyCache.h"
 @import YapDatabase;
 @import PureLayout;
 @import KVOController;
@@ -81,6 +83,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
 
+@property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
+
 @end
 
 @implementation OTRMessagesViewController
@@ -98,6 +102,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 #pragma - mark Lifecylce Methods
 
 - (void) dealloc {
+    [self.lastSeenRefreshTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -157,10 +162,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.collectionView.collectionViewLayout = layout;
     
     //Subscribe to changes in encryption state
-    __weak __typeof__(self) weakSelf = self;
+    __weak typeof(self)weakSelf = self;
     [self.KVOController observe:self.state keyPath:NSStringFromSelector(@selector(messageSecurity)) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        
         __typeof__(self) strongSelf = weakSelf;
+        if (!strongSelf) { return; }
         
         if ([object isKindOfClass:[MessagesViewControllerState class]]) {
             MessagesViewControllerState *state = (MessagesViewControllerState*)object;
@@ -199,7 +204,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
+    if (self.lastSeenRefreshTimer) {
+        [self.lastSeenRefreshTimer invalidate];
+        _lastSeenRefreshTimer = nil;
+    }
     __weak typeof(self)weakSelf = self;
+    _lastSeenRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:5 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        __typeof__(self) strongSelf = weakSelf;
+        if (!strongSelf) { return; }
+        [strongSelf refreshTitleView:[strongSelf titleView]];
+    }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
@@ -250,6 +264,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    [self.lastSeenRefreshTimer invalidate];
+    self.lastSeenRefreshTimer = nil;
     
     [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:self.threadKey colleciton:self.threadCollection];
     
@@ -311,6 +328,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
     }];
     
+    // This is set to nil so the refreshTitleView: method knows to reset username instead of last seen time
+    [self titleView].subtitleLabel.text = nil;
+    
     if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
         self.inputToolbar.contentView.textView.text = nil;
@@ -325,6 +345,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView reloadData];
     
     [self updateEncryptionState];
+    
+    [self sendPresenceProbe];
 }
 
                            
@@ -347,7 +369,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     OTRAccount *account = [self accountWithTransaction:transaction];
+    if (!account) { return nil; }
     return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+}
+
+/** Will send a probe to fetch last seen */
+- (void) sendPresenceProbe {
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    if (!xmpp || !buddy) { return; }
+    [xmpp sendPresenceProbeForBuddy:buddy];
 }
 
 - (void)updateViewWithKey:(NSString *)key collection:(NSString *)collection
@@ -465,7 +500,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     UIImage *statusImage = nil;
     if ([thread isKindOfClass:[OTRBuddy class]]) {
         OTRBuddy *buddy = (OTRBuddy*)thread;
-        titleView.subtitleLabel.text = buddy.username;
         UIColor *color = [buddy avatarBorderColor];
         if (color) { // only show online status
             statusImage = [OTRImages circleWithRadius:50
@@ -473,6 +507,44 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                       lineColor:nil
                                       fillColor:color];
         }
+        
+        dispatch_block_t refreshTimeBlock = ^{
+            __block OTRBuddy *buddy = nil;
+            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                buddy = (OTRBuddy*)[self threadObjectWithTransaction:transaction];
+            }];
+            if (![buddy isKindOfClass:[OTRBuddy class]]) {
+                return;
+            }
+            NSDate *lastSeen = [[OTRBuddyCache sharedInstance] lastSeenDateForBuddy:buddy];
+            OTRThreadStatus status = [[OTRBuddyCache sharedInstance] threadStatusForBuddy:buddy];
+            if (!lastSeen) {
+                titleView.subtitleLabel.text = buddy.username;
+                return;
+            }
+            TTTTimeIntervalFormatter *tf = [[TTTTimeIntervalFormatter alloc] init];
+            tf.presentTimeIntervalMargin = 60;
+            tf.usesAbbreviatedCalendarUnits = YES;
+            NSTimeInterval lastSeenInterval = [lastSeen timeIntervalSinceDate:[NSDate date]];
+            NSString *labelString = nil;
+            if (status == OTRThreadStatusAvailable) {
+                labelString = buddy.username;
+            } else {
+                labelString = [NSString stringWithFormat:@"%@ %@", ACTIVE_STRING(), [tf stringForTimeInterval:lastSeenInterval]];
+            }
+            titleView.subtitleLabel.text = labelString;
+        };
+        
+        // Set the username if nothing else is set.
+        // This should be cleared out when buddy is changed
+        if (!titleView.subtitleLabel.text) {
+            titleView.subtitleLabel.text = buddy.username;
+        }
+        
+        // Show an "Last seen 11 min ago" in title bar after brief delay
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            refreshTimeBlock();
+        });
     } else if ([thread isGroupThread]) {
         titleView.subtitleLabel.text = GROUP_CHAT_STRING();
     } else {
@@ -480,6 +552,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     titleView.titleImageView.image = statusImage;
+
 }
 
 /** 
