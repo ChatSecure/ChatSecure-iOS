@@ -78,35 +78,37 @@ public extension UIApplication {
     }
     
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
-        // Use the new UserNotifications.framework on iOS 10+
-        if #available(iOS 10.0, *) {
-            let localNotification = UNMutableNotificationContent()
-            localNotification.body = text
-            localNotification.badge = NSNumber(integerLiteral: unreadCount)
-            localNotification.sound = UNNotificationSound.default()
-            if let t = thread {
-                localNotification.threadIdentifier = t.threadIdentifier()
-                localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
-            }
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: nil) // Schedule the notification.
-            let center = UNUserNotificationCenter.current()
-            center.add(request, withCompletionHandler: { (error: Error?) in
-                if let error = error as NSError? {
-                    #if DEBUG
-                    NSLog("Error scheduling notification! %@", error)
-                    #endif
+        DispatchQueue.main.async {
+            // Use the new UserNotifications.framework on iOS 10+
+            if #available(iOS 10.0, *) {
+                let localNotification = UNMutableNotificationContent()
+                localNotification.body = text
+                localNotification.badge = NSNumber(integerLiteral: unreadCount)
+                localNotification.sound = UNNotificationSound.default()
+                if let t = thread {
+                    localNotification.threadIdentifier = t.threadIdentifier()
+                    localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
                 }
-            })
-        } else if(self.applicationState != .active) {
-            let localNotification = UILocalNotification()
-            localNotification.alertAction = REPLY_STRING()
-            localNotification.soundName = UILocalNotificationDefaultSoundName
-            localNotification.applicationIconBadgeNumber = unreadCount
-            localNotification.alertBody = text
-            if let t = thread {
-                localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: nil) // Schedule the notification.
+                let center = UNUserNotificationCenter.current()
+                center.add(request, withCompletionHandler: { (error: Error?) in
+                    if let error = error as NSError? {
+                        #if DEBUG
+                            NSLog("Error scheduling notification! %@", error)
+                        #endif
+                    }
+                })
+            } else if(self.applicationState != .active) {
+                let localNotification = UILocalNotification()
+                localNotification.alertAction = REPLY_STRING()
+                localNotification.soundName = UILocalNotificationDefaultSoundName
+                localNotification.applicationIconBadgeNumber = unreadCount
+                localNotification.alertBody = text
+                if let t = thread {
+                    localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+                }
+                self.presentLocalNotificationNow(localNotification)
             }
-            self.presentLocalNotificationNow(localNotification)
         }
     }
     
