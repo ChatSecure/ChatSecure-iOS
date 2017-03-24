@@ -36,6 +36,8 @@ NSString* BASIC_STRING() { return [OTRLanguageManager translatedString:@"Basic"]
 NSString* BLOCK_AND_REMOVE_STRING() { return [OTRLanguageManager translatedString:@"Block & Remove"]; }
 /** "Block", The String for a button to block a buddy */
 NSString* BLOCK_STRING() { return [OTRLanguageManager translatedString:@"Block"]; }
+/** "You and %@ are now friends.", Notification message when buddy has approved you */
+NSString* BUDDY_APPROVED_STRING() { return [OTRLanguageManager translatedString:@"You and %@ are now friends."]; }
 /** "Buddy Info", The title for the view that shows detailed buddy info */
 NSString* BUDDY_INFO_STRING() { return [OTRLanguageManager translatedString:@"Buddy Info"]; }
 /** "Basic Setup", username section */

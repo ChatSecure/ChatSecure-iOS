@@ -180,6 +180,11 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newBuddy saveWithTransaction:transaction];
     }];
+    
+    if (buddy.pendingApproval && !newBuddy.pendingApproval) {
+        // Buddy has approved us
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": newBuddy}];
+    }
 }
 
 #pragma - mark XMPPRosterStorage Methods

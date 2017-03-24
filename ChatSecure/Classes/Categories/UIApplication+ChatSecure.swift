@@ -51,6 +51,32 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
+    public func showLocalNotificationForSubscriptionRequestFrom(_ jid:String?) {
+        var name = SOMEONE_STRING()
+        if let jidName = jid {
+            name = jidName
+        }
+        
+        let chatString = WANTS_TO_CHAT_STRING()
+        let text = "\(name) \(chatString)"
+        let unreadCount = self.applicationIconBadgeNumber + 1
+        self.showLocalNotificationFor(nil, text: text, unreadCount: unreadCount)
+    }
+    
+    public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
+        var name = SOMEONE_STRING()
+        if let buddyName = (thread as? OTRBuddy)?.displayName {
+            name = buddyName
+        } else if let threadName = thread?.threadName() {
+            name = threadName
+        }
+        
+        let message = String(format: BUDDY_APPROVED_STRING(), name)
+        
+        let unreadCount = self.applicationIconBadgeNumber + 1
+        self.showLocalNotificationFor(thread, text: message, unreadCount: unreadCount)
+    }
+    
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
         // Use the new UserNotifications.framework on iOS 10+
         if #available(iOS 10.0, *) {
