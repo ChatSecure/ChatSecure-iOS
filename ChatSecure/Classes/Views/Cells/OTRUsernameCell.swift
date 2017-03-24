@@ -41,11 +41,6 @@ open class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         self.usernameField.delegate = self
     }
     
-    override open class func initialize() {
-        // Register xib
-        registerCellClass(defaultRowDescriptorType())
-    }
-    
     // MARK: XLFormBaseCell overrides
     
     override open func configure() {

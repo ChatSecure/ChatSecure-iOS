@@ -38,6 +38,8 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [OTRUsernameCell registerCellClass:[OTRUsernameCell defaultRowDescriptorType]];
+    
     self.loginAttempts = 0;
     
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];

@@ -37,8 +37,8 @@ PODS:
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
-  - FormatterKit/Resources (1.8.1)
-  - FormatterKit/TimeIntervalFormatter (1.8.1):
+  - FormatterKit/Resources (1.8.2)
+  - FormatterKit/TimeIntervalFormatter (1.8.2):
     - FormatterKit/Resources
   - GCDWebServer/CocoaLumberjack (3.3.3):
     - CocoaLumberjack (~> 2)
@@ -58,49 +58,49 @@ PODS:
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.2.0)
-  - KSCrash (1.15.3):
-    - KSCrash/Installations (= 1.15.3)
-  - KSCrash/Installations (1.15.3):
+  - KSCrash (1.15.4):
+    - KSCrash/Installations (= 1.15.4)
+  - KSCrash/Installations (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.15.3):
-    - KSCrash/Recording/Tools (= 1.15.3)
-  - KSCrash/Recording/Tools (1.15.3)
-  - KSCrash/Reporting (1.15.3):
+  - KSCrash/Recording (1.15.4):
+    - KSCrash/Recording/Tools (= 1.15.4)
+  - KSCrash/Recording/Tools (1.15.4)
+  - KSCrash/Reporting (1.15.4):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.3)
-    - KSCrash/Reporting/MessageUI (= 1.15.3)
-    - KSCrash/Reporting/Sinks (= 1.15.3)
-    - KSCrash/Reporting/Tools (= 1.15.3)
-  - KSCrash/Reporting/Filters (1.15.3):
+    - KSCrash/Reporting/Filters (= 1.15.4)
+    - KSCrash/Reporting/MessageUI (= 1.15.4)
+    - KSCrash/Reporting/Sinks (= 1.15.4)
+    - KSCrash/Reporting/Tools (= 1.15.4)
+  - KSCrash/Reporting/Filters (1.15.4):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.3)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.3)
-    - KSCrash/Reporting/Filters/Base (= 1.15.3)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.3)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.3)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.3)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.3)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.3)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.3)
-  - KSCrash/Reporting/Filters/Alert (1.15.3):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.3):
+    - KSCrash/Reporting/Filters/Alert (= 1.15.4)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.4)
+    - KSCrash/Reporting/Filters/Base (= 1.15.4)
+    - KSCrash/Reporting/Filters/Basic (= 1.15.4)
+    - KSCrash/Reporting/Filters/GZip (= 1.15.4)
+    - KSCrash/Reporting/Filters/JSON (= 1.15.4)
+    - KSCrash/Reporting/Filters/Sets (= 1.15.4)
+    - KSCrash/Reporting/Filters/Stringify (= 1.15.4)
+    - KSCrash/Reporting/Filters/Tools (= 1.15.4)
+  - KSCrash/Reporting/Filters/Alert (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.3):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.3):
+  - KSCrash/Reporting/Filters/AppleFmt (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.3):
+  - KSCrash/Reporting/Filters/Base (1.15.4):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.3):
+  - KSCrash/Reporting/Filters/GZip (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.3):
+  - KSCrash/Reporting/Filters/JSON (1.15.4):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -108,18 +108,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.3):
+  - KSCrash/Reporting/Filters/Stringify (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.3):
+  - KSCrash/Reporting/Filters/Tools (1.15.4):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.3):
+  - KSCrash/Reporting/MessageUI (1.15.4):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.3):
+  - KSCrash/Reporting/Sinks (1.15.4):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.3):
+  - KSCrash/Reporting/Tools (1.15.4):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libidn (1.33)
@@ -238,7 +238,7 @@ DEPENDENCIES:
   - CocoaAsyncSocket (~> 7.6.0)
   - CocoaLumberjack (~> 2.3.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
-  - FormatterKit/TimeIntervalFormatter
+  - FormatterKit/TimeIntervalFormatter (~> 1.8.2)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
@@ -328,7 +328,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: b9d5589f07baf9de8f34cc25abd4fcba28f13805
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
-  FormatterKit: 11ad17b983200629246a5a466f6f1bfa2df823cb
+  FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
   GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
@@ -338,7 +338,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
-  KSCrash: f344875321256d5906569a0853d73c6354a9f6f4
+  KSCrash: cbdf1f66c45c8dcc11154a4b1596c6cd1bfc2657
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -367,6 +367,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: 1fce2829a8a1b3ad5027b6ac20fb51b880f59bd5
+PODFILE CHECKSUM: dd16556f1d4274389bcaf64c9041872f13ad1bf8
 
 COCOAPODS: 1.2.0

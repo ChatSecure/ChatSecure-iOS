@@ -51,12 +51,12 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
-    internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int?) {
+    internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
         // Use the new UserNotifications.framework on iOS 10+
         if #available(iOS 10.0, *) {
             let localNotification = UNMutableNotificationContent()
             localNotification.body = text
-            localNotification.badge = unreadCount as NSNumber?? ?? 0
+            localNotification.badge = NSNumber(integerLiteral: unreadCount)
             localNotification.sound = UNNotificationSound.default()
             if let t = thread {
                 localNotification.threadIdentifier = t.threadIdentifier()
@@ -65,7 +65,7 @@ public extension UIApplication {
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: nil) // Schedule the notification.
             let center = UNUserNotificationCenter.current()
             center.add(request, withCompletionHandler: { (error: Error?) in
-                if let error = error as? NSError {
+                if let error = error as NSError? {
                     #if DEBUG
                     NSLog("Error scheduling notification! %@", error)
                     #endif
@@ -75,7 +75,7 @@ public extension UIApplication {
             let localNotification = UILocalNotification()
             localNotification.alertAction = REPLY_STRING()
             localNotification.soundName = UILocalNotificationDefaultSoundName
-            localNotification.applicationIconBadgeNumber = unreadCount ?? 0
+            localNotification.applicationIconBadgeNumber = unreadCount
             localNotification.alertBody = text
             if let t = thread {
                 localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]

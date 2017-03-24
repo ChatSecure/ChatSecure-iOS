@@ -298,8 +298,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 }
 
 - (void) addIdleDate:(NSDate*)date toPresence:(XMPPPresence*)presence {
-    // Don't leak any extra info over Tor
-    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+    // Don't leak any extra info over Tor or non-autologin accounts
+    if (self.account.accountType == OTRAccountTypeXMPPTor ||
+        !self.account.autologin) {
         return;
     }
     NSString *nowString = [date xmppDateTimeString];
@@ -577,8 +578,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         self.changePasswordManager = nil;
         completion(success,error);
     }];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
     [self.changePasswordManager changePassword];
-    
+#pragma clang diagnostic pop
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

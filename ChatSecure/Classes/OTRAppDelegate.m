@@ -83,6 +83,7 @@
 
 @implementation OTRAppDelegate
 @synthesize window = _window;
+@dynamic activeThreadYapKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -293,7 +294,6 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-#warning TODO: Move goAwayForAllAccounts to only happen after 90 seconds (before background timer expires)
     [[OTRProtocolManager sharedInstance] goAwayForAllAccounts];
     DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
