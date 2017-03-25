@@ -71,7 +71,7 @@ class OTRSignalTest: XCTestCase {
         let preKeyInfo = ourOutgoingBundle!.preKeys.first!
         let incomingBundle = OTROMEMOBundleIncoming(bundle: ourOutgoingBundle!.bundle, preKeyId: preKeyInfo.0, preKeyData: preKeyInfo.1)
         // 'Other' device is now able to send messages to 'Our' device
-        otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: incomingBundle)
+        try! otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: incomingBundle)
         
         let firstString = "Hi buddy"
         let data = firstString.data(using: String.Encoding.utf8)!
@@ -81,8 +81,7 @@ class OTRSignalTest: XCTestCase {
         
         // In the real world this encrypted data would be sent over the wire
         let decryptedData = try! ourEncryptionManager.decryptFromAddress(encryptedData.data, name: otherAccount.username, deviceId: otherEncryptionManager.registrationId)
-        let secondString = NSString(data: decryptedData, encoding: String.Encoding.utf8.rawValue) as! String
-        
+        let secondString = String(data: decryptedData, encoding: .utf8)
         XCTAssertEqual(firstString, secondString,"Equal Strings")
     
     }

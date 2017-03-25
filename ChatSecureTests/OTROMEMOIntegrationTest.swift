@@ -105,7 +105,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(messageText, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
             
             XCTAssertTrue(success,"Able to send message")
-            XCTAssertNil(error,"Error Sending \(error)")
+            XCTAssertNil(error,"Error Sending \(String(describing: error))")
             
             expectation.fulfill()
         }
