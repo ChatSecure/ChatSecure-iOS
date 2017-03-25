@@ -285,6 +285,19 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }
     [[OTRBuddyCache sharedInstance] setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
+    
+    // If this contact is pending approval but you see their presence
+    // then they're not pending anymore
+    if (newStatus != OTRThreadStatusOffline && newBuddy.pendingApproval) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRXMPPBuddy *buddy = [[OTRXMPPBuddy fetchObjectWithUniqueID:newBuddy.uniqueId transaction:transaction] copy];
+            if (!buddy) { return; }
+            buddy.pendingApproval = NO;
+            [buddy saveWithTransaction:transaction];
+        }];
+    }
+
+    
     // Update Last Seen
     NSDate *lastSeen = nil;
     NSDate *idleDate = nil;
