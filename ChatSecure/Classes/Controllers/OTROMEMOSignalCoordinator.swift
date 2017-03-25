@@ -545,7 +545,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 result = true
             } catch let err as NSError {
                 #if DEBUG
-                    NSLog("Error consuming incoming bundle %@", err)
+                    NSLog("Error consuming incoming bundle %@ %@", err, responseIq.prettyXMLString())
                 #endif
             }
             self?.callAndRemoveOutstandingBundleBlock(elementId!, success: result)

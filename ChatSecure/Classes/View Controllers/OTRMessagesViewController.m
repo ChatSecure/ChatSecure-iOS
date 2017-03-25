@@ -376,12 +376,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 /** Will send a probe to fetch last seen */
 - (void) sendPresenceProbe {
     __block OTRXMPPManager *xmpp = nil;
-    __block OTRBuddy *buddy = nil;
+    __block OTRXMPPBuddy *buddy = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         xmpp = [self xmppManagerWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
+        buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
     }];
-    if (!xmpp || !buddy) { return; }
+    if (!xmpp || ![buddy isKindOfClass:[OTRXMPPBuddy class]]) { return; }
     [xmpp sendPresenceProbeForBuddy:buddy];
 }
 

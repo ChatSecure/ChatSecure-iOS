@@ -71,6 +71,10 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
     return threadName;
 }
 
+- (nullable XMPPJID*) bareJID {
+    return [XMPPJID jidWithString:self.username];
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection

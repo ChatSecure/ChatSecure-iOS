@@ -514,11 +514,20 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark Public Methods
 
 /** Will send a probe to fetch last seen */
-- (void) sendPresenceProbeForBuddy:(OTRBuddy*)buddy {
+- (void) sendPresenceProbeForBuddy:(OTRXMPPBuddy*)buddy {
+    NSParameterAssert(buddy);
+    if (!buddy) { return; }
+    XMPPJID *jid = buddy.bareJID;
+    if (!jid) { return; }
+    
+    // We can't probe presence if we are still pending approval, so resend the request.
+    if (buddy.pendingApproval) {
+        [self.xmppRoster subscribePresenceToUser:jid];
+        return;
+    }
+    
     // https://xmpp.org/extensions/xep-0318.html
     // <presence from='juliet@capulet.com/balcony' to='romeo@montague.com' type='probe' />
-    XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
-    if (!jid) { return; }
     XMPPPresence *probe = [XMPPPresence presenceWithType:@"probe" to:jid];
     if (!probe) { return; }
     [self.xmppStream sendElement:probe];

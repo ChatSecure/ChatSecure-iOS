@@ -23,7 +23,7 @@
 @import Foundation;
 @import UIKit;
 @import XMPPFramework;
-#import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRProtocol.h"
@@ -73,8 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
 
-/** Will send a probe to fetch last seen */
-- (void) sendPresenceProbeForBuddy:(OTRBuddy*)buddy;
+/** Will try to send a probe to fetch last seen. If buddy is still pendingApproval it will retry subscription request. */
+- (void) sendPresenceProbeForBuddy:(OTRXMPPBuddy*)buddy;
 
 /** Will send an away presence with your last idle timestamp */
 - (void) goAway;
