@@ -92,13 +92,13 @@ extension OTRAccountSignalEncryptionManager {
     /**
      * This processes fetched OMEMO bundles. After you consume a bundle you can then create preKeyMessages to send to the contact.
      */
-    public func consumeIncomingBundle(_ name:String, bundle:OTROMEMOBundleIncoming) {
+    public func consumeIncomingBundle(_ name:String, bundle:OTROMEMOBundleIncoming) throws {
         let deviceId = Int32(bundle.bundle.deviceId)
         let incomingAddress = SignalAddress(name: name.lowercased(), deviceId: deviceId)
         let sessionBuilder = SignalSessionBuilder(address: incomingAddress, context: self.signalContext)
         let preKeyBundle = SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData as Data, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey as Data, signature: bundle.bundle.signedPreKeySignature as Data, identityKey: bundle.bundle.publicIdentityKey as Data)
         
-        sessionBuilder.processPreKeyBundle(preKeyBundle)
+        return try sessionBuilder.processPreKeyBundle(preKeyBundle)
     }
     
     public func encryptToAddress(_ data:Data, name:String, deviceId:UInt32) throws -> SignalCiphertext {

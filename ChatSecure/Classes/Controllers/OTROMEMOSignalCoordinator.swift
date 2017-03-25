@@ -539,8 +539,16 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             let preKey = bundle.preKeys[index]
             let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
-            self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
-            self?.callAndRemoveOutstandingBundleBlock(elementId!, success: true)
+            var result = false
+            do {
+                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
+                result = true
+            } catch let err as NSError {
+                #if DEBUG
+                    NSLog("Error consuming incoming bundle %@", err)
+                #endif
+            }
+            self?.callAndRemoveOutstandingBundleBlock(elementId!, success: result)
         }
         
     }
