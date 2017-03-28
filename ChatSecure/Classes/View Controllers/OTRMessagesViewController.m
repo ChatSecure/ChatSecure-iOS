@@ -208,13 +208,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.lastSeenRefreshTimer invalidate];
         _lastSeenRefreshTimer = nil;
     }
-    __weak typeof(self)weakSelf = self;
-    _lastSeenRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:5 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        __typeof__(self) strongSelf = weakSelf;
-        if (!strongSelf) { return; }
-        [strongSelf refreshTitleView:[strongSelf titleView]];
-    }];
+    _lastSeenRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(refreshTitleTimerUpdate:) userInfo:nil repeats:YES];
     
+    __weak typeof(self)weakSelf = self;
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         __block NSString *accountKey = nil;
@@ -485,6 +481,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     return [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
 }
+
+- (void)refreshTitleTimerUpdate:(NSTimer*)timer {
+    [self refreshTitleView:[self titleView]];
+}
+
 /** Updates the title view with the current thread information on this view controller*/
 - (void)refreshTitleView:(OTRTitleSubtitleView *)titleView
 {
