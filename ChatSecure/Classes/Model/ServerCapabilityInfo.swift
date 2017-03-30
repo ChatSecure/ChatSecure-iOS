@@ -22,6 +22,8 @@ public enum CapabilityCode: String {
     case XEP0198 = "XEP-0198"
     /// XEP-0357: Push
     case XEP0357 = "XEP-0357"
+    /// XEP-0363: HTTP File Upload https://xmpp.org/extensions/xep-0363.html
+    case XEP0363 = "XEP-0363"
 }
 
 @objc(OTRServerCapabilityInfo)
@@ -61,6 +63,12 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
             subtitle: "\(CapabilityCode.XEP0357.rawValue): Provides push messaging support.",
             xmlns: "urn:xmpp:push",
             url: NSURL(string: "https://xmpp.org/extensions/xep-0357.html")!)
+        caps[.XEP0363] = ServerCapabilityInfo(
+            code: .XEP0363,
+            title: "HTTP File Upload",
+            subtitle: "\(CapabilityCode.XEP0363.rawValue): Provides file transfer for media messaging.",
+            xmlns: XMPPHTTPFileUploadNamespace,
+            url: NSURL(string: "https://xmpp.org/extensions/xep-0363.html")!)
         return caps
     }
     

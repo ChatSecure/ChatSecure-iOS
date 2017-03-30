@@ -131,6 +131,8 @@
 		D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D935EF0C1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
+		D936D6C91E8B0F6C003B1343 /* FileTransferManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */; };
+		D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */; };
 		D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
 		D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
 		D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
@@ -964,6 +966,8 @@
 		D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyApprovalCell.h; sourceTree = "<group>"; };
 		D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyApprovalCell.m; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileTransferManager.swift; path = ChatSecure/Classes/Controllers/FileTransferManager.swift; sourceTree = "<group>"; };
+		D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferTests.swift; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
@@ -1620,6 +1624,7 @@
 		6396AF911A169D54009F3E6C = {
 			isa = PBXGroup;
 			children = (
+				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
 				6365CEFD1E2453F6009E213F /* ChatSecureUITests */,
@@ -1683,6 +1688,7 @@
 				63917C3D1DFA20D900341D96 /* OTRModelTest.swift */,
 				6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */,
 				63F0CAFA1E60C1B40045359C /* OTRYapViewTest.swift */,
+				D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */,
 				6323C6FF1E396D1900D0FB42 /* TestImages */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 				63F614DA1BB214640083A06A /* ChatSecureTests-Bridging-Header.h */,
@@ -2557,6 +2563,7 @@
 				635E51AB1DA83AF0002B70AB /* OTRTestDatabase.swift in Sources */,
 				63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */,
 				63917C3E1DFA20D900341D96 /* OTRModelTest.swift in Sources */,
+				D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */,
 				63F0CAFB1E60C1B40045359C /* OTRYapViewTest.swift in Sources */,
 				63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */,
 				639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */,
@@ -2710,6 +2717,7 @@
 				63E413AA1CDA9E2400B17303 /* MessageQueueHandler.swift in Sources */,
 				6340431D1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift in Sources */,
 				D93DDAEC1BA79A2800CD8331 /* OTRWelcomeAccountTableViewDelegate.m in Sources */,
+				D936D6C91E8B0F6C003B1343 /* FileTransferManager.swift in Sources */,
 				D93DDAED1BA79A2800CD8331 /* OTRInviteViewController.m in Sources */,
 				D93DDAEE1BA79A2800CD8331 /* OTRAddBuddyQRCodeViewController.m in Sources */,
 				D93DDAEF1BA79A2800CD8331 /* OTRQRCodeReaderDelegate.m in Sources */,
