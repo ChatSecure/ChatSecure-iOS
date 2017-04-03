@@ -49,8 +49,9 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 
 ## Build Instructions
 
-You'll need [CocoaPods](http://cocoapods.org) for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
+You'll need [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/Carthage/Carthage) installed for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
     
+    $ brew install carthage
     $ ### gem install cocoapods # Until CocoaPods is fixed use the bundle command below instead.
     $ bundle install
     
@@ -62,6 +63,7 @@ Download the source code and **don't forget** to pull down all of the submodules
     
 Now you'll need to build the dependencies.
     
+    $ carthage bootstrap --platform ios
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
     $ ### pod install # Until CocoaPods is fixed use the bundle commands below instead.

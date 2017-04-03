@@ -153,9 +153,6 @@ PODS:
   - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
   - SAMKeychain (1.5.2)
-  - SignalProtocol-ObjC (0.1.0):
-    - SignalProtocolC (~> 0.1.0)
-  - SignalProtocolC (0.1.0)
   - SQLCipher (3.4.1):
     - SQLCipher/standard (= 3.4.1)
   - SQLCipher/common (3.4.1)
@@ -260,8 +257,6 @@ DEPENDENCIES:
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
   - SAMKeychain (~> 1.5)
-  - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
-  - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec`)
   - TTTAttributedLabel (~> 2.0)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
@@ -294,10 +289,6 @@ EXTERNAL SOURCES:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
-  SignalProtocol-ObjC:
-    :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
-  SignalProtocolC:
-    :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapTaskQueue:
@@ -354,8 +345,6 @@ SPEC CHECKSUMS:
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
-  SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
-  SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
   SQLCipher: 43d12c0eb9c57fb438749618fc3ce0065509a559
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
@@ -367,6 +356,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: dd16556f1d4274389bcaf64c9041872f13ad1bf8
+PODFILE CHECKSUM: b177f20ecfaa2590b6391d274d805b951b5c2054
 
 COCOAPODS: 1.2.0

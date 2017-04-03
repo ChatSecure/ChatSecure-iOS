@@ -420,6 +420,10 @@
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */; };
 		D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */; };
+		D99497A31E930BED0068F19D /* SignalProtocolC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A11E930BED0068F19D /* SignalProtocolC.framework */; };
+		D99497A41E930BED0068F19D /* SignalProtocolObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */; };
+		D99497A51E930BFF0068F19D /* SignalProtocolC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A11E930BED0068F19D /* SignalProtocolC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D99497A61E930BFF0068F19D /* SignalProtocolObjC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
 		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
@@ -514,6 +518,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D99497A51E930BFF0068F19D /* SignalProtocolC.framework in Embed Frameworks */,
+				D99497A61E930BFF0068F19D /* SignalProtocolObjC.framework in Embed Frameworks */,
 				D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */,
 				D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */,
 			);
@@ -992,6 +998,8 @@
 		D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRServerCapabilities.h; sourceTree = "<group>"; };
 		D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRServerCapabilities.m; sourceTree = "<group>"; };
 		D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerCapabilitiesViewController.swift; path = Onboarding/ServerCapabilitiesViewController.swift; sourceTree = "<group>"; };
+		D99497A11E930BED0068F19D /* SignalProtocolC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SignalProtocolC.framework; path = Carthage/Build/iOS/SignalProtocolC.framework; sourceTree = "<group>"; };
+		D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SignalProtocolObjC.framework; path = Carthage/Build/iOS/SignalProtocolObjC.framework; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
@@ -1061,6 +1069,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
+				D99497A31E930BED0068F19D /* SignalProtocolC.framework in Frameworks */,
+				D99497A41E930BED0068F19D /* SignalProtocolObjC.framework in Frameworks */,
 				DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1624,6 +1634,7 @@
 		6396AF911A169D54009F3E6C = {
 			isa = PBXGroup;
 			children = (
+				D99497771E9302E40068F19D /* Carthage */,
 				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
@@ -1840,6 +1851,15 @@
 				D9315CAD1BB600450077D2EE /* AddFriendsView.xib */,
 			);
 			path = OTRResources;
+			sourceTree = "<group>";
+		};
+		D99497771E9302E40068F19D /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				D99497A11E930BED0068F19D /* SignalProtocolC.framework */,
+				D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */,
+			);
+			name = Carthage;
 			sourceTree = "<group>";
 		};
 		D9AE3A0F1BA8CBFA00255537 /* OTRAssets */ = {
@@ -3163,6 +3183,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
@@ -3192,6 +3216,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;

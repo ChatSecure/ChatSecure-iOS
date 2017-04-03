@@ -1,4 +1,4 @@
-osx_image: xcode8.2
+osx_image: xcode8.3
 language: objective-c
 
 # Handle git submodules yourself
@@ -16,6 +16,7 @@ before_install:
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
   - git submodule update --init --recursive
+  - carthage bootstrap --platform ios
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
