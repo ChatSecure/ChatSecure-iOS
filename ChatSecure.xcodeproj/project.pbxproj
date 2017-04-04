@@ -115,6 +115,9 @@
 		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
 		D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */; };
 		D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D917CCDD1E553007003636B7 /* ServerCheck.swift */; };
+		D9182E371E943F24001E2BBA /* SignalProtocolC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9182E281E943EF9001E2BBA /* SignalProtocolC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9182E391E943F31001E2BBA /* SignalProtocolObjC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9182E341E943EFD001E2BBA /* SignalProtocolObjC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9182E3C1E943F60001E2BBA /* SignalProtocolObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9182E341E943EFD001E2BBA /* SignalProtocolObjC.framework */; };
 		D91C86681E4E6DEE008BD763 /* ServerCapabilityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91C86671E4E6DEE008BD763 /* ServerCapabilityInfo.swift */; };
 		D91C866B1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */; };
 		D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */; };
@@ -420,10 +423,6 @@
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */; };
 		D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */; };
-		D99497A31E930BED0068F19D /* SignalProtocolC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A11E930BED0068F19D /* SignalProtocolC.framework */; };
-		D99497A41E930BED0068F19D /* SignalProtocolObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */; };
-		D99497A51E930BFF0068F19D /* SignalProtocolC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A11E930BED0068F19D /* SignalProtocolC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D99497A61E930BFF0068F19D /* SignalProtocolObjC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
 		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
@@ -488,6 +487,41 @@
 			remoteGlobalIDString = 6396AF991A169D54009F3E6C;
 			remoteInfo = ChatSecure;
 		};
+		D9182E271E943EF9001E2BBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D92D72261E8D91CC00B478E8;
+			remoteInfo = "SignalProtocolC (iOS)";
+		};
+		D9182E291E943EF9001E2BBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D92D74201E8D94D000B478E8;
+			remoteInfo = "SignalProtocolC (macOS)";
+		};
+		D9182E311E943EFD001E2BBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D92D74571E8DAAC600B478E8;
+			remoteInfo = "SignalProtocolObjC (macOS)";
+		};
+		D9182E331E943EFD001E2BBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D92D75141E8DAC9E00B478E8;
+			remoteInfo = "SignalProtocolObjC (iOS)";
+		};
+		D9182E3A1E943F55001E2BBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D92D74D71E8DAC9E00B478E8;
+			remoteInfo = "SignalProtocolObjC (iOS)";
+		};
 		D9227C3D1BA7952100B5E1D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
@@ -518,8 +552,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D99497A51E930BFF0068F19D /* SignalProtocolC.framework in Embed Frameworks */,
-				D99497A61E930BFF0068F19D /* SignalProtocolObjC.framework in Embed Frameworks */,
+				D9182E391E943F31001E2BBA /* SignalProtocolObjC.framework in Embed Frameworks */,
+				D9182E371E943F24001E2BBA /* SignalProtocolC.framework in Embed Frameworks */,
 				D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */,
 				D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */,
 			);
@@ -954,6 +988,8 @@
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
 		D917CCDD1E553007003636B7 /* ServerCheck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCheck.swift; sourceTree = "<group>"; };
+		D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SignalProtocolC.xcodeproj; path = Carthage/Checkouts/SignalProtocolC/SignalProtocolC.xcodeproj; sourceTree = "<group>"; };
+		D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SignalProtocolObjC.xcodeproj; path = "Carthage/Checkouts/SignalProtocol-ObjC/SignalProtocolObjC.xcodeproj"; sourceTree = "<group>"; };
 		D91C86671E4E6DEE008BD763 /* ServerCapabilityInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCapabilityInfo.swift; sourceTree = "<group>"; };
 		D91C86691E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCapabilityTableViewCell.swift; sourceTree = "<group>"; };
 		D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerCapabilityTableViewCell.xib; sourceTree = "<group>"; };
@@ -998,8 +1034,6 @@
 		D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRServerCapabilities.h; sourceTree = "<group>"; };
 		D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRServerCapabilities.m; sourceTree = "<group>"; };
 		D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerCapabilitiesViewController.swift; path = Onboarding/ServerCapabilitiesViewController.swift; sourceTree = "<group>"; };
-		D99497A11E930BED0068F19D /* SignalProtocolC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SignalProtocolC.framework; path = Carthage/Build/iOS/SignalProtocolC.framework; sourceTree = "<group>"; };
-		D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SignalProtocolObjC.framework; path = Carthage/Build/iOS/SignalProtocolObjC.framework; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
@@ -1068,9 +1102,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9182E3C1E943F60001E2BBA /* SignalProtocolObjC.framework in Frameworks */,
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
-				D99497A31E930BED0068F19D /* SignalProtocolC.framework in Frameworks */,
-				D99497A41E930BED0068F19D /* SignalProtocolObjC.framework in Frameworks */,
 				DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1826,6 +1859,24 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D9182E231E943EF9001E2BBA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9182E281E943EF9001E2BBA /* SignalProtocolC.framework */,
+				D9182E2A1E943EF9001E2BBA /* SignalProtocolC.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D9182E2C1E943EFD001E2BBA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9182E321E943EFD001E2BBA /* SignalProtocolObjC.framework */,
+				D9182E341E943EFD001E2BBA /* SignalProtocolObjC.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D9227C2B1BA7952100B5E1D0 /* ChatSecureCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -1856,8 +1907,8 @@
 		D99497771E9302E40068F19D /* Carthage */ = {
 			isa = PBXGroup;
 			children = (
-				D99497A11E930BED0068F19D /* SignalProtocolC.framework */,
-				D99497A21E930BED0068F19D /* SignalProtocolObjC.framework */,
+				D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */,
+				D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */,
 			);
 			name = Carthage;
 			sourceTree = "<group>";
@@ -2182,6 +2233,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9182E3B1E943F55001E2BBA /* PBXTargetDependency */,
 				D9AE3A1F1BA8CCFA00255537 /* PBXTargetDependency */,
 			);
 			name = ChatSecureCore;
@@ -2329,6 +2381,16 @@
 			mainGroup = 6396AF911A169D54009F3E6C;
 			productRefGroup = 6396AF9B1A169D54009F3E6C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D9182E231E943EF9001E2BBA /* Products */;
+					ProjectRef = D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */;
+				},
+				{
+					ProductGroup = D9182E2C1E943EFD001E2BBA /* Products */;
+					ProjectRef = D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				6396AF991A169D54009F3E6C /* ChatSecure */,
@@ -2340,6 +2402,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D9182E281E943EF9001E2BBA /* SignalProtocolC.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SignalProtocolC.framework;
+			remoteRef = D9182E271E943EF9001E2BBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9182E2A1E943EF9001E2BBA /* SignalProtocolC.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SignalProtocolC.framework;
+			remoteRef = D9182E291E943EF9001E2BBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9182E321E943EFD001E2BBA /* SignalProtocolObjC.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SignalProtocolObjC.framework;
+			remoteRef = D9182E311E943EFD001E2BBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9182E341E943EFD001E2BBA /* SignalProtocolObjC.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SignalProtocolObjC.framework;
+			remoteRef = D9182E331E943EFD001E2BBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6365CEFA1E2453F6009E213F /* Resources */ = {
@@ -2855,6 +2948,11 @@
 			isa = PBXTargetDependency;
 			target = 6396AF991A169D54009F3E6C /* ChatSecure */;
 			targetProxy = 6396AFB41A169D54009F3E6C /* PBXContainerItemProxy */;
+		};
+		D9182E3B1E943F55001E2BBA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "SignalProtocolObjC (iOS)";
+			targetProxy = D9182E3A1E943F55001E2BBA /* PBXContainerItemProxy */;
 		};
 		D9227C3E1BA7952100B5E1D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

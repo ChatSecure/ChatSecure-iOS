@@ -9,14 +9,14 @@ git:
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
   # Fix Travis  xcodebuild exited with 65 https://github.com/travis-ci/travis-ci/issues/6675#issuecomment-257964767
-  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 6 (10.2" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
+  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 7 (10.3" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
   - echo $IOS_SIMULATOR_UDID
   - open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
   - bundle install # We need a pre-release CocoaPods version
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
   - git submodule update --init --recursive
-  - carthage bootstrap --no-use-binaries --platform ios
+  - carthage bootstrap --no-use-binaries --no-build --use-submodules --platform ios
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
@@ -35,3 +35,4 @@ before_script:
 script:
   - set -o pipefail
   - travis_retry xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" test | xcpretty -c
+  

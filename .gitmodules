@@ -22,6 +22,9 @@
 [submodule "Submodules/ChatSecure-Push-iOS"]
 	path = Submodules/ChatSecure-Push-iOS
 	url = git@github.com:ChatSecure/ChatSecure-Push-iOS.git
-[submodule "Submodules/SignalProtocol-ObjC"]
-	path = Submodules/SignalProtocol-ObjC
-	url = git@github.com:ChatSecure/SignalProtocol-ObjC.git
+[submodule "Carthage/Checkouts/SignalProtocolC"]
+	path = Carthage/Checkouts/SignalProtocolC
+	url = https://github.com/ChatSecure/SignalProtocolC.git
+[submodule "Carthage/Checkouts/SignalProtocol-ObjC"]
+	path = Carthage/Checkouts/SignalProtocol-ObjC
+	url = https://github.com/ChatSecure/SignalProtocol-ObjC.git
