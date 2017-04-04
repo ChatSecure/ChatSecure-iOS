@@ -10,17 +10,22 @@ import Foundation
 import XMPPFramework
 
 public class FileTransferManager: NSObject, XMPPHTPPFileUploadDelegate, OTRServerCapabilitiesDelegate {
-    /// This won't be set until OTRServerCapabilities has iterated the services and capabilities
-    var httpFileUpload: XMPPHTTPFileUpload?
+
+    var httpFileUpload: XMPPHTTPFileUpload
     var serverCapabilities: OTRServerCapabilities
+    private var servers: [HTTPServer] = []
     
     deinit {
+        httpFileUpload.removeDelegate(self)
         serverCapabilities.removeDelegate(self)
     }
     
     public init(serverCapabilities: OTRServerCapabilities) {
         self.serverCapabilities = serverCapabilities
+        self.httpFileUpload = XMPPHTTPFileUpload()
         super.init()
+        httpFileUpload.activate(serverCapabilities.xmppStream)
+        httpFileUpload.addDelegate(self, delegateQueue: DispatchQueue.main)
         serverCapabilities.addDelegate(self, delegateQueue: DispatchQueue.main)
         self.refreshCapabilities()
     }
@@ -29,31 +34,15 @@ public class FileTransferManager: NSObject, XMPPHTPPFileUploadDelegate, OTRServe
     
     /// This will fetch capabilities and setup XMPP transfer module if needed
     public func refreshCapabilities() {
-        if httpFileUpload != nil {
-            return
-        }
         guard let allCapabilities = serverCapabilities.allCapabilities else {
+            serverCapabilities.fetchAllCapabilities()
             return
         }
-        createHTTPUploadModuleIfNeeded(capabilities: allCapabilities)
-        if httpFileUpload != nil {
-            // this has no effect if youre not connected
-            serverCapabilities.fetchAllCapabilities()
-        }
+        servers = serversFromCapabilities(capabilities: allCapabilities)
+        serverCapabilities.fetchAllCapabilities()
     }
     
     // MARK: - Private Methods
-    
-    /// This will create the httpFileUpload object if needed
-    private func createHTTPUploadModuleIfNeeded(capabilities: [XMPPJID : XMLElement]) {
-        if httpFileUpload != nil {
-            return
-        }
-        let servers = self.serversFromCapabilities(capabilities: capabilities)
-        // Only bother with the first http server result for now
-        guard let server = servers.first else { return }
-        self.httpFileUpload = XMPPHTTPFileUpload(serviceName: server.jid.bare(), dispatchQueue: DispatchQueue.main)
-    }
     
     private func serversFromCapabilities(capabilities: [XMPPJID : XMLElement]) -> [HTTPServer] {
         var servers: [HTTPServer] = []
@@ -70,18 +59,18 @@ public class FileTransferManager: NSObject, XMPPHTPPFileUploadDelegate, OTRServe
     
     // MARK: - XMPPHTPPFileUploadDelegate
     
-    public func xmppHTTPFileUpload(_ sender: XMPPHTTPFileUpload!, didAssign slot: XMPPSlot!) {
+    public func xmppHTTPFileUpload(_ sender: XMPPHTTPFileUpload, service: XMPPJID, didAssign slot: XMPPSlot) {
         
     }
     
-    public func xmppHTTPFileUpload(_ sender: XMPPHTTPFileUpload!, didFailToAssignSlotWithError iqError: XMPPIQ!) {
+    public func xmppHTTPFileUpload(_ sender: XMPPHTTPFileUpload, service: XMPPJID, didFailToAssignSlotWithError iqError: XMPPIQ) {
         
     }
     
     // MARK: - OTRServerCapabilitiesDelegate
     
     public func serverCapabilities(_ sender: OTRServerCapabilities, didDiscoverCapabilities capabilities: [XMPPJID : XMLElement]) {
-        createHTTPUploadModuleIfNeeded(capabilities: capabilities)
+        servers = serversFromCapabilities(capabilities: capabilities)
     }
 }
 

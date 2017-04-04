@@ -972,7 +972,7 @@
 		D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyApprovalCell.h; sourceTree = "<group>"; };
 		D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyApprovalCell.m; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
-		D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileTransferManager.swift; path = ChatSecure/Classes/Controllers/FileTransferManager.swift; sourceTree = "<group>"; };
+		D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferManager.swift; sourceTree = "<group>"; };
 		D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferTests.swift; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
@@ -1180,6 +1180,7 @@
 		6331050E1A16D1A300C17BAE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
 				D917CCDD1E553007003636B7 /* ServerCheck.swift */,
 				63CBD67F1C642B6B00AC6D1F /* YapExtensions */,
 				6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */,
@@ -1635,7 +1636,6 @@
 			isa = PBXGroup;
 			children = (
 				D99497771E9302E40068F19D /* Carthage */,
-				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
 				6365CEFD1E2453F6009E213F /* ChatSecureUITests */,
