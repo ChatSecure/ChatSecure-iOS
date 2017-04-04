@@ -63,7 +63,7 @@ Download the source code and **don't forget** to pull down all of the submodules
     
 Now you'll need to build the dependencies.
     
-    $ carthage bootstrap --platform ios
+    $ carthage bootstrap --no-use-binaries --platform ios
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
     $ ### pod install # Until CocoaPods is fixed use the bundle commands below instead.

@@ -1,1 +1,1 @@
-github "ChatSecure/SignalProtocol-ObjC" "master"
+github "ChatSecure/SignalProtocol-ObjC" ~> 1.0.0

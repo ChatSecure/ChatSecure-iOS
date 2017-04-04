@@ -16,7 +16,7 @@ before_install:
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
   - git submodule update --init --recursive
-  - carthage bootstrap --platform ios
+  - carthage bootstrap --no-use-binaries --platform ios
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
