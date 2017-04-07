@@ -318,7 +318,41 @@ public class MessageQueueHandler:NSObject {
             completion(false, self.accountRetryTimeout)
         }
     }
-    
+
+    fileprivate func removeBuddyFromRoster(_ removeBuddyAction:OTRYapRemoveBuddyAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        
+        var acc:OTRAccount? = nil
+        self.databaseConnection.read({ (transaction) in
+            if let accountKey = removeBuddyAction.accountKey {
+                acc = OTRAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
+            }
+        })
+        guard let account = acc else {
+            completion(true, 0.0)
+            return
+        }
+        
+        //Get the XMPP procol manager associated with this message and therefore account
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+            completion(true, 0.0)
+            return
+        }
+        
+        //Ensure protocol is connected or if not and autologin then connnect
+        if (accountProtocol.connectionStatus == .connected) {
+            // Add the buddy to our roster
+            let jid = XMPPJID(string: removeBuddyAction.buddyJid)
+            accountProtocol.xmppRoster.removeUser(jid)
+            completion(true, 0.0)
+        } else if (account.autologin == true) {
+            self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: removeBuddyAction, timer: nil, completion: completion))
+            accountProtocol.connectUserInitiated(false)
+        } else {
+            // Retry later
+            completion(false, self.accountRetryTimeout)
+        }
+    }
+
     
     //Mark: Callback for Account
     
@@ -441,6 +475,8 @@ extension MessageQueueHandler: YapTaskQueueHandler {
                 self.sendMessage(sendMessageAction, completion: completion)
         case let addBuddyAction as OTRYapAddBuddyAction:
                 self.addBuddyToRoster(addBuddyAction, completion: completion)
+        case let removeBuddyAction as OTRYapRemoveBuddyAction:
+            self.removeBuddyFromRoster(removeBuddyAction, completion: completion)
         default: break
         }
     }

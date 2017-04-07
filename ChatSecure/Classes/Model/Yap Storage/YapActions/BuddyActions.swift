@@ -75,19 +75,8 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
 }
 
 open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
-    var buddyKey:String = ""
-    var date:Date = Date()
-    var accountKey:String?
-    
-    public override init() {
-        super.init()
-    }
-
-    public init(buddyKey:String) {
-        super.init()
-        self.buddyKey = buddyKey
-        self.date = Date()
-    }
+    open var buddyKey:String = ""
+    open var date:Date = Date()
 
     override open var uniqueId: String {
         return buddyKey
@@ -95,18 +84,6 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
 
     override open static func collection() -> String {
         return OTRYapMessageSendAction.collection()
-    }
-
-    required public init(dictionary dictionaryValue: [AnyHashable : Any]!) throws {
-        try super.init(dictionary: dictionaryValue)
-    }
-
-    required public init!(coder: NSCoder!) {
-        super.init(coder: coder)
-    }
-
-    required public init?(uniqueId: String) {
-        super.init(uniqueId: uniqueId)
     }
     
     /// The yap key of this item
@@ -141,3 +118,7 @@ open class OTRYapAddBuddyAction :OTRYapBuddyAction, YapDatabaseRelationshipNode 
     }
 }
 
+open class OTRYapRemoveBuddyAction :OTRYapBuddyAction {
+    open var accountKey:String?
+    open var buddyJid:String?
+}
