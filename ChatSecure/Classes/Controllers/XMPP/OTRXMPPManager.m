@@ -1148,9 +1148,12 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 
 - (void) addBuddy:(OTRXMPPBuddy *)newBuddy
 {
-    XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.username];
-    [self.xmppRoster addUser:newJID withNickname:newBuddy.displayName];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] initWithBuddyKey:newBuddy.uniqueId];
+        [addBuddyAction saveWithTransaction:transaction];
+    }];
 }
+
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy
 {
     XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
