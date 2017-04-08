@@ -34,10 +34,10 @@ class OTRImageTest: XCTestCase {
             return ImageInfo(name: name, image: self.imageForName(name, type: "jpg")!)
         }.forEach { (imageInfo) in
             let minSide = min(imageInfo.image.size.height, imageInfo.image.size.width)
-            let croppedImage = UIImage.otr_squareCropImage(imageInfo.image)!
+            let croppedImage = UIImage.otr_squareCropImage(imageInfo.image)
             XCTAssertTrue((croppedImage.size).equalTo(CGSize(width: minSide, height: minSide)),"Checking \(imageInfo.name) square cropping.")
             
-            let newImage = UIImage.otr_prepare(forAvatarUpload: imageInfo.image, maxSize: resizeImageSize)! 
+            let newImage = UIImage.otr_prepare(forAvatarUpload: imageInfo.image, maxSize: resizeImageSize) 
             let expectedSide = min(resizeImageSize,minSide)
             let expectedSize = CGSize(width: expectedSide, height: expectedSide)
             XCTAssertTrue((newImage.size).equalTo(expectedSize),"Checking crop and resize for \(imageInfo.name). Expected \(expectedSize). Found \(newImage.size).")

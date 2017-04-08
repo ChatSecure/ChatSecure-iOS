@@ -44,8 +44,7 @@
     
     NSArray *sampleFiles = [[NSBundle bundleForClass:[self class]] pathsForResourcesOfType:nil inDirectory:@"samples"];
     for (NSString *filePath in sampleFiles) {
-        OTRMediaItem *mediaItem = [[OTRMediaItem alloc] init];
-        mediaItem.filename = [filePath lastPathComponent];
+        OTRMediaItem *mediaItem = [[OTRMediaItem alloc] initWithFilename:[filePath lastPathComponent] mimeType:nil isIncoming:NO];
         
         self.mediaItems = [self.mediaItems arrayByAddingObject:mediaItem];
     }
