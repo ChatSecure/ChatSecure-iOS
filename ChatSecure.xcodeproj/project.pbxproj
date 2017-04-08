@@ -331,9 +331,9 @@
 		D93DDB881BA79A8B00CD8331 /* OTRXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105C41A16D1A300C17BAE /* OTRXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105C61A16D1A300C17BAE /* OTRXMPPTorAccount.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB8B1BA79A8D00CD8331 /* OTRImageItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 633620971A76E87B006E8739 /* OTRImageItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209A1A76E88C006E8739 /* OTRVideoItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB8D1BA79A8F00CD8331 /* OTRAudioItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209D1A76E89A006E8739 /* OTRAudioItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB8B1BA79A8D00CD8331 /* OTRImageItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 633620971A76E87B006E8739 /* OTRImageItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209A1A76E88C006E8739 /* OTRVideoItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8D1BA79A8F00CD8331 /* OTRAudioItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209D1A76E89A006E8739 /* OTRAudioItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB8E1BA79A9000CD8331 /* OTRStreamManagementStorageObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B916E31B7431C1003B778F /* OTRStreamManagementStorageObject.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB8F1BA79A9100CD8331 /* OTRBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CA1A16D1A300C17BAE /* OTRBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };

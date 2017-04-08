@@ -14,8 +14,19 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 
+@interface OTRImageItem()
+@property (nonatomic, readonly) CGFloat width;
+@property (nonatomic, readonly) CGFloat height;
+@end
 
 @implementation OTRImageItem
+
+- (instancetype) initWithFilename:(NSString *)filename size:(CGSize)size mimeType:(NSString *)mimeType isIncoming:(BOOL)isIncoming {
+    if (self = [super initWithFilename:filename mimeType:mimeType isIncoming:isIncoming]) {
+        self.size = size;
+    }
+    return self;
+}
 
 - (CGSize)mediaViewDisplaySize
 {
@@ -23,6 +34,15 @@
         return [[self class] normalizeWidth:self.width height:self.height];
     }
     return [super mediaViewDisplaySize];
+}
+
+- (CGSize) size {
+    return CGSizeMake(self.width, self.height);
+}
+
+- (void) setSize:(CGSize)size {
+    _width = size.width;
+    _height = size.height;
 }
 
 - (UIView *)mediaView {
@@ -42,7 +62,9 @@
                     __strong typeof(weakSelf)strongSelf = weakSelf;
                     UIImage *image = [UIImage imageWithData:data];
                     [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                    [strongSelf touchParentMessage];
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                        [strongSelf touchParentMessageWithTransaction:transaction];
+                    }];
                 }
             } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
         }];

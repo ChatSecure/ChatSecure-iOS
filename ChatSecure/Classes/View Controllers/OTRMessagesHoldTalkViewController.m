@@ -233,7 +233,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         }
     }
     
-    if (self.state.isThreadOnline && self.state.canSendMedia) {
+    if (self.state.canSendMedia) {
         //Encrypted Show camera button
         self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
         self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
@@ -252,8 +252,6 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
             [self setupDefaultSendButton];
             self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         }
-        
-        
     } else {
         [self removeMediaButtons];
     }

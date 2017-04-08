@@ -13,6 +13,13 @@
 
 @implementation OTRAudioItem
 
+- (instancetype) initWithFilename:(NSString *)filename timeLength:(NSTimeInterval)timeLength mimeType:(NSString *)mimeType isIncoming:(BOOL)isIncoming {
+    if (self = [super initWithFilename:filename mimeType:mimeType isIncoming:isIncoming]) {
+        _timeLength = timeLength;
+    }
+    return self;
+}
+
 + (NSString *)collection
 {
     return [OTRMediaItem collection];

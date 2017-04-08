@@ -16,14 +16,16 @@
     __block OTROutgoingMessage *deliveredMessage = nil;
     [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
         if ([message isKindOfClass:[self class]]) {
-            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
-            OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
-            if (![msg.mediaItemUniqueId length]) {
-                deliveredMessage = msg;
-                *stop = YES;
-            }
+            deliveredMessage = (OTROutgoingMessage *)message;
+            *stop = YES;
         }
     }];
+    
+    // OTRDATA Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
+    if (deliveredMessage.mediaItemUniqueId.length > 0 &&
+        deliveredMessage.text.length == 0) {
+        return;
+    }
     
     if (deliveredMessage) {
         deliveredMessage = [deliveredMessage copy];

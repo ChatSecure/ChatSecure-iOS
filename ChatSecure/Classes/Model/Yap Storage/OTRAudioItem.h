@@ -8,8 +8,20 @@
 
 #import "OTRMediaItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRAudioItem : OTRMediaItem
 
-@property (nonatomic) NSTimeInterval timeLength;
+@property (nonatomic, readwrite) NSTimeInterval timeLength;
+
+/** If mimeType is not provided, it will be guessed from filename */
+- (instancetype) initWithFilename:(NSString*)filename
+                       timeLength:(NSTimeInterval)timeLength
+                         mimeType:(nullable NSString*)mimeType
+                       isIncoming:(BOOL)isIncoming NS_DESIGNATED_INITIALIZER;
+
+- (instancetype) initWithFilename:(NSString*)filename
+                         mimeType:(nullable NSString*)mimeType
+                       isIncoming:(BOOL)isIncoming NS_UNAVAILABLE;
 
 @end
+NS_ASSUME_NONNULL_END

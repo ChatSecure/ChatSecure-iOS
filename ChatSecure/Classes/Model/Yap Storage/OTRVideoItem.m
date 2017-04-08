@@ -58,7 +58,9 @@
             CGImageRelease(imageRef);
             if (image && !error) {
                 [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                [strongSelf touchParentMessage];
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                    [strongSelf touchParentMessageWithTransaction:transaction];
+                }];
             }
         });
     } else {
@@ -84,8 +86,7 @@
     AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
     CGSize videoSize = videoTrack.naturalSize;
     
-    OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
-    videoItem.filename = url.lastPathComponent;
+    OTRVideoItem *videoItem = [[OTRVideoItem alloc] initWithFilename:url.lastPathComponent mimeType:nil isIncoming:NO];
     
     CGAffineTransform transform = videoTrack.preferredTransform;
     if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))

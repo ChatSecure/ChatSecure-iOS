@@ -10,16 +10,33 @@
 #import "OTRImages.h"
 @import JSQMessagesViewController;
 @import YapDatabase;
+@import OTRKit;
 #import "OTRDatabaseManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRMediaItem
+@synthesize mimeType = _mimeType;
 
-- (instancetype) init {
+- (instancetype) initWithFilename:(NSString *)filename mimeType:(NSString*)mimeType isIncoming:(BOOL)isIncoming {
     if (self = [super init]) {
-        self.transferProgress = 0;
+        _filename = [filename copy];
+        _isIncoming = isIncoming;
+        _transferProgress = 0.0f;
+        if (!mimeType) {
+            _mimeType = OTRKitGetMimeTypeForExtension(filename.pathExtension);
+        } else {
+            _mimeType = [mimeType copy];
+        }
     }
     return self;
+}
+
+- (NSString*) mimeType {
+    if (_mimeType) {
+        return _mimeType;
+    } else {
+        return OTRKitGetMimeTypeForExtension(self.filename.pathExtension);
+    }
 }
 
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
@@ -94,6 +111,17 @@
 - (NSUInteger)hash
 {
     return self.filename.hash;
+}
+
+- (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
+    id<OTRThreadOwner> threadOwner = [message threadOwnerWithTransaction:transaction];
+    NSString *buddyUniqueId = [threadOwner threadIdentifier];
+    if (!buddyUniqueId) {
+        return nil;
+    }
+    NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:self buddyUniqueId:buddyUniqueId];
+    return url;
 }
 
 #pragma - mark YapDatabaseRelationshipNode Methods

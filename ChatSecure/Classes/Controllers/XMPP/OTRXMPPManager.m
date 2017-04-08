@@ -216,6 +216,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
+    // File Transfer
+    _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:nil];
+    
     // Message storage
     _messageStorage = [[OTRXMPPMessageYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
     [self.messageStorage activate:self.xmppStream];
@@ -252,6 +255,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     MessageQueueHandler *queueHandler = [OTRDatabaseManager sharedInstance].messageQueueHandler;
     _messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
     [self.messageStatusModule activate:self.xmppStream];
+    
+    
     
     //OMEMO
     if ([[OTRAppDelegate appDelegate].theme enableOMEMO]) {
@@ -296,6 +301,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_omemoModule deactivate];
     [_serverCapabilities deactivate];
     _serverCheck = nil;
+    _fileTransferManager = nil;
 
     [_xmppStream disconnect];
 }

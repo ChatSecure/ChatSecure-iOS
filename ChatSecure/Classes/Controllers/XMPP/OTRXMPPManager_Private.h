@@ -40,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPMessageDeliveryReceipts *deliveryReceipts;
 @property (nonatomic, strong, readonly) OTRXMPPMessageStatusModule *messageStatusModule;
 @property (nonatomic, strong, readonly) OTRStreamManagementDelegate *streamManagementDelegate;
-@property (nonatomic, strong, readonly) FileTransferManager *fileTransferManager;
 
 
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;

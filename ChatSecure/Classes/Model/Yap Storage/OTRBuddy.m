@@ -124,21 +124,53 @@
     return finalMessage;
 }
 
-- (void)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction completionBlock:(void (^_Nonnull)(OTRMessageTransportSecurity))block completionQueue:(nonnull dispatch_queue_t)queue
+/** Translates the preferredSecurity value first if set, otherwise bestTransportSecurityWithTransaction: */
+- (OTRMessageTransportSecurity)preferredTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    NSParameterAssert(transaction);
+    if (!transaction) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Missing transaction for bestTransportSecurityWithTransaction!" userInfo:nil];
+    }
+    OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
+    
+    switch (self.preferredSecurity) {
+        case OTRSessionSecurityPlaintextOnly: {
+            messageSecurity = OTRMessageTransportSecurityPlaintext;
+            break;
+        }
+        case OTRSessionSecurityPlaintextWithOTR: {
+            messageSecurity = OTRMessageTransportSecurityPlaintextWithOTR;
+            break;
+        }
+        case OTRSessionSecurityOTR: {
+            messageSecurity = OTRMessageTransportSecurityOTR;
+            break;
+        }
+        case OTRSessionSecurityOMEMOandOTR:
+        case OTRSessionSecurityOMEMO: {
+            messageSecurity = OTRMessageTransportSecurityOMEMO;
+            break;
+        }
+        case OTRSessionSecurityBestAvailable: {
+            messageSecurity = [self bestTransportSecurityWithTransaction:transaction];
+            break;
+        }
+    }
+    
+    return messageSecurity;
+}
+
+- (OTRMessageTransportSecurity)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction
 {
     NSParameterAssert(transaction);
-    NSParameterAssert(block);
-    NSParameterAssert(queue);
-    if (!block || !queue || !transaction) { return; }
+    if (!transaction) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Missing transaction for bestTransportSecurityWithTransaction!" userInfo:nil];
+    }
     NSArray <OTROMEMODevice *>*devices = [OTROMEMODevice allDevicesForParentKey:self.uniqueId
                                                                      collection:[[self class] collection]
                                                                         transaction:transaction];
     // If we have some omemo devices then that's the best we have.
     if ([devices count] > 0) {
-        dispatch_async(queue, ^{
-            block(OTRMessageTransportSecurityOMEMO);
-        });
-        return;
+        return OTRMessageTransportSecurityOMEMO;
     }
     
     OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
@@ -147,13 +179,9 @@
     // If we had a session in the past then we should use that otherwise.
     NSArray<OTRFingerprint *> *allFingerprints = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit fingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString];
     if ([allFingerprints count]) {
-        dispatch_async(queue, ^{
-            block(OTRMessageTransportSecurityOTR);
-        });
+        return OTRMessageTransportSecurityOTR;
     } else {
-        dispatch_async(queue, ^{
-            block(OTRMessageTransportSecurityPlaintextWithOTR);
-        });
+        return OTRMessageTransportSecurityPlaintextWithOTR;
     }
 }
 

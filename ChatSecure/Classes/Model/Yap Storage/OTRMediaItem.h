@@ -11,17 +11,30 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
 
-@property (nonatomic, strong) NSString *filename;
-@property (nonatomic) BOOL isIncoming;
+@property (nonatomic, readonly) NSString *mimeType;
+@property (nonatomic, readonly) NSString *filename;
+@property (nonatomic, readonly) BOOL isIncoming;
 
-@property (nonatomic) float transferProgress;
+/** Valid 1 >= 0 */
+@property (nonatomic, readwrite) float transferProgress;
 
-- (void)touchParentMessage;
+/** If mimeType is not provided, it will be guessed from filename */
+- (instancetype) initWithFilename:(NSString*)filename
+                         mimeType:(nullable NSString*)mimeType
+                       isIncoming:(BOOL)isIncoming NS_DESIGNATED_INITIALIZER;
+
+- (instancetype) init NS_UNAVAILABLE;
+
+- (void)touchParentMessage DEPRECATED_MSG_ATTRIBUTE("Use touchParentMessageWithTransaction: instead.");
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-- (OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
+- (nullable OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 
+- (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction;
+
 @end
+NS_ASSUME_NONNULL_END

@@ -434,7 +434,7 @@ import YapDatabase
                 
                 let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
                 let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection())!
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection())
                 if let id = innerMessage.elementID() {
                     databaseMessage.messageId = id
                 }

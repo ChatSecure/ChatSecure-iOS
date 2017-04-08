@@ -21,13 +21,15 @@ abstract_target 'ChatSecureCorePods' do
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
-  pod "CocoaLumberjack", '~> 2.3.0'
+  pod "CocoaLumberjack", '~> 3.1.0'
   pod 'KSCrash', '~> 1.15.3'
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  pod 'YapDatabase/SQLCipher', '~> 2.9'
+  #pod 'YapDatabase/SQLCipher', '~> 2.9'
   #pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
+  pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'cocoalumberjack3'
+
 
   pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
@@ -43,6 +45,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'uservoice-iphone-sdk', '~> 3.2'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
+  pod 'CocoaLumberjack/Swift', '~> 3.1.0'
   # We need a commit from next release
   #pod 'CocoaAsyncSocket', '~> 7.4'
   pod 'CocoaAsyncSocket', '~> 7.6.0'
@@ -55,6 +58,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'XLForm', '~> 3.3'
   #pod 'ParkedTextField', '~> 0.2'
   pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
+  pod 'GCDWebServer/CocoaLumberjack', :git => 'https://github.com/ChatSecure/GCDWebServer.git', :branch => 'kdbertel-CocoaLumberjack3'
 
   # QR Codes
   pod 'QRCodeReaderViewController', '~> 4.0'

@@ -46,7 +46,6 @@
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
 
-#import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapMessageSendAction.h"
 #import "UIViewController+ChatSecure.h"
@@ -781,59 +780,37 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
-    __weak __typeof__(self) weakSelf = self;
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
+    
     [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        __typeof__(self) strongSelf = weakSelf;
-        id possibleBuddy = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
-        if ([possibleBuddy isKindOfClass:[OTRBuddy class]]) {
-            OTRBuddy *buddy = (OTRBuddy *)possibleBuddy;
-            OTRAccount *account = [buddy accountWithTransaction:transaction];
-            
-            __block OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (messageState == OTRKitMessageStateEncrypted) {
-                    self.state.canSendMedia = YES;
-                } else {
-                    self.state.canSendMedia = NO;
-                }
-                [self didUpdateState];
-            });
-            
-            switch (buddy.preferredSecurity) {
-                case OTRSessionSecurityPlaintextOnly: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityPlaintextWithOTR: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintextWithOTR;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityOTR: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOTR;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityOMEMOandOTR:
-                case OTRSessionSecurityOMEMO: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOMEMO;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityBestAvailable: {
-                    [buddy bestTransportSecurityWithTransaction:transaction completionBlock:^(OTRMessageTransportSecurity security) {
-                        strongSelf.state.messageSecurity = security;
-                    } completionQueue:dispatch_get_main_queue()];
-                    break;
-                }
-                    
-            }
+        buddy = [self buddyWithTransaction:transaction];
+        account = [buddy accountWithTransaction:transaction];
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        messageSecurity = [buddy preferredTransportSecurityWithTransaction:transaction];
+    } completionBlock:^{
+        if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
+            DDLogError(@"updateEncryptionState error: missing parameters");
+            return;
         }
+        BOOL canSendMedia = NO;
+        
+        OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+        // Check for XEP-0363 HTTP upload
+        // TODO: move this check elsewhere so it isnt dependent on refreshing crypto state
+        if (xmpp.fileTransferManager.canUploadFiles) {
+            canSendMedia = YES;
+        } else if (messageState == OTRKitMessageStateEncrypted &&
+                   buddy.status != OTRThreadStatusOffline) {
+            // If other side supports OTR, assume OTRDATA is possible
+            canSendMedia = YES;
+        }
+        
+        self.state.canSendMedia = canSendMedia;
+        self.state.messageSecurity = messageSecurity;
+        [self didUpdateState];
     }];
 }
 
@@ -1076,15 +1053,42 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRAccount *account = [self accountWithTransaction:transaction];
     OTRBaseMessage *message = [mediaItem parentMessageInTransaction:transaction];
     
+    OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
+    if (![xmpp isKindOfClass:[OTRXMPPManager class]] || !jid) {
+        DDLogError(@"Error sending file due to bad paramters");
+        return;
+    }
+    
     if (data) {
         buddy.lastMessageId = message.uniqueId;
         [buddy saveWithTransaction:transaction];
-        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
+        // OTRDATA
+        //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        
+        // XEP-0363
+        [xmpp.fileTransferManager uploadWithMediaItem:mediaItem prefetchedData:data completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
+            if (error) {
+                DDLogError(@"Error sending data: %@", error);
+            } else if (url) {
+                DDLogInfo(@"HTTP Upload complete and ready at: %@", url);
+            }
+        }];
     } else {
         NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:buddy.uniqueId];
         
-        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        // OTRDATA
+        //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        
+        // XEP-0363
+        [xmpp.fileTransferManager uploadWithFile:url completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
+            if (error) {
+                DDLogError(@"Error sending data: %@", error);
+            } else if (url) {
+                DDLogInfo(@"HTTP Upload complete and ready at: %@", url);
+            }
+        }];
     }
     
     [mediaItem touchParentMessageWithTransaction:transaction];
@@ -1283,55 +1287,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (void)sendPhoto:(UIImage *)photo asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize {
-    if (photo) {
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
-            
-            CGFloat scaleFactor = 0.25;
-            CGSize newSize = CGSizeMake(photo.size.width * scaleFactor, photo.size.height * scaleFactor);
-            UIImage *scaledImage = shouldResize ? [UIImage otr_imageWithImage:photo scaledToSize:newSize] : photo;
-            
-            __block NSData *imageData = nil;
-            if (!asJPEG) {
-                imageData = UIImagePNGRepresentation(scaledImage);
-            } else {
-                imageData = UIImageJPEGRepresentation(scaledImage, 0.5);
-            }
-            NSString *UUID = [[NSUUID UUID] UUIDString];
-            
-            __block OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
-            imageItem.width = photo.size.width;
-            imageItem.height = photo.size.height;
-            imageItem.isIncoming = NO;
-            imageItem.filename = [UUID stringByAppendingPathExtension:(asJPEG ? @"jpg" : @"png")];
-            
-            __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
-            message.buddyUniqueId = self.threadKey;
-            message.mediaItemUniqueId = imageItem.uniqueId;
-            message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
-            
-            [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [message saveWithTransaction:transaction];
-                [imageItem saveWithTransaction:transaction];
-                
-            } completionBlock:^{
-                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.threadKey completion:^(NSInteger bytesWritten, NSError *error) {
-                    [imageItem touchParentMessage];
-                    if (error) {
-                        message.error = error;
-                        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                            [message saveWithTransaction:transaction];
-                        }];
-                    }
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                        [self sendMediaItem:imageItem data:imageData tag:message transaction:transaction];
-                    }];
-                    
-                } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-            }];
-        });
-    }
+    NSParameterAssert(photo);
+    if (!photo) { return; }
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    NSParameterAssert(xmpp);
+    NSParameterAssert(buddy);
+    if (!xmpp || !buddy) { return; }
 
+    [xmpp.fileTransferManager sendWithImage:photo buddy:buddy];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods
@@ -1381,14 +1349,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     
-    __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
-    audioItem.isIncoming = [message messageIncoming];
-    audioItem.filename = [[url absoluteString] lastPathComponent];
-    
     AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
                                                  options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
     
-    audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
+    __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] initWithFilename:[[url absoluteString] lastPathComponent] timeLength:CMTimeGetSeconds(audioAsset.duration) mimeType:nil isIncoming:[message messageIncoming]];
     
     message.mediaItemUniqueId = audioItem.uniqueId;
     
@@ -1423,6 +1387,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize
 {
+    
     [self sendPhoto:[UIImage imageWithContentsOfFile:filePath] asJPEG:asJPEG shouldResize:shouldResize];
 }
 

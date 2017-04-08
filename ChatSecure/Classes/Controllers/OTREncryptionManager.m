@@ -602,18 +602,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];
     
     OTRMediaItem *mediaItem = nil;
+    Class mediaClass = nil;
     if(audioRange.location == 0) {
-        mediaItem = [[OTRAudioItem alloc] init];
-        
+        mediaClass = [OTRAudioItem class];
     } else if (imageRange.location == 0) {
-        mediaItem = [[OTRImageItem alloc] init];
-        
+        mediaClass = [OTRImageItem class];
     } else if (videoRange.location == 0) {
-        mediaItem = [[OTRVideoItem alloc] init];
+        mediaClass = [OTRVideoItem class];
     }
     
-    mediaItem.filename = transfer.fileName;
-    mediaItem.isIncoming = YES;
+    if (mediaClass) {
+        mediaItem = [[mediaClass alloc] initWithFilename:transfer.fileName mimeType:transfer.mimeType isIncoming:YES];
+    }
+    
     newMessage.mediaItemUniqueId = mediaItem.uniqueId;
     
     
@@ -708,9 +709,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTRImageItem *imageItem = (OTRImageItem *)mediaItem;
             
             UIImage *tempImage = [UIImage imageWithData:transfer.fileData];
-            imageItem.width = tempImage.size.width;
-            imageItem.height = tempImage.size.height;
-            
+            imageItem.size = tempImage.size;
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -719,7 +718,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 [buddy saveWithTransaction:transaction];
             } completionBlock:^{
                 [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:imageItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
-                    [imageItem touchParentMessage];
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [imageItem touchParentMessageWithTransaction:transaction];
+                    }];
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];
              

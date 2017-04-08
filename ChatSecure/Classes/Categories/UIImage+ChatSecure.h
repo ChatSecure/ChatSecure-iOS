@@ -8,6 +8,7 @@
 
 @import UIKit;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface UIImage (ChatSecure)
 
 + (UIImage *)otr_imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
@@ -23,3 +24,4 @@
 + (UIImage *)otr_prepareForAvatarUpload:(UIImage *)image maxSize:(CGFloat)size;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSString *uniqueId;
 
-- (nullable instancetype)initWithUniqueId:(NSString *)uniqueId;
 
 - (void)saveWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 - (void)removeWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
@@ -31,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObjectProtocol>
+
+- (instancetype)initWithUniqueId:(NSString *)uniqueId;
 
 @end
 

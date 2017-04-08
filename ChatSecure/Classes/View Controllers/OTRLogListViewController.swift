@@ -10,7 +10,7 @@ import Foundation
 import PureLayout
 
 func getAllLogFiles() -> [DDLogFileInfo]? {
-    return DDLogFileManagerDefault().sortedLogFileInfos() as? [DDLogFileInfo]
+    return DDLogFileManagerDefault().sortedLogFileInfos
 }
 
 class LogInfoCell: UITableViewCell {

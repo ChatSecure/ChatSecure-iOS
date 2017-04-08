@@ -9,28 +9,18 @@
 #import "OTRYapDatabaseObject.h"
 #import "OTRLog.h"
 
-@interface OTRYapDatabaseObject ()
-
-@property (nonatomic, strong) NSString *uniqueId;
-
-@end
-
 @implementation OTRYapDatabaseObject
 @synthesize uniqueId = _uniqueId;
 
-- (id)init
+- (instancetype)init
 {
-    if (self = [super init])
-    {
-        self.uniqueId = [[NSUUID UUID] UUIDString];
-    }
-    return self;
+    return [self initWithUniqueId:[NSUUID UUID].UUIDString];
 }
 
 - (instancetype)initWithUniqueId:(NSString *)uniqueId
 {
     if (self = [super init]) {
-        self.uniqueId = uniqueId;
+        _uniqueId = [uniqueId copy];
     }
     return self;
 }

@@ -27,23 +27,23 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
   - CocoaAsyncSocket (7.6.0)
-  - CocoaLumberjack (2.3.0):
-    - CocoaLumberjack/Default (= 2.3.0)
-    - CocoaLumberjack/Extensions (= 2.3.0)
-  - CocoaLumberjack/Core (2.3.0)
-  - CocoaLumberjack/Default (2.3.0):
-    - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.3.0):
+  - CocoaLumberjack (3.1.0):
+    - CocoaLumberjack/Default (= 3.1.0)
+    - CocoaLumberjack/Extensions (= 3.1.0)
+  - CocoaLumberjack/Default (3.1.0)
+  - CocoaLumberjack/Extensions (3.1.0):
+    - CocoaLumberjack/Default
+  - CocoaLumberjack/Swift (3.1.0):
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
   - FormatterKit/Resources (1.8.2)
   - FormatterKit/TimeIntervalFormatter (1.8.2):
     - FormatterKit/Resources
-  - GCDWebServer/CocoaLumberjack (3.3.3):
-    - CocoaLumberjack (~> 2)
+  - GCDWebServer/CocoaLumberjack (3.3.4):
+    - CocoaLumberjack
     - GCDWebServer/Core
-  - GCDWebServer/Core (3.3.3)
+  - GCDWebServer/Core (3.3.4)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
@@ -58,49 +58,49 @@ PODS:
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.2.0)
-  - KSCrash (1.15.4):
-    - KSCrash/Installations (= 1.15.4)
-  - KSCrash/Installations (1.15.4):
+  - KSCrash (1.15.5):
+    - KSCrash/Installations (= 1.15.5)
+  - KSCrash/Installations (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.15.4):
-    - KSCrash/Recording/Tools (= 1.15.4)
-  - KSCrash/Recording/Tools (1.15.4)
-  - KSCrash/Reporting (1.15.4):
+  - KSCrash/Recording (1.15.5):
+    - KSCrash/Recording/Tools (= 1.15.5)
+  - KSCrash/Recording/Tools (1.15.5)
+  - KSCrash/Reporting (1.15.5):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.4)
-    - KSCrash/Reporting/MessageUI (= 1.15.4)
-    - KSCrash/Reporting/Sinks (= 1.15.4)
-    - KSCrash/Reporting/Tools (= 1.15.4)
-  - KSCrash/Reporting/Filters (1.15.4):
+    - KSCrash/Reporting/Filters (= 1.15.5)
+    - KSCrash/Reporting/MessageUI (= 1.15.5)
+    - KSCrash/Reporting/Sinks (= 1.15.5)
+    - KSCrash/Reporting/Tools (= 1.15.5)
+  - KSCrash/Reporting/Filters (1.15.5):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.4)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.4)
-    - KSCrash/Reporting/Filters/Base (= 1.15.4)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.4)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.4)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.4)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.4)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.4)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.4)
-  - KSCrash/Reporting/Filters/Alert (1.15.4):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.4):
+    - KSCrash/Reporting/Filters/Alert (= 1.15.5)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.5)
+    - KSCrash/Reporting/Filters/Base (= 1.15.5)
+    - KSCrash/Reporting/Filters/Basic (= 1.15.5)
+    - KSCrash/Reporting/Filters/GZip (= 1.15.5)
+    - KSCrash/Reporting/Filters/JSON (= 1.15.5)
+    - KSCrash/Reporting/Filters/Sets (= 1.15.5)
+    - KSCrash/Reporting/Filters/Stringify (= 1.15.5)
+    - KSCrash/Reporting/Filters/Tools (= 1.15.5)
+  - KSCrash/Reporting/Filters/Alert (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.4):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.4):
+  - KSCrash/Reporting/Filters/AppleFmt (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.4):
+  - KSCrash/Reporting/Filters/Base (1.15.5):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.4):
+  - KSCrash/Reporting/Filters/GZip (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.4):
+  - KSCrash/Reporting/Filters/JSON (1.15.5):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -108,18 +108,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.4):
+  - KSCrash/Reporting/Filters/Stringify (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.4):
+  - KSCrash/Reporting/Filters/Tools (1.15.5):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.4):
+  - KSCrash/Reporting/MessageUI (1.15.5):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.4):
+  - KSCrash/Reporting/Sinks (1.15.5):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.4):
+  - KSCrash/Reporting/Tools (1.15.5):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libidn (1.33)
@@ -156,8 +156,6 @@ PODS:
   - SQLCipher (3.4.1):
     - SQLCipher/standard (= 3.4.1)
   - SQLCipher/common (3.4.1)
-  - SQLCipher/fts (3.4.1):
-    - SQLCipher/common
   - SQLCipher/standard (3.4.1):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
@@ -170,54 +168,53 @@ PODS:
     - CocoaLumberjack
     - KissXML (~> 5.2.0)
     - libidn (~> 1.33.0)
-  - YapDatabase/SQLCipher (2.9.2):
-    - YapDatabase/SQLCipher/Core (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions (= 2.9.2)
-  - YapDatabase/SQLCipher/Core (2.9.2):
-    - CocoaLumberjack (~> 2)
-    - SQLCipher/fts
-  - YapDatabase/SQLCipher/Extensions (2.9.2):
+  - YapDatabase/SQLCipher (2.9.3):
+    - YapDatabase/SQLCipher/Core (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions (= 2.9.3)
+  - YapDatabase/SQLCipher/Core (2.9.3):
+    - CocoaLumberjack
+    - SQLCipher (>= 3.4.0)
+  - YapDatabase/SQLCipher/Extensions (2.9.3):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/ActionManager (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.9.2)
-    - YapDatabase/SQLCipher/Extensions/Views (= 2.9.2)
-  - YapDatabase/SQLCipher/Extensions/ActionManager (2.9.2):
-    - Reachability (~> 3)
-    - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/CloudKit (2.9.2):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.9.2):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (2.9.2):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.9.2):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.9.3)
+    - YapDatabase/SQLCipher/Extensions/Views (= 2.9.3)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (2.9.3):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (2.9.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.9.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Relationships (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (2.9.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.9.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResults (2.9.2):
+    - YapDatabase/SQLCipher/Extensions/Views
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.9.3):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/Hooks (2.9.3):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/Relationships (2.9.3):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.9.3):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/SearchResults (2.9.3):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.9.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Views (2.9.2):
+  - YapDatabase/SQLCipher/Extensions/Views (2.9.3):
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.2.0):
     - YapDatabase/SQLCipher (~> 2.9)
@@ -233,9 +230,11 @@ DEPENDENCIES:
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - CocoaAsyncSocket (~> 7.6.0)
-  - CocoaLumberjack (~> 2.3.0)
+  - CocoaLumberjack (~> 3.1.0)
+  - CocoaLumberjack/Swift (~> 3.1.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - FormatterKit/TimeIntervalFormatter (~> 1.8.2)
+  - GCDWebServer/CocoaLumberjack (from `https://github.com/ChatSecure/GCDWebServer.git`, branch `kdbertel-CocoaLumberjack3`)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
@@ -263,7 +262,7 @@ DEPENDENCIES:
   - VTAcknowledgementsViewController (~> 1.2)
   - XLForm (~> 3.3)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 2.9)
+  - YapDatabase/SQLCipher (from `https://github.com/ChatSecure/YapDatabase.git`, branch `cocoalumberjack3`)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `0.2.0-escaping-closure`)
   - ZXingObjC (~> 3.0)
 
@@ -272,6 +271,9 @@ EXTERNAL SOURCES:
     :path: Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec
   CPAProxy:
     :path: Submodules/CPAProxy/CPAProxy.podspec
+  GCDWebServer:
+    :branch: kdbertel-CocoaLumberjack3
+    :git: https://github.com/ChatSecure/GCDWebServer.git
   gtm-http-fetcher:
     :podspec: Podspecs/gtm-http-fetcher.podspec
   gtm-oauth2:
@@ -291,11 +293,17 @@ EXTERNAL SOURCES:
     :tag: 0.3.0
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
+  YapDatabase:
+    :branch: cocoalumberjack3
+    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
     :branch: 0.2.0-escaping-closure
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 CHECKOUT OPTIONS:
+  GCDWebServer:
+    :commit: '09e728ed805abf5e870893f0cb5f40142bf616a3'
+    :git: https://github.com/ChatSecure/GCDWebServer.git
   JSQMessagesViewController:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
     :tag: 7.3.4-send_button
@@ -305,6 +313,9 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
+  YapDatabase:
+    :commit: c25684304549d5f81908cdb15bbf944922f10e21
+    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
     :commit: efcdffc99f1547843f39ead63c82a6aabb7bca75
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -317,10 +328,10 @@ SPEC CHECKSUMS:
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
   CocoaAsyncSocket: b9d5589f07baf9de8f34cc25abd4fcba28f13805
-  CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
+  CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
-  GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
+  GCDWebServer: 633c3cd8db5cab3da5f6b39bd9275faba52c6b9c
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   IOCipher: 4cb4cd9a5998f69f4578a51501987dc5951ff092
@@ -329,7 +340,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
-  KSCrash: cbdf1f66c45c8dcc11154a4b1596c6cd1bfc2657
+  KSCrash: 061c15c3b979ce441f2664ee18282bd4b340d040
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -351,11 +362,11 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: 544da7ab3faf7005de303708630a4e9741efb907
-  YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
+  XMPPFramework: 2f21fd7d86713908faddda98abfb7c3a6030badf
+  YapDatabase: e011309c2f6a50a8115ee22e8e9eb31db08cae5a
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: b177f20ecfaa2590b6391d274d805b951b5c2054
+PODFILE CHECKSUM: 1160ce2f984d28c4d9ff5eedf21397bd767ea619
 
 COCOAPODS: 1.2.0
