@@ -37,7 +37,7 @@
 }
 
 - (CGSize) size {
-    return CGSizeMake(self.width, self.height);
+    return CGSizeMake(_width, _height);
 }
 
 - (void) setSize:(CGSize)size {

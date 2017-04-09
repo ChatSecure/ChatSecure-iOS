@@ -1311,32 +1311,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL
 {
-    __block OTRVideoItem *videoItem = [OTRVideoItem videoItemWithFileURL:videoURL];
-    
-    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
-    message.mediaItemUniqueId = videoItem.uniqueId;
-    message.buddyUniqueId = self.threadKey;
-    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
-    
-    NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.threadKey];
-    [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
-        
-        if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
-            NSError *err = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:&err];
-            if (err) {
-                DDLogError(@"Error Removing Video File");
-            }
-            
-        }
-        
-        message.error = error;
-        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [videoItem saveWithTransaction:transaction];
-            [message saveWithTransaction:transaction];
-            [self sendMediaItem:videoItem data:nil tag:message transaction:transaction];
-        }];
+    if (!videoURL) { return; }
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
     }];
+    NSParameterAssert(xmpp);
+    NSParameterAssert(buddy);
+    if (!xmpp || !buddy) { return; }
+    
+    [xmpp.fileTransferManager sendWithVideoURL:videoURL buddy:buddy];
 }
 
 - (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
@@ -1346,48 +1332,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)sendAudioFileURL:(NSURL *)url
 {
-    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
-    message.buddyUniqueId = self.threadKey;
-    
-    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
-                                                 options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
-    
-    __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] initWithFilename:[[url absoluteString] lastPathComponent] timeLength:CMTimeGetSeconds(audioAsset.duration) mimeType:nil isIncoming:[message messageIncoming]];
-    
-    message.mediaItemUniqueId = audioItem.uniqueId;
-    
-    NSString *newPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:self.threadKey];
-    
-    [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
-        
-        NSData *data = nil;
-        if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
-            long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil][NSFileSize] longLongValue];
-            if (fileSize < 1024 * 1024 * 1) {
-                // Smaller than 1Mb
-                data = [NSData dataWithContentsOfFile:url.path];
-            }
-            NSError *err = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:url.path error:&err];
-            if (err) {
-                DDLogError(@"Error Removing Audio File");
-            }
-        }
-        
-        message.error = error;
-        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [message saveWithTransaction:transaction];
-            [audioItem saveWithTransaction:transaction];
-            [self sendMediaItem:audioItem data:data tag:message transaction:transaction];
-        }];
-        
-        
+    if (!url) { return; }
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
     }];
+    NSParameterAssert(xmpp);
+    NSParameterAssert(buddy);
+    if (!xmpp || !buddy) { return; }
+    
+    [xmpp.fileTransferManager sendWithAudioURL:url buddy:buddy];
 }
 
 - (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize
 {
-    
     [self sendPhoto:[UIImage imageWithContentsOfFile:filePath] asJPEG:asJPEG shouldResize:shouldResize];
 }
 

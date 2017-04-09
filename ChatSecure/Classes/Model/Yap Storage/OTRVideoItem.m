@@ -18,7 +18,21 @@
 
 @import AVFoundation;
 
+@interface OTRVideoItem()
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+@end
+
 @implementation OTRVideoItem
+
+- (CGSize) size {
+    return CGSizeMake(_width, _height);
+}
+
+- (void) setSize:(CGSize)size {
+    _width = size.width;
+    _height = size.height;
+}
 
 - (NSURL *)mediaURL
 {
@@ -80,27 +94,28 @@
     return view;
 }
 
-+ (instancetype)videoItemWithFileURL:(NSURL *)url
-{
-    AVURLAsset *asset = [AVURLAsset assetWithURL:url];
-    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
-    CGSize videoSize = videoTrack.naturalSize;
-    
-    OTRVideoItem *videoItem = [[OTRVideoItem alloc] initWithFilename:url.lastPathComponent mimeType:nil isIncoming:NO];
-    
-    CGAffineTransform transform = videoTrack.preferredTransform;
-    if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))
-    {
-        videoItem.width = videoSize.width;
-        videoItem.height = videoSize.height;
+/** If mimeType is not provided, it will be guessed from filename */
+- (instancetype) initWithVideoURL:(NSURL*)url
+                       isIncoming:(BOOL)isIncoming {
+    NSParameterAssert(url);
+    if (self = [super initWithFilename:url.lastPathComponent mimeType:nil isIncoming:isIncoming]) {
+        AVURLAsset *asset = [AVURLAsset assetWithURL:url];
+        AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+        CGSize videoSize = videoTrack.naturalSize;
+        
+        CGAffineTransform transform = videoTrack.preferredTransform;
+        if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))
+        {
+            _width = videoSize.width;
+            _height = videoSize.height;
+        }
+        else
+        {
+            _width = videoSize.height;
+            _height = videoSize.width;
+        }
     }
-    else
-    {
-        videoItem.width = videoSize.height;
-        videoItem.height = videoSize.width;
-    }
-    
-    return videoItem;
+    return self;
 }
 
 + (NSString *)collection

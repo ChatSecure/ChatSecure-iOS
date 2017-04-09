@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readwrite) NSTimeInterval timeLength;
 
+- (instancetype) initWithAudioURL:(NSURL*)url
+                       isIncoming:(BOOL)isIncoming;
+
 /** If mimeType is not provided, it will be guessed from filename */
 - (instancetype) initWithFilename:(NSString*)filename
                        timeLength:(NSTimeInterval)timeLength

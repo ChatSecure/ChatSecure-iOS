@@ -146,12 +146,69 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         }
     }
     
-    public func send(videoURL: URL, buddy: OTRBuddy) {
-        
+    public func send(videoURL url: URL, buddy: OTRBuddy) {
+        internalQueue.async {
+            self.send(url: url, buddy: buddy, type: .video)
+        }
     }
     
-    public func send(audioURL: URL, buddy: OTRBuddy) {
-        
+    private enum MediaURLType {
+        case audio
+        case video
+        //case image
+    }
+    
+    private func send(url: URL, buddy: OTRBuddy, type: MediaURLType) {
+        internalQueue.async {
+            var item: OTRMediaItem? = nil
+            switch type {
+            case .audio:
+                item = OTRAudioItem(audioURL: url, isIncoming: false)
+            case .video:
+                item = OTRVideoItem(videoURL: url, isIncoming: false)
+            }
+            guard let mediaItem = item else {
+                DDLogError("No media item to share for URL: \(url)")
+                return
+            }
+            
+            let message = self.newOutgoingMessage(to: buddy, mediaItem: mediaItem)
+            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: buddy.uniqueId)
+            self.connection.readWrite({ (transaction) in
+                message.save(with: transaction)
+                mediaItem.save(with: transaction)
+            })
+            OTRMediaFileManager.sharedInstance().copyData(fromFilePath: url.path, toEncryptedPath: newPath, completionQueue: self.internalQueue, completion: { (copyError: Error?) in
+                var prefetchedData: Data? = nil
+                if FileManager.default.fileExists(atPath: url.path) {
+                    do {
+                        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+                        if let size = attributes[FileAttributeKey.size] as? NSNumber, size.uint64Value < 1024 * 1024 * 1 {
+                            prefetchedData = try Data(contentsOf: url)
+                        }
+                    } catch let error {
+                        DDLogError("Error prefetching data: \(error)")
+                    }
+                    do {
+                        try FileManager.default.removeItem(atPath: url.path)
+                    } catch let error {
+                        DDLogError("Error removing video: \(error)")
+                    }
+                }
+                message.error = copyError
+                self.connection.readWrite({ (transaction) in
+                    mediaItem.save(with: transaction)
+                    message.save(with: transaction)
+                })
+                self.send(mediaItem: mediaItem, prefetchedData: prefetchedData, message: message)
+            })
+        }
+    }
+    
+    public func send(audioURL url: URL, buddy: OTRBuddy) {
+        internalQueue.async {
+            self.send(url: url, buddy: buddy, type: .audio)
+        }
     }
     
     public func send(image: UIImage, buddy: OTRBuddy) {
@@ -162,14 +219,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             let imageData = UIImageJPEGRepresentation(scaledImage, 0.5)
             let filename = "\(UUID().uuidString).jpg"
             let imageItem = OTRImageItem(filename: filename, size: newSize, mimeType: "image/jpeg", isIncoming: false)
-            let message = OTROutgoingMessage()!
-            var security: OTRMessageTransportSecurity = .invalid
-            self.connection.read({ (transaction) in
-                security = buddy.preferredTransportSecurity(with: transaction)
-            })
-            message.buddyUniqueId = buddy.uniqueId
-            message.mediaItemUniqueId = imageItem.uniqueId
-            message.messageSecurityInfo = OTRMessageEncryptionInfo(messageSecurity: security)
+            let message = self.newOutgoingMessage(to: buddy, mediaItem: imageItem)
             self.connection.readWrite({ (transaction) in
                 message.save(with: transaction)
                 imageItem.save(with: transaction)
@@ -182,28 +232,43 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                         message.save(with: transaction)
                     }
                 })
-                self.upload(mediaItem: imageItem, prefetchedData: imageData, completion: { (_url: URL?, error: Error?) in
-                    guard let url = _url else {
-                        if let error = error {
-                            DDLogError("Error uploading: \(error)")
-                        }
-                        self.connection.readWrite({ (transaction) in
-                            message.error = error
-                            message.save(with: transaction)
-                        })
-                        return
-                    }
-                    self.connection.readWrite({ (transaction) in
-                        imageItem.transferProgress = 1.0
-                        message.text = url.absoluteString
-                        imageItem.save(with: transaction)
-                        message.save(with: transaction)
-                    })
-                    self.queueOutgoingMessage(message: message)
-                })
+                self.send(mediaItem: imageItem, prefetchedData: imageData, message: message)
             }, completionQueue: self.internalQueue)
         }
-        
+    }
+    
+    private func newOutgoingMessage(to buddy: OTRBuddy, mediaItem: OTRMediaItem) -> OTROutgoingMessage {
+        let message = OTROutgoingMessage()!
+        var security: OTRMessageTransportSecurity = .invalid
+        self.connection.read({ (transaction) in
+            security = buddy.preferredTransportSecurity(with: transaction)
+        })
+        message.buddyUniqueId = buddy.uniqueId
+        message.mediaItemUniqueId = mediaItem.uniqueId
+        message.messageSecurityInfo = OTRMessageEncryptionInfo(messageSecurity: security)
+        return message
+    }
+    
+    private func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTROutgoingMessage) {
+        self.upload(mediaItem: mediaItem, prefetchedData: prefetchedData, completion: { (_url: URL?, error: Error?) in
+            guard let url = _url else {
+                if let error = error {
+                    DDLogError("Error uploading: \(error)")
+                }
+                self.connection.readWrite({ (transaction) in
+                    message.error = error
+                    message.save(with: transaction)
+                })
+                return
+            }
+            self.connection.readWrite({ (transaction) in
+                mediaItem.transferProgress = 1.0
+                message.text = url.absoluteString
+                mediaItem.save(with: transaction)
+                message.save(with: transaction)
+            })
+            self.queueOutgoingMessage(message: message)
+        })
     }
     
     private func queueOutgoingMessage(message: OTROutgoingMessage) {

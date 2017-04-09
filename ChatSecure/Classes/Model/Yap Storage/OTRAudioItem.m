@@ -10,8 +10,16 @@
 #import "OTRAudioControlsView.h"
 @import JSQMessagesViewController;
 #import "OTRPlayPauseProgressView.h"
+@import AVFoundation;
 
 @implementation OTRAudioItem
+
+- (instancetype) initWithAudioURL:(NSURL*)url
+                       isIncoming:(BOOL)isIncoming {
+    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
+                                                 options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
+    return [self initWithFilename:url.lastPathComponent timeLength:CMTimeGetSeconds(audioAsset.duration) mimeType:nil isIncoming:isIncoming];
+}
 
 - (instancetype) initWithFilename:(NSString *)filename timeLength:(NSTimeInterval)timeLength mimeType:(NSString *)mimeType isIncoming:(BOOL)isIncoming {
     if (self = [super initWithFilename:filename mimeType:mimeType isIncoming:isIncoming]) {

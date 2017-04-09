@@ -8,11 +8,14 @@
 
 #import "OTRMediaItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRVideoItem : OTRMediaItem
 
-@property (nonatomic) float width;
-@property (nonatomic) float height;
+@property (nonatomic, readwrite) CGSize size;
 
-+ (instancetype)videoItemWithFileURL:(NSURL *)url;
+/** If mimeType is not provided, it will be guessed from filename */
+- (instancetype) initWithVideoURL:(NSURL*)url
+                       isIncoming:(BOOL)isIncoming NS_DESIGNATED_INITIALIZER;
 
 @end
+NS_ASSUME_NONNULL_END
