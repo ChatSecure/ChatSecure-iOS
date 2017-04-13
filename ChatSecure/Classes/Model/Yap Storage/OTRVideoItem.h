@@ -17,5 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype) initWithVideoURL:(NSURL*)url
                        isIncoming:(BOOL)isIncoming NS_DESIGNATED_INITIALIZER;
 
+
+- (instancetype) initWithFilename:(NSString *)filename mimeType:(nullable NSString *)mimeType isIncoming:(BOOL)isIncoming NS_UNAVAILABLE;
+
 @end
 NS_ASSUME_NONNULL_END

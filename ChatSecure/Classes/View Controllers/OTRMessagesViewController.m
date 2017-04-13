@@ -1068,13 +1068,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
         // XEP-0363
-        [xmpp.fileTransferManager uploadWithMediaItem:mediaItem prefetchedData:data completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
-            if (error) {
-                DDLogError(@"Error sending data: %@", error);
-            } else if (url) {
-                DDLogInfo(@"HTTP Upload complete and ready at: %@", url);
-            }
-        }];
+        //[xmpp.fileTransferManager sendWithMediaItem:mediaItem buddy:buddy];
     } else {
         NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:buddy.uniqueId];
         
@@ -1082,13 +1076,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
         
         // XEP-0363
-        [xmpp.fileTransferManager uploadWithFile:url completion:^(NSURL * _Nullable url, NSError * _Nullable error) {
-            if (error) {
-                DDLogError(@"Error sending data: %@", error);
-            } else if (url) {
-                DDLogInfo(@"HTTP Upload complete and ready at: %@", url);
-            }
-        }];
+        //[xmpp.fileTransferManager sendWithMediaItem:mediaItem buddy:buddy];
     }
     
     [mediaItem touchParentMessageWithTransaction:transaction];
