@@ -30,7 +30,7 @@ install:
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
-  - bundle exec pod repo update --silent
+  - bundle exec pod repo update
   - bundle exec pod install
 script:
   - set -o pipefail
