@@ -9,6 +9,7 @@
 import UIKit
 import XMPPFramework
 import YapDatabase
+import CocoaLumberjack
 
 /** 
  * This is the glue between XMPP/OMEMO and Signal
@@ -485,15 +486,16 @@ import YapDatabase
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     
     public func omemo(_ omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        //print("publishedDeviceIds: \(responseIq)")
+        DDLogVerbose("publishedDeviceIds: \(responseIq)")
+
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToPublishDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
-        //print("failedToPublishDeviceIds: \(errorIq)")
+        DDLogWarn("failedToPublishDeviceIds: \(String(describing: errorIq))")
     }
     
     public func omemo(_ omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], from fromJID: XMPPJID, incomingElement: XMPPElement) {
-        //print("deviceListUpdate: \(fromJID) \(deviceIds)")
+        DDLogVerbose("deviceListUpdate: \(fromJID) \(deviceIds)")
         self.workQueue.async { [weak self] in
             if let eid = incomingElement.elementID() {
                 self?.callAndRemoveOutstandingBundleBlock(eid, success: true)
@@ -502,19 +504,20 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToFetchDeviceIdsFor fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
-        
+        DDLogWarn("failedToFetchDeviceIdsFor \(fromJID)")
     }
     
     public func omemo(_ omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        //print("publishedBundle: \(responseIq) \(outgoingIq)")
+        DDLogVerbose("publishedBundle: \(responseIq) \(outgoingIq)")
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToPublishBundle bundle: OMEMOBundle, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
-        //print("failedToPublishBundle: \(errorIq) \(outgoingIq)")
+        DDLogWarn("failedToPublishBundle: \(String(describing: errorIq)) \(outgoingIq)")
     }
     
     public func omemo(_ omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, from fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        
+        DDLogVerbose("fetchedBundle: \(responseIq) \(outgoingIq)")
+
         if (self.isOurJID(fromJID) && bundle.deviceId == self.signalEncryptionManager.registrationId) {
             //We fetched our own bundle
             if let ourDatabaseBundle = self.fetchMyBundle() {
@@ -535,19 +538,24 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             //Create incoming bundle from OMEMOBundle
             let innerBundle = OTROMEMOBundle(deviceId: bundle.deviceId, publicIdentityKey: bundle.identityKey, signedPublicPreKey: bundle.signedPreKey.publicKey, signedPreKeyId: bundle.signedPreKey.preKeyId, signedPreKeySignature: bundle.signedPreKey.signature)
             //Select random pre key to use
-            let index = Int(arc4random_uniform(UInt32(bundle.preKeys.count)))
-            let preKey = bundle.preKeys[index]
-            let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
-            //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
             var result = false
-            do {
-                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
-                result = true
-            } catch let err as NSError {
-                #if DEBUG
-                    NSLog("Error consuming incoming bundle %@ %@", err, responseIq.prettyXMLString())
-                #endif
+            var keysTried: UInt = 0 // Sometimes the bundle can't be made, so try a few more prekeys
+            while !result && keysTried < UInt(bundle.preKeys.count) {
+                keysTried = keysTried + 1
+                let index = Int(arc4random_uniform(UInt32(bundle.preKeys.count)))
+                let preKey = bundle.preKeys[index]
+                let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
+                //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
+                do {
+                    try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
+                    result = true
+                    break
+                } catch let err {
+                    DDLogWarn("Error consuming incoming bundle: \(err) \(responseIq.prettyXMLString())")
+                }
             }
+            
+            
             self?.callAndRemoveOutstandingBundleBlock(elementId!, success: result)
         }
         
