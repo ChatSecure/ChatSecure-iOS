@@ -352,7 +352,7 @@ import YapDatabase
     
     open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
         let aesGcmBlockLength = 16
-        guard let encryptedPayload = payload, encryptedPayload.count > aesGcmBlockLength else {
+        guard let encryptedPayload = payload, encryptedPayload.count > 0 else {
             return
         }
         
