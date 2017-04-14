@@ -67,17 +67,16 @@ extension OTRAccountSignalEncryptionManager {
     /** 
      * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
      */
-    public func generateOutgoingBundle(_ preKeyCount:UInt) -> OTROMEMOBundleOutgoing? {
+    public func generateOutgoingBundle(_ preKeyCount:UInt) throws -> OTROMEMOBundleOutgoing {
         
         guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
-            return nil
+            throw OMEMOBundleError.keyGeneration
         }
-        _ = self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
         
         let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
         let deviceId = self.registrationId
         guard let preKeys = self.generatePreKeys(1, count: preKeyCount) else {
-            return nil
+            throw OMEMOBundleError.keyGeneration
         }
         
         var preKeyDict = [UInt32:Data]()
@@ -86,6 +85,20 @@ extension OTRAccountSignalEncryptionManager {
         }
         
         let bundle = OTROMEMOBundle(deviceId: deviceId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
+        
+        do {
+            if let preKey = preKeys.first {
+                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.preKeyId(), preKeyPublic: preKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
+            } else {
+                DDLogError("Error testing outgoing bundle")
+                throw OMEMOBundleError.invalid
+            }
+        } catch let error {
+            DDLogError("Error creating outgoing bundle: \(error)")
+            throw OMEMOBundleError.invalid
+        }
+        
+        _ = self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
         return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
     }
     
@@ -96,7 +109,7 @@ extension OTRAccountSignalEncryptionManager {
         let deviceId = Int32(bundle.bundle.deviceId)
         let incomingAddress = SignalAddress(name: name.lowercased(), deviceId: deviceId)
         let sessionBuilder = SignalSessionBuilder(address: incomingAddress, context: self.signalContext)
-        let preKeyBundle = SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData as Data, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey as Data, signature: bundle.bundle.signedPreKeySignature as Data, identityKey: bundle.bundle.publicIdentityKey as Data)
+        let preKeyBundle = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature, identityKey: bundle.bundle.publicIdentityKey)
         
         return try sessionBuilder.processPreKeyBundle(preKeyBundle)
     }
