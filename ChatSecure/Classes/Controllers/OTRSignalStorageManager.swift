@@ -159,7 +159,7 @@ open class OTRSignalStorageManager: NSObject {
      
      - return: A complete outgoing bundle.
      */
-    open func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
+    open func fetchOurExistingBundle() throws -> OTROMEMOBundleOutgoing {
         var simpleBundle:OTROMEMOBundle? = nil
         //Fetch and create the base bundle
         self.databaseConnection.read { (transaction) in
@@ -178,7 +178,7 @@ open class OTRSignalStorageManager: NSObject {
         }
         
         guard let bundle = simpleBundle else  {
-            return nil
+            throw OMEMOBundleError.notFound
         }
         
         //Gather pieces of outgoing bundle
@@ -197,6 +197,18 @@ open class OTRSignalStorageManager: NSObject {
                 
             }
         })
+        
+        do {
+            if let preKey = preKeys.first, let preKeyData = preKey.keyData {
+                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: preKeyData, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
+            } else {
+                DDLogError("Error fetching outgoing bundle: no prekeys")
+                throw OMEMOBundleError.invalid
+            }
+        } catch let error {
+            DDLogError("Error fetching outgoing bundle: \(error)")
+            throw error
+        }
         
         return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict as [UInt32 : Data])
     }

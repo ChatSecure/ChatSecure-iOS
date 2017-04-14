@@ -516,10 +516,13 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     public func omemo(_ omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, from fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         
         if (self.isOurJID(fromJID) && bundle.deviceId == self.signalEncryptionManager.registrationId) {
+            DDLogVerbose("fetchedOurOwnBundle: \(responseIq) \(outgoingIq)")
+
             //We fetched our own bundle
             if let ourDatabaseBundle = self.fetchMyBundle() {
                 //This bundle doesn't have the correct identity key. Something has gone wrong and we should republish
                 if ourDatabaseBundle.identityKey != bundle.identityKey {
+                    DDLogError("Bundle identityKeys do not match! \(ourDatabaseBundle.identityKey) vs \(bundle.identityKey)")
                     omemo.publishBundle(ourDatabaseBundle, elementId: nil)
                 }
             }
@@ -617,8 +620,35 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
 
     //Always returns most complete bundle with correct count of prekeys
     public func fetchMyBundle() -> OMEMOBundle? {
+        var _bundle: OTROMEMOBundleOutgoing? = nil
         
-        guard let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() ?? self.signalEncryptionManager.generateOutgoingBundle(self.preKeyCount) else {
+        do {
+            _bundle = try signalEncryptionManager.storage.fetchOurExistingBundle()
+            
+        } catch let omemoError as OMEMOBundleError {
+            switch omemoError {
+            case .invalid:
+                DDLogError("Found invalid stored bundle!")
+                // delete???
+                break
+            default:
+                break
+            }
+        } catch let error {
+            DDLogError("Other error fetching bundle! \(error)")
+        }
+        let maxTries = 5
+        var tries = 0
+        while _bundle == nil && tries < maxTries {
+            tries = tries + 1
+            do {
+                _bundle = try self.signalEncryptionManager.generateOutgoingBundle(self.preKeyCount)
+            } catch let error {
+                DDLogError("Error generating bundle! Try #\(tries)/\(maxTries) \(error)")
+            }
+        }
+        guard let bundle = _bundle else {
+            DDLogError("Could not fetch or generate valid bundle!")
             return nil
         }
         

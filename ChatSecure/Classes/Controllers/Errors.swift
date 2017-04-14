@@ -111,6 +111,13 @@ extension EncryptionError: ChatSecureErrorProtocol {
     case serviceUnavailable = 1004
 }
 
+public enum OMEMOBundleError: Error {
+    case unknown
+    case notFound
+    case invalid
+    case keyGeneration
+}
+
 extension OTRXMPPXMLError: ChatSecureErrorProtocol {
     public func code() -> Int {
         return self.rawValue
