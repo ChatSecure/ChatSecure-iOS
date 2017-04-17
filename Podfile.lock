@@ -58,49 +58,49 @@ PODS:
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.2.0)
-  - KSCrash (1.15.4):
-    - KSCrash/Installations (= 1.15.4)
-  - KSCrash/Installations (1.15.4):
+  - KSCrash (1.15.8):
+    - KSCrash/Installations (= 1.15.8)
+  - KSCrash/Installations (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.15.4):
-    - KSCrash/Recording/Tools (= 1.15.4)
-  - KSCrash/Recording/Tools (1.15.4)
-  - KSCrash/Reporting (1.15.4):
+  - KSCrash/Recording (1.15.8):
+    - KSCrash/Recording/Tools (= 1.15.8)
+  - KSCrash/Recording/Tools (1.15.8)
+  - KSCrash/Reporting (1.15.8):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.4)
-    - KSCrash/Reporting/MessageUI (= 1.15.4)
-    - KSCrash/Reporting/Sinks (= 1.15.4)
-    - KSCrash/Reporting/Tools (= 1.15.4)
-  - KSCrash/Reporting/Filters (1.15.4):
+    - KSCrash/Reporting/Filters (= 1.15.8)
+    - KSCrash/Reporting/MessageUI (= 1.15.8)
+    - KSCrash/Reporting/Sinks (= 1.15.8)
+    - KSCrash/Reporting/Tools (= 1.15.8)
+  - KSCrash/Reporting/Filters (1.15.8):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.4)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.4)
-    - KSCrash/Reporting/Filters/Base (= 1.15.4)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.4)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.4)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.4)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.4)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.4)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.4)
-  - KSCrash/Reporting/Filters/Alert (1.15.4):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.4):
+    - KSCrash/Reporting/Filters/Alert (= 1.15.8)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.8)
+    - KSCrash/Reporting/Filters/Base (= 1.15.8)
+    - KSCrash/Reporting/Filters/Basic (= 1.15.8)
+    - KSCrash/Reporting/Filters/GZip (= 1.15.8)
+    - KSCrash/Reporting/Filters/JSON (= 1.15.8)
+    - KSCrash/Reporting/Filters/Sets (= 1.15.8)
+    - KSCrash/Reporting/Filters/Stringify (= 1.15.8)
+    - KSCrash/Reporting/Filters/Tools (= 1.15.8)
+  - KSCrash/Reporting/Filters/Alert (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.4):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.4):
+  - KSCrash/Reporting/Filters/AppleFmt (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.4):
+  - KSCrash/Reporting/Filters/Base (1.15.8):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.4):
+  - KSCrash/Reporting/Filters/GZip (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.4):
+  - KSCrash/Reporting/Filters/JSON (1.15.8):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -108,18 +108,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.4):
+  - KSCrash/Reporting/Filters/Stringify (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.4):
+  - KSCrash/Reporting/Filters/Tools (1.15.8):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.4):
+  - KSCrash/Reporting/MessageUI (1.15.8):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.4):
+  - KSCrash/Reporting/Sinks (1.15.8):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.4):
+  - KSCrash/Reporting/Tools (1.15.8):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libidn (1.33)
@@ -153,9 +153,9 @@ PODS:
   - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
   - SAMKeychain (1.5.2)
-  - SignalProtocol-ObjC (0.1.0):
-    - SignalProtocolC (~> 0.1.0)
-  - SignalProtocolC (0.1.0)
+  - SignalProtocolC (2.3.1)
+  - SignalProtocolObjC (1.0.0):
+    - SignalProtocolC (~> 2.3.1)
   - SQLCipher (3.4.1):
     - SQLCipher/standard (= 3.4.1)
   - SQLCipher/common (3.4.1)
@@ -260,8 +260,7 @@ DEPENDENCIES:
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
   - SAMKeychain (~> 1.5)
-  - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
-  - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec`)
+  - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TTTAttributedLabel (~> 2.0)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
@@ -294,10 +293,8 @@ EXTERNAL SOURCES:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
-  SignalProtocol-ObjC:
-    :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
-  SignalProtocolC:
-    :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec
+  SignalProtocolObjC:
+    :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapTaskQueue:
@@ -338,7 +335,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
-  KSCrash: cbdf1f66c45c8dcc11154a4b1596c6cd1bfc2657
+  KSCrash: 4acb0f9cdb0b1ce7155c608dc175d91d750a8c3a
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -354,19 +351,19 @@ SPEC CHECKSUMS:
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
-  SignalProtocol-ObjC: 06dbca97b2c0b1b434ea325abc50b4c26cf6e900
-  SignalProtocolC: a059b4ff6899a2d99d7fafb046513fdd2db2b441
+  SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
+  SignalProtocolObjC: f5f0c7dcbedf21490b7ec190b6dc5103910acb75
   SQLCipher: 43d12c0eb9c57fb438749618fc3ce0065509a559
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 82b5c44465fe900b6e54ee856328733d2abfa947
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
-  XMPPFramework: 544da7ab3faf7005de303708630a4e9741efb907
+  XMPPFramework: 164ed2ce99e3eb2f358e9f5ca5eeaa8d75339fde
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: dd16556f1d4274389bcaf64c9041872f13ad1bf8
+PODFILE CHECKSUM: 4b36c3890db7f83bb7bf599f2a24a4b449cda1fc
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1

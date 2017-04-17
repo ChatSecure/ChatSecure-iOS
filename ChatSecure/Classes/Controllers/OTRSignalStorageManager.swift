@@ -202,11 +202,11 @@ open class OTRSignalStorageManager: NSObject {
             if let preKey = preKeys.first, let preKeyData = preKey.keyData {
                 let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: preKeyData, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
             } else {
-                DDLogError("Error fetching outgoing bundle: no prekeys")
+                //DDLogError("Error fetching outgoing bundle: no prekeys")
                 throw OMEMOBundleError.invalid
             }
         } catch let error {
-            DDLogError("Error fetching outgoing bundle: \(error)")
+            //DDLogError("Error fetching outgoing bundle: \(error)")
             throw error
         }
         

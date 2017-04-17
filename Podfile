@@ -60,7 +60,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
-  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec'
+  # pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '0.3.0'
 
@@ -76,7 +76,7 @@ abstract_target 'ChatSecureCorePods' do
 
   # Submodules
 
-  pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
+  pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'

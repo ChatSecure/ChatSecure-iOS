@@ -90,11 +90,11 @@ extension OTRAccountSignalEncryptionManager {
             if let preKey = preKeys.first {
                 let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.preKeyId(), preKeyPublic: preKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
             } else {
-                DDLogError("Error testing outgoing bundle")
+                //DDLogError("Error testing outgoing bundle")
                 throw OMEMOBundleError.invalid
             }
         } catch let error {
-            DDLogError("Error creating outgoing bundle: \(error)")
+            //DDLogError("Error creating outgoing bundle: \(error)")
             throw OMEMOBundleError.invalid
         }
         
