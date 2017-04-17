@@ -1148,9 +1148,13 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 
 - (void) addBuddy:(OTRXMPPBuddy *)newBuddy
 {
-    XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.username];
-    [self.xmppRoster addUser:newJID withNickname:newBuddy.displayName];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
+        addBuddyAction.buddyKey = newBuddy.uniqueId;
+        [addBuddyAction saveWithTransaction:transaction];
+    }];
 }
+
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy
 {
     XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
@@ -1159,13 +1163,17 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 }
 -(void)removeBuddies:(NSArray *)buddies
 {
-    for (OTRXMPPBuddy *buddy in buddies){
-        XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
-        [self.xmppRoster removeUser:jid];
-    }
-    
-    
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        // Add actions to the queue
+        for (OTRXMPPBuddy *buddy in buddies){
+            OTRYapRemoveBuddyAction *removeBuddyAction = [[OTRYapRemoveBuddyAction alloc] init];
+            removeBuddyAction.buddyKey = buddy.uniqueId;
+            removeBuddyAction.buddyJid = buddy.username;
+            removeBuddyAction.accountKey = buddy.accountUniqueId;
+            [removeBuddyAction saveWithTransaction:transaction];
+        }
+        
         [transaction removeObjectsForKeys:[buddies valueForKey:NSStringFromSelector(@selector(uniqueId))] inCollection:[OTRXMPPBuddy collection]];
     }];
 

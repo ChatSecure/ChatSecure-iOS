@@ -456,9 +456,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self.readWriteConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
         if (dbBuddy) {
-            BuddyAction *action = [[BuddyAction alloc] init];
-            action.buddy = dbBuddy;
-            action.action = BuddyActionTypeDelete;
+            OTRYapRemoveBuddyAction *action = [[OTRYapRemoveBuddyAction alloc] init];
+            action.buddyKey = dbBuddy.uniqueId;
+            action.buddyJid = dbBuddy.username;
+            action.accountKey = dbBuddy.accountUniqueId;
             [action saveWithTransaction:transaction];
             [dbBuddy removeWithTransaction:transaction];
         }

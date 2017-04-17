@@ -42,6 +42,7 @@ import Foundation
     case omemoDeviceEdgeName
     case signalSignedPreKey
     case messageActionEdgeName
+    case buddyActionEdgeName
     
     public func name() -> String {
         switch self {
@@ -52,6 +53,7 @@ import Foundation
             case .omemoDeviceEdgeName: return "OmemoDeviceEdgeName"
             case .signalSignedPreKey: return "SignalSignedPreKey"
             case .messageActionEdgeName: return "MessageActionEdgeName"
+            case .buddyActionEdgeName: return "BuddyActionEdgeName"
         }
     }
 }

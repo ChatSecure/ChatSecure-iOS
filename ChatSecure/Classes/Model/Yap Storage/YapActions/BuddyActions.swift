@@ -8,6 +8,7 @@
 
 import Foundation
 import YapDatabase.YapDatabaseActionManager
+import YapTaskQueue
 
 @objc public enum BuddyActionType: Int {
     case delete
@@ -71,4 +72,53 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
         }
 
     }
+}
+
+open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
+    open var buddyKey:String = ""
+    open var date:Date = Date()
+
+    override open var uniqueId: String {
+        return buddyKey
+    }
+
+    override open static func collection() -> String {
+        return OTRYapMessageSendAction.collection()
+    }
+    
+    /// The yap key of this item
+    public func yapKey() -> String {
+        return self.uniqueId
+    }
+    
+    /// The yap collection of this item
+    public func yapCollection() -> String {
+        return type(of: self).collection()
+    }
+    
+    /// The queue that this item is in.
+    public func queueName() -> String {
+        let brokerName = YapDatabaseConstants.extensionName(.messageQueueBrokerViewName)
+        return "\(brokerName).\(self.buddyKey)"
+    }
+    
+    /// How this item should be sorted compared to other items in it's queue
+    public func sort(_ otherObject:YapTaskQueueAction) -> ComparisonResult {
+        guard let otherDate = (otherObject as? OTRYapBuddyAction)?.date else {
+            return .orderedSame
+        }
+        return self.date.compare(otherDate)
+    }
+}
+
+open class OTRYapAddBuddyAction :OTRYapBuddyAction, YapDatabaseRelationshipNode {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.buddyActionEdgeName.name(), destinationKey: self.buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: .deleteSourceIfDestinationDeleted)
+        return [edge]
+    }
+}
+
+open class OTRYapRemoveBuddyAction :OTRYapBuddyAction {
+    open var accountKey:String?
+    open var buddyJid:String?
 }

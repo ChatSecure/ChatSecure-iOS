@@ -1,4 +1,4 @@
-      //
+//
 //  MessageQueueHandler.swift
 //  ChatSecure
 //
@@ -8,7 +8,30 @@
 
 import Foundation
 import YapTaskQueue
-      
+
+private class OutstandingActionInfo: Hashable, Equatable {
+    let action:YapTaskQueueAction
+    let timer:Timer?
+    let completion:((_ success: Bool, _ retryTimeout: TimeInterval) -> Void)
+    
+    public init(action:YapTaskQueueAction,timer:Timer?,completion:@escaping ((_ success: Bool, _ retryTimeout: TimeInterval) -> Void)) {
+        self.action = action
+        self.timer = timer
+        self.completion = completion
+    }
+    
+    /// Needed so we can store the struct in a dictionary
+    var hashValue: Int {
+        get {
+            return action.yapKey().hashValue
+        }
+    }
+}
+
+private func ==(lhs: OutstandingActionInfo, rhs: OutstandingActionInfo) -> Bool {
+    return lhs.action.yapKey() == rhs.action.yapKey()
+}
+
 /// This is just small struct to store the necessary inormation about a message while we wait for delegate callbacks from the XMPPStream
 private struct OutstandingMessageInfo {
     let messageKey:String
@@ -18,7 +41,7 @@ private struct OutstandingMessageInfo {
     let completion:((_ success: Bool, _ retryTimeout: TimeInterval) -> Void)
 }
 
-/// Needed so we can store the struct in a dictionary 
+/// Needed so we can store the struct in a dictionary
 extension OutstandingMessageInfo: Hashable {
     var hashValue: Int {
         get {
@@ -43,7 +66,7 @@ public class MessageQueueHandler:NSObject {
     let databaseConnection:YapDatabaseConnection
     fileprivate var outstandingMessages = [String:OutstandingMessageInfo]()
     fileprivate var outstandingBuddies = [String:OutstandingMessageInfo]()
-    fileprivate var outstandingAccounts = [String:Set<OutstandingMessageInfo>]()
+    fileprivate var outstandingAccounts = [String:Set<OutstandingActionInfo>]()
     fileprivate let isolationQueue = DispatchQueue(label: "MessageQueueHandler-IsolationQueue", attributes: [])
     fileprivate var accountLoginNotificationObserver:NSObjectProtocol?
     fileprivate var messageStateDidChangeNotificationObserver:NSObjectProtocol?
@@ -73,50 +96,48 @@ public class MessageQueueHandler:NSObject {
     
     //MARK: Access to outstanding messages and account
     
-    fileprivate func waitingForAccount(_ accountString:String,messageKey:String,messageCollection:String,messageSecurity:OTRMessageTransportSecurity,completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+    fileprivate func waitingForAccount(_ accountString:String,action:OutstandingActionInfo) {
         
         self.isolationQueue.async {
             
             // Get the set out or create a new one
-            var messageSet = self.outstandingAccounts[accountString]
-            if messageSet == nil {
-                messageSet = Set<OutstandingMessageInfo>()
+            var actionSet = self.outstandingAccounts[accountString]
+            if actionSet == nil {
+                actionSet = Set<OutstandingActionInfo>()
             }
             
             // Guarantee set is real
-            guard var set = messageSet else {
+            guard var set = actionSet else {
                 return
             }
             // Add new item
-            set.insert(OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,messageSecurity:messageSecurity,timer:nil, completion: completion))
+            set.insert(action)
             //Insert back into dictionary
             self.outstandingAccounts.updateValue(set, forKey: accountString)
         }
-        
-        
     }
     
-    fileprivate func popWaitingAccount(_ accountString:String) -> Set<OutstandingMessageInfo>? {
-        var messageInfoSet:Set<OutstandingMessageInfo>? = nil
+    fileprivate func popWaitingAccount(_ accountString:String) -> Set<OutstandingActionInfo>? {
+        var actionSet:Set<OutstandingActionInfo>? = nil
         self.isolationQueue.sync {
-            messageInfoSet = self.outstandingAccounts.removeValue(forKey: accountString)
+            actionSet = self.outstandingAccounts.removeValue(forKey: accountString)
         }
         
-        return messageInfoSet
+        return actionSet
     }
     
     fileprivate func waitingForBuddy(_ buddyKey:String,messageKey:String, messageCollection:String, messageSecurity:OTRMessageTransportSecurity, timer:Timer,completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
         
         let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,messageSecurity:messageSecurity, timer:nil, completion: completion)
         
-        self.isolationQueue.async { 
+        self.isolationQueue.async {
             self.outstandingBuddies.updateValue(messageInfo, forKey: buddyKey)
         }
     }
     
     fileprivate func popWaitingBuddy(_ buddyKey:String) -> OutstandingMessageInfo? {
         var messageInfo:OutstandingMessageInfo? = nil
-        self.isolationQueue.sync { 
+        self.isolationQueue.sync {
             messageInfo = self.outstandingBuddies.removeValue(forKey: buddyKey)
         }
         return messageInfo
@@ -126,15 +147,15 @@ public class MessageQueueHandler:NSObject {
         let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection, messageSecurity:messageSecurity, timer:nil, completion: completion)
         let key = "\(messageKey)\(messageCollection)"
         
-        self.isolationQueue.async { 
+        self.isolationQueue.async {
             self.outstandingMessages.updateValue(messageInfo, forKey: key)
         }
     }
     
-    /** 
+    /**
      * Remove a waiting message info from the outstaning message dictionary. After the message info is removed the completion block should be called.
      * This ensures that the outstandingMessages dictionary is accessed from the correct queue.
-     * 
+     *
      * - parameter messageKey: The yap database messsage key.
      * - parameter messageCollection: The yap database message key.
      * - returns: The OutstandingMessageInfo if one exists. Removed from the waiting dictioanry.
@@ -142,7 +163,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate func popWaitingMessage(_ messageKey:String,messageCollection:String) -> OutstandingMessageInfo? {
         var messageInfo:OutstandingMessageInfo? = nil
         let key = "\(messageKey)\(messageCollection)"
-        self.isolationQueue.sync { 
+        self.isolationQueue.sync {
             messageInfo = self.outstandingMessages.removeValue(forKey: key)
         }
         
@@ -172,21 +193,35 @@ public class MessageQueueHandler:NSObject {
     fileprivate func sendMessage(_ outstandingMessage:OutstandingMessageInfo) {
         self.operationQueue.addOperation { [weak self] in
             guard let strongSelf = self else { return }
-            var msg:OTROutgoingMessage? = nil
+            var msgAction:OTRYapMessageSendAction? = nil
             strongSelf.databaseConnection.read({ (transaction) in
-                msg = transaction.object(forKey: outstandingMessage.messageKey, inCollection: outstandingMessage.messageCollection) as? OTROutgoingMessage
+                msgAction = strongSelf.fetchSendingAction(outstandingMessage.messageKey, messageCollection: outstandingMessage.messageCollection, transaction: transaction)
             })
             
-            guard let message = msg else {
+            guard let action = msgAction else {
                 outstandingMessage.completion(true, 0.0)
                 return
             }
             
-            strongSelf.sendMessage(message, completion: outstandingMessage.completion)
+            strongSelf.sendMessage(action, completion: outstandingMessage.completion)
         }
     }
     
-    fileprivate func sendMessage(_ message:OTROutgoingMessage, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+    fileprivate func sendMessage(_ messageSendingAction:OTRYapMessageSendAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        
+        let messageKey = messageSendingAction.messageKey
+        let messageCollection = messageSendingAction.messageCollection
+        var msg:OTROutgoingMessage? = nil
+        self.databaseConnection.read { (transaction) in
+            msg = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
+        }
+        
+        guard let message = msg else {
+            // Somehow we have an action without a message. This is very strange. Do not like.
+            // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
+            completion(true, 0.0)
+            return
+        }
         
         var bud:OTRBuddy? = nil
         var acc:OTRAccount? = nil
@@ -214,8 +249,6 @@ public class MessageQueueHandler:NSObject {
          * a msesage to be sent.
          */
         //Some way to store a message dictionary with the key and block
-        let messageCollection = OTROutgoingMessage.collection()
-        
         
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus == .connected) {
@@ -236,7 +269,7 @@ public class MessageQueueHandler:NSObject {
                 break
             }
         } else if (account.autologin == true) {
-            self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
+            self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: messageSendingAction, timer: nil, completion: completion))
             accountProtocol.connectUserInitiated(false)
         } else {
             // The account might be connected then? even if not auto connecting we might just start up faster then the
@@ -247,8 +280,79 @@ public class MessageQueueHandler:NSObject {
             
             completion(false, self.accountRetryTimeout)
         }
-
     }
+    
+    fileprivate func addBuddyToRoster(_ addBuddyAction:OTRYapAddBuddyAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        
+        var bud:OTRBuddy? = nil
+        var acc:OTRAccount? = nil
+        self.databaseConnection.read({ (transaction) in
+            bud = OTRBuddy.fetchObject(withUniqueID: addBuddyAction.buddyKey, transaction: transaction)
+            if let accountKey = bud?.accountUniqueId {
+                acc = OTRAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
+            }
+            
+        })
+        guard let buddy = bud,let account = acc else {
+            completion(true, 0.0)
+            return
+        }
+        
+        //Get the XMPP procol manager associated with this message and therefore account
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+            completion(true, 0.0)
+            return
+        }
+
+        //Ensure protocol is connected or if not and autologin then connnect
+        if (accountProtocol.connectionStatus == .connected) {
+            // Add the buddy to our roster
+            let jid = XMPPJID(string: buddy.username)
+            accountProtocol.xmppRoster.addUser(jid, withNickname:buddy.displayName)
+            completion(true, 0.0)
+        } else if (account.autologin == true) {
+            self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: addBuddyAction, timer: nil, completion: completion))
+            accountProtocol.connectUserInitiated(false)
+        } else {
+            // Retry later
+            completion(false, self.accountRetryTimeout)
+        }
+    }
+
+    fileprivate func removeBuddyFromRoster(_ removeBuddyAction:OTRYapRemoveBuddyAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        
+        var acc:OTRAccount? = nil
+        self.databaseConnection.read({ (transaction) in
+            if let accountKey = removeBuddyAction.accountKey {
+                acc = OTRAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
+            }
+        })
+        guard let account = acc else {
+            completion(true, 0.0)
+            return
+        }
+        
+        //Get the XMPP procol manager associated with this message and therefore account
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+            completion(true, 0.0)
+            return
+        }
+        
+        //Ensure protocol is connected or if not and autologin then connnect
+        if (accountProtocol.connectionStatus == .connected) {
+            // Add the buddy to our roster
+            let jid = XMPPJID(string: removeBuddyAction.buddyJid)
+            accountProtocol.xmppRoster.removeUser(jid)
+            completion(true, 0.0)
+        } else if (account.autologin == true) {
+            self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: removeBuddyAction, timer: nil, completion: completion))
+            accountProtocol.connectUserInitiated(false)
+        } else {
+            // Retry later
+            completion(false, self.accountRetryTimeout)
+        }
+    }
+
     
     //Mark: Callback for Account
     
@@ -263,12 +367,15 @@ public class MessageQueueHandler:NSObject {
     
     fileprivate func didConnectAccount(_ accountKey:String, accountCollection:String) {
         
-        guard let messageSet = self.popWaitingAccount(accountKey) else {
+        guard let actionSet = self.popWaitingAccount(accountKey) else {
             return
         }
         
-        for messageInfo in messageSet {
-            self.sendMessage(messageInfo)
+        for actionInfo in actionSet {
+            self.operationQueue.addOperation { [weak self] in
+                guard let strongSelf = self else { return }
+                strongSelf.handleNextItem(actionInfo.action, completion: actionInfo.completion)
+            }
         }
     }
     
@@ -277,7 +384,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate func handleMessageStateDidChangeNotification(_ notification:Notification) {
         guard let buddy = notification.object as? OTRBuddy,
             let messageStateInt = (notification.userInfo?[OTRMessageStateKey] as? NSNumber)?.uintValue else {
-            return
+                return
         }
         
         if  messageStateInt == OTREncryptionMessageState.encrypted.rawValue {
@@ -355,37 +462,26 @@ extension MessageQueueHandler: OTRXMPPMessageStatusModuleDelegate {
         messageInfo.completion(true, 0.0)
     }
 }
-      
+
 //MARK: YapTaskQueueHandler Protocol
 extension MessageQueueHandler: YapTaskQueueHandler {
-        /** This method is called when an item is available to be exectued. Call completion once finished with the action item.
-         
-         */
+    /** This method is called when an item is available to be exectued. Call completion once finished with the action item.
+     
+     */
     
     public func handleNextItem(_ action:YapTaskQueueAction, completion:@escaping (_ success:Bool, _ retryTimeout:TimeInterval)->Void) {
-        //Get the real message out of the database
-        guard let messageSendingAction = action as? OTRYapMessageSendAction else {
-            return
+        switch action {
+        case let sendMessageAction as OTRYapMessageSendAction:
+                self.sendMessage(sendMessageAction, completion: completion)
+        case let addBuddyAction as OTRYapAddBuddyAction:
+                self.addBuddyToRoster(addBuddyAction, completion: completion)
+        case let removeBuddyAction as OTRYapRemoveBuddyAction:
+            self.removeBuddyFromRoster(removeBuddyAction, completion: completion)
+        default: break
         }
-        
-        let messageKey = messageSendingAction.messageKey
-        let messageCollection = messageSendingAction.messageCollection
-        var msg:OTROutgoingMessage? = nil
-        self.databaseConnection.read { (transaction) in
-            msg = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
-        }
-        
-        guard let message = msg else {
-            // Somehow we have an action without a message. This is very strange. Do not like.
-            // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
-            completion(true, 0.0)
-            return
-        }
-        
-        self.sendMessage(message, completion: completion)
     }
 }
-      
+
 // Message sending logic
 extension MessageQueueHandler {
     typealias MessageQueueHandlerCompletion = (_ success: Bool, _ retryTimeout: TimeInterval) -> Void
@@ -460,6 +556,6 @@ extension MessageQueueHandler {
                     messageInfo.completion(true, 0.0)
                 }
             }
-            })
+        })
     }
 }
