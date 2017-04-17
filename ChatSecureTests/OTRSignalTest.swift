@@ -41,7 +41,7 @@ class OTRSignalTest: XCTestCase {
         })
         
         let ourEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: ourAccount.uniqueId, databaseConnection: ourDatabaseConnection)
-        let ourOutgoingBundle = ourEncryptionManager.generateOutgoingBundle(10)
+        let ourOutgoingBundle = try! ourEncryptionManager.generateOutgoingBundle(10)
         
         let otherEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
         
@@ -51,7 +51,7 @@ class OTRSignalTest: XCTestCase {
             buddy.username = ourAccount.username
             buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle!.bundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
+            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle.bundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection(), publicIdentityKeyData: nil, lastSeenDate:nil)
             device.save(with:transaction)
         })
         ourDatabaseConnection.readWrite ({ (transaction) in
@@ -68,8 +68,8 @@ class OTRSignalTest: XCTestCase {
         //At this point int 'real' world we could post or outgoing bundle to OMEMO
         
         //Convert our outgoing bundle to an incoming bundle
-        let preKeyInfo = ourOutgoingBundle!.preKeys.first!
-        let incomingBundle = OTROMEMOBundleIncoming(bundle: ourOutgoingBundle!.bundle, preKeyId: preKeyInfo.0, preKeyData: preKeyInfo.1)
+        let preKeyInfo = ourOutgoingBundle.preKeys.first!
+        let incomingBundle = OTROMEMOBundleIncoming(bundle: ourOutgoingBundle.bundle, preKeyId: preKeyInfo.0, preKeyData: preKeyInfo.1)
         // 'Other' device is now able to send messages to 'Our' device
         try! otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: incomingBundle)
         

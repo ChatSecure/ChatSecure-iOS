@@ -172,8 +172,8 @@ open class OTRSignalStorageManager: NSObject {
                 
                 let publicIdentityKey = identityKeyPair.identityKeyPair.publicKey
                 simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
-            } catch {
-                
+            } catch let error {
+                DDLogError("Could not create signed preKey for bundle: \(error)")
             }
         }
         
@@ -193,8 +193,8 @@ open class OTRSignalStorageManager: NSObject {
                 let signalPreKey = try SignalPreKey(serializedData: data)
                 
                 preKeyDict.updateValue(signalPreKey.keyPair().publicKey, forKey: preKey.keyId)
-            } catch {
-                
+            } catch let error {
+                DDLogError("Found invalid prekey: \(error)")
             }
         })
         
