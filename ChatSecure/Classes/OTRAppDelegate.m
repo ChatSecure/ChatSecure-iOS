@@ -186,13 +186,18 @@
 - (void) setupCrashReporting {
     KSCrash *crash = [KSCrash sharedInstance];
     crash.monitoring = KSCrashMonitorTypeProductionSafeMinimal;
-    /*
-#warning Change this to KSCrashMonitorTypeProductionSafeMinimal before App Store release!
-#warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
     
+//#warning Change this to KSCrashMonitorTypeProductionSafeMinimal before App Store release!
+//#warning Otherwise it may crash for pauses longer than the deadlockWatchdogInterval!
+    
+    // People are reporting deadlocks again...
+    // Let's turn this back on for a little while.
+#if DEBUG
+    crash.monitoring = KSCrashMonitorTypeDebuggerSafe;
+#else
     crash.monitoring = KSCrashMonitorTypeAll;
-    crash.deadlockWatchdogInterval = 10;
-    */
+    crash.deadlockWatchdogInterval = 20;
+#endif
     
     // Setup Crash Reporting
     KSCrashInstallationHockey* installation = [KSCrashInstallationHockey sharedInstance];
