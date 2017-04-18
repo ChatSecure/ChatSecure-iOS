@@ -59,7 +59,8 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
         [serverInfo.privacyPolicyURL  promptToShowURLFromViewController:parentViewController sender:sender];
     }];
     [self setOnionAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
-        // TODO: show Tor info
+        NSURL *url = [NSURL URLWithString:@"https://en.wikipedia.org/wiki/.onion"];
+        [url promptToShowURLFromViewController:parentViewController sender:sender];
     }];
     [self setTwitterAction:^(XMPPServerInfoCell * _Nonnull cell, id _Nonnull sender) {
         [serverInfo.twitterURL promptToShowURLFromViewController:parentViewController sender:sender];

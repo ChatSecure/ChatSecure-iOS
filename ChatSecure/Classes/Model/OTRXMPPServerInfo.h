@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Defaults to 5222 */
 @property (nonatomic, readonly) in_port_t portNumber;
 @property (nonatomic, strong, readonly, nullable) NSString *certificate;
+/** If the server has a CAPTCHA challenge when registering. We currently don't support CAPTCHAs, so those results will be filtered out of . */
+@property (nonatomic, readonly) BOOL requiresCaptcha;
 
 /** Return image if loaded from local resource bundle */
 - (nullable UIImage*) logoImage;
@@ -58,8 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** loaded from bundle */
 @property (class, readonly, nullable) NSArray<OTRXMPPServerInfo*> *defaultServerList;
 
-//+ (nullable NSArray<OTRXMPPServerInfo*> *)defaultServerList;
+/** Returns all servers (that don't require CAPTCHAs) */
 + (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData;
+
+/** Returns servers with optional CAPTCHA filtering. filterRequiresCaptcha=YES will remove results. */
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData filterRequiresCaptcha:(BOOL)filterRequiresCaptcha;
 
 @end
 NS_ASSUME_NONNULL_END

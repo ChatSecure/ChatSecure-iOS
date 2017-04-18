@@ -30,6 +30,9 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 
 @implementation OTRXMPPServerInfo
 @synthesize portNumber = _portNumber;
+@synthesize websiteURL = _websiteURL;
+@synthesize twitterURL = _twitterURL;
+@synthesize privacyPolicyURL = _privacyPolicyURL;
 
 - (instancetype) initWithDomain:(NSString*)domain {
     if (self = [super init]) {
@@ -51,7 +54,8 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
              @"server": @"server",
              @"onion": @"onion",
              @"portNumber": @"port",
-             @"certificate": @"certificate"
+             @"certificate": @"certificate",
+             @"requiresCaptcha": @"captcha"
              };
 }
 
@@ -68,8 +72,13 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 }
 
 - (UIImage*) logoImage {
+    UIImage *defaultImage = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil]; // load default image
+    NSParameterAssert(defaultImage);
     NSBundle *bundle = [[self class] serverBundle];
     NSArray *pathComponents = [self.logo pathComponents];
+    if (pathComponents.count < 2) {
+        return defaultImage;
+    }
     NSString *folder = pathComponents[0];
     NSString *fileName = pathComponents[1];
     NSString *extension = [fileName pathExtension];
@@ -77,7 +86,7 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
     NSString *path = [bundle pathForResource:resource ofType:extension inDirectory:folder];
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     if (!image) {
-        image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+        image = defaultImage;
     }
     NSParameterAssert(image);
     return image;
@@ -88,6 +97,27 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
         return _portNumber;
     }
     return 5222;
+}
+
+- (NSURL*) websiteURL {
+    if (_websiteURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _websiteURL;
+}
+
+- (NSURL*) twitterURL {
+    if (_twitterURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _twitterURL;
+}
+
+- (NSURL*) privacyPolicyURL {
+    if (_privacyPolicyURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _privacyPolicyURL;
 }
 
 + (NSBundle*)serverBundle {
@@ -112,7 +142,11 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
     return _defaultServerList;
 }
 
-+ (NSArray *)serverListFromJSONData:(NSData*)jsonData {
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData {
+    return [self serverListFromJSONData:jsonData filterRequiresCaptcha:YES];
+}
+
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData filterRequiresCaptcha:(BOOL)filterRequiresCaptcha {
     NSParameterAssert(jsonData != nil);
     NSError *error = nil;
     NSDictionary *root = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
@@ -128,6 +162,10 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
         NSLog(@"Error parsing server list JSON: %@", error);
         return nil;
     }
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(OTRXMPPServerInfo *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return evaluatedObject.requiresCaptcha != filterRequiresCaptcha;
+    }];
+    servers = [servers filteredArrayUsingPredicate:predicate];
     return servers;
 }
 
