@@ -637,7 +637,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         } catch let error {
             //DDLogError("Other error fetching bundle! \(error)")
         }
-        let maxTries = 5
+        let maxTries = 50
         var tries = 0
         while _bundle == nil && tries < maxTries {
             tries = tries + 1
