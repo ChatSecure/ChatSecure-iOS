@@ -15,20 +15,20 @@
             <rect key="frame" x="0.0" y="0.0" width="329" height="101"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Add Friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sd1-gC-uPo">
-                    <rect key="frame" x="10" y="10" width="309" height="22"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="998" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Add Friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sd1-gC-uPo">
+                    <rect key="frame" x="10" y="10" width="309" height="19.5"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S0r-RH-Yrj">
-                    <rect key="frame" x="10" y="36" width="309" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <rect key="frame" x="10" y="37.5" width="309" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGW-Vp-uBw">
-                    <rect key="frame" x="124.5" y="61" width="80" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGW-Vp-uBw">
+                    <rect key="frame" x="124.5" y="62.5" width="80" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="hyB-4e-hlB"/>
                     </constraints>
@@ -46,11 +46,11 @@
                 <constraint firstAttribute="trailing" secondItem="S0r-RH-Yrj" secondAttribute="trailing" constant="10" id="US1-b7-YG3"/>
                 <constraint firstAttribute="trailing" secondItem="Sd1-gC-uPo" secondAttribute="trailing" constant="10" id="XgO-rP-wjG"/>
                 <constraint firstItem="kGW-Vp-uBw" firstAttribute="centerX" secondItem="RXs-xW-dqD" secondAttribute="centerX" id="Y4w-Zt-qoH"/>
-                <constraint firstAttribute="bottom" secondItem="kGW-Vp-uBw" secondAttribute="bottom" constant="10" id="hoC-Fm-boy"/>
-                <constraint firstItem="kGW-Vp-uBw" firstAttribute="top" secondItem="S0r-RH-Yrj" secondAttribute="bottom" constant="4" id="r5o-bK-592"/>
+                <constraint firstAttribute="bottom" secondItem="kGW-Vp-uBw" secondAttribute="bottom" priority="999" constant="10" id="hoC-Fm-boy"/>
+                <constraint firstItem="kGW-Vp-uBw" firstAttribute="top" secondItem="S0r-RH-Yrj" secondAttribute="bottom" constant="8" id="r5o-bK-592"/>
                 <constraint firstItem="S0r-RH-Yrj" firstAttribute="leading" secondItem="RXs-xW-dqD" secondAttribute="leading" constant="10" id="t1m-D5-W3z"/>
                 <constraint firstItem="S0r-RH-Yrj" firstAttribute="centerX" secondItem="RXs-xW-dqD" secondAttribute="centerX" id="txQ-nU-Bvc"/>
-                <constraint firstItem="S0r-RH-Yrj" firstAttribute="top" secondItem="Sd1-gC-uPo" secondAttribute="bottom" constant="4" id="vGf-xx-icd"/>
+                <constraint firstItem="S0r-RH-Yrj" firstAttribute="top" secondItem="Sd1-gC-uPo" secondAttribute="bottom" constant="8" id="vGf-xx-icd"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
