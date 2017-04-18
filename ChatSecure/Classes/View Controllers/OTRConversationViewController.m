@@ -102,10 +102,17 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     __block BOOL hasAccounts = NO;
+    __block BOOL needsMigration = NO;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
+        }
+        NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
+        for (OTRAccount *account in accounts) {
+            if ([[account.username lowercaseString] hasSuffix:@"dukgo.com"]) {
+                needsMigration = YES;
+            }
         }
     }];
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
@@ -123,6 +130,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             [self presentViewController:pushVC animated:YES completion:nil];
         }
         self.hasPresentedOnboarding = YES;
+    }
+    if (needsMigration) {
+        [self createMigrationHeaderView];
     }
 }
 
@@ -225,6 +235,20 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     else {
         self.title = CHATS_STRING();
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if (self.tableView.tableHeaderView != nil) {
+        UIView *headerView = self.tableView.tableHeaderView;
+        [headerView setNeedsLayout];
+        [headerView layoutIfNeeded];
+        int height = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        CGRect frame = headerView.frame;
+        frame.size.height = height;
+        headerView.frame = frame;
+        self.tableView.tableHeaderView = headerView;
     }
 }
 
@@ -451,6 +475,26 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     
     [self.tableView endUpdates];
+}
+
+#pragma - mark Account Migration Methods
+
+- (void)createMigrationHeaderView
+{
+    UINib *nib = [UINib nibWithNibName:@"MigrationInfoHeaderView" bundle:OTRAssets.resourcesBundle];
+    MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
+    [header.titleLabel setText:@"It's time to move!"];
+    [header.descriptionLabel setText:@"Your account currently lives on the Dukgo servers. That chat service is closing in 8 days, so we're going to help move your account to a new server."];
+    self.tableView.tableHeaderView = header;
+}
+
+- (IBAction)didPressStartMigrationButton:(id)sender {
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+    OTRBaseLoginViewController *createAccountVC = (OTRBaseLoginViewController*)[onboardingStoryboard instantiateViewControllerWithIdentifier:@"createNewAccount"];
+    createAccountVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    createAccountVC.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES];
+    createAccountVC.loginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
+    [self.navigationController pushViewController:createAccountVC animated:YES];
 }
 
 @end
