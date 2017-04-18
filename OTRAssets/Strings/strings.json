@@ -271,6 +271,14 @@
         "comment": "Explanation for why a message could not be sent.",
         "string": "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."
     },
+    "MIGRATION_STRING": {
+        "comment": "Title for migration header view",
+        "string": "It's time to move!"
+    },
+    "MIGRATION_INFO_STRING": {
+        "comment": "Explanation for why migration is needed",
+        "string": "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."
+    },
     "NAME_STRING": {
         "comment": "The string describing a buddy's display name",
         "string": "Name"

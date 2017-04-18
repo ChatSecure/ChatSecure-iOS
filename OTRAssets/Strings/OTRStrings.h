@@ -194,6 +194,10 @@ FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
 FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 FOUNDATION_EXPORT NSString* MESSAGE_COULD_NOT_BE_SENT_STRING();
+/** "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server.", Explanation for why migration is needed */
+FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
+/** "It's time to move!", Title for migration header view */
+FOUNDATION_EXPORT NSString* MIGRATION_STRING();
 /** "My QR Code", Your QR code */
 FOUNDATION_EXPORT NSString* MY_QR_CODE();
 /** "Me",  */
