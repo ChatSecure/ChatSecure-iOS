@@ -37,6 +37,9 @@
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRBuddyApprovalCell.h"
+#import "OTRStrings.h"
+#import "OTRvCard.h"
+#import "XMPPvCardTemp.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -50,6 +53,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic) BOOL hasPresentedOnboarding;
 
 @property (nonatomic, strong) OTRAccountDatabaseCount *accountCounter;
+@property (nonatomic, strong) MigrationInfoHeaderView *migrationInfoHeaderView;
 
 @end
 
@@ -111,6 +115,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
         for (OTRAccount *account in accounts) {
             if ([[account.username lowercaseString] hasSuffix:@"dukgo.com"]) {
+                if ([account conformsToProtocol:@protocol(OTRvCard)]) {
+                    XMPPvCardTemp *vcard = [(id<OTRvCard>)account vCardTemp];
+                    if (vcard.jid != nil && [vcard.jid.bare caseInsensitiveCompare:[account username]] != NSOrderedSame) {
+                        continue; // Already in the migration process
+                    }
+                }
                 needsMigration = YES;
             }
         }
@@ -132,7 +142,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         self.hasPresentedOnboarding = YES;
     }
     if (needsMigration) {
-        [self createMigrationHeaderView];
+        self.migrationInfoHeaderView = [self createMigrationHeaderView];
+        self.tableView.tableHeaderView = self.migrationInfoHeaderView;
     }
 }
 
@@ -240,8 +251,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    if (self.tableView.tableHeaderView != nil) {
-        UIView *headerView = self.tableView.tableHeaderView;
+    if (self.migrationInfoHeaderView != nil) {
+        UIView *headerView = self.migrationInfoHeaderView;
         [headerView setNeedsLayout];
         [headerView layoutIfNeeded];
         int height = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
@@ -479,13 +490,13 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 #pragma - mark Account Migration Methods
 
-- (void)createMigrationHeaderView
+- (MigrationInfoHeaderView *)createMigrationHeaderView
 {
     UINib *nib = [UINib nibWithNibName:@"MigrationInfoHeaderView" bundle:OTRAssets.resourcesBundle];
     MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
-    [header.titleLabel setText:@"It's time to move!"];
-    [header.descriptionLabel setText:@"Your account currently lives on the Dukgo servers. That chat service is closing in 8 days, so we're going to help move your account to a new server."];
-    self.tableView.tableHeaderView = header;
+    [header.titleLabel setText:MIGRATION_STRING()];
+    [header.descriptionLabel setText:MIGRATION_INFO_STRING()];
+    return header;
 }
 
 - (IBAction)didPressStartMigrationButton:(id)sender {
