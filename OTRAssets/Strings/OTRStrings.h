@@ -204,6 +204,8 @@ FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_STRING();
 FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_SWITCH();
 /** "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
+/** "Get Started", Title for button to start migration tool */
+FOUNDATION_EXPORT NSString* MIGRATION_START_STRING();
 /** "It's time to move!", Title for migration header view */
 FOUNDATION_EXPORT NSString* MIGRATION_STRING();
 /** "My QR Code", Your QR code */

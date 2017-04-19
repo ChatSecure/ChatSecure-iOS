@@ -279,6 +279,10 @@
         "comment": "Explanation for why migration is needed",
         "string": "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."
     },
+    "MIGRATION_START_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Get Started"
+    },
     "MIGRATED_BUDDY_STRING": {
         "comment": "Title for migrated buddy header view",
         "string": "Buddy has moved!"

@@ -204,6 +204,8 @@ NSString* MIGRATED_BUDDY_STRING() { return [OTRLanguageManager translatedString:
 NSString* MIGRATED_BUDDY_SWITCH() { return [OTRLanguageManager translatedString:@"Switch"]; }
 /** "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."]; }
+/** "Get Started", Title for button to start migration tool */
+NSString* MIGRATION_START_STRING() { return [OTRLanguageManager translatedString:@"Get Started"]; }
 /** "It's time to move!", Title for migration header view */
 NSString* MIGRATION_STRING() { return [OTRLanguageManager translatedString:@"It's time to move!"]; }
 /** "My QR Code", Your QR code */

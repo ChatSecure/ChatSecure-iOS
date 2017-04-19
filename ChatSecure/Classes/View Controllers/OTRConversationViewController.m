@@ -496,6 +496,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
     [header.titleLabel setText:MIGRATION_STRING()];
     [header.descriptionLabel setText:MIGRATION_INFO_STRING()];
+    [header.startButton setTitle:MIGRATION_START_STRING() forState:UIControlStateNormal];
     return header;
 }
 
