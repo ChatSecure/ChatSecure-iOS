@@ -84,6 +84,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
 
 @property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
+@property (nonatomic, strong) UIView *jidForwardingHeaderView;
 
 @end
 
@@ -341,6 +342,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView reloadData];
     
     [self updateEncryptionState];
+    [self updateJIDForwardingHeader];
     
     [self sendPresenceProbe];
 }
@@ -556,7 +558,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 }
 
-/** 
+/**
  This generates a UIAlertAction where the handler fetches the outgoing message (optionaly duplicates). Then if media message resend media message. If not update messageSecurityInfo and date and create new sending action.
  */
 - (UIAlertAction *)resendOutgoingMessageActionForMessageKey:(NSString *)messageKey
@@ -1827,6 +1829,100 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
+}
+
+#pragma - mark Buddy Migration methods
+
+- (NSString *)getForwardingJIDForBuddy:(OTRBuddy *)buddy {
+    NSString *ret = nil;
+    if (buddy != nil && [buddy conformsToProtocol:@protocol(OTRvCard)]) {
+        XMPPvCardTemp *vcard = [(id<OTRvCard>)buddy vCardTemp];
+        if (vcard.jid != nil) {
+            ret = vcard.jid.bare;
+        }
+    }
+    return ret;
+}
+
+- (void)updateJIDForwardingHeader {
+    
+    __block id<OTRThreadOwner> thread = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [self threadObjectWithTransaction:transaction];
+    }];
+    OTRBuddy *buddy = nil;
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
+        buddy = (OTRBuddy*)thread;
+    }
+    
+    // If we have a buddy with vcard JID set to something else than the username, show a
+    // "buddy has moved" warning to allow the user to start a chat with that JID instead.
+    BOOL showHeader = NO;
+    NSString *forwardingJid = [self getForwardingJIDForBuddy:buddy];
+    if (forwardingJid != nil && [forwardingJid caseInsensitiveCompare:[buddy username]] != NSOrderedSame) {
+        showHeader = YES;
+    }
+    
+    if (showHeader && self.jidForwardingHeaderView == nil) {
+        UINib *nib = [UINib nibWithNibName:@"MigratedBuddyHeaderView" bundle:OTRAssets.resourcesBundle];
+        MigratedBuddyHeaderView *header = (MigratedBuddyHeaderView*)[nib instantiateWithOwner:self options:nil][0];
+        [header.titleLabel setText:MIGRATED_BUDDY_STRING()];
+        [header.descriptionLabel setText:MIGRATED_BUDDY_INFO_STRING()];
+        [header.switchButton setTitle:MIGRATED_BUDDY_SWITCH() forState:UIControlStateNormal];
+        [header.ignoreButton setTitle:MIGRATED_BUDDY_IGNORE() forState:UIControlStateNormal];
+        [header setNeedsLayout];
+        [header layoutIfNeeded];
+        int height = [header systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        CGRect frame = header.frame;
+        frame.size.height = height;
+        header.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+        [self.view addSubview:header];
+        self.jidForwardingHeaderView = header;
+        self.collectionView.contentInset = UIEdgeInsetsMake(height, 0, 0, 0);
+    } else if (!showHeader && self.jidForwardingHeaderView != nil) {
+        self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        [self.jidForwardingHeaderView removeFromSuperview];
+        self.jidForwardingHeaderView = nil;
+    }
+}
+
+- (IBAction)didPressMigratedIgnore {
+    if (self.jidForwardingHeaderView != nil) {
+        self.jidForwardingHeaderView.hidden = YES;
+        self.collectionView.contentInset = UIEdgeInsetsZero;
+    }
+}
+
+- (IBAction)didPressMigratedSwitch {
+    if (self.jidForwardingHeaderView != nil) {
+        self.jidForwardingHeaderView.hidden = YES;
+        self.collectionView.contentInset = UIEdgeInsetsZero;
+    }
+    
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
+    }];
+    
+    NSString *forwardingJid = [self getForwardingJIDForBuddy:buddy];
+    if (forwardingJid != nil) {
+        // Try to find buddy
+        //
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRAccount *account = [self accountWithTransaction:transaction];
+            OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:forwardingJid withAccountUniqueId:account.uniqueId transaction:transaction];
+            if (!buddy) {
+                buddy = [[OTRXMPPBuddy alloc] init];
+                buddy.accountUniqueId = account.uniqueId;
+                buddy.username = forwardingJid;
+                id<OTRProtocol> proto = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                if (proto != nil) {
+                    [proto addBuddy:buddy];
+                }
+            }
+            [self setThreadKey:buddy.uniqueId collection:[OTRBuddy collection]];
+        }];
+    }
 }
 
 @end

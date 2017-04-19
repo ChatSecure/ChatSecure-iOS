@@ -279,6 +279,22 @@
         "comment": "Explanation for why migration is needed",
         "string": "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."
     },
+    "MIGRATED_BUDDY_STRING": {
+        "comment": "Title for migrated buddy header view",
+        "string": "Buddy has moved!"
+    },
+    "MIGRATED_BUDDY_INFO_STRING": {
+        "comment": "Explanation that buddy has a different prefered jid in the vcard",
+        "string": "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?"
+    },
+    "MIGRATED_BUDDY_IGNORE": {
+        "comment": "Button to ignore the migrated buddy warning",
+        "string": "Ignore"
+    },
+    "MIGRATED_BUDDY_SWITCH": {
+        "comment": "Button to switch the chat over to the migrated account",
+        "string": "Switch"
+    },
     "NAME_STRING": {
         "comment": "The string describing a buddy's display name",
         "string": "Name"

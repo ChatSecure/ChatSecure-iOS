@@ -194,6 +194,14 @@ NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager t
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 NSString* MESSAGE_COULD_NOT_BE_SENT_STRING() { return [OTRLanguageManager translatedString:@"The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."]; }
+/** "Ignore", Button to ignore the migrated buddy warning */
+NSString* MIGRATED_BUDDY_IGNORE() { return [OTRLanguageManager translatedString:@"Ignore"]; }
+/** "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?", Explanation that buddy has a different prefered jid in the vcard */
+NSString* MIGRATED_BUDDY_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?"]; }
+/** "Buddy has moved!", Title for migrated buddy header view */
+NSString* MIGRATED_BUDDY_STRING() { return [OTRLanguageManager translatedString:@"Buddy has moved!"]; }
+/** "Switch", Button to switch the chat over to the migrated account */
+NSString* MIGRATED_BUDDY_SWITCH() { return [OTRLanguageManager translatedString:@"Switch"]; }
 /** "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."]; }
 /** "It's time to move!", Title for migration header view */
