@@ -202,6 +202,8 @@ FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_INFO_STRING();
 FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_STRING();
 /** "Switch", Button to switch the chat over to the migrated account */
 FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_SWITCH();
+/** "Migrate Account", Title for button to start migration tool */
+FOUNDATION_EXPORT NSString* MIGRATE_ACCOUNT_STRING();
 /** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
 /** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */

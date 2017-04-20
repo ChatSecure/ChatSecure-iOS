@@ -20,8 +20,9 @@ enum TableSections: Int {
     case invite
     case details
     case loginlogout
+    case migrate
     case delete
-    static let allValues = [account, invite, details, loginlogout, delete]
+    static let allValues = [account, invite, details, loginlogout, migrate, delete]
 }
 
 enum AccountRows: Int {
@@ -124,6 +125,11 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     
     // MARK: - User Actions
     
+    func showMigrateAccount(account: OTRXMPPAccount, sender: Any) {
+        let migrateVC = OTRBaseLoginViewController()
+        self.navigationController?.pushViewController(migrateVC, animated: true)
+    }
+    
     func showDeleteDialog(account: OTRXMPPAccount, sender: Any) {
         let alert = UIAlertController(title: "\(DELETE_ACCOUNT_MESSAGE_STRING()) \(account.username)?", message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
@@ -204,7 +210,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             return AccountRows.allValues.count
         case .details:
             return detailCells.count
-        case .delete, .loginlogout, .invite:
+        case .delete, .loginlogout, .invite, .migrate:
             return 1
         }
     }
@@ -230,6 +236,8 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             return deleteCell(account: account, tableView: tableView, indexPath: indexPath)
         case .loginlogout:
             return loginLogoutCell(account: account, tableView: tableView, indexPath: indexPath)
+        case .migrate:
+            return migrateCell(account: account, tableView: tableView, indexPath: indexPath)
         }
         return UITableViewCell() // this should never be reached
     }
@@ -251,7 +259,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             let cell = self.tableView(tableView, cellForRowAt: indexPath)
             detail.action(tableView, indexPath, cell)
             return
-        case .invite, .delete, .loginlogout:
+        case .invite, .delete, .loginlogout, .migrate:
             self.tableView.deselectRow(at: indexPath, animated: true)
             if let cell = self.tableView(tableView, cellForRowAt: indexPath) as? SingleButtonTableViewCell, let action = cell.buttonAction {
                 action(cell, cell.button)
@@ -274,7 +282,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
                     break
                 }
             }
-        case .details, .invite, .delete, .loginlogout:
+        case .details, .invite, .delete, .loginlogout, .migrate:
             break
         }
         return height
@@ -339,6 +347,16 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         cell.button.setTitleColor(nil, for: .normal)
         cell.selectionStyle = .default
         cell.button.isEnabled = true
+        return cell
+    }
+    
+    func migrateCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
+        let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
+        cell.button.setTitle(MIGRATE_ACCOUNT_STRING(), for: .normal)
+        cell.buttonAction = { [weak self] (cell, sender) in
+            guard let strongSelf = self else { return }
+            strongSelf.showMigrateAccount(account: strongSelf.account, sender: sender)
+        }
         return cell
     }
     

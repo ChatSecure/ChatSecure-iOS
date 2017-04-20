@@ -287,6 +287,10 @@
         "comment": "Title for button to start migration tool",
         "string": "Get Started"
     },
+    "MIGRATE_ACCOUNT_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Migrate Account"
+    },
     "MIGRATED_BUDDY_STRING": {
         "comment": "Title for migrated buddy header view",
         "string": "Buddy has moved!"
