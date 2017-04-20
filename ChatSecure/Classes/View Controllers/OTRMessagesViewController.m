@@ -1833,13 +1833,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma - mark Buddy Migration methods
 
-- (NSString *)getForwardingJIDForBuddy:(OTRBuddy *)buddy {
-    NSString *ret = nil;
-    if (buddy != nil && [buddy conformsToProtocol:@protocol(OTRvCard)]) {
-        XMPPvCardTemp *vcard = [(id<OTRvCard>)buddy vCardTemp];
-        if (vcard.jid != nil) {
-            ret = vcard.jid.bare;
-        }
+- (XMPPJID *)getForwardingJIDForBuddy:(OTRBuddy *)buddy {
+    XMPPJID *ret = nil;
+    OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
+    if (xmppBuddy != nil && xmppBuddy.vCardTemp != nil) {
+        ret = xmppBuddy.vCardTemp.jid;
     }
     return ret;
 }
@@ -1850,16 +1848,16 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         thread = [self threadObjectWithTransaction:transaction];
     }];
-    OTRBuddy *buddy = nil;
-    if ([thread isKindOfClass:[OTRBuddy class]]) {
-        buddy = (OTRBuddy*)thread;
+    OTRXMPPBuddy *buddy = nil;
+    if ([thread isKindOfClass:[OTRXMPPBuddy class]]) {
+        buddy = (OTRXMPPBuddy*)thread;
     }
     
     // If we have a buddy with vcard JID set to something else than the username, show a
     // "buddy has moved" warning to allow the user to start a chat with that JID instead.
     BOOL showHeader = NO;
-    NSString *forwardingJid = [self getForwardingJIDForBuddy:buddy];
-    if (forwardingJid != nil && [forwardingJid caseInsensitiveCompare:[buddy username]] != NSOrderedSame) {
+    XMPPJID *forwardingJid = [self getForwardingJIDForBuddy:buddy];
+    if (forwardingJid != nil && ![forwardingJid isEqualToJID:buddy.bareJID options:XMPPJIDCompareBare]) {
         showHeader = YES;
     }
     
@@ -1904,17 +1902,17 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
     }];
     
-    NSString *forwardingJid = [self getForwardingJIDForBuddy:buddy];
+    XMPPJID *forwardingJid = [self getForwardingJIDForBuddy:buddy];
     if (forwardingJid != nil) {
         // Try to find buddy
         //
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             OTRAccount *account = [self accountWithTransaction:transaction];
-            OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:forwardingJid withAccountUniqueId:account.uniqueId transaction:transaction];
+            OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:forwardingJid.bare withAccountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = account.uniqueId;
-                buddy.username = forwardingJid;
+                buddy.username = forwardingJid.bare;
                 id<OTRProtocol> proto = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 if (proto != nil) {
                     [proto addBuddy:buddy];

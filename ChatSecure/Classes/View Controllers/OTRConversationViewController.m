@@ -115,11 +115,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
         for (OTRAccount *account in accounts) {
             if ([[account.username lowercaseString] hasSuffix:@"dukgo.com"]) {
-                if ([account conformsToProtocol:@protocol(OTRvCard)]) {
-                    XMPPvCardTemp *vcard = [(id<OTRvCard>)account vCardTemp];
-                    if (vcard.jid != nil && [vcard.jid.bare caseInsensitiveCompare:[account username]] != NSOrderedSame) {
-                        continue; // Already in the migration process
-                    }
+                OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
+                if (xmppAccount != nil && xmppAccount.vCardTemp != nil && ![xmppAccount.vCardTemp.jid isEqualToJID:[xmppAccount bareJID] options:XMPPJIDCompareBare]) {
+                    continue; // Already in the migration process
                 }
                 needsMigration = YES;
             }
