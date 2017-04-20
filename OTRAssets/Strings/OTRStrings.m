@@ -386,8 +386,8 @@ NSString* SOMEONE_STRING() { return [OTRLanguageManager translatedString:@"Someo
 NSString* SOURCE_STRING() { return [OTRLanguageManager translatedString:@"Check out the source here on Github"]; }
 /** "Server", server selection section title */
 NSString* Server_String() { return [OTRLanguageManager translatedString:@"Server"]; }
-/** "Choose from our list of trusted servers, or use your own.", server selection footer */
-NSString* Server_String_Hint() { return [OTRLanguageManager translatedString:@"Choose from our list of trusted servers, or use your own."]; }
+/** "Choose from a selection of public servers, or use your own.", server selection footer */
+NSString* Server_String_Hint() { return [OTRLanguageManager translatedString:@"Choose from a selection of public servers, or use your own."]; }
 /** "Show Advanced Encryption Settings",  */
 NSString* Show_Advanced_Encryption_Settings() { return [OTRLanguageManager translatedString:@"Show Advanced Encryption Settings"]; }
 /** "Show Advanced Options", toggle switch for show advanced */

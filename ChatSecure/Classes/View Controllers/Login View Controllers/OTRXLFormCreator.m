@@ -35,9 +35,9 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 
 NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
-@implementation OTRXLFormCreator
+@implementation XLFormDescriptor (OTRAccount)
 
-+ (XLFormDescriptor *)formForAccount:(OTRAccount *)account
++ (instancetype) existingAccountFormWithAccount:(OTRAccount *)account
 {
     XLFormDescriptor *descriptor = [self formForAccountType:account.accountType createAccount:NO];
     
@@ -67,6 +67,14 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
     }
     
     return descriptor;
+}
+
++ (instancetype) registerNewAccountFormWithAccountType:(OTRAccountType)accountType {
+    return [self formForAccountType:accountType createAccount:YES];
+}
+
++ (instancetype) existingAccountFormWithAccountType:(OTRAccountType)accountType {
+    return [self formForAccountType:accountType createAccount:NO];
 }
 
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount
@@ -105,7 +113,6 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [accountSection addFormRow:passwordRow];
         
         XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:Server_String()];
-        serverSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
 
         serverSection.footerTitle = Server_String_Hint();
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
@@ -116,10 +123,10 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [torSection addFormRow:[self torRowDescriptorWithValue:NO]];
         
         [descriptor addFormSection:basicSection];
+        [descriptor addFormSection:serverSection];
         [descriptor addFormSection:showAdvancedSection];
         [descriptor addFormSection:accountSection];
         [descriptor addFormSection:torSection];
-        [descriptor addFormSection:serverSection];
     } else {
         descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING()];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING()];

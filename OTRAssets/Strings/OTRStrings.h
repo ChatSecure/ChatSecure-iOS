@@ -386,7 +386,7 @@ FOUNDATION_EXPORT NSString* SOMEONE_STRING();
 FOUNDATION_EXPORT NSString* SOURCE_STRING();
 /** "Server", server selection section title */
 FOUNDATION_EXPORT NSString* Server_String();
-/** "Choose from our list of trusted servers, or use your own.", server selection footer */
+/** "Choose from a selection of public servers, or use your own.", server selection footer */
 FOUNDATION_EXPORT NSString* Server_String_Hint();
 /** "Show Advanced Encryption Settings",  */
 FOUNDATION_EXPORT NSString* Show_Advanced_Encryption_Settings();

@@ -521,7 +521,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     OTRBaseLoginViewController *createAccountVC = (OTRBaseLoginViewController*)[onboardingStoryboard instantiateViewControllerWithIdentifier:@"createNewAccount"];
     createAccountVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    createAccountVC.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES];
+    createAccountVC.form = [XLFormDescriptor registerNewAccountFormWithAccountType:OTRAccountTypeJabber];
     createAccountVC.loginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
     [self.navigationController pushViewController:createAccountVC animated:YES];
 }

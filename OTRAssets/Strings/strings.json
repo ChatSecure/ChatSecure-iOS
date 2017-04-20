@@ -1028,7 +1028,7 @@
         "string": "Server Information"
     }, "Server_String_Hint": {
         "comment": "server selection footer",
-        "string": "Choose from our list of trusted servers, or use your own."
+        "string": "Choose from a selection of public servers, or use your own."
     }, "Enable_Tor_String": {
         "comment": "",
         "string": "Enable Tor"
