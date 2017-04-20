@@ -113,17 +113,24 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             hasAccounts = YES;
         }
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
-        for (OTRAccount *account in accounts) {
-            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
-            if (xmppAccount != nil) {
-                if ([OTRServerDeprecation isDeprecatedWithServer:xmppAccount.bareJID.domain]) {
-                    if (xmppAccount.vCardTemp != nil && ![xmppAccount.vCardTemp.jid isEqualToJID:[xmppAccount bareJID] options:XMPPJIDCompareBare]) {
-                        continue; // Already in the migration process
-                    }
-                    needsMigration = xmppAccount;
-                }
+        [accounts enumerateObjectsUsingBlock:^(OTRAccount * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (![obj isKindOfClass:[OTRXMPPAccount class]]) {
+                return;
             }
-        }
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)obj;
+            XMPPJID *jid = xmppAccount.bareJID;
+            XMPPJID *vcardJid = xmppAccount.vCardTemp.jid;
+            if (!jid) {
+                return;
+            }
+            if ([OTRServerDeprecation isDeprecatedWithServer:jid.domain]) {
+                if (vcardJid && ![vcardJid isEqualToJID:jid options:XMPPJIDCompareBare]) {
+                    return; // Already in the migration process
+                }
+                needsMigration = xmppAccount;
+                *stop = YES;
+            }
+        }];
     }];
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
 
