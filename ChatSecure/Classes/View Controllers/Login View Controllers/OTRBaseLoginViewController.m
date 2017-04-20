@@ -381,13 +381,23 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 #pragma - mark Class Methods
 
-+ (instancetype)loginViewControllerForAccount:(OTRAccount *)account
+- (instancetype) initWithAccount:(OTRAccount*)account
 {
-    OTRBaseLoginViewController *baseLoginViewController = [[self alloc] initWithForm:[XLFormDescriptor existingAccountFormWithAccount:account] style:UITableViewStyleGrouped];
-    baseLoginViewController.account = account;
-    baseLoginViewController.loginHandler = [OTRLoginHandler loginHandlerForAccount:account];
-    
-    return baseLoginViewController;
+    NSParameterAssert(account != nil);
+    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccount:account];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.account = account;
+        self.loginHandler = [OTRLoginHandler loginHandlerForAccount:account];
+    }
+    return self;
+}
+
+- (instancetype) initWithAccountType:(OTRAccountType)accountType {
+    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccountType:OTRAccountTypeJabber];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.loginHandler = [[OTRXMPPLoginHandler alloc] init];
+    }
+    return self;
 }
 
 @end

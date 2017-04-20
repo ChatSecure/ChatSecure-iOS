@@ -117,8 +117,7 @@
                     [googleAccount saveWithTransaction:transaction];
                 }];
                 
-                OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[XLFormDescriptor existingAccountFormWithAccount:googleAccount] style:UITableViewStyleGrouped];
-                loginViewController.account = googleAccount;
+                OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithAccount:googleAccount];
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.loginHandler = loginHandler;
                 

@@ -20,8 +20,10 @@ open class OTRServerDeprecation: NSObject {
     }
     
     static let dukgo = OTRServerDeprecation(name:"Dukgo", domain:"dukgo.com", shutdownDate:Date(timeIntervalSince1970: TimeInterval(integerLiteral: 1494288000)))
+    static let calyx = OTRServerDeprecation(name:"Calyx", domain:"jabber.calyxinstitute.org", shutdownDate:Date(timeIntervalSince1970: TimeInterval(integerLiteral: 1494288000)))
     static let allDeprecatedServers:[String:OTRServerDeprecation] = [
-        dukgo.domain:dukgo
+        dukgo.domain:dukgo,
+        calyx.domain:calyx
     ]
     
     open static func isDeprecated(server: String) -> Bool {

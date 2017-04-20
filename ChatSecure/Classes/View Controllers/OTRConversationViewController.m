@@ -518,12 +518,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 }
 
 - (IBAction)didPressStartMigrationButton:(id)sender {
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
-    OTRBaseLoginViewController *createAccountVC = (OTRBaseLoginViewController*)[onboardingStoryboard instantiateViewControllerWithIdentifier:@"createNewAccount"];
-    createAccountVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    createAccountVC.form = [XLFormDescriptor registerNewAccountFormWithAccountType:OTRAccountTypeJabber];
-    createAccountVC.loginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
-    [self.navigationController pushViewController:createAccountVC animated:YES];
+    // TODO: fill this in
+    OTRAccount *oldAccout = nil;
+    OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:nil];
+    migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.navigationController pushViewController:migrateVC animated:YES];
 }
 
 @end

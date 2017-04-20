@@ -8,24 +8,31 @@
 
 @import XLForm;
 #import "OTRLoginHandler.h"
-@class OTRAccount;
+#import "OTRAccount.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRBaseLoginViewController : XLFormViewController
 
 @property (nonatomic) BOOL showsCancelButton;
 
-@property (nonatomic, strong) OTRAccount *account;
+@property (nonatomic, strong, nullable) OTRAccount *account;
 
 @property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> loginHandler;
 
 @property (nonatomic) BOOL readOnly;
 
 /**
- Creates an OTRBaseLoginViewController with correct form and login handler
- 
- @param An account to use to create the view
- @return A configured OTRBaseLoginViewController
+ * Creates a view for logging in with an existing local & remote account.
+ *
+ * @param An account to use to create the view
+ * @return A configured OTRBaseLoginViewController
  */
-+ (instancetype)loginViewControllerForAccount:(OTRAccount *)account;
+- (instancetype) initWithAccount:(OTRAccount*)account;
+
+/**
+ * Creates a view for logging in with an existing remote account.
+ */
+- (instancetype) initWithAccountType:(OTRAccountType)accountType;
 
 @end
+NS_ASSUME_NONNULL_END

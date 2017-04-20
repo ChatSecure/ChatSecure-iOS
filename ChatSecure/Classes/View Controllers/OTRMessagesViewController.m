@@ -863,7 +863,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRProtocolManager sharedInstance] loginAccount:account userInitiated:YES];
         
     } else {
-        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
+        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithAccount:account];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
         nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:nav animated:YES completion:nil];

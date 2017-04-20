@@ -176,7 +176,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     }
     
     func pushLoginView(account: OTRXMPPAccount, sender: Any) {
-        guard let login = OTRBaseLoginViewController(for: account) else { return }
+        let login = OTRBaseLoginViewController(account: account)
         navigationController?.pushViewController(login, animated: true)
     }
     

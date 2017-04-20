@@ -129,6 +129,8 @@
 		D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
 		D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */; };
 		D92AC2091DB023D8007BD3E7 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */; };
@@ -965,6 +967,8 @@
 		D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSecureCore.h; sourceTree = "<group>"; };
 		D9227C2E1BA7952100B5E1D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrationViewController.h; sourceTree = "<group>"; };
+		D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrationViewController.m; sourceTree = "<group>"; };
 		D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		D93027561BAA381F000CC975 /* OTRResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTRResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93027581BAA381F000CC975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1471,6 +1475,8 @@
 		633105FF1A16D1A300C17BAE /* Login View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */,
+				D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */,
 				638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */,
 				638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */,
 				638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */,
@@ -1944,6 +1950,7 @@
 				632AA73A1D482A1A00F65733 /* OTRSignalSession.h in Headers */,
 				D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */,
 				D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */,
+				D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */,
 				63E353F61BB9E46D005C54C3 /* OTRPushTLVHandlerProtocols.h in Headers */,
 				D93DDBA91BA79AAB00CD8331 /* OTRXMPPLoginHandler.h in Headers */,
 				63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */,
@@ -2631,6 +2638,7 @@
 				D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */,
 				D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */,
 				6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */,
+				D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */,
 				D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */,
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStorage.m in Sources */,
