@@ -94,5 +94,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     }
 }
 
+- (nullable XMPPJID*) bareJID {
+    return [XMPPJID jidWithString:self.username];
+}
 
 @end
