@@ -202,8 +202,10 @@ NSString* MIGRATED_BUDDY_INFO_STRING() { return [OTRLanguageManager translatedSt
 NSString* MIGRATED_BUDDY_STRING() { return [OTRLanguageManager translatedString:@"Buddy has moved!"]; }
 /** "Switch", Button to switch the chat over to the migrated account */
 NSString* MIGRATED_BUDDY_SWITCH() { return [OTRLanguageManager translatedString:@"Switch"]; }
-/** "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server.", Explanation for why migration is needed */
-NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."]; }
+/** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
+NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."]; }
+/** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
+NSString* MIGRATION_INFO_WITH_DATE_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."]; }
 /** "Get Started", Title for button to start migration tool */
 NSString* MIGRATION_START_STRING() { return [OTRLanguageManager translatedString:@"Get Started"]; }
 /** "It's time to move!", Title for migration header view */

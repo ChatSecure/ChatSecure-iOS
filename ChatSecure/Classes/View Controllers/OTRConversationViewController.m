@@ -106,7 +106,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     __block BOOL hasAccounts = NO;
-    __block BOOL needsMigration = NO;
+    __block OTRXMPPAccount *needsMigration;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
@@ -114,12 +114,14 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
         for (OTRAccount *account in accounts) {
-            if ([[account.username lowercaseString] hasSuffix:@"dukgo.com"]) {
-                OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
-                if (xmppAccount != nil && xmppAccount.vCardTemp != nil && ![xmppAccount.vCardTemp.jid isEqualToJID:[xmppAccount bareJID] options:XMPPJIDCompareBare]) {
-                    continue; // Already in the migration process
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
+            if (xmppAccount != nil) {
+                if ([OTRServerDeprecation isDeprecatedWithServer:xmppAccount.bareJID.domain]) {
+                    if (xmppAccount.vCardTemp != nil && ![xmppAccount.vCardTemp.jid isEqualToJID:[xmppAccount bareJID] options:XMPPJIDCompareBare]) {
+                        continue; // Already in the migration process
+                    }
+                    needsMigration = xmppAccount;
                 }
-                needsMigration = YES;
             }
         }
     }];
@@ -139,8 +141,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }
         self.hasPresentedOnboarding = YES;
     }
-    if (needsMigration) {
-        self.migrationInfoHeaderView = [self createMigrationHeaderView];
+    if (needsMigration != nil) {
+        self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;
     }
 }
@@ -488,12 +490,22 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 #pragma - mark Account Migration Methods
 
-- (MigrationInfoHeaderView *)createMigrationHeaderView
+- (MigrationInfoHeaderView *)createMigrationHeaderView:(OTRXMPPAccount *)account
 {
+    OTRServerDeprecation *deprecationInfo = [OTRServerDeprecation deprecationInfoWithServer:account.bareJID.domain];
+    if (deprecationInfo == nil) {
+        return nil; // Should not happen if we got here already
+    }
     UINib *nib = [UINib nibWithNibName:@"MigrationInfoHeaderView" bundle:OTRAssets.resourcesBundle];
     MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
     [header.titleLabel setText:MIGRATION_STRING()];
-    [header.descriptionLabel setText:MIGRATION_INFO_STRING()];
+    if (deprecationInfo.shutdownDate != nil && [[[NSDate alloc] initWithTimeIntervalSinceNow:0] compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
+        // Show shutdown date
+        [header.descriptionLabel setText:[NSString stringWithFormat:MIGRATION_INFO_WITH_DATE_STRING(), deprecationInfo.name, [NSDateFormatter localizedStringFromDate:deprecationInfo.shutdownDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]]];
+    } else {
+        // No shutdown date or already passed
+        [header.descriptionLabel setText:[NSString stringWithFormat:MIGRATION_INFO_STRING(), deprecationInfo.name]];
+    }
     [header.startButton setTitle:MIGRATION_START_STRING() forState:UIControlStateNormal];
     return header;
 }

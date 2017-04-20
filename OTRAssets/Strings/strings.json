@@ -277,7 +277,11 @@
     },
     "MIGRATION_INFO_STRING": {
         "comment": "Explanation for why migration is needed",
-        "string": "Your account currently lives on the Dukgo servers. That chat service is closing on May 9th 2017, so we're going to help move your account to a new server."
+        "string": "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_INFO_WITH_DATE_STRING": {
+        "comment": "Explanation for why migration is needed, contains a shutdown date",
+        "string": "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."
     },
     "MIGRATION_START_STRING": {
         "comment": "Title for button to start migration tool",
