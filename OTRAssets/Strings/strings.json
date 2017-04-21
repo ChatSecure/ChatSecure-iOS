@@ -3,6 +3,18 @@
         "comment": "Title for the about page",
         "string": "About"
     },
+    "ARCHIVE_STRING": {
+        "comment": "Noun. segmented control value for displaying archived conversations",
+        "string": "Archive"
+    },
+    "ARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for archiving an old conversation",
+        "string": "Archive"
+    },
+    "UNARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for moving archived converation back to inbox",
+        "string": "Unarchive"
+    },
     "ABOUT_VERSION_STRING": {
         "comment": "Label for button to show version numbers and licenses",
         "string": "About This Version"
@@ -182,6 +194,10 @@
     "EXTENDED_AWAY_STRING": {
         "comment": "Default message when a user status is set to extended away",
         "string": "Extended Away"
+    },
+    "INBOX_STRING": {
+        "comment": "segmented control value for active conversations",
+        "string": "Inbox"
     },
     "FACEBOOK_STRING": {
         "comment": "the name for facebook",

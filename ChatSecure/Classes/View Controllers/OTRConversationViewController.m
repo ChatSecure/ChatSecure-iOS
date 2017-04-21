@@ -72,6 +72,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
     self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
     
+    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
+    inboxArchiveControl.selectedSegmentIndex = 0;
+    [self updateInboxArchiveFilteringAndShowArchived:NO];
+    [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = inboxArchiveControl;
+    
     ////////// Create TableView /////////////////
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -93,10 +99,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     self.conversationListViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.conversationListViewHandler.delegate = self;
-    [self.conversationListViewHandler setup:OTRConversationDatabaseViewExtensionName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
+    [self.conversationListViewHandler setup:OTRFilteredConversationsName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
     
     [self.tableView reloadData];
-    [self updateTitle];
+    [self updateInboxArchiveItems:self.navigationItem.titleView];
     
     self.accountCounter = [[OTRAccountDatabaseCount alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection delegate:self];
 }
@@ -160,7 +166,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
-    [self updateTitle];
+    [self updateInboxArchiveItems:self.navigationItem.titleView];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
     
@@ -179,6 +185,35 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [super viewWillDisappear:animated];
     [self.cellUpdateTimer invalidate];
     self.cellUpdateTimer = nil;
+}
+
+- (void)inboxArchiveControlValueChanged:(id)sender {
+    if (![sender isKindOfClass:[UISegmentedControl class]]) {
+        return;
+    }
+    UISegmentedControl *segment = sender;
+    BOOL showArchived = NO;
+    if (segment.selectedSegmentIndex == 0) {
+        showArchived = NO;
+    } else if (segment.selectedSegmentIndex == 1) {
+        showArchived = YES;
+    }
+    [self updateInboxArchiveFilteringAndShowArchived:showArchived];
+}
+
+- (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredConversationsName];
+        YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+            if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                id<OTRThreadOwner> threadOwner = object;
+                BOOL isArchived = threadOwner.isArchived;
+                return showArchived == isArchived;
+            }
+            return YES;
+        }];
+        [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
+    }];
 }
 
 - (void)settingsButtonPressed:(id)sender
@@ -238,22 +273,31 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.composeBarButtonItem.enabled = numberOfaccounts > 0;
 }
 
-- (void)updateTitle
+- (void)updateInboxArchiveItems:(UIView*)sender
 {
+//    if (![sender isKindOfClass:[UISegmentedControl class]]) {
+//        return;
+//    }
+//    UISegmentedControl *control = sender;
+    // We can't accurately calculate the unread messages for inbox vs archived
+    // This will require a massive reindexing of all messages which should be avoided until db performance is improved
+    
+    /*
     __block NSUInteger numberUnreadMessages = 0;
     [self.conversationListViewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         numberUnreadMessages = [transaction numberOfUnreadMessages];
     }];
     if (numberUnreadMessages > 99) {
-        self.title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING()];
+        NSString *title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING()];
     }
     else if (numberUnreadMessages > 0)
     {
-        self.title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING(),(int)numberUnreadMessages];
+        NSString *title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING(),(int)numberUnreadMessages];
     }
     else {
         self.title = CHATS_STRING();
     }
+     */
 }
 
 - (void)viewDidLayoutSubviews {
@@ -424,7 +468,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)didSetupMappings:(OTRYapViewHandler *)handler
 {
     [self.tableView reloadData];
-    [self updateTitle];
+    [self updateInboxArchiveItems:self.navigationItem.titleView];
 }
 
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
@@ -433,7 +477,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     
-    [self updateTitle];
+    [self updateInboxArchiveItems:self.navigationItem.titleView];
     
     [self.tableView beginUpdates];
     

@@ -11,6 +11,7 @@ import YapDatabase.YapDatabaseRelationship
 
 open class OTRXMPPRoom: OTRYapDatabaseObject {
     
+    open var isArchived = false
     open var accountUniqueId:String?
     open var ownJID:String?
     open var jid:String?
@@ -35,6 +36,7 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    
     public func threadName() -> String {
         return self.subject ?? self.jid ?? ""
     }

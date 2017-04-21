@@ -23,6 +23,7 @@
 
 @implementation OTRBuddy
 @synthesize displayName = _displayName;
+@synthesize isArchived = _isArchived;
 @dynamic statusMessage, chatState, lastSentChatState, status;
 
 /**

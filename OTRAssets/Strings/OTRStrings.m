@@ -20,6 +20,10 @@ NSString* ADD_EXISTING_STRING() { return [OTRLanguageManager translatedString:@"
 NSString* ADD_STRING() { return [OTRLanguageManager translatedString:@"Add"]; }
 /** "Advanced", String to describe advanced set of settings */
 NSString* ADVANCED_STRING() { return [OTRLanguageManager translatedString:@"Advanced"]; }
+/** "Archive", Verb. action for archiving an old conversation */
+NSString* ARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
+/** "Archive", Noun. segmented control value for displaying archived conversations */
+NSString* ARCHIVE_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
 /** "Are you sure?", Shown to confirm destructive actions */
 NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
 /** "Available", Label in buddy list for users that are available */
@@ -160,6 +164,8 @@ NSString* HELP_TRANSLATE_STRING() { return [OTRLanguageManager translatedString:
 NSString* HOLD_TO_TALK_STRING() { return [OTRLanguageManager translatedString:@"Hold to talk"]; }
 /** "Hostname", Label text for hostname field on login scree */
 NSString* HOSTNAME_STRING() { return [OTRLanguageManager translatedString:@"Hostname"]; }
+/** "Inbox", segmented control value for active conversations */
+NSString* INBOX_STRING() { return [OTRLanguageManager translatedString:@"Inbox"]; }
 /** "Incoming", Label for incoming data transfers */
 NSString* INCOMING_STRING() { return [OTRLanguageManager translatedString:@"Incoming"]; }
 /** "Info", Short for information, button title to get more information */
@@ -402,6 +408,8 @@ NSString* TOR_WARNING_MESSAGE_STRING() { return [OTRLanguageManager translatedSt
 NSString* TWITTER_STRING() { return [OTRLanguageManager translatedString:@"Twitter"]; }
 /** "Unable to Send Message", Title for error message */
 NSString* UNABLE_TO_SEND_STRING() { return [OTRLanguageManager translatedString:@"Unable to Send Message"]; }
+/** "Unarchive", Verb. action for moving archived converation back to inbox */
+NSString* UNARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:@"Unarchive"]; }
 /** "plaintext", Label for messages that are not encrypted */
 NSString* UNENCRYPTED_STRING() { return [OTRLanguageManager translatedString:@"plaintext"]; }
 /** "Unknown Error", Describes an error without a known cause */

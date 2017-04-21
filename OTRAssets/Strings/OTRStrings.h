@@ -20,6 +20,10 @@ FOUNDATION_EXPORT NSString* ADD_EXISTING_STRING();
 FOUNDATION_EXPORT NSString* ADD_STRING();
 /** "Advanced", String to describe advanced set of settings */
 FOUNDATION_EXPORT NSString* ADVANCED_STRING();
+/** "Archive", Verb. action for archiving an old conversation */
+FOUNDATION_EXPORT NSString* ARCHIVE_ACTION_STRING();
+/** "Archive", Noun. segmented control value for displaying archived conversations */
+FOUNDATION_EXPORT NSString* ARCHIVE_STRING();
 /** "Are you sure?", Shown to confirm destructive actions */
 FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
 /** "Available", Label in buddy list for users that are available */
@@ -160,6 +164,8 @@ FOUNDATION_EXPORT NSString* HELP_TRANSLATE_STRING();
 FOUNDATION_EXPORT NSString* HOLD_TO_TALK_STRING();
 /** "Hostname", Label text for hostname field on login scree */
 FOUNDATION_EXPORT NSString* HOSTNAME_STRING();
+/** "Inbox", segmented control value for active conversations */
+FOUNDATION_EXPORT NSString* INBOX_STRING();
 /** "Incoming", Label for incoming data transfers */
 FOUNDATION_EXPORT NSString* INCOMING_STRING();
 /** "Info", Short for information, button title to get more information */
@@ -402,6 +408,8 @@ FOUNDATION_EXPORT NSString* TOR_WARNING_MESSAGE_STRING();
 FOUNDATION_EXPORT NSString* TWITTER_STRING();
 /** "Unable to Send Message", Title for error message */
 FOUNDATION_EXPORT NSString* UNABLE_TO_SEND_STRING();
+/** "Unarchive", Verb. action for moving archived converation back to inbox */
+FOUNDATION_EXPORT NSString* UNARCHIVE_ACTION_STRING();
 /** "plaintext", Label for messages that are not encrypted */
 FOUNDATION_EXPORT NSString* UNENCRYPTED_STRING();
 /** "Unknown Error", Describes an error without a known cause */

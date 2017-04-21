@@ -16,6 +16,7 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
+NSString *OTRFilteredConversationsName = @"OTRFilteredConversationsName";
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
@@ -36,7 +37,29 @@ NSString *OTRPushAccountGroup = @"Account";
 
 @implementation OTRDatabaseView
 
-
++ (BOOL)registerFilteredConversationsViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredConversationsName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *conversationView = [database registeredExtension:OTRConversationDatabaseViewExtensionName];
+    if (!conversationView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    BOOL showArchived = NO;
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRConversationDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
+    return [database registerExtension:filteredView withName:OTRFilteredConversationsName];
+}
 
 + (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database
 {
@@ -109,7 +132,8 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"6"
                                                                       options:options];
     
-    return [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    return result && [self registerFilteredConversationsViewWithDatabase:database];
 }
 
 

@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 
 @protocol OTRThreadOwner <NSObject>
 @required
+/** If thread should be hidden from main lists */
+@property (nonatomic, readwrite) BOOL isArchived;
 - (nonnull NSString *)threadName;
 - (nonnull NSString *)threadIdentifier;
 - (nonnull NSString *)threadCollection;
