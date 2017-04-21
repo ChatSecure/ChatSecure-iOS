@@ -80,5 +80,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
 + (BOOL) shouldShowPushWarning;
 
+/** If enabled, the server selection cell will be shown when creating new accounts. Otherwise it will be hidden in the 'advanced' section. */
++ (BOOL) shouldShowServerCell;
+
 @end
 NS_ASSUME_NONNULL_END

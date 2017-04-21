@@ -38,5 +38,7 @@
 	<string>https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7</string>
 	<key>ShouldShowPushWarning</key>
 	<true/>
+	<key>ShouldShowServerCell</key>
+	<true/>
 </dict>
 </plist>

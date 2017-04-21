@@ -113,6 +113,9 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         [accountSection addFormRow:passwordRow];
         
         XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:Server_String()];
+        if (![OTRBranding shouldShowServerCell]) {
+            serverSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
+        }
 
         serverSection.footerTitle = Server_String_Hint();
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];

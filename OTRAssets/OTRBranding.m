@@ -138,6 +138,12 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return result;
 }
 
+/** If enabled, the server selection cell will be shown when creating new accounts. Otherwise it will be hidden in the 'advanced' section. */
++ (BOOL) shouldShowServerCell {
+    BOOL result = [[[self defaultPlist] objectForKey:@"ShouldShowServerCell"] boolValue];
+    return result;
+}
+
 + (NSDictionary*) defaultPlist {
     // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];
