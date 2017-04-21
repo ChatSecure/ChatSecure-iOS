@@ -126,7 +126,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     // MARK: - User Actions
     
     func showMigrateAccount(account: OTRXMPPAccount, sender: Any) {
-        let migrateVC = OTRBaseLoginViewController()
+        let migrateVC = OTRAccountMigrationViewController(oldAccount: account)
         self.navigationController?.pushViewController(migrateVC, animated: true)
     }
     

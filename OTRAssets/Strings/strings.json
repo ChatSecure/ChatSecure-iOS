@@ -271,6 +271,14 @@
         "comment": "Explanation for why a message could not be sent.",
         "string": "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."
     },
+    "MESSAGE_FRIENDS_WITH_NEW_INFO_STRING": {
+        "comment": "Title for toggle switch to spam your friends with your new account info",
+        "string": "Notify Contacts of New Account"
+    },
+    "MIGRATION_FORM_DETAIL_STRING": {
+        "comment": "Description detail text for account migration form",
+        "string": "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\\n\\nIf you'd like, we can also notify your existing contacts that your account has moved."
+    },
     "MIGRATION_STRING": {
         "comment": "Title for migration header view",
         "string": "It's time to move!"

@@ -392,10 +392,19 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     return self;
 }
 
-- (instancetype) initWithAccountType:(OTRAccountType)accountType {
-    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccountType:OTRAccountTypeJabber];
+- (instancetype) initWithExistingAccountType:(OTRAccountType)accountType {
+    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccountType:accountType];
     if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
         self.loginHandler = [[OTRXMPPLoginHandler alloc] init];
+    }
+    return self;
+}
+
+/** This is for registering new accounts on a server */
+- (instancetype) initWithNewAccountType:(OTRAccountType)accountType {
+    XLFormDescriptor *form = [XLFormDescriptor registerNewAccountFormWithAccountType:accountType];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.loginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
     }
     return self;
 }

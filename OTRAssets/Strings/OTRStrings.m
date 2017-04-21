@@ -194,6 +194,8 @@ NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager t
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 NSString* MESSAGE_COULD_NOT_BE_SENT_STRING() { return [OTRLanguageManager translatedString:@"The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."]; }
+/** "Notify Contacts of New Account", Title for toggle switch to spam your friends with your new account info */
+NSString* MESSAGE_FRIENDS_WITH_NEW_INFO_STRING() { return [OTRLanguageManager translatedString:@"Notify Contacts of New Account"]; }
 /** "Ignore", Button to ignore the migrated buddy warning */
 NSString* MIGRATED_BUDDY_IGNORE() { return [OTRLanguageManager translatedString:@"Ignore"]; }
 /** "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?", Explanation that buddy has a different prefered jid in the vcard */
@@ -204,6 +206,8 @@ NSString* MIGRATED_BUDDY_STRING() { return [OTRLanguageManager translatedString:
 NSString* MIGRATED_BUDDY_SWITCH() { return [OTRLanguageManager translatedString:@"Switch"]; }
 /** "Migrate Account", Title for button to start migration tool */
 NSString* MIGRATE_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Migrate Account"]; }
+/** "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved.", Description detail text for account migration form */
+NSString* MIGRATION_FORM_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved."]; }
 /** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."]; }
 /** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */

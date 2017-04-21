@@ -9,6 +9,9 @@
 #import "OTRBaseLoginViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/** Show form row to spam your old contacts w/ new acct info */
+FOUNDATION_EXPORT NSString *const kSpamYourContactsTag;
+
 @interface OTRAccountMigrationViewController : OTRBaseLoginViewController
 
 @property (nonatomic, strong, readonly) OTRAccount *oldAccount;

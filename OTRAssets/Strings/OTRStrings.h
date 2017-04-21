@@ -194,6 +194,8 @@ FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
 FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 FOUNDATION_EXPORT NSString* MESSAGE_COULD_NOT_BE_SENT_STRING();
+/** "Notify Contacts of New Account", Title for toggle switch to spam your friends with your new account info */
+FOUNDATION_EXPORT NSString* MESSAGE_FRIENDS_WITH_NEW_INFO_STRING();
 /** "Ignore", Button to ignore the migrated buddy warning */
 FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_IGNORE();
 /** "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?", Explanation that buddy has a different prefered jid in the vcard */
@@ -204,6 +206,8 @@ FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_STRING();
 FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_SWITCH();
 /** "Migrate Account", Title for button to start migration tool */
 FOUNDATION_EXPORT NSString* MIGRATE_ACCOUNT_STRING();
+/** "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved.", Description detail text for account migration form */
+FOUNDATION_EXPORT NSString* MIGRATION_FORM_DETAIL_STRING();
 /** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
 FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
 /** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
