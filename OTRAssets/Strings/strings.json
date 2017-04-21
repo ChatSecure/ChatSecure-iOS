@@ -127,6 +127,10 @@
         "comment": "Title for progress of creating a new account",
         "string": "Creating Account"
     },
+    "DELETE_STRING": {
+        "comment": "action button for deleting something",
+        "string": "Delete"
+    },
     "DELETE_ACCOUNT_MESSAGE_STRING": {
         "comment": "Ask user if they want to delete the stored account information",
         "string": "Permanently delete"

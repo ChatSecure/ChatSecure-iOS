@@ -102,6 +102,8 @@ FOUNDATION_EXPORT NSString* DELETE_ACCOUNT_TITLE_STRING();
 FOUNDATION_EXPORT NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING();
 /** "Auto-delete", Title for automatic conversation deletion setting */
 FOUNDATION_EXPORT NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING();
+/** "Delete", action button for deleting something */
+FOUNDATION_EXPORT NSString* DELETE_STRING();
 /** "Delivered", Shows in the chat view when a message has been delivered */
 FOUNDATION_EXPORT NSString* DELIVERED_STRING();
 /** "Your donation will help fund the continued development of ChatSecure.", Message shown when about to donate */

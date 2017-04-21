@@ -102,6 +102,8 @@ NSString* DELETE_ACCOUNT_TITLE_STRING() { return [OTRLanguageManager translatedS
 NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Delete chats on disconnect"]; }
 /** "Auto-delete", Title for automatic conversation deletion setting */
 NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING() { return [OTRLanguageManager translatedString:@"Auto-delete"]; }
+/** "Delete", action button for deleting something */
+NSString* DELETE_STRING() { return [OTRLanguageManager translatedString:@"Delete"]; }
 /** "Delivered", Shows in the chat view when a message has been delivered */
 NSString* DELIVERED_STRING() { return [OTRLanguageManager translatedString:@"Delivered"]; }
 /** "Your donation will help fund the continued development of ChatSecure.", Message shown when about to donate */

@@ -326,37 +326,15 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     return [self.conversationListViewHandler.mappings numberOfItemsInSection:section];
 }
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    //Delete conversation
-    if(editingStyle == UITableViewCellEditingStyleDelete) {
-        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRBaseMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
-        }];
-        
-        if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
-            
-            //Leave room
-            NSString *accountKey = [thread threadAccountIdentifier];
-            __block OTRAccount *account = nil;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
-            }];
-            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            XMPPJID *jid = [XMPPJID jidWithString:((OTRXMPPRoom *)thread).jid];
-            [xmppManager.roomManager leaveRoom:jid];
-            
-            //Delete database items
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
-            }];
-        }
-    }
-    
-}
+//
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    //Delete conversation
+//    if(editingStyle == UITableViewCellEditingStyleDelete) {
+//        
+//    }
+//    
+//}
 
 - (void) handleSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest*)request approved:(BOOL)approved {
     __block OTRXMPPAccount *account = nil;
@@ -437,9 +415,70 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     return kOTRConversationCellHeight;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewCellEditingStyleDelete;
+//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return UITableViewCellEditingStyleDelete;
+//}
+
+- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
+    id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+    // Bail out if it's a subscription request
+    if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
+        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
+        return nil;
+    }
+    
+    BOOL inboxContext = NO; // If we're viewing the inbox
+    if ([self.navigationItem.titleView isKindOfClass:[UISegmentedControl class]]) {
+        UISegmentedControl *control = (UISegmentedControl*)self.navigationItem.titleView;
+        inboxContext = control.selectedSegmentIndex == 0;
+    }
+    NSString *archiveTitle = ARCHIVE_ACTION_STRING();
+    if (!inboxContext) {
+        archiveTitle = UNARCHIVE_ACTION_STRING();
+    }
+
+    UITableViewRowAction *archiveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:archiveTitle handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            NSString *key = [thread threadIdentifier];
+            NSString *collection = [thread threadCollection];
+            id object = [transaction objectForKey:key inCollection:collection];
+            if (![object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                return;
+            }
+            id <OTRThreadOwner> thread = object;
+            thread.isArchived = !thread.isArchived;
+            [transaction setObject:thread forKey:key inCollection:collection];
+        }];
+    }];
+    
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:DELETE_STRING() handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [OTRBaseMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
+        }];
+        
+        if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
+            
+            //Leave room
+            NSString *accountKey = [thread threadAccountIdentifier];
+            __block OTRAccount *account = nil;
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
+            }];
+            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            XMPPJID *jid = [XMPPJID jidWithString:((OTRXMPPRoom *)thread).jid];
+            [xmppManager.roomManager leaveRoom:jid];
+            
+            //Delete database items
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
+            }];
+        }
+    }];
+    
+    return @[deleteAction, archiveAction];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
