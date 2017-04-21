@@ -573,6 +573,72 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
 }
 
+// Currently the only way to force a vCard update is to update the avatar. We want to do this in a non-destructive way, so that this method can be used many times without the avatar being distorted. The idea is to manipulate the bottom rightmost pixel value, setting it to the neighboring pixel value with the blue component alternating between +-1.
+- (void)forcevCardUpdateWithCompletion:(void (^)(BOOL success))completion {
+    UIImage *image = [self.account avatarImage];
+    if (image != nil) {
+        CGFloat width = image.size.width;
+        CGFloat height = image.size.height;
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        
+        size_t bitsPerComponent = 8;
+        size_t bytesPerPixel    = 4;
+        size_t bytesPerRow      = (width * bitsPerComponent * bytesPerPixel + 7) / 8;
+        size_t dataSize         = bytesPerRow * height;
+        
+        unsigned char *data = malloc(dataSize);
+        memset(data, 0, dataSize);
+        
+        CGContextRef context = CGBitmapContextCreate(data, width, height,
+                                                     bitsPerComponent,
+                                                     bytesPerRow, colorSpace,
+                                                     kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
+        
+        
+        CGColorSpaceRelease(colorSpace);
+        
+        CGContextDrawImage(context, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage);
+        
+        // Get pixel color for neighboring pixel
+        int offset = (width - 2) * bytesPerRow + (height - 1) * bytesPerPixel;
+        int alpha =  data[offset];
+        int red = data[offset+1];
+        int green = data[offset+2];
+        int blue = data[offset+3];
+
+        // Manipulate the bottom right pixel
+        offset = (width - 1) * bytesPerRow + (height - 1) * bytesPerPixel;
+        int currentBlue = data[offset+3];
+
+        data[offset] = alpha;
+        data[offset+1] = red;
+        data[offset+2] = green;
+        if (currentBlue != blue) {
+            // Not equal, just use the blue value for the neighboring pixel
+            data[offset+3] = blue;
+        } else {
+            if (blue == 255) {
+                data[offset+3] = blue - 1;
+            } else {
+                data[offset+3] = blue + 1;
+            }
+        }
+        
+        CGImageRef imgRef = CGBitmapContextCreateImage(context);
+        UIImage* img = [UIImage imageWithCGImage:imgRef];
+        CGImageRelease(imgRef);
+        
+        // When finished, release the context
+        CGContextRelease(context);
+        if (data) { free(data); }
+        
+        [self setAvatar:img completion:completion];
+    }
+}
+
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion {
     if (!completion) {
         return;

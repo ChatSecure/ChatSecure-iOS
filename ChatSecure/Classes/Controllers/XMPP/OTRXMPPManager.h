@@ -71,6 +71,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL success))completion;
 
+/** Force a vCard update (by manipulating pixel values in the avatar image)
+ */
+- (void)forcevCardUpdateWithCompletion:(void (^)(BOOL success))completion;
+
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
 
 /** Will try to send a probe to fetch last seen. If buddy is still pendingApproval it will retry subscription request. */
