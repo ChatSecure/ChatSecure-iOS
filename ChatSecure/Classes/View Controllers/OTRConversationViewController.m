@@ -514,15 +514,17 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [header.descriptionLabel setText:[NSString stringWithFormat:MIGRATION_INFO_STRING(), deprecationInfo.name]];
     }
     [header.startButton setTitle:MIGRATION_START_STRING() forState:UIControlStateNormal];
+    [header setAccount:account];
     return header;
 }
 
 - (IBAction)didPressStartMigrationButton:(id)sender {
-    // TODO: fill this in
-    OTRAccount *oldAccout = nil;
-    OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:nil];
-    migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self.navigationController pushViewController:migrateVC animated:YES];
+    if (self.migrationInfoHeaderView != nil) {
+        OTRAccount *oldAccount = self.migrationInfoHeaderView.account;
+        OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:oldAccount];
+        migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.navigationController pushViewController:migrateVC animated:YES];
+    }
 }
 
 @end
