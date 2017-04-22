@@ -7,6 +7,7 @@
 //
 
 #import "OTRBaseLoginViewController.h"
+#import "OTRXMPPAccount.h"
 
 NS_ASSUME_NONNULL_BEGIN
 /** Show form row to spam your old contacts w/ new acct info */
@@ -14,14 +15,14 @@ FOUNDATION_EXPORT NSString *const kSpamYourContactsTag;
 
 @interface OTRAccountMigrationViewController : OTRBaseLoginViewController
 
-@property (nonatomic, strong, readonly) OTRAccount *oldAccount;
+@property (nonatomic, strong, readonly) OTRXMPPAccount *oldAccount;
 
 /**
  * This creates an account registration view prepopulated with
  * your old account nickname. Once registration is complete
  * the existing contacts from oldAccount will be migrated to the new account.
  */
-- (instancetype) initWithOldAccount:(OTRAccount*)oldAccount;
+- (instancetype) initWithOldAccount:(OTRXMPPAccount*)oldAccount;
 
 @end
 NS_ASSUME_NONNULL_END

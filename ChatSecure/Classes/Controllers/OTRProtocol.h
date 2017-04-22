@@ -58,6 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) disconnect;
 - (void) disconnectSocketOnly:(BOOL)socketOnly;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
+- (void) addBuddies:(NSArray<OTRBuddy*> *)buddies;
 
 - (void) removeBuddies:(NSArray<OTRBuddy*> *)buddies;
 - (void) blockBuddies:(NSArray<OTRBuddy*> *)buddies;

@@ -1212,13 +1212,23 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     });
 }
 
+- (void) addBuddies:(NSArray<OTRXMPPBuddy*> *)buddies {
+    NSParameterAssert(buddies != nil);
+    if (!buddies) { return; }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
+            addBuddyAction.buddyKey = obj.uniqueId;
+            [addBuddyAction saveWithTransaction:transaction];
+        }];
+    }];
+}
+
 - (void) addBuddy:(OTRXMPPBuddy *)newBuddy
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
-        addBuddyAction.buddyKey = newBuddy.uniqueId;
-        [addBuddyAction saveWithTransaction:transaction];
-    }];
+    NSParameterAssert(newBuddy != nil);
+    if (!newBuddy) { return; }
+    [self addBuddies:@[newBuddy]];
 }
 
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy

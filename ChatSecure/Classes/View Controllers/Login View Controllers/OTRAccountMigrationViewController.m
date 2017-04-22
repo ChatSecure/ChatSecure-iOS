@@ -11,12 +11,16 @@
 #import "OTRProtocolManager.h"
 #import "OTRXMPPManager.h"
 #import "OTRStrings.h"
+#import "OTRDatabaseManager.h"
+#import "OTRYapMessageSendAction.h"
+#import "OTRLog.h"
+#import "OTRXMPPManager_Private.h"
 
 NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 
 @implementation OTRAccountMigrationViewController
 
-- (instancetype) initWithOldAccount:(OTRAccount*)oldAccount {
+- (instancetype) initWithOldAccount:(OTRXMPPAccount*)oldAccount {
     NSParameterAssert(oldAccount);
     if (self = [super initWithNewAccountType:oldAccount.accountType]) {
         _oldAccount = oldAccount;
@@ -29,23 +33,99 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
             [self.form addFormRow:spamRow afterRow:nicknameRow];
             nicknameRow.sectionDescriptor.footerTitle = MIGRATION_FORM_DETAIL_STRING();
         }
-        
+        // Don't let people migrate Tor accounts to non-Tor accounts
+        if (oldAccount.accountType == OTRAccountTypeXMPPTor) {
+            XLFormRowDescriptor *torRow = [self.form formRowWithTag:kOTRXLFormUseTorTag];
+            torRow.value = @YES;
+            torRow.disabled = @YES;
+        }
     }
     return self;
-}
-
-// Override superclass
-- (void)loginButtonPressed:(id)sender {
-//    OTRXMPPManager *oldXmpp = [[OTRProtocolManager sharedInstance] protocolForAccount:self.oldAccount];
-//    OTRXMPPManager *oldXmpp = [[OTRProtocolManager sharedInstance] protocolForAccount:self.oldAccount];
-//    if (oldXmpp && []) {
-//        
-//    }
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.title = MIGRATE_ACCOUNT_STRING();
 }
+
+#pragma mark - Superclass Overrides
+
+- (void)loginButtonPressed:(id)sender {
+    // If account isn't logged in, login so we can spam old contacts & update your old vCard.jid with new details
+    BOOL isConnected = [[OTRProtocolManager sharedInstance] isAccountConnected:self.oldAccount];
+    if (!isConnected) {
+        // TODO: Fix Tor connection issues
+        [[OTRProtocolManager sharedInstance] loginAccount:self.oldAccount];
+    }
+    [super loginButtonPressed:sender];
+}
+
+- (void) handleSuccessWithNewAccount:(OTRXMPPAccount*)newAccount sender:(id)sender {
+    // This is where we do the migration before passing off to the superclass
+    
+    OTRXMPPManager *oldXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:self.oldAccount];
+    OTRXMPPManager *newXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:newAccount];
+    
+    // Step 1 - Add old contacts to new account
+    
+    __block NSArray<OTRXMPPBuddy*> *buddies = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddies = [self.account allBuddiesWithTransaction:transaction];
+    }];
+    NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
+    [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        OTRXMPPBuddy *newBuddy = [[OTRXMPPBuddy alloc] init];
+        newBuddy.username = obj.username;
+        newBuddy.accountUniqueId = newAccount.uniqueId;
+        // Show buddies in list only if you've talked to them before
+        if (obj.lastMessageId != nil) {
+            newBuddy.lastMessageId = @"";
+        }
+        newBuddy.avatarData = obj.avatarData;
+        newBuddy.displayName = obj.displayName;
+        newBuddy.preferredSecurity = obj.preferredSecurity;
+        [newBuddies addObject:newBuddy];
+    }];
+    
+    [newXmpp addBuddies:newBuddies];
+    
+    // Step 2 - Message old contacts that you have new account
+    
+    NSMutableArray<OTRYapMessageSendAction *> *sendActions = [NSMutableArray arrayWithCapacity:buddies.count];
+    // TODO: This depends on future changes
+    
+    
+    // Step 3 - Copy your avatar from old account to new account
+    
+    [newXmpp setAvatar:self.oldAccount.avatarImage completion:^(BOOL success) {
+        DDLogVerbose(@"Avatar copied to new account: success=%d", success);
+    }];
+    
+    // Step 4 - Update your old account's vCard with new JID
+    
+    XMPPvCardTemp *vCard = self.oldAccount.vCardTemp;
+    vCard.jid = newAccount.bareJID;
+    [oldXmpp.xmppvCardTempModule updateMyvCardTemp:vCard];
+    
+    // Step 5 - Update your old account's vCard.image to force other client's to refresh your whole vCard
+    
+    [oldXmpp setAvatar:self.oldAccount.avatarImage completion:^(BOOL success) {
+        DDLogVerbose(@"Avatar copied to on account to force vCard update: success=%d", success);
+    }];
+    
+    // Step 6 - Mark your old conversations as 'archived'
+    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj = [obj copy];
+            obj.isArchived = YES;
+            [obj saveWithTransaction:transaction];
+        }];
+    }];
+    
+    [super handleSuccessWithNewAccount:newAccount sender:sender];
+}
+
+
 
 @end

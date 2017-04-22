@@ -120,31 +120,37 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                         [account removeKeychainPassword:nil];
                     }
                     [strongSelf handleError:error];
-                } else {
-                    strongSelf.account = account;
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        [account saveWithTransaction:transaction];
-                    }];
-                    
-                    // If push isn't enabled, prompt to enable it
-                    if ([PushController getPushPreference] == PushPreferenceEnabled) {
-                        [strongSelf pushInviteViewController];
-                    } else {
-                        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
-                        EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
-                        if (pushVC) {
-                            pushVC.account = account;
-                            [strongSelf.navigationController pushViewController:pushVC animated:YES];
-                        } else {
-                            [strongSelf pushInviteViewController];
-                        }
-                    }
+                } else if (account) {
+                    self.account = account;
+                    [self handleSuccessWithNewAccount:account sender:sender];
                 }
         }];
     }
 }
 
-- (void) pushInviteViewController {
+- (void) handleSuccessWithNewAccount:(OTRAccount*)account sender:(id)sender {
+    NSParameterAssert(account != nil);
+    if (!account) { return; }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [account saveWithTransaction:transaction];
+    }];
+    
+    // If push isn't enabled, prompt to enable it
+    if ([PushController getPushPreference] == PushPreferenceEnabled) {
+        [self pushInviteViewController:sender];
+    } else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+        EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        if (pushVC) {
+            pushVC.account = account;
+            [self.navigationController pushViewController:pushVC animated:YES];
+        } else {
+            [self pushInviteViewController:sender];
+        }
+    }
+}
+
+- (void) pushInviteViewController:(id)sender {
     if (self.existingAccount) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {

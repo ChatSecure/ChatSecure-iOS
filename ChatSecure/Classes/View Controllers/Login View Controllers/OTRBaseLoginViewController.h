@@ -20,10 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 /** If true, do not allow editing of the form */
 @property (nonatomic) BOOL readOnly;
 
-
-/** Attempts to login with existing account or create/register account via form values. */
-- (void)loginButtonPressed:(id)sender;
-
 /**
  * Creates a view for logging in with an existing local & remote account.
  *
@@ -39,6 +35,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** This is for registering new accounts on a server */
 - (instancetype) initWithNewAccountType:(OTRAccountType)accountType;
+
+#pragma mark - Superclass Overrides
+// The below methods can be overridden by subclasses
+
+/** Attempts to login with existing account or create/register account via form values. */
+- (void)loginButtonPressed:(id)sender;
+
+/** This is called after login succeeds and by default will push the next onboarding view controller */
+- (void) handleSuccessWithNewAccount:(OTRAccount*)account sender:(id)sender;
 
 @end
 NS_ASSUME_NONNULL_END
