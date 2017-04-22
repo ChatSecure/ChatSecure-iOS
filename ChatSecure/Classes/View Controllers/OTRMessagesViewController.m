@@ -335,10 +335,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
-    [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
-    [self updateViewWithKey:self.threadKey collection:self.threadCollection];
-    [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
-    [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
+    if (self.threadKey && self.threadCollection) {
+        [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
+        [self updateViewWithKey:self.threadKey collection:self.threadCollection];
+        [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
+        [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
+    }
+    
     [self.collectionView reloadData];
     
     [self updateEncryptionState];
@@ -1833,9 +1836,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma - mark Buddy Migration methods
 
-- (XMPPJID *)getForwardingJIDForBuddy:(OTRBuddy *)buddy {
+- (nullable XMPPJID *)getForwardingJIDForBuddy:(OTRXMPPBuddy *)xmppBuddy {
     XMPPJID *ret = nil;
-    OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
     if (xmppBuddy != nil && xmppBuddy.vCardTemp != nil) {
         ret = xmppBuddy.vCardTemp.jid;
     }
