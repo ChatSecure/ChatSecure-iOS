@@ -8,22 +8,26 @@
 
 @import Mantle;
 
+NS_ASSUME_NONNULL_BEGIN
+
 // This enum reperesents all the ways a message can be transported.
 typedef NS_ENUM(NSUInteger, OTRMessageTransportSecurity) {
+    OTRMessageTransportSecurityInvalid = 4, // //This was added later so we needed to maintain the initial raw value of other values.
     OTRMessageTransportSecurityPlaintext = 0,
     OTRMessageTransportSecurityPlaintextWithOTR = 3, //This was added later so we needed to maintain the initial raw value. This is opportunistic OTR, appending special whitespace.
     OTRMessageTransportSecurityOTR = 1,
     OTRMessageTransportSecurityOMEMO = 2
 };
 
+
 @interface OTRMessageEncryptionInfo : MTLModel
 
-- (nullable instancetype) init NS_UNAVAILABLE;
+- (instancetype) init NS_UNAVAILABLE;
 
-- (nullable instancetype)initWithMessageSecurity:(OTRMessageTransportSecurity)messageSecurity;
-- (nullable instancetype)initPlaintext;
-- (nullable instancetype)initWithOTRFingerprint:(nonnull NSData *)otrFingerprint;
-- (nullable instancetype)initWithOMEMODevice:(nonnull NSString *)omemoDeviceYapKey collection:(nonnull NSString*)collection;
+- (instancetype)initWithMessageSecurity:(OTRMessageTransportSecurity)messageSecurity;
+- (instancetype)initPlaintext;
+- (instancetype)initWithOTRFingerprint:(NSData *)otrFingerprint;
+- (instancetype)initWithOMEMODevice:(NSString *)omemoDeviceYapKey collection:(NSString*)collection;
 
 @property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
 @property (nonatomic, strong, nullable, readonly) NSString *omemoDeviceYapKey;
@@ -31,3 +35,4 @@ typedef NS_ENUM(NSUInteger, OTRMessageTransportSecurity) {
 @property (nonatomic, strong, nullable, readonly) NSData *otrFingerprint;
 
 @end
+NS_ASSUME_NONNULL_END

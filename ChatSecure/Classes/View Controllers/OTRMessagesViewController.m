@@ -786,59 +786,34 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
-    __weak __typeof__(self) weakSelf = self;
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
+    
     [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        __typeof__(self) strongSelf = weakSelf;
-        id possibleBuddy = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
-        if ([possibleBuddy isKindOfClass:[OTRBuddy class]]) {
-            OTRBuddy *buddy = (OTRBuddy *)possibleBuddy;
-            OTRAccount *account = [buddy accountWithTransaction:transaction];
-            
-            __block OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (messageState == OTRKitMessageStateEncrypted) {
-                    self.state.canSendMedia = YES;
-                } else {
-                    self.state.canSendMedia = NO;
-                }
-                [self didUpdateState];
-            });
-            
-            switch (buddy.preferredSecurity) {
-                case OTRSessionSecurityPlaintextOnly: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityPlaintextWithOTR: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityPlaintextWithOTR;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityOTR: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOTR;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityOMEMOandOTR:
-                case OTRSessionSecurityOMEMO: {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        strongSelf.state.messageSecurity = OTRMessageTransportSecurityOMEMO;
-                    });
-                    break;
-                }
-                case OTRSessionSecurityBestAvailable: {
-                    [buddy bestTransportSecurityWithTransaction:transaction completionBlock:^(OTRMessageTransportSecurity security) {
-                        strongSelf.state.messageSecurity = security;
-                    } completionQueue:dispatch_get_main_queue()];
-                    break;
-                }
-                    
-            }
+        buddy = [self buddyWithTransaction:transaction];
+        account = [buddy accountWithTransaction:transaction];
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        messageSecurity = [buddy preferredTransportSecurityWithTransaction:transaction];
+    } completionBlock:^{
+        if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
+            DDLogError(@"updateEncryptionState error: missing parameters");
+            return;
         }
+        BOOL canSendMedia = NO;
+        
+        OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+        
+        if (messageState == OTRKitMessageStateEncrypted &&
+            buddy.status != OTRThreadStatusOffline) {
+            // If other side supports OTR, assume OTRDATA is possible
+            canSendMedia = YES;
+        }
+        
+        self.state.canSendMedia = canSendMedia;
+        self.state.messageSecurity = messageSecurity;
+        [self didUpdateState];
     }];
 }
 

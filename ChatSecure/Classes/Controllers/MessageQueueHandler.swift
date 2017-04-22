@@ -267,6 +267,9 @@ public class MessageQueueHandler:NSObject {
             case .OMEMO:
                 self.sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
                 break
+            case .invalid:
+                fatalError("Invalid message security. This should never happen... so let's crash!")
+                break
             }
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: messageSendingAction, timer: nil, completion: completion))
