@@ -195,8 +195,8 @@
 #if DEBUG
     crash.monitoring = KSCrashMonitorTypeDebuggerSafe;
 #else
-    crash.monitoring = KSCrashMonitorTypeAll;
-    crash.deadlockWatchdogInterval = 20;
+    //crash.monitoring = KSCrashMonitorTypeAll;
+    //crash.deadlockWatchdogInterval = 20;
 #endif
     
     // Setup Crash Reporting
