@@ -74,7 +74,7 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddies = [self.account allBuddiesWithTransaction:transaction];
+        buddies = [self.oldAccount allBuddiesWithTransaction:transaction];
         // If spamming friends, create some messages for them
         if (shouldSpamFriends) {
             [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
