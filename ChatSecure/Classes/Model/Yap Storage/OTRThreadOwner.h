@@ -33,7 +33,6 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 - (BOOL)isGroupThread;
 
-
 @end
 
 

@@ -335,6 +335,10 @@
         "comment": "Button to switch the chat over to the migrated account",
         "string": "Switch"
     },
+    "MY_NEW_ACCOUNT_INFO_STRING": {
+        "comment": "label for new account info for migration",
+        "string": "My new account information"
+    },
     "NAME_STRING": {
         "comment": "The string describing a buddy's display name",
         "string": "Name"

@@ -533,6 +533,31 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppStream sendElement:probe];
 }
 
+/** Enqueues an array of messages to be sent by message queue */
+- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages {
+    NSParameterAssert(messages);
+    if (!messages.count) {
+        return;
+    }
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [messages enumerateObjectsUsingBlock:^(OTROutgoingMessage * _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+            //2. Create send message task
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message];
+            //3. save both to database
+            [message saveWithTransaction:transaction];
+            [sendingAction saveWithTransaction:transaction];
+            //Update buddy
+            OTRBuddy *buddy = [message buddyWithTransaction:transaction];
+            if (!buddy) {
+                return;
+            }
+            buddy.composingMessageString = nil;
+            buddy.lastMessageId = message.uniqueId;
+            [buddy saveWithTransaction:transaction];
+        }];
+    }];
+}
+
 - (void)setAvatar:(UIImage *)avatarImage completion:(void (^)(BOOL success))completion
 {
     if (!avatarImage) {
@@ -1094,31 +1119,33 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 
 - (void) sendMessage:(OTROutgoingMessage*)message
 {
+    NSParameterAssert(message);
     NSString *text = message.text;
-    
-    __block OTRBuddy *buddy = nil;
+    if (!text.length) {
+        return;
+    }
+    __block OTRXMPPBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
+        buddy = (OTRXMPPBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
-    
+    if (!buddy || ![buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+        return;
+    }
     [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];
     
-    if ([text length])
-    {
-        NSString * messageID = message.messageId;
-        XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:buddy.username] elementID:messageID];
-        [xmppMessage addBody:text];
-
-        [xmppMessage addActiveChatState];
-        
-        if ([OTRKit stringStartsWithOTRPrefix:text]) {
-            [xmppMessage addPrivateMessageCarbons];
-            [xmppMessage addStorageHint:XMPPMessageStorageNoCopy];
-            [xmppMessage addStorageHint:XMPPMessageStorageNoPermanentStore];
-        }
-		
-		[self.xmppStream sendElement:xmppMessage];
+    NSString * messageID = message.messageId;
+    XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:buddy.bareJID elementID:messageID];
+    [xmppMessage addBody:text];
+    
+    [xmppMessage addActiveChatState];
+    
+    if ([OTRKit stringStartsWithOTRPrefix:text]) {
+        [xmppMessage addPrivateMessageCarbons];
+        [xmppMessage addStorageHint:XMPPMessageStorageNoCopy];
+        [xmppMessage addStorageHint:XMPPMessageStorageNoPermanentStore];
     }
+    
+    [self.xmppStream sendElement:xmppMessage];
 }
 
 - (NSString*) type {

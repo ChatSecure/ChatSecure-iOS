@@ -1214,26 +1214,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self finishSendingMessage];
     
     //1. Create new message database object
-    __block OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
-    message.buddyUniqueId = self.threadKey;
-    message.text = text;
-    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
-    
-    //2. Create send message task
-    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTROutgoingMessage collection] buddyKey:message.threadId date:message.date];
-    
-    //3. save both to database
-    __weak __typeof__(self) weakSelf = self;
-    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        __typeof__(self) strongSelf = weakSelf;
-        [message saveWithTransaction:transaction];
-        [sendingAction saveWithTransaction:transaction];
-        
-        //Update buddy
-        OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
-        buddy.composingMessageString = nil;
-        buddy.lastMessageId = message.uniqueId;
-        [buddy saveWithTransaction:transaction];
+    __block OTROutgoingMessage *message = nil;
+    __block OTRXMPPManager *xmpp = nil;
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+        if (!buddy) { return; }
+        message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
+        xmpp = [self xmppManagerWithTransaction:transaction];
+    } completionBlock:^{
+        [xmpp sendMessage:message];
     }];
 }
 

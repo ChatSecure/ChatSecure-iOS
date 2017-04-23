@@ -139,6 +139,14 @@
     return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
 }
 
+- (nullable OTRBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
+    id <OTRThreadOwner> threadOwner = [self threadOwnerWithTransaction:transaction];
+    if ([threadOwner isKindOfClass:[OTRBuddy class]]) {
+        return (OTRBuddy*)threadOwner;
+    }
+    return nil;
+}
+
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     [transaction removeAllObjectsInCollection:[self collection]];

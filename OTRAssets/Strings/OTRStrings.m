@@ -224,6 +224,8 @@ NSString* MIGRATION_INFO_WITH_DATE_STRING() { return [OTRLanguageManager transla
 NSString* MIGRATION_START_STRING() { return [OTRLanguageManager translatedString:@"Get Started"]; }
 /** "It's time to move!", Title for migration header view */
 NSString* MIGRATION_STRING() { return [OTRLanguageManager translatedString:@"It's time to move!"]; }
+/** "My new account information", label for new account info for migration */
+NSString* MY_NEW_ACCOUNT_INFO_STRING() { return [OTRLanguageManager translatedString:@"My new account information"]; }
 /** "My QR Code", Your QR code */
 NSString* MY_QR_CODE() { return [OTRLanguageManager translatedString:@"My QR Code"]; }
 /** "Me",  */

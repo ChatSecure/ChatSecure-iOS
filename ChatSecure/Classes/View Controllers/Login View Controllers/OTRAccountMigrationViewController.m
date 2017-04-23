@@ -66,11 +66,22 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     OTRXMPPManager *oldXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:self.oldAccount];
     OTRXMPPManager *newXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:newAccount];
     
+    BOOL shouldSpamFriends = [[self.form formRowWithTag:kSpamYourContactsTag].value isEqual:@YES];
+    
     // Step 1 - Add old contacts to new account
     
+    NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), newAccount.bareJID.bare];
+    NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddies = [self.account allBuddiesWithTransaction:transaction];
+        // If spamming friends, create some messages for them
+        if (shouldSpamFriends) {
+            [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                OTROutgoingMessage *message = [OTROutgoingMessage messageToBuddy:obj text:messageText transaction:transaction];
+                [outgoingMessages addObject:message];
+            }];
+        }
     }];
     NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
     [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -91,9 +102,9 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     
     // Step 2 - Message old contacts that you have new account
     
-    NSMutableArray<OTRYapMessageSendAction *> *sendActions = [NSMutableArray arrayWithCapacity:buddies.count];
-    // TODO: This depends on future changes
-    
+    if (shouldSpamFriends) {
+        [oldXmpp enqueueMessages:outgoingMessages];
+    }
     
     // Step 3 - Copy your avatar from old account to new account
     
