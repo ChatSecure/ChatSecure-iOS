@@ -1222,7 +1222,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
         xmpp = [self xmppManagerWithTransaction:transaction];
     } completionBlock:^{
-        [xmpp sendMessage:message];
+        if (!message || !xmpp) { return; }
+        [xmpp enqueueMessage:message];
     }];
 }
 

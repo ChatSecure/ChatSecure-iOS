@@ -533,6 +533,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppStream sendElement:probe];
 }
 
+
+/** Enqueues a message to be sent by message queue */
+- (void) enqueueMessage:(OTROutgoingMessage*)message {
+    NSParameterAssert(message);
+    if (!message) { return; }
+    [self enqueueMessages:@[message]];
+}
+
 /** Enqueues an array of messages to be sent by message queue */
 - (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages {
     NSParameterAssert(messages);

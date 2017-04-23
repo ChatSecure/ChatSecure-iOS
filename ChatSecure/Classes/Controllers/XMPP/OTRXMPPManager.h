@@ -86,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** Will send an available presence */
 - (void) goOnline;
 
+/** Enqueues a message to be sent by message queue */
+- (void) enqueueMessage:(OTROutgoingMessage*)message;
+
 /** Enqueues an array of messages to be sent by message queue */
 - (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages;
 
