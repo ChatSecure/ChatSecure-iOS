@@ -26,6 +26,8 @@ FOUNDATION_EXPORT NSString* ARCHIVE_ACTION_STRING();
 FOUNDATION_EXPORT NSString* ARCHIVE_STRING();
 /** "Are you sure?", Shown to confirm destructive actions */
 FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
+/** "Audio Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* AUDIO_MESSAGE_STRING();
 /** "Available", Label in buddy list for users that are available */
 FOUNDATION_EXPORT NSString* AVAILABLE_STRING();
 /** "Away", Label in buddy list for users that are away */
@@ -308,6 +310,8 @@ FOUNDATION_EXPORT NSString* PAYMENTS_SETUP_ERROR_STRING();
 FOUNDATION_EXPORT NSString* PENDING_APPROVAL_STRING();
 /** "Photo Library", Label for button to open up photo library and choose photo */
 FOUNDATION_EXPORT NSString* PHOTO_LIBRARY_STRING();
+/** "Picture Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* PICTURE_MESSAGE_STRING();
 /** "Manage saved SSL certificates", subtitle for the certificate pinned setting */
 FOUNDATION_EXPORT NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING();
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
@@ -442,6 +446,8 @@ FOUNDATION_EXPORT NSString* VERIFY_FINGERPRINT_STRING();
 FOUNDATION_EXPORT NSString* VERIFY_STRING();
 /** "Version", when displaying version numbers such as 1.0.0 */
 FOUNDATION_EXPORT NSString* VERSION_STRING();
+/** "Video Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* VIDEO_MESSAGE_STRING();
 /** "View profile to review contact's devices or change encryption settings.", Describe how to change a contact's device settings */
 FOUNDATION_EXPORT NSString* VIEW_PROFILE_DESCRIPTION_STRING();
 /** "View Profile", The label for a button to view the buddy profile */

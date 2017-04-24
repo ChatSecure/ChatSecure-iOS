@@ -26,6 +26,8 @@ NSString* ARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:
 NSString* ARCHIVE_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
 /** "Are you sure?", Shown to confirm destructive actions */
 NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
+/** "Audio Message", Text for media message summary */
+NSString* AUDIO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Audio Message"]; }
 /** "Available", Label in buddy list for users that are available */
 NSString* AVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Available"]; }
 /** "Away", Label in buddy list for users that are away */
@@ -308,6 +310,8 @@ NSString* PAYMENTS_SETUP_ERROR_STRING() { return [OTRLanguageManager translatedS
 NSString* PENDING_APPROVAL_STRING() { return [OTRLanguageManager translatedString:@"Pending Approval"]; }
 /** "Photo Library", Label for button to open up photo library and choose photo */
 NSString* PHOTO_LIBRARY_STRING() { return [OTRLanguageManager translatedString:@"Photo Library"]; }
+/** "Picture Message", Text for media message summary */
+NSString* PICTURE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Picture Message"]; }
 /** "Manage saved SSL certificates", subtitle for the certificate pinned setting */
 NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Manage saved SSL certificates"]; }
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
@@ -442,6 +446,8 @@ NSString* VERIFY_FINGERPRINT_STRING() { return [OTRLanguageManager translatedStr
 NSString* VERIFY_STRING() { return [OTRLanguageManager translatedString:@"Verify"]; }
 /** "Version", when displaying version numbers such as 1.0.0 */
 NSString* VERSION_STRING() { return [OTRLanguageManager translatedString:@"Version"]; }
+/** "Video Message", Text for media message summary */
+NSString* VIDEO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Video Message"]; }
 /** "View profile to review contact's devices or change encryption settings.", Describe how to change a contact's device settings */
 NSString* VIEW_PROFILE_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"View profile to review contact's devices or change encryption settings."]; }
 /** "View Profile", The label for a button to view the buddy profile */

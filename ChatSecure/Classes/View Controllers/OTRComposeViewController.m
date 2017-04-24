@@ -440,7 +440,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
+    NSArray *accounts = [OTRAccountsManager allAccounts];
     if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
     {
         [self addBuddy:accounts];

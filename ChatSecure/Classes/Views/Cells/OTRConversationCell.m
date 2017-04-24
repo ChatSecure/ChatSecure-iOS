@@ -12,6 +12,11 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
+#import "OTRMediaItem.h"
+#import "OTRImageItem.h"
+#import "OTRAudioItem.h"
+#import "OTRVideoItem.h"
+@import OTRAssets;
 @import YapDatabase;
 
 
@@ -82,18 +87,28 @@
     __block OTRAccount *account = nil;
     __block id <OTRMessageProtocol> lastMessage = nil;
     __block NSUInteger unreadMessages = 0;
+    __block OTRMediaItem *mediaItem = nil;
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
         unreadMessages = [thread numberOfUnreadMessagesWithTransaction:transaction];
         lastMessage = [thread lastMessageWithTransaction:transaction];
+        if (lastMessage.messageMediaItemKey) {
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:lastMessage.messageMediaItemKey transaction:transaction];
+        }
     }];
     
     self.accountLabel.text = account.username;
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
-    self.conversationLabel.text = lastMessage.text;
+    if (lastMessage.messageError != nil) {
+        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.text];
+    } else if (mediaItem) {
+        self.conversationLabel.text = [self stringForMediaItem:mediaItem];
+    } else {
+        self.conversationLabel.text = lastMessage.text;
+    }
     if (unreadMessages > 0) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
@@ -105,6 +120,18 @@
     self.dateLabel.textColor = self.nameLabel.textColor;
     
     [self updateDateString:lastMessage.date];
+}
+
+- (NSString*) stringForMediaItem:(OTRMediaItem*)mediaItem {
+    NSString *item = @"";
+    if ([mediaItem isKindOfClass:[OTRImageItem class]]) {
+        item = [NSString stringWithFormat:@"📷 %@", PICTURE_MESSAGE_STRING()];
+    } else if ([mediaItem isKindOfClass:[OTRVideoItem class]]) {
+        item = [NSString stringWithFormat:@"🎥 %@", VIDEO_MESSAGE_STRING()];
+    } else if ([mediaItem isKindOfClass:[OTRAudioItem class]]) {
+        item = [NSString stringWithFormat:@"🔊 %@", AUDIO_MESSAGE_STRING()];
+    }
+    return item;
 }
 
 - (void)updateDateString:(NSDate *)date

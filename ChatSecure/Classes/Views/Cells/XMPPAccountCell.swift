@@ -15,7 +15,7 @@ public class XMPPAccountCell: UITableViewCell {
     @IBOutlet weak var avatarButton: UIButton!
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet public weak var accountNameLabel: UILabel!
-    @IBOutlet weak var infoButton: UIButton!
+    @IBOutlet public weak var infoButton: UIButton!
     
     public var infoButtonAction: CellButtonBlock?
     public var avatarButtonAction: CellButtonBlock?

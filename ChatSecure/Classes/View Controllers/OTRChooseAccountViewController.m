@@ -13,11 +13,14 @@
 @import OTRAssets;
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
+@import PureLayout;
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
 @interface OTRChooseAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<OTRAccount*> *accounts;
 
 @end
 
@@ -28,23 +31,25 @@
     [super viewDidLoad];
     
     self.title = ACCOUNT_STRING();
+    self.accounts = [OTRAccountsManager allAccounts];
 	
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    //self.tableView.scrollEnabled =  [self tableView:self.tableView numberOfRowsInSection:0] * 50.0 > self.tableView.frame.size.height;
+    [self.view addSubview:self.tableView];
+    [self.tableView autoPinEdgesToSuperviewEdges];
     
-    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    NSBundle *bundle = [OTRAssets resourcesBundle];
+    UINib *nib = [UINib nibWithNibName:[XMPPAccountCell cellIdentifier] bundle:bundle];
+    [self.tableView registerNib:nib forCellReuseIdentifier:[XMPPAccountCell cellIdentifier]];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-    
-    
-    [self.view addSubview: self.tableView];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50.0;
+    return [XMPPAccountCell cellHeight];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -54,16 +59,13 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self onlineAccounts] count];
+    return self.accounts.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellIdentifier = @"cell";
-    UITableViewCell * cell = [tView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-    }
+    NSString *cellIdentifier = [XMPPAccountCell cellIdentifier];
+    XMPPAccountCell * cell = [tView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
     [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
@@ -71,7 +73,7 @@
 
 -(void)tableView:(UITableView *)tView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
+    OTRAccount *account = [self.accounts objectAtIndex:indexPath.row];
     OTRNewBuddyViewController * buddyViewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
     [self.navigationController pushViewController:buddyViewController animated:YES];
     
@@ -79,17 +81,11 @@
     [tView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(NSArray *)onlineAccounts
+-(void) configureCell:(XMPPAccountCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    return [OTRAccountsManager allAccountsAbleToAddBuddies];
-}
-
--(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    OTRAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
-    cell.textLabel.text = account.username;
-    cell.detailTextLabel.text = nil;
-    cell.imageView.image = [account accountImage];
+    OTRXMPPAccount *account = (OTRXMPPAccount*)[self.accounts objectAtIndex:indexPath.row];
+    [cell setAppearanceWithAccount:account];
+    cell.infoButton.hidden = YES;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 

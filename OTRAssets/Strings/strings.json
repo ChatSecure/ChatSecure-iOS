@@ -3,6 +3,18 @@
         "comment": "Title for the about page",
         "string": "About"
     },
+    "AUDIO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Audio Message"
+    },
+    "VIDEO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Video Message"
+    },
+    "PICTURE_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Picture Message"
+    },
     "ARCHIVE_STRING": {
         "comment": "Noun. segmented control value for displaying archived conversations",
         "string": "Archive"

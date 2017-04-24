@@ -30,41 +30,25 @@
 #import "OTRLog.h"
 #import "OTRAccount.h"
 
-@interface OTRAccountsManager(Private)
-- (void) refreshAccountsArray;
-@end
-
 @implementation OTRAccountsManager
 
 + (void)removeAccount:(OTRAccount*)account
 {
+    NSParameterAssert(account);
+    if (!account) { return; }
     [account removeKeychainPassword:nil];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeObjectForKey:account.uniqueId inCollection:[OTRAccount collection]];
     }];
 }
 
-+ (NSArray *)allAccountsAbleToAddBuddies  {
++ (NSArray<OTRAccount*> *)allAccounts  {
     
-    __block NSArray *accounts = nil;
+    __block NSArray *accounts = @[];
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        
-        if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
-            OTRAccount *account = (OTRAccount *)evaluatedObject;
-            
-            if ([[OTRProtocolManager sharedInstance] isAccountConnected:account]) {
-                return YES;
-            }
-        }
-        return NO;
-    }];
-    
-    
-    return [accounts filteredArrayUsingPredicate:predicate];
+    return accounts;
 }
 
 + (OTRAccount *)accountWithUsername:(NSString *)username
