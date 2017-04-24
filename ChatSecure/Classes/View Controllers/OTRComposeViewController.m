@@ -75,10 +75,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.doneBarButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
     
-    NSString *groupString = [NSString fa_stringForFontAwesomeIcon:FAGroup];
-    self.groupBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:groupString style:UIBarButtonItemStylePlain target:self action:@selector(groupButtonPressed:)];
-    [self.groupBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:kFontAwesomeFont size:[UIFont buttonFontSize]]}
-                                      forState:UIControlStateNormal];
+    self.groupBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:GROUP_CHAT_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(groupButtonPressed:)];
     
     
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
@@ -386,7 +383,15 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
         id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
         
-        [cell setThread:threadOwner];
+        __block OTRAccount *account = nil;
+        [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            BOOL showAccount = [self shouldShowAccountLabelWithTransaction:transaction];
+            if (showAccount) {
+                account = [OTRAccount accountForThread:threadOwner transaction:transaction];
+            }
+        }];
+        
+        [cell setThread:threadOwner account:account];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
@@ -398,6 +403,16 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
     
     
+}
+
+/** By default will show account if numAccounts > 0*/
+- (BOOL) shouldShowAccountLabelWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    NSUInteger numberOfAccounts = 0;
+    numberOfAccounts = [OTRAccount numberOfAccountsWithTransaction:transaction];
+    if (numberOfAccounts > 1) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark UITableViewDelegate Methods
@@ -466,7 +481,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }];
 }
 
-- (void)addBuddy:(NSArray * _Nullable)accountsAbleToAddBuddies
+- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
 {
     if ([accountsAbleToAddBuddies count] == 0) {
         return; // No accounts

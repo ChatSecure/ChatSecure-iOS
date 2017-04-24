@@ -65,6 +65,7 @@ extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnN
 
 
 + (instancetype)sharedInstance;
+@property (class, nonatomic, readonly) OTRDatabaseManager *shared;
 
 NS_ASSUME_NONNULL_END
 

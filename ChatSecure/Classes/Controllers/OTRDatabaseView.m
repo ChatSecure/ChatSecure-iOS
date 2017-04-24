@@ -247,6 +247,7 @@ NSString *OTRPushAccountGroup = @"Account";
         OTRBuddy *buddy1 = (OTRBuddy *)object1;
         OTRBuddy *buddy2 = (OTRBuddy *)object2;
         
+        NSComparisonResult result = NSOrderedSame;
         
         if (buddy1.currentStatus == buddy2.currentStatus) {
             NSString *buddy1String = buddy1.username;
@@ -260,13 +261,20 @@ NSString *OTRPushAccountGroup = @"Account";
                 buddy2String = buddy2.displayName;
             }
             
-            return [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
+            result = [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
         }
         else if (buddy1.currentStatus < buddy2.currentStatus) {
-            return NSOrderedAscending;
+            result = NSOrderedAscending;
         }
-        else{
-            return NSOrderedDescending;
+        else {
+            result = NSOrderedDescending;
+        }
+        
+        NSComparisonResult archiveSort = [@(buddy1.isArchived) compare:@(buddy2.isArchived)];
+        if (archiveSort == NSOrderedSame) {
+            return result;
+        } else {
+            return archiveSort;
         }
     }];
     
@@ -277,7 +285,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"3"
+                                                           versionTag:@"7"
                                                               options:options];
     
     return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];

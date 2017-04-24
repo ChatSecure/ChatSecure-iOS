@@ -31,13 +31,21 @@ public class XMPPAccountCell: UITableViewCell {
     public override func awakeFromNib() {
         avatarButton.backgroundColor = nil
     }
+    
+    public func setAppearance(buddy: OTRBuddy) {
+        setAppearance(userInfo: buddy)
+    }
 
     public func setAppearance(account: OTRXMPPAccount) {
-        let image = account.avatarImage()
+        setAppearance(userInfo: account)
+    }
+    
+    func setAppearance(userInfo: OTRUserInfoProfile) {
+        let image = userInfo.avatarImage
         avatarButton.setImage(image, for: .normal)
         
         if let imageView = avatarButton.imageView {
-            setAppearance(userInfo: account, usernameLabel: accountNameLabel, displayNameLabel: displayNameLabel, avatarImageView: imageView)
+            setAppearance(userInfo: userInfo, usernameLabel: accountNameLabel, displayNameLabel: displayNameLabel, avatarImageView: imageView)
         }
     }
     

@@ -262,6 +262,10 @@
 
 #pragma mark Singleton Object Methods
 
++ (OTRProtocolManager*) shared {
+    return [self sharedInstance];
+}
+
 + (instancetype)sharedInstance
 {
     static id sharedInstance = nil;

@@ -58,5 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance; // Singleton method
 
+/** Convenience for sharedInstance */
+@property (class, nonatomic, readonly) OTRProtocolManager *shared;
+
 @end
 NS_ASSUME_NONNULL_END

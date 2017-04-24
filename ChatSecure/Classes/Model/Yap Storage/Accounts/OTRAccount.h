@@ -88,6 +88,8 @@ extern NSString *const OTRXMPPTorImageName;
 
 + (NSArray <OTRAccount *>*)allAccountsWithUsername:(NSString *)username transaction:(YapDatabaseReadTransaction*)transaction;
 + (NSArray <OTRAccount *>*)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction;
++ (NSUInteger) numberOfAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction;
++ (nullable OTRAccount*) accountForThread:(id<OTRThreadOwner>)thread transaction:(YapDatabaseReadTransaction*)transaction;
 
 /**
  Remove all accounts with account type using a read/write transaction

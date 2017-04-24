@@ -236,6 +236,17 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return accountsArray;
 }
 
++ (NSUInteger) numberOfAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    return [transaction numberOfKeysInCollection:[OTRAccount collection]];
+}
+
++ (nullable OTRAccount*) accountForThread:(id<OTRThreadOwner>)thread transaction:(YapDatabaseReadTransaction*)transaction {
+    NSParameterAssert(thread);
+    if (!thread) { return nil; }
+    OTRAccount *account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
+    return account;
+}
+
 + (NSArray <OTRAccount *>*)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
 {
     NSMutableArray <OTRAccount *>*accounts = [NSMutableArray array];
