@@ -73,6 +73,9 @@ NSString *OTRPushAccountGroup = @"Account";
             if ([object isKindOfClass:[OTRBuddy class]])
             {
                 OTRBuddy *buddy = (OTRBuddy *)object;
+                if (!buddy.username.length) {
+                    return nil;
+                }
                 // Hack to show "placeholder" items in list
                 if (buddy.lastMessageId && buddy.lastMessageId.length == 0) {
                     return OTRConversationGroup;
@@ -129,7 +132,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"6"
+                                                                   versionTag:@"7"
                                                                       options:options];
     
     BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
@@ -145,6 +148,19 @@ NSString *OTRPushAccountGroup = @"Account";
     if (accountView) {
         return YES;
     }
+    
+    [YapDatabaseViewGrouping withObjectBlock:^NSString * _Nullable(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([collection isEqualToString:[OTRAccount collection]] && [object isKindOfClass:[OTRAccount class]])
+        {
+            OTRAccount *account = object;
+            if (!account.username.length) {
+                return nil;
+            }
+            return OTRAllAccountGroup;
+        }
+        
+        return nil;
+    }];
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key) {
         if ([collection isEqualToString:[OTRAccount collection]])
@@ -173,7 +189,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"1"
+                                                                   versionTag:@"2"
                                                                       options:options];
     
     return [database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
@@ -235,6 +251,10 @@ NSString *OTRPushAccountGroup = @"Account";
             if (!account) {
                 return nil;
             }
+            // Filter out buddies with no username
+            if (!buddy.username.length) {
+                return nil;
+            }
             if (![account.username isEqualToString:buddy.username]) {
                 return OTRBuddyGroup;
             }
@@ -285,7 +305,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"7"
+                                                           versionTag:@"8"
                                                               options:options];
     
     return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];

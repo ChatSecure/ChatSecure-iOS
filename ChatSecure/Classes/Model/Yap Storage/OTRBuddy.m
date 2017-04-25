@@ -86,6 +86,14 @@
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
 
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    OTRBuddy *buddy = (OTRBuddy*)[super fetchObjectWithUniqueID:uniqueID transaction:transaction];
+    if (!buddy.username.length) {
+        return nil;
+    }
+    return buddy;
+}
+
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
     YapDatabaseSecondaryIndexTransaction *indexTransaction = [transaction ext:OTRMessagesSecondaryIndex];
     if (!indexTransaction) {

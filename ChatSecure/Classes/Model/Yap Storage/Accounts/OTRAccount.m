@@ -200,11 +200,19 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (buddy) {
+        if (buddy.username.length) {
             [allBuddies addObject:buddy];
         }
     }];
     return allBuddies;
+}
+
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    OTRAccount *account = (OTRAccount*)[super fetchObjectWithUniqueID:uniqueID transaction:transaction];
+    if (!account.username.length) {
+        return nil;
+    }
+    return account;
 }
 
 

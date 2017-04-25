@@ -95,9 +95,10 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
         newBuddy.username = obj.username;
         newBuddy.accountUniqueId = newAccount.uniqueId;
         // Show buddies in list only if you've talked to them before
-        if (obj.lastMessageId != nil) {
+        if (obj.lastMessageId.length > 0 && !obj.isArchived) {
             newBuddy.lastMessageId = @"";
         }
+        newBuddy.isArchived = obj.isArchived;
         newBuddy.avatarData = obj.avatarData;
         newBuddy.displayName = obj.displayName;
         newBuddy.preferredSecurity = obj.preferredSecurity;

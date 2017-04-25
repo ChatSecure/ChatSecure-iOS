@@ -59,6 +59,11 @@
 }
 
 + (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    NSParameterAssert(uniqueID);
+    NSParameterAssert(transaction);
+    if (!uniqueID || !transaction) {
+        return nil;
+    }
     id object = [transaction objectForKey:uniqueID inCollection:[self collection]];
     NSParameterAssert(!object || [object isKindOfClass:[self class]]);
     return object;
