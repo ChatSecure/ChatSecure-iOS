@@ -113,12 +113,47 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     __block BOOL hasAccounts = NO;
-    __block OTRXMPPAccount *needsMigration;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
         }
+    }];
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+
+    //If there is any number of accounts launch into default conversation view otherwise onboarding time
+    if (!hasAccounts) {
+        UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
+        welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:welcomeNavController animated:YES completion:nil];
+        self.hasPresentedOnboarding = YES;
+    } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
+        EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        pushVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        if (pushVC) {
+            [self presentViewController:pushVC animated:YES completion:nil];
+        }
+        self.hasPresentedOnboarding = YES;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.cellUpdateTimer invalidate];
+    [self.tableView reloadData];
+    [self updateInboxArchiveItems:self.navigationItem.titleView];
+    self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
+    
+    
+    [self updateComposeButton:self.accountCounter.numberOfAccounts];
+    [self showMigrationViewIfNeeded];
+}
+
+- (void)showMigrationViewIfNeeded {
+    __block OTRXMPPAccount *needsMigration;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
         [accounts enumerateObjectsUsingBlock:^(OTRAccount * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (![obj isKindOfClass:[OTRXMPPAccount class]]) {
@@ -139,39 +174,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             }
         }];
     }];
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
-
-    //If there is any number of accounts launch into default conversation view otherwise onboarding time
-    if (!hasAccounts) {
-        UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
-        welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:welcomeNavController animated:YES completion:nil];
-        self.hasPresentedOnboarding = YES;
-    } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
-        EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
-        pushVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        if (pushVC) {
-            [self presentViewController:pushVC animated:YES completion:nil];
-        }
-        self.hasPresentedOnboarding = YES;
-    }
     if (needsMigration != nil) {
         self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self.cellUpdateTimer invalidate];
-    [self.tableView reloadData];
-    [self updateInboxArchiveItems:self.navigationItem.titleView];
-    self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
-    
-    
-    [self updateComposeButton:self.accountCounter.numberOfAccounts];
 }
 
 - (void)viewDidAppear:(BOOL)animated
