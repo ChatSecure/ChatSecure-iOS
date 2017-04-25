@@ -340,14 +340,19 @@ extension OTRSignalStorageManager: SignalStore {
         }
     }
     
+    /// Returns true if deleted, false if not found
     public func deletePreKey(withId preKeyId: UInt32) -> Bool {
+        var result = false
         self.databaseConnection.readWrite { (transaction) in
             let yapKey = OTRSignalPreKey.uniqueKey(forAccountKey: self.accountKey, keyId: preKeyId)
-            let preKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction)
-            preKey?.keyData = nil
-            preKey?.save(with: transaction)
+            if let preKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction) {
+                preKey.keyData = nil
+                preKey.save(with: transaction)
+                result = true
+            }
+            
         }
-        return true
+        return result
     }
     
     //MARK: SignalSignedPreKeyStore
