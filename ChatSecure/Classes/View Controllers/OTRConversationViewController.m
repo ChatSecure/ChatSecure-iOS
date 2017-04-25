@@ -557,7 +557,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         OTRAccount *oldAccount = self.migrationInfoHeaderView.account;
         OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:oldAccount];
         migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.navigationController pushViewController:migrateVC animated:YES];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:migrateVC];
+        [self presentViewController:navigationController animated:YES completion:nil];
     }
 }
 
