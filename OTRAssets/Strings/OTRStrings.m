@@ -186,6 +186,8 @@ NSString* INVITE_LINK_STRING() { return [OTRLanguageManager translatedString:@"S
 NSString* IN_BAND_ERROR_STRING() { return [OTRLanguageManager translatedString:@"The XMPP server does not support in-band registration"]; }
 /** "Jabber (XMPP)", the name for jabber, also include (XMPP) at the end */
 NSString* JABBER_STRING() { return [OTRLanguageManager translatedString:@"Jabber (XMPP)"]; }
+/** "Join Group", Text for joining existing XMPP room */
+NSString* JOIN_GROUP_STRING() { return [OTRLanguageManager translatedString:@"Join Group"]; }
 /** "Knock Sent", Text for label after knock is sent. Like knocking on a door */
 NSString* KNOCK_SENT_STRING() { return [OTRLanguageManager translatedString:@"Knock Sent"]; }
 /** "Knock", Label for button after to send push notification knock. Like knocking on a door */

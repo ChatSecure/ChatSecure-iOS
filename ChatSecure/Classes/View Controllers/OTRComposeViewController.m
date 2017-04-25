@@ -19,6 +19,7 @@
 @import PureLayout;
 @import BButton;
 #import "OTRBuddyInfoCell.h"
+#import "OTRXMPPManager_Private.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
 
@@ -238,6 +239,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (void)switchSelectionMode {
     _selectionModeIsSingle = !_selectionModeIsSingle;
     
+    // Change from Join Group / Add Buddy
+    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
+    
     //Update right bar button item
     if (self.selectionModeIsSingle) {
         self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
@@ -373,7 +378,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
         }
-        cell.textLabel.text = ADD_BUDDY_STRING();
+        if (_selectionModeIsSingle) {
+            cell.textLabel.text = ADD_BUDDY_STRING();
+        } else {
+            cell.textLabel.text = JOIN_GROUP_STRING();
+        }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         return cell;
@@ -443,7 +452,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     NSArray *accounts = [OTRAccountsManager allAccounts];
     if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
     {
-        [self addBuddy:accounts];
+        if (_selectionModeIsSingle) {
+            [self addBuddy:accounts];
+        } else {
+            // join group
+            [self joinGroup:tableView];
+        }
     }
     else {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
@@ -491,13 +505,59 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     UIViewController *viewController = nil;
     if([accountsAbleToAddBuddies count] > 1) {
         // pick which account
-        viewController = [[OTRChooseAccountViewController alloc] init];
+        OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];
+        chooser.selectionBlock = ^(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account) {
+            OTRNewBuddyViewController *newBuddyVC = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
+            [chooseVC.navigationController pushViewController:newBuddyVC animated:YES];
+        };
+        viewController = chooser;
     }
     else {
         OTRAccount *account = [accountsAbleToAddBuddies firstObject];
         viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
     }
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void) joinGroup:(id)sender {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:JOIN_GROUP_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = XMPP_USERNAME_EXAMPLE_STRING();
+    }];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = [NSString stringWithFormat:@"%@ (%@)", PASSWORD_STRING(), OPTIONAL_STRING()];
+    }];
+    UIAlertAction *joinAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *jidStr = alertController.textFields.firstObject.text;
+        NSString *pass = alertController.textFields.lastObject.text;
+        if (!jidStr.length) {
+            return;
+        }
+        XMPPJID *roomJid = [XMPPJID jidWithString:jidStr];
+        if (!roomJid) {
+            return;
+        }
+        NSArray *accounts = [OTRAccountsManager allAccounts];
+        void (^joinRoom)(OTRAccount *account) = ^void(OTRAccount *account) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+            if (!xmpp) { return; }
+            [xmpp.roomManager joinRoom:roomJid withNickname:account.username subject:nil password:pass];
+        };
+        if (accounts.count > 1) {
+            OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];
+            chooser.selectionBlock = ^(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account) {
+                [chooseVC dismissViewControllerAnimated:YES completion:nil];
+                joinRoom(account);
+            };
+            [self.navigationController pushViewController:chooser animated:YES];
+        } else {
+            joinRoom(accounts.firstObject);
+        }
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:joinAction];
+    [alertController addAction:cancel];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma - mark UIScrollViewDelegate

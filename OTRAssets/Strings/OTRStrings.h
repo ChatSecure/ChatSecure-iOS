@@ -186,6 +186,8 @@ FOUNDATION_EXPORT NSString* INVITE_LINK_STRING();
 FOUNDATION_EXPORT NSString* IN_BAND_ERROR_STRING();
 /** "Jabber (XMPP)", the name for jabber, also include (XMPP) at the end */
 FOUNDATION_EXPORT NSString* JABBER_STRING();
+/** "Join Group", Text for joining existing XMPP room */
+FOUNDATION_EXPORT NSString* JOIN_GROUP_STRING();
 /** "Knock Sent", Text for label after knock is sent. Like knocking on a door */
 FOUNDATION_EXPORT NSString* KNOCK_SENT_STRING();
 /** "Knock", Label for button after to send push notification knock. Like knocking on a door */

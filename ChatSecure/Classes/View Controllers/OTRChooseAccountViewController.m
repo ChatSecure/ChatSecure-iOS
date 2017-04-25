@@ -74,9 +74,10 @@
 -(void)tableView:(UITableView *)tView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRAccount *account = [self.accounts objectAtIndex:indexPath.row];
-    OTRNewBuddyViewController * buddyViewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
-    [self.navigationController pushViewController:buddyViewController animated:YES];
     
+    if (self.selectionBlock) {
+        self.selectionBlock(self, account);
+    }
     
     [tView deselectRowAtIndexPath:indexPath animated:YES];
 }

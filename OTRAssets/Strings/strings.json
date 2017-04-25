@@ -15,6 +15,10 @@
         "comment": "Text for media message summary",
         "string": "Picture Message"
     },
+    "JOIN_GROUP_STRING": {
+        "comment": "Text for joining existing XMPP room",
+        "string": "Join Group"
+    },
     "ARCHIVE_STRING": {
         "comment": "Noun. segmented control value for displaying archived conversations",
         "string": "Archive"

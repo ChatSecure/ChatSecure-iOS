@@ -19,6 +19,7 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
     open var messageText:String?
     open var lastRoomMessageId:String?
     open var subject:String?
+    open var roomPassword:String?
     override open var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
