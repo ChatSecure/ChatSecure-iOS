@@ -1799,6 +1799,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return NO;
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutJIDForwardingHeader];
+}
+
 #pragma - mark Buddy Migration methods
 
 - (nullable XMPPJID *)getForwardingJIDForBuddy:(OTRXMPPBuddy *)xmppBuddy {
@@ -1807,6 +1812,19 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         ret = xmppBuddy.vCardTemp.jid;
     }
     return ret;
+}
+
+- (void)layoutJIDForwardingHeader {
+    if (self.jidForwardingHeaderView != nil) {
+        [self.jidForwardingHeaderView setNeedsLayout];
+        [self.jidForwardingHeaderView layoutIfNeeded];
+        int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        CGRect frame = self.jidForwardingHeaderView.frame;
+        frame.size.height = height;
+        self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
+        [self.view bringSubviewToFront:self.jidForwardingHeaderView];
+        self.topContentAdditionalInset = height;
+    }
 }
 
 - (void)updateJIDForwardingHeader {
@@ -1835,17 +1853,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [header.descriptionLabel setText:MIGRATED_BUDDY_INFO_STRING()];
         [header.switchButton setTitle:MIGRATED_BUDDY_SWITCH() forState:UIControlStateNormal];
         [header.ignoreButton setTitle:MIGRATED_BUDDY_IGNORE() forState:UIControlStateNormal];
-        [header setNeedsLayout];
-        [header layoutIfNeeded];
-        int height = [header systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-        CGRect frame = header.frame;
-        frame.size.height = height;
-        header.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
+        [header setBackgroundColor:UIColor.whiteColor];
         [self.view addSubview:header];
+        [self.view bringSubviewToFront:header];
         self.jidForwardingHeaderView = header;
-        self.collectionView.contentInset = UIEdgeInsetsMake(height, 0, 0, 0);
+        [self.view setNeedsLayout];
     } else if (!showHeader && self.jidForwardingHeaderView != nil) {
-        self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.topContentAdditionalInset = 0;
         [self.jidForwardingHeaderView removeFromSuperview];
         self.jidForwardingHeaderView = nil;
     }
@@ -1854,14 +1868,14 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)didPressMigratedIgnore {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.collectionView.contentInset = UIEdgeInsetsZero;
+        self.topContentAdditionalInset = 0;
     }
 }
 
 - (IBAction)didPressMigratedSwitch {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.collectionView.contentInset = UIEdgeInsetsZero;
+        self.topContentAdditionalInset = 0;
     }
     
     __block OTRXMPPBuddy *buddy = nil;
