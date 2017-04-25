@@ -26,6 +26,10 @@
  }
  */
 
+@interface OTRXMPPServerInfo ()
+@property (nonatomic, readonly) NSArray<NSString*> *extensions;
+@end
+
 static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 
 @implementation OTRXMPPServerInfo
@@ -55,7 +59,8 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
              @"onion": @"onion",
              @"portNumber": @"port",
              @"certificate": @"certificate",
-             @"requiresCaptcha": @"captcha"
+             @"requiresCaptcha": @"captcha",
+             @"extensions": @"extensions"
              };
 }
 
@@ -120,6 +125,13 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
     return _privacyPolicyURL;
 }
 
+- (NSSet<NSString*>*) supportedXEPs {
+    if (!self.extensions) {
+        return [NSSet set];
+    }
+    return [NSSet setWithArray:self.extensions];
+}
+
 + (NSBundle*)serverBundle {
     NSString *folderName = @"xmpp-server-list";
     NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
@@ -143,11 +155,21 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 }
 
 + (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData {
-    return [self serverListFromJSONData:jsonData filterRequiresCaptcha:YES];
+    NSSet *desiredXEPs = [[self class] desiredXEPs];
+    return [self serverListFromJSONData:jsonData filterBlock:^BOOL(OTRXMPPServerInfo * _Nonnull server) {
+        BOOL result = server.requiresCaptcha == NO;
+        if (!result) {
+            return NO;
+        }
+        NSSet *supportedXEPs = server.supportedXEPs;
+        result = result && [desiredXEPs isSubsetOfSet:supportedXEPs];
+        return result;
+    }];
 }
 
-+ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData filterRequiresCaptcha:(BOOL)filterRequiresCaptcha {
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData filterBlock:(nonnull BOOL (^)(OTRXMPPServerInfo * _Nonnull))filterBlock {
     NSParameterAssert(jsonData != nil);
+    NSParameterAssert(filterBlock != nil);
     NSError *error = nil;
     NSDictionary *root = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
     NSParameterAssert(root != nil);
@@ -163,10 +185,22 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
         return nil;
     }
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(OTRXMPPServerInfo *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return evaluatedObject.requiresCaptcha != filterRequiresCaptcha;
+        return filterBlock(evaluatedObject);
     }];
     servers = [servers filteredArrayUsingPredicate:predicate];
     return servers;
+}
+
++ (NSString*) XEP_0357 {
+    return @"XEP-0357";
+}
+
++ (NSString*) XEP_0363 {
+    return @"XEP-0363";
+}
+
++ (NSSet<NSString*>*) desiredXEPs {
+    return [NSSet setWithObjects:self.XEP_0357, self.XEP_0363, nil];
 }
 
 @end
