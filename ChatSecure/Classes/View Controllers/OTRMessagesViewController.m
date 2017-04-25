@@ -1894,6 +1894,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = account.uniqueId;
                 buddy.username = forwardingJid.bare;
+                [buddy saveWithTransaction:transaction];
                 id<OTRProtocol> proto = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 if (proto != nil) {
                     [proto addBuddy:buddy];
