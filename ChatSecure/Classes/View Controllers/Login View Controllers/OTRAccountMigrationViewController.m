@@ -61,10 +61,16 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 }
 
 - (void) handleSuccessWithNewAccount:(OTRXMPPAccount*)newAccount sender:(id)sender {
+    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [newAccount saveWithTransaction:transaction];
+    }];
     // This is where we do the migration before passing off to the superclass
     
     OTRXMPPManager *oldXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:self.oldAccount];
     OTRXMPPManager *newXmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:newAccount];
+    
+    NSParameterAssert(oldXmpp);
+    NSParameterAssert(newXmpp);
     
     BOOL shouldSpamFriends = [[self.form formRowWithTag:kSpamYourContactsTag].value isEqual:@YES];
     
@@ -98,6 +104,11 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
         [newBuddies addObject:newBuddy];
     }];
     
+    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [newBuddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj saveWithTransaction:transaction];
+        }];
+    }];
     [newXmpp addBuddies:newBuddies];
     
     // Step 2 - Message old contacts that you have new account
