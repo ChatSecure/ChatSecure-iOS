@@ -22,6 +22,7 @@
 #import "OTRXMPPManager_Private.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
+#import "UITableView+ChatSecure.h"
 
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -472,27 +473,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        [self removeThreadOwner:[self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView]];
-    }
-}
-
-- (void)removeThreadOwner:(id<OTRThreadOwner>)threadOwner {
-    __block NSString *key = [threadOwner threadIdentifier];
-    [self.readWriteConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
-        if (dbBuddy) {
-            OTRYapRemoveBuddyAction *action = [[OTRYapRemoveBuddyAction alloc] init];
-            action.buddyKey = dbBuddy.uniqueId;
-            action.buddyJid = dbBuddy.username;
-            action.accountKey = dbBuddy.accountUniqueId;
-            [action saveWithTransaction:transaction];
-            [dbBuddy removeWithTransaction:transaction];
-        }
-    }];
+- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
+    NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+    id <OTRThreadOwner> thread = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
+    if (!thread) { return nil; }
+    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:YES connection:OTRDatabaseManager.shared.readWriteDatabaseConnection];
 }
 
 - (void)addBuddy:(NSArray *)accountsAbleToAddBuddies

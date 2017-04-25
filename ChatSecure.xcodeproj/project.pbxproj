@@ -425,6 +425,8 @@
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */; };
 		D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */; };
+		D997E3F41EAECD1400BF72EF /* UITableView+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */; };
+		D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
 		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
@@ -1002,6 +1004,8 @@
 		D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRServerCapabilities.h; sourceTree = "<group>"; };
 		D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRServerCapabilities.m; sourceTree = "<group>"; };
 		D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerCapabilitiesViewController.swift; path = Onboarding/ServerCapabilitiesViewController.swift; sourceTree = "<group>"; };
+		D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+ChatSecure.h"; sourceTree = "<group>"; };
+		D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ChatSecure.m"; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
@@ -1149,6 +1153,8 @@
 		633105011A16D1A300C17BAE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */,
+				D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */,
 				D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */,
 				D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */,
 				D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */,
@@ -2005,6 +2011,7 @@
 				D93DDBCE1BA79ADD00CD8331 /* OTRStatusMessageCell.h in Headers */,
 				D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */,
 				D93DDB811BA79A8700CD8331 /* OTRShareSetting.h in Headers */,
+				D997E3F41EAECD1400BF72EF /* UITableView+ChatSecure.h in Headers */,
 				D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */,
 				D93DDB801BA79A8600CD8331 /* OTRSettingsGroup.h in Headers */,
 				D93DDBCD1BA79ADB00CD8331 /* OTRSettingTableViewCell.h in Headers */,
@@ -2607,6 +2614,7 @@
 				D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */,
 				634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */,
 				924F68571EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift in Sources */,
+				D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */,
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */,
 				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
