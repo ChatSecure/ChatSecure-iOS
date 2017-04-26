@@ -116,6 +116,11 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     
     XMPPvCardTemp *vCard = self.oldAccount.vCardTemp;
     vCard.jid = newAccount.bareJID;
+    self.oldAccount.waitingForvCardTempFetch = NO;
+    self.oldAccount.lastUpdatedvCardTemp = [NSDate date];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [self.oldAccount saveWithTransaction:transaction];
+    }];
     [oldXmpp.xmppvCardTempModule updateMyvCardTemp:vCard];
     
     // Step 5 - Update your old account's vCard.image to force other client's to refresh your whole vCard
