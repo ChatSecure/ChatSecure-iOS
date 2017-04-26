@@ -13,6 +13,7 @@
 #import "OTRMessagesGroupViewController.h"
 #import "OTRInviteViewController.h"
 #import "OTRSettingsViewController.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRTheme
 
@@ -56,6 +57,10 @@
 
 - (__kindof UIViewController* ) inviteViewControllerForAccount:(OTRAccount*)account {
     return [[OTRInviteViewController alloc] initWithAccount:account];
+}
+
+- (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection {
+    return [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:longLivedReadConnection writeConnection:writeConnection];
 }
 
 - (BOOL) enableOMEMO

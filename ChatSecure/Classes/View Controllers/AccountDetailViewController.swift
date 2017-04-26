@@ -31,10 +31,10 @@ enum AccountRows: Int {
 }
 
 @objc(OTRAccountDetailViewController)
-public class AccountDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+open class AccountDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let tableView: UITableView
-    var account: OTRXMPPAccount
+    public let tableView: UITableView
+    public var account: OTRXMPPAccount
     let longLivedReadConnection: YapDatabaseConnection
     let writeConnection: YapDatabaseConnection
     var detailCells: [DetailCellInfo] = []
@@ -55,7 +55,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         self.title = ACCOUNT_STRING()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
@@ -100,14 +100,14 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         ]
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(loginStatusChanged(_:)), name: NSNotification.Name(rawValue: OTRXMPPLoginStatusNotificationName), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: xmpp.serverCheck)
         tableView.reloadData()
     }
     
-    public override func viewDidDisappear(_ animated: Bool) {
+    open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
@@ -197,11 +197,11 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
 
     // MARK: - Table view data source & delegate
 
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return TableSections.allValues.count
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let tableSection = TableSections(rawValue: section) else {
             return 0
         }
@@ -216,7 +216,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     }
 
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
@@ -242,7 +242,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         return UITableViewCell() // this should never be reached
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return
         }
@@ -268,7 +268,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         }
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height = UITableViewAutomaticDimension
         guard let section = TableSections(rawValue: indexPath.section) else {
             return height
@@ -340,7 +340,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         return cell
     }
     
-    func singleButtonCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
+    public func singleButtonCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SingleButtonTableViewCell.cellIdentifier(), for: indexPath) as? SingleButtonTableViewCell else {
             return SingleButtonTableViewCell()
         }
