@@ -177,6 +177,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if (needsMigration != nil) {
         self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;
+    } else if (self.migrationInfoHeaderView != nil) {
+        self.migrationInfoHeaderView = nil;
+        self.tableView.tableHeaderView = nil;
     }
 }
 
