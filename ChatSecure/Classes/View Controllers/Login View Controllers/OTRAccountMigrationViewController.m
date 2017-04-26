@@ -39,6 +39,7 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
             torRow.value = @YES;
             torRow.disabled = @YES;
         }
+        self.showsCancelButton = YES;
     }
     return self;
 }
