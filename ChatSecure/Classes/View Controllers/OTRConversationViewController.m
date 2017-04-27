@@ -557,8 +557,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (IBAction)didPressStartMigrationButton:(id)sender {
     if (self.migrationInfoHeaderView != nil) {
-        OTRAccount *oldAccount = self.migrationInfoHeaderView.account;
+        OTRXMPPAccount *oldAccount = self.migrationInfoHeaderView.account;
         OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:oldAccount];
+        migrateVC.showsCancelButton = YES;
         migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:migrateVC];
         [self presentViewController:navigationController animated:YES completion:nil];
