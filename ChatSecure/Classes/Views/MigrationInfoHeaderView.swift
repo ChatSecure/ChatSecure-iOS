@@ -8,15 +8,20 @@
 
 import UIKit
 
-public class MigrationInfoHeaderView: UIView {
+open class MigrationInfoHeaderView: UIView {
     @IBOutlet public var titleLabel: UILabel!
     @IBOutlet public var descriptionLabel: UILabel!
     @IBOutlet public var startButton: UIButton!
     public var account: OTRXMPPAccount?
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
-        titleLabel.preferredMaxLayoutWidth = titleLabel.bounds.width
-        descriptionLabel.preferredMaxLayoutWidth = descriptionLabel.bounds.width
+        for view in subviews {
+            if let label = view as? UILabel {
+                if label.numberOfLines == 0 {
+                    label.preferredMaxLayoutWidth = label.bounds.width
+                }
+            }
+        }
     }
 }

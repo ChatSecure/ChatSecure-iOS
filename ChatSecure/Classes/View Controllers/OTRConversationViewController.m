@@ -318,7 +318,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [headerView layoutIfNeeded];
         int height = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         CGRect frame = headerView.frame;
-        frame.size.height = height;
+        frame.size.height = height + 1;
         headerView.frame = frame;
         self.tableView.tableHeaderView = headerView;
     }
