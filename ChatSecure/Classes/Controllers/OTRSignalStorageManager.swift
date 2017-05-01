@@ -200,7 +200,8 @@ open class OTRSignalStorageManager: NSObject {
         
         do {
             if let preKey = preKeys.first, let preKeyData = preKey.keyData {
-                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: preKeyData, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
+                let signalPreKey = try SignalPreKey(serializedData: preKeyData)
+                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: signalPreKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
             } else {
                 //DDLogError("Error fetching outgoing bundle: no prekeys")
                 throw OMEMOBundleError.invalid
