@@ -128,6 +128,11 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     
     XMPPvCardTemp *vCard = self.oldAccount.vCardTemp;
     vCard.jid = newAccount.bareJID;
+    self.oldAccount.waitingForvCardTempFetch = NO;
+    self.oldAccount.lastUpdatedvCardTemp = [NSDate date];
+    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [self.oldAccount saveWithTransaction:transaction];
+    }];
     [oldXmpp.xmppvCardTempModule updateMyvCardTemp:vCard];
     
     // Step 5 - Update your old account's vCard.image to force other client's to refresh your whole vCard
@@ -138,7 +143,7 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     
     // Step 6 - Mark your old conversations as 'archived'
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             obj = [obj copy];
             obj.isArchived = YES;

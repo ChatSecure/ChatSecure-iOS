@@ -177,6 +177,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if (needsMigration != nil) {
         self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;
+    } else if (self.migrationInfoHeaderView != nil) {
+        self.migrationInfoHeaderView = nil;
+        self.tableView.tableHeaderView = nil;
     }
 }
 
@@ -315,7 +318,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [headerView layoutIfNeeded];
         int height = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         CGRect frame = headerView.frame;
-        frame.size.height = height;
+        frame.size.height = height + 1;
         headerView.frame = frame;
         self.tableView.tableHeaderView = headerView;
     }
@@ -554,8 +557,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (IBAction)didPressStartMigrationButton:(id)sender {
     if (self.migrationInfoHeaderView != nil) {
-        OTRAccount *oldAccount = self.migrationInfoHeaderView.account;
+        OTRXMPPAccount *oldAccount = self.migrationInfoHeaderView.account;
         OTRAccountMigrationViewController *migrateVC = [[OTRAccountMigrationViewController alloc] initWithOldAccount:oldAccount];
+        migrateVC.showsCancelButton = YES;
         migrateVC.modalPresentationStyle = UIModalPresentationFormSheet;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:migrateVC];
         [self presentViewController:navigationController animated:YES completion:nil];
