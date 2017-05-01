@@ -208,6 +208,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 }
 
 + (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    if (!uniqueID || !transaction) { return nil; }
     OTRAccount *account = (OTRAccount*)[super fetchObjectWithUniqueID:uniqueID transaction:transaction];
     if (!account.username.length) {
         return nil;

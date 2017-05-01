@@ -293,6 +293,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    if (!self.threadKey || !self.threadCollection || !transaction) { return nil; }
     id object = [transaction objectForKey:self.threadKey inCollection:self.threadCollection];
     if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
         return object;
@@ -310,6 +311,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id <OTRThreadOwner> thread =  [self threadObjectWithTransaction:transaction];
+    if (!thread) { return nil; }
     OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
     return account;
 }

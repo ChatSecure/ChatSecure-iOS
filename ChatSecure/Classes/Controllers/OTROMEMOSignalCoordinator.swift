@@ -9,6 +9,7 @@
 import UIKit
 import XMPPFramework
 import YapDatabase
+import SignalProtocolObjC
 
 /** 
  * This is the glue between XMPP/OMEMO and Signal
@@ -367,7 +368,14 @@ import YapDatabase
                     unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
                     // have successfully decripted the AES key. We should break and use it to decrypt the payload
                     break
-                } catch {
+                } catch let error {
+                    //NSLog("Error decrypting: \(error)")
+                    let buddyAddress = SignalAddress(name: fromJID.bare(), deviceId: Int32(senderDeviceId))
+                    if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
+                        // Session is corrupted
+                        let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
+                        //NSLog("Session exists and is corrupted. Deleting...")
+                    }
                     return
                 }
             }
