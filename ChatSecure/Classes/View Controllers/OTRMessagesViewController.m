@@ -1818,9 +1818,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (self.jidForwardingHeaderView != nil) {
         [self.jidForwardingHeaderView setNeedsLayout];
         [self.jidForwardingHeaderView layoutIfNeeded];
-        int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
         CGRect frame = self.jidForwardingHeaderView.frame;
-        frame.size.height = height;
         self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
         [self.view bringSubviewToFront:self.jidForwardingHeaderView];
         self.topContentAdditionalInset = height;
@@ -1849,6 +1848,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (showHeader && self.jidForwardingHeaderView == nil) {
         UINib *nib = [UINib nibWithNibName:@"MigratedBuddyHeaderView" bundle:OTRAssets.resourcesBundle];
         MigratedBuddyHeaderView *header = (MigratedBuddyHeaderView*)[nib instantiateWithOwner:self options:nil][0];
+        [header setForwardingJID:forwardingJid];
         [header.titleLabel setText:MIGRATED_BUDDY_STRING()];
         [header.descriptionLabel setText:MIGRATED_BUDDY_INFO_STRING()];
         [header.switchButton setTitle:MIGRATED_BUDDY_SWITCH() forState:UIControlStateNormal];

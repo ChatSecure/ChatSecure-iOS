@@ -8,15 +8,21 @@
 
 import UIKit
 
-public class MigratedBuddyHeaderView: UIView {
+open class MigratedBuddyHeaderView: UIView {
     @IBOutlet public var titleLabel: UILabel!
     @IBOutlet public var descriptionLabel: UILabel!
     @IBOutlet public var switchButton: UIButton!
     @IBOutlet public var ignoreButton: UIButton!
+    public var forwardingJID: XMPPJID?
     
-    override public func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
-        titleLabel.preferredMaxLayoutWidth = titleLabel.bounds.width
-        descriptionLabel.preferredMaxLayoutWidth = descriptionLabel.bounds.width
+        for view in subviews {
+            if let label = view as? UILabel {
+                if label.numberOfLines == 0 {
+                    label.preferredMaxLayoutWidth = label.bounds.width
+                }
+            }
+        }
     }
 }
