@@ -1819,7 +1819,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.jidForwardingHeaderView setNeedsLayout];
         [self.jidForwardingHeaderView layoutIfNeeded];
         int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
-        CGRect frame = self.jidForwardingHeaderView.frame;
         self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
         [self.view bringSubviewToFront:self.jidForwardingHeaderView];
         self.topContentAdditionalInset = height;
