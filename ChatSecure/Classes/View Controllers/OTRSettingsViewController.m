@@ -300,7 +300,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
     }
-    OTRAccountDetailViewController *detailVC = [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+    OTRAccountDetailViewController *detailVC = [[OTRAppDelegate appDelegate].theme accountDetailViewControllerForAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];
