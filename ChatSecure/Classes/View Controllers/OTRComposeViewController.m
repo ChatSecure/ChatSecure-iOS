@@ -150,17 +150,22 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self updateInboxArchiveFilteringAndShowArchived:showArchived];
 }
 
+- (YapDatabaseViewFiltering *)getFilteringBlock:(BOOL)showArchived {
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    return filtering;
+}
+
 - (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
-    [OTRDatabaseManager.shared.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredBuddiesName];
-        YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
-            if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
-                id<OTRThreadOwner> threadOwner = object;
-                BOOL isArchived = threadOwner.isArchived;
-                return showArchived == isArchived;
-            }
-            return YES;
-        }];
+        YapDatabaseViewFiltering *filtering = [self getFilteringBlock:showArchived];
         [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
     }];
 }
