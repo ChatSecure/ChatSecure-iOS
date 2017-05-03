@@ -21,6 +21,7 @@ NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
+NSString *OTRFilteredBuddiesName = @"OTRFilteredBuddiesName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
 
@@ -308,8 +309,31 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"8"
                                                               options:options];
     
-    return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
+    return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName] && [self registerFilteredBuddiesViewWithDatabase:database];
+}
 
++ (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredBuddiesName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *buddiesView = [database registeredExtension:OTRAllBuddiesDatabaseViewExtensionName];
+    if (!buddiesView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    BOOL showArchived = NO;
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRAllBuddiesDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
+    return [database registerExtension:filteredView withName:OTRFilteredBuddiesName];
 }
 
 + (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database

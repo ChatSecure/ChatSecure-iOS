@@ -83,6 +83,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
     
+    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
+    inboxArchiveControl.selectedSegmentIndex = 0;
+    [self updateInboxArchiveFilteringAndShowArchived:NO];
+    [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = inboxArchiveControl;
+    
     /////////// TableView ///////////
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -104,7 +110,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     //////// View Handlers /////////
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
-    [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
+    [self.viewHandler setup:OTRFilteredBuddiesName groups:@[OTRBuddyGroup]];
     
     self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
@@ -128,6 +134,35 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+}
+
+- (void)inboxArchiveControlValueChanged:(id)sender {
+    if (![sender isKindOfClass:[UISegmentedControl class]]) {
+        return;
+    }
+    UISegmentedControl *segment = sender;
+    BOOL showArchived = NO;
+    if (segment.selectedSegmentIndex == 0) {
+        showArchived = NO;
+    } else if (segment.selectedSegmentIndex == 1) {
+        showArchived = YES;
+    }
+    [self updateInboxArchiveFilteringAndShowArchived:showArchived];
+}
+
+- (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
+    [OTRDatabaseManager.shared.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredBuddiesName];
+        YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+            if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                id<OTRThreadOwner> threadOwner = object;
+                BOOL isArchived = threadOwner.isArchived;
+                return showArchived == isArchived;
+            }
+            return YES;
+        }];
+        [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
