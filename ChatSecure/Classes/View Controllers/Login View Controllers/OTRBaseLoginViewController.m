@@ -243,6 +243,10 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 - (void)handleError:(NSError *)error
 {
+    NSParameterAssert(error);
+    if (!error) {
+        return;
+    }
     //show xmpp erors, cert errors, tor errors, oauth errors.
     if (error.code == OTRXMPPSSLError) {
         NSData * certData = error.userInfo[OTRXMPPSSLCertificateDataKey];

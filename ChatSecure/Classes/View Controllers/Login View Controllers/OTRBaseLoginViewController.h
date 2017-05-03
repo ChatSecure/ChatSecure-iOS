@@ -45,5 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** This is called after login succeeds and by default will push the next onboarding view controller */
 - (void) handleSuccessWithNewAccount:(OTRAccount*)account sender:(id)sender;
 
+/** This is called after login succeeds and by default will push the next onboarding view controller */
+- (void) handleError:(NSError*)error;
+
+
 @end
 NS_ASSUME_NONNULL_END

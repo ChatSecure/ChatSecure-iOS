@@ -18,11 +18,25 @@
 
 NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 
+typedef NS_ENUM(NSInteger, MigrationStatus) {
+    MigrationStatusUnknown = 0,
+    MigrationStatusFailed,
+    MigrationStatusCreating,
+    MigrationStatusMigrating,
+    MigrationStatusComplete
+};
+
+@interface OTRAccountMigrationViewController ()
+/** Whether or not the account is migrated within handleSuccessWithNewAccount:. This is to maybe fix a bug where the contacts are re-added multiple times. */
+@property (nonatomic) MigrationStatus migrationStatus;
+@end
+
 @implementation OTRAccountMigrationViewController
 
 - (instancetype) initWithOldAccount:(OTRXMPPAccount*)oldAccount {
     NSParameterAssert(oldAccount);
     if (self = [super initWithNewAccountType:oldAccount.accountType]) {
+        _migrationStatus = MigrationStatusUnknown;
         _oldAccount = oldAccount;
         XLFormRowDescriptor *spamRow = [XLFormRowDescriptor formRowDescriptorWithTag:kSpamYourContactsTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:MESSAGE_FRIENDS_WITH_NEW_INFO_STRING()];
         spamRow.value = @YES;
@@ -50,6 +64,11 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 
 #pragma mark - Superclass Overrides
 
+- (void)handleError:(NSError *)error {
+    self.migrationStatus = MigrationStatusFailed;
+    [super handleError:error];
+}
+
 - (void)loginButtonPressed:(id)sender {
     // If account isn't logged in, login so we can spam old contacts & update your old vCard.jid with new details
     BOOL isConnected = [[OTRProtocolManager sharedInstance] isAccountConnected:self.oldAccount];
@@ -57,10 +76,16 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
         // TODO: Fix Tor connection issues
         [[OTRProtocolManager sharedInstance] loginAccount:self.oldAccount];
     }
+    self.migrationStatus = MigrationStatusCreating;
     [super loginButtonPressed:sender];
 }
 
 - (void) handleSuccessWithNewAccount:(OTRXMPPAccount*)newAccount sender:(id)sender {
+    if (self.migrationStatus != MigrationStatusCreating) {
+        [super handleSuccessWithNewAccount:newAccount sender:sender];
+        return;
+    }
+    self.migrationStatus = MigrationStatusMigrating;
     [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newAccount saveWithTransaction:transaction];
     }];
@@ -91,6 +116,10 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
     }];
     NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
     [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        // Don't add yourself to your new roster
+        if ([obj.bareJID isEqualToJID:self.oldAccount.bareJID options:XMPPJIDCompareBare]) {
+            return;
+        }
         OTRXMPPBuddy *newBuddy = [[OTRXMPPBuddy alloc] init];
         newBuddy.username = obj.username;
         newBuddy.accountUniqueId = newAccount.uniqueId;
@@ -150,7 +179,7 @@ NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
             [obj saveWithTransaction:transaction];
         }];
     }];
-    
+    self.migrationStatus = MigrationStatusComplete;
     [super handleSuccessWithNewAccount:newAccount sender:sender];
 }
 
