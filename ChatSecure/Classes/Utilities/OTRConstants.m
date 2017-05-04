@@ -77,6 +77,9 @@ NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
 //Noticications
 NSString *const kOTRNotificationThreadKey = @"kOTRNotificationThreadKey";
 NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadCollection";
+NSString *const kOTRNotificationType = @"kOTRNotificationType";
+NSString *const kOTRNotificationTypeNone = @"kOTRNotificationTypeNone";
+NSString *const kOTRNotificationTypeSubscriptionRequest = @"kOTRNotificationTypeSubscriptionRequest";
 
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";

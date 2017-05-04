@@ -569,7 +569,9 @@
 
 - (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if (userInfo[kOTRNotificationThreadKey] == nil) {
+    if ([kOTRNotificationTypeNone isEqualToString:userInfo[kOTRNotificationType]]) {
+        // Nothing
+    } else if ([kOTRNotificationTypeSubscriptionRequest isEqualToString:userInfo[kOTRNotificationType]]) {
         // This is a subscription request
         [self showSubscriptionRequestForBuddy:userInfo];
     } else {

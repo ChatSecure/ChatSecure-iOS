@@ -135,6 +135,33 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }
         self.hasPresentedOnboarding = YES;
     }
+    
+    OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
+    if (needsMigration != nil) {
+        // Show local notification prompt
+        OTRServerDeprecation *deprecationInfo = [OTRServerDeprecation deprecationInfoWithServer:needsMigration.bareJID.domain];
+        if (deprecationInfo != nil) {
+            NSString *notificationBody;
+            NSDate *now = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+            if (deprecationInfo.shutdownDate != nil && [now compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
+                // Show shutdown date, in x days format
+                NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+                NSDateComponents *components = [gregorianCalendar components:NSCalendarUnitDay
+                                                                    fromDate:now
+                                                                      toDate:deprecationInfo.shutdownDate
+                                                                     options:0];
+                long days = [components day];
+                notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
+            } else {
+                // No shutdown date or already passed
+                notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_STRING(), deprecationInfo.name];
+            }
+
+            [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
+        }
+    } else {
+        [[UIApplication sharedApplication] cancelRecurringLocalNotificationWithIdentifier:@"Migration"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -151,7 +178,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self showMigrationViewIfNeeded];
 }
 
-- (void)showMigrationViewIfNeeded {
+- (OTRXMPPAccount *)checkIfNeedsMigration {
     __block OTRXMPPAccount *needsMigration;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
@@ -174,6 +201,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             }
         }];
     }];
+    return needsMigration;
+}
+
+- (void)showMigrationViewIfNeeded {
+    OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
     if (needsMigration != nil) {
         self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;

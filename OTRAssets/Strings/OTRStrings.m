@@ -224,6 +224,10 @@ NSString* MIGRATION_FORM_DETAIL_STRING() { return [OTRLanguageManager translated
 NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."]; }
 /** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
 NSString* MIGRATION_INFO_WITH_DATE_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."]; }
+/** "Your account has expired.", Explanation that your account has expired and you need to migrate */
+NSString* MIGRATION_NOTIFICATION_STRING() { return [OTRLanguageManager translatedString:@"Your account has expired."]; }
+/** "Your account is expiring in '%1$d' days.", Explanation that your account has expired and you need to migrate, contains a shutdown date */
+NSString* MIGRATION_NOTIFICATION_WITH_DATE_STRING() { return [OTRLanguageManager translatedString:@"Your account is expiring in '%1$d' days."]; }
 /** "Get Started", Title for button to start migration tool */
 NSString* MIGRATION_START_STRING() { return [OTRLanguageManager translatedString:@"Get Started"]; }
 /** "It's time to move!", Title for migration header view */
