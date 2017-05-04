@@ -10,6 +10,8 @@ NSString* ABOUT_VERSION_STRING() { return [OTRLanguageManager translatedString:@
 NSString* ACCOUNTS_STRING() { return [OTRLanguageManager translatedString:@"Accounts"]; }
 /** "Account", The string describing a buddy's account */
 NSString* ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Account"]; }
+/** "Active", segmented control value for active friends */
+NSString* ACTIVE_BUDDIES_STRING() { return [OTRLanguageManager translatedString:@"Active"]; }
 /** "Active", This will be displayed in the UI as 'Active 10m ago'  */
 NSString* ACTIVE_STRING() { return [OTRLanguageManager translatedString:@"Active"]; }
 /** "Add Buddy", The title for the view to add a buddy */

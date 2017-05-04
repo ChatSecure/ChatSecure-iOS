@@ -3,6 +3,10 @@
         "comment": "Title for the about page",
         "string": "About"
     },
+    "ACTIVE_BUDDIES_STRING": {
+        "comment": "segmented control value for active friends",
+        "string": "Active"
+    },
     "AUDIO_MESSAGE_STRING": {
         "comment": "Text for media message summary",
         "string": "Audio Message"

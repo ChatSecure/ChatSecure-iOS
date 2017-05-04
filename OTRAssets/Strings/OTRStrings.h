@@ -10,6 +10,8 @@ FOUNDATION_EXPORT NSString* ABOUT_VERSION_STRING();
 FOUNDATION_EXPORT NSString* ACCOUNTS_STRING();
 /** "Account", The string describing a buddy's account */
 FOUNDATION_EXPORT NSString* ACCOUNT_STRING();
+/** "Active", segmented control value for active friends */
+FOUNDATION_EXPORT NSString* ACTIVE_BUDDIES_STRING();
 /** "Active", This will be displayed in the UI as 'Active 10m ago'  */
 FOUNDATION_EXPORT NSString* ACTIVE_STRING();
 /** "Add Buddy", The title for the view to add a buddy */

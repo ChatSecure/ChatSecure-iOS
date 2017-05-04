@@ -83,7 +83,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
     
-    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
+    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[ACTIVE_BUDDIES_STRING(), ARCHIVE_STRING()]];
     inboxArchiveControl.selectedSegmentIndex = 0;
     [self updateInboxArchiveFilteringAndShowArchived:NO];
     [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
