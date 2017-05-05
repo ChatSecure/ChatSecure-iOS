@@ -141,8 +141,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         // Show local notification prompt
         OTRServerDeprecation *deprecationInfo = [OTRServerDeprecation deprecationInfoWithServer:needsMigration.bareJID.domain];
         if (deprecationInfo != nil) {
-            NSString *notificationBody;
-            NSDate *now = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+            NSString *notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_STRING(), deprecationInfo.name];
+            NSDate *now = [NSDate date];
             if (deprecationInfo.shutdownDate != nil && [now compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
                 // Show shutdown date, in x days format
                 NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -152,9 +152,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                                                                      options:0];
                 long days = [components day];
                 notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
-            } else {
-                // No shutdown date or already passed
-                notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_STRING(), deprecationInfo.name];
             }
 
             [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
@@ -575,7 +572,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     UINib *nib = [UINib nibWithNibName:@"MigrationInfoHeaderView" bundle:OTRAssets.resourcesBundle];
     MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
     [header.titleLabel setText:MIGRATION_STRING()];
-    if (deprecationInfo.shutdownDate != nil && [[[NSDate alloc] initWithTimeIntervalSinceNow:0] compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
+    if (deprecationInfo.shutdownDate != nil && [[NSDate date] compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
         // Show shutdown date
         [header.descriptionLabel setText:[NSString stringWithFormat:MIGRATION_INFO_WITH_DATE_STRING(), deprecationInfo.name, [NSDateFormatter localizedStringFromDate:deprecationInfo.shutdownDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]]];
     } else {
