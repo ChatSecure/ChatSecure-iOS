@@ -45,6 +45,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *groupBarButtonItem;
+@property (nonatomic, strong) UISegmentedControl *inboxArchiveControl;
 
 @end
 
@@ -83,11 +84,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
     
-    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[ACTIVE_BUDDIES_STRING(), ARCHIVE_STRING()]];
-    inboxArchiveControl.selectedSegmentIndex = 0;
+    _inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[ACTIVE_BUDDIES_STRING(), ARCHIVE_STRING()]];
+    _inboxArchiveControl.selectedSegmentIndex = 0;
     [self updateInboxArchiveFilteringAndShowArchived:NO];
-    [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-    self.navigationItem.titleView = inboxArchiveControl;
+    [_inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = _inboxArchiveControl;
     
     /////////// TableView ///////////
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];

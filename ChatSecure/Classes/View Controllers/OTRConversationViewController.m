@@ -55,6 +55,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 @property (nonatomic, strong) OTRAccountDatabaseCount *accountCounter;
 @property (nonatomic, strong) MigrationInfoHeaderView *migrationInfoHeaderView;
+@property (nonatomic, strong) UISegmentedControl *inboxArchiveControl;
 
 @end
 
@@ -73,11 +74,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
     self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
     
-    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
-    inboxArchiveControl.selectedSegmentIndex = 0;
+    _inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
+    _inboxArchiveControl.selectedSegmentIndex = 0;
     [self updateInboxArchiveFilteringAndShowArchived:NO];
-    [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-    self.navigationItem.titleView = inboxArchiveControl;
+    [_inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = _inboxArchiveControl;
     
     ////////// Create TableView /////////////////
     
