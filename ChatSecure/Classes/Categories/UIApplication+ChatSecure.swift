@@ -78,6 +78,7 @@ public extension UIApplication {
     }
     
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
+        if let thread = thread, thread.isArchived { return } // No notifications for archived
         DispatchQueue.main.async {
             // Use the new UserNotifications.framework on iOS 10+
             if #available(iOS 10.0, *) {
