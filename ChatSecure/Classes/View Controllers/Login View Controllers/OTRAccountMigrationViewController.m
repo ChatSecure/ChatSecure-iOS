@@ -109,6 +109,10 @@ typedef NS_ENUM(NSInteger, MigrationStatus) {
         // If spamming friends, create some messages for them
         if (shouldSpamFriends) {
             [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                // Don't send yourself a message
+                if ([obj.bareJID isEqualToJID:self.oldAccount.bareJID options:XMPPJIDCompareBare]) {
+                    return;
+                }
                 OTROutgoingMessage *message = [OTROutgoingMessage messageToBuddy:obj text:messageText transaction:transaction];
                 [outgoingMessages addObject:message];
             }];
