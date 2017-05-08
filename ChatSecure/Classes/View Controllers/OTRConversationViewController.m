@@ -437,7 +437,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     
     // Bail out if it's a subscription request
@@ -446,10 +445,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
 
-    if (thread.isArchived) {
-        return; // Can't chat with archived friends
-    }
-    
     if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
         [self.delegate conversationViewController:self didSelectThread:thread];
     }
