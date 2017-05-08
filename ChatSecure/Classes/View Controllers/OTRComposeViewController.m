@@ -463,6 +463,9 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     else {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
         id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
+        if (threadOwner.isArchived) {
+            return; // Can't chat with archived friends
+        }
         if (self.selectionModeIsSingle == YES) {
             NSSet <NSString *>*buddySet = [NSSet setWithObject:[threadOwner threadIdentifier]];
             [self completeSelectingBuddies:buddySet groupName:nil];
