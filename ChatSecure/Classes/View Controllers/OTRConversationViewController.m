@@ -220,7 +220,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 BOOL isArchived = threadOwner.isArchived;
                 return showArchived == isArchived;
             }
-            return YES;
+            return !showArchived; // Don't show presence requests in Archive
         }];
         [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
     }];
