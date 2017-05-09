@@ -32,10 +32,6 @@
 	<string>https://push-staging.chatsecure.org/api/v1/</string>
 	<key>UserVoiceSite</key>
 	<string>chatsecure.uservoice.com</string>
-	<key>PayPalURL</key>
-	<string>https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=F9SM36SQY5EN8</string>
-	<key>BitcoinURL</key>
-	<string>https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7</string>
 	<key>ShouldShowPushWarning</key>
 	<true/>
 	<key>ShouldShowServerCell</key>
