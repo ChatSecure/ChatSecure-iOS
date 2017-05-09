@@ -12,6 +12,7 @@ import YapDatabase.YapDatabaseRelationship
 open class OTRXMPPRoom: OTRYapDatabaseObject {
     
     open var isArchived = false
+    open var muteExpiration:Date?
     open var accountUniqueId:String?
     open var ownJID:String?
     open var jid:String?
@@ -37,6 +38,16 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    
+    public var isMuted: Bool {
+        guard let expiration = muteExpiration else {
+            return false
+        }
+        if expiration > Date() {
+            return true
+        }
+        return false
+    }
     
     public func threadName() -> String {
         return self.subject ?? self.jid ?? ""

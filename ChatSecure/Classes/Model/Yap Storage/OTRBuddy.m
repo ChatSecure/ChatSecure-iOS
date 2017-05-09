@@ -24,6 +24,7 @@
 @implementation OTRBuddy
 @synthesize displayName = _displayName;
 @synthesize isArchived = _isArchived;
+@synthesize muteExpiration = _muteExpiration;
 @dynamic statusMessage, chatState, lastSentChatState, status;
 
 /**
@@ -261,6 +262,16 @@
 
 - (OTRThreadStatus) status {
     return [[OTRBuddyCache sharedInstance] threadStatusForBuddy:self];
+}
+
+- (BOOL) isMuted {
+    if (!self.muteExpiration) {
+        return NO;
+    }
+    if ([[NSDate date] compare:self.muteExpiration] == NSOrderedAscending) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark YapDatabaseRelationshipNode
