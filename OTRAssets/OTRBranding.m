@@ -144,6 +144,11 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return result;
 }
 
++ (BOOL) showsColorForStatus {
+    BOOL result = [[[self defaultPlist] objectForKey:@"ShowsColorForStatus"] boolValue];
+    return result;
+}
+
 + (NSDictionary*) defaultPlist {
     // Normally this won't be nil, but they WILL be nil during tests.
     NSBundle *bundle = [OTRAssets resourcesBundle];

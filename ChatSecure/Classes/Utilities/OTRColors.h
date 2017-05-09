@@ -10,6 +10,7 @@
 
 #import "OTRThreadOwner.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRColors : NSObject
 
 +(UIColor *)colorWithStatus:(OTRThreadStatus)status;
@@ -24,5 +25,5 @@
 + (UIColor *)warnColor;
 
 + (UIColor *)defaultBlueColor;
-
 @end
+NS_ASSUME_NONNULL_END

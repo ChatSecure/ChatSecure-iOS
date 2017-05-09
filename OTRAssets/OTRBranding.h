@@ -83,5 +83,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, the server selection cell will be shown when creating new accounts. Otherwise it will be hidden in the 'advanced' section. */
 + (BOOL) shouldShowServerCell;
 
+/** If enabled, will show colors for status indicators. */
+@property (class, readonly) BOOL showsColorForStatus;
+
 @end
 NS_ASSUME_NONNULL_END
