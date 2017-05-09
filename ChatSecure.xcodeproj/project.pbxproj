@@ -138,6 +138,8 @@
 		D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D935EF0C1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
+		D93718531EC267F800766D49 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
+		D93718541EC267F800766D49 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
 		D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
 		D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
 		D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
@@ -980,6 +982,8 @@
 		D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyApprovalCell.h; sourceTree = "<group>"; };
 		D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyApprovalCell.m; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D93718511EC267F800766D49 /* OTRAccountMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrator.h; sourceTree = "<group>"; };
+		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
@@ -1186,6 +1190,8 @@
 		6331050E1A16D1A300C17BAE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D93718511EC267F800766D49 /* OTRAccountMigrator.h */,
+				D93718521EC267F800766D49 /* OTRAccountMigrator.m */,
 				D917CCDD1E553007003636B7 /* ServerCheck.swift */,
 				63CBD67F1C642B6B00AC6D1F /* YapExtensions */,
 				6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */,
@@ -2029,6 +2035,7 @@
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
 				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
 				D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */,
+				D93718531EC267F800766D49 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
 				D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */,
@@ -2770,6 +2777,7 @@
 				D91E641A1DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift in Sources */,
 				D93DDAFF1BA79A2900CD8331 /* OTRChooseAccountViewController.m in Sources */,
 				D91C86681E4E6DEE008BD763 /* ServerCapabilityInfo.swift in Sources */,
+				D93718541EC267F800766D49 /* OTRAccountMigrator.m in Sources */,
 				D93DDB001BA79A2900CD8331 /* OTRComposeViewController.m in Sources */,
 				63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */,
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
