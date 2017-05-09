@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina3_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -19,17 +19,17 @@
                         <viewControllerLayoutGuide type="bottom" id="QwV-if-gsM"/>
                     </layoutGuides>
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="peW-Bv-YYS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank you!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z0b-01-F8c">
-                                <rect key="frame" x="86" y="40" width="148" height="36"/>
+                                <rect key="frame" x="113.5" y="40" width="148" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="tzh-dS-ZUa">
-                                <rect key="frame" x="8" y="114" width="304" height="80"/>
+                                <rect key="frame" x="8" y="114" width="359" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Kw4-oY-0g6"/>
                                 </constraints>
@@ -39,31 +39,31 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NHC-BV-VjX">
-                                <rect key="frame" x="16" y="430" width="53" height="30"/>
+                                <rect key="frame" x="16" y="617" width="53" height="30"/>
                                 <state key="normal" title="Restore"/>
                                 <connections>
                                     <action selector="restoreButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="Fsq-Es-0M2"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gXX-QC-Oew">
-                                <rect key="frame" x="218" y="430" width="86" height="30"/>
+                                <rect key="frame" x="273" y="617" width="86" height="30"/>
                                 <state key="normal" title="Maybe Later"/>
                                 <connections>
                                     <segue destination="IC3-R1-eWi" kind="show" id="tn7-VO-3bW"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Kx-N0-Yqp" userLabel="IAP Buttons View">
-                                <rect key="frame" x="8" y="359.5" width="304" height="62.5"/>
+                                <rect key="frame" x="8" y="336" width="359" height="273"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="boG-Bi-Djt">
-                                        <rect key="frame" x="106" y="16.5" width="92" height="30"/>
+                                        <rect key="frame" x="133.5" y="122" width="92" height="30"/>
                                         <state key="normal" title="🍺 $5.99/mo"/>
                                         <connections>
                                             <action selector="mediumMoneyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="tbX-rd-nIN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="647-wq-NMP">
-                                        <rect key="frame" x="203" y="16.5" width="99" height="30"/>
+                                        <rect key="frame" x="258" y="122" width="99" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <state key="normal" title="🎁 $19.99/mo"/>
                                         <connections>
@@ -71,7 +71,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-wM-gJf">
-                                        <rect key="frame" x="8" y="16.5" width="96" height="30"/>
+                                        <rect key="frame" x="8" y="122" width="96" height="30"/>
                                         <state key="normal" title=" ☕️ $2.99/mo"/>
                                         <connections>
                                             <action selector="smallMoneyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="Y1E-2a-AEZ"/>
@@ -91,7 +91,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5z-3N-jCk">
-                                <rect key="frame" x="8" y="202" width="304" height="149.5"/>
+                                <rect key="frame" x="8" y="202" width="359" height="126"/>
                                 <attributedString key="attributedText">
                                     <fragment>
                                         <string key="content">Here's what you get:
@@ -185,17 +185,17 @@
                         <viewControllerLayoutGuide type="bottom" id="hNv-Ah-nAt"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ijh-fq-dON">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More Ways to Help" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97z-ZP-B7P">
-                                <rect key="frame" x="24" y="40" width="272" height="36"/>
+                                <rect key="frame" x="24" y="40" width="327" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Can't spare the cash right now? There are plenty of other ways to contribute. " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dEy-M2-DVk">
-                                <rect key="frame" x="16" y="92" width="288" height="61"/>
+                                <rect key="frame" x="16" y="92" width="343" height="61"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="eTe-hN-cnT"/>
                                 </constraints>
@@ -204,52 +204,52 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VSE-2h-AoI">
-                                <rect key="frame" x="251" y="430" width="41" height="30"/>
+                                <rect key="frame" x="306" y="617" width="41" height="30"/>
                                 <state key="normal" title="Finish"/>
                                 <connections>
                                     <action selector="dismissButtonPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="GyF-cY-oKZ"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b7t-YO-UNy">
-                                <rect key="frame" x="24" y="171.5" width="272" height="237"/>
+                                <rect key="frame" x="24" y="265" width="327" height="237"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUB-hE-6FZ">
-                                        <rect key="frame" x="78" y="8" width="116" height="30"/>
+                                        <rect key="frame" x="105.5" y="8" width="116" height="30"/>
                                         <state key="normal" title="Spread the Word"/>
                                         <connections>
                                             <action selector="shareButtonPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="OIb-uk-2WH"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="byp-Sd-dEW">
-                                        <rect key="frame" x="87" y="46" width="99" height="30"/>
+                                        <rect key="frame" x="114.5" y="46" width="99" height="30"/>
                                         <state key="normal" title="Help Translate"/>
                                         <connections>
                                             <action selector="translateButtonPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="wkl-kQ-eqX"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JvN-7y-LU8">
-                                        <rect key="frame" x="64" y="84" width="145" height="30"/>
+                                        <rect key="frame" x="91.5" y="84" width="145" height="30"/>
                                         <state key="normal" title="Join the Beta Testers"/>
                                         <connections>
                                             <action selector="joinBetaPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="LeL-Wm-Nny"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ui4-L3-zT2">
-                                        <rect key="frame" x="74" y="122" width="124" height="30"/>
+                                        <rect key="frame" x="101.5" y="122" width="124" height="30"/>
                                         <state key="normal" title="Submit your Ideas"/>
                                         <connections>
                                             <action selector="submitIdeasPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="6KG-J6-yCQ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ynN-Or-UyI">
-                                        <rect key="frame" x="77" y="160" width="118" height="30"/>
+                                        <rect key="frame" x="104.5" y="160" width="118" height="30"/>
                                         <state key="normal" title="File a Bug Report"/>
                                         <connections>
                                             <action selector="fileBugPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="oyD-cC-I3A"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NFE-tU-GVQ">
-                                        <rect key="frame" x="52" y="198" width="169" height="30"/>
+                                        <rect key="frame" x="79.5" y="198" width="169" height="30"/>
                                         <state key="normal" title="Review on the App Store"/>
                                         <connections>
                                             <action selector="reviewButtonPressed:" destination="IC3-R1-eWi" eventType="touchUpInside" id="lHd-ca-cyC"/>
