@@ -19,7 +19,7 @@ open class OTRServerDeprecation: NSObject {
         self.shutdownDate = shutdownDate
     }
     
-    static let dukgo = OTRServerDeprecation(name:"Dukgo", domain:"dukgo.com", shutdownDate:Date(timeIntervalSince1970: TimeInterval(integerLiteral: 1494288000)))
+    static let dukgo = OTRServerDeprecation(name:"Dukgo", domain:"dukgo.com", shutdownDate:Date(timeIntervalSince1970: TimeInterval(integerLiteral: 1495065600)))
     static let allDeprecatedServers:[String:OTRServerDeprecation] = [
         dukgo.domain:dukgo,
     ]

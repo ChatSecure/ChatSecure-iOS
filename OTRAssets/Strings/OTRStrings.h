@@ -10,6 +10,8 @@ FOUNDATION_EXPORT NSString* ABOUT_VERSION_STRING();
 FOUNDATION_EXPORT NSString* ACCOUNTS_STRING();
 /** "Account", The string describing a buddy's account */
 FOUNDATION_EXPORT NSString* ACCOUNT_STRING();
+/** "Active", segmented control value for active friends */
+FOUNDATION_EXPORT NSString* ACTIVE_BUDDIES_STRING();
 /** "Active", This will be displayed in the UI as 'Active 10m ago'  */
 FOUNDATION_EXPORT NSString* ACTIVE_STRING();
 /** "Add Buddy", The title for the view to add a buddy */
@@ -224,6 +226,10 @@ FOUNDATION_EXPORT NSString* MIGRATION_FORM_DETAIL_STRING();
 FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
 /** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
 FOUNDATION_EXPORT NSString* MIGRATION_INFO_WITH_DATE_STRING();
+/** "Your account has expired.", Explanation that your account has expired and you need to migrate */
+FOUNDATION_EXPORT NSString* MIGRATION_NOTIFICATION_STRING();
+/** "Your account is expiring in '%1$d' days.", Explanation that your account has expired and you need to migrate, contains a shutdown date */
+FOUNDATION_EXPORT NSString* MIGRATION_NOTIFICATION_WITH_DATE_STRING();
 /** "Get Started", Title for button to start migration tool */
 FOUNDATION_EXPORT NSString* MIGRATION_START_STRING();
 /** "It's time to move!", Title for migration header view */

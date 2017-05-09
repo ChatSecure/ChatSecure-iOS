@@ -55,6 +55,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 @property (nonatomic, strong) OTRAccountDatabaseCount *accountCounter;
 @property (nonatomic, strong) MigrationInfoHeaderView *migrationInfoHeaderView;
+@property (nonatomic, strong) UISegmentedControl *inboxArchiveControl;
 
 @end
 
@@ -73,11 +74,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
     self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
     
-    UISegmentedControl *inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
-    inboxArchiveControl.selectedSegmentIndex = 0;
+    _inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[INBOX_STRING(), ARCHIVE_STRING()]];
+    _inboxArchiveControl.selectedSegmentIndex = 0;
     [self updateInboxArchiveFilteringAndShowArchived:NO];
-    [inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-    self.navigationItem.titleView = inboxArchiveControl;
+    [_inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = _inboxArchiveControl;
     
     ////////// Create TableView /////////////////
     
@@ -135,6 +136,30 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }
         self.hasPresentedOnboarding = YES;
     }
+    
+    OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
+    if (needsMigration != nil) {
+        // Show local notification prompt
+        OTRServerDeprecation *deprecationInfo = [OTRServerDeprecation deprecationInfoWithServer:needsMigration.bareJID.domain];
+        if (deprecationInfo != nil) {
+            NSString *notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_STRING(), deprecationInfo.name];
+            NSDate *now = [NSDate date];
+            if (deprecationInfo.shutdownDate != nil && [now compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
+                // Show shutdown date, in x days format
+                NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+                NSDateComponents *components = [gregorianCalendar components:NSCalendarUnitDay
+                                                                    fromDate:now
+                                                                      toDate:deprecationInfo.shutdownDate
+                                                                     options:0];
+                long days = [components day];
+                notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
+            }
+
+            [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
+        }
+    } else {
+        [[UIApplication sharedApplication] cancelRecurringLocalNotificationWithIdentifier:@"Migration"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -151,7 +176,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self showMigrationViewIfNeeded];
 }
 
-- (void)showMigrationViewIfNeeded {
+- (OTRXMPPAccount *)checkIfNeedsMigration {
     __block OTRXMPPAccount *needsMigration;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
@@ -174,6 +199,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             }
         }];
     }];
+    return needsMigration;
+}
+
+- (void)showMigrationViewIfNeeded {
+    OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
     if (needsMigration != nil) {
         self.migrationInfoHeaderView = [self createMigrationHeaderView:needsMigration];
         self.tableView.tableHeaderView = self.migrationInfoHeaderView;
@@ -543,7 +573,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     UINib *nib = [UINib nibWithNibName:@"MigrationInfoHeaderView" bundle:OTRAssets.resourcesBundle];
     MigrationInfoHeaderView *header = (MigrationInfoHeaderView*)[nib instantiateWithOwner:self options:nil][0];
     [header.titleLabel setText:MIGRATION_STRING()];
-    if (deprecationInfo.shutdownDate != nil && [[[NSDate alloc] initWithTimeIntervalSinceNow:0] compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
+    if (deprecationInfo.shutdownDate != nil && [[NSDate date] compare:deprecationInfo.shutdownDate] == NSOrderedAscending) {
         // Show shutdown date
         [header.descriptionLabel setText:[NSString stringWithFormat:MIGRATION_INFO_WITH_DATE_STRING(), deprecationInfo.name, [NSDateFormatter localizedStringFromDate:deprecationInfo.shutdownDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]]];
     } else {

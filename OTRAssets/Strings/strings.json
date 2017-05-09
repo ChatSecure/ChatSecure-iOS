@@ -3,6 +3,10 @@
         "comment": "Title for the about page",
         "string": "About"
     },
+    "ACTIVE_BUDDIES_STRING": {
+        "comment": "segmented control value for active friends",
+        "string": "Active"
+    },
     "AUDIO_MESSAGE_STRING": {
         "comment": "Text for media message summary",
         "string": "Audio Message"
@@ -326,6 +330,14 @@
     "MIGRATION_INFO_WITH_DATE_STRING": {
         "comment": "Explanation for why migration is needed, contains a shutdown date",
         "string": "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_NOTIFICATION_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate",
+        "string": "Your account has expired."
+    },
+    "MIGRATION_NOTIFICATION_WITH_DATE_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate, contains a shutdown date",
+        "string": "Your account is expiring in '%1$d' days."
     },
     "MIGRATION_START_STRING": {
         "comment": "Title for button to start migration tool",
