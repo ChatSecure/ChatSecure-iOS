@@ -103,40 +103,37 @@ typedef NS_ENUM(NSInteger, MigrationStatus) {
     
     NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), newAccount.bareJID.bare];
     NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
-    __block NSArray<OTRXMPPBuddy*> *buddies = nil;
+    __block NSArray<OTRXMPPBuddy*> *buddies = @[];
+    __block NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray array];
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddies = [self.oldAccount allBuddiesWithTransaction:transaction];
-        // If spamming friends, create some messages for them
-        if (shouldSpamFriends) {
-            [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                // Don't send yourself a message
-                if ([obj.bareJID isEqualToJID:self.oldAccount.bareJID options:XMPPJIDCompareBare]) {
-                    return;
-                }
+        newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            // Don't add yourself to your new roster
+            if ([obj.bareJID isEqualToJID:self.oldAccount.bareJID options:XMPPJIDCompareBare]) {
+                return;
+            }
+            OTRXMPPBuddy *newBuddy = [[OTRXMPPBuddy alloc] init];
+            newBuddy.username = obj.username;
+            newBuddy.accountUniqueId = newAccount.uniqueId;
+            // Show buddies in list only if you've talked to them before
+            if (obj.lastMessageId.length > 0 && !obj.isArchived) {
+                newBuddy.lastMessageId = @"";
+            }
+            newBuddy.isArchived = obj.isArchived;
+            newBuddy.avatarData = obj.avatarData;
+            newBuddy.displayName = obj.displayName;
+            newBuddy.preferredSecurity = obj.preferredSecurity;
+            [newBuddies addObject:newBuddy];
+            
+            // If spamming friends, create some messages for them
+            if (shouldSpamFriends) {
                 OTROutgoingMessage *message = [OTROutgoingMessage messageToBuddy:obj text:messageText transaction:transaction];
                 [outgoingMessages addObject:message];
-            }];
-        }
+            }
+        }];
     }];
-    NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
-    [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        // Don't add yourself to your new roster
-        if ([obj.bareJID isEqualToJID:self.oldAccount.bareJID options:XMPPJIDCompareBare]) {
-            return;
-        }
-        OTRXMPPBuddy *newBuddy = [[OTRXMPPBuddy alloc] init];
-        newBuddy.username = obj.username;
-        newBuddy.accountUniqueId = newAccount.uniqueId;
-        // Show buddies in list only if you've talked to them before
-        if (obj.lastMessageId.length > 0 && !obj.isArchived) {
-            newBuddy.lastMessageId = @"";
-        }
-        newBuddy.isArchived = obj.isArchived;
-        newBuddy.avatarData = obj.avatarData;
-        newBuddy.displayName = obj.displayName;
-        newBuddy.preferredSecurity = obj.preferredSecurity;
-        [newBuddies addObject:newBuddy];
-    }];
+    
     
     [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [newBuddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
