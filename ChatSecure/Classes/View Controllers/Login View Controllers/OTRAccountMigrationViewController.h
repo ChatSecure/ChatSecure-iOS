@@ -13,9 +13,20 @@ NS_ASSUME_NONNULL_BEGIN
 /** Show form row to spam your old contacts w/ new acct info */
 FOUNDATION_EXPORT NSString *const kSpamYourContactsTag;
 
+typedef NS_ENUM(NSInteger, MigrationStatus) {
+    MigrationStatusUnknown = 0,
+    MigrationStatusFailed,
+    MigrationStatusCreating,
+    MigrationStatusMigrating,
+    MigrationStatusComplete
+};
+
 @interface OTRAccountMigrationViewController : OTRBaseLoginViewController
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *oldAccount;
+
+/** Whether or not the account is migrated within handleSuccessWithNewAccount:. This is to maybe fix a bug where the contacts are re-added multiple times. */
+@property (nonatomic) MigrationStatus migrationStatus;
 
 /**
  * This creates an account registration view prepopulated with

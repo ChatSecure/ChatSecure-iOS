@@ -19,17 +19,7 @@
 
 NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 
-typedef NS_ENUM(NSInteger, MigrationStatus) {
-    MigrationStatusUnknown = 0,
-    MigrationStatusFailed,
-    MigrationStatusCreating,
-    MigrationStatusMigrating,
-    MigrationStatusComplete
-};
-
 @interface OTRAccountMigrationViewController ()
-/** Whether or not the account is migrated within handleSuccessWithNewAccount:. This is to maybe fix a bug where the contacts are re-added multiple times. */
-@property (nonatomic) MigrationStatus migrationStatus;
 @property (nonatomic, strong, nullable) OTRAccountMigrator *migrator;
 @end
 
