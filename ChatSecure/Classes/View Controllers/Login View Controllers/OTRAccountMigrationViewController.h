@@ -24,5 +24,12 @@ FOUNDATION_EXPORT NSString *const kSpamYourContactsTag;
  */
 - (instancetype) initWithOldAccount:(OTRXMPPAccount*)oldAccount;
 
+/**
+ * Called when migration is complete, overridable by subclasses. The success flag
+ * indicates whether the operation completed successfully or not. If you override this,
+ * make sure to call the superclass implementation.
+ */
+-(void) onMigrationComplete:(BOOL)success;
+
 @end
 NS_ASSUME_NONNULL_END

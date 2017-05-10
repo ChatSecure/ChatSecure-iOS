@@ -78,6 +78,7 @@ public extension UIApplication {
     }
     
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
+        if let thread = thread, thread.isMuted { return } // No notifications for muted
         DispatchQueue.main.async {
             var identifier:String? = nil
             var userInfo:[AnyHashable:Any]? = nil
@@ -170,7 +171,6 @@ public extension UIApplication {
                             let center = UNUserNotificationCenter.current()
                             center.removePendingNotificationRequests(withIdentifiers:[request.identifier])
                         }
-                        return
                     }
                 }
             })
@@ -183,7 +183,6 @@ public extension UIApplication {
                         if cancelIfFound {
                             self.cancelLocalNotification(notification)
                         }
-                        break
                     }
                 }
             }

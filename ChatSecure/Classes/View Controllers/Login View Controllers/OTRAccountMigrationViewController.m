@@ -93,15 +93,18 @@ typedef NS_ENUM(NSInteger, MigrationStatus) {
     __weak typeof(self)weakSelf = self;
     [self.migrator migrateWithCompletion:^(BOOL success, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        if (success) {
-            strongSelf.migrationStatus = MigrationStatusComplete;
-        } else {
-            strongSelf.migrationStatus = MigrationStatusFailed;
-        }
+        [strongSelf onMigrationComplete:success];
         [super handleSuccessWithNewAccount:newAccount sender:sender];
     }];
 }
 
+-(void) onMigrationComplete:(BOOL)success {
+    if (success) {
+        self.migrationStatus = MigrationStatusComplete;
+    } else {
+        self.migrationStatus = MigrationStatusFailed;
+    }
+}
 
 
 @end
