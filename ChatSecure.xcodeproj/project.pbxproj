@@ -457,6 +457,8 @@
 		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
 		D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B4B4A91E64CB9D00B87B59 /* XMPPPushModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B4B4AC1E64CB9D00B87B59 /* XMPPPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B4B4AA1E64CB9D00B87B59 /* XMPPPushModule.m */; };
+		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
+		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
 		D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */; };
 		D9B9B1371DC802480007F5A7 /* OTRUserInfoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -984,10 +986,10 @@
 		D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyApprovalCell.h; sourceTree = "<group>"; };
 		D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyApprovalCell.m; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
-		D93718511EC267F800766D49 /* OTRAccountMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrator.h; sourceTree = "<group>"; };
-		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D937184D1EC13D7B00766D49 /* Purchase.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Purchase.storyboard; sourceTree = "<group>"; };
 		D937184F1EC1402B00766D49 /* MaybeLaterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeLaterViewController.swift; sourceTree = "<group>"; };
+		D93718511EC267F800766D49 /* OTRAccountMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrator.h; sourceTree = "<group>"; };
+		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
@@ -2046,7 +2048,7 @@
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
 				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
 				D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */,
-				D93718531EC267F800766D49 /* OTRAccountMigrator.h in Headers */,
+				D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
 				D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */,
@@ -2794,7 +2796,6 @@
 				D91E641A1DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift in Sources */,
 				D93DDAFF1BA79A2900CD8331 /* OTRChooseAccountViewController.m in Sources */,
 				D91C86681E4E6DEE008BD763 /* ServerCapabilityInfo.swift in Sources */,
-				D93718541EC267F800766D49 /* OTRAccountMigrator.m in Sources */,
 				D93DDB001BA79A2900CD8331 /* OTRComposeViewController.m in Sources */,
 				63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */,
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
@@ -2841,6 +2842,7 @@
 				D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */,
 				D93DDB211BA79A2C00CD8331 /* OTRLockButton.m in Sources */,
 				D93DDB221BA79A2C00CD8331 /* OTRPasswordStrengthView.m in Sources */,
+				D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */,
 				D93DDB231BA79A2D00CD8331 /* OTRRememberPasswordView.m in Sources */,
 				D93DDB241BA79A2D00CD8331 /* OTRSocialButtonsView.m in Sources */,
 				6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */,

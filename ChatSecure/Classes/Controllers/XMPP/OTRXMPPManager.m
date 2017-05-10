@@ -1252,6 +1252,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     if (!buddies.count) { return; }
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj saveWithTransaction:transaction];
             OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
             addBuddyAction.buddyKey = obj.uniqueId;
             [addBuddyAction saveWithTransaction:transaction];

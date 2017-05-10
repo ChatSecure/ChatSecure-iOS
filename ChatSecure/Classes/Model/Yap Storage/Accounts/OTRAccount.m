@@ -33,7 +33,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 @end
 
 @implementation OTRAccount
-
+@dynamic isArchived;
 @synthesize accountType = _accountType;
 /** This value is only used when rememberPassword is false */
 @synthesize password = _password;
@@ -138,6 +138,11 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
         }
     }
     return nil;
+}
+
+// Overridden in superclass
+- (BOOL) isArchived {
+    return NO;
 }
 
 - (Class)protocolClass {
@@ -299,11 +304,12 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 + (NSDictionary *)encodingBehaviorsByPropertyKey {
     NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
     [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(password))];
+    [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(isArchived))];
     return behaviors;
 }
 
 + (MTLPropertyStorage)storageBehaviorForPropertyWithKey:(NSString *)propertyKey {
-    if ([propertyKey isEqualToString:NSStringFromSelector(@selector(password))]) {
+    if ([propertyKey isEqualToString:NSStringFromSelector(@selector(password))] || [propertyKey isEqualToString:NSStringFromSelector(@selector(isArchived))]) {
         return MTLPropertyStorageNone;
     }
     return [super storageBehaviorForPropertyWithKey:propertyKey];

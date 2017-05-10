@@ -269,12 +269,22 @@
         message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
-    __block NSArray *accounts = nil;
+    NSMutableArray<OTRAccount*> *accounts = [NSMutableArray array];
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+        NSArray<OTRAccount*> *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
+        [allAccounts enumerateObjectsUsingBlock:^(OTRAccount * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!obj.isArchived) {
+                [accounts addObject:obj];
+            }
+        }];
     }];
     [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
         if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)account;
+            if ([xmppAccount.bareJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
+                // Don't allow adding yourself to yourself
+                return;
+            }
             // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
             NSString *title = nil;
             if (accounts.count == 1) {

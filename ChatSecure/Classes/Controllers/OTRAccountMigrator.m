@@ -13,6 +13,7 @@
 #import "OTRLog.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager_Private.h"
+#import "NSURL+ChatSecure.h"
 @import KVOController;
 
 @import OTRAssets;
@@ -97,7 +98,12 @@
     
     // Step 1 - Add old contacts to new account
     
-    NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), self.migratedAccount.bareJID.bare];
+    // This is a special hint in the URL to indicate that we're migrating
+    // TODO: include OTR/OMEMO fingerprints
+    NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:@"m" value:@"1"];
+    NSURL *shareLink = [NSURL otr_shareLink:NSURL.otr_shareBaseURL jid:self.migratedAccount.bareJID queryItems:@[item]];
+    
+    NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), (shareLink != nil) ? shareLink : self.migratedAccount.bareJID.bare];
     NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = @[];
     __block NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray array];

@@ -463,11 +463,11 @@
         XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
         XMPPJID *jid = xmppURI.jid;
         NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
-        NSString *action = xmppURI.queryAction;
-        if (jid && [action isEqualToString:@"subscribe"]) {
+        // NSString *action = xmppURI.queryAction; //  && [action isEqualToString:@"subscribe"]
+        if (jid) {
             [OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint];
+            return YES;
         }
-        return YES;
     }
     return NO;
 }

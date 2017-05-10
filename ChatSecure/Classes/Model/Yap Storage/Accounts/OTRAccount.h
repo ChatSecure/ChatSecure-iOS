@@ -42,6 +42,8 @@ extern NSString *const OTRXMPPTorImageName;
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL autologin;
 
+@property (nonatomic, readonly) BOOL isArchived;
+
 /**
  * Setting this value does a comparison of against the previously value
  * to invalidate the OTRImages cache.

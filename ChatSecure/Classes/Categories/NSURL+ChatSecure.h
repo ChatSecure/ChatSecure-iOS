@@ -13,18 +13,18 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (ChatSecure)
 
-+ (NSURL*) otr_githubURL;
+@property (nonatomic, class, readonly) NSURL *otr_githubURL;
 
-+ (NSURL*) otr_facebookAppURL;
-+ (NSURL*) otr_facebookWebURL;
+@property (nonatomic, class, readonly) NSURL *otr_facebookAppURL;
+@property (nonatomic, class, readonly) NSURL *otr_facebookWebURL;
 
-+ (NSURL*) otr_twitterAppURL;
-+ (NSURL*) otr_twitterWebURL;
+@property (nonatomic, class, readonly) NSURL *otr_twitterAppURL;
+@property (nonatomic, class, readonly) NSURL *otr_twitterWebURL;
 
-+ (NSURL*) otr_transifexURL;
-+ (NSURL*) otr_projectURL;
+@property (nonatomic, class, readonly) NSURL *otr_transifexURL;
+@property (nonatomic, class, readonly) NSURL *otr_projectURL;
 
-+ (NSURL*) otr_shareBaseURL;
+@property (nonatomic, class, readonly) NSURL *otr_shareBaseURL;
 
 /**
  *  This method creates a shareable link based on the spec described
