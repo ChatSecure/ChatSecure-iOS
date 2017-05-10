@@ -338,8 +338,13 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
                 }
                 
                 // Since we only support OTR at the moment, we can finish here, but this should be refactored with a dispatch_group when we support more key types.
-                
-                NSURL *url = [NSURL otr_shareLink:baseURL.absoluteString username:self.username fingerprints:fingerprints];
+                NSMutableArray <NSURLQueryItem*> *queryItems = [NSMutableArray arrayWithCapacity:fingerprints.count];
+                [fingerprints enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+                    NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:key value:obj];
+                    [queryItems addObject:item];
+                }];
+                XMPPJID *jid = [XMPPJID jidWithString:self.username];
+                NSURL *url = [NSURL otr_shareLink:baseURL jid:jid queryItems:queryItems];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionBlock(url, nil);

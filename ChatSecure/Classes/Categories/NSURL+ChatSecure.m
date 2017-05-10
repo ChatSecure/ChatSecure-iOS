@@ -59,24 +59,21 @@
  *
  *  @see +fingerprintStringTypeForFingerprintType:
  */
-+ (NSURL*) otr_shareLink:(NSString *)baseURL
-                username:(NSString *)username
-            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints {
++ (NSURL*) otr_shareLink:(NSURL *)baseURL
+                     jid:(XMPPJID *)jid
+              queryItems:(nullable NSArray<NSURLQueryItem*> *)queryItems {
     NSParameterAssert(baseURL);
-    NSParameterAssert(username);
-    NSString *urlString = @"";
+    NSParameterAssert(jid);
     BOOL base64Encoded = YES;
-    
-    NSMutableString *fingerprintsString = [NSMutableString string];
-    
-    if (fingerprints.count > 0) {
-        [fingerprints enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-            [fingerprintsString appendFormat:@"?%@=%@",key,obj];
-        }];
-    }
+    NSString *username = jid.bare;
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:baseURL resolvingAgainstBaseURL:YES];
+    //urlComponents.path = [NSString stringWithFormat:@"/%@", username];
+    urlComponents.queryItems = queryItems;
+    NSString *query = urlComponents.query;
+    urlComponents.queryItems = nil;
     
     // The part after the /i/#
-    NSString *anchor = [NSString stringWithFormat:@"%@%@", username, fingerprintsString];
+    NSString *anchor = [NSString stringWithFormat:@"%@?%@", username, query];
     
     if (base64Encoded) {
         anchor = [[anchor dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
@@ -88,14 +85,14 @@
         anchor = [anchor stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
         anchor = [anchor stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
     }
-    urlString = [NSString stringWithFormat:@"%@%@", baseURL, anchor];
-    NSURL *url = [NSURL URLWithString:urlString];
-    return url;
+    urlComponents.fragment = anchor;
+    return urlComponents.URL;
 }
 
 //As described https://dev.guardianproject.info/projects/gibberbot/wiki/Invite_Links
-- (void)otr_decodeShareLink:(void (^)(NSString *username, NSString *fingerprint))completion
+- (void) otr_decodeShareLink:(void (^)(XMPPJID * _Nullable jid, NSArray<NSURLQueryItem*> * _Nullable queryItems))completion
 {
+    NSParameterAssert(completion);
     if (!completion) {
         return;
     }
@@ -105,17 +102,19 @@
         return;
     }
     
-    NSString *urlString = self.absoluteString;
-    
-    NSArray *components = [urlString componentsSeparatedByString:@"/i/#"];
-    
-    if (components.count != 2) {
+    NSURLComponents *components = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];
+    if (!components) {
         completion(nil, nil);
         return;
     }
     
-    NSString *base64String = components[1];
+    NSString *base64String = components.fragment;
+    if (!base64String) {
+        completion(nil, nil);
+        return;
+    }
     
+    // Using URL-encoded base64
     base64String = [base64String stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
     base64String = [base64String stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
     
@@ -130,21 +129,57 @@
     }
     
     NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    
     if (!data) {
         completion(nil, nil);
         return;
     }
-    
     NSString *utf8String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    components = [utf8String componentsSeparatedByString:@"?otr="];
-    if (components.count == 1) {
-        completion(components.firstObject, nil);
-    } else if (components.count == 2) {
-        completion(components.firstObject, components.lastObject);
-    } else {
+    if (!utf8String) {
         completion(nil, nil);
+        return;
     }
+    // Generate a fake URL so we can use NSURLComponents
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:YES];
+    urlComponents.fragment = nil;
+    urlComponents.path = nil;
+    NSURL *baseURL = urlComponents.URL;
+    NSString *fakeUrlString = [NSString stringWithFormat:@"%@/%@", baseURL.absoluteString, utf8String];
+    NSURL *fakeURL = [NSURL URLWithString:fakeUrlString];
+    if (!fakeURL) {
+        completion(nil, nil);
+        return;
+    }
+    urlComponents = [NSURLComponents componentsWithURL:fakeURL resolvingAgainstBaseURL:NO];
+    if (!urlComponents) {
+        completion(nil, nil);
+        return;
+    }
+    if (urlComponents.path.length <= 1) {
+        completion(nil, nil);
+        return;
+    }
+    NSString *username = [urlComponents.path substringFromIndex:1]; // Remove '/' character
+    NSArray<NSURLQueryItem*> *queryItems = urlComponents.queryItems;
+    
+    XMPPJID *jid = [XMPPJID jidWithString:username];
+    
+    completion(jid, queryItems);
+}
+
+/** Checks for m=1 */
++ (BOOL) otr_queryItemsContainMigrationHint:(NSArray<NSURLQueryItem*> *)queryItems {
+    NSParameterAssert(queryItems);
+    if (!queryItems) {
+        return NO;
+    }
+    __block BOOL migrationHint = NO;
+    [queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.name isEqualToString:@"m"] && [obj.value isEqualToString:@"1"]) {
+            migrationHint = YES;
+            *stop = YES;
+        }
+    }];
+    return migrationHint;
 }
 
 

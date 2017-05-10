@@ -21,6 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 @import Foundation;
+@import XMPPFramework;
 #import "OTREncryptionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
@@ -55,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
 
 - (void)sendMessage:(OTROutgoingMessage *)message;
+
+/** Shows UI to process an invite. Probably could be better handled somewhere else. */
++ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint;
 
 + (instancetype)sharedInstance; // Singleton method
 

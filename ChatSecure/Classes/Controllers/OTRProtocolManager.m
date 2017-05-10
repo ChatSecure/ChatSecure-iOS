@@ -260,6 +260,51 @@
     }];
 }
 
++ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint {
+    NSParameterAssert(jid);
+    if (!jid) { return; }
+    NSString *jidString = jid.bare;
+    NSString *message = [NSString stringWithString:jidString];
+    if (otrFingerprint.length == 40) {
+        message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+    [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
+            NSString *title = nil;
+            if (accounts.count == 1) {
+                title = ADD_STRING();
+            } else {
+                title = account.username;
+            }
+            UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                OTRBuddy *buddy = [[OTRBuddy alloc] init];
+                buddy.username = jidString;
+                [protocol addBuddy:buddy];
+                /* TODO OTR fingerprint verificaction
+                 if (otrFingerprint) {
+                 // We are missing a method to add fingerprint to trust store
+                 [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
+                 }*/
+            }];
+            [alert addAction:action];
+        }
+    }];
+    if (alert.actions.count > 0) {
+        // No need to show anything if only option is "cancel"
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        // This is janky af
+        [OTRAppDelegate.appDelegate.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
+}
+
 #pragma mark Singleton Object Methods
 
 + (OTRProtocolManager*) shared {
