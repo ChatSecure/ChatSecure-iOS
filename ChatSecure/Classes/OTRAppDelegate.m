@@ -431,14 +431,20 @@
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *url = userActivity.webpageURL;
         if ([url otr_isInviteLink]) {
-            __block NSString *username = nil;
+            __block XMPPJID *jid = nil;
             __block NSString *fingerprint = nil;
-            [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
-                username = uName;
-                fingerprint = fPrint;
+            NSString *otr = [OTRAccount fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
+            [url otr_decodeShareLink:^(XMPPJID * _Nullable inJid, NSArray<NSURLQueryItem*> * _Nullable queryItems) {
+                jid = inJid;
+                [queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.name isEqualToString:otr]) {
+                        fingerprint = obj.value;
+                        *stop = YES;
+                    }
+                }];
             }];
-            if (username.length) {
-                [self handleInvite:username fingerprint:fingerprint];
+            if (jid) {
+                [OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint];
             }
             return YES;
         }
@@ -459,53 +465,14 @@
         NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
         NSString *action = xmppURI.queryAction;
         if (jid && [action isEqualToString:@"subscribe"]) {
-            [self handleInvite:jid.full fingerprint:otrFingerprint];
+            [OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint];
         }
         return YES;
     }
     return NO;
 }
 
-- (void)handleInvite:(NSString *)jidString fingerprint:(NSString *)otrFingerprint {
-    NSString *message = [NSString stringWithString:jidString];
-    if (otrFingerprint.length == 40) {
-        message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
-    }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
-    __block NSArray *accounts = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        accounts = [OTRAccount allAccountsWithTransaction:transaction];
-    }];
-    [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
-        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
-            // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
-            NSString *title = nil;
-            if (accounts.count == 1) {
-                title = ADD_STRING();
-            } else {
-                title = account.username;
-            }
-            UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                OTRBuddy *buddy = [[OTRBuddy alloc] init];
-                buddy.username = jidString;
-                [protocol addBuddy:buddy];
-                /* TODO OTR fingerprint verificaction
-                 if (otrFingerprint) {
-                 // We are missing a method to add fingerprint to trust store
-                 [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
-                 }*/
-            }];
-            [alert addAction:action];
-        }
-    }];
-    if (alert.actions.count > 0) {
-        // No need to show anything if only option is "cancel"
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:cancel];
-        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
-    }
-}
+
 
 - (void) showSubscriptionRequestForBuddy:(NSDictionary*)userInfo {
     // This is probably in response to a user requesting subscriptions from us

@@ -230,7 +230,10 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
                 }
                 pushCell.setPushInfo(pushInfo: check.result.pushInfo, pushCapabilities: check.result.capabilities?[.XEP0357], pushStatus: xmppPushStatus)
                 pushCell.infoButtonBlock = { [weak self] (cell, sender) in
-                    (self?.check.result.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: self, sender: sender)
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    (strongSelf.check.result.pushInfo?.pushAPIURL as NSURL?)?.promptToShow(from: strongSelf, sender: sender)
                 }
                 return pushCell
             }

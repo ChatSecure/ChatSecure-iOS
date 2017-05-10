@@ -8,7 +8,9 @@
 
 @import Foundation;
 @import UIKit;
+@import XMPPFramework;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (ChatSecure)
 
 + (NSURL*) otr_githubURL;
@@ -36,9 +38,9 @@
  *
  *  @see +fingerprintStringTypeForFingerprintType:
  */
-+ (NSURL*) otr_shareLink:(NSString *)baseURL
-                 username:(NSString *)username
-            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints;
++ (nullable NSURL*) otr_shareLink:(NSURL *)baseURL
+                              jid:(XMPPJID *)jid
+                       queryItems:(nullable NSArray<NSURLQueryItem*> *)queryItems;
 
 /**
  *  Synchronously decodes a url into the given username and fingerprint.
@@ -48,12 +50,16 @@
  *
  *  @param completion a block that will be called with the decoded username and fingerprint
  */
-- (void) otr_decodeShareLink:(void (^)(NSString *username, NSString *fingerprint))completion;
+- (void) otr_decodeShareLink:(void (^)(XMPPJID * _Nullable jid, NSArray<NSURLQueryItem*> * _Nullable queryItems))completion;
+
+/** Checks if share link indicates user has migrated.  m=1 */
++ (BOOL) otr_queryItemsContainMigrationHint:(NSArray<NSURLQueryItem*> *)queryItems;
 
 /** Checks if URL contains '/i/#' for the invite links of this style: https://chatsecure.org/i/#YWhkdmRqZW5kYmRicmVpQGR1a2dvLmNvbT9vdHI9M0EyN0FDODZBRkVGOENGMDlEOTAyMEQwNTJBNzNGMUVGMEQyOUI2Rg */
-- (BOOL) otr_isInviteLink;
+@property (nonatomic, readonly) BOOL otr_isInviteLink;
 
 /** This will give a user a prompt before calling openURL */
 - (void) promptToShowURLFromViewController:(UIViewController*)viewController sender:(id)sender;
 
 @end
+NS_ASSUME_NONNULL_END
