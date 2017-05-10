@@ -110,8 +110,11 @@
     NSArray *components = [urlString componentsSeparatedByString:@"/i/#"];
     
     if (components.count != 2) {
-        completion(nil, nil);
-        return;
+        components = [urlString componentsSeparatedByString:@"/m/#"]; // try migration link
+        if (components.count != 2) {
+            completion(nil, nil);
+            return;
+        }
     }
     
     NSString *base64String = components[1];
@@ -148,9 +151,9 @@
 }
 
 
-/** Checks if URL contains '/i/#' for the invite links of this style: https://chatsecure.org/i/#YWhkdmRqZ... */
+/** Checks if URL contains '/i/#' for the invite links of this style: https://chatsecure.org/i/#YWhkdmRqZ... (or '/m/#' for migration type links) */
 - (BOOL) otr_isInviteLink {
-    return [self.absoluteString containsString:@"/i/#"];
+    return [self.absoluteString containsString:@"/i/#"] || [self.absoluteString containsString:@"/m/#"];
 }
 
 /** This will give a user a prompt before calling openURL */

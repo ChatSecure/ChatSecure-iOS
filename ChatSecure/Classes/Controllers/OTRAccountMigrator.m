@@ -20,6 +20,7 @@
 @interface OTRAccountMigrator ()
 @property (nonatomic) BOOL isMigrationInProgress;
 @property (nonatomic, copy, nullable) void (^completion)(BOOL success, NSError * _Nullable error);
+@property (nonatomic) NSString *inviteLink;
 @end
 
 @implementation OTRAccountMigrator
@@ -74,11 +75,21 @@
     [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [self.migratedAccount saveWithTransaction:transaction];
     }];
-    if ([self areBothAccountsAreOnline]) {
-        [self migrateOnlineAccountsWithCompletion:completion];
-        return;
-    }
-    [self loginAccountsIfNeeded];
+    
+    
+    NSSet <NSNumber*> *fingerprintTypes = [NSSet setWithArray:@[@(OTRFingerprintTypeOTR)]];
+    [self.migratedAccount generateShareURLWithFingerprintTypes:fingerprintTypes completion:^(NSURL *shareURL, NSError *error) {
+        if (shareURL != nil) {
+            _inviteLink = [[shareURL absoluteString] stringByReplacingOccurrencesOfString:@"/i/#" withString:@"/m/#"];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self areBothAccountsAreOnline]) {
+                [self migrateOnlineAccountsWithCompletion:completion];
+                return;
+            }
+            [self loginAccountsIfNeeded];
+        });
+    }];
 }
 
 
@@ -94,10 +105,11 @@
     NSParameterAssert(oldXmpp);
     NSParameterAssert(newXmpp);
     
-    
     // Step 1 - Add old contacts to new account
-    
-    NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), self.migratedAccount.bareJID.bare];
+
+    // Build message text. Use invite link, unless we failed to create one, in which case
+    // use the jid.
+    NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), (_inviteLink != nil) ? _inviteLink : self.migratedAccount.bareJID.bare];
     NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = @[];
     __block NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray array];
