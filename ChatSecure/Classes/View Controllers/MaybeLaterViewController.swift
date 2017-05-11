@@ -22,6 +22,7 @@ class MaybeLaterViewController: UIViewController {
     }
     
     @IBAction func dismissButtonPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func shareButtonPressed(_ sender: Any) {

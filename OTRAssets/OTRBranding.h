@@ -71,12 +71,6 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** UserVoice Site */
 + (nullable NSString*) userVoiceSite;
 
-/** PayPal donation URL */
-+ (nullable NSURL*) paypalURL;
-
-/** Bitcoin donation URL (e.g. Coinbase) */
-+ (nullable NSURL*) bitcoinURL;
-
 /** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
 + (BOOL) shouldShowPushWarning;
 
@@ -85,6 +79,9 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 
 /** If enabled, will show colors for status indicators. */
 @property (class, readonly) BOOL showsColorForStatus;
+
+/** If enabled, will allow the in-app-purchase donations UI. This includes hardcoded elements designed for upstream ChatSecure. */
+@property (class, readonly) BOOL allowsDonation;
 
 @end
 NS_ASSUME_NONNULL_END

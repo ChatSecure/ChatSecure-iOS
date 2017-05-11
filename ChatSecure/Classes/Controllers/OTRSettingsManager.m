@@ -101,7 +101,7 @@
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting, shareViewSetting]];
     
-    if ([OTRBranding paypalURL] && [OTRBranding bitcoinURL]) {
+    if (OTRBranding.allowsDonation) {
         OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING() description:nil];
         donateSetting.imageName = @"29-heart.png";
         [otherSettings insertObject:donateSetting atIndex:1];

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="gpY-7F-1nv">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -53,17 +53,17 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Kx-N0-Yqp" userLabel="IAP Buttons View">
-                                <rect key="frame" x="8" y="336" width="359" height="273"/>
+                                <rect key="frame" x="8" y="311.5" width="359" height="297.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="boG-Bi-Djt">
-                                        <rect key="frame" x="133.5" y="122" width="92" height="30"/>
+                                        <rect key="frame" x="133.5" y="134" width="92" height="30"/>
                                         <state key="normal" title="🍺 $5.99/mo"/>
                                         <connections>
                                             <action selector="mediumMoneyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="tbX-rd-nIN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="647-wq-NMP">
-                                        <rect key="frame" x="258" y="122" width="99" height="30"/>
+                                        <rect key="frame" x="258" y="134" width="99" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <state key="normal" title="🎁 $19.99/mo"/>
                                         <connections>
@@ -71,7 +71,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-wM-gJf">
-                                        <rect key="frame" x="8" y="122" width="96" height="30"/>
+                                        <rect key="frame" x="8" y="134" width="96" height="30"/>
                                         <state key="normal" title=" ☕️ $2.99/mo"/>
                                         <connections>
                                             <action selector="smallMoneyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="Y1E-2a-AEZ"/>
@@ -90,63 +90,19 @@
                                     <constraint firstItem="boG-Bi-Djt" firstAttribute="centerX" secondItem="9Kx-N0-Yqp" secondAttribute="centerX" id="xvx-9z-JTr"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5z-3N-jCk">
-                                <rect key="frame" x="8" y="202" width="359" height="126"/>
-                                <attributedString key="attributedText">
-                                    <fragment>
-                                        <string key="content">Here's what you get:
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5z-3N-jCk">
+                                <rect key="frame" x="8" y="202" width="359" height="102"/>
+                                <string key="text">Here's what you get:
 
-</string>
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content="✅">
-                                        <attributes>
-                                            <font key="NSFont" size="17" name=".AppleColorEmojiUI"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment>
-                                        <string key="content"> Feel good supporting indie software
-</string>
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content="✅">
-                                        <attributes>
-                                            <font key="NSFont" size="17" name=".AppleColorEmojiUI"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment>
-                                        <string key="content"> Continued development and updates
-</string>
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content="✅">
-                                        <attributes>
-                                            <font key="NSFont" size="17" name=".AppleColorEmojiUI"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content=" Help keep the app free for everyone">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="3" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
+• Feel good supporting indie software
+• Continued development and updates
+• Help keep the app free for everyone</string>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.97111301660292437" blue="0.96413302951388891" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="NHC-BV-VjX" firstAttribute="leading" secondItem="peW-Bv-YYS" secondAttribute="leadingMargin" id="3Ls-pR-mfZ"/>
                             <constraint firstItem="9Kx-N0-Yqp" firstAttribute="leading" secondItem="peW-Bv-YYS" secondAttribute="leading" constant="8" id="3g8-Q4-0ei"/>
@@ -274,7 +230,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.97111301660000005" blue="0.96413302950000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="97z-ZP-B7P" secondAttribute="trailing" constant="8" id="3gH-2g-ZKl"/>
                             <constraint firstItem="b7t-YO-UNy" firstAttribute="centerY" secondItem="ijh-fq-dON" secondAttribute="centerY" constant="50" id="8Bh-YY-2KH"/>

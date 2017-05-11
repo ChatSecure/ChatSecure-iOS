@@ -38,5 +38,7 @@
 	<true/>
 	<key>ShowsColorForStatus</key>
 	<true/>
+	<key>AllowsDonation</key>
+	<true/>
 </dict>
 </plist>
