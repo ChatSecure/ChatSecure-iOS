@@ -16,13 +16,14 @@ public class PurchaseViewController: UIViewController {
     @IBOutlet weak var smallMoneyButton: UIButton!
     @IBOutlet weak var mediumMoneyButton: UIButton!
     fileprivate let maybeLaterSegue = "maybeLaterSegue"
+    let observer = TransactionObserver.shared
     
     var allMoneyButtons: [UIButton:Product] {
         return [smallMoneyButton: .small, mediumMoneyButton: .medium, bigMoneyButton: .big]
     }
     
     enum Product: String {
-        case small = "3_donation_monthly" // "3_donation_consumable"
+        case small = "3_donation_nonconsumable" // "3_donation_monthly" // "3_donation_consumable"
         case medium = "6_donation_monthly" // "6_donation_consumable"
         case big = "20_donation_monthly" // "20_donation_consumable"
         static let allProductsSet = Set([small.rawValue, medium.rawValue, big.rawValue])
@@ -39,11 +40,18 @@ public class PurchaseViewController: UIViewController {
     }
     private var productsRequest: SKProductsRequest?
     var products: [Product:SKProduct] = [:]
+    
+    deinit {
+        observer.transactionSuccess = nil
+    }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
+        observer.transactionSuccess = { [weak self] (transaction) in
+            guard let strongSelf = self else { return }
+            strongSelf.progressToMaybeLater(strongSelf)
+        }
     }
 
     override public func didReceiveMemoryWarning() {
@@ -98,6 +106,10 @@ public class PurchaseViewController: UIViewController {
         } else {
             NSLog("Could not buy product via button \(sender)")
         }
+    }
+    
+    fileprivate func progressToMaybeLater(_ sender: Any) {
+        self.performSegue(withIdentifier: maybeLaterSegue, sender: sender)
     }
     
     @IBAction func restoreButtonPressed(_ sender: Any) {
@@ -159,7 +171,26 @@ extension SKProduct {
     }
 }
 
-extension PurchaseViewController: SKPaymentTransactionObserver {
+public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
+    public static let shared = TransactionObserver()
+    let paymentQueue = SKPaymentQueue.default()
+    public var transactionSuccess: ((_ transaction: SKPaymentTransaction) -> Void)?
+    
+    deinit {
+        stopObserving()
+    }
+    
+    /** Start observing IAP transactions */
+    public func startObserving() {
+        paymentQueue.add(self)
+    }
+    
+    public func stopObserving() {
+        paymentQueue.remove(self)
+    }
+    
+    // MARK: SKPaymentTransactionObserver
+    
     public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             switch (transaction.transactionState) {
@@ -184,7 +215,6 @@ extension PurchaseViewController: SKPaymentTransactionObserver {
     
     public func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         NSLog("Payment queue restore finished")
-
     }
     
     public func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
@@ -193,15 +223,19 @@ extension PurchaseViewController: SKPaymentTransactionObserver {
     
     private func complete(transaction: SKPaymentTransaction) {
         NSLog("Transaction complete: \(transaction)")
-        self.performSegue(withIdentifier: maybeLaterSegue, sender: self)
         SKPaymentQueue.default().finishTransaction(transaction)
+        transactionSuccess?(transaction)
     }
     
     private func restore(transaction: SKPaymentTransaction) {
-        guard let _ = transaction.original?.payment.productIdentifier else { return }
+        guard let _ = transaction.original?.payment.productIdentifier else {
+            NSLog("Cannot restore: No original transaction: \(transaction)")
+            return
+        }
         
         NSLog("Transaction restored: \(transaction)")
         SKPaymentQueue.default().finishTransaction(transaction)
+        transactionSuccess?(transaction)
     }
     
     private func fail(transaction: SKPaymentTransaction) {

@@ -150,6 +150,7 @@
     ////////////
     
     [self.window makeKeyAndVisible];
+    [TransactionObserver.shared startObserving];
     
     application.applicationIconBadgeNumber = 0;
     
