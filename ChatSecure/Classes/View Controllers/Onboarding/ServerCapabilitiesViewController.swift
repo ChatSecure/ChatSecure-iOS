@@ -90,7 +90,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.autoPinEdgesToSuperviewEdges()
-        let bundle = OTRAssets.resourcesBundle()
+        let bundle = OTRAssets.resourcesBundle
         for identifier in [ServerCapabilityTableViewCell.cellIdentifier(), PushAccountTableViewCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier(), TwoButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.register(nib, forCellReuseIdentifier: identifier)

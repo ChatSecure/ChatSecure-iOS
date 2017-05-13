@@ -211,3 +211,11 @@
 }
 
 @end
+
+@implementation UIViewController (ChatSecureURL)
+- (void) promptToShowURL:(NSURL*)url sender:(id)sender {
+    [url promptToShowURLFromViewController:self sender:sender];
+}
+
+
+@end

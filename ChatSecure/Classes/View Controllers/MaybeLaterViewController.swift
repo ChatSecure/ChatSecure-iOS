@@ -8,6 +8,8 @@
 
 import UIKit
 import OTRAssets
+import uservoice_iphone_sdk
+import Appirater
 
 public class MaybeLaterViewController: UIViewController {
 
@@ -34,21 +36,42 @@ public class MaybeLaterViewController: UIViewController {
     }
     
     @IBAction func shareButtonPressed(_ sender: Any) {
+        let itemProvider = OTRActivityItemProvider(placeholderItem: "")
+        let qr = OTRQRCodeActivity()
+        let avc = UIActivityViewController(activityItems: [itemProvider], applicationActivities: [qr])
+        avc.excludedActivityTypes = [.print, .assignToContact, .saveToCameraRoll]
+        avc.setPopoverSource(sender)
+        present(avc, animated: true, completion: nil)
     }
     
     @IBAction func translateButtonPressed(_ sender: Any) {
+        prompt(toShow: OTRBranding.transifexURL, sender: sender)
     }
     
     @IBAction func joinBetaPressed(_ sender: Any) {
+        prompt(toShow: OTRBranding.testflightSignupURL, sender: sender)
     }
     
     @IBAction func submitIdeasPressed(_ sender: Any) {
+        let alert = UIAlertController(title: SHOW_USERVOICE_STRING(), message: nil, preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil);
+        let show = UIAlertAction(title: OK_STRING(), style: .default) { (action) in
+            let config = UVConfig(site: OTRBranding.userVoiceSite!)
+            UserVoice.presentInterface(forParentViewController: self, andConfig: config)
+        }
+        alert.addAction(cancel)
+        alert.addAction(show)
+        alert.setPopoverSource(sender)
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func reviewButtonPressed(_ sender: Any) {
+        Appirater.rateApp()
     }
 
     @IBAction func fileBugPressed(_ sender: Any) {
+        let url = OTRBranding.githubURL.appendingPathComponent("issues")
+        prompt(toShow: url, sender: sender)
     }
     
     
@@ -63,4 +86,13 @@ public class MaybeLaterViewController: UIViewController {
 //        }
 //    }
 
+}
+
+fileprivate extension UIViewController {
+    func setPopoverSource(_ sender: Any) {
+        if let view = sender as? UIView {
+            popoverPresentationController?.sourceView = view
+            popoverPresentationController?.sourceRect = view.bounds
+        }
+    }
 }

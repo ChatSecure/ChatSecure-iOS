@@ -91,6 +91,12 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return url;
 }
 
++ (NSURL *)testflightSignupURL {
+    NSString *urlString = [[self defaultPlist] objectForKey:@"TestflightSignupURL"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 #pragma mark Strings
 
 /** The default XMPP resource (e.g. username@example.com/chatsecure) */

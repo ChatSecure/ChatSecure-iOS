@@ -70,7 +70,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.autoPinEdgesToSuperviewEdges()
-        let bundle = OTRAssets.resourcesBundle()
+        let bundle = OTRAssets.resourcesBundle
         for identifier in [XMPPAccountCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.register(nib, forCellReuseIdentifier: identifier)
@@ -81,7 +81,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     private func setupDetailCells() {
         var serverInfoText = SERVER_INFORMATION_STRING()
         if xmpp.serverCheck.getCombinedPushStatus() == .broken &&
-           OTRBranding.shouldShowPushWarning() {
+           OTRBranding.shouldShowPushWarning {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
         detailCells = [

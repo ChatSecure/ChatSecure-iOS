@@ -40,7 +40,7 @@ public extension XLFormBaseCell {
     }
     
     public class func registerCellClass(_ forType: String) {
-        let bundle = OTRAssets.resourcesBundle()
+        let bundle = OTRAssets.resourcesBundle
         let path = bundle.bundlePath
         guard let bundleName = (path as NSString?)?.lastPathComponent else {
             return
