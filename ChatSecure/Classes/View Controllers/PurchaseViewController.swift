@@ -187,7 +187,7 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         stopObserving()
     }
     
-    static var receiptData: Data? {
+    public static var receiptData: Data? {
         var data: Data? = nil
         guard let url = Bundle.main.appStoreReceiptURL else {
             return nil
@@ -198,7 +198,7 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         return data
     }
     
-    static var hasValidReceipt: Bool {
+    public static var hasValidReceipt: Bool {
         guard let receipt = receiptData else {
             return false
         }

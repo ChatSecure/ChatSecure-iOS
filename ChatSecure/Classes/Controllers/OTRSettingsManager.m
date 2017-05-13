@@ -63,6 +63,19 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING() settings:@[accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
+    if (OTRBranding.allowsDonation) {
+        NSString *donateTitle = DONATE_STRING();
+        if (TransactionObserver.hasValidReceipt) {
+            donateTitle = [NSString stringWithFormat:@"%@    ✅", DONATE_STRING()];
+        } else {
+            donateTitle = [NSString stringWithFormat:@"%@    🆕", DONATE_STRING()];
+        }
+        OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:donateTitle description:nil];
+        donateSetting.imageName = @"29-heart.png";
+        OTRSettingsGroup *donateGroup = [[OTRSettingsGroup alloc] initWithTitle:DONATE_STRING() settings:@[donateSetting]];
+        [settingsGroups addObject:donateGroup];
+    }
+    
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING()
                                                                                  description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING()
                                                                                  settingsKey:kOTRSettingKeyDeleteOnDisconnect];
@@ -73,6 +86,8 @@
                                                                            description:PINNED_CERTIFICATES_DESCRIPTION_STRING()];
     
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    
     
     if (![PushController canReceivePushNotifications] ||
         [PushController getPushPreference] != PushPreferenceEnabled) {
@@ -100,12 +115,6 @@
     
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting, shareViewSetting]];
-    
-    if (OTRBranding.allowsDonation) {
-        OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING() description:nil];
-        donateSetting.imageName = @"29-heart.png";
-        [otherSettings insertObject:donateSetting atIndex:1];
-    }
     
     if ([OTRBranding userVoiceSite]) {
         OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING() description:nil];
