@@ -198,6 +198,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewDidAppear:animated];
     [self tryToMarkAllMessagesAsRead];
+    // This is a hack to attempt fixing https://github.com/ChatSecure/ChatSecure-iOS/issues/657
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self scrollToBottomAnimated:animated];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -270,7 +274,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
     
-    [self.inputToolbar.contentView.textView resignFirstResponder];
+    // [self.inputToolbar.contentView.textView resignFirstResponder];
 }
 
 #pragma - mark Setters & getters
