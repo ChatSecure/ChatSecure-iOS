@@ -7,16 +7,24 @@
 //
 
 import UIKit
+import OTRAssets
 
-class MaybeLaterViewController: UIViewController {
+public class MaybeLaterViewController: UIViewController {
 
-    override func viewDidLoad() {
+    @IBOutlet weak var subheadingLabel: UILabel!
+    
+    override public func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if TransactionObserver.hasValidReceipt {
+            subheadingLabel.text = THANK_YOU_FOR_CONTRIBUTION()
+        }
     }
 
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -44,14 +52,15 @@ class MaybeLaterViewController: UIViewController {
     }
     
     
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        // Get the new view controller using segue.destinationViewController.
+//        // Pass the selected object to the new view controller.
+//        if let purchase = sender as? PurchaseViewController {
+//            
+//        }
+//    }
 
 }

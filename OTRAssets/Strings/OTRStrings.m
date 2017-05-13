@@ -314,6 +314,8 @@ NSString* OTRL_MSGEVENT_SETUP_ERROR_STRING() { return [OTRLanguageManager transl
 NSString* PASSWORD_STRING() { return [OTRLanguageManager translatedString:@"Password"]; }
 /** "This device doesn't seem to be configured to make payments.", Error message when trying to make a purchase but payments haven't been set up yet */
 NSString* PAYMENTS_SETUP_ERROR_STRING() { return [OTRLanguageManager translatedString:@"This device doesn't seem to be configured to make payments."]; }
+/** "Payments Unavailable", Title for alert when user isn't allowed to make payments */
+NSString* PAYMENTS_UNAVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Payments Unavailable"]; }
 /** "Pending Approval", String for XMPP buddies when adding buddy is pending */
 NSString* PENDING_APPROVAL_STRING() { return [OTRLanguageManager translatedString:@"Pending Approval"]; }
 /** "Photo Library", Label for button to open up photo library and choose photo */
@@ -418,6 +420,8 @@ NSString* Server_String_Hint() { return [OTRLanguageManager translatedString:@"C
 NSString* Show_Advanced_Encryption_Settings() { return [OTRLanguageManager translatedString:@"Show Advanced Encryption Settings"]; }
 /** "Show Advanced Options", toggle switch for show advanced */
 NSString* Show_Advanced_Options() { return [OTRLanguageManager translatedString:@"Show Advanced Options"]; }
+/** "Thank you for your contribution!", string shown if user has already paid */
+NSString* THANK_YOU_FOR_CONTRIBUTION() { return [OTRLanguageManager translatedString:@"Thank you for your contribution!"]; }
 /** "Tor is an experimental feature, please use with caution.", Message for warning about using tor network */
 NSString* TOR_WARNING_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Tor is an experimental feature, please use with caution."]; }
 /** "Twitter", Name of the popular social tweeting site */

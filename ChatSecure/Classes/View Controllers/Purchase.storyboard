@@ -369,6 +369,9 @@ Cg
                             <constraint firstItem="dEy-M2-DVk" firstAttribute="top" secondItem="97z-ZP-B7P" secondAttribute="bottom" constant="16" id="uWm-jY-5ea"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="subheadingLabel" destination="dEy-M2-DVk" id="eh2-Dc-mih"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Af-JD-7ZL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

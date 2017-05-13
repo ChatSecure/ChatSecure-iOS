@@ -567,6 +567,10 @@
         "comment": "Title for listing the user saved SSL certificates",
         "string": "Saved Certificates"
     },
+    "PAYMENTS_UNAVAILABLE_STRING": {
+        "comment": "Title for alert when user isn't allowed to make payments",
+        "string": "Payments Unavailable"
+    },
     "SAVE_STRING": {
         "comment": "Title for button for saving a setting",
         "string": "Save"
@@ -986,6 +990,10 @@
     "RESEND_DESCRIPTION_STRING" : {
         "comment": "Describe what resending will do the %@ will be replaced withe the method OTR/OMEMO/Plaintext",
         "string": "Resending this message will use %@."
+    },
+    "THANK_YOU_FOR_CONTRIBUTION" : {
+        "comment": "string shown if user has already paid",
+        "string": "Thank you for your contribution!"
     },
     "VIEW_PROFILE_DESCRIPTION_STRING" : {
         "comment": "Describe how to change a contact's device settings",

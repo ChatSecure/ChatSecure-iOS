@@ -10,6 +10,7 @@ import UIKit
 import StoreKit
 import FormatterKit
 import MBProgressHUD
+import OTRAssets
 
 public class PurchaseViewController: UIViewController {
     @IBOutlet weak var bigMoneyButton: UIButton!
@@ -50,7 +51,7 @@ public class PurchaseViewController: UIViewController {
         // Do any additional setup after loading the view.
         observer.transactionSuccess = { [weak self] (transaction) in
             guard let strongSelf = self else { return }
-            strongSelf.progressToMaybeLater(strongSelf)
+            strongSelf.progressToMaybeLater(sender: strongSelf)
         }
     }
 
@@ -65,6 +66,12 @@ public class PurchaseViewController: UIViewController {
             allMoneyButtons.forEach {
                 $0.key.isEnabled = false
             }
+            let alert = UIAlertController(title: PAYMENTS_UNAVAILABLE_STRING(), message: nil, preferredStyle: .alert)
+            let ok = UIAlertAction(title: OK_STRING(), style: .default, handler: { (action) in
+                self.progressToMaybeLater(sender: self)
+            })
+            alert.addAction(ok)
+            alert.show(self, sender: nil)
             NSLog("User cannot make payments.")
             // TODO: show user cant make payments
             return
@@ -108,7 +115,7 @@ public class PurchaseViewController: UIViewController {
         }
     }
     
-    fileprivate func progressToMaybeLater(_ sender: Any) {
+    fileprivate func progressToMaybeLater(sender: Any) {
         self.performSegue(withIdentifier: maybeLaterSegue, sender: sender)
     }
     
@@ -178,6 +185,25 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
     
     deinit {
         stopObserving()
+    }
+    
+    static var receiptData: Data? {
+        var data: Data? = nil
+        guard let url = Bundle.main.appStoreReceiptURL else {
+            return nil
+        }
+        do {
+            data = try Data(contentsOf: url)
+        } catch {}
+        return data
+    }
+    
+    static var hasValidReceipt: Bool {
+        guard let receipt = receiptData else {
+            return false
+        }
+        // We skip verification because we don't really care if the user has paid
+        return receipt.count > 0
     }
     
     /** Start observing IAP transactions */

@@ -314,6 +314,8 @@ FOUNDATION_EXPORT NSString* OTRL_MSGEVENT_SETUP_ERROR_STRING();
 FOUNDATION_EXPORT NSString* PASSWORD_STRING();
 /** "This device doesn't seem to be configured to make payments.", Error message when trying to make a purchase but payments haven't been set up yet */
 FOUNDATION_EXPORT NSString* PAYMENTS_SETUP_ERROR_STRING();
+/** "Payments Unavailable", Title for alert when user isn't allowed to make payments */
+FOUNDATION_EXPORT NSString* PAYMENTS_UNAVAILABLE_STRING();
 /** "Pending Approval", String for XMPP buddies when adding buddy is pending */
 FOUNDATION_EXPORT NSString* PENDING_APPROVAL_STRING();
 /** "Photo Library", Label for button to open up photo library and choose photo */
@@ -418,6 +420,8 @@ FOUNDATION_EXPORT NSString* Server_String_Hint();
 FOUNDATION_EXPORT NSString* Show_Advanced_Encryption_Settings();
 /** "Show Advanced Options", toggle switch for show advanced */
 FOUNDATION_EXPORT NSString* Show_Advanced_Options();
+/** "Thank you for your contribution!", string shown if user has already paid */
+FOUNDATION_EXPORT NSString* THANK_YOU_FOR_CONTRIBUTION();
 /** "Tor is an experimental feature, please use with caution.", Message for warning about using tor network */
 FOUNDATION_EXPORT NSString* TOR_WARNING_MESSAGE_STRING();
 /** "Twitter", Name of the popular social tweeting site */
