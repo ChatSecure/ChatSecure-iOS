@@ -24,7 +24,7 @@ public class PurchaseViewController: UIViewController {
     }
     
     enum Product: String {
-        case small = "3_donation_nonconsumable" // "3_donation_monthly" // "3_donation_consumable"
+        case small = "3_donation_monthly" // "3_donation_nonconsumable" // "3_donation_consumable"
         case medium = "6_donation_monthly" // "6_donation_consumable"
         case big = "20_donation_monthly" // "20_donation_consumable"
         static let allProductsSet = Set([small.rawValue, medium.rawValue, big.rawValue])
