@@ -234,6 +234,8 @@ FOUNDATION_EXPORT NSString* MIGRATION_NOTIFICATION_WITH_DATE_STRING();
 FOUNDATION_EXPORT NSString* MIGRATION_START_STRING();
 /** "It's time to move!", Title for migration header view */
 FOUNDATION_EXPORT NSString* MIGRATION_STRING();
+/** "More Ways to Help", button for additional ways to help support development of the app */
+FOUNDATION_EXPORT NSString* MORE_WAYS_TO_HELP_STRING();
 /** "My new account information", label for new account info for migration */
 FOUNDATION_EXPORT NSString* MY_NEW_ACCOUNT_INFO_STRING();
 /** "My QR Code", Your QR code */

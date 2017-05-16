@@ -257,7 +257,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
         OTRSettingActionBlock actionBlock = setting.actionBlock;
         if (actionBlock) {
-            actionBlock();
+            actionBlock(self);
         }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

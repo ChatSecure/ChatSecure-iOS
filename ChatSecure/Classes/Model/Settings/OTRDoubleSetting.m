@@ -33,7 +33,7 @@
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf editValue];
         };
         self.defaultValue = [NSNumber numberWithDouble:0.0];

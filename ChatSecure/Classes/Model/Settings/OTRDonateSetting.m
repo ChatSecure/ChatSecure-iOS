@@ -17,7 +17,7 @@
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf openDonationDialog];
         };
     }

@@ -11,6 +11,10 @@
         "comment": "Text for media message summary",
         "string": "Audio Message"
     },
+    "MORE_WAYS_TO_HELP_STRING": {
+        "comment": "button for additional ways to help support development of the app",
+        "string": "More Ways to Help"
+    },
     "VIDEO_MESSAGE_STRING": {
         "comment": "Text for media message summary",
         "string": "Video Message"

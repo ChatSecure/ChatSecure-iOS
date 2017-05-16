@@ -71,8 +71,18 @@
             donateTitle = [NSString stringWithFormat:@"%@    🆕", DONATE_STRING()];
         }
         OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:donateTitle description:nil];
-        donateSetting.imageName = @"29-heart.png";
-        OTRSettingsGroup *donateGroup = [[OTRSettingsGroup alloc] initWithTitle:DONATE_STRING() settings:@[donateSetting]];
+        //donateSetting.imageName = @"29-heart.png";
+        OTRSetting *moreSetting = [[OTRSetting alloc] initWithTitle:MORE_WAYS_TO_HELP_STRING() description:nil];
+        moreSetting.actionBlock = ^void(id sender) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Purchase" bundle:[OTRAssets resourcesBundle]];
+            UIViewController *moreVC = [storyboard instantiateViewControllerWithIdentifier:@"moreWaysToHelp"];
+            UIViewController *sourceVC = sender;
+            if (![sender isKindOfClass:[UIViewController class]]) {
+                return;
+            }
+            [sourceVC presentViewController:moreVC animated:YES completion:nil];
+        };
+        OTRSettingsGroup *donateGroup = [[OTRSettingsGroup alloc] initWithTitle:DONATE_STRING() settings:@[donateSetting, moreSetting]];
         [settingsGroups addObject:donateGroup];
     }
     
