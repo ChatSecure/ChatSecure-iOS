@@ -185,15 +185,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 return;
             }
             OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)obj;
-            XMPPJID *jid = xmppAccount.bareJID;
-            XMPPJID *vcardJid = xmppAccount.vCardTemp.jid;
-            if (!jid) {
-                return;
-            }
-            if ([OTRServerDeprecation isDeprecatedWithServer:jid.domain]) {
-                if (vcardJid && ![vcardJid isEqualToJID:jid options:XMPPJIDCompareBare]) {
-                    return; // Already in the migration process
-                }
+            if ([xmppAccount needsMigration]) {
                 needsMigration = xmppAccount;
                 *stop = YES;
             }

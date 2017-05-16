@@ -16,6 +16,7 @@
 #import "OTRLog.h"
 #import "OTRXMPPManager_Private.h"
 #import "OTRAccountMigrator.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const kSpamYourContactsTag = @"kSpamYourContactsTag";
 
@@ -93,6 +94,10 @@ typedef NS_ENUM(NSInteger, MigrationStatus) {
     __weak typeof(self)weakSelf = self;
     [self.migrator migrateWithCompletion:^(BOOL success, NSError * _Nullable error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
+        if (success) {
+            // Remember migration, at least for this session
+            [self.oldAccount setHasMigrated:YES];
+        }
         [strongSelf onMigrationComplete:success];
         [super handleSuccessWithNewAccount:newAccount sender:sender];
     }];
