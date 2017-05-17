@@ -42,7 +42,7 @@
         }];
     }];
     if (jid) {
-        [OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint];
+        [OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint buddyAddedCallback:nil];
     }
     
     //send subscription request to JID
