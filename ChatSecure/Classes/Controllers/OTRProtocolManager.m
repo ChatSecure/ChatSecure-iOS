@@ -36,6 +36,7 @@
 @import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 
 @interface OTRProtocolManager ()
 @property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
@@ -260,7 +261,7 @@
     }];
 }
 
-+ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint {
++ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint buddyAddedCallback:(nullable void (^)(OTRBuddy *buddy))buddyAddedCallback {
     NSParameterAssert(jid);
     if (!jid) { return; }
     NSString *jidString = jid.bare;
@@ -293,15 +294,39 @@
                 title = account.username;
             }
             UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                OTRBuddy *buddy = [[OTRBuddy alloc] init];
-                buddy.username = jidString;
-                [protocol addBuddy:buddy];
+                OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                
+                __block OTRXMPPBuddy *buddy = nil;
+                __block BOOL handled = NO;
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:jidString withAccountUniqueId:account.uniqueId transaction:transaction];
+                    if (!buddy) {
+                        buddy = [[OTRXMPPBuddy alloc] init];
+                        buddy.username = jidString;
+                        buddy.accountUniqueId = account.uniqueId;
+                    }
+                    [buddy saveWithTransaction:transaction];
+                    
+                    // Check if we already have a subscription request from this user
+                    OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:account.uniqueId transaction:transaction];
+                    if (presenceRequest != nil) {
+                        // We have an incoming subscription request, just answer that!
+                        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+                        [presenceRequest removeWithTransaction:transaction];
+                        handled = YES;
+                    }
+                }];
+                if (!handled) {
+                    [manager addBuddy:buddy];
+                }
                 /* TODO OTR fingerprint verificaction
                  if (otrFingerprint) {
                  // We are missing a method to add fingerprint to trust store
                  [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
                  }*/
+                if (buddyAddedCallback != nil) {
+                    buddyAddedCallback(buddy);
+                }
             }];
             [alert addAction:action];
         }

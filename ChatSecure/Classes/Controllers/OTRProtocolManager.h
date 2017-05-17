@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendMessage:(OTROutgoingMessage *)message;
 
 /** Shows UI to process an invite. Probably could be better handled somewhere else. */
-+ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint;
++ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint buddyAddedCallback:(nullable void (^)(OTRBuddy *buddy))buddyAddedCallback;
 
 + (instancetype)sharedInstance; // Singleton method
 
