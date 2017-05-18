@@ -25,7 +25,7 @@ public extension YapDatabase {
         
         let options = YapDatabaseViewOptions()
         options.allowedCollections = YapWhitelistBlacklist(whitelist: whiteList)
-        let view = YapDatabaseView(grouping: grouping, sorting: sorting, versionTag: version, options: options)
+        let view = YapDatabaseAutoView(grouping: grouping, sorting: sorting, versionTag: version, options: options)
         self.asyncRegister(view, withName: name.name(), completionQueue: completionQueue, completionBlock: completionBlock)
     }
     

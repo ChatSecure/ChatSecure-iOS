@@ -26,14 +26,14 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
-  - CocoaAsyncSocket (7.6.0)
-  - CocoaLumberjack (3.1.0):
-    - CocoaLumberjack/Default (= 3.1.0)
-    - CocoaLumberjack/Extensions (= 3.1.0)
-  - CocoaLumberjack/Default (3.1.0)
-  - CocoaLumberjack/Extensions (3.1.0):
+  - CocoaAsyncSocket (7.6.1)
+  - CocoaLumberjack (3.2.0):
+    - CocoaLumberjack/Default (= 3.2.0)
+    - CocoaLumberjack/Extensions (= 3.2.0)
+  - CocoaLumberjack/Default (3.2.0)
+  - CocoaLumberjack/Extensions (3.2.0):
     - CocoaLumberjack/Default
-  - CocoaLumberjack/Swift (3.1.0):
+  - CocoaLumberjack/Swift (3.2.0):
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
@@ -153,9 +153,6 @@ PODS:
   - QRCodeReaderViewController (4.0.2)
   - Reachability (3.2)
   - SAMKeychain (1.5.2)
-  - SignalProtocolC (2.3.1)
-  - SignalProtocolObjC (1.0.0):
-    - SignalProtocolC (~> 2.3.1)
   - SQLCipher (3.4.1):
     - SQLCipher/standard (= 3.4.1)
   - SQLCipher/common (3.4.1)
@@ -171,56 +168,67 @@ PODS:
     - CocoaLumberjack
     - KissXML (~> 5.2.0)
     - libidn (~> 1.33.0)
-  - YapDatabase/SQLCipher (2.9.3):
-    - YapDatabase/SQLCipher/Core (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions (= 2.9.3)
-  - YapDatabase/SQLCipher/Core (2.9.3):
+  - YapDatabase/SQLCipher (3.0):
+    - YapDatabase/SQLCipher/Core (= 3.0)
+    - YapDatabase/SQLCipher/Extensions (= 3.0)
+  - YapDatabase/SQLCipher/Core (3.0):
     - CocoaLumberjack
     - SQLCipher (>= 3.4.0)
-  - YapDatabase/SQLCipher/Extensions (2.9.3):
+  - YapDatabase/SQLCipher/Extensions (3.0):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/ActionManager (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.9.3)
-    - YapDatabase/SQLCipher/Extensions/Views (= 2.9.3)
-  - YapDatabase/SQLCipher/Extensions/ActionManager (2.9.3):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/AutoView (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/ManualView (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 3.0)
+    - YapDatabase/SQLCipher/Extensions/View (= 3.0)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (3.0):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/CloudKit (2.9.3):
+    - YapDatabase/SQLCipher/Extensions/AutoView
+  - YapDatabase/SQLCipher/Extensions/AutoView (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.9.3):
+    - YapDatabase/SQLCipher/Extensions/View
+  - YapDatabase/SQLCipher/Extensions/CloudCore (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.0):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/FilteredView (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Relationships (2.9.3):
+    - YapDatabase/SQLCipher/Extensions/View
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/Hooks (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResults (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/ManualView (3.0):
     - YapDatabase/SQLCipher/Core
+    - YapDatabase/SQLCipher/Extensions/View
+  - YapDatabase/SQLCipher/Extensions/Relationships (3.0):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (3.0):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/SearchResultsView (3.0):
+    - YapDatabase/SQLCipher/Core
+    - YapDatabase/SQLCipher/Extensions/AutoView
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
-    - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Views (2.9.3):
+  - YapDatabase/SQLCipher/Extensions/View (3.0):
     - YapDatabase/SQLCipher/Core
-  - YapTaskQueue/SQLCipher (0.2.0):
-    - YapDatabase/SQLCipher (~> 2.9)
+  - YapTaskQueue/SQLCipher (0.3.0):
+    - YapDatabase/SQLCipher (~> 3.0)
   - ZXingObjC (3.2.1):
     - ZXingObjC/All (= 3.2.1)
   - ZXingObjC/All (3.2.1)
@@ -233,8 +241,8 @@ DEPENDENCIES:
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - CocoaAsyncSocket (~> 7.6.0)
-  - CocoaLumberjack (~> 3.1.0)
-  - CocoaLumberjack/Swift (~> 3.1.0)
+  - CocoaLumberjack (~> 3.2.0)
+  - CocoaLumberjack/Swift (~> 3.2.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - FormatterKit/TimeIntervalFormatter (~> 1.8.2)
   - GCDWebServer/CocoaLumberjack (from `https://github.com/ChatSecure/GCDWebServer.git`, branch `kdbertel-CocoaLumberjack3`)
@@ -259,15 +267,14 @@ DEPENDENCIES:
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
   - SAMKeychain (~> 1.5)
-  - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TTTAttributedLabel (~> 2.0)
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 1.2)
   - XLForm (~> 3.3)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (from `https://github.com/ChatSecure/YapDatabase.git`, branch `cocoalumberjack3`)
-  - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `0.2.0-escaping-closure`)
+  - YapDatabase/SQLCipher (~> 3.0)
+  - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `yap3`)
   - ZXingObjC (~> 3.0)
 
 EXTERNAL SOURCES:
@@ -295,15 +302,10 @@ EXTERNAL SOURCES:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
-  SignalProtocolObjC:
-    :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
-  YapDatabase:
-    :branch: cocoalumberjack3
-    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
-    :branch: 0.2.0-escaping-closure
+    :branch: yap3
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 CHECKOUT OPTIONS:
@@ -319,11 +321,8 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
-  YapDatabase:
-    :commit: c25684304549d5f81908cdb15bbf944922f10e21
-    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
-    :commit: efcdffc99f1547843f39ead63c82a6aabb7bca75
+    :commit: d784806de99de76372418ecfaf9fc94de5a1412d
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
@@ -333,8 +332,8 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
-  CocoaAsyncSocket: b9d5589f07baf9de8f34cc25abd4fcba28f13805
-  CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
+  CocoaAsyncSocket: 7eadd3f59e1a6c84e2aefc93e9ff7b55156fe174
+  CocoaLumberjack: 9b4aed7073d242f29cc2f62068d995faf67f703a
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
   GCDWebServer: 633c3cd8db5cab3da5f6b39bd9275faba52c6b9c
@@ -362,8 +361,6 @@ SPEC CHECKSUMS:
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 1865333198217411f35327e8da61b43de79b635b
-  SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
-  SignalProtocolObjC: f5f0c7dcbedf21490b7ec190b6dc5103910acb75
   SQLCipher: 43d12c0eb9c57fb438749618fc3ce0065509a559
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
@@ -371,10 +368,10 @@ SPEC CHECKSUMS:
   VTAcknowledgementsViewController: e1de80f2c0ce31cc7e1c6f1c8aaeec2770371f09
   XLForm: d5c391dfc62865927b5bcab0a5a0dbfb3e02b0ec
   XMPPFramework: 164ed2ce99e3eb2f358e9f5ca5eeaa8d75339fde
-  YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
-  YapTaskQueue: f5d60946ffa289e228faf8411bf53cf90cfa7ead
+  YapDatabase: 0cef6c79948169c924ae325d430ffcfa8a5231c2
+  YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: 4b36c3890db7f83bb7bf599f2a24a4b449cda1fc
+PODFILE CHECKSUM: 96c89daba1c91ef0ad46e3178ba6c64d4f170e46
 
 COCOAPODS: 1.2.1

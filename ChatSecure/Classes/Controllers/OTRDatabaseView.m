@@ -131,7 +131,7 @@ NSString *OTRPushAccountGroup = @"Account";
     NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], [OTRXMPPPresenceSubscriptionRequest collection], nil];
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
     
-    YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
+    YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
                                                                    versionTag:@"7"
                                                                       options:options];
@@ -188,7 +188,7 @@ NSString *OTRPushAccountGroup = @"Account";
     options.isPersistent = YES;
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRAccount collection]]];
     
-    YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
+    YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
                                                                    versionTag:@"2"
                                                                       options:options];
@@ -227,7 +227,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     
     
-    YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
+    YapDatabaseAutoView *view = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
                                                            versionTag:@"1"
                                                               options:options];
@@ -304,7 +304,7 @@ NSString *OTRPushAccountGroup = @"Account";
     options.isPersistent = YES;
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRBuddy collection]]];
     
-    YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
+    YapDatabaseAutoView *view = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
                                                            versionTag:@"8"
                                                               options:options];
@@ -367,7 +367,7 @@ NSString *OTRPushAccountGroup = @"Account";
     options.isPersistent = YES;
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRXMPPPresenceSubscriptionRequest collection]]];
     
-    YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
+    YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
                                                                    versionTag:@"1"
                                                                       options:options];

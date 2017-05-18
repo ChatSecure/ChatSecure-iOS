@@ -21,14 +21,14 @@ abstract_target 'ChatSecureCorePods' do
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
-  pod "CocoaLumberjack", '~> 3.1.0'
+  pod "CocoaLumberjack", '~> 3.2.0'
   pod 'KSCrash', '~> 1.15.3'
   pod 'MBProgressHUD', '~> 1.0'
   pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  #pod 'YapDatabase/SQLCipher', '~> 2.9'
+  pod 'YapDatabase/SQLCipher', '~> 3.0'
   #pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
-  pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'cocoalumberjack3'
+  # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'cocoalumberjack3'
 
 
   pod 'Mantle', '~> 2.0'
@@ -45,7 +45,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'uservoice-iphone-sdk', '~> 3.2'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
-  pod 'CocoaLumberjack/Swift', '~> 3.1.0'
+  pod 'CocoaLumberjack/Swift', '~> 3.2.0'
   # We need a commit from next release
   #pod 'CocoaAsyncSocket', '~> 7.4'
   pod 'CocoaAsyncSocket', '~> 7.6.0'
@@ -75,12 +75,12 @@ abstract_target 'ChatSecureCorePods' do
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
-  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => '0.2.0-escaping-closure'
+  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
   # pod 'YapTaskQueue/SQLCipher', '~> 0.2' # Waiting on @escaping fix upstream
 
   # Submodules
 
-  pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
+  # pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
