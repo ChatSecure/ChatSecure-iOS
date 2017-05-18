@@ -12,7 +12,7 @@
 
 #pragma MARK - OTRMessageProtocol
 
-- (BOOL)messageIncoming
+- (BOOL)isMessageIncoming
 {
     return YES;
 }
@@ -26,7 +26,7 @@
     return security;
 }
 
-- (BOOL)messageRead
+- (BOOL)isMessageRead
 {
     return self.read;
 }

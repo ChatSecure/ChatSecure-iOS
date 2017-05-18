@@ -58,7 +58,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func threadCollection() -> String {
-        return OTRXMPPRoom.collection()
+        return OTRXMPPRoom.collection
     }
     
     public func threadAccountIdentifier() -> String {

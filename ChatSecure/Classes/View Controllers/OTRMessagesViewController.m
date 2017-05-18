@@ -691,7 +691,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if (![self isMessageTrusted:message]) {
         title = UNTRUSTED_DEVICE_STRING();
-        if ([message messageIncoming]) {
+        if ([message isMessageIncoming]) {
             alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING();
         } else {
             alertMessage = UNTRUSTED_DEVICE_SENT_STRING();
@@ -983,7 +983,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         id <OTRMessageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
         id <OTRMessageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
         
-        NSTimeInterval timeDifference = [[currentMessage date] timeIntervalSinceDate:[previousMessage date]];
+        NSTimeInterval timeDifference = [[currentMessage messageDate] timeIntervalSinceDate:[previousMessage messageDate]];
         if (timeDifference > kOTRMessageSentDateShowTimeInterval) {
             showDate = YES;
         }
@@ -1183,7 +1183,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
     
     UIColor *textColor = nil;
-    if ([message messageIncoming]) {
+    if ([message isMessageIncoming]) {
         textColor = [UIColor blackColor];
     }
     else {
@@ -1386,7 +1386,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     JSQMessagesBubbleImage *image = nil;
-    if ([message messageIncoming]) {
+    if ([message isMessageIncoming]) {
         image = self.incomingBubbleImage;
     }
     else {
@@ -1406,7 +1406,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([message messageError] || ![self isMessageTrusted:message]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
     }
-    else if ([message messageIncoming]) {
+    else if ([message isMessageIncoming]) {
         __block OTRBuddy *buddy = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             buddy = [self buddyWithTransaction:transaction];
@@ -1436,7 +1436,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([self showDateAtIndexPath:indexPath]) {
         id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
-        NSDate *date = [message date];
+        NSDate *date = [message messageDate];
         if (date != nil) {
             [text appendAttributedString: [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:date]];
         }
@@ -1682,7 +1682,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         //Get last message and test if isIncoming
         NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
         id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-        if ([lastMessage messageIncoming]) {
+        if ([lastMessage isMessageIncoming]) {
             [self finishReceivingMessage];
         } else {
             // We can't use finishSendingMessage here because it might

@@ -126,7 +126,7 @@
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBaseMessage *message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (!finalMessage ||    [message.date compare:finalMessage.date] == NSOrderedDescending) {
+        if (!finalMessage ||    [message.messageDate compare:finalMessage.messageDate] == NSOrderedDescending) {
             finalMessage = (id <OTRMessageProtocol>)message;
         }
         

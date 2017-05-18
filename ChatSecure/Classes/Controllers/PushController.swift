@@ -362,13 +362,13 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
     
     open func tokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
-        guard let buddy = transaction.object(forKey: buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
+        guard let buddy = transaction.object(forKey: buddyKey, inCollection: OTRBuddy.collection) as? OTRBuddy else {
             throw NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
         }
         
         var tokens: [TokenContainer] = []
         if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
-            relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), using: { (edge, stop) -> Void in
+            relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection, using: { (edge, stop) -> Void in
                 
                 if let tokenContainer = transaction.object(forKey: edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
                     if tokenContainer.accountKey != nil && createdByThisAccount {

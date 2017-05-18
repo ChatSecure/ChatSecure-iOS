@@ -231,9 +231,9 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
             if ([message messageKey].length) {
                 [dict setObject:[message messageKey] forKey:OTRYapDatabaseMessageIdSecondaryIndexColumnName];
             }
-            [dict setObject:@([message messageRead]) forKey:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName];
-            if ([message threadId]) {
-                [dict setObject:[message threadId] forKey:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
+            [dict setObject:@(message.isMessageRead) forKey:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName];
+            if (message.threadId) {
+                [dict setObject:message.threadId forKey:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
             }
         }
     }];

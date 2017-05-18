@@ -82,8 +82,8 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
         return buddyKey
     }
 
-    override open static func collection() -> String {
-        return OTRYapMessageSendAction.collection()
+    override open static var collection: String {
+        return OTRYapMessageSendAction.collection
     }
     
     /// The yap key of this item
@@ -93,7 +93,7 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
     
     /// The yap collection of this item
     public func yapCollection() -> String {
-        return type(of: self).collection()
+        return type(of: self).collection
     }
     
     /// The queue that this item is in.
@@ -113,7 +113,7 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
 
 open class OTRYapAddBuddyAction :OTRYapBuddyAction, YapDatabaseRelationshipNode {
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
-        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.buddyActionEdgeName.name(), destinationKey: self.buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: .deleteSourceIfDestinationDeleted)
+        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.buddyActionEdgeName.name(), destinationKey: self.buddyKey, collection: OTRBuddy.collection, nodeDeleteRules: .deleteSourceIfDestinationDeleted)
         return [edge]
     }
 }

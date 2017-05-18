@@ -253,9 +253,9 @@ public class MessageQueueHandler:NSObject {
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus == .connected) {
             
-            switch message.messageSecurity() {
+            switch message.messageSecurity {
             case .plaintext:
-                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity(), completion: completion)
+                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
                 OTRProtocolManager.sharedInstance().send(message)
                 break
             case .plaintextWithOTR:
@@ -498,7 +498,7 @@ extension MessageQueueHandler {
         //We're connected now we need to check encryption requirements
         let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
         let otrKitSend = {
-            self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection(), messageSecurity:message.messageSecurity(), completion: completion)
+            self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection, messageSecurity:message.messageSecurity, completion: completion)
             otrKit.encodeMessage(text, tlvs: nil, username:buddyUsername , accountName: accountUsername, protocol: accountProtocolStrintg, tag: message)
         }
         
@@ -508,7 +508,7 @@ extension MessageQueueHandler {
             //Timeout at some point waiting for OTR session
             DispatchQueue.main.async {
                 let timer = Timer.scheduledTimer(timeInterval: self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddyKey, repeats: false)
-                self.waitingForBuddy(buddyKey, messageKey: message.uniqueId, messageCollection: OTROutgoingMessage.collection(),messageSecurity:message.messageSecurity(), timer:timer, completion: completion)
+                self.waitingForBuddy(buddyKey, messageKey: message.uniqueId, messageCollection: OTROutgoingMessage.collection,messageSecurity:message.messageSecurity, timer:timer, completion: completion)
                 otrKit.initiateEncryption(withUsername: buddyUsername, accountName: accountUsername, protocol: accountProtocolStrintg)
             }
         } else {
@@ -534,7 +534,7 @@ extension MessageQueueHandler {
             completion(true, 0.0)
             return
         }
-        self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection(), messageSecurity:message.messageSecurity(), completion: completion)
+        self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection, messageSecurity:message.messageSecurity, completion: completion)
         
         
         
@@ -554,7 +554,7 @@ extension MessageQueueHandler {
                     message.save(with: transaction)
                 })
                 
-                if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection()) {
+                if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection) {
                     //Even though we were not succesfull in sending a message. The action needs to be removed from the queue so the next message can be handled.
                     messageInfo.completion(true, 0.0)
                 }

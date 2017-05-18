@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** This will fetch an updated instance of the object. If nil, it means it was deleted or not present in the db. */
 - (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 
-+ (nonnull NSString *)collection;
+@property (class, readonly) NSString *collection;
 
 + (nullable instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
 

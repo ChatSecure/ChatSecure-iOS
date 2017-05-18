@@ -105,11 +105,11 @@ NSString *OTRPushAccountGroup = @"Account";
                 
                 // Assume nil dates indicate a lastMessageId of ""
                 // indicating that we want to force to the top
-                NSDate *date1 = [message1 date];
+                NSDate *date1 = [message1 messageDate];
                 if (!date1) {
                     date1 = [NSDate date];
                 }
-                NSDate *date2 = [message2 date];
+                NSDate *date2 = [message2 messageDate];
                 if (!date2) {
                     date2 = [NSDate date];
                 }
@@ -215,7 +215,7 @@ NSString *OTRPushAccountGroup = @"Account";
             id <OTRMessageProtocol> message1 = (id <OTRMessageProtocol>)object1;
             id <OTRMessageProtocol> message2 = (id <OTRMessageProtocol>)object2;
             
-            return [[message1 date] compare:[message2 date]];
+            return [[message1 messageDate] compare:[message2 messageDate]];
         }
         return NSOrderedSame;
     }];

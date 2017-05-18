@@ -33,7 +33,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     //MARK: YapDatabaseRelationshipNode Methods
     open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         if let roomID = self.roomUniqueId {
-            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection(), destinationKey: roomID, collection: OTRXMPPRoom.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
+            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection, destinationKey: roomID, collection: OTRXMPPRoom.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             return [relationship]
         }
         return nil

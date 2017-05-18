@@ -91,12 +91,12 @@
 #pragma - mark OTRMessage Protocol methods
 
 // Override in subclass
-- (BOOL)messageIncoming {
+- (BOOL)isMessageIncoming {
     return YES;
 }
 
 // Override in subclass
-- (BOOL)messageRead {
+- (BOOL)isMessageRead {
     return YES;
 }
 
@@ -127,6 +127,10 @@
 
 - (NSError *)messageError {
     return self.error;
+}
+
+- (NSString*) messageText {
+    return self.text;
 }
 
 - (NSString *)remoteMessageId
@@ -178,7 +182,7 @@
 + (id<OTRMessageProtocol>)messageForMessageId:(NSString *)messageId incoming:(BOOL)incoming transaction:(YapDatabaseReadTransaction *)transaction {
     __block id<OTRMessageProtocol> deliveredMessage = nil;
     [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
-        if ([message messageIncoming] == incoming) {
+        if ([message isMessageIncoming] == incoming) {
             //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
             deliveredMessage = message;
             *stop = YES;

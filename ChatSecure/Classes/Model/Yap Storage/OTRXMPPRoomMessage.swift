@@ -34,7 +34,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var displayName:String?
     open var state:RoomMessageState = .received
     open var messageText:String?
-    open var messageDate:Date?
+    open var messageDate = Date.distantPast
     open var xmppId:String? = UUID().uuidString
     open var read = true
     
@@ -52,7 +52,7 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         
         if let roomID = self.roomUniqueId {
-            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomMessage.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomMessage.collection(), destinationKey: roomID, collection: OTRXMPPRoom.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
+            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomMessage.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomMessage.collection, destinationKey: roomID, collection: OTRXMPPRoom.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             return [relationship]
         }
         return nil
@@ -60,43 +60,46 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
-    
     //MARK: OTRMessageProtocol
     
-    public func messageKey() -> String {
+    public var isMessageRead: Bool {
+        return self.read
+    }
+    
+    public var messageKey: String {
         return self.uniqueId
     }
     
-    public func messageCollection() -> String {
-        return type(of: self).collection()
+    public var messageCollection: String {
+        return type(of: self).collection
     }
     
-    public func threadId() -> String? {
+    public var threadId: String? {
         return self.roomUniqueId
     }
     
-    public func messageIncoming() -> Bool {
+    public var isMessageIncoming: Bool {
         return self.state.incoming()
     }
     
-    public func messageMediaItemKey() -> String? {
+    public var messageMediaItemKey: String? {
         return nil
     }
     
-    public func messageError() -> Error? {
+    public var messageError: Error? {
         return nil
     }
     
-    public func messageSecurity() -> OTRMessageTransportSecurity {
+    public var messageSecurity: OTRMessageTransportSecurity {
         return .plaintext;
     }
     
-    public func remoteMessageId() -> String? {
+    public var remoteMessageId: String? {
         return self.xmppId
     }
     
     public func threadOwner(with transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
-        guard let key = self.threadId() else {
+        guard let key = self.threadId else {
             return nil
         }
         return OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction)
@@ -113,7 +116,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
             if (self.state.incoming()) {
                 result = self.senderJID
             } else {
-                guard let key = self.threadId(), let thread = transaction.object(forKey: key, inCollection: OTRXMPPRoom.collection()) as? OTRXMPPRoom else {
+                guard let key = self.threadId, let thread = transaction.object(forKey: key, inCollection: OTRXMPPRoom.collection) as? OTRXMPPRoom else {
                     return
                 }
                 result = thread.accountUniqueId
@@ -127,10 +130,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func date() -> Date {
-        guard let date = self.messageDate else {
-            return Date.distantPast
-        }
-        return date
+        return self.messageDate
     }
     
     public func isMediaMessage() -> Bool {

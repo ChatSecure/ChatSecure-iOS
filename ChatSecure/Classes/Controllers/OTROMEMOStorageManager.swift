@@ -74,9 +74,9 @@ open class OTROMEMOStorageManager {
         self.databaseConnection.read { (transaction) in
             if let buddy = OTRBuddy.fetch(withUsername: username, withAccountUniqueId: self.accountKey, transaction: transaction) {
                 if let trust = trusted {
-                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection(), trusted: trust, transaction: transaction)
+                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection, trusted: trust, transaction: transaction)
                 } else {
-                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection(), transaction: transaction)
+                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection, transaction: transaction)
                 }
             }
         }
@@ -113,12 +113,12 @@ open class OTROMEMOStorageManager {
             // Instead of fulling removing devices, mark them as removed for historical purposes
             devicesToRemove.forEach({ (deviceId) in
                 let deviceKey = OTROMEMODevice.yapKey(withDeviceId: deviceId, parentKey: parentYapKey, parentCollection: parentYapCollection)
-                guard var device = transaction.object(forKey: deviceKey, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice else {
+                guard var device = transaction.object(forKey: deviceKey, inCollection: OTROMEMODevice.collection) as? OTROMEMODevice else {
                     return
                 }
                 device = device.copy() as! OTROMEMODevice
                 device.trustLevel = .removed
-                transaction.setObject(device, forKey: device.uniqueId, inCollection: OTROMEMODevice.collection())
+                transaction.setObject(device, forKey: device.uniqueId, inCollection: OTROMEMODevice.collection)
             })
             
             devicesToAdd.forEach({ (deviceId) in
@@ -166,7 +166,7 @@ open class OTROMEMOStorageManager {
                 buddy?.save(with: transaction)
             }
             if let bud = buddy {
-                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: type(of: bud).collection(), transaction: transaction)
+                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: type(of: bud).collection, transaction: transaction)
             }
             
         }

@@ -59,7 +59,7 @@ open class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
     open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         var edges:[YapDatabaseRelationshipEdge] = []
         if let buddyKey = self.buddyKey {
-            let buddyEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
+            let buddyEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             edges.append(buddyEdge)
         }
         

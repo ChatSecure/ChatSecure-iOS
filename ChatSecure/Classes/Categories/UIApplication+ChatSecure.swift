@@ -29,7 +29,7 @@ public extension UIApplication {
         let threadName = threadOwner.threadName()
         
         var text = "\(threadName)"
-        if let msgTxt = message.text() {
+        if let msgTxt = message.messageText {
             if let rawMessageString = msgTxt.convertingHTMLToPlainText() {
                 text += ": \(rawMessageString)"
             }

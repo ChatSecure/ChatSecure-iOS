@@ -20,7 +20,7 @@ extension OTRYapMessageSendAction:  YapTaskQueueAction {
     
     /// The yap collection of this item
     public func yapCollection() -> String {
-        return type(of: self).collection()
+        return type(of: self).collection
     }
     
     /// The queue that this item is in.

@@ -21,54 +21,54 @@ open class PushMessage: OTRYapDatabaseObject {
     open var pushDate:Date = Date()
     
     ///Send it to the same collection of other messages
-    open class override func collection() -> String {
-        return OTRBaseMessage.collection()
+    open class override var collection: String {
+        return OTRBaseMessage.collection
     }
     
 }
 
 extension PushMessage: OTRMessageProtocol {
-    public func messageKey() -> String {
+    public var messageKey: String {
         return self.uniqueId
     }
     
-    public func messageCollection() -> String {
-        return OTRBaseMessage.collection()
+    public var messageCollection: String {
+        return OTRBaseMessage.collection
     }
     
-    public func threadId() -> String? {
+    public var threadId: String? {
         return self.buddyKey
     }
     
-    public func messageIncoming() -> Bool {
+    public var isMessageIncoming: Bool {
         return false
     }
     
-    public func messageMediaItemKey() -> String? {
+    public var messageMediaItemKey: String? {
         return nil
     }
     
-    public func messageError() -> Error? {
+    public var messageError: Error? {
         return self.error
     }
     
-    public func messageSecurity() -> OTRMessageTransportSecurity {
+    public var messageSecurity: OTRMessageTransportSecurity {
         return .plaintext
     }
     
-    public func messageRead() -> Bool {
+    public var isMessageRead: Bool {
         return true
     }
     
-    public func date() -> Date {
+    public var messageDate: Date {
         return self.pushDate
     }
     
-    public func text() -> String? {
+    public var messageText: String? {
         return nil
     }
     
-    public func remoteMessageId() -> String? {
+    public var remoteMessageId: String? {
         return nil
     }
     
@@ -85,7 +85,7 @@ extension PushMessage: YapDatabaseRelationshipNode {
         
         if let destinationKey = self.buddyKey {
             let name = "buddy"
-            return [YapDatabaseRelationshipEdge(name: name, destinationKey: destinationKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)]
+            return [YapDatabaseRelationshipEdge(name: name, destinationKey: destinationKey, collection: OTRBuddy.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)]
         }
         return nil
         
@@ -107,6 +107,14 @@ extension PushMessage {
 }
 
 extension PushMessage: JSQMessageData {
+    public func text() -> String {
+        return self.messageText ?? ""
+    }
+    
+    public func date() -> Date {
+        return self.messageDate
+    }
+
     public func senderId() -> String! {
         let account = self.account()
         return account?.uniqueId ?? ""

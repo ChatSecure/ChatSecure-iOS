@@ -51,12 +51,12 @@
 
 #pragma MARK - OTRMessageProtocol 
 
-- (BOOL)messageIncoming
+- (BOOL)isMessageIncoming
 {
     return NO;
 }
 
-- (BOOL)messageRead
+- (BOOL)isMessageRead
 {
     return YES;
 }

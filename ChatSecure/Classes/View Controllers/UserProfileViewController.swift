@@ -86,7 +86,7 @@ open class UserProfileViewController: XLFormViewController {
         }
         OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
             for viewedDevice in devicesToSave {
-                if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection()) as? OTROMEMODevice {
+                if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection) as? OTROMEMODevice {
                     device = device.copy() as! OTROMEMODevice
                     device.trustLevel = viewedDevice.trustLevel
                     
@@ -115,7 +115,7 @@ open class UserProfileViewController: XLFormViewController {
             case let device as OTROMEMODevice:
                 if let myBundle = self.signalCoordinator?.fetchMyBundle() {
                     // This is only used to compare so we don't allow delete UI on our device
-                    let thisDeviceYapKey = OTROMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: self.accountKey, parentCollection: OTRAccount.collection())
+                    let thisDeviceYapKey = OTROMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: self.accountKey, parentCollection: OTRAccount.collection)
                     if device.uniqueId != thisDeviceYapKey {
                         return true
                     }
@@ -169,7 +169,7 @@ open class UserProfileViewController: XLFormViewController {
         var hasDevices = false
         
         connection.read { (transaction: YapDatabaseReadTransaction) in
-            if OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection(), transaction: transaction).count > 0 {
+            if OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction).count > 0 {
                 hasDevices = true
             }
         }
@@ -251,7 +251,7 @@ open class UserProfileViewController: XLFormViewController {
             }
             
             OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in
-                guard var buddy = transaction.object(forKey: buddy.uniqueId, inCollection: type(of: buddy).collection()) as? OTRBuddy else {
+                guard var buddy = transaction.object(forKey: buddy.uniqueId, inCollection: type(of: buddy).collection) as? OTRBuddy else {
                     return
                 }
                 guard let account = buddy.account(with: transaction) else {
@@ -311,10 +311,10 @@ open class UserProfileViewController: XLFormViewController {
         guard let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() else {
             return form
         }
-        let thisDevice = OTROMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection(), publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
+        let thisDevice = OTROMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection, publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
         var ourDevices: [OTROMEMODevice] = []
         connection.read { (transaction: YapDatabaseReadTransaction) in
-            ourDevices = OTROMEMODevice.allDevices(forParentKey: account.uniqueId, collection: type(of: account).collection(), transaction: transaction)
+            ourDevices = OTROMEMODevice.allDevices(forParentKey: account.uniqueId, collection: type(of: account).collection, transaction: transaction)
         }
 
         
@@ -382,7 +382,7 @@ open class UserProfileViewController: XLFormViewController {
             theirSection.addFormRow(buddyRow)
             var theirDevices: [OTROMEMODevice] = []
             connection.read({ (transaction: YapDatabaseReadTransaction) in
-                theirDevices = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection(), transaction: transaction)
+                theirDevices = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
             })
             let theirFingerprints = allFingerprints.filter({ (fingerprint: OTRFingerprint) -> Bool in
                 return fingerprint.username == buddy.username &&

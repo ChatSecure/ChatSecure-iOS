@@ -52,7 +52,7 @@ public extension YapDatabase {
             }
             
             return date1.compare(date2)
-        }), version: "1", whiteList: [OTRXMPPRoomMessage.collection()], name: .unsentGroupMessagesViewName, completionQueue:completionQueue, completionBlock:completionBlock)
+        }), version: "1", whiteList: [OTRXMPPRoomMessage.collection], name: .unsentGroupMessagesViewName, completionQueue:completionQueue, completionBlock:completionBlock)
     }
     
     public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
@@ -82,6 +82,6 @@ public extension YapDatabase {
             return name1.localizedCompare(name2)
         }
         
-        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
 }

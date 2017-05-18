@@ -235,11 +235,11 @@ open class OTRSignalStorageManager: NSObject {
         if ourAccount?.username == signalAddress.name {
             
             parentKey = self.accountKey
-            parentCollection = OTRAccount.collection()
+            parentCollection = OTRAccount.collection
             
         } else if let buddy = OTRBuddy.fetch(withUsername: signalAddress.name, withAccountUniqueId: self.accountKey, transaction: transaction) {
             parentKey = buddy.uniqueId
-            parentCollection = OTRBuddy.collection()
+            parentCollection = OTRBuddy.collection
         }
         
         guard let key = parentKey, let collection = parentCollection else {
@@ -283,7 +283,7 @@ extension OTRSignalStorageManager: SignalStore {
     public func deleteSessionRecord(for address: SignalAddress) -> Bool {
         let yapKey = OTRSignalSession.uniqueKey(forAccountKey: self.accountKey, name: address.name, deviceId: address.deviceId)
         self.databaseConnection.readWrite { (transaction) in
-            transaction.removeObject(forKey: yapKey, inCollection: OTRSignalSession.collection())
+            transaction.removeObject(forKey: yapKey, inCollection: OTRSignalSession.collection)
         }
         return true
     }
@@ -307,7 +307,7 @@ extension OTRSignalStorageManager: SignalStore {
             })
             count = Int32(sessionKeys.count)
             for key in sessionKeys {
-                transaction.removeObject(forKey: key, inCollection: OTRSignalSession.collection())
+                transaction.removeObject(forKey: key, inCollection: OTRSignalSession.collection)
             }
         })
         return count
@@ -389,7 +389,7 @@ extension OTRSignalStorageManager: SignalStore {
     
     public func removeSignedPreKey(withId signedPreKeyId: UInt32) -> Bool {
         self.databaseConnection.readWrite { (transaction) in
-            transaction.removeObject(forKey: self.accountKey, inCollection: OTRSignalSignedPreKey.collection())
+            transaction.removeObject(forKey: self.accountKey, inCollection: OTRSignalSignedPreKey.collection)
         }
         return true
     }

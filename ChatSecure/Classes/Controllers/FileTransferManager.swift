@@ -304,7 +304,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     public func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTROutgoingMessage) {
         var shouldEncrypt = false
-        switch message.messageSecurity() {
+        switch message.messageSecurity {
         case .OMEMO, .OTR:
             shouldEncrypt = true
         case .invalid, .plaintext, .plaintextWithOTR:
@@ -333,7 +333,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     private func queueOutgoingMessage(message: OTROutgoingMessage) {
-        let sendAction = OTRYapMessageSendAction(messageKey: message.uniqueId, messageCollection: message.messageCollection(), buddyKey: message.buddyUniqueId, date: message.date)
+        let sendAction = OTRYapMessageSendAction(messageKey: message.uniqueId, messageCollection: message.messageCollection, buddyKey: message.buddyUniqueId, date: message.date)
         self.connection.readWrite { (transaction) in
             message.save(with: transaction)
             sendAction.save(with: transaction)
@@ -365,6 +365,17 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         servers = serversFromCapabilities(capabilities: capabilities)
     }
 }
+
+// MARK: - Scanning and downloading incoming media
+extension FileTransferManager {
+
+}
+
+extension OTRIncomingMessage {
+    
+}
+
+// MARK: - Extensions
 
 fileprivate struct HTTPServer {
     /// service jid for upload service
@@ -412,5 +423,45 @@ public extension XMLElement {
         }
         
         return maxSize
+    }
+}
+
+enum URLScheme: String {
+    case https = "https"
+    case aesgcm = "aesgcm"
+    static let downloadableSchemes: [URLScheme] = [.https, .aesgcm]
+}
+
+public extension String {
+    
+    /** Grab any URLs from a string */
+    public var urls: [URL] {
+        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
+            return []
+        }
+        var urls: [URL] = []
+        let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.characters.count))
+        for match in matches where match.resultType == .link {
+            if let url = match.url {
+                urls.append(url)
+            }
+        }
+        return urls
+    }
+    
+    /** Use this for extracting potentially downloadable URLs from a message. Currently checks for https:// and aesgcm:// */
+    public var downloadableURLs: [URL] {
+        return urlsMatchingSchemes(URLScheme.downloadableSchemes)
+    }
+    
+    fileprivate func urlsMatchingSchemes(_ schemes: [URLScheme]) -> [URL] {
+        let urls = self.urls.filter {
+            guard let scheme = $0.scheme else { return false }
+            for inScheme in schemes where inScheme.rawValue == scheme {
+                return true
+            }
+            return false
+        }
+        return urls
     }
 }

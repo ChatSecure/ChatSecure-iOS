@@ -103,11 +103,11 @@
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
     if (lastMessage.messageError != nil) {
-        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.text];
+        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.messageText];
     } else if (mediaItem) {
         self.conversationLabel.text = [self stringForMediaItem:mediaItem];
     } else {
-        self.conversationLabel.text = lastMessage.text;
+        self.conversationLabel.text = lastMessage.messageText;
     }
     if (unreadMessages > 0) {
         //unread message
@@ -119,7 +119,7 @@
     }
     self.dateLabel.textColor = self.nameLabel.textColor;
     
-    [self updateDateString:lastMessage.date];
+    [self updateDateString:lastMessage.messageDate];
 }
 
 - (NSString*) stringForMediaItem:(OTRMediaItem*)mediaItem {

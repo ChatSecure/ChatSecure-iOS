@@ -40,7 +40,7 @@ import SignalProtocolObjC
  `  */
     @objc public required init(accountYapKey:String,  databaseConnection:YapDatabaseConnection) throws {
         try self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
-        self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection(), databaseConnection: databaseConnection)
+        self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection, databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
         self.databaseConnection = databaseConnection
         self.outstandingXMPPStanzaResponseBlocks = [:]
@@ -76,7 +76,7 @@ import SignalProtocolObjC
      - parameter completion: The completion closure called on callbackQueue. If it successfully was able to fetch all the bundles or if it wasn't necessary. If there were no devices for this buddy it will also return flase
      */
     open func prepareSessionForBuddy(_ buddyYapKey:String, completion:@escaping (Bool) -> Void) {
-        self.prepareSession(buddyYapKey, yapCollection: OTRBuddy.collection(), completion: completion)
+        self.prepareSession(buddyYapKey, yapCollection: OTRBuddy.collection, completion: completion)
     }
     
     /**
@@ -156,7 +156,7 @@ import SignalProtocolObjC
      Check if we have valid sessions with our other devices and if not fetch their bundles and start sessions.
      */
     func prepareSessionWithOurDevices(_ completion:@escaping (_ success:Bool) -> Void) {
-        self.prepareSession(self.accountYapKey, yapCollection: OTRAccount.collection(), completion: completion)
+        self.prepareSession(self.accountYapKey, yapCollection: OTRAccount.collection, completion: completion)
     }
     
     fileprivate func encryptPayloadWithSignalForDevice(_ device:OTROMEMODevice, payload:Data) throws -> OMEMOKeyData? {
@@ -230,7 +230,7 @@ import SignalProtocolObjC
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: type(of: buddy).collection(), trusted: true).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: type(of: buddy).collection, trusted: true).map(encryptClosure).flatMap{ $0 }
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
@@ -334,7 +334,7 @@ import SignalProtocolObjC
             
             let remoteDevicesToRemove = devices.filter({ (device) -> Bool in
                 // Can only remove devices that belong to this account from the remote server.
-                return device.parentKey == accountKey && device.parentCollection == OTRAccount.collection()
+                return device.parentKey == accountKey && device.parentCollection == OTRAccount.collection
             })
             
             if( remoteDevicesToRemove.count > 0 ) {
@@ -442,8 +442,8 @@ import SignalProtocolObjC
                 databaseMessage.buddyUniqueId = buddy.uniqueId
                 
                 let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
-                let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection())
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection())
+                let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection)
+                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection)
                 if let id = innerMessage.elementID() {
                     databaseMessage.messageId = id
                 }

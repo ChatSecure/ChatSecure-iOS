@@ -13,47 +13,22 @@
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
 @protocol OTRThreadOwner;
 
-extern const struct OTRMessageAttributes {
-	__unsafe_unretained NSString * _Nonnull date;
-	__unsafe_unretained NSString * _Nonnull text;
-	__unsafe_unretained NSString * _Nonnull delivered;
-	__unsafe_unretained NSString * _Nonnull read;
-	__unsafe_unretained NSString * _Nonnull incoming;
-    __unsafe_unretained NSString * _Nonnull messageId;
-    __unsafe_unretained NSString * _Nonnull transportedSecurely;
-    __unsafe_unretained NSString * _Nonnull mediaItem;
-} OTRMessageAttributes;
-
-
-
-
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRMessageProtocol <NSObject>
 @required
-
-- (nonnull NSString *)messageKey;
-
-- (nonnull NSString *)messageCollection;
-
-- (nullable NSString *)threadId;
-
-- (BOOL)messageIncoming;
-
-- (nullable NSString *)messageMediaItemKey;
-
-- (nullable NSError *)messageError;
-
-- (OTRMessageTransportSecurity)messageSecurity;
-
-- (BOOL)messageRead;
-
-- (nonnull NSDate *)date;
-
-- (nullable NSString *)text;
-
-- (nullable NSString *)remoteMessageId;
+@property (nonatomic, readonly) NSString *messageKey;
+@property (nonatomic, readonly) NSString *messageCollection;
+@property (nonatomic, readonly, nullable) NSString *threadId;
+@property (nonatomic, readonly) BOOL isMessageIncoming;
+@property (nonatomic, readonly, nullable) NSString *messageMediaItemKey;
+@property (nonatomic, readonly, nullable) NSError *messageError;
+@property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
+@property (nonatomic, readonly) BOOL isMessageRead;
+@property (nonatomic, readonly) NSDate *messageDate;
+@property (nonatomic, readonly, nullable) NSString *messageText;
+@property (nonatomic, readonly, nullable) NSString *remoteMessageId;
 
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
-
 @end
 
 @interface OTRBaseMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
@@ -90,3 +65,4 @@ extern const struct OTRMessageAttributes {
  */
 + (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message;
 @end
+NS_ASSUME_NONNULL_END

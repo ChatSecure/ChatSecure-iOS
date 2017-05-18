@@ -48,7 +48,7 @@ import XMPPFramework
         }
         
         if let message = self.fetchMessage(messageId) {
-            self.delegate?.didSendMessage(message.messageKey(), messageCollection: message.messageCollection())
+            self.delegate?.didSendMessage(message.messageKey, messageCollection: message.messageCollection)
         }
     }
     
@@ -59,7 +59,7 @@ import XMPPFramework
         }
         
         if let message = self.fetchMessage(messageId) {
-            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error as NSError?)
+            self.delegate?.didFailToSendMessage(message.messageKey, messageCollection: message.messageCollection, error: error as NSError?)
         }
         
     }
