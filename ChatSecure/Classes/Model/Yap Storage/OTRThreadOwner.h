@@ -19,6 +19,13 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 
 @protocol OTRThreadOwner <NSObject>
 @required
+/** If thread should be hidden from main lists */
+@property (nonatomic, readwrite) BOOL isArchived;
+/** Whether or not notifications should be hidden. Computed by comparing current time to muteExpiration. */
+@property (nonatomic, readonly) BOOL isMuted;
+/** How long until the thread is unmuted. If nil, thread will be considered unmuted. */
+@property (nonatomic, strong, nullable) NSDate *muteExpiration;
+
 - (nonnull NSString *)threadName;
 - (nonnull NSString *)threadIdentifier;
 - (nonnull NSString *)threadCollection;
@@ -30,7 +37,6 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 - (BOOL)isGroupThread;
-
 
 @end
 

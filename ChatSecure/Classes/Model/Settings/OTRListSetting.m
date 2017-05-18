@@ -19,7 +19,7 @@
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             __strong typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf editValue];
         };

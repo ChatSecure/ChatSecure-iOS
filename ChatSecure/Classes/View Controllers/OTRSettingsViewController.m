@@ -257,7 +257,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
         OTRSettingActionBlock actionBlock = setting.actionBlock;
         if (actionBlock) {
-            actionBlock();
+            actionBlock(self);
         }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -300,7 +300,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
     }
-    OTRAccountDetailViewController *detailVC = [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+    OTRAccountDetailViewController *detailVC = [[OTRAppDelegate appDelegate].theme accountDetailViewControllerForAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];
@@ -367,31 +367,12 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-    NSURL *paypalURL = [OTRBranding paypalURL];
-    NSURL *bitcoinURL = [OTRBranding bitcoinURL];
-    
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    UIAlertAction *paypalAlertAction = [UIAlertAction actionWithTitle:@"PayPal" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [[UIApplication sharedApplication] openURL:paypalURL];
-    }];
-    
-    UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoin" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        [[UIApplication sharedApplication] openURL:bitcoinURL];
-    }];
-    
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    
-    [alertController addAction:paypalAlertAction];
-    [alertController addAction:bitcoinAlertAction];
-    [alertController addAction:cancelAlertAction];
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
-    
-    alertController.popoverPresentationController.sourceView = cell;
-    alertController.popoverPresentationController.sourceRect = cell.bounds;
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Purchase" bundle:[OTRAssets resourcesBundle]];
+    UIViewController *vc = [storyboard instantiateInitialViewController];
+    vc.modalPresentationStyle = UIModalPresentationFormSheet;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    nav.navigationBarHidden = YES;
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate

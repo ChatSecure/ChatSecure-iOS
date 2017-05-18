@@ -264,12 +264,20 @@
         }
     } else if ([resultURL otr_isInviteLink]) {
         NSURL *url = [NSURL URLWithString:result];
-        __block NSString *username = nil;
+        __block XMPPJID *jid = nil;
         __block NSString *fingerprint = nil;
-        [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
-            username = uName;
-            fingerprint = fPrint;
+        
+        NSString *otr = [OTRAccount fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
+        [url otr_decodeShareLink:^(XMPPJID * _Nullable inJid, NSArray<NSURLQueryItem*> * _Nullable queryItems) {
+            jid = inJid;
+            [queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.name isEqualToString:otr]) {
+                    fingerprint = obj.value;
+                    *stop = YES;
+                }
+            }];
         }];
+        NSString *username = jid.bare;
         if (username.length) {
             self.accountNameTextField.text = username;
         }

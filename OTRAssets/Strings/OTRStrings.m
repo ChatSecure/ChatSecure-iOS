@@ -10,6 +10,8 @@ NSString* ABOUT_VERSION_STRING() { return [OTRLanguageManager translatedString:@
 NSString* ACCOUNTS_STRING() { return [OTRLanguageManager translatedString:@"Accounts"]; }
 /** "Account", The string describing a buddy's account */
 NSString* ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Account"]; }
+/** "Active", segmented control value for active friends */
+NSString* ACTIVE_BUDDIES_STRING() { return [OTRLanguageManager translatedString:@"Active"]; }
 /** "Active", This will be displayed in the UI as 'Active 10m ago'  */
 NSString* ACTIVE_STRING() { return [OTRLanguageManager translatedString:@"Active"]; }
 /** "Add Buddy", The title for the view to add a buddy */
@@ -20,8 +22,14 @@ NSString* ADD_EXISTING_STRING() { return [OTRLanguageManager translatedString:@"
 NSString* ADD_STRING() { return [OTRLanguageManager translatedString:@"Add"]; }
 /** "Advanced", String to describe advanced set of settings */
 NSString* ADVANCED_STRING() { return [OTRLanguageManager translatedString:@"Advanced"]; }
+/** "Archive", Verb. action for archiving an old conversation */
+NSString* ARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
+/** "Archive", Noun. segmented control value for displaying archived conversations */
+NSString* ARCHIVE_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
 /** "Are you sure?", Shown to confirm destructive actions */
 NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
+/** "Audio Message", Text for media message summary */
+NSString* AUDIO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Audio Message"]; }
 /** "Available", Label in buddy list for users that are available */
 NSString* AVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Available"]; }
 /** "Away", Label in buddy list for users that are away */
@@ -98,6 +106,8 @@ NSString* DELETE_ACCOUNT_TITLE_STRING() { return [OTRLanguageManager translatedS
 NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Delete chats on disconnect"]; }
 /** "Auto-delete", Title for automatic conversation deletion setting */
 NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING() { return [OTRLanguageManager translatedString:@"Auto-delete"]; }
+/** "Delete", action button for deleting something */
+NSString* DELETE_STRING() { return [OTRLanguageManager translatedString:@"Delete"]; }
 /** "Delivered", Shows in the chat view when a message has been delivered */
 NSString* DELIVERED_STRING() { return [OTRLanguageManager translatedString:@"Delivered"]; }
 /** "Your donation will help fund the continued development of ChatSecure.", Message shown when about to donate */
@@ -160,6 +170,8 @@ NSString* HELP_TRANSLATE_STRING() { return [OTRLanguageManager translatedString:
 NSString* HOLD_TO_TALK_STRING() { return [OTRLanguageManager translatedString:@"Hold to talk"]; }
 /** "Hostname", Label text for hostname field on login scree */
 NSString* HOSTNAME_STRING() { return [OTRLanguageManager translatedString:@"Hostname"]; }
+/** "Inbox", segmented control value for active conversations */
+NSString* INBOX_STRING() { return [OTRLanguageManager translatedString:@"Inbox"]; }
 /** "Incoming", Label for incoming data transfers */
 NSString* INCOMING_STRING() { return [OTRLanguageManager translatedString:@"Incoming"]; }
 /** "Info", Short for information, button title to get more information */
@@ -176,6 +188,8 @@ NSString* INVITE_LINK_STRING() { return [OTRLanguageManager translatedString:@"S
 NSString* IN_BAND_ERROR_STRING() { return [OTRLanguageManager translatedString:@"The XMPP server does not support in-band registration"]; }
 /** "Jabber (XMPP)", the name for jabber, also include (XMPP) at the end */
 NSString* JABBER_STRING() { return [OTRLanguageManager translatedString:@"Jabber (XMPP)"]; }
+/** "Join Group", Text for joining existing XMPP room */
+NSString* JOIN_GROUP_STRING() { return [OTRLanguageManager translatedString:@"Join Group"]; }
 /** "Knock Sent", Text for label after knock is sent. Like knocking on a door */
 NSString* KNOCK_SENT_STRING() { return [OTRLanguageManager translatedString:@"Knock Sent"]; }
 /** "Knock", Label for button after to send push notification knock. Like knocking on a door */
@@ -194,6 +208,36 @@ NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager t
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 NSString* MESSAGE_COULD_NOT_BE_SENT_STRING() { return [OTRLanguageManager translatedString:@"The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."]; }
+/** "Notify Contacts of New Account", Title for toggle switch to spam your friends with your new account info */
+NSString* MESSAGE_FRIENDS_WITH_NEW_INFO_STRING() { return [OTRLanguageManager translatedString:@"Notify Contacts of New Account"]; }
+/** "Ignore", Button to ignore the migrated buddy warning */
+NSString* MIGRATED_BUDDY_IGNORE() { return [OTRLanguageManager translatedString:@"Ignore"]; }
+/** "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?", Explanation that buddy has a different prefered jid in the vcard */
+NSString* MIGRATED_BUDDY_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?"]; }
+/** "Buddy has moved!", Title for migrated buddy header view */
+NSString* MIGRATED_BUDDY_STRING() { return [OTRLanguageManager translatedString:@"Buddy has moved!"]; }
+/** "Switch", Button to switch the chat over to the migrated account */
+NSString* MIGRATED_BUDDY_SWITCH() { return [OTRLanguageManager translatedString:@"Switch"]; }
+/** "Migrate Account", Title for button to start migration tool */
+NSString* MIGRATE_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Migrate Account"]; }
+/** "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved.", Description detail text for account migration form */
+NSString* MIGRATION_FORM_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved."]; }
+/** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
+NSString* MIGRATION_INFO_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."]; }
+/** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
+NSString* MIGRATION_INFO_WITH_DATE_STRING() { return [OTRLanguageManager translatedString:@"Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."]; }
+/** "Your account has expired.", Explanation that your account has expired and you need to migrate */
+NSString* MIGRATION_NOTIFICATION_STRING() { return [OTRLanguageManager translatedString:@"Your account has expired."]; }
+/** "Your account is expiring in '%1$d' days.", Explanation that your account has expired and you need to migrate, contains a shutdown date */
+NSString* MIGRATION_NOTIFICATION_WITH_DATE_STRING() { return [OTRLanguageManager translatedString:@"Your account is expiring in '%1$d' days."]; }
+/** "Get Started", Title for button to start migration tool */
+NSString* MIGRATION_START_STRING() { return [OTRLanguageManager translatedString:@"Get Started"]; }
+/** "It's time to move!", Title for migration header view */
+NSString* MIGRATION_STRING() { return [OTRLanguageManager translatedString:@"It's time to move!"]; }
+/** "More Ways to Help", button for additional ways to help support development of the app */
+NSString* MORE_WAYS_TO_HELP_STRING() { return [OTRLanguageManager translatedString:@"More Ways to Help"]; }
+/** "My new account information", label for new account info for migration */
+NSString* MY_NEW_ACCOUNT_INFO_STRING() { return [OTRLanguageManager translatedString:@"My new account information"]; }
 /** "My QR Code", Your QR code */
 NSString* MY_QR_CODE() { return [OTRLanguageManager translatedString:@"My QR Code"]; }
 /** "Me",  */
@@ -272,10 +316,14 @@ NSString* OTRL_MSGEVENT_SETUP_ERROR_STRING() { return [OTRLanguageManager transl
 NSString* PASSWORD_STRING() { return [OTRLanguageManager translatedString:@"Password"]; }
 /** "This device doesn't seem to be configured to make payments.", Error message when trying to make a purchase but payments haven't been set up yet */
 NSString* PAYMENTS_SETUP_ERROR_STRING() { return [OTRLanguageManager translatedString:@"This device doesn't seem to be configured to make payments."]; }
+/** "Payments Unavailable", Title for alert when user isn't allowed to make payments */
+NSString* PAYMENTS_UNAVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Payments Unavailable"]; }
 /** "Pending Approval", String for XMPP buddies when adding buddy is pending */
 NSString* PENDING_APPROVAL_STRING() { return [OTRLanguageManager translatedString:@"Pending Approval"]; }
 /** "Photo Library", Label for button to open up photo library and choose photo */
 NSString* PHOTO_LIBRARY_STRING() { return [OTRLanguageManager translatedString:@"Photo Library"]; }
+/** "Picture Message", Text for media message summary */
+NSString* PICTURE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Picture Message"]; }
 /** "Manage saved SSL certificates", subtitle for the certificate pinned setting */
 NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Manage saved SSL certificates"]; }
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
@@ -368,18 +416,22 @@ NSString* SOMEONE_STRING() { return [OTRLanguageManager translatedString:@"Someo
 NSString* SOURCE_STRING() { return [OTRLanguageManager translatedString:@"Check out the source here on Github"]; }
 /** "Server", server selection section title */
 NSString* Server_String() { return [OTRLanguageManager translatedString:@"Server"]; }
-/** "Choose from our list of trusted servers, or use your own.", server selection footer */
-NSString* Server_String_Hint() { return [OTRLanguageManager translatedString:@"Choose from our list of trusted servers, or use your own."]; }
+/** "Choose from a selection of public servers, or use your own.", server selection footer */
+NSString* Server_String_Hint() { return [OTRLanguageManager translatedString:@"Choose from a selection of public servers, or use your own."]; }
 /** "Show Advanced Encryption Settings",  */
 NSString* Show_Advanced_Encryption_Settings() { return [OTRLanguageManager translatedString:@"Show Advanced Encryption Settings"]; }
 /** "Show Advanced Options", toggle switch for show advanced */
 NSString* Show_Advanced_Options() { return [OTRLanguageManager translatedString:@"Show Advanced Options"]; }
+/** "Thank you for your contribution!", string shown if user has already paid */
+NSString* THANK_YOU_FOR_CONTRIBUTION() { return [OTRLanguageManager translatedString:@"Thank you for your contribution!"]; }
 /** "Tor is an experimental feature, please use with caution.", Message for warning about using tor network */
 NSString* TOR_WARNING_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Tor is an experimental feature, please use with caution."]; }
 /** "Twitter", Name of the popular social tweeting site */
 NSString* TWITTER_STRING() { return [OTRLanguageManager translatedString:@"Twitter"]; }
 /** "Unable to Send Message", Title for error message */
 NSString* UNABLE_TO_SEND_STRING() { return [OTRLanguageManager translatedString:@"Unable to Send Message"]; }
+/** "Unarchive", Verb. action for moving archived converation back to inbox */
+NSString* UNARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:@"Unarchive"]; }
 /** "plaintext", Label for messages that are not encrypted */
 NSString* UNENCRYPTED_STRING() { return [OTRLanguageManager translatedString:@"plaintext"]; }
 /** "Unknown Error", Describes an error without a known cause */
@@ -408,6 +460,8 @@ NSString* VERIFY_FINGERPRINT_STRING() { return [OTRLanguageManager translatedStr
 NSString* VERIFY_STRING() { return [OTRLanguageManager translatedString:@"Verify"]; }
 /** "Version", when displaying version numbers such as 1.0.0 */
 NSString* VERSION_STRING() { return [OTRLanguageManager translatedString:@"Version"]; }
+/** "Video Message", Text for media message summary */
+NSString* VIDEO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Video Message"]; }
 /** "View profile to review contact's devices or change encryption settings.", Describe how to change a contact's device settings */
 NSString* VIEW_PROFILE_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"View profile to review contact's devices or change encryption settings."]; }
 /** "View Profile", The label for a button to view the buddy profile */

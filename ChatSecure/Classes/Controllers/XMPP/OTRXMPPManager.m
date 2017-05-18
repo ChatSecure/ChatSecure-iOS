@@ -539,6 +539,39 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppStream sendElement:probe];
 }
 
+
+/** Enqueues a message to be sent by message queue */
+- (void) enqueueMessage:(OTROutgoingMessage*)message {
+    NSParameterAssert(message);
+    if (!message) { return; }
+    [self enqueueMessages:@[message]];
+}
+
+/** Enqueues an array of messages to be sent by message queue */
+- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages {
+    NSParameterAssert(messages);
+    if (!messages.count) {
+        return;
+    }
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [messages enumerateObjectsUsingBlock:^(OTROutgoingMessage * _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+            //2. Create send message task
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message];
+            //3. save both to database
+            [message saveWithTransaction:transaction];
+            [sendingAction saveWithTransaction:transaction];
+            //Update buddy
+            OTRBuddy *buddy = [message buddyWithTransaction:transaction];
+            if (!buddy) {
+                return;
+            }
+            buddy.composingMessageString = nil;
+            buddy.lastMessageId = message.uniqueId;
+            [buddy saveWithTransaction:transaction];
+        }];
+    }];
+}
+
 - (void)setAvatar:(UIImage *)avatarImage completion:(void (^)(BOOL success))completion
 {
     if (!avatarImage) {
@@ -577,6 +610,72 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         }];
     });
     
+}
+
+// Currently the only way to force a vCard update is to update the avatar. We want to do this in a non-destructive way, so that this method can be used many times without the avatar being distorted. The idea is to manipulate the bottom rightmost pixel value, setting it to the neighboring pixel value with the blue component alternating between +-1.
+- (void)forcevCardUpdateWithCompletion:(void (^)(BOOL success))completion {
+    UIImage *image = [self.account avatarImage];
+    if (image != nil) {
+        CGFloat width = image.size.width;
+        CGFloat height = image.size.height;
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        
+        size_t bitsPerComponent = 8;
+        size_t bytesPerPixel    = 4;
+        size_t bytesPerRow      = (width * bitsPerComponent * bytesPerPixel + 7) / 8;
+        size_t dataSize         = bytesPerRow * height;
+        
+        unsigned char *data = malloc(dataSize);
+        memset(data, 0, dataSize);
+        
+        CGContextRef context = CGBitmapContextCreate(data, width, height,
+                                                     bitsPerComponent,
+                                                     bytesPerRow, colorSpace,
+                                                     kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
+        
+        
+        CGColorSpaceRelease(colorSpace);
+        
+        CGContextDrawImage(context, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage);
+        
+        // Get pixel color for neighboring pixel
+        int offset = (width - 2) * bytesPerRow + (height - 1) * bytesPerPixel;
+        int alpha =  data[offset];
+        int red = data[offset+1];
+        int green = data[offset+2];
+        int blue = data[offset+3];
+
+        // Manipulate the bottom right pixel
+        offset = (width - 1) * bytesPerRow + (height - 1) * bytesPerPixel;
+        int currentBlue = data[offset+3];
+
+        data[offset] = alpha;
+        data[offset+1] = red;
+        data[offset+2] = green;
+        if (currentBlue != blue) {
+            // Not equal, just use the blue value for the neighboring pixel
+            data[offset+3] = blue;
+        } else {
+            if (blue == 255) {
+                data[offset+3] = blue - 1;
+            } else {
+                data[offset+3] = blue + 1;
+            }
+        }
+        
+        CGImageRef imgRef = CGBitmapContextCreateImage(context);
+        UIImage* img = [UIImage imageWithCGImage:imgRef];
+        CGImageRelease(imgRef);
+        
+        // When finished, release the context
+        CGContextRelease(context);
+        if (data) { free(data); }
+        
+        [self setAvatar:img completion:completion];
+    }
 }
 
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion {
@@ -1034,31 +1133,33 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 
 - (void) sendMessage:(OTROutgoingMessage*)message
 {
+    NSParameterAssert(message);
     NSString *text = message.text;
-    
-    __block OTRBuddy *buddy = nil;
+    if (!text.length) {
+        return;
+    }
+    __block OTRXMPPBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
+        buddy = (OTRXMPPBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
-    
+    if (!buddy || ![buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+        return;
+    }
     [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];
     
-    if ([text length])
-    {
-        NSString * messageID = message.messageId;
-        XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:buddy.username] elementID:messageID];
-        [xmppMessage addBody:text];
-
-        [xmppMessage addActiveChatState];
-        
-        if ([OTRKit stringStartsWithOTRPrefix:text]) {
-            [xmppMessage addPrivateMessageCarbons];
-            [xmppMessage addStorageHint:XMPPMessageStorageNoCopy];
-            [xmppMessage addStorageHint:XMPPMessageStorageNoPermanentStore];
-        }
-		
-		[self.xmppStream sendElement:xmppMessage];
+    NSString * messageID = message.messageId;
+    XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:buddy.bareJID elementID:messageID];
+    [xmppMessage addBody:text];
+    
+    [xmppMessage addActiveChatState];
+    
+    if ([OTRKit stringStartsWithOTRPrefix:text]) {
+        [xmppMessage addPrivateMessageCarbons];
+        [xmppMessage addStorageHint:XMPPMessageStorageNoCopy];
+        [xmppMessage addStorageHint:XMPPMessageStorageNoPermanentStore];
     }
+    
+    [self.xmppStream sendElement:xmppMessage];
 }
 
 - (NSString*) type {
@@ -1152,11 +1253,26 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     });
 }
 
+- (void) addBuddies:(NSArray<OTRXMPPBuddy*> *)buddies {
+    NSParameterAssert(buddies != nil);
+    if (!buddies.count) { return; }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj saveWithTransaction:transaction];
+            OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
+            addBuddyAction.buddyKey = obj.uniqueId;
+            [addBuddyAction saveWithTransaction:transaction];
+        }];
+    }];
+}
+
 - (void) addBuddy:(OTRXMPPBuddy *)newBuddy
 {
-    XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.username];
-    [self.xmppRoster addUser:newJID withNickname:newBuddy.displayName];
+    NSParameterAssert(newBuddy != nil);
+    if (!newBuddy) { return; }
+    [self addBuddies:@[newBuddy]];
 }
+
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy
 {
     XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
@@ -1165,13 +1281,17 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 }
 -(void)removeBuddies:(NSArray *)buddies
 {
-    for (OTRXMPPBuddy *buddy in buddies){
-        XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
-        [self.xmppRoster removeUser:jid];
-    }
-    
-    
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        // Add actions to the queue
+        for (OTRXMPPBuddy *buddy in buddies){
+            OTRYapRemoveBuddyAction *removeBuddyAction = [[OTRYapRemoveBuddyAction alloc] init];
+            removeBuddyAction.buddyKey = buddy.uniqueId;
+            removeBuddyAction.buddyJid = buddy.username;
+            removeBuddyAction.accountKey = buddy.accountUniqueId;
+            [removeBuddyAction saveWithTransaction:transaction];
+        }
+        
         [transaction removeObjectsForKeys:[buddies valueForKey:NSStringFromSelector(@selector(uniqueId))] inCollection:[OTRXMPPBuddy collection]];
     }];
 

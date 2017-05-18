@@ -68,13 +68,31 @@ extension OTRAccountSignalEncryptionManager {
      * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
      */
     public func generateOutgoingBundle(_ preKeyCount:UInt) throws -> OTROMEMOBundleOutgoing {
+        let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
+        let deviceId = self.registrationId
         
-        guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
+        // Fetch existing signed pre-key to prevent regeneration
+        // The existing storage code only allows for storage of 
+        // a single signedprekey per account, so regeneration
+        // will break things.
+        var signalSignedPreKey: SignalSignedPreKey? = nil
+        self.storage.databaseConnection.read { (transaction) in
+            guard let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObject(withUniqueID: self.storage.accountKey, transaction: transaction) else {
+                return
+            }
+            do {
+                signalSignedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
+            } catch {}
+        }
+        // If there is no existing one, generate a new one
+        if signalSignedPreKey == nil {
+            signalSignedPreKey = self.generateRandomSignedPreKey()
+        }
+        
+        guard let signedPreKey = signalSignedPreKey, let data = signedPreKey.serializedData() else {
             throw OMEMOBundleError.keyGeneration
         }
         
-        let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
-        let deviceId = self.registrationId
         guard let preKeys = self.generatePreKeys(1, count: preKeyCount) else {
             throw OMEMOBundleError.keyGeneration
         }
@@ -90,11 +108,11 @@ extension OTRAccountSignalEncryptionManager {
             if let preKey = preKeys.first {
                 let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.preKeyId(), preKeyPublic: preKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
             } else {
-                DDLogError("Error testing outgoing bundle")
+                //DDLogError("Error testing outgoing bundle")
                 throw OMEMOBundleError.invalid
             }
         } catch let error {
-            DDLogError("Error creating outgoing bundle: \(error)")
+            //DDLogError("Error creating outgoing bundle: \(error)")
             throw OMEMOBundleError.invalid
         }
         

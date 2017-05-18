@@ -60,7 +60,7 @@ public extension UIApplication {
         let chatString = WANTS_TO_CHAT_STRING()
         let text = "\(name) \(chatString)"
         let unreadCount = self.applicationIconBadgeNumber + 1
-        self.showLocalNotificationFor(nil, text: text, unreadCount: unreadCount)
+        self.showLocalNotificationWith(identifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
     }
     
     public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
@@ -78,18 +78,43 @@ public extension UIApplication {
     }
     
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
+        if let thread = thread, thread.isMuted { return } // No notifications for muted
         DispatchQueue.main.async {
+            var identifier:String? = nil
+            var userInfo:[AnyHashable:Any]? = nil
+            if let t = thread {
+                identifier = t.threadIdentifier()
+                userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+            }
+            self.showLocalNotificationWith(identifier: identifier, body: text, badge: unreadCount, userInfo: userInfo, recurring: false)
+        }
+    }
+    
+    public func showLocalNotificationWith(identifier:String?, body:String, badge:Int, userInfo:[AnyHashable:Any]?, recurring:Bool) {
+        DispatchQueue.main.async {
+            if recurring, self.hasRecurringLocalNotificationWith(identifier: identifier) {
+                return // Already pending
+            }
             // Use the new UserNotifications.framework on iOS 10+
             if #available(iOS 10.0, *) {
                 let localNotification = UNMutableNotificationContent()
-                localNotification.body = text
-                localNotification.badge = NSNumber(integerLiteral: unreadCount)
+                localNotification.body = body
+                localNotification.badge = NSNumber(integerLiteral: badge)
                 localNotification.sound = UNNotificationSound.default()
-                if let t = thread {
-                    localNotification.threadIdentifier = t.threadIdentifier()
-                    localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+                if let identifier = identifier {
+                    localNotification.threadIdentifier = identifier
                 }
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: nil) // Schedule the notification.
+                if let userInfo = userInfo {
+                    localNotification.userInfo = userInfo
+                }
+                var trigger:UNNotificationTrigger? = nil
+                if recurring {
+                    var date = DateComponents()
+                    date.hour = 11
+                    date.minute = 0
+                    trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
+                }
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: trigger) // Schedule the notification.
                 let center = UNUserNotificationCenter.current()
                 center.add(request, withCompletionHandler: { (error: Error?) in
                     if let error = error as NSError? {
@@ -98,18 +123,70 @@ public extension UIApplication {
                         #endif
                     }
                 })
-            } else if(self.applicationState != .active) {
+            } else if recurring || self.applicationState != .active {
                 let localNotification = UILocalNotification()
                 localNotification.alertAction = REPLY_STRING()
                 localNotification.soundName = UILocalNotificationDefaultSoundName
-                localNotification.applicationIconBadgeNumber = unreadCount
-                localNotification.alertBody = text
-                if let t = thread {
-                    localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+                localNotification.applicationIconBadgeNumber = badge
+                localNotification.alertBody = body
+                if let userInfo = userInfo {
+                    localNotification.userInfo = userInfo
                 }
-                self.presentLocalNotificationNow(localNotification)
+                if recurring {
+                    var date = DateComponents()
+                    date.hour = 11
+                    date.minute = 0
+                    localNotification.repeatInterval = .day
+                    localNotification.fireDate = NSCalendar.current.date(from: date)
+                    self.scheduleLocalNotification(localNotification)
+                } else {
+                    self.presentLocalNotificationNow(localNotification)
+                }
             }
         }
     }
     
+    public func hasRecurringLocalNotificationWith(identifier:String?) -> Bool {
+        return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:false)
+    }
+
+    public func cancelRecurringLocalNotificationWith(identifier:String?) -> Bool {
+        return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:true)
+    }
+
+    func hasRecurringLocalNotificationWith(identifier:String?, cancelIfFound:Bool) -> Bool {
+            guard let identifier = identifier else { return false }
+
+        var found = false
+        
+        // Use the new UserNotifications.framework on iOS 10+
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { (requests:[UNNotificationRequest]) in
+                for request in requests {
+                    let userInfo = request.content.userInfo
+                    if let threadKey =
+                        userInfo[kOTRNotificationThreadKey] as? String, threadKey == identifier {
+                        found = true
+                        if cancelIfFound {
+                            let center = UNUserNotificationCenter.current()
+                            center.removePendingNotificationRequests(withIdentifiers:[request.identifier])
+                        }
+                    }
+                }
+            })
+        } else {
+            if let notifications = self.scheduledLocalNotifications {
+                for notification in notifications {
+                    if let userInfo = notification.userInfo, let threadKey =
+                        userInfo[kOTRNotificationThreadKey] as? String, threadKey == identifier {
+                        found = true
+                        if cancelIfFound {
+                            self.cancelLocalNotification(notification)
+                        }
+                    }
+                }
+            }
+        }
+        return found
+    }
 }

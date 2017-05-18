@@ -36,6 +36,7 @@
 @import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 
 @interface OTRProtocolManager ()
 @property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
@@ -260,7 +261,90 @@
     }];
 }
 
++ (void)handleInviteForJID:(XMPPJID *)jid otrFingerprint:(nullable NSString *)otrFingerprint buddyAddedCallback:(nullable void (^)(OTRBuddy *buddy))buddyAddedCallback {
+    NSParameterAssert(jid);
+    if (!jid) { return; }
+    NSString *jidString = jid.bare;
+    NSString *message = [NSString stringWithString:jidString];
+    if (otrFingerprint.length == 40) {
+        message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    NSMutableArray<OTRAccount*> *accounts = [NSMutableArray array];
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSArray<OTRAccount*> *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
+        [allAccounts enumerateObjectsUsingBlock:^(OTRAccount * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!obj.isArchived) {
+                [accounts addObject:obj];
+            }
+        }];
+    }];
+    [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)account;
+            if ([xmppAccount.bareJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
+                // Don't allow adding yourself to yourself
+                return;
+            }
+            // Not the best way to do this, but only show "Add" if you have a single account, otherwise show the account name to add it to.
+            NSString *title = nil;
+            if (accounts.count == 1) {
+                title = ADD_STRING();
+            } else {
+                title = account.username;
+            }
+            UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                
+                __block OTRXMPPBuddy *buddy = nil;
+                __block BOOL handled = NO;
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:jidString withAccountUniqueId:account.uniqueId transaction:transaction];
+                    if (!buddy) {
+                        buddy = [[OTRXMPPBuddy alloc] init];
+                        buddy.username = jidString;
+                        buddy.accountUniqueId = account.uniqueId;
+                    }
+                    [buddy saveWithTransaction:transaction];
+                    
+                    // Check if we already have a subscription request from this user
+                    OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:account.uniqueId transaction:transaction];
+                    if (presenceRequest != nil) {
+                        // We have an incoming subscription request, just answer that!
+                        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+                        [presenceRequest removeWithTransaction:transaction];
+                        handled = YES;
+                    }
+                }];
+                if (!handled) {
+                    [manager addBuddy:buddy];
+                }
+                /* TODO OTR fingerprint verificaction
+                 if (otrFingerprint) {
+                 // We are missing a method to add fingerprint to trust store
+                 [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
+                 }*/
+                if (buddyAddedCallback != nil) {
+                    buddyAddedCallback(buddy);
+                }
+            }];
+            [alert addAction:action];
+        }
+    }];
+    if (alert.actions.count > 0) {
+        // No need to show anything if only option is "cancel"
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        // This is janky af
+        [OTRAppDelegate.appDelegate.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
+}
+
 #pragma mark Singleton Object Methods
+
++ (OTRProtocolManager*) shared {
+    return [self sharedInstance];
+}
 
 + (instancetype)sharedInstance
 {

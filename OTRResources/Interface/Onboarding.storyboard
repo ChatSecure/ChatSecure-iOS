@@ -108,7 +108,7 @@
         <!--Base Login View Controller-->
         <scene sceneID="QUf-a6-hQn">
             <objects>
-                <viewController id="ZvQ-dC-bHm" customClass="OTRBaseLoginViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createNewAccount" id="ZvQ-dC-bHm" customClass="OTRBaseLoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hBA-dq-abq"/>
                         <viewControllerLayoutGuide type="bottom" id="y6G-2m-Hxb"/>

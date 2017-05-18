@@ -120,31 +120,37 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                         [account removeKeychainPassword:nil];
                     }
                     [strongSelf handleError:error];
-                } else {
-                    strongSelf.account = account;
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        [account saveWithTransaction:transaction];
-                    }];
-                    
-                    // If push isn't enabled, prompt to enable it
-                    if ([PushController getPushPreference] == PushPreferenceEnabled) {
-                        [strongSelf pushInviteViewController];
-                    } else {
-                        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
-                        EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
-                        if (pushVC) {
-                            pushVC.account = account;
-                            [strongSelf.navigationController pushViewController:pushVC animated:YES];
-                        } else {
-                            [strongSelf pushInviteViewController];
-                        }
-                    }
+                } else if (account) {
+                    self.account = account;
+                    [self handleSuccessWithNewAccount:account sender:sender];
                 }
         }];
     }
 }
 
-- (void) pushInviteViewController {
+- (void) handleSuccessWithNewAccount:(OTRAccount*)account sender:(id)sender {
+    NSParameterAssert(account != nil);
+    if (!account) { return; }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [account saveWithTransaction:transaction];
+    }];
+    
+    // If push isn't enabled, prompt to enable it
+    if ([PushController getPushPreference] == PushPreferenceEnabled) {
+        [self pushInviteViewController:sender];
+    } else {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+        EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        if (pushVC) {
+            pushVC.account = account;
+            [self.navigationController pushViewController:pushVC animated:YES];
+        } else {
+            [self pushInviteViewController:sender];
+        }
+    }
+}
+
+- (void) pushInviteViewController:(id)sender {
     if (self.existingAccount) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
@@ -237,6 +243,10 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 - (void)handleError:(NSError *)error
 {
+    NSParameterAssert(error);
+    if (!error) {
+        return;
+    }
     //show xmpp erors, cert errors, tor errors, oauth errors.
     if (error.code == OTRXMPPSSLError) {
         NSData * certData = error.userInfo[OTRXMPPSSLCertificateDataKey];
@@ -381,13 +391,32 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 
 #pragma - mark Class Methods
 
-+ (instancetype)loginViewControllerForAccount:(OTRAccount *)account
+- (instancetype) initWithAccount:(OTRAccount*)account
 {
-    OTRBaseLoginViewController *baseLoginViewController = [[self alloc] initWithForm:[OTRXLFormCreator formForAccount:account] style:UITableViewStyleGrouped];
-    baseLoginViewController.account = account;
-    baseLoginViewController.loginHandler = [OTRLoginHandler loginHandlerForAccount:account];
-    
-    return baseLoginViewController;
+    NSParameterAssert(account != nil);
+    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccount:account];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.account = account;
+        self.loginHandler = [OTRLoginHandler loginHandlerForAccount:account];
+    }
+    return self;
+}
+
+- (instancetype) initWithExistingAccountType:(OTRAccountType)accountType {
+    XLFormDescriptor *form = [XLFormDescriptor existingAccountFormWithAccountType:accountType];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.loginHandler = [[OTRXMPPLoginHandler alloc] init];
+    }
+    return self;
+}
+
+/** This is for registering new accounts on a server */
+- (instancetype) initWithNewAccountType:(OTRAccountType)accountType {
+    XLFormDescriptor *form = [XLFormDescriptor registerNewAccountFormWithAccountType:accountType];
+    if (self = [super initWithForm:form style:UITableViewStyleGrouped]) {
+        self.loginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
+    }
+    return self;
 }
 
 @end

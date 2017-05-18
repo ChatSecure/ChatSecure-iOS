@@ -10,6 +10,7 @@ import UIKit
 import XMPPFramework
 import YapDatabase
 import CocoaLumberjack
+import SignalProtocolObjC
 
 /** 
  * This is the glue between XMPP/OMEMO and Signal
@@ -368,7 +369,14 @@ import CocoaLumberjack
                     unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
                     // have successfully decripted the AES key. We should break and use it to decrypt the payload
                     break
-                } catch {
+                } catch let error {
+                    //NSLog("Error decrypting: \(error)")
+                    let buddyAddress = SignalAddress(name: fromJID.bare(), deviceId: Int32(senderDeviceId))
+                    if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
+                        // Session is corrupted
+                        let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
+                        //NSLog("Session exists and is corrupted. Deleting...")
+                    }
                     return
                 }
             }
@@ -519,13 +527,13 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         DDLogVerbose("fetchedBundle: \(responseIq) \(outgoingIq)")
 
         if (self.isOurJID(fromJID) && bundle.deviceId == self.signalEncryptionManager.registrationId) {
-            DDLogVerbose("fetchedOurOwnBundle: \(responseIq) \(outgoingIq)")
+            //DDLogVerbose("fetchedOurOwnBundle: \(responseIq) \(outgoingIq)")
 
             //We fetched our own bundle
             if let ourDatabaseBundle = self.fetchMyBundle() {
                 //This bundle doesn't have the correct identity key. Something has gone wrong and we should republish
                 if ourDatabaseBundle.identityKey != bundle.identityKey {
-                    DDLogError("Bundle identityKeys do not match! \(ourDatabaseBundle.identityKey) vs \(bundle.identityKey)")
+                    //DDLogError("Bundle identityKeys do not match! \(ourDatabaseBundle.identityKey) vs \(bundle.identityKey)")
                     omemo.publishBundle(ourDatabaseBundle, elementId: nil)
                 }
             }
@@ -629,27 +637,27 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         } catch let omemoError as OMEMOBundleError {
             switch omemoError {
             case .invalid:
-                DDLogError("Found invalid stored bundle!")
+                //DDLogError("Found invalid stored bundle!")
                 // delete???
                 break
             default:
                 break
             }
         } catch let error {
-            DDLogError("Other error fetching bundle! \(error)")
+            //DDLogError("Other error fetching bundle! \(error)")
         }
-        let maxTries = 5
+        let maxTries = 50
         var tries = 0
         while _bundle == nil && tries < maxTries {
             tries = tries + 1
             do {
                 _bundle = try self.signalEncryptionManager.generateOutgoingBundle(self.preKeyCount)
             } catch let error {
-                DDLogError("Error generating bundle! Try #\(tries)/\(maxTries) \(error)")
+                //DDLogError("Error generating bundle! Try #\(tries)/\(maxTries) \(error)")
             }
         }
         guard let bundle = _bundle else {
-            DDLogError("Could not fetch or generate valid bundle!")
+            //DDLogError("Could not fetch or generate valid bundle!")
             return nil
         }
         

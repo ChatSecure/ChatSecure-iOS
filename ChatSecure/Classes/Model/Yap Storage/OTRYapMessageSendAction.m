@@ -31,4 +31,11 @@
     return [NSString stringWithFormat:@"%@%@",messageKey,messageCollection];
 }
 
+/** Generates an action that will send specified message. Unsaved! Message must be saved for operation to succeed! */
++ (instancetype)sendActionForMessage:(OTROutgoingMessage*)message {
+    NSParameterAssert(message);
+    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[[message class] collection] buddyKey:message.threadId date:message.date];
+    return sendingAction;
+}
+
 @end

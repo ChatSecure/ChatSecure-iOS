@@ -200,13 +200,14 @@ open class OTRSignalStorageManager: NSObject {
         
         do {
             if let preKey = preKeys.first, let preKeyData = preKey.keyData {
-                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: preKeyData, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
+                let signalPreKey = try SignalPreKey(serializedData: preKeyData)
+                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: signalPreKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
             } else {
-                DDLogError("Error fetching outgoing bundle: no prekeys")
+                //DDLogError("Error fetching outgoing bundle: no prekeys")
                 throw OMEMOBundleError.invalid
             }
         } catch let error {
-            DDLogError("Error fetching outgoing bundle: \(error)")
+            //DDLogError("Error fetching outgoing bundle: \(error)")
             throw error
         }
         
@@ -340,14 +341,19 @@ extension OTRSignalStorageManager: SignalStore {
         }
     }
     
+    /// Returns true if deleted, false if not found
     public func deletePreKey(withId preKeyId: UInt32) -> Bool {
+        var result = false
         self.databaseConnection.readWrite { (transaction) in
             let yapKey = OTRSignalPreKey.uniqueKey(forAccountKey: self.accountKey, keyId: preKeyId)
-            let preKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction)
-            preKey?.keyData = nil
-            preKey?.save(with: transaction)
+            if let preKey = OTRSignalPreKey.fetchObject(withUniqueID: yapKey, transaction: transaction) {
+                preKey.keyData = nil
+                preKey.save(with: transaction)
+                result = true
+            }
+            
         }
-        return true
+        return result
     }
     
     //MARK: SignalSignedPreKeyStore

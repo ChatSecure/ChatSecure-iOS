@@ -8,6 +8,10 @@
 
 @import UIKit;
 
+@class OTRAccount;
+
 @interface OTRChooseAccountViewController : UIViewController
+
+@property (nonatomic, copy, nullable) void (^selectionBlock)(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account);
 
 @end

@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) OTRProtocolConnectionStatus connectionStatus;
 
+/** Send a message immediately. Bypasses (and used by) the message queue. */
 - (void) sendMessage:(OTROutgoingMessage*)message;
 
 - (void) connect;
@@ -58,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) disconnect;
 - (void) disconnectSocketOnly:(BOOL)socketOnly;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
+- (void) addBuddies:(NSArray<OTRBuddy*> *)buddies;
 
 - (void) removeBuddies:(NSArray<OTRBuddy*> *)buddies;
 - (void) blockBuddies:(NSArray<OTRBuddy*> *)buddies;

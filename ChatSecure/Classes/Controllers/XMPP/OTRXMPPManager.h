@@ -72,6 +72,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL success))completion;
 
+/** Force a vCard update (by manipulating pixel values in the avatar image)
+ */
+- (void)forcevCardUpdateWithCompletion:(void (^)(BOOL success))completion;
+
 - (void)changePassword:(NSString *)newPassword completion:(void (^)(BOOL,NSError*))completion;
 
 /** Will try to send a probe to fetch last seen. If buddy is still pendingApproval it will retry subscription request. */
@@ -82,6 +86,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Will send an available presence */
 - (void) goOnline;
+
+/** Enqueues a message to be sent by message queue */
+- (void) enqueueMessage:(OTROutgoingMessage*)message;
+
+/** Enqueues an array of messages to be sent by message queue */
+- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages;
 
 @end
 

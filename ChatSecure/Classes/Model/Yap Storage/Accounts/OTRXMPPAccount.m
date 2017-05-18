@@ -83,6 +83,16 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     }
 }
 
+// If forwarding JID is set, assume account is archived
+- (BOOL) isArchived {
+    if (!self.vCardTemp.jid) {
+        return NO;
+    } else if (![self.vCardTemp.jid isEqualToJID:self.bareJID options:XMPPJIDCompareBare]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)setAvatarData:(NSData *)avatarData
 {
     [super setAvatarData:avatarData];
@@ -94,5 +104,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     }
 }
 
+- (nullable XMPPJID*) bareJID {
+    return [XMPPJID jidWithString:self.username];
+}
 
 @end

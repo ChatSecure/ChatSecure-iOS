@@ -13,6 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 //Extension Strings
+/** Can filter on inbox vs archive. Depends on OTRConversationDatabaseViewExtensionName */
+extern NSString *OTRFilteredConversationsName;
+/** Can filter on inbox vs archive. Depends on OTRAllBuddiesDatabaseViewExtensionName */
+extern NSString *OTRFilteredBuddiesName;
+
 extern NSString *OTRConversationDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
@@ -36,6 +41,8 @@ extern NSString *OTRPushTokenGroup;
 
 
 + (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerFilteredConversationsViewWithDatabase:(YapDatabase *)database;
+
 
 + (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database;
 
@@ -48,6 +55,7 @@ extern NSString *OTRPushTokenGroup;
 + (BOOL)registerChatDatabaseViewWithDatabase:(YapDatabase *)database;
 
 + (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database;
 
 + (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database;
 

@@ -16,7 +16,7 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 @interface OTRAssets : NSObject
 
 /** Returns OTRResources.bundle */
-+ (NSBundle*) resourcesBundle;
+@property (class, readonly) NSBundle* resourcesBundle;
 
 @end
 
@@ -25,60 +25,66 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 #pragma mark Strings
 
 /** The default XMPP resource (e.g. username@example.com/chatsecure) */
-+ (NSString*) xmppResource;
+@property (class, readonly) NSString* xmppResource;
 
 /** Email for user feedback e.g. support@chatsecure.org */
-+ (NSString*) feedbackEmail;
+@property (class, readonly) NSString* feedbackEmail;
 
 /** Google Apps GOOGLE_APP_ID */
-+ (NSString*) googleAppId;
+@property (class, readonly) NSString* googleAppId;
 
 /** Google Apps Scope e.g. https://www.googleapis.com/auth/googletalk */
-+ (NSString*) googleAppScope;
+@property (class, readonly) NSString* googleAppScope;
 
 #pragma mark URLs
 
+/** TestFlight signup URL */
+@property (class, readonly) NSURL* testflightSignupURL;
+
 /** Project source code on GitHub */
-+ (NSURL*) githubURL;
+@property (class, readonly) NSURL* githubURL;
 
 /** Facebook App URL (launches FB app) */
-+ (NSURL*) facebookAppURL;
+@property (class, readonly) NSURL* facebookAppURL;
 
 /** Facebook Web URL */
-+ (NSURL*) facebookWebURL;
+@property (class, readonly) NSURL* facebookWebURL;
 
 /** Twitter App URL (launches Twitter app) */
-+ (NSURL*) twitterAppURL;
+@property (class, readonly) NSURL* twitterAppURL;
 
 /** Twitter Web URL */
-+ (NSURL*) twitterWebURL;
+@property (class, readonly) NSURL* twitterWebURL;
 
 /** Transifex URL */
-+ (NSURL*) transifexURL;
+@property (class, readonly) NSURL* transifexURL;
 
 /** Project URL e.g. https://chatsecure.org */
-+ (NSURL*) projectURL;
+@property (class, readonly) NSURL* projectURL;
 
 /** Share Base URL e.g. https://chatsecure.org/i/# */
-+ (NSURL*) shareBaseURL;
+@property (class, readonly) NSURL* shareBaseURL;
 
 /** Push server URL e.g. https://push.example.com/api/v1/ */
-+ (NSURL *)pushAPIURL;
+@property (class, readonly) NSURL* pushAPIURL;
 
 /** Push staging server URL e.g. https://staging.push.example.com/api/v1/ */
-+ (nullable NSURL *)pushStagingAPIURL;
+@property (class, readonly, nullable) NSURL* pushStagingAPIURL;
 
 /** UserVoice Site */
-+ (nullable NSString*) userVoiceSite;
-
-/** PayPal donation URL */
-+ (nullable NSURL*) paypalURL;
-
-/** Bitcoin donation URL (e.g. Coinbase) */
-+ (nullable NSURL*) bitcoinURL;
+@property (class, readonly, nullable) NSString* userVoiceSite;
 
 /** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
-+ (BOOL) shouldShowPushWarning;
+@property (class, readonly) BOOL shouldShowPushWarning;
+
+/** If enabled, the server selection cell will be shown when creating new accounts. Otherwise it will be hidden in the 'advanced' section. */
+@property (class, readonly) BOOL shouldShowServerCell;
+
+/** If enabled, will show colors for status indicators. */
+@property (class, readonly) BOOL showsColorForStatus;
+
+/** If enabled, will allow the in-app-purchase donations UI. This includes hardcoded elements designed for upstream ChatSecure. */
+@property (class, readonly) BOOL allowsDonation;
 
 @end
 NS_ASSUME_NONNULL_END

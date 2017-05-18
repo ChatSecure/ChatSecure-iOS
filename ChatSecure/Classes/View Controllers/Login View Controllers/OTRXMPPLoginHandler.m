@@ -18,6 +18,7 @@
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRTorManager.h"
+#import "OTRLog.h"
 
 @interface OTRXMPPLoginHandler()
 @end
@@ -148,7 +149,7 @@
     XMPPJID *jid = [XMPPJID jidWithUser:jidNode domain:jidDomain resource:account.resource];
     if (!jid) {
         NSParameterAssert(jid != nil);
-        NSLog(@"Error creating JID from account values!");
+        DDLogError(@"Error creating JID from account values!");
     }
     account.username = jid.bare;
     account.resource = jid.resource;
@@ -171,9 +172,9 @@
     [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(OTRFingerprint *fingerprint, NSError *error) {
         NSParameterAssert(fingerprint.fingerprint.length > 0);
         if (fingerprint.fingerprint.length > 0) {
-            NSLog(@"Fingerprint generated for %@: %@", jid.bare, fingerprint);
+            DDLogVerbose(@"Fingerprint generated for %@: %@", jid.bare, fingerprint);
         } else {
-            NSLog(@"Error generating fingerprint for %@: %@", jid.bare, error);
+            DDLogError(@"Error generating fingerprint for %@: %@", jid.bare, error);
         }
     }];
     

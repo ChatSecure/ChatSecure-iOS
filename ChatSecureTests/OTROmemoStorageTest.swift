@@ -172,6 +172,10 @@ class OTROmemoStorageTest: XCTestCase {
     }
     
     /**
+     * NOTES: This test is failing because the stored bundle cannot
+     * be validated after re-fetching, so it regenerates a completely
+     * new bundle. Why does store/fetch corrupt the bundle?
+     *
      * 1. Test generating a bundle like on first launch.
      * 2. Remove a few pre keys. This simulates what will happen when the signal library uses up some pre keys from incoming bundle messages
      * 3. Fetch our own bundle again. This time it should all come from the database and the only new information is two new pre-keys to replace teh ones deleted

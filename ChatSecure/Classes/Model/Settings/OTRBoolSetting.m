@@ -29,7 +29,7 @@
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender) {
             [weakSelf toggle];
         };
         self.defaultValue = [NSNumber numberWithBool:NO];

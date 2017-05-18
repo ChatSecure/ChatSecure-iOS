@@ -878,6 +878,9 @@ NSString *const OTRDuckDuckGoImageKey = @"OTRMicrophoneImageKey";
                     name = username;
                 }
             }
+            if (!name) {
+                name = @"";
+            }
             image = [self avatarImageWithUsername:name];
         }
         

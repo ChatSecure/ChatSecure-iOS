@@ -100,7 +100,7 @@
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{
         __typeof__(self) strongSelf = weakSelf;
 		OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] init];
-        loginViewController.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO];
+        loginViewController.form = [XLFormDescriptor existingAccountFormWithAccountType:OTRAccountTypeJabber];
         loginViewController.loginHandler = [[OTRXMPPLoginHandler alloc] init];
         [strongSelf.navigationController pushViewController:loginViewController animated:YES];
     }]];
@@ -117,8 +117,7 @@
                     [googleAccount saveWithTransaction:transaction];
                 }];
                 
-                OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
-                loginViewController.account = googleAccount;
+                OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithAccount:googleAccount];
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.loginHandler = loginHandler;
                 

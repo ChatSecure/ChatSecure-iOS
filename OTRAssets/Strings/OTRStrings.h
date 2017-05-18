@@ -10,6 +10,8 @@ FOUNDATION_EXPORT NSString* ABOUT_VERSION_STRING();
 FOUNDATION_EXPORT NSString* ACCOUNTS_STRING();
 /** "Account", The string describing a buddy's account */
 FOUNDATION_EXPORT NSString* ACCOUNT_STRING();
+/** "Active", segmented control value for active friends */
+FOUNDATION_EXPORT NSString* ACTIVE_BUDDIES_STRING();
 /** "Active", This will be displayed in the UI as 'Active 10m ago'  */
 FOUNDATION_EXPORT NSString* ACTIVE_STRING();
 /** "Add Buddy", The title for the view to add a buddy */
@@ -20,8 +22,14 @@ FOUNDATION_EXPORT NSString* ADD_EXISTING_STRING();
 FOUNDATION_EXPORT NSString* ADD_STRING();
 /** "Advanced", String to describe advanced set of settings */
 FOUNDATION_EXPORT NSString* ADVANCED_STRING();
+/** "Archive", Verb. action for archiving an old conversation */
+FOUNDATION_EXPORT NSString* ARCHIVE_ACTION_STRING();
+/** "Archive", Noun. segmented control value for displaying archived conversations */
+FOUNDATION_EXPORT NSString* ARCHIVE_STRING();
 /** "Are you sure?", Shown to confirm destructive actions */
 FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
+/** "Audio Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* AUDIO_MESSAGE_STRING();
 /** "Available", Label in buddy list for users that are available */
 FOUNDATION_EXPORT NSString* AVAILABLE_STRING();
 /** "Away", Label in buddy list for users that are away */
@@ -98,6 +106,8 @@ FOUNDATION_EXPORT NSString* DELETE_ACCOUNT_TITLE_STRING();
 FOUNDATION_EXPORT NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING();
 /** "Auto-delete", Title for automatic conversation deletion setting */
 FOUNDATION_EXPORT NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING();
+/** "Delete", action button for deleting something */
+FOUNDATION_EXPORT NSString* DELETE_STRING();
 /** "Delivered", Shows in the chat view when a message has been delivered */
 FOUNDATION_EXPORT NSString* DELIVERED_STRING();
 /** "Your donation will help fund the continued development of ChatSecure.", Message shown when about to donate */
@@ -160,6 +170,8 @@ FOUNDATION_EXPORT NSString* HELP_TRANSLATE_STRING();
 FOUNDATION_EXPORT NSString* HOLD_TO_TALK_STRING();
 /** "Hostname", Label text for hostname field on login scree */
 FOUNDATION_EXPORT NSString* HOSTNAME_STRING();
+/** "Inbox", segmented control value for active conversations */
+FOUNDATION_EXPORT NSString* INBOX_STRING();
 /** "Incoming", Label for incoming data transfers */
 FOUNDATION_EXPORT NSString* INCOMING_STRING();
 /** "Info", Short for information, button title to get more information */
@@ -176,6 +188,8 @@ FOUNDATION_EXPORT NSString* INVITE_LINK_STRING();
 FOUNDATION_EXPORT NSString* IN_BAND_ERROR_STRING();
 /** "Jabber (XMPP)", the name for jabber, also include (XMPP) at the end */
 FOUNDATION_EXPORT NSString* JABBER_STRING();
+/** "Join Group", Text for joining existing XMPP room */
+FOUNDATION_EXPORT NSString* JOIN_GROUP_STRING();
 /** "Knock Sent", Text for label after knock is sent. Like knocking on a door */
 FOUNDATION_EXPORT NSString* KNOCK_SENT_STRING();
 /** "Knock", Label for button after to send push notification knock. Like knocking on a door */
@@ -194,6 +208,36 @@ FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
 FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 FOUNDATION_EXPORT NSString* MESSAGE_COULD_NOT_BE_SENT_STRING();
+/** "Notify Contacts of New Account", Title for toggle switch to spam your friends with your new account info */
+FOUNDATION_EXPORT NSString* MESSAGE_FRIENDS_WITH_NEW_INFO_STRING();
+/** "Ignore", Button to ignore the migrated buddy warning */
+FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_IGNORE();
+/** "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?", Explanation that buddy has a different prefered jid in the vcard */
+FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_INFO_STRING();
+/** "Buddy has moved!", Title for migrated buddy header view */
+FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_STRING();
+/** "Switch", Button to switch the chat over to the migrated account */
+FOUNDATION_EXPORT NSString* MIGRATED_BUDDY_SWITCH();
+/** "Migrate Account", Title for button to start migration tool */
+FOUNDATION_EXPORT NSString* MIGRATE_ACCOUNT_STRING();
+/** "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\n\nIf you'd like, we can also notify your existing contacts that your account has moved.", Description detail text for account migration form */
+FOUNDATION_EXPORT NSString* MIGRATION_FORM_DETAIL_STRING();
+/** "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server.", Explanation for why migration is needed */
+FOUNDATION_EXPORT NSString* MIGRATION_INFO_STRING();
+/** "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server.", Explanation for why migration is needed, contains a shutdown date */
+FOUNDATION_EXPORT NSString* MIGRATION_INFO_WITH_DATE_STRING();
+/** "Your account has expired.", Explanation that your account has expired and you need to migrate */
+FOUNDATION_EXPORT NSString* MIGRATION_NOTIFICATION_STRING();
+/** "Your account is expiring in '%1$d' days.", Explanation that your account has expired and you need to migrate, contains a shutdown date */
+FOUNDATION_EXPORT NSString* MIGRATION_NOTIFICATION_WITH_DATE_STRING();
+/** "Get Started", Title for button to start migration tool */
+FOUNDATION_EXPORT NSString* MIGRATION_START_STRING();
+/** "It's time to move!", Title for migration header view */
+FOUNDATION_EXPORT NSString* MIGRATION_STRING();
+/** "More Ways to Help", button for additional ways to help support development of the app */
+FOUNDATION_EXPORT NSString* MORE_WAYS_TO_HELP_STRING();
+/** "My new account information", label for new account info for migration */
+FOUNDATION_EXPORT NSString* MY_NEW_ACCOUNT_INFO_STRING();
 /** "My QR Code", Your QR code */
 FOUNDATION_EXPORT NSString* MY_QR_CODE();
 /** "Me",  */
@@ -272,10 +316,14 @@ FOUNDATION_EXPORT NSString* OTRL_MSGEVENT_SETUP_ERROR_STRING();
 FOUNDATION_EXPORT NSString* PASSWORD_STRING();
 /** "This device doesn't seem to be configured to make payments.", Error message when trying to make a purchase but payments haven't been set up yet */
 FOUNDATION_EXPORT NSString* PAYMENTS_SETUP_ERROR_STRING();
+/** "Payments Unavailable", Title for alert when user isn't allowed to make payments */
+FOUNDATION_EXPORT NSString* PAYMENTS_UNAVAILABLE_STRING();
 /** "Pending Approval", String for XMPP buddies when adding buddy is pending */
 FOUNDATION_EXPORT NSString* PENDING_APPROVAL_STRING();
 /** "Photo Library", Label for button to open up photo library and choose photo */
 FOUNDATION_EXPORT NSString* PHOTO_LIBRARY_STRING();
+/** "Picture Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* PICTURE_MESSAGE_STRING();
 /** "Manage saved SSL certificates", subtitle for the certificate pinned setting */
 FOUNDATION_EXPORT NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING();
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
@@ -368,18 +416,22 @@ FOUNDATION_EXPORT NSString* SOMEONE_STRING();
 FOUNDATION_EXPORT NSString* SOURCE_STRING();
 /** "Server", server selection section title */
 FOUNDATION_EXPORT NSString* Server_String();
-/** "Choose from our list of trusted servers, or use your own.", server selection footer */
+/** "Choose from a selection of public servers, or use your own.", server selection footer */
 FOUNDATION_EXPORT NSString* Server_String_Hint();
 /** "Show Advanced Encryption Settings",  */
 FOUNDATION_EXPORT NSString* Show_Advanced_Encryption_Settings();
 /** "Show Advanced Options", toggle switch for show advanced */
 FOUNDATION_EXPORT NSString* Show_Advanced_Options();
+/** "Thank you for your contribution!", string shown if user has already paid */
+FOUNDATION_EXPORT NSString* THANK_YOU_FOR_CONTRIBUTION();
 /** "Tor is an experimental feature, please use with caution.", Message for warning about using tor network */
 FOUNDATION_EXPORT NSString* TOR_WARNING_MESSAGE_STRING();
 /** "Twitter", Name of the popular social tweeting site */
 FOUNDATION_EXPORT NSString* TWITTER_STRING();
 /** "Unable to Send Message", Title for error message */
 FOUNDATION_EXPORT NSString* UNABLE_TO_SEND_STRING();
+/** "Unarchive", Verb. action for moving archived converation back to inbox */
+FOUNDATION_EXPORT NSString* UNARCHIVE_ACTION_STRING();
 /** "plaintext", Label for messages that are not encrypted */
 FOUNDATION_EXPORT NSString* UNENCRYPTED_STRING();
 /** "Unknown Error", Describes an error without a known cause */
@@ -408,6 +460,8 @@ FOUNDATION_EXPORT NSString* VERIFY_FINGERPRINT_STRING();
 FOUNDATION_EXPORT NSString* VERIFY_STRING();
 /** "Version", when displaying version numbers such as 1.0.0 */
 FOUNDATION_EXPORT NSString* VERSION_STRING();
+/** "Video Message", Text for media message summary */
+FOUNDATION_EXPORT NSString* VIDEO_MESSAGE_STRING();
 /** "View profile to review contact's devices or change encryption settings.", Describe how to change a contact's device settings */
 FOUNDATION_EXPORT NSString* VIEW_PROFILE_DESCRIPTION_STRING();
 /** "View Profile", The label for a button to view the buddy profile */

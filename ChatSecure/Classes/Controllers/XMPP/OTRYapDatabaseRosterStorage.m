@@ -128,19 +128,16 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 
 -(BOOL)isPendingApproval:(NSXMLElement *)item
 {
-    NSString *ask = [item attributeStringValueForName:@"ask"];
-    if ([ask isEqualToString:@"subscribe"]) {
-        return YES;
-    }
-    
     OTRSubscriptionAttribute subscriptionAttribute = [self subscriptionAttribute:item];
     
     // If you are subscribed to or are mutually subscribed then you are not pending approval.
-    if (subscriptionAttribute == OTRSubscriptionAttributeTo || subscriptionAttribute == OTRSubscriptionAttributeBoth) {
-        return NO;
+    if (subscriptionAttribute == OTRSubscriptionAttributeNone || subscriptionAttribute == OTRSubscriptionAttributeFrom) {
+        NSString *ask = [item attributeStringValueForName:@"ask"];
+        if ([ask isEqualToString:@"subscribe"]) {
+            return YES;
+        }
     }
-    
-    return YES;
+    return NO;
 }
 
 /** Buddy can be nil, which indicates a new buddy should be saved. */

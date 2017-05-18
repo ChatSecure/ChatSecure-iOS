@@ -33,7 +33,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 @end
 
 @implementation OTRAccount
-
+@dynamic isArchived;
 @synthesize accountType = _accountType;
 /** This value is only used when rememberPassword is false */
 @synthesize password = _password;
@@ -140,6 +140,11 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return nil;
 }
 
+// Overridden in superclass
+- (BOOL) isArchived {
+    return NO;
+}
+
 - (Class)protocolClass {
     NSAssert(NO, @"Must implement in subclass.");
     return nil;
@@ -200,11 +205,20 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (buddy) {
+        if (buddy.username.length) {
             [allBuddies addObject:buddy];
         }
     }];
     return allBuddies;
+}
+
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    if (!uniqueID || !transaction) { return nil; }
+    OTRAccount *account = (OTRAccount*)[super fetchObjectWithUniqueID:uniqueID transaction:transaction];
+    if (!account.username.length) {
+        return nil;
+    }
+    return account;
 }
 
 
@@ -234,6 +248,17 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
         }
     }];
     return accountsArray;
+}
+
++ (NSUInteger) numberOfAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    return [transaction numberOfKeysInCollection:[OTRAccount collection]];
+}
+
++ (nullable OTRAccount*) accountForThread:(id<OTRThreadOwner>)thread transaction:(YapDatabaseReadTransaction*)transaction {
+    NSParameterAssert(thread);
+    if (!thread) { return nil; }
+    OTRAccount *account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
+    return account;
 }
 
 + (NSArray <OTRAccount *>*)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
@@ -279,11 +304,12 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 + (NSDictionary *)encodingBehaviorsByPropertyKey {
     NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
     [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(password))];
+    [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(isArchived))];
     return behaviors;
 }
 
 + (MTLPropertyStorage)storageBehaviorForPropertyWithKey:(NSString *)propertyKey {
-    if ([propertyKey isEqualToString:NSStringFromSelector(@selector(password))]) {
+    if ([propertyKey isEqualToString:NSStringFromSelector(@selector(password))] || [propertyKey isEqualToString:NSStringFromSelector(@selector(isArchived))]) {
         return MTLPropertyStorageNone;
     }
     return [super storageBehaviorForPropertyWithKey:propertyKey];
@@ -318,8 +344,13 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
                 }
                 
                 // Since we only support OTR at the moment, we can finish here, but this should be refactored with a dispatch_group when we support more key types.
-                
-                NSURL *url = [NSURL otr_shareLink:baseURL.absoluteString username:self.username fingerprints:fingerprints];
+                NSMutableArray <NSURLQueryItem*> *queryItems = [NSMutableArray arrayWithCapacity:fingerprints.count];
+                [fingerprints enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+                    NSURLQueryItem *item = [NSURLQueryItem queryItemWithName:key value:obj];
+                    [queryItems addObject:item];
+                }];
+                XMPPJID *jid = [XMPPJID jidWithString:self.username];
+                NSURL *url = [NSURL otr_shareLink:baseURL jid:jid queryItems:queryItems];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionBlock(url, nil);

@@ -113,6 +113,12 @@
 		63FA130C1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA130B1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift */; };
 		63FCB1371DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCB1361DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift */; };
 		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
+		924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
+		924F67C71EA55C6F00528FB6 /* MigrationInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */; };
+		924F68571EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */; };
+		924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */; };
+		924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */; };
+		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
 		D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */; };
 		D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D917CCDD1E553007003636B7 /* ServerCheck.swift */; };
 		D9182E371E943F24001E2BBA /* SignalProtocolC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9182E281E943EF9001E2BBA /* SignalProtocolC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -127,6 +133,8 @@
 		D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
 		D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */; };
 		D92AC2091DB023D8007BD3E7 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */; };
@@ -136,6 +144,8 @@
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D936D6C91E8B0F6C003B1343 /* FileTransferManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */; };
 		D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */; };
+		D937184E1EC13D7B00766D49 /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D937184D1EC13D7B00766D49 /* Purchase.storyboard */; };
+		D93718501EC1402B00766D49 /* MaybeLaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D937184F1EC1402B00766D49 /* MaybeLaterViewController.swift */; };
 		D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
 		D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
 		D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
@@ -304,7 +314,7 @@
 		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB701BA79A7E00CD8331 /* OTRDomainCellInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058F1A16D1A300C17BAE /* OTRDomainCellInfo.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105911A16D1A300C17BAE /* OTROpenInFacebookActivity.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB721BA79A7F00CD8331 /* OTROpenInTwitterActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105931A16D1A300C17BAE /* OTROpenInTwitterActivity.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -362,7 +372,7 @@
 		D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 6346808B1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BE425C1B320EE20017058C /* OTRLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106121A16D1A300C17BAE /* OTRAboutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB11BA79AB500CD8331 /* OTRBuddyViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106161A16D1A300C17BAE /* OTRBuddyViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB21BA79AB600CD8331 /* OTRCertificateDomainViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061A1A16D1A300C17BAE /* OTRCertificatesViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -420,9 +430,13 @@
 		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
+		D985BC771EBD307D00993D27 /* PurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985BC751EBD307D00993D27 /* PurchaseViewController.swift */; };
+		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */; };
 		D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */; };
+		D997E3F41EAECD1400BF72EF /* UITableView+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */; };
+		D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
 		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
@@ -449,6 +463,8 @@
 		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
 		D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B4B4A91E64CB9D00B87B59 /* XMPPPushModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B4B4AC1E64CB9D00B87B59 /* XMPPPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B4B4AA1E64CB9D00B87B59 /* XMPPPushModule.m */; };
+		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
+		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
 		D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */; };
 		D9B9B1371DC802480007F5A7 /* OTRUserInfoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -979,6 +995,12 @@
 		702F03DE10003A33635A366F /* Pods-ChatSecureCorePods-ChatSecureTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.release.xcconfig"; sourceTree = "<group>"; };
 		7A62FCE8FEC1E7C9644F8C38 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
 		9118152C0A7B287ABD07FF70 /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
+		924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigrationInfoHeaderView.xib; path = Interface/MigrationInfoHeaderView.xib; sourceTree = "<group>"; };
+		924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationInfoHeaderView.swift; sourceTree = "<group>"; };
+		924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigratedBuddyHeaderView.swift; sourceTree = "<group>"; };
+		924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigratedBuddyHeaderView.xib; path = Interface/MigratedBuddyHeaderView.xib; sourceTree = "<group>"; };
+		924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRServerDeprecation.swift; sourceTree = "<group>"; };
+		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
 		962ED3D89B1F330A2A34928B /* Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C492FFACC855CE12E882968E /* Pods_ChatSecureCorePods_ChatSecureUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -999,6 +1021,8 @@
 		D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSecureCore.h; sourceTree = "<group>"; };
 		D9227C2E1BA7952100B5E1D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrationViewController.h; sourceTree = "<group>"; };
+		D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrationViewController.m; sourceTree = "<group>"; };
 		D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		D93027561BAA381F000CC975 /* OTRResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTRResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93027581BAA381F000CC975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1010,6 +1034,10 @@
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
 		D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferManager.swift; sourceTree = "<group>"; };
 		D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferTests.swift; sourceTree = "<group>"; };
+		D937184D1EC13D7B00766D49 /* Purchase.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Purchase.storyboard; sourceTree = "<group>"; };
+		D937184F1EC1402B00766D49 /* MaybeLaterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeLaterViewController.swift; sourceTree = "<group>"; };
+		D93718511EC267F800766D49 /* OTRAccountMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrator.h; sourceTree = "<group>"; };
+		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
@@ -1029,11 +1057,15 @@
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
 		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
+		D985BC751EBD307D00993D27 /* PurchaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseViewController.swift; sourceTree = "<group>"; };
+		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRExistingAccountViewController.h; path = "Login View Controllers/OTRExistingAccountViewController.h"; sourceTree = "<group>"; };
 		D989A84E1B5DBD90000608A9 /* OTRExistingAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRExistingAccountViewController.m; path = "Login View Controllers/OTRExistingAccountViewController.m"; sourceTree = "<group>"; };
 		D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRServerCapabilities.h; sourceTree = "<group>"; };
 		D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRServerCapabilities.m; sourceTree = "<group>"; };
 		D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerCapabilitiesViewController.swift; path = Onboarding/ServerCapabilitiesViewController.swift; sourceTree = "<group>"; };
+		D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+ChatSecure.h"; sourceTree = "<group>"; };
+		D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ChatSecure.m"; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
@@ -1084,6 +1116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
 				62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */,
 			);
@@ -1182,6 +1215,8 @@
 		633105011A16D1A300C17BAE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */,
+				D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */,
 				D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */,
 				D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */,
 				D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */,
@@ -1214,6 +1249,8 @@
 			isa = PBXGroup;
 			children = (
 				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
+				D93718511EC267F800766D49 /* OTRAccountMigrator.h */,
+				D93718521EC267F800766D49 /* OTRAccountMigrator.m */,
 				D917CCDD1E553007003636B7 /* ServerCheck.swift */,
 				63CBD67F1C642B6B00AC6D1F /* YapExtensions */,
 				6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */,
@@ -1415,6 +1452,7 @@
 		633105B91A16D1A300C17BAE /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
+				929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */,
 				D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */,
 				63CFB1051ABA492B00A8D27E /* Removed */,
 				633105BA1A16D1A300C17BAE /* OTRAccount.h */,
@@ -1453,6 +1491,7 @@
 				633105FB1A16D1A300C17BAE /* OTRUtilities.m */,
 				633105FC1A16D1A300C17BAE /* OTRXMPPError.h */,
 				633105FD1A16D1A300C17BAE /* OTRXMPPError.m */,
+				924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1460,6 +1499,9 @@
 		633105FE1A16D1A300C17BAE /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D985BC751EBD307D00993D27 /* PurchaseViewController.swift */,
+				D937184F1EC1402B00766D49 /* MaybeLaterViewController.swift */,
+				D937184D1EC13D7B00766D49 /* Purchase.storyboard */,
 				D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */,
 				D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */,
 				638D2DFD1AFAD3AE00F3C50C /* Onboarding */,
@@ -1508,6 +1550,8 @@
 		633105FF1A16D1A300C17BAE /* Login View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */,
+				D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */,
 				638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */,
 				638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */,
 				638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */,
@@ -1551,6 +1595,8 @@
 				6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */,
 				639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */,
 				639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */,
+				924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */,
+				924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1900,6 +1946,8 @@
 				D99F17891BAB946800604558 /* Branding.plist */,
 				D99F178B1BAB947E00604558 /* Secrets.plist */,
 				D9315CAD1BB600450077D2EE /* AddFriendsView.xib */,
+				924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */,
+				924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */,
 			);
 			path = OTRResources;
 			sourceTree = "<group>";
@@ -1953,6 +2001,7 @@
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D985BC791EBD32F700993D27 /* StoreKit.framework */,
 				CCD1F8E85C658C8D3865B584 /* Pods.framework */,
 				46AAC6968EC686E61C8E8EA4 /* Pods_ChatSecureCore.framework */,
 				9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */,
@@ -2006,6 +2055,7 @@
 				632AA73A1D482A1A00F65733 /* OTRSignalSession.h in Headers */,
 				D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */,
 				D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */,
+				D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */,
 				63E353F61BB9E46D005C54C3 /* OTRPushTLVHandlerProtocols.h in Headers */,
 				D93DDBA91BA79AAB00CD8331 /* OTRXMPPLoginHandler.h in Headers */,
 				63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */,
@@ -2060,6 +2110,7 @@
 				D93DDBCE1BA79ADD00CD8331 /* OTRStatusMessageCell.h in Headers */,
 				D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */,
 				D93DDB811BA79A8700CD8331 /* OTRShareSetting.h in Headers */,
+				D997E3F41EAECD1400BF72EF /* UITableView+ChatSecure.h in Headers */,
 				D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */,
 				D93DDB801BA79A8600CD8331 /* OTRSettingsGroup.h in Headers */,
 				D93DDBCD1BA79ADB00CD8331 /* OTRSettingTableViewCell.h in Headers */,
@@ -2077,6 +2128,7 @@
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
 				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
 				D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */,
+				D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
 				D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */,
@@ -2305,6 +2357,9 @@
 							com.apple.DataProtection = {
 								enabled = 1;
 							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -2484,6 +2539,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */,
 				D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */,
 				D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */,
 				D99F178C1BAB947E00604558 /* Secrets.plist in Resources */,
@@ -2494,12 +2550,14 @@
 				D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */,
 				D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */,
 				D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */,
+				D937184E1EC13D7B00766D49 /* Purchase.storyboard in Resources */,
 				D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */,
 				D91E641C1DB179A00074B2D4 /* OMEMODeviceFingerprintCell.xib in Resources */,
 				D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */,
 				D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */,
 				D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */,
 				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
+				924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2699,8 +2757,11 @@
 				D93DDB2A1BA79A5400CD8331 /* OTRUsernameCell.swift in Sources */,
 				D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */,
 				D935EF0C1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m in Sources */,
+				924F67C71EA55C6F00528FB6 /* MigrationInfoHeaderView.swift in Sources */,
 				D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */,
 				634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */,
+				924F68571EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift in Sources */,
+				D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */,
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */,
 				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
@@ -2732,6 +2793,7 @@
 				D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */,
 				D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */,
 				6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */,
+				D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */,
 				D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */,
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStorage.m in Sources */,
@@ -2766,6 +2828,7 @@
 				D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */,
 				D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */,
 				D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */,
+				D985BC771EBD307D00993D27 /* PurchaseViewController.swift in Sources */,
 				D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */,
 				D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */,
 				D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */,
@@ -2822,6 +2885,7 @@
 				D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */,
 				D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */,
 				637ABBCA1DD5312200B18DD2 /* OTROutgoingMessage.m in Sources */,
+				929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */,
 				D9BC71DF1E53B465007A3C4F /* TwoButtonTableViewCell.swift in Sources */,
 				63D65D2E1DD68A8D00D9E52E /* OTRMessage.m in Sources */,
 				D93DDAE81BA79A2800CD8331 /* OTRUtilities.m in Sources */,
@@ -2829,6 +2893,7 @@
 				D93DDAEB1BA79A2800CD8331 /* OTRExistingAccountViewController.m in Sources */,
 				63E413AA1CDA9E2400B17303 /* MessageQueueHandler.swift in Sources */,
 				6340431D1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift in Sources */,
+				D93718501EC1402B00766D49 /* MaybeLaterViewController.swift in Sources */,
 				D93DDAEC1BA79A2800CD8331 /* OTRWelcomeAccountTableViewDelegate.m in Sources */,
 				D936D6C91E8B0F6C003B1343 /* FileTransferManager.swift in Sources */,
 				D93DDAED1BA79A2800CD8331 /* OTRInviteViewController.m in Sources */,
@@ -2860,6 +2925,7 @@
 				63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */,
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
 				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
+				924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */,
 				D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */,
 				D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */,
 				D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */,
@@ -2901,6 +2967,7 @@
 				D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */,
 				D93DDB211BA79A2C00CD8331 /* OTRLockButton.m in Sources */,
 				D93DDB221BA79A2C00CD8331 /* OTRPasswordStrengthView.m in Sources */,
+				D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */,
 				D93DDB231BA79A2D00CD8331 /* OTRRememberPasswordView.m in Sources */,
 				D93DDB241BA79A2D00CD8331 /* OTRSocialButtonsView.m in Sources */,
 				6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */,

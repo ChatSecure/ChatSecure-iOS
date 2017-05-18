@@ -23,6 +23,8 @@
 
 @implementation OTRBuddy
 @synthesize displayName = _displayName;
+@synthesize isArchived = _isArchived;
+@synthesize muteExpiration = _muteExpiration;
 @dynamic statusMessage, chatState, lastSentChatState, status;
 
 /**
@@ -83,6 +85,14 @@
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
+}
+
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    OTRBuddy *buddy = (OTRBuddy*)[super fetchObjectWithUniqueID:uniqueID transaction:transaction];
+    if (!buddy.username.length) {
+        return nil;
+    }
+    return buddy;
 }
 
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
@@ -252,6 +262,16 @@
 
 - (OTRThreadStatus) status {
     return [[OTRBuddyCache sharedInstance] threadStatusForBuddy:self];
+}
+
+- (BOOL) isMuted {
+    if (!self.muteExpiration) {
+        return NO;
+    }
+    if ([[NSDate date] compare:self.muteExpiration] == NSOrderedAscending) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark YapDatabaseRelationshipNode

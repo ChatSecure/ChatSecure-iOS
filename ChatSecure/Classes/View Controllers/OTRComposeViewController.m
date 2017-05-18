@@ -19,8 +19,10 @@
 @import PureLayout;
 @import BButton;
 #import "OTRBuddyInfoCell.h"
+#import "OTRXMPPManager_Private.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
+#import "UITableView+ChatSecure.h"
 
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -43,6 +45,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *groupBarButtonItem;
+@property (nonatomic, strong) UISegmentedControl *inboxArchiveControl;
 
 @end
 
@@ -75,14 +78,17 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.doneBarButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
     
-    NSString *groupString = [NSString fa_stringForFontAwesomeIcon:FAGroup];
-    self.groupBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:groupString style:UIBarButtonItemStylePlain target:self action:@selector(groupButtonPressed:)];
-    [self.groupBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:kFontAwesomeFont size:[UIFont buttonFontSize]]}
-                                      forState:UIControlStateNormal];
+    self.groupBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:GROUP_CHAT_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(groupButtonPressed:)];
     
     
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
+    
+    _inboxArchiveControl = [[UISegmentedControl alloc] initWithItems:@[ACTIVE_BUDDIES_STRING(), ARCHIVE_STRING()]];
+    _inboxArchiveControl.selectedSegmentIndex = 0;
+    [self updateInboxArchiveFilteringAndShowArchived:NO];
+    [_inboxArchiveControl addTarget:self action:@selector(inboxArchiveControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    self.navigationItem.titleView = _inboxArchiveControl;
     
     /////////// TableView ///////////
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -105,7 +111,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     //////// View Handlers /////////
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
-    [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
+    [self.viewHandler setup:OTRFilteredBuddiesName groups:@[OTRBuddyGroup]];
     
     self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
@@ -129,6 +135,40 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+}
+
+- (void)inboxArchiveControlValueChanged:(id)sender {
+    if (![sender isKindOfClass:[UISegmentedControl class]]) {
+        return;
+    }
+    UISegmentedControl *segment = sender;
+    BOOL showArchived = NO;
+    if (segment.selectedSegmentIndex == 0) {
+        showArchived = NO;
+    } else if (segment.selectedSegmentIndex == 1) {
+        showArchived = YES;
+    }
+    [self updateInboxArchiveFilteringAndShowArchived:showArchived];
+}
+
+- (YapDatabaseViewFiltering *)getFilteringBlock:(BOOL)showArchived {
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    return filtering;
+}
+
+- (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredBuddiesName];
+        YapDatabaseViewFiltering *filtering = [self getFilteringBlock:showArchived];
+        [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -240,6 +280,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)switchSelectionMode {
     _selectionModeIsSingle = !_selectionModeIsSingle;
+    
+    // Change from Join Group / Add Buddy
+    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     
     //Update right bar button item
     if (self.selectionModeIsSingle) {
@@ -376,7 +420,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
         }
-        cell.textLabel.text = ADD_BUDDY_STRING();
+        if (_selectionModeIsSingle) {
+            cell.textLabel.text = ADD_BUDDY_STRING();
+        } else {
+            cell.textLabel.text = JOIN_GROUP_STRING();
+        }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         return cell;
@@ -386,7 +434,15 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
         id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
         
-        [cell setThread:threadOwner];
+        __block OTRAccount *account = nil;
+        [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            BOOL showAccount = [self shouldShowAccountLabelWithTransaction:transaction];
+            if (showAccount) {
+                account = [OTRAccount accountForThread:threadOwner transaction:transaction];
+            }
+        }];
+        
+        [cell setThread:threadOwner account:account];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
@@ -398,6 +454,16 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
     
     
+}
+
+/** By default will show account if numAccounts > 0*/
+- (BOOL) shouldShowAccountLabelWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    NSUInteger numberOfAccounts = 0;
+    numberOfAccounts = [OTRAccount numberOfAccountsWithTransaction:transaction];
+    if (numberOfAccounts > 1) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark UITableViewDelegate Methods
@@ -425,10 +491,15 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
+    NSArray *accounts = [OTRAccountsManager allAccounts];
     if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
     {
-        [self addBuddy:accounts];
+        if (_selectionModeIsSingle) {
+            [self addBuddy:accounts];
+        } else {
+            // join group
+            [self joinGroup:tableView];
+        }
     }
     else {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
@@ -443,29 +514,14 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        [self removeThreadOwner:[self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView]];
-    }
+- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
+    NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+    id <OTRThreadOwner> thread = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
+    if (!thread) { return nil; }
+    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:YES connection:OTRDatabaseManager.shared.readWriteDatabaseConnection];
 }
 
-- (void)removeThreadOwner:(id<OTRThreadOwner>)threadOwner {
-    __block NSString *key = [threadOwner threadIdentifier];
-    [self.readWriteConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
-        if (dbBuddy) {
-            BuddyAction *action = [[BuddyAction alloc] init];
-            action.buddy = dbBuddy;
-            action.action = BuddyActionTypeDelete;
-            [action saveWithTransaction:transaction];
-            [dbBuddy removeWithTransaction:transaction];
-        }
-    }];
-}
-
-- (void)addBuddy:(NSArray * _Nullable)accountsAbleToAddBuddies
+- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
 {
     if ([accountsAbleToAddBuddies count] == 0) {
         return; // No accounts
@@ -475,13 +531,59 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     UIViewController *viewController = nil;
     if([accountsAbleToAddBuddies count] > 1) {
         // pick which account
-        viewController = [[OTRChooseAccountViewController alloc] init];
+        OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];
+        chooser.selectionBlock = ^(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account) {
+            OTRNewBuddyViewController *newBuddyVC = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
+            [chooseVC.navigationController pushViewController:newBuddyVC animated:YES];
+        };
+        viewController = chooser;
     }
     else {
         OTRAccount *account = [accountsAbleToAddBuddies firstObject];
         viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
     }
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void) joinGroup:(id)sender {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:JOIN_GROUP_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = XMPP_USERNAME_EXAMPLE_STRING();
+    }];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = [NSString stringWithFormat:@"%@ (%@)", PASSWORD_STRING(), OPTIONAL_STRING()];
+    }];
+    UIAlertAction *joinAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *jidStr = alertController.textFields.firstObject.text;
+        NSString *pass = alertController.textFields.lastObject.text;
+        if (!jidStr.length) {
+            return;
+        }
+        XMPPJID *roomJid = [XMPPJID jidWithString:jidStr];
+        if (!roomJid) {
+            return;
+        }
+        NSArray *accounts = [OTRAccountsManager allAccounts];
+        void (^joinRoom)(OTRAccount *account) = ^void(OTRAccount *account) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+            if (!xmpp) { return; }
+            [xmpp.roomManager joinRoom:roomJid withNickname:account.username subject:nil password:pass];
+        };
+        if (accounts.count > 1) {
+            OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];
+            chooser.selectionBlock = ^(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account) {
+                [chooseVC dismissViewControllerAnimated:YES completion:nil];
+                joinRoom(account);
+            };
+            [self.navigationController pushViewController:chooser animated:YES];
+        } else {
+            joinRoom(accounts.firstObject);
+        }
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:joinAction];
+    [alertController addAction:cancel];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma - mark UIScrollViewDelegate

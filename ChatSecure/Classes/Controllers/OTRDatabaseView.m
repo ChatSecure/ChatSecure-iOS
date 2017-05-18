@@ -16,10 +16,12 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
+NSString *OTRFilteredConversationsName = @"OTRFilteredConversationsName";
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
+NSString *OTRFilteredBuddiesName = @"OTRFilteredBuddiesName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
 
@@ -36,7 +38,29 @@ NSString *OTRPushAccountGroup = @"Account";
 
 @implementation OTRDatabaseView
 
-
++ (BOOL)registerFilteredConversationsViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredConversationsName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *conversationView = [database registeredExtension:OTRConversationDatabaseViewExtensionName];
+    if (!conversationView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    BOOL showArchived = NO;
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRConversationDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
+    return [database registerExtension:filteredView withName:OTRFilteredConversationsName];
+}
 
 + (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database
 {
@@ -50,6 +74,9 @@ NSString *OTRPushAccountGroup = @"Account";
             if ([object isKindOfClass:[OTRBuddy class]])
             {
                 OTRBuddy *buddy = (OTRBuddy *)object;
+                if (!buddy.username.length) {
+                    return nil;
+                }
                 // Hack to show "placeholder" items in list
                 if (buddy.lastMessageId && buddy.lastMessageId.length == 0) {
                     return OTRConversationGroup;
@@ -106,10 +133,11 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"6"
+                                                                   versionTag:@"7"
                                                                       options:options];
     
-    return [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    return result && [self registerFilteredConversationsViewWithDatabase:database];
 }
 
 
@@ -121,6 +149,19 @@ NSString *OTRPushAccountGroup = @"Account";
     if (accountView) {
         return YES;
     }
+    
+    [YapDatabaseViewGrouping withObjectBlock:^NSString * _Nullable(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([collection isEqualToString:[OTRAccount collection]] && [object isKindOfClass:[OTRAccount class]])
+        {
+            OTRAccount *account = object;
+            if (!account.username.length) {
+                return nil;
+            }
+            return OTRAllAccountGroup;
+        }
+        
+        return nil;
+    }];
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key) {
         if ([collection isEqualToString:[OTRAccount collection]])
@@ -149,7 +190,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"1"
+                                                                   versionTag:@"2"
                                                                       options:options];
     
     return [database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
@@ -211,6 +252,10 @@ NSString *OTRPushAccountGroup = @"Account";
             if (!account) {
                 return nil;
             }
+            // Filter out buddies with no username
+            if (!buddy.username.length) {
+                return nil;
+            }
             if (![account.username isEqualToString:buddy.username]) {
                 return OTRBuddyGroup;
             }
@@ -223,6 +268,7 @@ NSString *OTRPushAccountGroup = @"Account";
         OTRBuddy *buddy1 = (OTRBuddy *)object1;
         OTRBuddy *buddy2 = (OTRBuddy *)object2;
         
+        NSComparisonResult result = NSOrderedSame;
         
         if (buddy1.currentStatus == buddy2.currentStatus) {
             NSString *buddy1String = buddy1.username;
@@ -236,13 +282,20 @@ NSString *OTRPushAccountGroup = @"Account";
                 buddy2String = buddy2.displayName;
             }
             
-            return [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
+            result = [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
         }
         else if (buddy1.currentStatus < buddy2.currentStatus) {
-            return NSOrderedAscending;
+            result = NSOrderedAscending;
         }
-        else{
-            return NSOrderedDescending;
+        else {
+            result = NSOrderedDescending;
+        }
+        
+        NSComparisonResult archiveSort = [@(buddy1.isArchived) compare:@(buddy2.isArchived)];
+        if (archiveSort == NSOrderedSame) {
+            return result;
+        } else {
+            return archiveSort;
         }
     }];
     
@@ -253,11 +306,34 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"3"
+                                                           versionTag:@"8"
                                                               options:options];
     
-    return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
+    return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName] && [self registerFilteredBuddiesViewWithDatabase:database];
+}
 
++ (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredBuddiesName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *buddiesView = [database registeredExtension:OTRAllBuddiesDatabaseViewExtensionName];
+    if (!buddiesView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    BOOL showArchived = NO;
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            id<OTRThreadOwner> threadOwner = object;
+            BOOL isArchived = threadOwner.isArchived;
+            return showArchived == isArchived;
+        }
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRAllBuddiesDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
+    return [database registerExtension:filteredView withName:OTRFilteredBuddiesName];
 }
 
 + (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database

@@ -47,7 +47,7 @@ open class OTRWelcomeViewController: UIViewController {
     override open func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "createNewAccountSegue" {
             let createAccountVC: OTRBaseLoginViewController = segue.destination as! OTRBaseLoginViewController
-            createAccountVC.form = OTRXLFormCreator.form(for: OTRAccountType.jabber, createAccount: true)
+            createAccountVC.form = XLFormDescriptor.registerNewAccountForm(with: .jabber)
             createAccountVC.loginHandler = OTRXMPPCreateAccountHandler()
         }
     }

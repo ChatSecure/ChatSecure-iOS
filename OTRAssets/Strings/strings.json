@@ -3,6 +3,42 @@
         "comment": "Title for the about page",
         "string": "About"
     },
+    "ACTIVE_BUDDIES_STRING": {
+        "comment": "segmented control value for active friends",
+        "string": "Active"
+    },
+    "AUDIO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Audio Message"
+    },
+    "MORE_WAYS_TO_HELP_STRING": {
+        "comment": "button for additional ways to help support development of the app",
+        "string": "More Ways to Help"
+    },
+    "VIDEO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Video Message"
+    },
+    "PICTURE_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Picture Message"
+    },
+    "JOIN_GROUP_STRING": {
+        "comment": "Text for joining existing XMPP room",
+        "string": "Join Group"
+    },
+    "ARCHIVE_STRING": {
+        "comment": "Noun. segmented control value for displaying archived conversations",
+        "string": "Archive"
+    },
+    "ARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for archiving an old conversation",
+        "string": "Archive"
+    },
+    "UNARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for moving archived converation back to inbox",
+        "string": "Unarchive"
+    },
     "ABOUT_VERSION_STRING": {
         "comment": "Label for button to show version numbers and licenses",
         "string": "About This Version"
@@ -115,6 +151,10 @@
         "comment": "Title for progress of creating a new account",
         "string": "Creating Account"
     },
+    "DELETE_STRING": {
+        "comment": "action button for deleting something",
+        "string": "Delete"
+    },
     "DELETE_ACCOUNT_MESSAGE_STRING": {
         "comment": "Ask user if they want to delete the stored account information",
         "string": "Permanently delete"
@@ -182,6 +222,10 @@
     "EXTENDED_AWAY_STRING": {
         "comment": "Default message when a user status is set to extended away",
         "string": "Extended Away"
+    },
+    "INBOX_STRING": {
+        "comment": "segmented control value for active conversations",
+        "string": "Inbox"
     },
     "FACEBOOK_STRING": {
         "comment": "the name for facebook",
@@ -270,6 +314,62 @@
     "MESSAGE_COULD_NOT_BE_SENT_STRING": {
         "comment": "Explanation for why a message could not be sent.",
         "string": "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."
+    },
+    "MESSAGE_FRIENDS_WITH_NEW_INFO_STRING": {
+        "comment": "Title for toggle switch to spam your friends with your new account info",
+        "string": "Notify Contacts of New Account"
+    },
+    "MIGRATION_FORM_DETAIL_STRING": {
+        "comment": "Description detail text for account migration form",
+        "string": "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\\n\\nIf you'd like, we can also notify your existing contacts that your account has moved."
+    },
+    "MIGRATION_STRING": {
+        "comment": "Title for migration header view",
+        "string": "It's time to move!"
+    },
+    "MIGRATION_INFO_STRING": {
+        "comment": "Explanation for why migration is needed",
+        "string": "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_INFO_WITH_DATE_STRING": {
+        "comment": "Explanation for why migration is needed, contains a shutdown date",
+        "string": "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_NOTIFICATION_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate",
+        "string": "Your account has expired."
+    },
+    "MIGRATION_NOTIFICATION_WITH_DATE_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate, contains a shutdown date",
+        "string": "Your account is expiring in '%1$d' days."
+    },
+    "MIGRATION_START_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Get Started"
+    },
+    "MIGRATE_ACCOUNT_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Migrate Account"
+    },
+    "MIGRATED_BUDDY_STRING": {
+        "comment": "Title for migrated buddy header view",
+        "string": "Buddy has moved!"
+    },
+    "MIGRATED_BUDDY_INFO_STRING": {
+        "comment": "Explanation that buddy has a different prefered jid in the vcard",
+        "string": "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?"
+    },
+    "MIGRATED_BUDDY_IGNORE": {
+        "comment": "Button to ignore the migrated buddy warning",
+        "string": "Ignore"
+    },
+    "MIGRATED_BUDDY_SWITCH": {
+        "comment": "Button to switch the chat over to the migrated account",
+        "string": "Switch"
+    },
+    "MY_NEW_ACCOUNT_INFO_STRING": {
+        "comment": "label for new account info for migration",
+        "string": "My new account information"
     },
     "NAME_STRING": {
         "comment": "The string describing a buddy's display name",
@@ -470,6 +570,10 @@
     "SAVED_CERTIFICATES_STRING": {
         "comment": "Title for listing the user saved SSL certificates",
         "string": "Saved Certificates"
+    },
+    "PAYMENTS_UNAVAILABLE_STRING": {
+        "comment": "Title for alert when user isn't allowed to make payments",
+        "string": "Payments Unavailable"
     },
     "SAVE_STRING": {
         "comment": "Title for button for saving a setting",
@@ -891,6 +995,10 @@
         "comment": "Describe what resending will do the %@ will be replaced withe the method OTR/OMEMO/Plaintext",
         "string": "Resending this message will use %@."
     },
+    "THANK_YOU_FOR_CONTRIBUTION" : {
+        "comment": "string shown if user has already paid",
+        "string": "Thank you for your contribution!"
+    },
     "VIEW_PROFILE_DESCRIPTION_STRING" : {
         "comment": "Describe how to change a contact's device settings",
         "string": "View profile to review contact's devices or change encryption settings."
@@ -992,7 +1100,7 @@
         "string": "Server Information"
     }, "Server_String_Hint": {
         "comment": "server selection footer",
-        "string": "Choose from our list of trusted servers, or use your own."
+        "string": "Choose from a selection of public servers, or use your own."
     }, "Enable_Tor_String": {
         "comment": "",
         "string": "Enable Tor"

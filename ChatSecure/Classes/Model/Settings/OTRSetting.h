@@ -30,7 +30,7 @@
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass;
 @end
 
-typedef void (^OTRSettingActionBlock)(void);
+typedef void (^OTRSettingActionBlock)(id sender);
 
 @interface OTRSetting : NSObject
 

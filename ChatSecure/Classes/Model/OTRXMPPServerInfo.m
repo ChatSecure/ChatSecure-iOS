@@ -26,10 +26,17 @@
  }
  */
 
+@interface OTRXMPPServerInfo ()
+@property (nonatomic, readonly) NSArray<NSString*> *extensions;
+@end
+
 static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 
 @implementation OTRXMPPServerInfo
 @synthesize portNumber = _portNumber;
+@synthesize websiteURL = _websiteURL;
+@synthesize twitterURL = _twitterURL;
+@synthesize privacyPolicyURL = _privacyPolicyURL;
 
 - (instancetype) initWithDomain:(NSString*)domain {
     if (self = [super init]) {
@@ -51,7 +58,9 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
              @"server": @"server",
              @"onion": @"onion",
              @"portNumber": @"port",
-             @"certificate": @"certificate"
+             @"certificate": @"certificate",
+             @"requiresCaptcha": @"captcha",
+             @"extensions": @"extensions"
              };
 }
 
@@ -68,8 +77,13 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
 }
 
 - (UIImage*) logoImage {
+    UIImage *defaultImage = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil]; // load default image
+    NSParameterAssert(defaultImage);
     NSBundle *bundle = [[self class] serverBundle];
     NSArray *pathComponents = [self.logo pathComponents];
+    if (pathComponents.count < 2) {
+        return defaultImage;
+    }
     NSString *folder = pathComponents[0];
     NSString *fileName = pathComponents[1];
     NSString *extension = [fileName pathExtension];
@@ -77,7 +91,7 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
     NSString *path = [bundle pathForResource:resource ofType:extension inDirectory:folder];
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     if (!image) {
-        image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+        image = defaultImage;
     }
     NSParameterAssert(image);
     return image;
@@ -88,6 +102,34 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
         return _portNumber;
     }
     return 5222;
+}
+
+- (NSURL*) websiteURL {
+    if (_websiteURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _websiteURL;
+}
+
+- (NSURL*) twitterURL {
+    if (_twitterURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _twitterURL;
+}
+
+- (NSURL*) privacyPolicyURL {
+    if (_privacyPolicyURL.absoluteString.length == 0) {
+        return nil;
+    }
+    return _privacyPolicyURL;
+}
+
+- (NSSet<NSString*>*) supportedXEPs {
+    if (!self.extensions) {
+        return [NSSet set];
+    }
+    return [NSSet setWithArray:self.extensions];
 }
 
 + (NSBundle*)serverBundle {
@@ -112,8 +154,22 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
     return _defaultServerList;
 }
 
-+ (NSArray *)serverListFromJSONData:(NSData*)jsonData {
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData {
+    NSSet *desiredXEPs = [[self class] desiredXEPs];
+    return [self serverListFromJSONData:jsonData filterBlock:^BOOL(OTRXMPPServerInfo * _Nonnull server) {
+        BOOL result = server.requiresCaptcha == NO;
+        if (!result) {
+            return NO;
+        }
+        NSSet *supportedXEPs = server.supportedXEPs;
+        result = result && [desiredXEPs isSubsetOfSet:supportedXEPs];
+        return result;
+    }];
+}
+
++ (nullable NSArray<OTRXMPPServerInfo*> *)serverListFromJSONData:(NSData*)jsonData filterBlock:(nonnull BOOL (^)(OTRXMPPServerInfo * _Nonnull))filterBlock {
     NSParameterAssert(jsonData != nil);
+    NSParameterAssert(filterBlock != nil);
     NSError *error = nil;
     NSDictionary *root = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
     NSParameterAssert(root != nil);
@@ -128,7 +184,23 @@ static NSArray<OTRXMPPServerInfo*> *_defaultServerList = nil;
         NSLog(@"Error parsing server list JSON: %@", error);
         return nil;
     }
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(OTRXMPPServerInfo *evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return filterBlock(evaluatedObject);
+    }];
+    servers = [servers filteredArrayUsingPredicate:predicate];
     return servers;
+}
+
++ (NSString*) XEP_0357 {
+    return @"XEP-0357";
+}
+
++ (NSString*) XEP_0363 {
+    return @"XEP-0363";
+}
+
++ (NSSet<NSString*>*) desiredXEPs {
+    return [NSSet setWithObjects:self.XEP_0357, self.XEP_0363, nil];
 }
 
 @end

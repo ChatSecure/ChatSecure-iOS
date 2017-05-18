@@ -353,6 +353,10 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 
 #pragma - mark Singlton Methodd
 
++ (OTRDatabaseManager*) shared {
+    return [self sharedInstance];
+}
+
 + (instancetype)sharedInstance
 {
     static id databaseManager = nil;

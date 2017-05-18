@@ -20,8 +20,9 @@ enum TableSections: Int {
     case invite
     case details
     case loginlogout
+    case migrate
     case delete
-    static let allValues = [account, invite, details, loginlogout, delete]
+    static let allValues = [account, invite, details, loginlogout, migrate, delete]
 }
 
 enum AccountRows: Int {
@@ -30,10 +31,10 @@ enum AccountRows: Int {
 }
 
 @objc(OTRAccountDetailViewController)
-public class AccountDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+open class AccountDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let tableView: UITableView
-    var account: OTRXMPPAccount
+    public let tableView: UITableView
+    public var account: OTRXMPPAccount
     let longLivedReadConnection: YapDatabaseConnection
     let writeConnection: YapDatabaseConnection
     var detailCells: [DetailCellInfo] = []
@@ -54,7 +55,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         self.title = ACCOUNT_STRING()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
@@ -69,7 +70,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.autoPinEdgesToSuperviewEdges()
-        let bundle = OTRAssets.resourcesBundle()
+        let bundle = OTRAssets.resourcesBundle
         for identifier in [XMPPAccountCell.cellIdentifier(), SingleButtonTableViewCell.cellIdentifier()] {
             let nib = UINib(nibName: identifier, bundle: bundle)
             tableView.register(nib, forCellReuseIdentifier: identifier)
@@ -80,7 +81,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     private func setupDetailCells() {
         var serverInfoText = SERVER_INFORMATION_STRING()
         if xmpp.serverCheck.getCombinedPushStatus() == .broken &&
-           OTRBranding.shouldShowPushWarning() {
+           OTRBranding.shouldShowPushWarning {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
         detailCells = [
@@ -99,14 +100,14 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         ]
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(loginStatusChanged(_:)), name: NSNotification.Name(rawValue: OTRXMPPLoginStatusNotificationName), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: xmpp.serverCheck)
         tableView.reloadData()
     }
     
-    public override func viewDidDisappear(_ animated: Bool) {
+    open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
@@ -123,6 +124,11 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     }
     
     // MARK: - User Actions
+    
+    func showMigrateAccount(account: OTRXMPPAccount, sender: Any) {
+        let migrateVC = OTRAccountMigrationViewController(oldAccount: account)
+        self.navigationController?.pushViewController(migrateVC, animated: true)
+    }
     
     func showDeleteDialog(account: OTRXMPPAccount, sender: Any) {
         let alert = UIAlertController(title: "\(DELETE_ACCOUNT_MESSAGE_STRING()) \(account.username)?", message: nil, preferredStyle: .actionSheet)
@@ -170,7 +176,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
     }
     
     func pushLoginView(account: OTRXMPPAccount, sender: Any) {
-        guard let login = OTRBaseLoginViewController(for: account) else { return }
+        let login = OTRBaseLoginViewController(account: account)
         navigationController?.pushViewController(login, animated: true)
     }
     
@@ -191,11 +197,11 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
 
     // MARK: - Table view data source & delegate
 
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return TableSections.allValues.count
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let tableSection = TableSections(rawValue: section) else {
             return 0
         }
@@ -204,13 +210,13 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             return AccountRows.allValues.count
         case .details:
             return detailCells.count
-        case .delete, .loginlogout, .invite:
+        case .delete, .loginlogout, .invite, .migrate:
             return 1
         }
     }
 
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
@@ -230,11 +236,13 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             return deleteCell(account: account, tableView: tableView, indexPath: indexPath)
         case .loginlogout:
             return loginLogoutCell(account: account, tableView: tableView, indexPath: indexPath)
+        case .migrate:
+            return migrateCell(account: account, tableView: tableView, indexPath: indexPath)
         }
         return UITableViewCell() // this should never be reached
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = TableSections(rawValue: indexPath.section) else {
             return
         }
@@ -251,7 +259,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
             let cell = self.tableView(tableView, cellForRowAt: indexPath)
             detail.action(tableView, indexPath, cell)
             return
-        case .invite, .delete, .loginlogout:
+        case .invite, .delete, .loginlogout, .migrate:
             self.tableView.deselectRow(at: indexPath, animated: true)
             if let cell = self.tableView(tableView, cellForRowAt: indexPath) as? SingleButtonTableViewCell, let action = cell.buttonAction {
                 action(cell, cell.button)
@@ -260,7 +268,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         }
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height = UITableViewAutomaticDimension
         guard let section = TableSections(rawValue: indexPath.section) else {
             return height
@@ -274,7 +282,7 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
                     break
                 }
             }
-        case .details, .invite, .delete, .loginlogout:
+        case .details, .invite, .delete, .loginlogout, .migrate:
             break
         }
         return height
@@ -332,13 +340,23 @@ public class AccountDetailViewController: UIViewController, UITableViewDelegate,
         return cell
     }
     
-    func singleButtonCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
+    public func singleButtonCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SingleButtonTableViewCell.cellIdentifier(), for: indexPath) as? SingleButtonTableViewCell else {
             return SingleButtonTableViewCell()
         }
         cell.button.setTitleColor(nil, for: .normal)
         cell.selectionStyle = .default
         cell.button.isEnabled = true
+        return cell
+    }
+    
+    func migrateCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
+        let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
+        cell.button.setTitle(MIGRATE_ACCOUNT_STRING(), for: .normal)
+        cell.buttonAction = { [weak self] (cell, sender) in
+            guard let strongSelf = self else { return }
+            strongSelf.showMigrateAccount(account: strongSelf.account, sender: sender)
+        }
         return cell
     }
     

@@ -54,7 +54,7 @@
     return result;
 }
 
-- (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name subject:(NSString *)subject
+- (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name subject:(NSString *)subject password:(nullable NSString *)password
 {
     dispatch_async(moduleQueue, ^{
         if ([subject length]) {
@@ -93,19 +93,19 @@
     
     /** Create room database object */
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+        OTRXMPPRoom *room = [[OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction] copy];
         if(!room) {
             room = [[OTRXMPPRoom alloc] init];
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
-            
         }
         
         //Other Room properties should be set here
         if ([subject length]) {
             room.subject = subject;
         }
+        room.roomPassword = password;
         
         [room saveWithTransaction:transaction];
     }];
@@ -123,7 +123,7 @@
         [historyElement addAttributeWithName:@"since" stringValue:dateTimeString];
     }
     
-    [room joinRoomUsingNickname:name history:historyElement];
+    [room joinRoomUsingNickname:name history:historyElement password:password];
     return databaseRoomKey;
 }
 
@@ -143,7 +143,7 @@
         
     });
     
-    return [self joinRoom:roomName withNickname:name subject:subject];
+    return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
 - (void)inviteUser:(NSString *)user toRoom:(NSString *)roomJID withMessage:(NSString *)message
@@ -215,7 +215,7 @@
         }];
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
         [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:self.xmppStream.myJID.bare subject:obj.subject];
+            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:self.xmppStream.myJID.bare subject:obj.subject password:obj.roomPassword];
         }];
     }];
 }
@@ -300,6 +300,7 @@
     // </message>
     
     XMPPJID *fromJID = nil;
+    NSString *password = nil;
     
     NSXMLElement * roomInvite = [message elementForName:@"x" xmlns:XMPPMUCUserNamespace];
     NSXMLElement * directInvite = [message elementForName:@"x" xmlns:@"jabber:x:conference"];
@@ -307,9 +308,11 @@
         // XEP-0045
         NSXMLElement * invite  = [roomInvite elementForName:@"invite"];
         fromJID = [XMPPJID jidWithString:[invite attributeStringValueForName:@"from"]];
+        password = [roomInvite elementForName:@"password"].stringValue;
     } else if (directInvite) {
         // XEP-0249
         fromJID = [message from];
+        password = [directInvite attributeStringValueForName:@"password"];
     }
     if (!fromJID) {
         DDLogWarn(@"Could not parse fromJID from room invite: %@", message);
@@ -326,7 +329,7 @@
         DDLogWarn(@"Received room invitation from someone not on our roster! %@ %@", fromJID, message);
         return;
     }
-    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare subject:nil];
+    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare subject:nil password:password];
 }
 
 #pragma - mark XMPPRoomDelegate Methods

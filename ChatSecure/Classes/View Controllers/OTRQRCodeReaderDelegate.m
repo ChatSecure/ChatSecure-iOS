@@ -8,7 +8,8 @@
 
 #import "OTRQRCodeReaderDelegate.h"
 #import "NSURL+ChatSecure.h"
-
+#import "OTRAccount.h"
+#import "OTRProtocolManager.h"
 
 @implementation OTRQRCodeReaderDelegate
 
@@ -28,12 +29,21 @@
     NSURL *url = [NSURL URLWithString:result];
     
     //Todo: Check to make sure url is really a share url
-    __block NSString *username = nil;
+    __block XMPPJID *jid = nil;
     __block NSString *fingerprint = nil;
-    [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
-        username = uName;
-        fingerprint = fPrint;
+    NSString *otr = [OTRAccount fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
+    [url otr_decodeShareLink:^(XMPPJID * _Nullable inJid, NSArray<NSURLQueryItem*> * _Nullable queryItems) {
+        jid = inJid;
+        [queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.name isEqualToString:otr]) {
+                fingerprint = obj.value;
+                *stop = YES;
+            }
+        }];
     }];
+    if (jid) {
+        [OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint buddyAddedCallback:nil];
+    }
     
     //send subscription request to JID
     [self done];

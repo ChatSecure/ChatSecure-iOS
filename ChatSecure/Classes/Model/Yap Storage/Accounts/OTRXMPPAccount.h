@@ -26,5 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
 
+/** Returns the bare JID derived from the self.username property */
+@property (nonatomic, strong, readonly, nullable) XMPPJID *bareJID;
+
 @end
 NS_ASSUME_NONNULL_END
