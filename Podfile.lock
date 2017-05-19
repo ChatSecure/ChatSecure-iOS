@@ -52,9 +52,7 @@ PODS:
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer/CocoaLumberjack
     - IOCipher/common
-  - JSQMessagesViewController (7.3.4):
-    - JSQSystemSoundPlayer (~> 2.0.1)
-  - JSQSystemSoundPlayer (2.0.1)
+  - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.2.0)
@@ -127,9 +125,6 @@ PODS:
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (~> 3.4.0)
-  - Mantle (2.1.0):
-    - Mantle/extobjc (= 2.1.0)
-  - Mantle/extobjc (2.1.0)
   - MBProgressHUD (1.0.0)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -249,13 +244,12 @@ DEPENDENCIES:
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
-  - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`, tag `7.3.4-send_button`)
+  - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - JTSImageViewController (~> 1.4)
   - JVFloatLabeledTextField (~> 1.0)
   - KSCrash (~> 1.15.3)
   - KVOController (~> 1.0)
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
-  - Mantle (~> 2.0)
   - MBProgressHUD (~> 1.0)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
@@ -292,8 +286,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :git: https://github.com/ChatSecure/JSQMessagesViewController
-    :tag: 7.3.4-send_button
+    :path: Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec
   libsqlfs:
     :branch: podspec-fix
     :git: https://github.com/ChatSecure/libsqlfs.git
@@ -312,9 +305,6 @@ CHECKOUT OPTIONS:
   GCDWebServer:
     :commit: '09e728ed805abf5e870893f0cb5f40142bf616a3'
     :git: https://github.com/ChatSecure/GCDWebServer.git
-  JSQMessagesViewController:
-    :git: https://github.com/ChatSecure/JSQMessagesViewController
-    :tag: 7.3.4-send_button
   libsqlfs:
     :commit: 317d21a1e43e28396a62a462a8213a5f33678c2c
     :git: https://github.com/ChatSecure/libsqlfs.git
@@ -340,8 +330,7 @@ SPEC CHECKSUMS:
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   IOCipher: 4cb4cd9a5998f69f4578a51501987dc5951ff092
-  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
-  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  JSQMessagesViewController: 00d0382ca20f3a0913c876754be5b00a6a66aaee
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
@@ -349,7 +338,6 @@ SPEC CHECKSUMS:
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
-  Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
@@ -372,6 +360,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: bbf7b8f0cf8933fdd33eb4f9f46e22308552869b
 
-PODFILE CHECKSUM: 96c89daba1c91ef0ad46e3178ba6c64d4f170e46
+PODFILE CHECKSUM: baeed463b1becffeaf4673ab94ec290374068e6f
 
 COCOAPODS: 1.2.1

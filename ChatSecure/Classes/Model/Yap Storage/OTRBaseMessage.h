@@ -8,7 +8,6 @@
 
 #import "OTRYapDatabaseObject.h"
 #import "OTRMessageEncryptionInfo.h"
-@import JSQMessagesViewController;
 @import YapDatabase;
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
 @protocol OTRThreadOwner;

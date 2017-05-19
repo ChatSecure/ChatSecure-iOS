@@ -36,7 +36,7 @@
 }
 
 /** This will fetch an updated instance of the object */
-- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction {
+- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id object = [[self class] fetchObjectWithUniqueID:self.uniqueId transaction:transaction];
     return object;
 }

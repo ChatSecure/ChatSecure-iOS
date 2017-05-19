@@ -14,16 +14,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol OTRYapDatabaseObjectProtocol <NSObject, NSCoding, NSCopying>
+@required
 
 @property (nonatomic, readonly) NSString *uniqueId;
-
-
-- (void)saveWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
-- (void)removeWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
-/** This will fetch an updated instance of the object. If nil, it means it was deleted or not present in the db. */
-- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
-
 @property (class, readonly) NSString *collection;
+
+- (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+- (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+/** This will fetch an updated instance of the object. If nil, it means it was deleted or not present in the db. */
+- (nullable instancetype)refetchWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 + (nullable instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
 

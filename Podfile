@@ -31,7 +31,7 @@ abstract_target 'ChatSecureCorePods' do
   # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'cocoalumberjack3'
 
 
-  pod 'Mantle', '~> 2.0'
+  # pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
   # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
   # using for in meantime
@@ -73,7 +73,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Forks
-  pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
+  # pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
 
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
   # pod 'YapTaskQueue/SQLCipher', '~> 0.2' # Waiting on @escaping fix upstream
@@ -86,7 +86,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-
+  pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
   target 'ChatSecureCore'
   target 'ChatSecureTests'

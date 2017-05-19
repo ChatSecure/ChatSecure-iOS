@@ -30,4 +30,7 @@
 	url = https://github.com/ChatSecure/SignalProtocol-ObjC.git
 [submodule "Carthage/Checkouts/Mantle"]
 	path = Carthage/Checkouts/Mantle
-	url = https://github.com/Mantle/Mantle.git
+	url = https://github.com/ChatSecure/Mantle.git
+[submodule "Submodules/JSQMessagesViewController"]
+	path = Submodules/JSQMessagesViewController
+	url = git@github.com:ChatSecure/JSQMessagesViewController.git

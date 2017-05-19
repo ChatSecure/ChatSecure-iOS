@@ -8,12 +8,12 @@
 
 @import Foundation;
 @import UIKit;
-@import JSQMessagesViewController;
 
 @class OTRAccount;
 @class OTRXMPPAccount;
 @class OTRXMPPManager;
 @class YapDatabaseConnection;
+@class JSQMessagesViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRTheme : NSObject
