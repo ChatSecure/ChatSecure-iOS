@@ -370,12 +370,12 @@ import SignalProtocolObjC
                     // have successfully decripted the AES key. We should break and use it to decrypt the payload
                     break
                 } catch let error {
-                    //NSLog("Error decrypting: \(error)")
+                    DDLogError("Error decrypting: \(error)")
                     let buddyAddress = SignalAddress(name: fromJID.bare(), deviceId: Int32(senderDeviceId))
                     if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
                         // Session is corrupted
                         let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
-                        //NSLog("Session exists and is corrupted. Deleting...")
+                        DDLogError("Session exists and is corrupted. Deleting...")
                     }
                     return
                 }
@@ -637,14 +637,14 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         } catch let omemoError as OMEMOBundleError {
             switch omemoError {
             case .invalid:
-                //DDLogError("Found invalid stored bundle!")
+                DDLogError("Found invalid stored bundle!")
                 // delete???
                 break
             default:
                 break
             }
         } catch let error {
-            //DDLogError("Other error fetching bundle! \(error)")
+            DDLogError("Other error fetching bundle! \(error)")
         }
         let maxTries = 50
         var tries = 0
@@ -653,11 +653,11 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
             do {
                 _bundle = try self.signalEncryptionManager.generateOutgoingBundle(self.preKeyCount)
             } catch let error {
-                //DDLogError("Error generating bundle! Try #\(tries)/\(maxTries) \(error)")
+                DDLogError("Error generating bundle! Try #\(tries)/\(maxTries) \(error)")
             }
         }
         guard let bundle = _bundle else {
-            //DDLogError("Could not fetch or generate valid bundle!")
+            DDLogError("Could not fetch or generate valid bundle!")
             return nil
         }
         

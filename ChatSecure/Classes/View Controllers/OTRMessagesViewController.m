@@ -1182,6 +1182,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
     
+    // TODO: move this hack to download media items to
+    // somewhere else
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPManager *xmpp = [self xmppManagerWithTransaction:transaction];
+        if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]]) {
+            [xmpp.fileTransferManager downloadMediaIfNeeded:(OTRIncomingMessage*)message];
+        }
+    }];
+    
     UIColor *textColor = nil;
     if ([message isMessageIncoming]) {
         textColor = [UIColor blackColor];

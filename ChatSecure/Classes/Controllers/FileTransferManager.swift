@@ -11,7 +11,7 @@ import XMPPFramework
 import CocoaLumberjack
 import OTRKit
 
-public enum FileTransferManagerError: Error {
+public enum FileTransferError: Error {
     case unknown
     case noServers
     case serverError
@@ -82,7 +82,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 if let url = url {
                     self.upload(file: url, shouldEncrypt: shouldEncrypt, completion: completion)
                 } else {
-                    let error = FileTransferManagerError.fileNotFound
+                    let error = FileTransferError.fileNotFound
                     DDLogError("Upload filed: File not found \(error)")
                     self.callbackQueue.async {
                         completion(nil, error)
@@ -117,14 +117,14 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             guard let service = self.servers.first else {
                 DDLogWarn("No HTTP upload servers available")
                 self.callbackQueue.async {
-                    completion(nil, FileTransferManagerError.noServers)
+                    completion(nil, FileTransferError.noServers)
                 }
                 return
             }
             if UInt(data.count) > service.maxSize {
                 DDLogError("HTTP Upload exceeds max size \(data.count) > \(service.maxSize)")
                 self.callbackQueue.async {
-                    completion(nil, FileTransferManagerError.exceedsMaxSize)
+                    completion(nil, FileTransferError.exceedsMaxSize)
                 }
                 return
             }
@@ -136,7 +136,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 guard let key = OTRPasswordGenerator.randomData(withLength: 32), let iv = OTRPasswordGenerator.randomData(withLength: 16) else {
                     DDLogError("Could not generate key/iv")
                     self.callbackQueue.async {
-                        completion(nil, FileTransferManagerError.keyGenerationError)
+                        completion(nil, FileTransferError.keyGenerationError)
                     }
                     return
                 }
@@ -180,17 +180,17 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                                     if let outURL = components.url {
                                         completion(outURL, nil)
                                     } else {
-                                        completion(nil, FileTransferManagerError.urlFormatting)
+                                        completion(nil, FileTransferError.urlFormatting)
                                     }
                                 } else {
-                                    completion(nil, FileTransferManagerError.urlFormatting)
+                                    completion(nil, FileTransferError.urlFormatting)
                                 }
                             } else {
                                 // The plaintext case
                                 completion(slot.getURL, nil)
                             }
                         } else {
-                            completion(nil, FileTransferManagerError.serverError)
+                            completion(nil, FileTransferError.serverError)
                         }
                     }
                 })
@@ -368,11 +368,68 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 
 // MARK: - Scanning and downloading incoming media
 extension FileTransferManager {
-
+    
+    
+    public func downloadMediaIfNeeded(_ incomingMessage: OTRIncomingMessage) {
+        // Bail out if we've already downloaded the media
+        if incomingMessage.mediaItemUniqueId != nil {
+            DDLogWarn("Already downloaded media for this item")
+            return
+        }
+        guard let url = incomingMessage.downloadableURLs.first else {
+            // TODO: Only handles first URL. We cannot attach multiple media items yet.
+            DDLogWarn("No URLs found for media item")
+            return
+        }
+        
+        self.urlSession.getTasksWithCompletionHandler { (tasks, _, _) in
+            // Bail out if we've already got a task for this
+            for task in tasks where task.originalRequest?.url == url {
+                DDLogWarn("Already have outstanding task: \(task)")
+                return
+            }
+            
+            let request = URLRequest(url: url)
+            self.urlSession.dataTask(with: request, completionHandler: { (inData, urlResponse, error) in
+                if let error = error {
+                    DDLogError("Error downloading file \(error)")
+                    return
+                }
+                guard var data = inData else { return }
+                let authTagSize = 16 // i'm not sure if this can be assumed, but how else would we know the size?
+                if let (key, iv) = url.aesGcmKey, data.count > authTagSize {
+                    
+                    let cryptedData = data.subdata(in: 0..<data.count - authTagSize)
+                    let authTag = data.subdata(in: data.count - authTagSize..<data.count)
+                    let cryptoData = OTRCryptoData(data: cryptedData, authTag: authTag)
+                    do {
+                        data = try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
+                    } catch let error {
+                        DDLogError("Error decrypting data: \(error)")
+                        return
+                    }
+                }
+                let media = OTRMediaItem(filename: url.lastPathComponent, mimeType: urlResponse?.mimeType, isIncoming: true)
+                incomingMessage.mediaItemUniqueId = media.uniqueId
+                OTRMediaFileManager.sharedInstance().setData(data, for: media, buddyUniqueId: incomingMessage.buddyUniqueId, completion: { (bytesWritten, error) in
+                    if let error = error {
+                        DDLogError("Error copying data: \(error)")
+                        return
+                    }
+                    self.connection.asyncReadWrite({ (transaction) in
+                        media.save(with: transaction)
+                        incomingMessage.save(with: transaction)
+                    })
+                }, completionQueue: nil)
+            })
+        }
+    }
 }
 
-extension OTRIncomingMessage {
-    
+extension OTRMessageProtocol {
+    public var downloadableURLs: [URL] {
+        return self.messageText?.downloadableURLs ?? []
+    }
 }
 
 // MARK: - Extensions
@@ -430,6 +487,33 @@ enum URLScheme: String {
     case https = "https"
     case aesgcm = "aesgcm"
     static let downloadableSchemes: [URLScheme] = [.https, .aesgcm]
+}
+
+enum MimeTypes: String {
+    case jpeg = "image/jpeg"
+    case png = "image/png"
+}
+
+extension URL {
+    
+    /** URL scheme matches aesgcm:// */
+    var isAesGcm: Bool {
+        return scheme == URLScheme.aesgcm.rawValue
+    }
+    
+    /** Has hex anchor with key and IV. 48 bytes w/ 16 iv + 32 key */
+    var anchorData: Data? {
+        if !isAesGcm { return nil }
+        guard let anchor = self.fragment else { return nil }
+        return anchor.dataFromHex()
+    }
+    
+    var aesGcmKey: (key: Data, iv: Data)? {
+        guard let data = self.anchorData, data.count == 48 else { return nil }
+        let iv = data.subdata(in: 0..<16)
+        let key = data.subdata(in: 16..<48)
+        return (key, iv)
+    }
 }
 
 public extension String {
