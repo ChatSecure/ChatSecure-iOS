@@ -8,6 +8,7 @@
 
 #import "OTRMediaItem.h"
 #import "OTRImages.h"
+#import "OTRFileItem.h"
 @import JSQMessagesViewController;
 @import YapDatabase;
 @import OTRKit;
@@ -29,6 +30,34 @@
         }
     }
     return self;
+}
+
+/** Returns the appropriate subclass (OTRImageItem, etc) for incoming file */
++ (instancetype) incomingItemWithFilename:(NSString*)filename
+                                 mimeType:(nullable NSString*)mimeType {
+    if (!mimeType) {
+        mimeType = OTRKitGetMimeTypeForExtension(filename.pathExtension);
+    }
+    NSRange imageRange = [mimeType rangeOfString:@"image"];
+    NSRange audioRange = [mimeType rangeOfString:@"audio"];
+    NSRange videoRange = [mimeType rangeOfString:@"video"];
+    
+    OTRMediaItem *mediaItem = nil;
+    Class mediaClass = nil;
+    if(audioRange.location == 0) {
+        mediaClass = [OTRAudioItem class];
+    } else if (imageRange.location == 0) {
+        mediaClass = [OTRImageItem class];
+    } else if (videoRange.location == 0) {
+        mediaClass = [OTRVideoItem class];
+    } else {
+        mediaClass = [OTRFileItem class];
+    }
+    
+    if (mediaClass) {
+        mediaItem = [[mediaClass alloc] initWithFilename:filename mimeType:mimeType isIncoming:YES];
+    }
+    return mediaItem;
 }
 
 - (NSString*) mimeType {

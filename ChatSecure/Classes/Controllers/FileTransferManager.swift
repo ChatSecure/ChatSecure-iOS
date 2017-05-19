@@ -175,7 +175,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                                 // If there's a AES-GCM key, we gotta put it in the url
                                 // and change the scheme to `aesgcm`
                                 if var components = URLComponents(url: slot.getURL, resolvingAgainstBaseURL: true) {
-                                    components.scheme = "aesgcm"
+                                    components.scheme = URLScheme.aesgcm.rawValue
                                     components.fragment = outKeyIv.hexString()
                                     if let outURL = components.url {
                                         completion(outURL, nil)
@@ -376,10 +376,17 @@ extension FileTransferManager {
             DDLogWarn("Already downloaded media for this item")
             return
         }
-        guard let url = incomingMessage.downloadableURLs.first else {
+        guard var url = incomingMessage.downloadableURLs.first else {
             // TODO: Only handles first URL. We cannot attach multiple media items yet.
             DDLogWarn("No URLs found for media item")
             return
+        }
+        // Turn aesgcm links into https links
+        if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+            components.scheme = URLScheme.https.rawValue
+            if let rawURL = components.url {
+                url = rawURL
+            }
         }
         
         self.urlSession.getTasksWithCompletionHandler { (tasks, _, _) in
@@ -390,15 +397,21 @@ extension FileTransferManager {
             }
             
             let request = URLRequest(url: url)
-            self.urlSession.dataTask(with: request, completionHandler: { (inData, urlResponse, error) in
+            DDLogVerbose("Downloading media item at URL: \(url)")
+            let task = self.urlSession.dataTask(with: request, completionHandler: { (inData, urlResponse, error) in
                 if let error = error {
                     DDLogError("Error downloading file \(error)")
                     return
                 }
-                guard var data = inData else { return }
+                guard var data = inData, let response = urlResponse else {
+                    DDLogError("No data or response for URL \(url)")
+                    return
+                }
+                DDLogVerbose("Received response \(response)")
                 let authTagSize = 16 // i'm not sure if this can be assumed, but how else would we know the size?
                 if let (key, iv) = url.aesGcmKey, data.count > authTagSize {
-                    
+                    DDLogVerbose("Received encrypted response, attempting decryption...")
+
                     let cryptedData = data.subdata(in: 0..<data.count - authTagSize)
                     let authTag = data.subdata(in: data.count - authTagSize..<data.count)
                     let cryptoData = OTRCryptoData(data: cryptedData, authTag: authTag)
@@ -408,20 +421,27 @@ extension FileTransferManager {
                         DDLogError("Error decrypting data: \(error)")
                         return
                     }
+                    DDLogVerbose("Decrpytion successful")
                 }
-                let media = OTRMediaItem(filename: url.lastPathComponent, mimeType: urlResponse?.mimeType, isIncoming: true)
-                incomingMessage.mediaItemUniqueId = media.uniqueId
+                let media = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: urlResponse?.mimeType)
                 OTRMediaFileManager.sharedInstance().setData(data, for: media, buddyUniqueId: incomingMessage.buddyUniqueId, completion: { (bytesWritten, error) in
                     if let error = error {
                         DDLogError("Error copying data: \(error)")
                         return
                     }
                     self.connection.asyncReadWrite({ (transaction) in
+                        media.transferProgress = 1.0
                         media.save(with: transaction)
-                        incomingMessage.save(with: transaction)
+                        if let message = incomingMessage.refetch(with: transaction) {
+                            message.mediaItemUniqueId = media.uniqueId
+                            message.save(with: transaction)
+                        } else {
+                            DDLogError("Message not found: \(incomingMessage)")
+                        }
                     })
                 }, completionQueue: nil)
             })
+            task.resume()
         }
     }
 }
@@ -503,9 +523,9 @@ extension URL {
     
     /** Has hex anchor with key and IV. 48 bytes w/ 16 iv + 32 key */
     var anchorData: Data? {
-        if !isAesGcm { return nil }
         guard let anchor = self.fragment else { return nil }
-        return anchor.dataFromHex()
+        let data = anchor.dataFromHex()
+        return data
     }
     
     var aesGcmKey: (key: Data, iv: Data)? {

@@ -463,6 +463,8 @@
 		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
 		D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B4B4A91E64CB9D00B87B59 /* XMPPPushModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B4B4AC1E64CB9D00B87B59 /* XMPPPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B4B4AA1E64CB9D00B87B59 /* XMPPPushModule.m */; };
+		D9B79B951ECF951F00883963 /* OTRFileItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B79B931ECF951F00883963 /* OTRFileItem.h */; };
+		D9B79B961ECF951F00883963 /* OTRFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B79B941ECF951F00883963 /* OTRFileItem.m */; };
 		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
 		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
@@ -1084,6 +1086,8 @@
 		D9AE3A2F1BA8D84500255537 /* OTRBranding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBranding.m; sourceTree = "<group>"; };
 		D9B4B4A91E64CB9D00B87B59 /* XMPPPushModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPushModule.h; sourceTree = "<group>"; };
 		D9B4B4AA1E64CB9D00B87B59 /* XMPPPushModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPushModule.m; sourceTree = "<group>"; };
+		D9B79B931ECF951F00883963 /* OTRFileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFileItem.h; sourceTree = "<group>"; };
+		D9B79B941ECF951F00883963 /* OTRFileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFileItem.m; sourceTree = "<group>"; };
 		D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoProfileCell.swift; sourceTree = "<group>"; };
 		D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoProfileCell.xib; sourceTree = "<group>"; };
 		D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUserInfoProfile.h; sourceTree = "<group>"; };
@@ -1646,6 +1650,8 @@
 		633620961A76E854006E8739 /* Media Items */ = {
 			isa = PBXGroup;
 			children = (
+				D9B79B931ECF951F00883963 /* OTRFileItem.h */,
+				D9B79B941ECF951F00883963 /* OTRFileItem.m */,
 				63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */,
 				63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */,
 				633620971A76E87B006E8739 /* OTRImageItem.h */,
@@ -2096,6 +2102,7 @@
 				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,
 				D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */,
 				D93DDB831BA79A8800CD8331 /* OTRViewSetting.h in Headers */,
+				D9B79B951ECF951F00883963 /* OTRFileItem.h in Headers */,
 				637ABBC91DD5312200B18DD2 /* OTROutgoingMessage.h in Headers */,
 				D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */,
 				D93DDB821BA79A8700CD8331 /* OTRValueSetting.h in Headers */,
@@ -2923,6 +2930,7 @@
 				D91C86681E4E6DEE008BD763 /* ServerCapabilityInfo.swift in Sources */,
 				D93DDB001BA79A2900CD8331 /* OTRComposeViewController.m in Sources */,
 				63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */,
+				D9B79B961ECF951F00883963 /* OTRFileItem.m in Sources */,
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
 				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
 				924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */,

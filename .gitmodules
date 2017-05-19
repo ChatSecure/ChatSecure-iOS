@@ -28,3 +28,6 @@
 [submodule "Carthage/Checkouts/SignalProtocol-ObjC"]
 	path = Carthage/Checkouts/SignalProtocol-ObjC
 	url = https://github.com/ChatSecure/SignalProtocol-ObjC.git
+[submodule "Carthage/Checkouts/Mantle"]
+	path = Carthage/Checkouts/Mantle
+	url = https://github.com/Mantle/Mantle.git

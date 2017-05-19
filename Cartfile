@@ -1,3 +1,4 @@
 # github "ChatSecure/SignalProtocol-ObjC" ~> 1.0.0
 github "ChatSecure/SignalProtocol-ObjC" "241f439"
 github "ChatSecure/SignalProtocolC" "4335dfb"
+github "Mantle/Mantle" ~> 2.1.0

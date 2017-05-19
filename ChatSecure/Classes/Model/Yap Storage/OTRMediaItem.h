@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
                          mimeType:(nullable NSString*)mimeType
                        isIncoming:(BOOL)isIncoming NS_DESIGNATED_INITIALIZER;
 
+/** Returns the appropriate subclass (OTRImageItem, etc) for incoming file. Only image/audio/video supported at the moment. */
++ (instancetype) incomingItemWithFilename:(NSString*)filename
+                                 mimeType:(nullable NSString*)mimeType;
+
 - (instancetype) init NS_UNAVAILABLE;
 
 - (void)touchParentMessage DEPRECATED_MSG_ATTRIBUTE("Use touchParentMessageWithTransaction: instead.");

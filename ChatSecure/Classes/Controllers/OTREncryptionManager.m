@@ -597,23 +597,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     newMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:fingerprint.fingerprint];
     newMessage.text = nil;
     
-    NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
-    NSRange audioRange = [transfer.mimeType rangeOfString:@"audio"];
-    NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];
-    
-    OTRMediaItem *mediaItem = nil;
-    Class mediaClass = nil;
-    if(audioRange.location == 0) {
-        mediaClass = [OTRAudioItem class];
-    } else if (imageRange.location == 0) {
-        mediaClass = [OTRImageItem class];
-    } else if (videoRange.location == 0) {
-        mediaClass = [OTRVideoItem class];
-    }
-    
-    if (mediaClass) {
-        mediaItem = [[mediaClass alloc] initWithFilename:transfer.fileName mimeType:transfer.mimeType isIncoming:YES];
-    }
+    OTRMediaItem *mediaItem = [OTRMediaItem incomingItemWithFilename:transfer.fileName mimeType:transfer.mimeType];
     
     newMessage.mediaItemUniqueId = mediaItem.uniqueId;
     
