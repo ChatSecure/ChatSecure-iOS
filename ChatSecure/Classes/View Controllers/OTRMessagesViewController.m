@@ -1197,6 +1197,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
+    cell.textView.delegate = self;    
     return cell;
 }
 
@@ -1791,6 +1792,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
+    if ([URL otr_isInviteLink]) {
+        NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
+        activity.webpageURL = URL;
+        [[OTRAppDelegate appDelegate] application:[UIApplication sharedApplication] continueUserActivity:activity restorationHandler:nil];
+        return NO;
+    }
+    
     UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[URL]];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
