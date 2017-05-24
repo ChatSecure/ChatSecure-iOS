@@ -369,7 +369,6 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 // MARK: - Scanning and downloading incoming media
 extension FileTransferManager {
     
-    
     public func downloadMediaIfNeeded(_ incomingMessage: OTRIncomingMessage) {
         // Bail out if we've already downloaded the media
         if incomingMessage.mediaItemUniqueId != nil {
@@ -446,9 +445,15 @@ extension FileTransferManager {
     }
 }
 
-extension OTRMessageProtocol {
-    public var downloadableURLs: [URL] {
+fileprivate extension OTRMessageProtocol {
+    fileprivate var downloadableURLs: [URL] {
         return self.messageText?.downloadableURLs ?? []
+    }
+}
+
+public extension OTRBaseMessage {
+    @objc public var downloadableNSURLs: [NSURL] {
+        return self.downloadableURLs as [NSURL]
     }
 }
 

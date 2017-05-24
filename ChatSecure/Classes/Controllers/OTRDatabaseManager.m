@@ -160,24 +160,24 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     
     ////// Register Extensions////////
     
-    // Register realtionship extension
-    YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
-    
-    [self.database asyncRegisterExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName] completionBlock:nil];
-    
-    // Register Secondary Index
-    YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
-    [self.database asyncRegisterExtension:secondaryIndex withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameSecondaryIndexName] completionBlock:nil];
-    YapDatabaseSecondaryIndex *messageIndex = [self setupMessageSecondaryIndexes];
-    [self.database asyncRegisterExtension:messageIndex withName:OTRMessagesSecondaryIndex completionBlock:nil];
-    
-    // Register action manager
-    self.actionManager = [[YapDatabaseActionManager alloc] init];
-    NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
-    [self.database asyncRegisterExtension:self.actionManager withName:actionManagerName completionBlock:nil];
-    
     //Async register all the views
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_block_t registerExtensions = ^{
+        // Register realtionship extension
+        YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
+        
+        [self.database registerExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName]];
+        
+        // Register Secondary Index
+        YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
+        [self.database registerExtension:secondaryIndex withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameSecondaryIndexName]];
+        YapDatabaseSecondaryIndex *messageIndex = [self setupMessageSecondaryIndexes];
+        [self.database registerExtension:messageIndex withName:OTRMessagesSecondaryIndex];
+        
+        // Register action manager
+        self.actionManager = [[YapDatabaseActionManager alloc] init];
+        NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
+        [self.database registerExtension:self.actionManager withName:actionManagerName];
+        
         [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
@@ -197,7 +197,20 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
         NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
         [self.database registerExtension:searchResultsView withName:viewName];
-    });
+    };
+    
+#if DEBUG
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    // This can make it easier when writing tests
+    if (environment[@"SYNC_DB_STARTUP"]) {
+        registerExtensions();
+    } else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), registerExtensions);
+    }
+#else
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), registerExtensions);
+#endif
+    
     
     if (self.database != nil) {
         return YES;

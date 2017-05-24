@@ -43,6 +43,7 @@ import Foundation
     case signalSignedPreKey
     case messageActionEdgeName
     case buddyActionEdgeName
+    case download // for OTRDownloadMessage -> OTRBaseMessage
     
     public func name() -> String {
         switch self {
@@ -54,6 +55,7 @@ import Foundation
             case .signalSignedPreKey: return "SignalSignedPreKey"
             case .messageActionEdgeName: return "MessageActionEdgeName"
             case .buddyActionEdgeName: return "BuddyActionEdgeName"
+            case .download: return "download"
         }
     }
 }

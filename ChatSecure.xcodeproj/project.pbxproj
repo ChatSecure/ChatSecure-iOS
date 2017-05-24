@@ -129,6 +129,9 @@
 		D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */; };
 		D91E641A1DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91E64181DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift */; };
 		D91E641C1DB179A00074B2D4 /* OMEMODeviceFingerprintCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91E64191DB156E90074B2D4 /* OMEMODeviceFingerprintCell.xib */; };
+		D91F9EFB1ED6301500AEA62C /* OTRDownloadMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = D91F9EF91ED6301500AEA62C /* OTRDownloadMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D91F9EFC1ED6301500AEA62C /* OTRDownloadMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D91F9EFA1ED6301500AEA62C /* OTRDownloadMessage.m */; };
+		D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */; };
 		D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */; };
 		D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
@@ -1078,6 +1081,9 @@
 		D91C866A1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerCapabilityTableViewCell.xib; sourceTree = "<group>"; };
 		D91E64181DB156E90074B2D4 /* OMEMODeviceFingerprintCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OMEMODeviceFingerprintCell.swift; sourceTree = "<group>"; };
 		D91E64191DB156E90074B2D4 /* OMEMODeviceFingerprintCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OMEMODeviceFingerprintCell.xib; sourceTree = "<group>"; };
+		D91F9EF91ED6301500AEA62C /* OTRDownloadMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDownloadMessage.h; sourceTree = "<group>"; };
+		D91F9EFA1ED6301500AEA62C /* OTRDownloadMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDownloadMessage.m; sourceTree = "<group>"; };
+		D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferIntegrationTests.swift; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSecureCore.h; sourceTree = "<group>"; };
@@ -1477,6 +1483,8 @@
 		633105B81A16D1A300C17BAE /* Yap Storage */ = {
 			isa = PBXGroup;
 			children = (
+				D91F9EF91ED6301500AEA62C /* OTRDownloadMessage.h */,
+				D91F9EFA1ED6301500AEA62C /* OTRDownloadMessage.m */,
 				63D150F81D8A0B46006FB2E2 /* OMEMO-Storage */,
 				63BA43DA1D417C34007FAF7F /* Signal-Storage */,
 				63CBD68E1C642B8100AC6D1F /* YapActions */,
@@ -1846,6 +1854,7 @@
 				6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */,
 				63F0CAFA1E60C1B40045359C /* OTRYapViewTest.swift */,
 				D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */,
+				D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */,
 				6323C6FF1E396D1900D0FB42 /* TestImages */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 				63F614DA1BB214640083A06A /* ChatSecureTests-Bridging-Header.h */,
@@ -2261,6 +2270,7 @@
 				D9A7756F1E43F8A200027864 /* ProxyXMPPStream.h in Headers */,
 				D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */,
 				D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */,
+				D91F9EFB1ED6301500AEA62C /* OTRDownloadMessage.h in Headers */,
 				D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */,
 				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
 				D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */,
@@ -2879,6 +2889,7 @@
 				635E51A91DA82A4E002B70AB /* OTROMEMOTestModule.swift in Sources */,
 				635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */,
 				63634CE91DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift in Sources */,
+				D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */,
 				635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */,
 				63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */,
 			);
@@ -3045,6 +3056,7 @@
 				D9B4B4AC1E64CB9D00B87B59 /* XMPPPushModule.m in Sources */,
 				D92AC2091DB023D8007BD3E7 /* UserProfileViewController.swift in Sources */,
 				6326D9B01DC3D0F100D72403 /* OTRYapMessageSendAction.m in Sources */,
+				D91F9EFC1ED6301500AEA62C /* OTRDownloadMessage.m in Sources */,
 				D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */,
 				D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */,
 				D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */,
