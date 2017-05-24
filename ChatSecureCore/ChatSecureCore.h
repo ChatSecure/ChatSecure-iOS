@@ -83,6 +83,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPServerInfo.h"
 #import "XMPPPushModule.h"
+#import "OTRAccountMigrator.h"
 
 //Signal Models
 #import "OTRAccountSignalIdentity.h"

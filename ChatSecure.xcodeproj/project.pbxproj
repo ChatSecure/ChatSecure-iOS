@@ -459,7 +459,7 @@
 		D9B4B4AB1E64CB9D00B87B59 /* XMPPPushModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B4B4A91E64CB9D00B87B59 /* XMPPPushModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B4B4AC1E64CB9D00B87B59 /* XMPPPushModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B4B4AA1E64CB9D00B87B59 /* XMPPPushModule.m */; };
 		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
-		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
+		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
 		D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */; };
 		D9B9B1371DC802480007F5A7 /* OTRUserInfoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
