@@ -135,6 +135,10 @@
         "comment": "Copy string to clipboard as in copy and paste",
         "string": "Copy"
     },
+    "COPY_LINK_STRING": {
+        "comment": "Copy link URL to clipboard as in copy and paste",
+        "string": "Copy Link"
+    },
     "CREATED_BY_STRING": {
         "comment": "Start of sentence that will be followed by names",
         "string": "Created by"

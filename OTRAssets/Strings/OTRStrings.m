@@ -72,6 +72,8 @@ NSString* CONNECTING_STRING() { return [OTRLanguageManager translatedString:@"Co
 NSString* CONNECTING_TO_TOR_STRING() { return [OTRLanguageManager translatedString:@"Connecting to Tor"]; }
 /** "Connect", String for button to connect connect */
 NSString* CONNECT_STRING() { return [OTRLanguageManager translatedString:@"Connect"]; }
+/** "Copy Link", Copy link URL to clipboard as in copy and paste */
+NSString* COPY_LINK_STRING() { return [OTRLanguageManager translatedString:@"Copy Link"]; }
 /** "Copy", Copy string to clipboard as in copy and paste */
 NSString* COPY_STRING() { return [OTRLanguageManager translatedString:@"Copy"]; }
 /** "Created by", Start of sentence that will be followed by names */

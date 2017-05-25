@@ -9,23 +9,53 @@
 #import "OTRMediaItem.h"
 #import "OTRImages.h"
 #import "OTRFileItem.h"
+#import "OTRLog.h"
+#import "OTRTextItem.h"
+#import "OTRHTMLItem.h"
 @import JSQMessagesViewController;
 @import YapDatabase;
 @import OTRKit;
+@import MobileCoreServices;
 #import "OTRDatabaseManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+
+static NSString* GetExtensionForMimeType(NSString* mimeType) {
+    NSCParameterAssert(mimeType.length > 0);
+    if (!mimeType.length) { return @""; }
+    NSString *extension = @"";
+    CFStringRef cfMimeType = (__bridge CFStringRef)mimeType;
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, cfMimeType, NULL);
+    if (uti) {
+        extension = CFBridgingRelease(UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension));
+        CFRelease(uti);
+    }
+    return extension;
+}
+
 
 @implementation OTRMediaItem
 @synthesize mimeType = _mimeType;
 
 - (instancetype) initWithFilename:(NSString *)filename mimeType:(NSString*)mimeType isIncoming:(BOOL)isIncoming {
+    NSParameterAssert(filename);
     if (self = [super init]) {
+        if (!filename.length) {
+            filename = @"file";
+        }
         _filename = [filename copy];
         _isIncoming = isIncoming;
         _transferProgress = 0.0f;
-        if (!mimeType) {
+        if (!mimeType.length) {
             _mimeType = OTRKitGetMimeTypeForExtension(filename.pathExtension);
         } else {
+            NSString *extension = GetExtensionForMimeType(mimeType);
+            if (![filename.pathExtension isEqualToString:extension]) {
+                DDLogWarn(@"Given file extension does not match expected extension from mime type: %@ %@", filename.pathExtension, extension);
+                if (!filename.pathExtension.length && extension.length > 0) {
+                    _filename = [filename stringByAppendingPathExtension:extension];
+                    DDLogInfo(@"Created new filename with best guess for file extension: %@", _filename);
+                }
+            }
             _mimeType = [mimeType copy];
         }
     }
@@ -41,6 +71,8 @@
     NSRange imageRange = [mimeType rangeOfString:@"image"];
     NSRange audioRange = [mimeType rangeOfString:@"audio"];
     NSRange videoRange = [mimeType rangeOfString:@"video"];
+    NSRange htmlRange = [mimeType rangeOfString:@"text/html"];
+    NSRange textRange = [mimeType rangeOfString:@"text"];
     
     OTRMediaItem *mediaItem = nil;
     Class mediaClass = nil;
@@ -50,6 +82,12 @@
         mediaClass = [OTRImageItem class];
     } else if (videoRange.location == 0) {
         mediaClass = [OTRVideoItem class];
+    } else if (textRange.location == 0) {
+        if (htmlRange.location == 0) {
+            mediaClass = [OTRHTMLItem class];
+        } else {
+            mediaClass = [OTRTextItem class];
+        }
     } else {
         mediaClass = [OTRFileItem class];
     }

@@ -454,6 +454,13 @@
 		D9A7BCE71E4554E200888A8E /* OTRXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */; };
 		D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */; };
 		D9AA246C1CAB401800337ECA /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */; };
+		D9ABD71E1ED787EE00219A9C /* OTRHTMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */; };
+		D9ABD71F1ED787EE00219A9C /* OTRHTMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */; };
+		D9ABD72B1ED7886100219A9C /* OTRTextItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD7291ED7886100219A9C /* OTRTextItem.h */; };
+		D9ABD72C1ED7886100219A9C /* OTRTextItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABD72A1ED7886100219A9C /* OTRTextItem.m */; };
+		D9ABD7531ED792F200219A9C /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9ABD73C1ED792D800219A9C /* HTMLReader.framework */; };
+		D9ABD7541ED7931200219A9C /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9ABD73C1ED792D800219A9C /* HTMLReader.framework */; };
+		D9ABD7551ED7931200219A9C /* HTMLReader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9ABD73C1ED792D800219A9C /* HTMLReader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9AE3A111BA8CBFA00255537 /* OTRAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = D9AE3A101BA8CBFA00255537 /* OTRAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9AE3A1B1BA8CC8600255537 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F91A16D1A300C17BAE /* OTRSecrets.m */; };
@@ -559,6 +566,97 @@
 			remoteGlobalIDString = D93027551BAA381F000CC975;
 			remoteInfo = OTRResources;
 		};
+		D9ABD73B1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C6C1F4C1A179BF600236076;
+			remoteInfo = "HTMLReader iOS";
+		};
+		D9ABD73D1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C9C3ECA176BC53900E982C9;
+			remoteInfo = "Tests on iOS";
+		};
+		D9ABD73F1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C88293B18369DD70051653C;
+			remoteInfo = "HTMLReader OS X";
+		};
+		D9ABD7411ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C88295018369DD70051653C;
+			remoteInfo = "Tests on OS X";
+		};
+		D9ABD7431ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D10776E1C1AC2DF00CF9B41;
+			remoteInfo = "HTMLReader tvOS";
+		};
+		D9ABD7451ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0D1077771C1AC2DF00CF9B41;
+			remoteInfo = "Tests on tvOS";
+		};
+		D9ABD7471ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C319BC31C618863000DAA63;
+			remoteInfo = "HTMLReader watchOS";
+		};
+		D9ABD7491ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CD5250918DC83E6003F46A3;
+			remoteInfo = Benchmarker;
+		};
+		D9ABD74B1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C9513C91A80971100BB2CC9;
+			remoteInfo = "Encoding Labeler";
+		};
+		D9ABD74D1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C9A2A071836FEAE0059FE17;
+			remoteInfo = "Entity Fetcher";
+		};
+		D9ABD74F1ED792D800219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C9C3EB9176BC53900E982C9;
+			remoteInfo = "HTMLReader iOS Static Library";
+		};
+		D9ABD7511ED792E900219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C6C1F4B1A179BF600236076;
+			remoteInfo = "HTMLReader iOS";
+		};
+		D9ABD7561ED7931200219A9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C6C1F4B1A179BF600236076;
+			remoteInfo = "HTMLReader iOS";
+		};
 		D9AE3A1E1BA8CCFA00255537 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
@@ -635,6 +733,7 @@
 				D9182E391E943F31001E2BBA /* SignalProtocolObjC.framework in Embed Frameworks */,
 				D9182E371E943F24001E2BBA /* SignalProtocolC.framework in Embed Frameworks */,
 				D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */,
+				D9ABD7551ED7931200219A9C /* HTMLReader.framework in Embed Frameworks */,
 				D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -1140,6 +1239,11 @@
 		D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPStream.h; sourceTree = "<group>"; };
 		D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPStream.m; sourceTree = "<group>"; };
 		D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = "Pods/gtm-oauth2/Source/Touch/GTMOAuth2ViewTouch.xib"; sourceTree = SOURCE_ROOT; };
+		D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRHTMLItem.h; sourceTree = "<group>"; };
+		D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRHTMLItem.m; sourceTree = "<group>"; };
+		D9ABD7291ED7886100219A9C /* OTRTextItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTextItem.h; sourceTree = "<group>"; };
+		D9ABD72A1ED7886100219A9C /* OTRTextItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTextItem.m; sourceTree = "<group>"; };
+		D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HTMLReader.xcodeproj; path = Carthage/Checkouts/HTMLReader/HTMLReader.xcodeproj; sourceTree = "<group>"; };
 		D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleButtonView.h; sourceTree = "<group>"; };
 		D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleButtonView.m; sourceTree = "<group>"; };
 		D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OTRAssets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1186,6 +1290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9ABD7541ED7931200219A9C /* HTMLReader.framework in Frameworks */,
 				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
 				62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */,
@@ -1205,6 +1310,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9ABD7531ED792F200219A9C /* HTMLReader.framework in Frameworks */,
 				D9B79BBB1ECF9FCE00883963 /* Mantle.framework in Frameworks */,
 				D9182E3C1E943F60001E2BBA /* SignalProtocolObjC.framework in Frameworks */,
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
@@ -1719,10 +1825,14 @@
 		633620961A76E854006E8739 /* Media Items */ = {
 			isa = PBXGroup;
 			children = (
+				D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */,
+				D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */,
 				D9B79B931ECF951F00883963 /* OTRFileItem.h */,
 				D9B79B941ECF951F00883963 /* OTRFileItem.m */,
 				63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */,
 				63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */,
+				D9ABD7291ED7886100219A9C /* OTRTextItem.h */,
+				D9ABD72A1ED7886100219A9C /* OTRTextItem.m */,
 				633620971A76E87B006E8739 /* OTRImageItem.h */,
 				633620981A76E87B006E8739 /* OTRImageItem.m */,
 				6336209A1A76E88C006E8739 /* OTRVideoItem.h */,
@@ -2031,11 +2141,30 @@
 		D99497771E9302E40068F19D /* Carthage */ = {
 			isa = PBXGroup;
 			children = (
+				D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */,
 				D9B79B9E1ECF9F8700883963 /* Mantle.xcodeproj */,
 				D9182E2B1E943EFD001E2BBA /* SignalProtocolObjC.xcodeproj */,
 				D9182E221E943EF9001E2BBA /* SignalProtocolC.xcodeproj */,
 			);
 			name = Carthage;
+			sourceTree = "<group>";
+		};
+		D9ABD72E1ED792D800219A9C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9ABD73C1ED792D800219A9C /* HTMLReader.framework */,
+				D9ABD73E1ED792D800219A9C /* Tests on iOS.xctest */,
+				D9ABD7401ED792D800219A9C /* HTMLReader.framework */,
+				D9ABD7421ED792D800219A9C /* Tests on OS X.xctest */,
+				D9ABD7441ED792D800219A9C /* HTMLReader.framework */,
+				D9ABD7461ED792D800219A9C /* Tests on tvOS.xctest */,
+				D9ABD7481ED792D800219A9C /* HTMLReader.framework */,
+				D9ABD74A1ED792D800219A9C /* Benchmarker */,
+				D9ABD74C1ED792D800219A9C /* Encoding Labeler */,
+				D9ABD74E1ED792D800219A9C /* Entity Fetcher */,
+				D9ABD7501ED792D800219A9C /* libHTMLReader.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		D9AE3A0F1BA8CBFA00255537 /* OTRAssets */ = {
@@ -2112,6 +2241,7 @@
 			files = (
 				D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */,
 				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
+				D9ABD72B1ED7886100219A9C /* OTRTextItem.h in Headers */,
 				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
 				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
 				D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */,
@@ -2272,6 +2402,7 @@
 				D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */,
 				D91F9EFB1ED6301500AEA62C /* OTRDownloadMessage.h in Headers */,
 				D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */,
+				D9ABD71E1ED787EE00219A9C /* OTRHTMLItem.h in Headers */,
 				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
 				D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */,
 				D93DDB341BA79A7000CD8331 /* NSFileManager+ChatSecure.h in Headers */,
@@ -2336,6 +2467,7 @@
 			dependencies = (
 				D99F17901BAB9CD400604558 /* PBXTargetDependency */,
 				D9227C3E1BA7952100B5E1D0 /* PBXTargetDependency */,
+				D9ABD7571ED7931200219A9C /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -2378,6 +2510,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9ABD7521ED792E900219A9C /* PBXTargetDependency */,
 				D9B79BBD1ECF9FD500883963 /* PBXTargetDependency */,
 				D9182E3B1E943F55001E2BBA /* PBXTargetDependency */,
 				D9AE3A1F1BA8CCFA00255537 /* PBXTargetDependency */,
@@ -2532,6 +2665,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = D9ABD72E1ED792D800219A9C /* Products */;
+					ProjectRef = D9ABD72D1ED792D800219A9C /* HTMLReader.xcodeproj */;
+				},
+				{
 					ProductGroup = D9B79B9F1ECF9F8700883963 /* Products */;
 					ProjectRef = D9B79B9E1ECF9F8700883963 /* Mantle.xcodeproj */;
 				},
@@ -2583,6 +2720,83 @@
 			fileType = wrapper.framework;
 			path = SignalProtocolObjC.framework;
 			remoteRef = D9182E331E943EFD001E2BBA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD73C1ED792D800219A9C /* HTMLReader.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLReader.framework;
+			remoteRef = D9ABD73B1ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD73E1ED792D800219A9C /* Tests on iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Tests on iOS.xctest";
+			remoteRef = D9ABD73D1ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7401ED792D800219A9C /* HTMLReader.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLReader.framework;
+			remoteRef = D9ABD73F1ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7421ED792D800219A9C /* Tests on OS X.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Tests on OS X.xctest";
+			remoteRef = D9ABD7411ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7441ED792D800219A9C /* HTMLReader.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLReader.framework;
+			remoteRef = D9ABD7431ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7461ED792D800219A9C /* Tests on tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Tests on tvOS.xctest";
+			remoteRef = D9ABD7451ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7481ED792D800219A9C /* HTMLReader.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = HTMLReader.framework;
+			remoteRef = D9ABD7471ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD74A1ED792D800219A9C /* Benchmarker */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Benchmarker;
+			remoteRef = D9ABD7491ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD74C1ED792D800219A9C /* Encoding Labeler */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "Encoding Labeler";
+			remoteRef = D9ABD74B1ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD74E1ED792D800219A9C /* Entity Fetcher */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "Entity Fetcher";
+			remoteRef = D9ABD74D1ED792D800219A9C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9ABD7501ED792D800219A9C /* libHTMLReader.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHTMLReader.a;
+			remoteRef = D9ABD74F1ED792D800219A9C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D9B79BA91ECF9F8700883963 /* Mantle.framework */ = {
@@ -3004,6 +3218,7 @@
 				D93DDAD21BA79A2600CD8331 /* OTROAuthXMPPAccount.m in Sources */,
 				D93DDAD31BA79A2600CD8331 /* OTRXMPPAccount.m in Sources */,
 				63CBD6901C642B9E00AC6D1F /* BuddyActions.swift in Sources */,
+				D9ABD72C1ED7886100219A9C /* OTRTextItem.m in Sources */,
 				D93DDAD41BA79A2600CD8331 /* OTRXMPPTorAccount.m in Sources */,
 				D93DDAD51BA79A2700CD8331 /* OTRMediaItem.m in Sources */,
 				D93DDAD61BA79A2700CD8331 /* OTRImageItem.m in Sources */,
@@ -3123,6 +3338,7 @@
 				6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */,
 				D93DDB251BA79A2D00CD8331 /* OTRTitleSubtitleView.m in Sources */,
 				D9BC71DA1E53B2BF007A3C4F /* SingleButtonTableViewCell.swift in Sources */,
+				D9ABD71F1ED787EE00219A9C /* OTRHTMLItem.m in Sources */,
 				D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */,
 				D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */,
 				632BF0401E3817A400C2D0C2 /* OTRXMPPChangeAvatar.swift in Sources */,
@@ -3180,6 +3396,16 @@
 			isa = PBXTargetDependency;
 			target = D93027551BAA381F000CC975 /* OTRResources */;
 			targetProxy = D99F178F1BAB9CD400604558 /* PBXContainerItemProxy */;
+		};
+		D9ABD7521ED792E900219A9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "HTMLReader iOS";
+			targetProxy = D9ABD7511ED792E900219A9C /* PBXContainerItemProxy */;
+		};
+		D9ABD7571ED7931200219A9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "HTMLReader iOS";
+			targetProxy = D9ABD7561ED7931200219A9C /* PBXContainerItemProxy */;
 		};
 		D9AE3A1F1BA8CCFA00255537 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

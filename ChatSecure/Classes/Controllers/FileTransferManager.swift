@@ -396,7 +396,7 @@ extension FileTransferManager {
     public func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
         // Bail out if we've already downloaded the media
         if downloadMessage.mediaItemUniqueId != nil {
-            DDLogWarn("Already downloaded media for this item")
+            // DDLogWarn("Already downloaded media for this item")
             return
         }
         var url = downloadMessage.url

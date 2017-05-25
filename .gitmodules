@@ -34,3 +34,6 @@
 [submodule "Submodules/JSQMessagesViewController"]
 	path = Submodules/JSQMessagesViewController
 	url = git@github.com:ChatSecure/JSQMessagesViewController.git
+[submodule "Carthage/Checkouts/HTMLReader"]
+	path = Carthage/Checkouts/HTMLReader
+	url = https://github.com/nolanw/HTMLReader.git

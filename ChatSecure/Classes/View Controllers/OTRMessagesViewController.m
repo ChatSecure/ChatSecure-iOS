@@ -50,6 +50,9 @@
 #import "OTRYapMessageSendAction.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRBuddyCache.h"
+#import "OTRTextItem.h"
+#import "OTRHTMLItem.h"
+#import "OTRFileItem.h"
 @import YapDatabase;
 @import PureLayout;
 @import KVOController;
@@ -631,6 +634,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if (![message isKindOfClass:[OTRChatMessageGroup class]]) {
         [actions addObject:[self viewProfileAction]];
+    }
+    
+    if ([message isKindOfClass:[OTRDownloadMessage class]]) {
+        OTRDownloadMessage *download = (OTRDownloadMessage*)message;
+        if ([download.url.scheme isEqualToString:@"https"]) {
+            UIAlertAction *copyLinkAction = [UIAlertAction actionWithTitle:COPY_LINK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIPasteboard.generalPasteboard.persistent = YES;
+                UIPasteboard.generalPasteboard.URL = download.url;
+            }];
+            UIAlertAction *openInSafari = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [UIApplication.sharedApplication openURL:download.url];
+            }];
+            [actions addObject:copyLinkAction];
+            [actions addObject:openInSafari];
+        }
+        
     }
     
     [actions addObject:[self cancleAction]];
@@ -1660,6 +1679,10 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             }
             else if ([item isKindOfClass:[OTRAudioItem class]]) {
                 [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+            } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
+                // OTRDownloadMessage *download = (OTRDownloadMessage*)message;
+                // Janky hack to open URL for now
+                [self didTapAvatar:message sender:collectionView];
             }
         }];
     }

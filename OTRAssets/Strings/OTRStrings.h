@@ -72,6 +72,8 @@ FOUNDATION_EXPORT NSString* CONNECTING_STRING();
 FOUNDATION_EXPORT NSString* CONNECTING_TO_TOR_STRING();
 /** "Connect", String for button to connect connect */
 FOUNDATION_EXPORT NSString* CONNECT_STRING();
+/** "Copy Link", Copy link URL to clipboard as in copy and paste */
+FOUNDATION_EXPORT NSString* COPY_LINK_STRING();
 /** "Copy", Copy string to clipboard as in copy and paste */
 FOUNDATION_EXPORT NSString* COPY_STRING();
 /** "Created by", Start of sentence that will be followed by names */
