@@ -8,17 +8,9 @@
 
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
+#import "OTRDownloadMessage.h"
 @import JSQMessagesViewController;
 
-@interface OTRBaseMessage (JSQMessageData)
-
-@end
-
-@interface OTRIncomingMessage (JSQMessageData) <JSQMessageData>
-
-@end
-
-
-@interface OTROutgoingMessage (JSQMessageData) <JSQMessageData>
+@interface OTRBaseMessage (JSQMessageData) <JSQMessageData>
 
 @end

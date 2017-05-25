@@ -369,17 +369,37 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 // MARK: - Scanning and downloading incoming media
 extension FileTransferManager {
     
-    public func downloadMediaIfNeeded(_ incomingMessage: OTRIncomingMessage) {
+    /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
+    public func createAndDownloadItemsIfNeeded(message: OTRBaseMessage, readConnection: YapDatabaseConnection) {
+        if message.mediaItemUniqueId != nil || message.text?.characters.count == 0 || message.downloadableURLs.count == 0 {
+            DDLogVerbose("Download of message not needed \(message.uniqueId)")
+            return
+        }
+        var downloads: [OTRDownloadMessage] = []
+        readConnection.read { (transaction) in
+            downloads = OTRDownloadMessage.existingDownloads(for: message, transaction: transaction)
+        }
+        if downloads.count == 0 {
+            downloads = OTRDownloadMessage.downloads(for: message)
+            connection.readWrite({ (transaction) in
+                for download in downloads {
+                    download.save(with: transaction)
+                }
+            })
+        }
+        for download in downloads {
+            downloadMediaIfNeeded(download)
+        }
+    }
+    
+    /** Downloads media for a single downloadmessage */
+    public func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
         // Bail out if we've already downloaded the media
-        if incomingMessage.mediaItemUniqueId != nil {
+        if downloadMessage.mediaItemUniqueId != nil {
             DDLogWarn("Already downloaded media for this item")
             return
         }
-        guard var url = incomingMessage.downloadableURLs.first else {
-            // TODO: Only handles first URL. We cannot attach multiple media items yet.
-            DDLogWarn("No URLs found for media item")
-            return
-        }
+        var url = downloadMessage.url
         // Turn aesgcm links into https links
         if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
             components.scheme = URLScheme.https.rawValue
@@ -423,7 +443,7 @@ extension FileTransferManager {
                     DDLogVerbose("Decrpytion successful")
                 }
                 let media = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: urlResponse?.mimeType)
-                OTRMediaFileManager.sharedInstance().setData(data, for: media, buddyUniqueId: incomingMessage.buddyUniqueId, completion: { (bytesWritten, error) in
+                OTRMediaFileManager.sharedInstance().setData(data, for: media, buddyUniqueId: downloadMessage.buddyUniqueId, completion: { (bytesWritten, error) in
                     if let error = error {
                         DDLogError("Error copying data: \(error)")
                         return
@@ -431,11 +451,11 @@ extension FileTransferManager {
                     self.connection.asyncReadWrite({ (transaction) in
                         media.transferProgress = 1.0
                         media.save(with: transaction)
-                        if let message = incomingMessage.refetch(with: transaction) {
+                        if let message = downloadMessage.refetch(with: transaction) {
                             message.mediaItemUniqueId = media.uniqueId
                             message.save(with: transaction)
                         } else {
-                            DDLogError("Message not found: \(incomingMessage)")
+                            DDLogError("Message not found: \(downloadMessage)")
                         }
                     })
                 }, completionQueue: nil)

@@ -1184,12 +1184,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     // TODO: move this hack to download media items to
     // somewhere else
+    __block OTRXMPPManager *xmpp = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRXMPPManager *xmpp = [self xmppManagerWithTransaction:transaction];
-        if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]]) {
-            [xmpp.fileTransferManager downloadMediaIfNeeded:(OTRIncomingMessage*)message];
-        }
+        xmpp = [self xmppManagerWithTransaction:transaction];
     }];
+    if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]]) {
+        [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:(OTRIncomingMessage*)message readConnection:self.readOnlyDatabaseConnection];
+    }
     
     UIColor *textColor = nil;
     if ([message isMessageIncoming]) {

@@ -36,88 +36,46 @@
     return media;
 }
 
-@end
-
-@implementation OTROutgoingMessage (JSQMessageData)
-
 - (NSString *)senderId {
     __block NSString *sender = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
-        OTRAccount *account = [buddy accountWithTransaction:transaction];
-        sender = account.uniqueId;
-     }];
+    if (self.isMessageIncoming) {
+        sender = self.buddyUniqueId;
+    } else {
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            sender = account.uniqueId;
+        }];
+    }
     return sender;
 }
 
 - (NSString *)senderDisplayName {
     __block NSString *sender = @"";
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
-        OTRAccount *account = [buddy accountWithTransaction:transaction];
-        if ([account.displayName length]) {
-            sender = account.displayName;
-        }
-        else {
-            sender = account.username;
-        }
-    }];
+    if (self.isMessageIncoming) {
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            if ([buddy.displayName length]) {
+                sender = buddy.displayName;
+            }
+            else {
+                sender = buddy.username;
+            }
+        }];
+    } else {
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            if ([account.displayName length]) {
+                sender = account.displayName;
+            }
+            else {
+                sender = account.username;
+            }
+        }];
+    }
     return sender;
-}
-
-- (NSUInteger)messageHash
-{
-    return [super messageHash];
-}
-
-- (BOOL)isMediaMessage
-{
-    return [super isMediaMessage];
-}
-
-- (id<JSQMessageMediaData>)media
-{
-    return [super media];
 }
 
 @end
 
-@implementation OTRIncomingMessage (JSQMessageData)
-
-- (NSString *)senderId
-{
-    return self.buddyUniqueId;
-    
-}
-
-- (NSString *)senderDisplayName {
-    __block NSString *sender = @"";
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
-        if ([buddy.displayName length]) {
-            sender = buddy.displayName;
-        }
-        else {
-            sender = buddy.username;
-        }
-    }];
-    return sender;
-}
-
-- (NSUInteger)messageHash
-{
-    return [super messageHash];
-}
-
-- (BOOL)isMediaMessage
-{
-    return [super isMediaMessage];
-}
-
-- (id<JSQMessageMediaData>)media
-{
-    return [super media];
-}
-
-
-@end
