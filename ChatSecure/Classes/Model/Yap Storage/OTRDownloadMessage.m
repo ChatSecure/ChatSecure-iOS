@@ -7,7 +7,9 @@
 //
 
 @import YapDatabase;
+@import OTRAssets;
 #import "OTRLog.h"
+#import "OTRImages.h"
 #import "OTRDownloadMessage.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -99,6 +101,61 @@
     }
     NSUInteger count = [relationship edgeCountWithName:edgeName];
     return count > 0;
+}
+
+@end
+
+@implementation UIAlertAction (OTRDownloadMessage)
+
++ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sender:(id)sender viewController:(UIViewController*)viewController {
+    NSParameterAssert(downloadMessage);
+    NSParameterAssert(sender);
+    NSParameterAssert(viewController);
+    if (!downloadMessage || !sender || !viewController) { return @[]; }
+    NSMutableArray<UIAlertAction*> *actions = [NSMutableArray new];
+    
+    NSURL *url = nil;
+    // sometimes the scheme is aesgcm, which can't be shared normally
+    if ([downloadMessage.url.scheme isEqualToString:@"https"]) {
+        url = downloadMessage.url;
+    }
+    
+    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSMutableArray *activityItems = [NSMutableArray new];
+        if (url) {
+            [activityItems addObject:url];
+        }
+        // This is sorta janky, but only support fetching images for now
+        if (downloadMessage.mediaItemUniqueId.length) {
+            UIImage *image = [OTRImages imageWithIdentifier:downloadMessage.mediaItemUniqueId];
+            if (image) {
+                [activityItems addObject:image];
+            }
+        }
+        UIActivityViewController *share = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        
+        if ([sender isKindOfClass:[UIView class]]) {
+            UIView *view = sender;
+            share.popoverPresentationController.sourceView = view;
+            share.popoverPresentationController.sourceRect = view.bounds;
+        }
+        [viewController presentViewController:share animated:YES completion:nil];
+    }];
+    [actions addObject:shareAction];
+    
+    if (url) {
+        UIAlertAction *copyLinkAction = [UIAlertAction actionWithTitle:COPY_LINK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIPasteboard.generalPasteboard.persistent = YES;
+            UIPasteboard.generalPasteboard.URL = url;
+        }];
+        UIAlertAction *openInSafari = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [UIApplication.sharedApplication openURL:url];
+        }];
+        [actions addObject:copyLinkAction];
+        [actions addObject:openInSafari];
+    }
+    
+    return actions;
 }
 
 @end

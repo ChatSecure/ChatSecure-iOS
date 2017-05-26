@@ -27,4 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL) hasExistingDownloadsForMessage:(OTRBaseMessage*)message transaction:(YapDatabaseReadTransaction*)transaction;
 
 @end
+
+@interface UIAlertAction (OTRDownloadMessage)
+
++ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sender:(id)sender viewController:(UIViewController*)viewController;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -638,18 +638,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([message isKindOfClass:[OTRDownloadMessage class]]) {
         OTRDownloadMessage *download = (OTRDownloadMessage*)message;
-        if ([download.url.scheme isEqualToString:@"https"]) {
-            UIAlertAction *copyLinkAction = [UIAlertAction actionWithTitle:COPY_LINK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                UIPasteboard.generalPasteboard.persistent = YES;
-                UIPasteboard.generalPasteboard.URL = download.url;
-            }];
-            UIAlertAction *openInSafari = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [UIApplication.sharedApplication openURL:download.url];
-            }];
-            [actions addObject:copyLinkAction];
-            [actions addObject:openInSafari];
-        }
-        
+        NSArray<UIAlertAction*> *downloadActions = [UIAlertAction actionsForDownloadMessage:download sender:self viewController:self];
+        [actions addObjectsFromArray:downloadActions];
     }
     
     [actions addObject:[self cancleAction]];
