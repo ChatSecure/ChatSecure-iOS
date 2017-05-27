@@ -143,16 +143,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 
 - (UIView *)mediaView
 {
-    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
-    if (image) {
-        CGSize size = [self mediaViewDisplaySize];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.frame = CGRectMake(0, 0, size.width, size.height);
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.clipsToBounds = YES;
-        [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
-        return imageView;
-    }
+    [self fetchMediaData];
     return nil;
 }
 
@@ -190,6 +181,52 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:self buddyUniqueId:buddyUniqueId];
     return url;
 }
+
++ (nullable instancetype) mediaItemForMessage:(id<OTRMessageProtocol>)message transaction:(YapDatabaseReadTransaction*)transaction {
+    OTRMediaItem *item = [OTRMediaItem fetchObjectWithUniqueID:message.messageMediaItemKey transaction:transaction];
+    return item;
+}
+
+- (BOOL) shouldFetchMediaData {
+    return YES;
+}
+
+- (void) fetchMediaData {
+    if (![self shouldFetchMediaData]) {
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // The superview should handle creating the actual imageview
+        // this code is used to fetch the image from the data store and then cache in ram
+        __block NSString *buddyUniqueId = nil;
+        [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
+            buddyUniqueId = [message buddyUniqueId];
+        }];
+        NSError *error = nil;
+        NSData *data = [OTRMediaFileManager.shared dataForItem:self buddyUniqueId:buddyUniqueId error:&error];
+        if(!data.length) {
+            DDLogWarn(@"No data found for media item: %@", error);
+            return;
+        }
+        BOOL result = [self handleMediaData:data];
+        if (!result) {
+            DDLogError(@"Could not handle display for media item %@", self);
+            return;
+        }
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [self touchParentMessageWithTransaction:transaction];
+        }];
+    });
+}
+
+/** Overrideable in subclasses. This is called after data is fetched from db, but before display */
+- (BOOL) handleMediaData:(NSData*)mediaData {
+    NSParameterAssert(mediaData.length > 0);
+    if (!mediaData.length) { return NO; }
+    return NO;
+}
+
 
 #pragma - mark YapDatabaseRelationshipNode Methods
 

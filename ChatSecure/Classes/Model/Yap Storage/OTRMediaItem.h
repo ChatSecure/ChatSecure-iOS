@@ -40,5 +40,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction;
 
+/** Fetches existing media item. Returns nil if not found */
++ (nullable instancetype) mediaItemForMessage:(id<OTRMessageProtocol>)message transaction:(YapDatabaseReadTransaction*)transaction;
+
+// MARK: - Media Fetching
+
+/* Return NO if data is already cached to prevent refetch */
+- (BOOL) shouldFetchMediaData;
+/** Triggers a refretch of media data. This is called internally when mediaView is accessed. */
+- (void) fetchMediaData;
+/** Overrideable in subclasses. This is called after data is fetched from db in fetchMediaData, but before display. Return YES if successful or NO if there was an error. */
+- (BOOL) handleMediaData:(NSData*)mediaData;
+
 @end
 NS_ASSUME_NONNULL_END

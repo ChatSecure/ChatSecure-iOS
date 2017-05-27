@@ -53,45 +53,57 @@
     return [super mediaViewDisplaySize];
 }
 
+- (BOOL) shouldFetchMediaData {
+    return ![OTRImages imageWithIdentifier:self.uniqueId];
+}
+
+- (void) fetchMediaData {
+    if (![self shouldFetchMediaData]) {
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AVURLAsset *asset = [AVURLAsset assetWithURL:[self mediaURL]];
+        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        imageGenerator.appliesPreferredTrackTransform = YES;
+        NSError *error = nil;
+        //Grab middle frame
+        CMTime time = CMTimeMultiplyByFloat64(asset.duration, 0.5);
+        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&error];
+        UIImage *image = [UIImage imageWithCGImage:imageRef];
+        CGImageRelease(imageRef);
+        if (image && !error) {
+            [OTRImages setImage:image forIdentifier:self.uniqueId];
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [self touchParentMessageWithTransaction:transaction];
+            }];
+        }
+    });
+}
+
 - (UIView *)mediaView
 {
-    UIView *view = [super mediaView];
-    if (!view) {
-        //async loading image into OTRImages image cache
-        __weak typeof(self)weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            AVURLAsset *asset = [AVURLAsset assetWithURL:[strongSelf mediaURL]];
-            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-            imageGenerator.appliesPreferredTrackTransform = YES;
-            NSError *error = nil;
-            //Grab middle frame
-            CMTime time = CMTimeMultiplyByFloat64(asset.duration, 0.5);
-            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&error];
-            UIImage *image = [UIImage imageWithCGImage:imageRef];
-            CGImageRelease(imageRef);
-            if (image && !error) {
-                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    [strongSelf touchParentMessageWithTransaction:transaction];
-                }];
-            }
-        });
-    } else {
-        UIImage *playIcon = [[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:playIcon];
-        imageView.backgroundColor = [UIColor clearColor];
-        imageView.contentMode = UIViewContentModeCenter;
-        imageView.clipsToBounds = YES;
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        [view addSubview:imageView];
-        [imageView autoCenterInSuperview];
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
+    if (!image) {
+        [self fetchMediaData];
+        return nil;
     }
+    CGSize size = [self mediaViewDisplaySize];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.frame = CGRectMake(0, 0, size.width, size.height);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
     
+    UIImage *playIcon = [[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
+    UIImageView *playImageView = [[UIImageView alloc] initWithImage:playIcon];
+    playImageView.backgroundColor = [UIColor clearColor];
+    playImageView.contentMode = UIViewContentModeCenter;
+    playImageView.clipsToBounds = YES;
+    playImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [imageView addSubview:playImageView];
+    [playImageView autoCenterInSuperview];
     
-    
-    return view;
+    return imageView;
 }
 
 /** If mimeType is not provided, it will be guessed from filename */

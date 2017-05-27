@@ -13,6 +13,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
+#import "OTRLog.h"
 
 @interface OTRImageItem()
 @property (nonatomic, readonly) CGFloat width;
@@ -46,31 +47,33 @@
 }
 
 - (UIView *)mediaView {
-    UIView *view = [super mediaView];
-    if (!view) {
-        //async loading image into OTRImages image cache
-        __weak typeof(self)weakSelf = self;
-        __block NSString *buddyUniqueId = nil;
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            OTRBaseMessage *message = [strongSelf parentMessageInTransaction:transaction];
-            buddyUniqueId = [message buddyUniqueId];
-        } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            [[OTRMediaFileManager sharedInstance] dataForItem:strongSelf buddyUniqueId:buddyUniqueId completion:^(NSData *data, NSError *error) {
-                if([data length]) {
-                    __strong typeof(weakSelf)strongSelf = weakSelf;
-                    UIImage *image = [UIImage imageWithData:data];
-                    [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                        [strongSelf touchParentMessageWithTransaction:transaction];
-                    }];
-                }
-            } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        }];
-        
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
+    if (!image) {
+        [self fetchMediaData];
+        return nil;
     }
-    return view;
+    CGSize size = [self mediaViewDisplaySize];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.frame = CGRectMake(0, 0, size.width, size.height);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
+    return imageView;
+}
+
+- (BOOL) shouldFetchMediaData {
+    return ![OTRImages imageWithIdentifier:self.uniqueId];
+}
+
+- (BOOL) handleMediaData:(NSData *)mediaData {
+    [super handleMediaData:mediaData];
+    UIImage *image = [UIImage imageWithData:mediaData];
+    if (!image) {
+        DDLogWarn(@"Media item data is not an image!");
+        return NO;
+    }
+    [OTRImages setImage:image forIdentifier:self.uniqueId];
+    return YES;
 }
 
 + (NSString *)collection

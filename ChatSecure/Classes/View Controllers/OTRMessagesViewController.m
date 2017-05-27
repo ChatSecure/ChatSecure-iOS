@@ -1652,29 +1652,38 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    if ([message isMediaMessage]) {
-        __block OTRMediaItem *item = nil;
-        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-             item = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
-        } completionBlock:^{
-            if (item.transferProgress != 1 && item.isIncoming) {
-                return;
-            }
-            
-            if ([item isKindOfClass:[OTRImageItem class]]) {
-                [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-            }
-            else if ([item isKindOfClass:[OTRVideoItem class]]) {
-                [self showVideo:(OTRVideoItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-            }
-            else if ([item isKindOfClass:[OTRAudioItem class]]) {
-                [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-            } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
-                // OTRDownloadMessage *download = (OTRDownloadMessage*)message;
-                // Janky hack to open URL for now
-                [self didTapAvatar:message sender:collectionView];
-            }
+    if (!message.isMediaMessage) {
+        return;
+    }
+    __block OTRMediaItem *item = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+         item = [OTRMediaItem mediaItemForMessage:message transaction:transaction];
+    }];
+    if (!item) { return; }
+    if (item.transferProgress != 1 && item.isIncoming) {
+        return;
+    }
+    
+    if ([item isKindOfClass:[OTRImageItem class]]) {
+        [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+    }
+    else if ([item isKindOfClass:[OTRVideoItem class]]) {
+        [self showVideo:(OTRVideoItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+    }
+    else if ([item isKindOfClass:[OTRAudioItem class]]) {
+        [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+    } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
+        OTRDownloadMessage *download = (OTRDownloadMessage*)message;
+        // Janky hack to open URL for now
+        NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForDownloadMessage:download sender:self viewController:self];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [alert addAction:obj];
         }];
+        [alert addAction:[self cancleAction]];
+        alert.popoverPresentationController.sourceView = self.view;
+        alert.popoverPresentationController.sourceRect = self.view.bounds;
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 

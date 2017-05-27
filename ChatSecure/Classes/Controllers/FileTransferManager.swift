@@ -231,7 +231,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 message.save(with: transaction)
                 mediaItem.save(with: transaction)
             })
-            OTRMediaFileManager.sharedInstance().copyData(fromFilePath: url.path, toEncryptedPath: newPath, completionQueue: self.internalQueue, completion: { (copyError: Error?) in
+            OTRMediaFileManager.shared.copyData(fromFilePath: url.path, toEncryptedPath: newPath, completion: { (result, copyError: Error?) in
                 var prefetchedData: Data? = nil
                 if FileManager.default.fileExists(atPath: url.path) {
                     do {
@@ -254,7 +254,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                     message.save(with: transaction)
                 })
                 self.send(mediaItem: mediaItem, prefetchedData: prefetchedData, message: message)
-            })
+            }, completionQueue: self.internalQueue)
         }
     }
     
@@ -269,7 +269,9 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             let scaleFactor: CGFloat = 0.25;
             let newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
             let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
-            let imageData = UIImageJPEGRepresentation(scaledImage, 0.5)
+            guard let imageData = UIImageJPEGRepresentation(scaledImage, 0.5) else {
+                return
+            }
             let filename = "\(UUID().uuidString).jpg"
             let imageItem = OTRImageItem(filename: filename, size: newSize, mimeType: "image/jpeg", isIncoming: false)
             let message = self.newOutgoingMessage(to: buddy, mediaItem: imageItem)
@@ -277,7 +279,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 message.save(with: transaction)
                 imageItem.save(with: transaction)
             })
-            OTRMediaFileManager.sharedInstance().setData(imageData, for: imageItem, buddyUniqueId: buddy.uniqueId, completion: { (bytesWritten: Int, error: Error?) in
+            OTRMediaFileManager.shared.setData(imageData, for: imageItem, buddyUniqueId: buddy.uniqueId, completion: { (bytesWritten: Int, error: Error?) in
                 self.connection.readWrite({ (transaction) in
                     imageItem.touchParentMessage(with: transaction)
                     if let error = error {

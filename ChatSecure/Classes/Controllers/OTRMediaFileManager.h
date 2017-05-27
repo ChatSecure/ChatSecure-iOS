@@ -10,6 +10,7 @@
 
 @class OTRMediaItem, IOCipher;
 
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const kOTRRootMediaDirectory;
 
 @interface OTRMediaFileManager : NSObject
@@ -20,23 +21,25 @@ extern NSString *const kOTRRootMediaDirectory;
 
 - (void)copyDataFromFilePath:(NSString *)filePath
              toEncryptedPath:(NSString *)path
-             completionQueue:(dispatch_queue_t)completionQueue
-                  completion:(void (^)(NSError *))completion;
+                  completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+             completionQueue:(nullable dispatch_queue_t)completionQueue;
 
 - (void)setData:(NSData *)data
         forItem:(OTRMediaItem *)mediaItem
   buddyUniqueId:(NSString *)buddyUniqueId
-     completion:(void (^)(NSInteger bytesWritten, NSError *error))completion
-completionQueue:(dispatch_queue_t)completionQueue;
+     completion:(void (^)(NSInteger bytesWritten, NSError * _Nullable error))completion
+completionQueue:(nullable dispatch_queue_t)completionQueue;
 
-- (void)dataForItem:(OTRMediaItem *)mediaItem
-      buddyUniqueId:(NSString *)buddyUniqueId
-          completion:(void (^)(NSData *data, NSError *error))completion
-     completionQueue:(dispatch_queue_t)completionQueue;
+- (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
+                  buddyUniqueId:(NSString *)buddyUniqueId
+                          error:(NSError**)error;
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;
 
+@property (class, nonatomic, readonly) OTRMediaFileManager *shared;
+
 + (instancetype)sharedInstance;
 
 @end
+NS_ASSUME_NONNULL_END
