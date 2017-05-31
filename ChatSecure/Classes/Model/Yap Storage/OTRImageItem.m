@@ -65,8 +65,8 @@
     return ![OTRImages imageWithIdentifier:self.uniqueId];
 }
 
-- (BOOL) handleMediaData:(NSData *)mediaData {
-    [super handleMediaData:mediaData];
+- (BOOL) handleMediaData:(NSData *)mediaData message:(nonnull id<OTRMessageProtocol>)message {
+    [super handleMediaData:mediaData message:message];
     UIImage *image = [UIImage imageWithData:mediaData];
     if (!image) {
         DDLogWarn(@"Media item data is not an image!");

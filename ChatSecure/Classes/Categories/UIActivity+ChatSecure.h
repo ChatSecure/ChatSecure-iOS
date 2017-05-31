@@ -12,4 +12,8 @@
 
 + (CGSize)otr_defaultImageSize;
 
+/** Activities relevant for links */
+@property (nonatomic, class, readonly) NSArray<UIActivity*> *otr_linkActivities;
+
+
 @end

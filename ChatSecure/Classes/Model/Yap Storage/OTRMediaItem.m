@@ -122,9 +122,9 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     }];
 }
 
-- (OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
+- (id<OTRMessageProtocol>)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
-    __block OTRBaseMessage *message = nil;
+    __block id<OTRMessageProtocol> message = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
     [[readTransaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
@@ -172,7 +172,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 }
 
 - (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction {
-    OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
+    id<OTRMessageProtocol> message = [self parentMessageInTransaction:transaction];
     id<OTRThreadOwner> threadOwner = [message threadOwnerWithTransaction:transaction];
     NSString *buddyUniqueId = [threadOwner threadIdentifier];
     if (!buddyUniqueId) {
@@ -198,18 +198,23 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // The superview should handle creating the actual imageview
         // this code is used to fetch the image from the data store and then cache in ram
-        __block NSString *buddyUniqueId = nil;
+        __block id<OTRThreadOwner> thread = nil;
+        __block id<OTRMessageProtocol> message = nil;
         [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
-            buddyUniqueId = [message buddyUniqueId];
+            message = [self parentMessageInTransaction:transaction];
+            thread = [message threadOwnerWithTransaction:transaction];
         }];
+        if (!message || !thread) {
+            DDLogError(@"Missing parent message or thread for media message!");
+            return;
+        }
         NSError *error = nil;
-        NSData *data = [OTRMediaFileManager.shared dataForItem:self buddyUniqueId:buddyUniqueId error:&error];
+        NSData *data = [OTRMediaFileManager.shared dataForItem:self buddyUniqueId:thread.threadIdentifier error:&error];
         if(!data.length) {
             DDLogWarn(@"No data found for media item: %@", error);
             return;
         }
-        BOOL result = [self handleMediaData:data];
+        BOOL result = [self handleMediaData:data message:message];
         if (!result) {
             DDLogError(@"Could not handle display for media item %@", self);
             return;
@@ -221,7 +226,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 }
 
 /** Overrideable in subclasses. This is called after data is fetched from db, but before display */
-- (BOOL) handleMediaData:(NSData*)mediaData {
+- (BOOL) handleMediaData:(NSData*)mediaData message:(id<OTRMessageProtocol>)message {
     NSParameterAssert(mediaData.length > 0);
     if (!mediaData.length) { return NO; }
     return NO;

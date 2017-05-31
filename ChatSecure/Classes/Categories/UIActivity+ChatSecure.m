@@ -7,8 +7,24 @@
 //
 
 #import "UIActivity+ChatSecure.h"
+@import ARChromeActivity;
+@import TUSafariActivity;
+#import "OTROpenInFacebookActivity.h"
+#import "OTROpenInTwitterActivity.h"
+@import OTRAssets;
 
 @implementation UIActivity (ChatSecure)
+
++ (NSArray<UIActivity*>*) otr_linkActivities {
+    TUSafariActivity *safariActivity = [TUSafariActivity new];
+    ARChromeActivity *chromeActivity = [ARChromeActivity new];
+    chromeActivity.activityTitle = OPEN_IN_CHROME();
+    chromeActivity.callbackURL = [NSURL URLWithString:@"chatsecure://"];
+    OTROpenInTwitterActivity *twitterActivity = [OTROpenInTwitterActivity new];
+    OTROpenInFacebookActivity *facebookActivity = [OTROpenInFacebookActivity new];
+    NSArray *applicationActivites  = @[twitterActivity,facebookActivity,safariActivity,chromeActivity];
+    return applicationActivites;
+}
 
 + (CGSize)otr_defaultImageSize
 {

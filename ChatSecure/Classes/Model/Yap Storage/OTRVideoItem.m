@@ -15,6 +15,7 @@
 @import JSQMessagesViewController;
 @import PureLayout;
 #import "OTRMediaServer.h"
+#import "OTRThreadOwner.h"
 
 @import AVFoundation;
 
@@ -38,8 +39,9 @@
 {
     __block NSString *buddyUniqueId = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBaseMessage *message = [self parentMessageInTransaction:transaction];
-        buddyUniqueId = message.buddyUniqueId;
+        id<OTRMessageProtocol> message = [self parentMessageInTransaction:transaction];
+        id<OTRThreadOwner> thread = [message threadOwnerWithTransaction:transaction];
+        buddyUniqueId = [thread threadIdentifier];
     }];
     
     return [[OTRMediaServer sharedInstance] urlForMediaItem:self buddyUniqueId:buddyUniqueId];

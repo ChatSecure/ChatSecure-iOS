@@ -11,9 +11,11 @@
 @import PureLayout;
 @import HTMLReader;
 #import "OTRLog.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRHTMLMetadata : NSObject
 @property (nonatomic, strong, nullable) NSString *title;
+@property (nonatomic, strong, nullable) NSURL *url;
 @end
 @implementation OTRHTMLMetadata
 @end
@@ -28,6 +30,11 @@
     return ![[[self class] htmlCache] objectForKey:self.uniqueId];
 }
 
+- (CGSize)mediaViewDisplaySize
+{
+    return CGSizeMake(250.0f, 70.0f);
+}
+
 // Return empty view for now
 - (UIView *)mediaView {
     OTRHTMLMetadata *metadata = [[[self class] htmlCache] objectForKey:self.uniqueId];
@@ -35,19 +42,20 @@
         [self fetchMediaData];
         return nil;
     }
+    HTMLPreviewView *view = [HTMLPreviewView previewView];
+    if (!view) {
+        return nil;
+    }
+    [view setURL:metadata.url title:metadata.title];
     CGSize size = [self mediaViewDisplaySize];
-    CGRect frame = CGRectMake(0, 0, size.width, size.height);
-    UILabel *textLabel = [[UILabel alloc] initWithFrame:frame];
-    textLabel.numberOfLines = 0;
-    textLabel.adjustsFontSizeToFitWidth = YES;
-    UIView *view = [[UIView alloc] initWithFrame:frame];
-    [view addSubview:textLabel];
-    textLabel.text = metadata.title;
+    view.frame = CGRectMake(0, 0, size.width, size.height);;
+    view.backgroundColor = [UIColor jsq_messageBubbleLightGrayColor];
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:view isOutgoing:!self.isIncoming];
     return view;
 }
 
 /** Overrideable in subclasses. This is called after data is fetched from db, but before display */
-- (BOOL) handleMediaData:(NSData*)mediaData {
+- (BOOL) handleMediaData:(NSData*)mediaData message:(nonnull id<OTRMessageProtocol>)message {
     HTMLDocument *html = [HTMLDocument documentWithData:mediaData
                                       contentTypeHeader:self.mimeType];
     NSString *title = [[html.rootElement firstNodeMatchingSelector:@"head"] firstNodeMatchingSelector:@"title"].textContent;
@@ -56,6 +64,7 @@
     }
     OTRHTMLMetadata *metadata = [[OTRHTMLMetadata alloc] init];
     metadata.title = title;
+    metadata.url = [NSURL URLWithString:message.messageText];
     [[[self class] htmlCache] setObject:metadata forKey:self.uniqueId];
     return YES;
 }

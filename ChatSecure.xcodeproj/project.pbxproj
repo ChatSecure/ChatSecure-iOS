@@ -438,6 +438,8 @@
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */; };
 		D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */; };
+		D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */; };
+		D98BA36E1EDE47F3004475B6 /* HTMLPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98BA36D1EDE47F3004475B6 /* HTMLPreviewView.swift */; };
 		D997E3F41EAECD1400BF72EF /* UITableView+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */; };
 		D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
@@ -1230,6 +1232,8 @@
 		D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRServerCapabilities.h; sourceTree = "<group>"; };
 		D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRServerCapabilities.m; sourceTree = "<group>"; };
 		D98B8E341E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerCapabilitiesViewController.swift; path = Onboarding/ServerCapabilitiesViewController.swift; sourceTree = "<group>"; };
+		D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HTMLPreviewView.xib; path = Interface/HTMLPreviewView.xib; sourceTree = "<group>"; };
+		D98BA36D1EDE47F3004475B6 /* HTMLPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLPreviewView.swift; sourceTree = "<group>"; };
 		D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+ChatSecure.h"; sourceTree = "<group>"; };
 		D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ChatSecure.m"; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
@@ -1783,6 +1787,7 @@
 		6331064B1A16D1A300C17BAE /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D98BA36D1EDE47F3004475B6 /* HTMLPreviewView.swift */,
 				D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */,
 				D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */,
 				D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */,
@@ -2122,6 +2127,7 @@
 		D93027571BAA381F000CC975 /* OTRResources */ = {
 			isa = PBXGroup;
 			children = (
+				D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */,
 				D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */,
 				D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */,
 				D913A56C1B747B62006C5ACD /* Onboarding.storyboard */,
@@ -2902,6 +2908,7 @@
 			files = (
 				924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */,
 				D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */,
+				D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */,
 				D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */,
 				D99F178C1BAB947E00604558 /* Secrets.plist in Resources */,
 				D9BC71E11E53B4A3007A3C4F /* TwoButtonTableViewCell.xib in Resources */,
@@ -3156,6 +3163,7 @@
 				D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */,
 				6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */,
 				D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */,
+				D98BA36E1EDE47F3004475B6 /* HTMLPreviewView.swift in Sources */,
 				D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */,
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStorage.m in Sources */,

@@ -638,7 +638,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([message isKindOfClass:[OTRDownloadMessage class]]) {
         OTRDownloadMessage *download = (OTRDownloadMessage*)message;
-        NSArray<UIAlertAction*> *downloadActions = [UIAlertAction actionsForDownloadMessage:download sender:self viewController:self];
+        NSArray<UIAlertAction*> *downloadActions = [UIAlertAction actionsForDownloadMessage:download sourceView:self.view viewController:self];
         [actions addObjectsFromArray:downloadActions];
     }
     
@@ -1072,7 +1072,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];
     OTRAccount *account = [self accountWithTransaction:transaction];
-    OTRBaseMessage *message = [mediaItem parentMessageInTransaction:transaction];
+    id<OTRMessageProtocol> message = [mediaItem parentMessageInTransaction:transaction];
     
     OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
@@ -1082,7 +1082,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     if (data) {
-        buddy.lastMessageId = message.uniqueId;
+        buddy.lastMessageId = message.messageKey;
         [buddy saveWithTransaction:transaction];
         
         // OTRDATA
@@ -1675,8 +1675,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
         OTRDownloadMessage *download = (OTRDownloadMessage*)message;
         // Janky hack to open URL for now
-        NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForDownloadMessage:download sender:self viewController:self];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForDownloadMessage:download sourceView:self.view viewController:self];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:message.text message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [alert addAction:obj];
         }];

@@ -11,6 +11,7 @@
 #import "OTRLog.h"
 #import "OTRImages.h"
 #import "OTRDownloadMessage.h"
+#import "UIActivity+ChatSecure.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRDownloadMessage ()
@@ -107,11 +108,11 @@
 
 @implementation UIAlertAction (OTRDownloadMessage)
 
-+ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sender:(id)sender viewController:(UIViewController*)viewController {
++ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController {
     NSParameterAssert(downloadMessage);
-    NSParameterAssert(sender);
+    NSParameterAssert(sourceView);
     NSParameterAssert(viewController);
-    if (!downloadMessage || !sender || !viewController) { return @[]; }
+    if (!downloadMessage || !sourceView || !viewController) { return @[]; }
     NSMutableArray<UIAlertAction*> *actions = [NSMutableArray new];
     
     NSURL *url = nil;
@@ -132,13 +133,11 @@
                 [activityItems addObject:image];
             }
         }
-        UIActivityViewController *share = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        NSArray<UIActivity*> *activities = UIActivity.otr_linkActivities;
+        UIActivityViewController *share = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:activities];
         
-        if ([sender isKindOfClass:[UIView class]]) {
-            UIView *view = sender;
-            share.popoverPresentationController.sourceView = view;
-            share.popoverPresentationController.sourceRect = view.bounds;
-        }
+        share.popoverPresentationController.sourceView = sourceView;
+        share.popoverPresentationController.sourceRect = sourceView.bounds;
         [viewController presentViewController:share animated:YES completion:nil];
     }];
     [actions addObject:shareAction];

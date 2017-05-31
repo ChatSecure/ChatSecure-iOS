@@ -8,8 +8,10 @@
 
 @import UIKit;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface UIActivityViewController (ChatSecure)
 
-+ (instancetype)otr_linkActivityViewControllerWithURLs:(NSArray *)urlArray;
++ (nullable instancetype)otr_linkActivityViewControllerWithURLs:(NSArray<NSURL*> *)urlArray;
 
 @end
+NS_ASSUME_NONNULL_END

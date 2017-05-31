@@ -10,6 +10,7 @@
 #import "OTRYapDatabaseObject.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
+#import "OTRBaseMessage.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)touchParentMessage DEPRECATED_MSG_ATTRIBUTE("Use touchParentMessageWithTransaction: instead.");
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-- (nullable OTRBaseMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
+- (nullable id<OTRMessageProtocol>)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 
@@ -50,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Triggers a refretch of media data. This is called internally when mediaView is accessed. */
 - (void) fetchMediaData;
 /** Overrideable in subclasses. This is called after data is fetched from db in fetchMediaData, but before display. Return YES if successful or NO if there was an error. */
-- (BOOL) handleMediaData:(NSData*)mediaData;
+- (BOOL) handleMediaData:(NSData*)mediaData message:(id<OTRMessageProtocol>)message;
 
 @end
 NS_ASSUME_NONNULL_END

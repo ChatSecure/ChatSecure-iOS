@@ -30,9 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIAlertAction (OTRDownloadMessage)
 
-
-
-+ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sender:(id)sender viewController:(UIViewController*)viewController;
++ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController;
 
 @end
 
