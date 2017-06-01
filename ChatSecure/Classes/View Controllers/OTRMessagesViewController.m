@@ -254,7 +254,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([self.threadKey length]) {
         [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
         [self updateViewWithKey:self.threadKey collection:self.threadCollection];
-        [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
+        [self.viewHandler setup:OTRFilteredChatDatabaseViewExtensionName groups:@[self.threadKey]];
         if(![self.inputToolbar.contentView.textView.text length]) {
             [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
         }
@@ -346,7 +346,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (self.threadKey && self.threadCollection) {
         [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
         [self updateViewWithKey:self.threadKey collection:self.threadCollection];
-        [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
+        [self.viewHandler setup:OTRFilteredChatDatabaseViewExtensionName groups:@[self.threadKey]];
         [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     }
     

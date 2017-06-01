@@ -20,6 +20,7 @@ NSString *OTRFilteredConversationsName = @"OTRFilteredConversationsName";
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
+NSString *OTRFilteredChatDatabaseViewExtensionName = @"OTRFilteredChatDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRFilteredBuddiesName = @"OTRFilteredBuddiesName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
@@ -196,6 +197,39 @@ NSString *OTRPushAccountGroup = @"Account";
     return [database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
 }
 
++ (BOOL)registerFilteredChatViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredChatDatabaseViewExtensionName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *chatView = [database registeredExtension:OTRChatDatabaseViewExtensionName];
+    if (!chatView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([object conformsToProtocol:@protocol(OTRDownloadMessageProtocol)]) {
+            id<OTRDownloadMessageProtocol> message = object;
+            // Filter out messages that are just URLs and have downloads
+            if (!message.messageText &&
+                !message.messageMediaItemKey &&
+                [message hasExistingDownloadsWithTransaction:transaction]) {
+                return NO;
+            }
+        }
+//        if ([object isKindOfClass:[OTRDownloadMessage class]]) {
+//            OTRDownloadMessage *download = object;
+//            if (!download.messageMediaItemKey) {
+//                return NO;
+//            }
+//        }
+
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"3" options:options];
+    return [database registerExtension:filteredView withName:OTRFilteredChatDatabaseViewExtensionName];
+}
+
 + (BOOL)registerChatDatabaseViewWithDatabase:(YapDatabase *)database
 {
     if ([database registeredExtension:OTRChatDatabaseViewExtensionName]) {
@@ -232,7 +266,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"1"
                                                               options:options];
     
-    return [database registerExtension:view withName:OTRChatDatabaseViewExtensionName];
+    return [database registerExtension:view withName:OTRChatDatabaseViewExtensionName] && [self registerFilteredChatViewWithDatabase:database];
 }
 
 + (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database

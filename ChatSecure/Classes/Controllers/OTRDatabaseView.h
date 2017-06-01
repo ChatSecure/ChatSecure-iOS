@@ -19,6 +19,8 @@ extern NSString *OTRFilteredConversationsName;
 extern NSString *OTRFilteredBuddiesName;
 
 extern NSString *OTRConversationDatabaseViewExtensionName;
+/** Right now only filters messages without a length */
+extern NSString *OTRFilteredChatDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;

@@ -15,7 +15,9 @@
 @import OTRAssets;
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
-
+#import "OTRDownloadMessage.h"
+@import CocoaLumberjack;
+#import "OTRLog.h"
 #import "OTRMessageEncryptionInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -86,6 +88,49 @@
         return [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:OTRMessageTransportSecurityOTR];
     }
     return _messageSecurityInfo;
+}
+
+#pragma mark OTRDownloadMessageProtocol
+
+/**  If available, existing instances will be returned. */
+- (NSArray<OTRDownloadMessage*>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    id<OTRMessageProtocol> message = self;
+    NSMutableArray<OTRDownloadMessage*> *downloadMessages = [NSMutableArray array];
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
+    YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
+    if (!relationship) {
+        DDLogWarn(@"%@ not registered!", extensionName);
+    }
+    [relationship enumerateEdgesWithName:edgeName destinationKey:message.messageKey collection:message.messageCollection usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRDownloadMessage *download = [OTRDownloadMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        if (download) {
+            [downloadMessages addObject:download];
+        }
+    }];
+    return downloadMessages;
+}
+
+/** Returns an unsaved array of downloadable URLs. */
+- (NSArray<OTRDownloadMessage*>*) downloads {
+    id<OTRMessageProtocol> message = self;
+    NSMutableArray<OTRDownloadMessage*> *downloadMessages = [NSMutableArray array];
+    [self.downloadableNSURLs enumerateObjectsUsingBlock:^(NSURL * _Nonnull url, NSUInteger idx, BOOL * _Nonnull stop) {
+        OTRDownloadMessage *download = [[OTRDownloadMessage alloc] initWithParentMessage:message url:url];
+        [downloadMessages addObject:download];
+    }];
+    return downloadMessages;
+}
+
+- (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
+    YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
+    if (!relationship) {
+        DDLogWarn(@"%@ not registered!", extensionName);
+    }
+    NSUInteger count = [relationship edgeCountWithName:edgeName];
+    return count > 0;
 }
 
 #pragma - mark OTRMessage Protocol methods

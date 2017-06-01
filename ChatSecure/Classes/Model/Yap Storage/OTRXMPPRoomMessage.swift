@@ -8,6 +8,7 @@
 
 import Foundation
 import YapDatabase
+import CocoaLumberjack
 
 @objc public enum RoomMessageState:Int {
     case received = 0
@@ -103,6 +104,44 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
             return nil
         }
         return OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction)
+    }
+}
+
+extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
+    public func downloads() -> [OTRDownloadMessage] {
+        var downloads: [OTRDownloadMessage] = []
+        for url in self.downloadableURLs {
+            let download = OTRDownloadMessage(parentMessage: self, url: url)
+            downloads.append(download)
+        }
+        return downloads
+    }
+    
+    public func existingDownloads(with transaction: YapDatabaseReadTransaction) -> [OTRDownloadMessage] {
+        var downloads: [OTRDownloadMessage] = []
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
+        guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
+            DDLogWarn("\(extensionName) not registered!");
+            return []
+        }
+        let edgeName = YapDatabaseConstants.edgeName(.download)
+        relationship.enumerateEdges(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection) { (edge, stop) in
+            if let download = OTRDownloadMessage.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
+                downloads.append(download)
+            }
+        }
+        return downloads
+    }
+    
+    public func hasExistingDownloads(with transaction: YapDatabaseReadTransaction) -> Bool {
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
+        guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
+            DDLogWarn("\(extensionName) not registered!");
+            return false
+        }
+        let edgeName = YapDatabaseConstants.edgeName(.download)
+        let count = relationship.edgeCount(withName: edgeName)
+        return count > 0
     }
 }
 

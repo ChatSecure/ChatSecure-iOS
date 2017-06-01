@@ -48,4 +48,17 @@ class FileTransferTests: XCTestCase {
 
     }
     
+    func testSingleURLOnly() {
+        let url1 = "http://test.com"
+        let url2 = "hello http://test.com"
+        let url3 = "http://test.com hello"
+        let url4 = "http://test.com http://bob.com"
+        let url5 = "what is this"
+        XCTAssertTrue(url1.isSingleURLOnly)
+        XCTAssertFalse(url2.isSingleURLOnly)
+        XCTAssertFalse(url3.isSingleURLOnly)
+        XCTAssertFalse(url4.isSingleURLOnly)
+        XCTAssertFalse(url5.isSingleURLOnly)
+    }
+    
 }

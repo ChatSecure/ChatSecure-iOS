@@ -372,20 +372,33 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
-    public func createAndDownloadItemsIfNeeded(message: OTRBaseMessage, readConnection: YapDatabaseConnection) {
-        if message.mediaItemUniqueId != nil || message.text?.characters.count == 0 || message.downloadableURLs.count == 0 {
-            DDLogVerbose("Download of message not needed \(message.uniqueId)")
+    public func createAndDownloadItemsIfNeeded(message: OTRDownloadMessageProtocol, readConnection: YapDatabaseConnection) {
+        if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
+            DDLogVerbose("Download of message not needed \(message.messageKey)")
             return
         }
         var downloads: [OTRDownloadMessage] = []
         readConnection.read { (transaction) in
-            downloads = OTRDownloadMessage.existingDownloads(for: message, transaction: transaction)
+            downloads = message.existingDownloads(with: transaction)
         }
         if downloads.count == 0 {
-            downloads = OTRDownloadMessage.downloads(for: message)
+            downloads = message.downloads()
+            if downloads.count == 0 {
+                return
+            }
             connection.readWrite({ (transaction) in
                 for download in downloads {
                     download.save(with: transaction)
+                }
+                // Hack to hide URL for media messages
+                if let onlyURL = message.messageText?.isSingleURLOnly, onlyURL == true,
+                    let newMessage = message.refetch(with: transaction){
+                    if let base = newMessage as? OTRBaseMessage {
+                        base.text = nil
+                    } else if let muc = newMessage as? OTRXMPPRoomMessage {
+                        muc.messageText = nil
+                    }
+                    newMessage.save(with: transaction)
                 }
             })
         }
@@ -467,8 +480,8 @@ extension FileTransferManager {
     }
 }
 
-fileprivate extension OTRMessageProtocol {
-    fileprivate var downloadableURLs: [URL] {
+public extension OTRMessageProtocol {
+    public var downloadableURLs: [URL] {
         return self.messageText?.downloadableURLs ?? []
     }
 }
@@ -563,21 +576,45 @@ extension URL {
     }
 }
 
+public extension NSString {
+    public var isSingleURLOnly: Bool {
+        return (self as String).isSingleURLOnly
+    }
+}
+
 public extension String {
     
-    /** Grab any URLs from a string */
-    public var urls: [URL] {
+    private var urlRanges: ([URL], [NSRange]) {
         guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
-            return []
+            return ([], [])
         }
         var urls: [URL] = []
+        var ranges: [NSRange] = []
         let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.characters.count))
         for match in matches where match.resultType == .link {
             if let url = match.url {
                 urls.append(url)
+                ranges.append(match.range)
             }
         }
+        return (urls, ranges)
+    }
+    
+    /** Grab any URLs from a string */
+    public var urls: [URL] {
+        let (urls, _) = urlRanges
         return urls
+    }
+    
+    /** Returns true if the message is ONLY a single URL */
+    public var isSingleURLOnly: Bool {
+        let (_, ranges) = urlRanges
+        guard ranges.count == 1,
+            let range = ranges.first,
+            range.length == self.characters.count else {
+            return false
+        }
+        return true
     }
     
     /** Use this for extracting potentially downloadable URLs from a message. Currently checks for https:// and aesgcm:// */
