@@ -183,7 +183,7 @@ import SignalProtocolObjC
      - parameter messageId: The preffered XMPP element Id to be used.
      - parameter completion: The completion block is called after all the necessary omemo preperation has completed and sendKeyData:iv:toJID:payload:elementId: is invoked
      */
-    open func encryptAndSendMessage(_ messageBody:String, buddyYapKey:String, messageId:String?, completion:@escaping (Bool,NSError?) -> Void) {
+    open func encryptAndSendMessage(_ message: OTROutgoingMessage, buddyYapKey:String, messageId:String?, completion:@escaping (Bool,NSError?) -> Void) {
         // Gather bundles for buddy and account here
         let group = DispatchGroup()
         
@@ -207,7 +207,8 @@ import SignalProtocolObjC
                 bud = OTRBuddy.fetchObject(withUniqueID: buddyYapKey, transaction: transaction)
             }
             
-            guard let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud else {
+            guard let messageBody = message.text,
+                let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud else {
                 return
             }
             do {

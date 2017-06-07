@@ -372,7 +372,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
-    public func createAndDownloadItemsIfNeeded(message: OTRDownloadMessageProtocol, readConnection: YapDatabaseConnection) {
+    public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection) {
         if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
             DDLogVerbose("Download of message not needed \(message.messageKey)")
             return
@@ -494,6 +494,19 @@ public extension OTRBaseMessage {
 
 // MARK: - Extensions
 
+fileprivate extension XMPPMessage {
+    /** XEP-0066: Out of Band Data jabber:x:oob */
+    var outOfBandURL: URL? {
+        guard let oob = elements(forXmlns: "jabber:x:oob").first as? XMLElement,
+            let urlElement = oob.elements(forName: "url").first,
+            let urlString = urlElement.stringValue else {
+                return nil
+        }
+        let url = URL(string: urlString)
+        return url
+    }
+}
+
 fileprivate struct HTTPServer {
     /// service jid for upload service
     let jid: XMPPJID
@@ -547,11 +560,6 @@ enum URLScheme: String {
     case https = "https"
     case aesgcm = "aesgcm"
     static let downloadableSchemes: [URLScheme] = [.https, .aesgcm]
-}
-
-enum MimeTypes: String {
-    case jpeg = "image/jpeg"
-    case png = "image/png"
 }
 
 extension URL {

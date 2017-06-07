@@ -24,6 +24,10 @@
     return [OTRXMPPTorManager class];
 }
 
+- (BOOL) disableAutomaticURLFetching {
+    return YES;
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection

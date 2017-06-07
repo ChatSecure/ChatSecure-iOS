@@ -208,8 +208,8 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
-        if ([object conformsToProtocol:@protocol(OTRDownloadMessageProtocol)]) {
-            id<OTRDownloadMessageProtocol> message = object;
+        if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+            id<OTRMessageProtocol> message = object;
             // Filter out messages that are just URLs and have downloads
             if (!message.messageText &&
                 !message.messageMediaItemKey &&
@@ -217,12 +217,6 @@ NSString *OTRPushAccountGroup = @"Account";
                 return NO;
             }
         }
-//        if ([object isKindOfClass:[OTRDownloadMessage class]]) {
-//            OTRDownloadMessage *download = object;
-//            if (!download.messageMediaItemKey) {
-//                return NO;
-//            }
-//        }
 
         return YES;
     }];

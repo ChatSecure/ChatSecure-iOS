@@ -538,7 +538,7 @@ extension MessageQueueHandler {
         
         
         
-        signalCoordinator.encryptAndSendMessage(text, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
+        signalCoordinator.encryptAndSendMessage(message, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -547,7 +547,7 @@ extension MessageQueueHandler {
                 //Something went wrong getting ready to send the message
                 //Save error object to message
                 strongSelf.databaseConnection.readWrite({ (transaction) in
-                    guard let message = OTROutgoingMessage.fetchObject(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                    guard let message = message.refetch(with: transaction) else {
                         return
                     }
                     message.error = error

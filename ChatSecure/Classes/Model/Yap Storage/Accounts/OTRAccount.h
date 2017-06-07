@@ -43,6 +43,8 @@ extern NSString *const OTRXMPPTorImageName;
 @property (nonatomic) BOOL autologin;
 
 @property (nonatomic, readonly) BOOL isArchived;
+/** Whether or not user would like to auto fetch media messages */
+@property (nonatomic, readwrite) BOOL disableAutomaticURLFetching;
 
 /**
  * Setting this value does a comparison of against the previously value

@@ -30,6 +30,10 @@ NSString* ARCHIVE_STRING() { return [OTRLanguageManager translatedString:@"Archi
 NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
 /** "Audio Message", Text for media message summary */
 NSString* AUDIO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Audio Message"]; }
+/** "Automatically Fetch Media", Title for other miscellaneous settings group */
+NSString* AUTO_URL_FETCH_STRING() { return [OTRLanguageManager translatedString:@"Automatically Fetch Media"]; }
+/** "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts.", Title for other miscellaneous settings group */
+NSString* AUTO_URL_FETCH_WARNING_STRING() { return [OTRLanguageManager translatedString:@"All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts."]; }
 /** "Available", Label in buddy list for users that are available */
 NSString* AVAILABLE_STRING() { return [OTRLanguageManager translatedString:@"Available"]; }
 /** "Away", Label in buddy list for users that are away */

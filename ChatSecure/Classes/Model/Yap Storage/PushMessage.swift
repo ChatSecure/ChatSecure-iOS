@@ -28,6 +28,18 @@ open class PushMessage: OTRYapDatabaseObject {
 }
 
 extension PushMessage: OTRMessageProtocol {
+    public func downloads() -> [OTRDownloadMessage] {
+        return []
+    }
+    
+    public func existingDownloads(with transaction: YapDatabaseReadTransaction) -> [OTRDownloadMessage] {
+        return []
+    }
+    
+    public func hasExistingDownloads(with transaction: YapDatabaseReadTransaction) -> Bool {
+        return false
+    }
+    
     public var messageKey: String {
         return self.uniqueId
     }

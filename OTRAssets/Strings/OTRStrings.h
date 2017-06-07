@@ -30,6 +30,10 @@ FOUNDATION_EXPORT NSString* ARCHIVE_STRING();
 FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
 /** "Audio Message", Text for media message summary */
 FOUNDATION_EXPORT NSString* AUDIO_MESSAGE_STRING();
+/** "Automatically Fetch Media", Title for other miscellaneous settings group */
+FOUNDATION_EXPORT NSString* AUTO_URL_FETCH_STRING();
+/** "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts.", Title for other miscellaneous settings group */
+FOUNDATION_EXPORT NSString* AUTO_URL_FETCH_WARNING_STRING();
 /** "Available", Label in buddy list for users that are available */
 FOUNDATION_EXPORT NSString* AVAILABLE_STRING();
 /** "Away", Label in buddy list for users that are away */

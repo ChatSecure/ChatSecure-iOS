@@ -15,7 +15,17 @@
 NS_ASSUME_NONNULL_BEGIN
 @class OTRDownloadMessage;
 
-@protocol OTRMessageProtocol <OTRYapDatabaseObjectProtocol>
+@protocol OTRDownloadMessageProtocol <NSObject>
+@required
+/** Returns an unsaved array of downloadable URLs. */
+- (NSArray<OTRDownloadMessage*>*) downloads;
+/**  If available, existing instances will be returned. */
+- (NSArray<OTRDownloadMessage*>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
+/** Checks if edge count > 0 */
+- (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
+@end
+
+@protocol OTRMessageProtocol <OTRYapDatabaseObjectProtocol, OTRDownloadMessageProtocol>
 @required
 @property (nonatomic, readonly) NSString *messageKey;
 @property (nonatomic, readonly) NSString *messageCollection;
@@ -32,17 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 @end
 
-@protocol OTRDownloadMessageProtocol <OTRMessageProtocol>
-@required
-/** Returns an unsaved array of downloadable URLs. */
-- (NSArray<OTRDownloadMessage*>*) downloads;
-/**  If available, existing instances will be returned. */
-- (NSArray<OTRDownloadMessage*>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
-/** Checks if edge count > 0 */
-- (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
-@end
 
-@interface OTRBaseMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol, OTRDownloadMessageProtocol>
+@interface OTRBaseMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
 
 /** The date the message is created for outgoing messages and the date it is received for incoming messages*/
 @property (nonatomic, strong, nonnull) NSDate *date;

@@ -1194,11 +1194,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // TODO: move this hack to download media items to
     // somewhere else
     __block OTRXMPPManager *xmpp = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         xmpp = [self xmppManagerWithTransaction:transaction];
+        account = (OTRXMPPAccount*)[self accountWithTransaction:transaction];
     }];
-    if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]]) {
-        [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:(OTRIncomingMessage*)message readConnection:self.readOnlyDatabaseConnection];
+    if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]] &&
+        [account isKindOfClass:[OTRXMPPAccount class]]) {
+        // Do not automatically download messages if disabled by user
+        if (!account.disableAutomaticURLFetching) {
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:(OTRIncomingMessage*)message readConnection:self.readOnlyDatabaseConnection];
+        }
     }
     
     UIColor *textColor = nil;
@@ -1213,10 +1219,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 	// Do not allow clickable links for Tor accounts to prevent information leakage
     // Could be better to move this information to the message object to not need to do a database read.
-    __block OTRAccount *account = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [self accountWithTransaction:transaction];
-    }];
     if ([account isKindOfClass:[OTRXMPPTorAccount class]]) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     }
@@ -1564,6 +1566,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             mediaItem = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
         }];
+        if (!mediaItem) {
+            return attributedString;
+        }
         
         float percentProgress = mediaItem.transferProgress * 100;
         

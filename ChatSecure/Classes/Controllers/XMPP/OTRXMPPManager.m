@@ -705,6 +705,30 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 #pragma mark XMPPStream Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (XMPPMessage *)xmppStream:(XMPPStream *)sender willSendMessage:(XMPPMessage *)message {
+    NSString *body = [message body];
+    if (body.length && ![body containsString:@" "]) {
+        NSURL *url = [NSURL URLWithString:body];
+        NSString *extension = url.pathExtension;
+        NSString *scheme = url.scheme;
+        if (scheme.length &&
+            extension.length &&
+            ([scheme isEqualToString:@"https"])) {
+            // this means we're probably sending a file so mark it as OOB data
+            /*
+             <x xmlns="jabber:x:oob">
+               <url>https://xmpp.example.com/upload/6c44c22c-70c6-4375-8b2d-1992a0f9dc18/8CleEoqhTjiMcny0PqoZyg.jpg</url>
+             </x>
+             */
+            NSXMLElement *oob = [NSXMLElement elementWithName:@"x" xmlns:@"jabber:x:oob"];
+            NSXMLElement *urlElement = [NSXMLElement elementWithName:@"url" stringValue:body];
+            [oob addChild:urlElement];
+            [message addChild:oob];
+        }
+    }
+    return message;
+}
+
 - (void)xmppStreamDidChangeMyJID:(XMPPStream *)stream
 {
     if (![[stream.myJID bare] isEqualToString:self.account.username] || ![[stream.myJID resource] isEqualToString:self.account.resource])

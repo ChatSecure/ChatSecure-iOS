@@ -431,6 +431,14 @@
         "comment": "Title for other miscellaneous settings group",
         "string": "Other"
     },
+    "AUTO_URL_FETCH_STRING": {
+        "comment": "Title for other miscellaneous settings group",
+        "string": "Automatically Fetch Media"
+    },
+    "AUTO_URL_FETCH_WARNING_STRING": {
+        "comment": "Title for other miscellaneous settings group",
+        "string": "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts."
+    },
     "OTRL_MSGEVENT_CONNECTION_ENDED_STRING": {
         "comment": "Error string for OTR message string",
         "string": "Message has not been sent because our buddy has ended the private conversation. We should either close the connection, or refresh it."

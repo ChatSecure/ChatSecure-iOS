@@ -34,6 +34,8 @@ NSString *const kOTRXLFormShowAdvancedTag               = @"kOTRXLFormShowAdvanc
 NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLFormGenerateSecurePasswordTag";
 
 NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
+NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutomaticURLFetchTag";
+
 
 @implementation XLFormDescriptor (OTRAccount)
 
@@ -56,6 +58,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
             XLFormRowDescriptor *torRow = [descriptor formRowWithTag:kOTRXLFormUseTorTag];
             torRow.hidden = @YES;
         }
+        [[descriptor formRowWithTag:kOTRXLFormAutomaticURLFetchTag] setValue:@(!xmppAccount.disableAutomaticURLFetching)];
     }
     if (account.accountType == OTRAccountTypeXMPPTor) {
         XLFormRowDescriptor *torRow = [descriptor formRowWithTag:kOTRXLFormUseTorTag];
@@ -64,6 +67,9 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         XLFormRowDescriptor *autologin = [descriptor formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag];
         autologin.value = @NO;
         autologin.disabled = @YES;
+        XLFormRowDescriptor *autofetch = [descriptor formRowWithTag:kOTRXLFormAutomaticURLFetchTag];
+        autofetch.value = @NO;
+        autofetch.disabled = @YES;
     }
     
     return descriptor;
@@ -125,11 +131,17 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         torSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
         [torSection addFormRow:[self torRowDescriptorWithValue:NO]];
         
+        XLFormSectionDescriptor *otherSection = [XLFormSectionDescriptor formSectionWithTitle:OTHER_STRING()];
+        otherSection.footerTitle = AUTO_URL_FETCH_WARNING_STRING();
+        otherSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
+        [otherSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
+        
         [descriptor addFormSection:basicSection];
         [descriptor addFormSection:serverSection];
         [descriptor addFormSection:showAdvancedSection];
         [descriptor addFormSection:accountSection];
         [descriptor addFormSection:torSection];
+        [descriptor addFormSection:otherSection];
     } else {
         descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING()];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING()];
@@ -151,6 +163,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:[OTRXMPPAccount newResource]]];
                 
                 [advancedSection addFormRow:[self torRowDescriptorWithValue:NO]];
+                [advancedSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
                 
                 break;
             }
@@ -162,6 +175,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
                 [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:YES]];
                 
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
+                [advancedSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
                 
                 break;
             }
@@ -246,6 +260,12 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
     [portRowDescriptor addValidator:[XLFormRegexValidator formRegexValidatorWithMsg:@"Incorect port number" regex:@"^$|^([1-9][0-9]{0,3}|[1-5][0-9]{0,4}|6[0-5]{0,2}[0-3][0-5])$"]];
     
     return portRowDescriptor;
+}
+
++ (XLFormRowDescriptor*) autoFetchRowDescriptorWithValue:(BOOL)value {
+    XLFormRowDescriptor *autoFetchRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormAutomaticURLFetchTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:AUTO_URL_FETCH_STRING()];
+    autoFetchRow.value = @(value);
+    return autoFetchRow;
 }
 
 + (XLFormRowDescriptor*) torRowDescriptorWithValue:(BOOL)value {
