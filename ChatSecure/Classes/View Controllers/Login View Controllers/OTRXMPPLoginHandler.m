@@ -49,6 +49,9 @@
         [[form formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:nil];
     }
     
+    XLFormRowDescriptor *autofetch = [form formRowWithTag:kOTRXLFormAutomaticURLFetchTag];
+    autofetch.value = @(!account.disableAutomaticURLFetching);
+    
     [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:account.resource];
 }
 
@@ -138,6 +141,10 @@
     
     if ([resource length]) {
         account.resource = resource;
+    }
+    NSNumber *autofetch = [form formRowWithTag:kOTRXLFormAutomaticURLFetchTag].value;
+    if (autofetch) {
+        account.disableAutomaticURLFetching = !autofetch.boolValue;
     }
     
     // Post-process values via XMPPJID for stringprep
