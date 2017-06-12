@@ -102,7 +102,10 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
         let expectation = self.expectation(description: "Sending Message")
         let messageText = "This is message from Bob to Alice"
-        self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(messageText, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
+        let message = OTROutgoingMessage()!
+        message.text = messageText
+        message.buddyUniqueId = self.bobUser!.buddy.uniqueId
+        self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(message, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
             
             XCTAssertTrue(success,"Able to send message")
             XCTAssertNil(error,"Error Sending \(String(describing: error))")

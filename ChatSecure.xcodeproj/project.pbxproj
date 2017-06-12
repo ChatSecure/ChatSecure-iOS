@@ -429,6 +429,8 @@
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */; };
 		D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */; };
+		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
+		D97070A71EEF3909004FEBDE /* MediaDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97070A61EEF3909004FEBDE /* MediaDownloadView.swift */; };
 		D97175531E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1220,6 +1222,8 @@
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAccountTableViewCell.swift; sourceTree = "<group>"; };
 		D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushAccountTableViewCell.xib; sourceTree = "<group>"; };
+		D97070911EEF382D004FEBDE /* MediaDownloadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MediaDownloadView.xib; path = Interface/MediaDownloadView.xib; sourceTree = "<group>"; };
+		D97070A61EEF3909004FEBDE /* MediaDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDownloadView.swift; sourceTree = "<group>"; };
 		D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YapDatabaseViewConnection+ChatSecure.h"; sourceTree = "<group>"; };
 		D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "YapDatabaseViewConnection+ChatSecure.m"; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
@@ -1787,6 +1791,7 @@
 		6331064B1A16D1A300C17BAE /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				D97070A61EEF3909004FEBDE /* MediaDownloadView.swift */,
 				D98BA36D1EDE47F3004475B6 /* HTMLPreviewView.swift */,
 				D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */,
 				D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */,
@@ -2127,6 +2132,7 @@
 		D93027571BAA381F000CC975 /* OTRResources */ = {
 			isa = PBXGroup;
 			children = (
+				D97070911EEF382D004FEBDE /* MediaDownloadView.xib */,
 				D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */,
 				D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */,
 				D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */,
@@ -2925,6 +2931,7 @@
 				D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */,
 				D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */,
 				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
+				D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */,
 				924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3189,6 +3196,7 @@
 				6325DD601E20390700C88944 /* OTRLogListViewController.swift in Sources */,
 				D93DDABC1BA79A2500CD8331 /* OTROpenInFacebookActivity.m in Sources */,
 				D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */,
+				D97070A71EEF3909004FEBDE /* MediaDownloadView.swift in Sources */,
 				D93DDABD1BA79A2500CD8331 /* OTROpenInTwitterActivity.m in Sources */,
 				63BAB26D1C863C60005185F3 /* PushMessage.swift in Sources */,
 				D93DDABE1BA79A2500CD8331 /* OTRQRCodeActivity.m in Sources */,

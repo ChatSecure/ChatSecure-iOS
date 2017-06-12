@@ -482,9 +482,8 @@ import SignalProtocolObjC
                     guard let _ = databaseMessage.text else {
                         return
                     }
-                    if let account = account, !account.disableAutomaticURLFetching {
-                        xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection)
-                    }
+                    
+                    xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection)
                     UIApplication.shared.showLocalNotification(databaseMessage)
             })
             // Display local notification

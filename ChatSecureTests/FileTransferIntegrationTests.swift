@@ -45,11 +45,11 @@ class FileTransferIntegrationTests: XCTestCase {
         
         var hasDownloads = false
         readConnection.read({ (transaction) in
-            hasDownloads = OTRDownloadMessage.hasExistingDownloads(for: incomingMessage, transaction: transaction)
+            hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
         })
         XCTAssertFalse(hasDownloads)
         
-        let downloads = OTRDownloadMessage.downloads(for: incomingMessage)
+        let downloads = incomingMessage.downloads()
         writeConnection.readWrite { (transaction) in
             for download in downloads {
                 download.save(with: transaction)
@@ -57,8 +57,8 @@ class FileTransferIntegrationTests: XCTestCase {
         }
         var savedDownloads: [OTRDownloadMessage] = []
         readConnection.read({ (transaction) in
-            hasDownloads = OTRDownloadMessage.hasExistingDownloads(for: incomingMessage, transaction: transaction)
-            savedDownloads = OTRDownloadMessage.existingDownloads(for: incomingMessage, transaction: transaction)
+            hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
+            savedDownloads = incomingMessage.existingDownloads(with: transaction)
         })
         XCTAssertTrue(hasDownloads)
         XCTAssertEqual(urls.count, savedDownloads.count)

@@ -325,10 +325,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             xmpp = (OTRXMPPManager*) [[OTRProtocolManager sharedInstance] protocolForAccount:account];
             [xmpp sendDeliveryReceiptForMessage:originalMessage];
         } completionBlock:^{
-            // Do not automatically download messages if disabled by user
-            if (account && !account.disableAutomaticURLFetching) {
-                [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:originalMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection];
-            }
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:originalMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection];
             [[UIApplication sharedApplication] showLocalNotification:originalMessage];
         }];
     }

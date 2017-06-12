@@ -56,6 +56,8 @@
 #import "OTRBuddyCache.h"
 #import "UIImage+ChatSecure.h"
 #import "XMPPPushModule.h"
+#import "OTRXMPPTorManager.h"
+#import "OTRTorManager.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -217,7 +219,18 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
     // File Transfer
-    _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:nil];
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    if ([self isKindOfClass:[OTRXMPPTorManager class]]) {
+        CPAProxyManager *tor = [OTRTorManager sharedInstance].torManager;
+        NSString *proxyHost = tor.SOCKSHost;
+        NSUInteger proxyPort = tor.SOCKSPort;
+        NSDictionary *proxyDict = @{
+                                    (NSString *)kCFStreamPropertySOCKSProxyHost : proxyHost,
+                                    (NSString *)kCFStreamPropertySOCKSProxyPort : @(proxyPort)
+                                    };
+        sessionConfiguration.connectionProxyDictionary = proxyDict;
+    }
+    _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:sessionConfiguration];
     
     // Message storage
     _messageStorage = [[OTRXMPPMessageYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];

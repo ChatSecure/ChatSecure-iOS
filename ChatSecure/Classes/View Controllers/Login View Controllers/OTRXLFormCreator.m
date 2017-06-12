@@ -140,7 +140,9 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
         [descriptor addFormSection:serverSection];
         [descriptor addFormSection:showAdvancedSection];
         [descriptor addFormSection:accountSection];
-        [descriptor addFormSection:torSection];
+        if (OTRBranding.torEnabled) {
+            [descriptor addFormSection:torSection];
+        }
         [descriptor addFormSection:otherSection];
     } else {
         descriptor = [XLFormDescriptor formDescriptorWithTitle:LOGIN_STRING()];
@@ -161,8 +163,9 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
                 [advancedSection addFormRow:[self hostnameRowDescriptorWithValue:nil]];
                 [advancedSection addFormRow:[self portRowDescriptorWithValue:@([OTRXMPPAccount defaultPort])]];
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:[OTRXMPPAccount newResource]]];
-                
-                [advancedSection addFormRow:[self torRowDescriptorWithValue:NO]];
+                if (OTRBranding.torEnabled) {
+                    [advancedSection addFormRow:[self torRowDescriptorWithValue:NO]];
+                }
                 [advancedSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
                 
                 break;

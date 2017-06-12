@@ -378,8 +378,16 @@ extension FileTransferManager {
             return
         }
         var downloads: [OTRDownloadMessage] = []
+        var disableAutomaticURLFetching = false
         readConnection.read { (transaction) in
             downloads = message.existingDownloads(with: transaction)
+            if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
+                disableAutomaticURLFetching = account.disableAutomaticURLFetching
+            }
+        }
+        if disableAutomaticURLFetching {
+            DDLogVerbose("Automatic URL fetching disabled \(message.messageKey)")
+           return
         }
         if downloads.count == 0 {
             downloads = message.downloads()
@@ -388,6 +396,7 @@ extension FileTransferManager {
             }
             connection.readWrite({ (transaction) in
                 for download in downloads {
+                    
                     download.save(with: transaction)
                 }
                 // Hack to hide URL for media messages

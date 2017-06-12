@@ -36,12 +36,12 @@ class FileTransferTests: XCTestCase {
         let incomingMessage = OTRIncomingMessage(uniqueId: NSUUID().uuidString)
         // this should be split into four messages
         incomingMessage.text = "i like cheese https://cheese.com https://cheeze.biz/cheddar.jpg aesgcm://example.com/12345.png"
-        let downloads = OTRDownloadMessage.downloads(for: incomingMessage)
+        let downloads = incomingMessage.downloads()
         XCTAssertEqual(downloads.count, 3)
         
         let noURLsMessage = OTRIncomingMessage(uniqueId: NSUUID().uuidString)
         noURLsMessage.text = "aint no urls here"
-        let noDownloads = OTRDownloadMessage.downloads(for: noURLsMessage)
+        let noDownloads = noURLsMessage.downloads()
         XCTAssertEqual(noDownloads.count, 0)
         
         

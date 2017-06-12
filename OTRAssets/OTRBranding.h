@@ -86,5 +86,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, will allow the in-app-purchase donations UI. This includes hardcoded elements designed for upstream ChatSecure. */
 @property (class, readonly) BOOL allowsDonation;
 
+/** If enabled, will show the Tor UI during account creation. Does not affect accounts already created. */
+@property (class, readonly) BOOL torEnabled;
+
 @end
 NS_ASSUME_NONNULL_END

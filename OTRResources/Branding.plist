@@ -42,5 +42,7 @@
 	<true/>
 	<key>AllowsDonation</key>
 	<true/>
+	<key>TorEnabled</key>
+	<true/>
 </dict>
 </plist>
