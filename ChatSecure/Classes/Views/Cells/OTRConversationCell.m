@@ -105,7 +105,7 @@
     if (lastMessage.messageError != nil) {
         self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.messageText];
     } else if (mediaItem) {
-        self.conversationLabel.text = [self stringForMediaItem:mediaItem];
+        self.conversationLabel.text = mediaItem.displayText;
     } else {
         self.conversationLabel.text = lastMessage.messageText;
     }
@@ -122,17 +122,7 @@
     [self updateDateString:lastMessage.messageDate];
 }
 
-- (NSString*) stringForMediaItem:(OTRMediaItem*)mediaItem {
-    NSString *item = @"";
-    if ([mediaItem isKindOfClass:[OTRImageItem class]]) {
-        item = [NSString stringWithFormat:@"📷 %@", PICTURE_MESSAGE_STRING()];
-    } else if ([mediaItem isKindOfClass:[OTRVideoItem class]]) {
-        item = [NSString stringWithFormat:@"🎥 %@", VIDEO_MESSAGE_STRING()];
-    } else if ([mediaItem isKindOfClass:[OTRAudioItem class]]) {
-        item = [NSString stringWithFormat:@"🔊 %@", AUDIO_MESSAGE_STRING()];
-    }
-    return item;
-}
+
 
 - (void)updateDateString:(NSDate *)date
 {

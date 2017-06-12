@@ -434,6 +434,9 @@ import SignalProtocolObjC
                 }
             }
             
+            var xmpp: OTRXMPPManager? = nil
+            var account: OTRAccount? = nil
+            
             self.databaseConnection.asyncReadWrite({ (transaction) in
                 
                 guard let buddyUsernmae = relatedBuddyUsername, let buddy = OTRBuddy.fetch(withUsername: buddyUsernmae, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
@@ -463,25 +466,26 @@ import SignalProtocolObjC
                 newDevice.save(with: transaction)
                 
                 // Send delivery receipt
-                guard let account = OTRAccount.fetchObject(withUniqueID: buddy.accountUniqueId, transaction: transaction) else {
-                    return
-                }
-                guard let protocolManager = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+                account = OTRAccount.fetchObject(withUniqueID: buddy.accountUniqueId, transaction: transaction)
+                if let account = account {
+                    xmpp = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager
+                } else {
                     return
                 }
                 
                 if let incomingMessage = databaseMessage as? OTRIncomingMessage {
-                    protocolManager.sendDeliveryReceipt(for: incomingMessage)
+                    xmpp?.sendDeliveryReceipt(for: incomingMessage)
                 }
                 
-                }, completionBlock: {
-                    if let _ = databaseMessage.text {
-                        if let messageCopy = databaseMessage.copy() as? OTRIncomingMessage {
-                            DispatchQueue.main.async(execute: {
-                                UIApplication.shared.showLocalNotification(messageCopy)
-                            })
-                        }
+                }, completionQueue: DispatchQueue.main,
+                   completionBlock: {
+                    guard let _ = databaseMessage.text else {
+                        return
                     }
+                    if let account = account, !account.disableAutomaticURLFetching {
+                        xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection)
+                    }
+                    UIApplication.shared.showLocalNotification(databaseMessage)
             })
             // Display local notification
             

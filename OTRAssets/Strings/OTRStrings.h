@@ -150,6 +150,8 @@ FOUNDATION_EXPORT NSString* Enable_String();
 FOUNDATION_EXPORT NSString* Enable_Tor_String();
 /** "Facebook", the name for facebook */
 FOUNDATION_EXPORT NSString* FACEBOOK_STRING();
+/** "File Message", Text for file message summary */
+FOUNDATION_EXPORT NSString* FILE_MESSAGE_STRING();
 /** "Fix Background Fetch...", prompt to fix background fetch */
 FOUNDATION_EXPORT NSString* FIX_BACKGROUND_FETCH_STRING();
 /** "Fix Permissions...", prompt to fix permissions */

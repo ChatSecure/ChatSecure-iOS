@@ -27,7 +27,7 @@
 @implementation OTRHTMLItem
 
 - (BOOL) shouldFetchMediaData {
-    return ![[[self class] htmlCache] objectForKey:self.uniqueId];
+    return !self.metadata;
 }
 
 - (CGSize)mediaViewDisplaySize
@@ -35,9 +35,22 @@
     return CGSizeMake(250.0f, 70.0f);
 }
 
+- (NSString*) displayText {
+    NSString *text = self.metadata.url.absoluteString;
+    if (!text.length) {
+        [self fetchMediaData];
+        text = self.filename;
+    }
+    return [NSString stringWithFormat:@"🔗 %@", text];
+}
+
+- (nullable OTRHTMLMetadata*) metadata {
+    return [[[self class] htmlCache] objectForKey:self.uniqueId];
+}
+
 // Return empty view for now
 - (UIView *)mediaView {
-    OTRHTMLMetadata *metadata = [[[self class] htmlCache] objectForKey:self.uniqueId];
+    OTRHTMLMetadata *metadata = [self metadata];
     if (!metadata) {
         [self fetchMediaData];
         return nil;

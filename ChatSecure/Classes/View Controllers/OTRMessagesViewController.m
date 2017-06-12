@@ -1191,21 +1191,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
     
-    // TODO: move this hack to download media items to
-    // somewhere else
-    __block OTRXMPPManager *xmpp = nil;
     __block OTRXMPPAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        xmpp = [self xmppManagerWithTransaction:transaction];
         account = (OTRXMPPAccount*)[self accountWithTransaction:transaction];
     }];
-    if (xmpp && [message isKindOfClass:[OTRIncomingMessage class]] &&
-        [account isKindOfClass:[OTRXMPPAccount class]]) {
-        // Do not automatically download messages if disabled by user
-        if (!account.disableAutomaticURLFetching) {
-            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:(OTRIncomingMessage*)message readConnection:self.readOnlyDatabaseConnection];
-        }
-    }
     
     UIColor *textColor = nil;
     if ([message isMessageIncoming]) {

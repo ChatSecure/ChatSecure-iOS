@@ -37,7 +37,7 @@
 #import "OTRVideoItem.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
-
+#import "OTRDatabaseManager.h"
 #import "OTRLog.h"
 #import "OTRPushTLVHandler.h"
 #import "OTRXMPPManager.h"
@@ -311,6 +311,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         if (wasEncrypted) {
             originalMessage.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOTRFingerprint:fingerprint.fingerprint];
         }
+        __block OTRXMPPManager *xmpp = nil;
+        __block OTRAccount *account = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
             //Update lastMessageDate for sorting and grouping
@@ -319,10 +321,14 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [buddy saveWithTransaction:transaction];
             
             // Send delivery receipt
-            OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
-            OTRXMPPManager *protocol = (OTRXMPPManager*) [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            [protocol sendDeliveryReceiptForMessage:originalMessage];
+            account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+            xmpp = (OTRXMPPManager*) [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            [xmpp sendDeliveryReceiptForMessage:originalMessage];
         } completionBlock:^{
+            // Do not automatically download messages if disabled by user
+            if (account && !account.disableAutomaticURLFetching) {
+                [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:originalMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection];
+            }
             [[UIApplication sharedApplication] showLocalNotification:originalMessage];
         }];
     }

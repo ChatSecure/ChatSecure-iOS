@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *mimeType;
 @property (nonatomic, readonly) NSString *filename;
 @property (nonatomic, readonly) BOOL isIncoming;
+/** Text to show in message preview such as "📷 Picture Message" */
+@property (nonatomic, readonly) NSString *displayText;
 
 /** Valid 1 >= 0 */
 @property (nonatomic, readwrite) float transferProgress;

@@ -112,26 +112,15 @@
 
 - (id <OTRMessageProtocol>)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    __block id <OTRMessageProtocol> finalMessage = nil;
-    
-    if (self.lastMessageId.length) {
-        finalMessage = [OTRBaseMessage fetchObjectWithUniqueID:self.lastMessageId transaction:transaction];
+    YapDatabaseViewTransaction *viewTransaction = [transaction ext:OTRFilteredChatDatabaseViewExtensionName];
+    if (!viewTransaction) {
+        return nil;
     }
-    if (finalMessage) {
-        return finalMessage;
+    id <OTRMessageProtocol> message = [viewTransaction lastObjectInGroup:self.threadIdentifier];
+    if (![message conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+        return nil;
     }
-    
-    // Use slow lookup for legacy db migration
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRBaseMessage *message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (!finalMessage ||    [message.messageDate compare:finalMessage.messageDate] == NSOrderedDescending) {
-            finalMessage = (id <OTRMessageProtocol>)message;
-        }
-        
-    }];
-    return finalMessage;
+    return message;
 }
 
 /** Translates the preferredSecurity value first if set, otherwise bestTransportSecurityWithTransaction: */

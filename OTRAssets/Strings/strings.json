@@ -23,6 +23,10 @@
         "comment": "Text for media message summary",
         "string": "Picture Message"
     },
+    "FILE_MESSAGE_STRING": {
+        "comment": "Text for file message summary",
+        "string": "File Message"
+    },
     "JOIN_GROUP_STRING": {
         "comment": "Text for joining existing XMPP room",
         "string": "Join Group"

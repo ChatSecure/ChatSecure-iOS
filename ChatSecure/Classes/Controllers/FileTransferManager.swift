@@ -408,7 +408,7 @@ extension FileTransferManager {
     }
     
     /** Downloads media for a single downloadmessage */
-    public func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
+    private func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
         // Bail out if we've already downloaded the media
         if downloadMessage.mediaItemUniqueId != nil {
             // DDLogWarn("Already downloaded media for this item")
@@ -463,14 +463,21 @@ extension FileTransferManager {
                         DDLogError("Error copying data: \(error)")
                         return
                     }
+                    var message: OTRDownloadMessage? = nil
                     self.connection.asyncReadWrite({ (transaction) in
                         media.transferProgress = 1.0
                         media.save(with: transaction)
-                        if let message = downloadMessage.refetch(with: transaction) {
+                        message = downloadMessage.refetch(with: transaction)
+                        if let message = message {
                             message.mediaItemUniqueId = media.uniqueId
                             message.save(with: transaction)
                         } else {
                             DDLogError("Message not found: \(downloadMessage)")
+                        }
+                    }, completionQueue: DispatchQueue.main,
+                       completionBlock: {
+                        if let message = message {
+                            UIApplication.shared.showLocalNotification(message)
                         }
                     })
                 }, completionQueue: nil)
@@ -487,6 +494,12 @@ public extension OTRMessageProtocol {
 }
 
 public extension OTRBaseMessage {
+    @objc public var downloadableNSURLs: [NSURL] {
+        return self.downloadableURLs as [NSURL]
+    }
+}
+
+public extension OTRXMPPRoomMessage {
     @objc public var downloadableNSURLs: [NSURL] {
         return self.downloadableURLs as [NSURL]
     }

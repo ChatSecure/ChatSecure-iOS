@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
 @property (atomic, readonly) OTRChatState lastSentChatState;
 @property (atomic, readonly) OTRThreadStatus status;
 
-/** uniqueId of last incoming or outgoing OTRMessage */
+/** uniqueId of last incoming or outgoing OTRMessage. @warn ⚠️ This is no longer used for fetching with lastMessageWithTransaction: and may be invalid, but is being kept around due to a hack to force-show new threads that are empty. */
 @property (nonatomic, strong, nullable) NSString *lastMessageId;
 
 /** User can choose a preferred security method e.g. plaintext, OTR, OMEMO. If undefined, best available option should be chosen elsewhere. OMEMO > OTR > Plaintext */

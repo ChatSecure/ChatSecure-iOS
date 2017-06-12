@@ -16,6 +16,7 @@
 @import YapDatabase;
 @import OTRKit;
 @import MobileCoreServices;
+@import OTRAssets;
 #import "OTRDatabaseManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -35,6 +36,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 
 @implementation OTRMediaItem
 @synthesize mimeType = _mimeType;
+@dynamic displayText;
 
 - (instancetype) initWithFilename:(NSString *)filename mimeType:(NSString*)mimeType isIncoming:(BOOL)isIncoming {
     NSParameterAssert(filename);
@@ -183,6 +185,9 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 }
 
 + (nullable instancetype) mediaItemForMessage:(id<OTRMessageProtocol>)message transaction:(YapDatabaseReadTransaction*)transaction {
+    if (!message.messageMediaItemKey.length) {
+        return nil;
+    }
     OTRMediaItem *item = [OTRMediaItem fetchObjectWithUniqueID:message.messageMediaItemKey transaction:transaction];
     return item;
 }
@@ -230,6 +235,24 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     NSParameterAssert(mediaData.length > 0);
     if (!mediaData.length) { return NO; }
     return NO;
+}
+
+- (NSString*) displayText {
+    NSString *item = [NSString stringWithFormat:@"📁 %@", FILE_MESSAGE_STRING()];
+    if ([self isKindOfClass:[OTRImageItem class]]) {
+        item = [NSString stringWithFormat:@"📷 %@", PICTURE_MESSAGE_STRING()];
+    } else if ([self isKindOfClass:[OTRVideoItem class]]) {
+        item = [NSString stringWithFormat:@"🎥 %@", VIDEO_MESSAGE_STRING()];
+    } else if ([self isKindOfClass:[OTRAudioItem class]]) {
+        item = [NSString stringWithFormat:@"🔊 %@", AUDIO_MESSAGE_STRING()];
+    }
+    return item;
+}
+
++ (NSDictionary *)encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(displayText))];
+    return behaviors;
 }
 
 

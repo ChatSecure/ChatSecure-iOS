@@ -216,11 +216,17 @@ NSString *OTRPushAccountGroup = @"Account";
                 [message hasExistingDownloadsWithTransaction:transaction]) {
                 return NO;
             }
+            // Filter out messages that are aesgcm scheme file transfers
+            // and don't have media attached
+            if ([message.messageText containsString:@"aesgcm://"] &&
+                !message.messageMediaItemKey) {
+                return NO;
+            }
         }
 
         return YES;
     }];
-    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"3" options:options];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"4" options:options];
     return [database registerExtension:filteredView withName:OTRFilteredChatDatabaseViewExtensionName];
 }
 

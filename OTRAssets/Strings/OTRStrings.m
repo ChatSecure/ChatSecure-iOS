@@ -150,6 +150,8 @@ NSString* Enable_String() { return [OTRLanguageManager translatedString:@"Enable
 NSString* Enable_Tor_String() { return [OTRLanguageManager translatedString:@"Enable Tor"]; }
 /** "Facebook", the name for facebook */
 NSString* FACEBOOK_STRING() { return [OTRLanguageManager translatedString:@"Facebook"]; }
+/** "File Message", Text for file message summary */
+NSString* FILE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"File Message"]; }
 /** "Fix Background Fetch...", prompt to fix background fetch */
 NSString* FIX_BACKGROUND_FETCH_STRING() { return [OTRLanguageManager translatedString:@"Fix Background Fetch..."]; }
 /** "Fix Permissions...", prompt to fix permissions */

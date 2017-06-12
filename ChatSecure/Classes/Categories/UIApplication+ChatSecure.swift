@@ -16,25 +16,32 @@ public extension UIApplication {
     public func showLocalNotification(_ message:OTRMessageProtocol) {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0
-        
+        var mediaItem: OTRMediaItem? = nil
         OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read({ (transaction) -> Void in
             unreadCount = transaction.numberOfUnreadMessages()
             thread = message.threadOwner(with: transaction)
+            mediaItem = OTRMediaItem.init(forMessage: message, transaction: transaction)
         })
-        
         guard let threadOwner = thread else {
             return
         }
-        
         let threadName = threadOwner.threadName()
         
         var text = "\(threadName)"
-        if let msgTxt = message.messageText {
-            if let rawMessageString = msgTxt.convertingHTMLToPlainText() {
-                text += ": \(rawMessageString)"
-            }
-        }
         
+        if let mediaItem = mediaItem {
+            let mediaText = mediaItem.displayText()
+            text += ": \(mediaText)"
+        } else if let msgTxt = message.messageText,
+            let rawMessageString = msgTxt.convertingHTMLToPlainText() {
+            // Bail out of notification if this is an incoming encrypted file transfer
+            if msgTxt.contains("aesgcm://") {
+                return
+            }
+            text += ": \(rawMessageString)"
+        } else {
+            return
+        }
         
         self.showLocalNotificationFor(threadOwner, text: text, unreadCount: Int(unreadCount))
     }

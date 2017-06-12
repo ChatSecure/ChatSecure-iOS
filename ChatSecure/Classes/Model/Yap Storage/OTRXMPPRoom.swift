@@ -88,19 +88,10 @@ extension OTRXMPPRoom:OTRThreadOwner {
     
     public func lastMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
         
-        guard let viewTransaction = transaction.ext(OTRChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
+        guard let viewTransaction = transaction.ext(OTRFilteredChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
             return nil
         }
-        
-        let numberOfItems = viewTransaction.numberOfItems(inGroup: self.threadIdentifier())
-        
-        if numberOfItems == 0 {
-            return nil
-        }
-        
-        guard let message = viewTransaction.object(at: numberOfItems-1, inGroup: self.threadIdentifier()) as? OTRMessageProtocol else {
-            return nil
-        }
+        let message = viewTransaction.lastObject(inGroup: self.threadIdentifier()) as? OTRMessageProtocol
         return message
     }
     
