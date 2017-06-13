@@ -85,6 +85,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
+@property (nonatomic, strong) NSDataDetector *linkDetector;
 
 @end
 
@@ -149,6 +150,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
           forState:UIControlStateNormal];
     
     self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
+    self.linkDetector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:nil];
     
     ////// TextViewUpdates //////
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
@@ -1197,6 +1199,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
+    // If we find any incoming migration link messages, show the "your friend has migrated" header
+    // to allow the user to start chatting with the new account instead.
+    if ([message messageIncoming]) {
+        [self.linkDetector enumerateMatchesInString:cell.textView.text options:kNilOptions range:NSMakeRange(0, [cell.textView.text length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            if (result.resultType == NSTextCheckingTypeLink)
+            {
+                if ([result.URL otr_isInviteLink]) {
+                    // Migration link?
+                    [result.URL otr_decodeShareLink:^(XMPPJID * _Nullable jid, NSArray<NSURLQueryItem *> * _Nullable queryItems) {
+                        if ([NSURL otr_queryItemsContainMigrationHint:queryItems]) {
+                            [self showJIDForwardingHeaderWithNewJID:jid];
+                        }
+                    }];
+                }
+            }
+        }];
+    }
+    
+    cell.textView.delegate = self;
     return cell;
 }
 
@@ -1791,6 +1812,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
+    if ([URL otr_isInviteLink]) {
+        NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
+        activity.webpageURL = URL;
+        [[OTRAppDelegate appDelegate] application:[UIApplication sharedApplication] continueUserActivity:activity restorationHandler:nil];
+        return NO;
+    }
+    
     UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[URL]];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
@@ -1851,10 +1879,20 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         showHeader = YES;
     }
     
-    if (showHeader && self.jidForwardingHeaderView == nil) {
+    if (showHeader) {
+        [self showJIDForwardingHeaderWithNewJID:forwardingJid];
+    } else if (!showHeader && self.jidForwardingHeaderView != nil) {
+        self.topContentAdditionalInset = 0;
+        [self.jidForwardingHeaderView removeFromSuperview];
+        self.jidForwardingHeaderView = nil;
+    }
+}
+
+- (void)showJIDForwardingHeaderWithNewJID:(XMPPJID *)newJid {
+    if (self.jidForwardingHeaderView == nil) {
         UINib *nib = [UINib nibWithNibName:@"MigratedBuddyHeaderView" bundle:OTRAssets.resourcesBundle];
         MigratedBuddyHeaderView *header = (MigratedBuddyHeaderView*)[nib instantiateWithOwner:self options:nil][0];
-        [header setForwardingJID:forwardingJid];
+        [header setForwardingJID:newJid];
         [header.titleLabel setText:MIGRATED_BUDDY_STRING()];
         [header.descriptionLabel setText:MIGRATED_BUDDY_INFO_STRING()];
         [header.switchButton setTitle:MIGRATED_BUDDY_SWITCH() forState:UIControlStateNormal];
@@ -1864,10 +1902,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.view bringSubviewToFront:header];
         self.jidForwardingHeaderView = header;
         [self.view setNeedsLayout];
-    } else if (!showHeader && self.jidForwardingHeaderView != nil) {
-        self.topContentAdditionalInset = 0;
-        [self.jidForwardingHeaderView removeFromSuperview];
-        self.jidForwardingHeaderView = nil;
     }
 }
 
