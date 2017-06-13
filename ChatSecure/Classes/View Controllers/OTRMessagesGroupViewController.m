@@ -44,6 +44,7 @@
     [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
+// Override superclass since it will just return nil (the ThreadKey has not been set when this is called during setup).
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
     return account;
