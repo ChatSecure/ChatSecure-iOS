@@ -380,7 +380,7 @@
 + (NSXMLElement *)defaultRoomConfiguration
 {
     NSXMLElement *form = [[NSXMLElement alloc] initWithName:@"x" xmlns:@"jabber:x:data"];
-    [form addAttributeWithName:@"typ" stringValue:@"form"];
+    [form addAttributeWithName:@"type" stringValue:@"form"];
     
     NSXMLElement *publicField = [[NSXMLElement alloc] initWithName:@"field"];
     [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_publicroom"];
@@ -393,10 +393,16 @@
     NSXMLElement *whoisField = [[NSXMLElement alloc] initWithName:@"field"];
     [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
+
+    NSXMLElement *membersOnlyField = [[NSXMLElement alloc] initWithName:@"field"];
+    [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
+    [membersOnlyField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
+
     
     [form addChild:publicField];
     [form addChild:persistentField];
     [form addChild:whoisField];
+    [form addChild:membersOnlyField];
     
     return form;
 }

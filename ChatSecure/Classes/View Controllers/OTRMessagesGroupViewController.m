@@ -44,6 +44,12 @@
     [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
+// Override superclass since it will just return nil (the ThreadKey has not been set when this is called during setup).
+- (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
+    return account;
+}
+
 // Override superclass
 - (void)setupInfoButton {
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
