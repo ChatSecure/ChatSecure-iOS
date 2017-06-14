@@ -11,6 +11,8 @@
 @import JSQMessagesViewController;
 #import "OTRPlayPauseProgressView.h"
 @import AVFoundation;
+#import "OTRMediaItem+Private.h"
+
 
 @implementation OTRAudioItem
 
@@ -22,6 +24,10 @@
 }
 
 - (instancetype) initWithFilename:(NSString *)filename timeLength:(NSTimeInterval)timeLength mimeType:(NSString *)mimeType isIncoming:(BOOL)isIncoming {
+    // Work around bug in Prosody XEP-0363 server "MIME type does not match file extension" because our default is "audio/x-m4a"
+    if ([filename.pathExtension isEqualToString:@"m4a"]) {
+        mimeType = @"audio/mpeg";
+    }
     if (self = [super initWithFilename:filename mimeType:mimeType isIncoming:isIncoming]) {
         _timeLength = timeLength;
     }
@@ -35,6 +41,10 @@
 
 - (CGSize)mediaViewDisplaySize
 {
+    // This is an absolutely terrible way of doing this
+    if ([self downloadMessage].messageError) {
+        return CGSizeMake(210.0f, 100.0f);
+    }
     return CGSizeMake(90, 38);
 }
 

@@ -14,6 +14,7 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRLog.h"
+#import "OTRMediaItem+Private.h"
 
 @interface OTRImageItem()
 @property (nonatomic, readonly) CGFloat width;

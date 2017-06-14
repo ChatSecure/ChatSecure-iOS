@@ -7,6 +7,7 @@
 //
 
 #import "OTRTextItem.h"
+#import "OTRMediaItem+Private.h"
 
 @implementation OTRTextItem
 

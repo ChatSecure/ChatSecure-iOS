@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *uniqueId;
 @property (class, readonly) NSString *collection;
 
+- (void)touchWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 - (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 /** This will fetch an updated (copied) instance of the object. If nil, it means it was deleted or not present in the db. */

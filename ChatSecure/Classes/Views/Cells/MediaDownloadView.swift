@@ -9,6 +9,18 @@
 import UIKit
 import OTRAssets
 
+public extension NSError {
+    /// Returns true if the message error is caused by automatic downloads being disabled
+    public var isAutomaticDownloadError: Bool {
+        if self.domain == FileTransferError.errorDomain &&
+            self.code == FileTransferError.automaticDownloadsDisabled.errorCode {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
 public class MediaDownloadView: UIView {
     @IBOutlet weak var downloadButton: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
@@ -18,8 +30,7 @@ public class MediaDownloadView: UIView {
     public func setMediaItem(_ mediaItem: OTRMediaItem, message: OTRDownloadMessage) {
         if let error = message.error {
             let nsError = error as NSError
-            if nsError.domain == FileTransferError.errorDomain &&
-                nsError.code == FileTransferError.automaticDownloadsDisabled.errorCode {
+            if nsError.isAutomaticDownloadError {
                 statusLabel.text = mediaItem.displayText()
             } else {
                 statusLabel.text = "⚠️ \(ERROR_STRING())"

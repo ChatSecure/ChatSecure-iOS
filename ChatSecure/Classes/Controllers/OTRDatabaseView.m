@@ -227,7 +227,7 @@ NSString *OTRPushAccountGroup = @"Account";
 
         return YES;
     }];
-    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"5" options:options];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"6" options:options];
     return [database registerExtension:filteredView withName:OTRFilteredChatDatabaseViewExtensionName];
 }
 

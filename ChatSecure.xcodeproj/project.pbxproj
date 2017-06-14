@@ -119,6 +119,7 @@
 		924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */; };
 		924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
+		D9040CB11EF1EB050027A862 /* OTRMediaItem+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9040CB01EF1EB050027A862 /* OTRMediaItem+Private.h */; };
 		D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */; };
 		D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D917CCDD1E553007003636B7 /* ServerCheck.swift */; };
 		D9182E371E943F24001E2BBA /* SignalProtocolC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9182E281E943EF9001E2BBA /* SignalProtocolC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1225,6 +1226,7 @@
 		C492FFACC855CE12E882968E /* Pods_ChatSecureCorePods_ChatSecureUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4E2DF261B1D18F006F8B3A6 /* Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig"; sourceTree = "<group>"; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9040CB01EF1EB050027A862 /* OTRMediaItem+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OTRMediaItem+Private.h"; sourceTree = "<group>"; };
 		D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDetailViewController.swift; sourceTree = "<group>"; };
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
@@ -1889,6 +1891,7 @@
 		633620961A76E854006E8739 /* Media Items */ = {
 			isa = PBXGroup;
 			children = (
+				D9040CB01EF1EB050027A862 /* OTRMediaItem+Private.h */,
 				D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */,
 				D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */,
 				D9B79B931ECF951F00883963 /* OTRFileItem.h */,
@@ -2356,6 +2359,7 @@
 				D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */,
 				D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */,
 				632AA73A1D482A1A00F65733 /* OTRSignalSession.h in Headers */,
+				D9040CB11EF1EB050027A862 /* OTRMediaItem+Private.h in Headers */,
 				D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */,
 				D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */,
 				D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */,

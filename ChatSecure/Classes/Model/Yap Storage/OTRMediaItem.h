@@ -13,7 +13,7 @@
 #import "OTRBaseMessage.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
+@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData, OTRMessageChildProtocol>
 
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readonly) NSString *filename;
@@ -35,10 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype) init NS_UNAVAILABLE;
 
-- (void)touchParentMessage DEPRECATED_MSG_ATTRIBUTE("Use touchParentMessageWithTransaction: instead.");
-- (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-- (nullable id<OTRMessageProtocol>)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
-
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 
 - (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction;
@@ -48,8 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: - Media Fetching
 
-/** Returns view to help assist in manually (re)downloading media, or nil if not needed */
-- (nullable UIView*) errorView;
+
 /* Return NO if data is already cached to prevent refetch */
 - (BOOL) shouldFetchMediaData;
 /** Triggers a refretch of media data. This is called internally when mediaView is accessed. */

@@ -7,6 +7,8 @@
 //
 
 #import "OTRFileItem.h"
+#import "OTRMediaItem+Private.h"
+
 
 @implementation OTRFileItem
 

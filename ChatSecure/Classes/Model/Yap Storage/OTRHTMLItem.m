@@ -12,6 +12,7 @@
 @import HTMLReader;
 @import OTRAssets;
 #import "OTRLog.h"
+#import "OTRMediaItem+Private.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRHTMLMetadata : NSObject

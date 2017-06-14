@@ -1072,7 +1072,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];
     OTRAccount *account = [self accountWithTransaction:transaction];
-    id<OTRMessageProtocol> message = [mediaItem parentMessageInTransaction:transaction];
+    id<OTRMessageProtocol> message = [mediaItem parentMessageWithTransaction:transaction];
     
     OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
@@ -1413,7 +1413,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     UIImage *avatarImage = nil;
-    if ([message messageError] || ![self isMessageTrusted:message]) {
+    NSError *messageError = [message messageError];
+    if ((messageError && !messageError.isAutomaticDownloadError) ||
+        ![self isMessageTrusted:message]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
     }
     else if ([message isMessageIncoming]) {

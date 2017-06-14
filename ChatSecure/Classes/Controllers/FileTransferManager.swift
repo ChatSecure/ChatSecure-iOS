@@ -397,22 +397,12 @@ extension FileTransferManager {
             connection.readWrite({ (transaction) in
                 for download in downloads {
                     if disableAutomaticURLFetching {
-                        let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.lastPathComponent, mimeType: nil)
+                        let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
                         media.save(with: transaction)
                         download.mediaItemUniqueId = media.uniqueId
                         download.error = FileTransferError.automaticDownloadsDisabled
                     }
                     download.save(with: transaction)
-                }
-                // Hack to hide URL for media messages
-                if let onlyURL = message.messageText?.isSingleURLOnly, onlyURL == true,
-                    let newMessage = message.refetch(with: transaction){
-                    if let base = newMessage as? OTRBaseMessage {
-                        base.text = nil
-                    } else if let muc = newMessage as? OTRXMPPRoomMessage {
-                        muc.messageText = nil
-                    }
-                    newMessage.save(with: transaction)
                 }
             })
         }

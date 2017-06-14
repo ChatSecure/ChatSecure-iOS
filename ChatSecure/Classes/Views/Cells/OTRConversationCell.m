@@ -18,7 +18,7 @@
 #import "OTRVideoItem.h"
 @import OTRAssets;
 @import YapDatabase;
-
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRConversationCell ()
 
@@ -102,7 +102,9 @@
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
-    if (lastMessage.messageError != nil) {
+    NSError *messageError = lastMessage.messageError;
+    if (messageError &&
+        !messageError.isAutomaticDownloadError) {
         self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.messageText];
     } else if (mediaItem) {
         self.conversationLabel.text = mediaItem.displayText;

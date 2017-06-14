@@ -48,7 +48,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         _isIncoming = isIncoming;
         _transferProgress = 0.0f;
         if (!mimeType.length) {
-            _mimeType = OTRKitGetMimeTypeForExtension(filename.pathExtension);
+            _mimeType = [self.class mimeTypeForFilename:filename];
         } else {
             NSString *extension = GetExtensionForMimeType(mimeType);
             if (![filename.pathExtension isEqualToString:extension]) {
@@ -64,11 +64,25 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     return self;
 }
 
++ (NSString*) mimeTypeForFilename:(NSString*)filename {
+    // This is to handle the case where we're storing temporary items with the full URL as the filename
+    NSURL *url = [NSURL URLWithString:filename];
+    NSString *pathExtension = filename.pathExtension;
+    if (url) {
+        pathExtension = url.pathExtension;
+    }
+    if (!pathExtension) {
+        pathExtension = @"";
+    }
+    NSString *mimeType = OTRKitGetMimeTypeForExtension(pathExtension);
+    return mimeType;
+}
+
 /** Returns the appropriate subclass (OTRImageItem, etc) for incoming file */
 + (instancetype) incomingItemWithFilename:(NSString*)filename
                                  mimeType:(nullable NSString*)mimeType {
     if (!mimeType) {
-        mimeType = OTRKitGetMimeTypeForExtension(filename.pathExtension);
+        mimeType = [self mimeTypeForFilename:filename];
     }
     NSRange imageRange = [mimeType rangeOfString:@"image"];
     NSRange audioRange = [mimeType rangeOfString:@"audio"];
@@ -104,7 +118,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     if (_mimeType) {
         return _mimeType;
     } else {
-        return OTRKitGetMimeTypeForExtension(self.filename.pathExtension);
+        return [self.class mimeTypeForFilename:self.filename];
     }
 }
 
@@ -116,15 +130,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
 }
-
-- (void)touchParentMessage
-{
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [self touchParentMessageWithTransaction:transaction];
-    }];
-}
-
-- (id<OTRMessageProtocol>)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
+- (id<OTRMessageProtocol>)parentMessageWithTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
     __block id<OTRMessageProtocol> message = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
@@ -179,7 +185,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 }
 
 - (nullable NSURL*) mediaServerURLWithTransaction:(YapDatabaseReadTransaction*)transaction {
-    id<OTRMessageProtocol> message = [self parentMessageInTransaction:transaction];
+    id<OTRMessageProtocol> message = [self parentMessageWithTransaction:transaction];
     id<OTRThreadOwner> threadOwner = [message threadOwnerWithTransaction:transaction];
     NSString *buddyUniqueId = [threadOwner threadIdentifier];
     if (!buddyUniqueId) {
@@ -211,7 +217,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         __block id<OTRThreadOwner> thread = nil;
         __block id<OTRMessageProtocol> message = nil;
         [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            message = [self parentMessageInTransaction:transaction];
+            message = [self parentMessageWithTransaction:transaction];
             thread = [message threadOwnerWithTransaction:transaction];
         }];
         if (!message || !thread) {
@@ -246,7 +252,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 - (nullable OTRDownloadMessage*) downloadMessage {
     __block id<OTRMessageProtocol> message = nil;
     [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        message = [self parentMessageInTransaction:transaction];
+        message = [self parentMessageWithTransaction:transaction];
     }];
     if ([message isKindOfClass:[OTRDownloadMessage class]]) {
         return (OTRDownloadMessage*)message;
@@ -279,6 +285,11 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         item = [NSString stringWithFormat:@"🎥 %@", VIDEO_MESSAGE_STRING()];
     } else if ([self isKindOfClass:[OTRAudioItem class]]) {
         item = [NSString stringWithFormat:@"🔊 %@", AUDIO_MESSAGE_STRING()];
+    } else {
+        NSURL *url = [NSURL URLWithString:self.filename];
+        if (url) {
+            item = [NSString stringWithFormat:@"🔗 %@", url.absoluteString];
+        }
     }
     return item;
 }

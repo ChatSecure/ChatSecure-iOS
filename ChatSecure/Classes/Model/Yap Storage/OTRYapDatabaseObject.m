@@ -35,6 +35,10 @@
     [transaction removeObjectForKey:self.uniqueId inCollection:[[self class] collection]];
 }
 
+- (void)touchWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    [transaction touchObjectForKey:self.uniqueId inCollection:self.class.collection];
+}
+
 /** This will fetch an updated instance of the object */
 - (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id object = [[[self class] fetchObjectWithUniqueID:self.uniqueId transaction:transaction] copy];

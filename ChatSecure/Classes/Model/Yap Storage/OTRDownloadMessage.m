@@ -49,6 +49,24 @@
     return edges;
 }
 
+- (nullable id<OTRMessageProtocol>) parentMessageWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    NSParameterAssert(transaction);
+    if (!transaction) { return nil; }
+    id object = [transaction objectForKey:self.parentMessageKey inCollection:self.parentMessageCollection];
+    if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+        return object;
+    }
+    return nil;
+}
+
+- (void) touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    NSParameterAssert(transaction);
+    if (!transaction) { return; }
+    id<OTRMessageProtocol> message = [self parentMessageWithTransaction:transaction];
+    if (!message) { return; }
+    [message touchWithTransaction:transaction];
+}
+
 @end
 
 @implementation UIAlertAction (OTRDownloadMessage)
