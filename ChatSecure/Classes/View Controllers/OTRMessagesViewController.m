@@ -1228,7 +1228,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     // If we find any incoming migration link messages, show the "your friend has migrated" header
     // to allow the user to start chatting with the new account instead.
-    if ([message messageIncoming]) {
+    if ([message isMessageIncoming]) {
         [self.linkDetector enumerateMatchesInString:cell.textView.text options:kNilOptions range:NSMakeRange(0, [cell.textView.text length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             if (result.resultType == NSTextCheckingTypeLink)
             {
