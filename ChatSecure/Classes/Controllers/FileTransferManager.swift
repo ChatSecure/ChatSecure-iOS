@@ -471,7 +471,10 @@ extension FileTransferManager {
     private func continueDownloading(downloadMessage: OTRDownloadMessage, url: URL, contentType: String?, contentLength: UInt) {
         var mediaItem: OTRMediaItem? = nil
         self.connection.readWrite { transaction in
-            mediaItem = OTRMediaItem(forMessage: downloadMessage, transaction: transaction) ?? OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
+            // Remove placeholder media item
+            mediaItem = OTRMediaItem(forMessage: downloadMessage, transaction: transaction)
+            mediaItem?.remove(with: transaction)
+            mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
             mediaItem?.save(with: transaction)
             downloadMessage.mediaItemUniqueId = mediaItem?.uniqueId
             downloadMessage.save(with: transaction)
