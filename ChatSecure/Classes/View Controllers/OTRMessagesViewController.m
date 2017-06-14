@@ -87,7 +87,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
-@property (nonatomic, strong) NSDataDetector *linkDetector;
 
 @end
 
@@ -152,7 +151,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
           forState:UIControlStateNormal];
     
     self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
-    self.linkDetector = [[NSDataDetector alloc] initWithTypes:NSTextCheckingTypeLink error:nil];
     
     ////// TextViewUpdates //////
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
@@ -1226,25 +1224,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
-    // If we find any incoming migration link messages, show the "your friend has migrated" header
-    // to allow the user to start chatting with the new account instead.
-    if ([message isMessageIncoming]) {
-        [self.linkDetector enumerateMatchesInString:cell.textView.text options:kNilOptions range:NSMakeRange(0, [cell.textView.text length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            if (result.resultType == NSTextCheckingTypeLink)
-            {
-                if ([result.URL otr_isInviteLink]) {
-                    // Migration link?
-                    [result.URL otr_decodeShareLink:^(XMPPJID * _Nullable jid, NSArray<NSURLQueryItem *> * _Nullable queryItems) {
-                        if ([NSURL otr_queryItemsContainMigrationHint:queryItems]) {
-                            [self showJIDForwardingHeaderWithNewJID:jid];
-                        }
-                    }];
-                }
-            }
-        }];
-    }
-    
-    cell.textView.delegate = self;
     return cell;
 }
 
