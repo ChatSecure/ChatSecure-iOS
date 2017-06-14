@@ -10,8 +10,9 @@ import Foundation
 import XMPPFramework
 import CocoaLumberjack
 import OTRKit
+import Alamofire
 
-public enum FileTransferError: Error {
+public enum FileTransferError: CustomNSError {
     case unknown
     case noServers
     case serverError
@@ -20,6 +21,7 @@ public enum FileTransferError: Error {
     case fileNotFound
     case keyGenerationError
     case cryptoError
+    case automaticDownloadsDisabled
 }
 
 public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
@@ -29,7 +31,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     let connection: YapDatabaseConnection
     let internalQueue = DispatchQueue(label: "FileTransferManager Queue")
     let callbackQueue = DispatchQueue.main
-    let urlSession: URLSession
+    let sessionManager: SessionManager
     private var servers: [HTTPServer] = []
     
     public var canUploadFiles: Bool {
@@ -43,11 +45,11 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     public init(connection: YapDatabaseConnection,
                 serverCapabilities: OTRServerCapabilities,
-                sessionConfiguration: URLSessionConfiguration?) {
+                sessionConfiguration: URLSessionConfiguration) {
         self.serverCapabilities = serverCapabilities
         self.httpFileUpload = XMPPHTTPFileUpload()
         self.connection = connection
-        self.urlSession = URLSession(configuration: sessionConfiguration ?? URLSessionConfiguration.ephemeral)
+        self.sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
         super.init()
         httpFileUpload.activate(serverCapabilities.xmppStream)
         httpFileUpload.addDelegate(self, delegateQueue: DispatchQueue.main)
@@ -166,7 +168,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                     return
                 }
                 let request = slot.putRequest
-                let upload = self.urlSession.uploadTask(with: request, from: outData, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+                let upload = self.sessionManager.session.uploadTask(with: request, from: outData, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
                     self.callbackQueue.async {
                         if let error = error {
                             completion(nil, error)
@@ -372,22 +374,20 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
-    public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection) {
+    public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
         if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
             DDLogVerbose("Download of message not needed \(message.messageKey)")
             return
         }
         var downloads: [OTRDownloadMessage] = []
         var disableAutomaticURLFetching = false
-        readConnection.read { (transaction) in
-            downloads = message.existingDownloads(with: transaction)
-            if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
-                disableAutomaticURLFetching = account.disableAutomaticURLFetching
+        if !force {
+            readConnection.read { (transaction) in
+                downloads = message.existingDownloads(with: transaction)
+                if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
+                    disableAutomaticURLFetching = account.disableAutomaticURLFetching
+                }
             }
-        }
-        if disableAutomaticURLFetching {
-            DDLogVerbose("Automatic URL fetching disabled \(message.messageKey)")
-           return
         }
         if downloads.count == 0 {
             downloads = message.downloads()
@@ -396,7 +396,12 @@ extension FileTransferManager {
             }
             connection.readWrite({ (transaction) in
                 for download in downloads {
-                    
+                    if disableAutomaticURLFetching {
+                        let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.lastPathComponent, mimeType: nil)
+                        media.save(with: transaction)
+                        download.mediaItemUniqueId = media.uniqueId
+                        download.error = FileTransferError.automaticDownloadsDisabled
+                    }
                     download.save(with: transaction)
                 }
                 // Hack to hide URL for media messages
@@ -411,88 +416,155 @@ extension FileTransferManager {
                 }
             })
         }
+        if disableAutomaticURLFetching {
+            DDLogVerbose("Automatic URL fetching disabled \(message.messageKey)")
+            return
+        }
         for download in downloads {
             downloadMediaIfNeeded(download)
         }
     }
     
     /** Downloads media for a single downloadmessage */
-    private func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
+    public func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
         // Bail out if we've already downloaded the media
-        if downloadMessage.mediaItemUniqueId != nil {
+        if downloadMessage.mediaItemUniqueId != nil &&
+            downloadMessage.error == nil {
             // DDLogWarn("Already downloaded media for this item")
             return
         }
-        var url = downloadMessage.url
-        // Turn aesgcm links into https links
-        if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
-            components.scheme = URLScheme.https.rawValue
-            if let rawURL = components.url {
-                url = rawURL
-            }
-        }
-        
-        self.urlSession.getTasksWithCompletionHandler { (tasks, _, _) in
+        let url = downloadMessage.downloadableURL
+        self.sessionManager.session.getTasksWithCompletionHandler { (tasks, _, _) in
             // Bail out if we've already got a task for this
             for task in tasks where task.originalRequest?.url == url {
                 DDLogWarn("Already have outstanding task: \(task)")
                 return
             }
-            
-            let request = URLRequest(url: url)
-            DDLogVerbose("Downloading media item at URL: \(url)")
-            let task = self.urlSession.dataTask(with: request, completionHandler: { (inData, urlResponse, error) in
-                if let error = error {
-                    DDLogError("Error downloading file \(error)")
-                    return
-                }
-                guard var data = inData, let response = urlResponse else {
-                    DDLogError("No data or response for URL \(url)")
-                    return
-                }
-                DDLogVerbose("Received response \(response)")
-                let authTagSize = 16 // i'm not sure if this can be assumed, but how else would we know the size?
-                if let (key, iv) = url.aesGcmKey, data.count > authTagSize {
-                    DDLogVerbose("Received encrypted response, attempting decryption...")
-
-                    let cryptedData = data.subdata(in: 0..<data.count - authTagSize)
-                    let authTag = data.subdata(in: data.count - authTagSize..<data.count)
-                    let cryptoData = OTRCryptoData(data: cryptedData, authTag: authTag)
-                    do {
-                        data = try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
-                    } catch let error {
-                        DDLogError("Error decrypting data: \(error)")
-                        return
+            self.sessionManager.request(url, method: .head)
+                .validate()
+                .responseData(queue: self.internalQueue) { response in
+                switch response.result {
+                case .success:
+                    DDLogInfo("HEAD response: \(String(describing: response.response?.allHeaderFields))")
+                    if let headers = response.response?.allHeaderFields {
+                        let contentType = headers["Content-Type"] as? String
+                        let contentLength = headers["Content-Length"] as? UInt ?? 0
+                        self.continueDownloading(downloadMessage: downloadMessage, url: url, contentType: contentType, contentLength: contentLength)
                     }
-                    DDLogVerbose("Decrpytion successful")
+                case .failure(let error):
+                    self.setError(error, onMessage: downloadMessage)
+                    DDLogError("HEAD error: \(error)")
                 }
-                let media = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: urlResponse?.mimeType)
-                OTRMediaFileManager.sharedInstance().setData(data, for: media, buddyUniqueId: downloadMessage.buddyUniqueId, completion: { (bytesWritten, error) in
-                    if let error = error {
-                        DDLogError("Error copying data: \(error)")
-                        return
-                    }
-                    var message: OTRDownloadMessage? = nil
-                    self.connection.asyncReadWrite({ (transaction) in
-                        media.transferProgress = 1.0
-                        media.save(with: transaction)
-                        message = downloadMessage.refetch(with: transaction)
-                        if let message = message {
-                            message.mediaItemUniqueId = media.uniqueId
-                            message.save(with: transaction)
-                        } else {
-                            DDLogError("Message not found: \(downloadMessage)")
-                        }
-                    }, completionQueue: DispatchQueue.main,
-                       completionBlock: {
-                        if let message = message {
-                            UIApplication.shared.showLocalNotification(message)
-                        }
-                    })
-                }, completionQueue: nil)
-            })
-            task.resume()
+            }
         }
+    }
+    
+    private func setError(_ error: Error, onMessage downloadMessage: OTRDownloadMessage) {
+        self.connection.readWrite { transaction in
+            if let message = downloadMessage.refetch(with: transaction) {
+                message.error = error
+                message.save(with: transaction)
+            }
+        }
+    }
+    
+    private func continueDownloading(downloadMessage: OTRDownloadMessage, url: URL, contentType: String?, contentLength: UInt) {
+        var mediaItem: OTRMediaItem? = nil
+        self.connection.readWrite { transaction in
+            mediaItem = OTRMediaItem(forMessage: downloadMessage, transaction: transaction) ?? OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
+            mediaItem?.save(with: transaction)
+            downloadMessage.mediaItemUniqueId = mediaItem?.uniqueId
+            downloadMessage.save(with: transaction)
+        }
+        guard let media = mediaItem else {
+            DDLogError("Could not unwrap media item")
+            self.setError(FileTransferError.fileNotFound, onMessage: downloadMessage)
+            return
+        }
+        DDLogVerbose("Downloading media item at URL: \(url)")
+        self.sessionManager.request(url)
+            .validate()
+            .responseData(queue: self.internalQueue) { response in
+                self.finishDownload(downloadMessage: downloadMessage, mediaItem: media, inData: response.data, urlResponse: response.response, error: response.error)
+                switch response.result {
+                case .success:
+                    DDLogVerbose("Download Successful")
+                case .failure(let error):
+                    self.setError(error, onMessage: downloadMessage)
+                    DDLogError("Download Error \(error)")
+                }
+            }.downloadProgress(queue: self.internalQueue) { progress in
+                DDLogVerbose("Download progress \(progress.fractionCompleted)")
+                self.connection.asyncReadWrite { transaction in
+                    if let media = media.refetch(with: transaction) {
+                        media.transferProgress = Float(progress.fractionCompleted)
+                        media.save(with: transaction)
+                        media.touchParentMessage(with: transaction)
+                    }
+                }
+        }
+    }
+    
+    private func finishDownload(downloadMessage: OTRDownloadMessage, mediaItem: OTRMediaItem, inData: Data?, urlResponse: URLResponse?, error: Error?) {
+        if let error = error {
+            self.setError(error, onMessage: downloadMessage)
+            DDLogError("Error downloading file \(error)")
+            return
+        }
+        guard var data = inData, let response = urlResponse, let url = response.url else {
+            self.setError(FileTransferError.fileNotFound, onMessage: downloadMessage)
+            DDLogError("No data or response")
+            return
+        }
+        DDLogVerbose("Received response \(response)")
+        let authTagSize = 16 // i'm not sure if this can be assumed, but how else would we know the size?
+        if let (key, iv) = url.aesGcmKey, data.count > authTagSize {
+            DDLogVerbose("Received encrypted response, attempting decryption...")
+            
+            let cryptedData = data.subdata(in: 0..<data.count - authTagSize)
+            let authTag = data.subdata(in: data.count - authTagSize..<data.count)
+            let cryptoData = OTRCryptoData(data: cryptedData, authTag: authTag)
+            do {
+                data = try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
+            } catch let error {
+                self.setError(error, onMessage: downloadMessage)
+                DDLogError("Error decrypting data: \(error)")
+                return
+            }
+            DDLogVerbose("Decrpytion successful")
+        }
+        OTRMediaFileManager.sharedInstance().setData(data, for: mediaItem, buddyUniqueId: downloadMessage.buddyUniqueId, completion: { (bytesWritten, error) in
+            if let error = error {
+                self.setError(error, onMessage: downloadMessage)
+                DDLogError("Error copying data: \(error)")
+                return
+            }
+            self.connection.asyncReadWrite({ (transaction) in
+                mediaItem.transferProgress = 1.0
+                mediaItem.save(with: transaction)
+                if let message = downloadMessage.refetch(with: transaction) {
+                    message.error = nil
+                    message.save(with: transaction)
+                }
+            }, completionQueue: DispatchQueue.main,
+               completionBlock: {
+                UIApplication.shared.showLocalNotification(downloadMessage)
+            })
+        }, completionQueue: nil)
+    }
+}
+
+extension OTRDownloadMessage {
+    /// Turn aesgcm links into https links
+    var downloadableURL: URL {
+        var downloadableURL = url
+        if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+            components.scheme = URLScheme.https.rawValue
+            if let rawURL = components.url {
+                downloadableURL = rawURL
+            }
+        }
+        return downloadableURL
     }
 }
 

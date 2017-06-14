@@ -10,6 +10,7 @@
 #import "OTRDatabaseManager.h"
 @import PureLayout;
 @import HTMLReader;
+@import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -50,12 +51,14 @@
 
 // Return empty view for now
 - (UIView *)mediaView {
+    UIView *errorView = [self errorView];
+    if (errorView) { return errorView; }
     OTRHTMLMetadata *metadata = [self metadata];
     if (!metadata) {
         [self fetchMediaData];
         return nil;
     }
-    HTMLPreviewView *view = [HTMLPreviewView previewView];
+    HTMLPreviewView *view = [HTMLPreviewView otr_viewFromNib];
     if (!view) {
         return nil;
     }

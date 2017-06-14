@@ -4,3 +4,4 @@ github "ChatSecure/SignalProtocolC" "4335dfb"
 github "ChatSecure/Mantle" "2.1.0_headerfix"
 # github "nolanw/HTMLReader" "v2.0.5"
 github "ChatSecure/HTMLReader" "xcode9-fix"
+github "Alamofire/Alamofire" ~> 4.4

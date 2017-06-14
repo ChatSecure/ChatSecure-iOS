@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
 
-@property (nonatomic, readonly) NSString *mimeType;
+@property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readonly) NSString *filename;
 @property (nonatomic, readonly) BOOL isIncoming;
 /** Text to show in message preview such as "📷 Picture Message" */
@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: - Media Fetching
 
+/** Returns view to help assist in manually (re)downloading media, or nil if not needed */
+- (nullable UIView*) errorView;
 /* Return NO if data is already cached to prevent refetch */
 - (BOOL) shouldFetchMediaData;
 /** Triggers a refretch of media data. This is called internally when mediaView is accessed. */

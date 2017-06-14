@@ -84,6 +84,8 @@
 
 - (UIView *)mediaView
 {
+    UIView *errorView = [self errorView];
+    if (errorView) { return errorView; }
     UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
     if (!image) {
         [self fetchMediaData];

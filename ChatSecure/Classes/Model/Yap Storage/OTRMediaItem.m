@@ -146,16 +146,21 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 - (UIView *)mediaView
 {
     [self fetchMediaData];
+    UIView *errorView = [self errorView];
+    if (errorView) { return errorView; }
     return nil;
 }
 
 - (CGSize)mediaViewDisplaySize
 {
+    // This is an absolutely terrible way of doing this
+    if ([self downloadMessage].messageError) {
+        return CGSizeMake(210.0f, 100.0f);
+    }
     //Taken from JSQMediaItem Example project
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         return CGSizeMake(315.0f, 225.0f);
     }
-    
     return CGSizeMake(210.0f, 150.0f);
 }
 
@@ -235,6 +240,35 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     NSParameterAssert(mediaData.length > 0);
     if (!mediaData.length) { return NO; }
     return NO;
+}
+
+/** ⚠️ Do not call from within an existing database transaction */
+- (nullable OTRDownloadMessage*) downloadMessage {
+    __block id<OTRMessageProtocol> message = nil;
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        message = [self parentMessageInTransaction:transaction];
+    }];
+    if ([message isKindOfClass:[OTRDownloadMessage class]]) {
+        return (OTRDownloadMessage*)message;
+    }
+    return nil;
+}
+
+- (UIView*) errorView {
+    OTRDownloadMessage *message = [self downloadMessage];
+    if (message.messageError) {
+        MediaDownloadView *downloadView = [MediaDownloadView otr_viewFromNib];
+        if (!downloadView) {
+            return nil;
+        }
+        [downloadView setMediaItem:self message:(OTRDownloadMessage*)message];
+        downloadView.backgroundColor = [UIColor jsq_messageBubbleLightGrayColor];
+        CGSize size = [self mediaViewDisplaySize];
+        downloadView.frame = CGRectMake(0, 0, size.width, size.height);
+        [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:downloadView isOutgoing:!self.isIncoming];
+        return downloadView;
+    }
+    return nil;
 }
 
 - (NSString*) displayText {

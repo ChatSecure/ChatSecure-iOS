@@ -1565,7 +1565,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSUInteger insertIndex = 0;
         
         if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING(),percentProgress];
+            if (message.messageError) {
+                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING()];
+            } else {
+                progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING(),percentProgress];
+            }
             insertIndex = [attributedString length];
         } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
             if(percentProgress > 0) {

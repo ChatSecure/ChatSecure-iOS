@@ -1,3 +1,4 @@
+github "Alamofire/Alamofire" "4.4.0"
 github "ChatSecure/HTMLReader" "808c2ebedc8b044eefc7a46c2dfca593244922e1"
 github "ChatSecure/Mantle" "4c1a09cb0c0811956cd35262340e42b940971cbb"
 github "ChatSecure/SignalProtocol-ObjC" "241f439a80afd68d9199e73e95f1350ade893b53"

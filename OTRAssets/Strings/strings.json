@@ -203,6 +203,10 @@
         "comment": "Title for button to press when user is finished",
         "string": "Done"
     },
+    "DOWNLOAD_STRING": {
+        "comment": "Title for button to download something",
+        "string": "Download"
+    },
     "DO_NOT_DISTURB_STRING": {
         "comment": "Default message when a user status is set to do not disturb",
         "string": "Do Not Disturb"

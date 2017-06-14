@@ -8,6 +8,8 @@
 
 #import "OTRBaseMessage.h"
 
+@class OTRAccount;
+
 typedef NS_ENUM(NSInteger, OTRThreadStatus) {
     OTRThreadStatusUnknown      = 0,
     OTRThreadStatusAvailable    = 1,
@@ -37,6 +39,8 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 - (BOOL)isGroupThread;
+
+- (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 @end
 

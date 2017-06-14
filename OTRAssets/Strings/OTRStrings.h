@@ -122,6 +122,8 @@ FOUNDATION_EXPORT NSString* DONATE_MESSAGE_STRING();
 FOUNDATION_EXPORT NSString* DONATE_STRING();
 /** "Done", Title for button to press when user is finished */
 FOUNDATION_EXPORT NSString* DONE_STRING();
+/** "Download", Title for button to download something */
+FOUNDATION_EXPORT NSString* DOWNLOAD_STRING();
 /** "Do Not Disturb", Default message when a user status is set to do not disturb */
 FOUNDATION_EXPORT NSString* DO_NOT_DISTURB_STRING();
 /** "Database Error",  */

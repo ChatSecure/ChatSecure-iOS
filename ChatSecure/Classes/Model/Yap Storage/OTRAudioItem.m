@@ -40,6 +40,8 @@
 
 - (UIView *)mediaView
 {
+    UIView *errorView = [self errorView];
+    if (errorView) { return errorView; }
     CGSize size = [self mediaViewDisplaySize];
     UIEdgeInsets bubbleInset = UIEdgeInsetsMake(5, 5, 5, 5);
     if (self.isIncoming) {

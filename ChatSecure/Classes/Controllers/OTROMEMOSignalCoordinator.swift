@@ -372,11 +372,16 @@ import SignalProtocolObjC
                     break
                 } catch let error {
                     DDLogError("Error decrypting: \(error)")
+                    let nsError = error as NSError
+                    if nsError.domain == SignalErrorDomain, nsError.code == SignalError.duplicateMessage.rawValue {
+                        // duplicate messages are benign and can be ignored
+                        return
+                    }
                     let buddyAddress = SignalAddress(name: fromJID.bare(), deviceId: Int32(senderDeviceId))
                     if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
                         // Session is corrupted
                         let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
-                        DDLogError("Session exists and is corrupted. Deleting...")
+                        DDLogError("Session exists and is possibly corrupted. Deleting...")
                     }
                     return
                 }
@@ -483,7 +488,7 @@ import SignalProtocolObjC
                         return
                     }
                     
-                    xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection)
+                    xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection, force: false)
                     UIApplication.shared.showLocalNotification(databaseMessage)
             })
             // Display local notification

@@ -122,6 +122,8 @@ NSString* DONATE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:
 NSString* DONATE_STRING() { return [OTRLanguageManager translatedString:@"Donate"]; }
 /** "Done", Title for button to press when user is finished */
 NSString* DONE_STRING() { return [OTRLanguageManager translatedString:@"Done"]; }
+/** "Download", Title for button to download something */
+NSString* DOWNLOAD_STRING() { return [OTRLanguageManager translatedString:@"Download"]; }
 /** "Do Not Disturb", Default message when a user status is set to do not disturb */
 NSString* DO_NOT_DISTURB_STRING() { return [OTRLanguageManager translatedString:@"Do Not Disturb"]; }
 /** "Database Error",  */

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 - (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-/** This will fetch an updated instance of the object. If nil, it means it was deleted or not present in the db. */
+/** This will fetch an updated (copied) instance of the object. If nil, it means it was deleted or not present in the db. */
 - (nullable instancetype)refetchWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 + (nullable instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;

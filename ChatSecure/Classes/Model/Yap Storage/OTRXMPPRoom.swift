@@ -38,6 +38,9 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    public func account(with transaction: YapDatabaseReadTransaction) -> OTRAccount? {
+        return OTRAccount.fetchObject(withUniqueID: threadAccountIdentifier(), transaction: transaction)
+    }
     
     public var isMuted: Bool {
         guard let expiration = muteExpiration else {
