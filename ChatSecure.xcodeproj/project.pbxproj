@@ -482,7 +482,7 @@
 		D9B79BBA1ECF9FB500883963 /* Mantle.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9B79BAD1ECF9F8700883963 /* Mantle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9B79BBB1ECF9FCE00883963 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B79BAD1ECF9F8700883963 /* Mantle.framework */; };
 		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
-		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; };
+		D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */ = {isa = PBXBuildFile; fileRef = D93718511EC267F800766D49 /* OTRAccountMigrator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9B9B1331DC7F3AC0007F5A7 /* UserInfoProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */; };
 		D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B9B1321DC7F3AC0007F5A7 /* UserInfoProfileCell.xib */; };
 		D9B9B1371DC802480007F5A7 /* OTRUserInfoProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B9B1361DC802480007F5A7 /* OTRUserInfoProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
