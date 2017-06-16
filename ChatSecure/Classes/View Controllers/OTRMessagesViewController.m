@@ -1696,8 +1696,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     // The databse view is setup now so refresh from there
     [self updateViewWithKey:self.threadKey collection:self.threadCollection];
     [self.collectionView reloadData];
-    NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
-    [self checkRangeForMigrationMessage:NSMakeRange(0, numberMappingsItems)];
 }
 
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler key:(NSString *)key collection:(NSString *)collection
@@ -1727,7 +1725,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             [self.collectionView reloadData];
             [self scrollToBottomAnimated:YES];
         }
-        [self checkRangeForMigrationMessage:NSMakeRange(collectionViewNumberOfItems, numberMappingsItems - collectionViewNumberOfItems)];
     } else {
         //deleted a message or message updated
         [self.collectionView performBatchUpdates:^{
@@ -1897,39 +1894,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             [self setThreadKey:buddy.uniqueId collection:[OTRBuddy collection]];
         }];
     }
-}
-
-// If we find any incoming migration link messages, show the "your friend has migrated" header
-// to allow the user to start chatting with the new account instead.
-- (void) checkRangeForMigrationMessage:(NSRange)range {
-    __weak __typeof__(self) weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        __typeof__(self) strongSelf = weakSelf;
-        __block bool foundLink = false;
-
-        for (NSUInteger i = range.location; !foundLink && i < (range.location + range.length); i++) {
-            id <OTRMessageProtocol>message = [strongSelf messageAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            if (message != nil && [message messageIncoming] && message.text != nil) {
-                [self.linkDetector enumerateMatchesInString:message.text options:kNilOptions range:NSMakeRange(0, [message.text length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                    if (result.resultType == NSTextCheckingTypeLink)
-                    {
-                        if ([result.URL otr_isInviteLink]) {
-                            // Migration link?
-                            [result.URL otr_decodeShareLink:^(XMPPJID * _Nullable jid, NSArray<NSURLQueryItem *> * _Nullable queryItems) {
-                                if ([NSURL otr_queryItemsContainMigrationHint:queryItems]) {
-                                    foundLink = true;
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        [strongSelf showJIDForwardingHeaderWithNewJID:jid];
-                                    });
-                                    *stop = TRUE;
-                                }
-                            }];
-                        }
-                    }
-                }];
-            }
-        }
-    });
 }
 
 @end
