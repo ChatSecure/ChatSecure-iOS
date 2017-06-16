@@ -1907,9 +1907,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         __typeof__(self) strongSelf = weakSelf;
         __block bool foundLink = false;
 
-        for (int i = range.location; !foundLink && i < (range.location + range.length); i++) {
+        for (NSUInteger i = range.location; !foundLink && i < (range.location + range.length); i++) {
             id <OTRMessageProtocol>message = [strongSelf messageAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            if (message != nil && [message messageIncoming]) {
+            if (message != nil && [message messageIncoming] && message.text != nil) {
                 [self.linkDetector enumerateMatchesInString:message.text options:kNilOptions range:NSMakeRange(0, [message.text length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                     if (result.resultType == NSTextCheckingTypeLink)
                     {
