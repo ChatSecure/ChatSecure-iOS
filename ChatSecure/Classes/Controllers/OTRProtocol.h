@@ -31,6 +31,7 @@ typedef NS_ENUM(int, OTRProtocolType) {
 
 typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
     OTRProtocolConnectionStatusDisconnected,
+    OTRProtocolConnectionStatusDisconnecting,
     OTRProtocolConnectionStatusConnected,
     OTRProtocolConnectionStatusConnecting
 };

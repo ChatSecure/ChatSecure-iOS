@@ -307,7 +307,8 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         case .connecting:
             cell.button.setTitle("\(CONNECTING_STRING())...", for: .normal)
             cell.button.isEnabled = false
-        case .disconnected:
+        case .disconnecting,
+             .disconnected:
             cell.button.setTitle(LOGIN_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }

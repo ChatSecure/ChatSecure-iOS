@@ -35,7 +35,7 @@
 @class XMPPPushModule, ServerCheck, FileTransferManager;
 
 NS_ASSUME_NONNULL_BEGIN
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, XMPPStreamDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
 
