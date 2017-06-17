@@ -471,9 +471,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
+        self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
         [self goAway];
-        [self.xmppStream disconnectAfterSending];
-        self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
         return;
     }
     
@@ -926,6 +925,19 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
 {
     DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, presence, error);
+    [self finishDisconnectingIfNeeded];
+}
+
+- (void)xmppStream:(XMPPStream *)sender didSendPresence:(XMPPPresence *)presence
+{
+    [self finishDisconnectingIfNeeded];
+}
+
+- (void)finishDisconnectingIfNeeded {
+    if (self.connectionStatus == OTRProtocolConnectionStatusDisconnecting) {
+        [self.xmppStream disconnect];
+        self.connectionStatus =  OTRProtocolConnectionStatusDisconnected;
+    }
 }
 
 #pragma mark XMPPvCardTempModuleDelegate
