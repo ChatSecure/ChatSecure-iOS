@@ -56,49 +56,49 @@ PODS:
   - JTSImageViewController (1.5.1)
   - JVFloatLabeledTextField (1.1.1)
   - KissXML (5.2.0)
-  - KSCrash (1.15.8):
-    - KSCrash/Installations (= 1.15.8)
-  - KSCrash/Installations (1.15.8):
+  - KSCrash (1.15.10):
+    - KSCrash/Installations (= 1.15.10)
+  - KSCrash/Installations (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.15.8):
-    - KSCrash/Recording/Tools (= 1.15.8)
-  - KSCrash/Recording/Tools (1.15.8)
-  - KSCrash/Reporting (1.15.8):
+  - KSCrash/Recording (1.15.10):
+    - KSCrash/Recording/Tools (= 1.15.10)
+  - KSCrash/Recording/Tools (1.15.10)
+  - KSCrash/Reporting (1.15.10):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.8)
-    - KSCrash/Reporting/MessageUI (= 1.15.8)
-    - KSCrash/Reporting/Sinks (= 1.15.8)
-    - KSCrash/Reporting/Tools (= 1.15.8)
-  - KSCrash/Reporting/Filters (1.15.8):
+    - KSCrash/Reporting/Filters (= 1.15.10)
+    - KSCrash/Reporting/MessageUI (= 1.15.10)
+    - KSCrash/Reporting/Sinks (= 1.15.10)
+    - KSCrash/Reporting/Tools (= 1.15.10)
+  - KSCrash/Reporting/Filters (1.15.10):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.8)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.8)
-    - KSCrash/Reporting/Filters/Base (= 1.15.8)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.8)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.8)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.8)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.8)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.8)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.8)
-  - KSCrash/Reporting/Filters/Alert (1.15.8):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.8):
+    - KSCrash/Reporting/Filters/Alert (= 1.15.10)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.10)
+    - KSCrash/Reporting/Filters/Base (= 1.15.10)
+    - KSCrash/Reporting/Filters/Basic (= 1.15.10)
+    - KSCrash/Reporting/Filters/GZip (= 1.15.10)
+    - KSCrash/Reporting/Filters/JSON (= 1.15.10)
+    - KSCrash/Reporting/Filters/Sets (= 1.15.10)
+    - KSCrash/Reporting/Filters/Stringify (= 1.15.10)
+    - KSCrash/Reporting/Filters/Tools (= 1.15.10)
+  - KSCrash/Reporting/Filters/Alert (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.8):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.8):
+  - KSCrash/Reporting/Filters/AppleFmt (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.8):
+  - KSCrash/Reporting/Filters/Base (1.15.10):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.8):
+  - KSCrash/Reporting/Filters/GZip (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.8):
+  - KSCrash/Reporting/Filters/JSON (1.15.10):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -106,18 +106,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.8):
+  - KSCrash/Reporting/Filters/Stringify (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.8):
+  - KSCrash/Reporting/Filters/Tools (1.15.10):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.8):
+  - KSCrash/Reporting/MessageUI (1.15.10):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.8):
+  - KSCrash/Reporting/Sinks (1.15.10):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.8):
+  - KSCrash/Reporting/Tools (1.15.10):
     - KSCrash/Recording
   - KVOController (1.2.0)
   - libidn (1.33)
@@ -334,7 +334,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: 0e5524b097f102036214dd8279edc8ecf08b5e18
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
-  KSCrash: 4acb0f9cdb0b1ce7155c608dc175d91d750a8c3a
+  KSCrash: 2643106940b53515492744f20af9e02cf81b0dbe
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed

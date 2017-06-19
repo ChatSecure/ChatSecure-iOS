@@ -35,7 +35,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>84</string>
+	<string>85</string>
 	<key>FacebookAppID</key>
 	<string>447241325394334</string>
 	<key>FacebookDisplayName</key>
@@ -54,7 +54,7 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
+		<key>NSAllowsLocalNetworking</key>
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
