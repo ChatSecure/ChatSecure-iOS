@@ -1223,7 +1223,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self.audioPlaybackController attachAudioControlsView:(OTRAudioControlsView *)view];
         }
     }
-    
+
+    // Needed for link interaction
+    cell.textView.delegate = self;
     return cell;
 }
 
