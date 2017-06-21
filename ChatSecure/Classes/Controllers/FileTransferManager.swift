@@ -157,7 +157,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             }
             
             
-            self.httpFileUpload.requestSlot(fromService: service.jid, filename: filename, size: UInt(data.count), contentType: contentType, completion: { (slot: XMPPSlot?, iq: XMPPIQ?, error: Error?) in
+            self.httpFileUpload.requestSlot(fromService: service.jid, filename: filename, size: UInt(outData.count), contentType: contentType, completion: { (slot: XMPPSlot?, iq: XMPPIQ?, error: Error?) in
                 guard let slot = slot else {
                     if let error = error {
                         DDLogError("\(service) failed to assign upload slot: \(error)")
