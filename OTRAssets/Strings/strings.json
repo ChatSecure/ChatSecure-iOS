@@ -191,6 +191,10 @@
         "comment": "e.g. for deactivating your push account",
         "string": "Deactivate"
     },
+    "DID_YOU_KNOW_DONATION_STRING": {
+        "comment": "prompt users to donate money",
+        "string": "Did you know you can now help fund future development directly within the app?"
+    },
     "DONATE_MESSAGE_STRING": {
         "comment": "Message shown when about to donate",
         "string": "Your donation will help fund the continued development of ChatSecure."
@@ -562,6 +566,10 @@
     "REMEMBER_PASSPHRASE_STRING": {
         "comment": "Label for switch to save passphrase",
         "string": "Remember Passphrase"
+    },
+    "MAYBE_LATER_STRING": {
+        "comment": "button to do something later",
+        "string": "Maybe Later"
     },
     "REMEMBER_PASSWORD_STRING": {
         "comment": "label for switch for whether or not we should save their password between launches",

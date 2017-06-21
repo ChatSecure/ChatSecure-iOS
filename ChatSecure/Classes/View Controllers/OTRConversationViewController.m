@@ -205,12 +205,47 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
 }
 
+- (void) showDonationPrompt {
+    if (!OTRBranding.allowsDonation ||
+        self.hasPresentedOnboarding ||
+        TransactionObserver.hasValidReceipt) {
+        return;
+    }
+    NSDate *ignoreDate = [NSUserDefaults.standardUserDefaults objectForKey:kOTRIgnoreDonationDateKey];
+    BOOL dateCheck = NO;
+    if (!ignoreDate) {
+        dateCheck = YES;
+    } else {
+        NSTimeInterval lastIgnored = [[NSDate date] timeIntervalSinceDate:ignoreDate];
+        NSTimeInterval twoWeeks = 60 * 60 * 24 * 14;
+        if (lastIgnored > twoWeeks) {
+            dateCheck = YES;
+        }
+    }
+    if (!dateCheck) {
+        return;
+    }
+    NSString *title = [NSString stringWithFormat:@"❤️ %@", DONATE_STRING()];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:DID_YOU_KNOW_DONATION_STRING() preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *donate = [UIAlertAction actionWithTitle:DONATE_STRING() style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [PurchaseViewController showFrom:self];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:MAYBE_LATER_STRING() style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:donate];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
+    [NSUserDefaults.standardUserDefaults setObject:NSDate.date forKey:kOTRIgnoreDonationDateKey];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
     [self showOnboardingIfNeeded];
+    [self showDonationPrompt];
 }
+         
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {

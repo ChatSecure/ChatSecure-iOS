@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 #import "OTRConstants.h"
 
-
+NSString *const kOTRIgnoreDonationDateKey = @"kOTRIgnoreDonationDateKey";
 NSString *const kOTRProtocolLoginSuccess                   = @"LoginSuccessNotification";
 NSString *const kOTRProtocolLoginFail                      = @"LoginFailedNotification";
 NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFailErrorKey";

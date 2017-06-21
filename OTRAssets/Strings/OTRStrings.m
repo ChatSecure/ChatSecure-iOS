@@ -116,6 +116,8 @@ NSString* DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING() { return [OTRLanguag
 NSString* DELETE_STRING() { return [OTRLanguageManager translatedString:@"Delete"]; }
 /** "Delivered", Shows in the chat view when a message has been delivered */
 NSString* DELIVERED_STRING() { return [OTRLanguageManager translatedString:@"Delivered"]; }
+/** "Did you know you can now help fund future development directly within the app?", prompt users to donate money */
+NSString* DID_YOU_KNOW_DONATION_STRING() { return [OTRLanguageManager translatedString:@"Did you know you can now help fund future development directly within the app?"]; }
 /** "Your donation will help fund the continued development of ChatSecure.", Message shown when about to donate */
 NSString* DONATE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Your donation will help fund the continued development of ChatSecure."]; }
 /** "Donate", Title for donation link */
@@ -216,6 +218,8 @@ NSString* LOGOUT_STRING() { return [OTRLanguageManager translatedString:@"Log Ou
 NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Manage ChatSecure Push account"]; }
 /** "Manage My Keys", Button to manage your OTR and OMEMO keys */
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
+/** "Maybe Later", button to do something later */
+NSString* MAYBE_LATER_STRING() { return [OTRLanguageManager translatedString:@"Maybe Later"]; }
 /** "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages.", Explanation for why a message could not be sent. */
 NSString* MESSAGE_COULD_NOT_BE_SENT_STRING() { return [OTRLanguageManager translatedString:@"The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."]; }
 /** "Notify Contacts of New Account", Title for toggle switch to spam your friends with your new account info */

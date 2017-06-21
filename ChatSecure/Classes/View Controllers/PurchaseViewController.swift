@@ -12,6 +12,18 @@ import FormatterKit
 import MBProgressHUD
 import OTRAssets
 
+public extension PurchaseViewController {
+    public class func show(from viewController: UIViewController) {
+        let assets = OTRAssets.resourcesBundle
+        let storyboard = UIStoryboard(name: "Purchase", bundle: assets)
+        guard let vc = storyboard.instantiateInitialViewController() else { return }
+        vc.modalPresentationStyle = .formSheet
+        let nav = UINavigationController(rootViewController: vc)
+        nav.isNavigationBarHidden = true
+        viewController.present(nav, animated: true, completion: nil)
+    }
+}
+
 extension Bundle {
     static var formatterKit: Bundle? {
         let framework = Bundle(for: TTTUnitOfInformationFormatter.self)

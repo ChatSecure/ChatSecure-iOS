@@ -367,12 +367,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Purchase" bundle:[OTRAssets resourcesBundle]];
-    UIViewController *vc = [storyboard instantiateInitialViewController];
-    vc.modalPresentationStyle = UIModalPresentationFormSheet;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    nav.navigationBarHidden = YES;
-    [self presentViewController:nav animated:YES completion:nil];
+    [PurchaseViewController showFrom:self];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate

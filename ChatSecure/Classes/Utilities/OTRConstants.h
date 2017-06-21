@@ -82,6 +82,8 @@ extern NSString *const OTRUserNotificationsUNTextInputReply;
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
 extern NSString *const kOTRPushEnabledKey;
+extern NSString *const kOTRIgnoreDonationDateKey;
+
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;
