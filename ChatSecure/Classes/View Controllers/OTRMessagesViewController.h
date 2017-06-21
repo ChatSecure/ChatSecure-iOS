@@ -59,9 +59,9 @@
 - (void)didFinishTyping;
 
 /** Currently uses clock for queued, and checkmark for delivered. */
-- (nullable NSString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)message;
+- (nullable NSAttributedString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)message;
 
 /** override this method to customize what should be shown at the beginning of the message status */
-- (nullable NSAttributedString *) encryptionStatusStringForMesage:(nonnull id<OTRMessageProtocol>)message;
+- (nullable NSAttributedString *) encryptionStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message;
 
 @end
