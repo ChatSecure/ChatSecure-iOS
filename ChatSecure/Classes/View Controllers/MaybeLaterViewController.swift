@@ -8,7 +8,7 @@
 
 import UIKit
 import OTRAssets
-import uservoice_iphone_sdk
+import UserVoice
 import Appirater
 
 public class MaybeLaterViewController: UIViewController {

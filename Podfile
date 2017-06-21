@@ -55,7 +55,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
 
   # Crypto
-  pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
+  pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocolObjC/SignalProtocolObjC.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 
   ### Moved to Carthage ###

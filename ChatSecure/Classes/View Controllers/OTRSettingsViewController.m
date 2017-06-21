@@ -29,7 +29,7 @@
 #import "OTRQRCodeViewController.h"
 @import QuartzCore;
 #import "OTRConstants.h"
-@import uservoice_iphone_sdk;
+@import UserVoice;
 #import "OTRAccountTableViewCell.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "OTRSecrets.h"

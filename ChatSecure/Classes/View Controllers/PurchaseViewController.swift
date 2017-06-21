@@ -12,6 +12,17 @@ import FormatterKit
 import MBProgressHUD
 import OTRAssets
 
+extension Bundle {
+    static var formatterKit: Bundle? {
+        let framework = Bundle(for: TTTUnitOfInformationFormatter.self)
+        guard let path = framework.path(forResource: "FormatterKit", ofType: "bundle") else {
+            return nil
+        }
+        let bundle = Bundle(path: path)
+        return bundle
+    }
+}
+
 public class PurchaseViewController: UIViewController {
     @IBOutlet weak var bigMoneyButton: UIButton!
     @IBOutlet weak var smallMoneyButton: UIButton!
@@ -94,7 +105,10 @@ public class PurchaseViewController: UIViewController {
             }
             button.isEnabled = true
             let price = product.formattedPrice ?? product.price.stringValue
-            let duration = NSLocalizedString("mo", tableName: "FormatterKit", bundle: Bundle.formatterKit(), value: "mo", comment: "Month")
+            var duration = "mo"
+            if let bundle = Bundle.formatterKit {
+                duration = NSLocalizedString("mo", tableName: "FormatterKit", bundle: bundle, value: "mo", comment: "Month")
+            }
             let fullPrice = "\(productEnum.emoji) \(price)/\(duration)"
             button.setTitle(fullPrice, for: .normal)
             button.titleLabel?.adjustsFontSizeToFitWidth = true

@@ -25,3 +25,6 @@
 [submodule "Submodules/JSQMessagesViewController"]
 	path = Submodules/JSQMessagesViewController
 	url = git@github.com:ChatSecure/JSQMessagesViewController.git
+[submodule "Submodules/SignalProtocol-ObjC"]
+	path = Submodules/SignalProtocol-ObjC
+	url = git@github.com:ChatSecure/SignalProtocol-ObjC.git

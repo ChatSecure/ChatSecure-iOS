@@ -5,7 +5,6 @@ github "AFNetworking/AFNetworking" ~> 3.1
 github "TheLevelUp/ZXingObjC" ~> 3.2
 github "soffes/SAMKeychain" ~> 1.5
 github "jdg/MBProgressHUD" ~> 1.0
-github "jverdi/JVFloatLabeledTextField" ~> 1.1
 github "TTTAttributedLabel/TTTAttributedLabel" ~> 2.0
 github "PureLayout/PureLayout" ~> 3.0
 github "uservoice/uservoice-ios-sdk" ~> 3.2

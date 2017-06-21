@@ -16,7 +16,6 @@ before_install:
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
   - git submodule update --init --recursive
-  - carthage bootstrap --no-use-binaries --no-build --use-submodules --platform ios
 
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
@@ -30,6 +29,7 @@ install:
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
+  - carthage update --platform ios --cache-builds
   - bundle exec pod repo update
   - bundle exec pod install
 script:
