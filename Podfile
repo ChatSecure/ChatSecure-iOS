@@ -17,76 +17,58 @@ use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 abstract_target 'ChatSecureCorePods' do
-  pod 'AFNetworking', '~> 3.1'
+  # User Interface
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
-  pod 'MWFeedParser', '~> 1.0'
-  pod "CocoaLumberjack", '~> 3.2.0'
-  pod 'KSCrash', '~> 1.15.3'
-  pod 'MBProgressHUD', '~> 1.0'
-  pod "SAMKeychain", '~> 1.5'
-  # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  pod 'YapDatabase/SQLCipher', '~> 3.0'
-  #pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
-  # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'cocoalumberjack3'
-
-
-  # pod 'Mantle', '~> 2.0'
-  pod 'Navajo', '~> 0.0'
-  # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
-  # using for in meantime
-  # pod 'JSQMessagesViewController', '~> 8.0'
-  pod 'BBlock', '~> 1.2'
-  pod 'JVFloatLabeledTextField', '~> 1.0'
-  pod 'TTTAttributedLabel', '~> 2.0'
+  pod 'JTSImageViewController', '~> 1.4'
   pod 'VTAcknowledgementsViewController', '~> 1.2'
-  pod 'PureLayout', '~> 3.0'
   pod 'BButton', '~> 4.0'
-  pod 'uservoice-iphone-sdk', '~> 3.2'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
+  pod 'QRCodeReaderViewController', '~> 4.0'
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '0.3.0'
+  pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
+
+  # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.2.0'
-  # We need a commit from next release
-  #pod 'CocoaAsyncSocket', '~> 7.4'
+  pod 'MWFeedParser', '~> 1.0'
+  pod 'Navajo', '~> 0.0'
+  pod 'BBlock', '~> 1.2'
+  pod 'KSCrash', '~> 1.15.3'
+
+  # Network
   pod 'CocoaAsyncSocket', '~> 7.6.0'
   pod 'ProxyKit/Client', '~> 1.2.0'
-
-  pod 'JTSImageViewController', '~> 1.4'
-  pod 'KVOController', '~> 1.0'
-  #Reachability only needed for YapActionItems
-  pod 'Reachability', '~> 3'
-  pod 'XLForm', '~> 3.3'
-  #pod 'ParkedTextField', '~> 0.2'
-  pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
   pod 'GCDWebServer/CocoaLumberjack', :git => 'https://github.com/ChatSecure/GCDWebServer.git', :branch => 'kdbertel-CocoaLumberjack3'
+  pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
+  pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
+  pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
 
-  # QR Codes
-  pod 'QRCodeReaderViewController', '~> 4.0'
-  pod 'ZXingObjC', '~> 3.0'
-
-  # pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/b2b483fe1c4c66cecfc0376c496e6a58ed1939b5/SignalProtocolC.podspec'
-  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
-  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '0.3.0'
-
-  # Local Podspecs
+  # Google Auth
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
-  # Forks
-  # pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :tag => '7.3.4-send_button'
-
-  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
-  # pod 'YapTaskQueue/SQLCipher', '~> 0.2' # Waiting on @escaping fix upstream
-
-  # Submodules
-
-  # pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
-  pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
-  pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
-  pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
-  pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
+  # Storage
+  pod 'YapDatabase/SQLCipher', '~> 3.0'
+  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
+  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
+
+  # Crypto
+  pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
+  pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
+
+  ### Moved to Carthage ###
+  # pod 'AFNetworking', '~> 3.1'
+  # pod 'ZXingObjC', '~> 3.0'
+  # pod "SAMKeychain", '~> 1.5'
+  # pod 'MBProgressHUD', '~> 1.0'
+  # pod 'TTTAttributedLabel', '~> 2.0'
+  # pod 'PureLayout', '~> 3.0'
+  # pod 'uservoice-iphone-sdk', '~> 3.2'
+  # pod 'KVOController', '~> 1.0'
+  # pod 'XLForm', '~> 3.3'
+  # pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
 
   target 'ChatSecureCore'
   target 'ChatSecureTests'

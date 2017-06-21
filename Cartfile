@@ -1,7 +1,14 @@
-# github "ChatSecure/SignalProtocol-ObjC" ~> 1.0.0
-github "ChatSecure/SignalProtocol-ObjC" "c9c7c1e"
-github "ChatSecure/SignalProtocolC" "4335dfb"
 github "ChatSecure/Mantle" "2.1.0_headerfix"
-# github "nolanw/HTMLReader" "v2.0.5"
-github "ChatSecure/HTMLReader" "xcode9-fix"
+github "nolanw/HTMLReader" "1d0dda3"
 github "Alamofire/Alamofire" ~> 4.4
+github "AFNetworking/AFNetworking" ~> 3.1
+github "TheLevelUp/ZXingObjC" ~> 3.2
+github "soffes/SAMKeychain" ~> 1.5
+github "jdg/MBProgressHUD" ~> 1.0
+github "jverdi/JVFloatLabeledTextField" ~> 1.1
+github "TTTAttributedLabel/TTTAttributedLabel" ~> 2.0
+github "PureLayout/PureLayout" ~> 3.0
+github "uservoice/uservoice-ios-sdk" ~> 3.2
+github "facebook/KVOController" ~> 1.2
+github "xmartlabs/XLForm" ~> 3.3
+github "mattt/FormatterKit" ~> 1.8

@@ -22,21 +22,6 @@
 [submodule "Submodules/ChatSecure-Push-iOS"]
 	path = Submodules/ChatSecure-Push-iOS
 	url = git@github.com:ChatSecure/ChatSecure-Push-iOS.git
-[submodule "Carthage/Checkouts/SignalProtocolC"]
-	path = Carthage/Checkouts/SignalProtocolC
-	url = https://github.com/ChatSecure/SignalProtocolC.git
-[submodule "Carthage/Checkouts/SignalProtocol-ObjC"]
-	path = Carthage/Checkouts/SignalProtocol-ObjC
-	url = https://github.com/ChatSecure/SignalProtocol-ObjC.git
-[submodule "Carthage/Checkouts/Mantle"]
-	path = Carthage/Checkouts/Mantle
-	url = https://github.com/ChatSecure/Mantle.git
 [submodule "Submodules/JSQMessagesViewController"]
 	path = Submodules/JSQMessagesViewController
 	url = git@github.com:ChatSecure/JSQMessagesViewController.git
-[submodule "Carthage/Checkouts/HTMLReader"]
-	path = Carthage/Checkouts/HTMLReader
-	url = https://github.com/ChatSecure/HTMLReader.git
-[submodule "Carthage/Checkouts/Alamofire"]
-	path = Carthage/Checkouts/Alamofire
-	url = https://github.com/Alamofire/Alamofire.git
