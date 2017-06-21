@@ -527,6 +527,19 @@
 		D9EC47821EFA03FC00C39B25 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
 		D9EC47831EFA03FC00C39B25 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
 		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9FD36001EFAFD3C00398CE4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476A1EFA03FC00C39B25 /* Alamofire.framework */; };
+		D9FD36011EFAFD3C00398CE4 /* FormatterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476B1EFA03FC00C39B25 /* FormatterKit.framework */; };
+		D9FD36021EFAFD3C00398CE4 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476C1EFA03FC00C39B25 /* HTMLReader.framework */; };
+		D9FD36031EFAFD3C00398CE4 /* KVOController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476E1EFA03FC00C39B25 /* KVOController.framework */; };
+		D9FD36041EFAFD3C00398CE4 /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476F1EFA03FC00C39B25 /* Mantle.framework */; };
+		D9FD36051EFAFD3C00398CE4 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47701EFA03FC00C39B25 /* MBProgressHUD.framework */; };
+		D9FD36061EFAFD3C00398CE4 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47711EFA03FC00C39B25 /* PureLayout.framework */; };
+		D9FD36071EFAFD3C00398CE4 /* SAMKeychain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47721EFA03FC00C39B25 /* SAMKeychain.framework */; };
+		D9FD36081EFAFD3C00398CE4 /* TTTAttributedLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47731EFA03FC00C39B25 /* TTTAttributedLabel.framework */; };
+		D9FD36091EFAFD3C00398CE4 /* UserVoice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47741EFA03FC00C39B25 /* UserVoice.framework */; };
+		D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
+		D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
+		D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
 		DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31610826406FD0CB714045AD /* Pods_ChatSecureCorePods_ChatSecureCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -1189,6 +1202,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9FD36001EFAFD3C00398CE4 /* Alamofire.framework in Frameworks */,
+				D9FD36011EFAFD3C00398CE4 /* FormatterKit.framework in Frameworks */,
+				D9FD36021EFAFD3C00398CE4 /* HTMLReader.framework in Frameworks */,
+				D9FD36031EFAFD3C00398CE4 /* KVOController.framework in Frameworks */,
+				D9FD36041EFAFD3C00398CE4 /* Mantle.framework in Frameworks */,
+				D9FD36051EFAFD3C00398CE4 /* MBProgressHUD.framework in Frameworks */,
+				D9FD36061EFAFD3C00398CE4 /* PureLayout.framework in Frameworks */,
+				D9FD36071EFAFD3C00398CE4 /* SAMKeychain.framework in Frameworks */,
+				D9FD36081EFAFD3C00398CE4 /* TTTAttributedLabel.framework in Frameworks */,
+				D9FD36091EFAFD3C00398CE4 /* UserVoice.framework in Frameworks */,
+				D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */,
+				D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */,
+				D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */,
 				631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */,
 				7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */,
 			);
@@ -2346,6 +2372,7 @@
 				6396AFB11A169D54009F3E6C /* Resources */,
 				3465A939CCAAAAC0480C0795 /* [CP] Embed Pods Frameworks */,
 				A32A5DF4737208630E1EA1F8 /* [CP] Copy Pods Resources */,
+				D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2752,6 +2779,33 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "python \"${SRCROOT}/OTRAssets/Strings/StringsConverter.py\"";
+		};
+		D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FormatterKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/HTMLReader.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/KVOController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PureLayout.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SAMKeychain.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/TTTAttributedLabel.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/UserVoice.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework",
+			);
+			name = "[Carthage] Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 		D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3396,6 +3450,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -3423,6 +3478,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
