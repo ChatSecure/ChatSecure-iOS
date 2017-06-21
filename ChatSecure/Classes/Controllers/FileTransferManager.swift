@@ -75,14 +75,14 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                        completion: @escaping (_ url: URL?, _ error: Error?) -> ()) {
         internalQueue.async {
             if let data = prefetchedData {
-                self.upload(data: data, shouldEncrypt: shouldEncrypt, filename: mediaItem.filename, contentType: mediaItem.mimeType, completion: completion)
+                self.upload(media: mediaItem, data: data, shouldEncrypt: shouldEncrypt, filename: mediaItem.filename, contentType: mediaItem.mimeType, completion: completion)
             } else {
                 var url: URL? = nil
                 self.connection.read({ (transaction) in
                     url = mediaItem.mediaServerURL(with: transaction)
                 })
                 if let url = url {
-                    self.upload(file: url, shouldEncrypt: shouldEncrypt, completion: completion)
+                    self.upload(media: mediaItem, file: url, shouldEncrypt: shouldEncrypt, completion: completion)
                 } else {
                     let error = FileTransferError.fileNotFound
                     DDLogError("Upload filed: File not found \(error)")
@@ -95,14 +95,15 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     /// Currently just a wrapper around sendData
-    private func upload(file: URL,
+    private func upload(media: OTRMediaItem,
+                        file: URL,
                         shouldEncrypt: Bool,
                      completion: @escaping (_ url: URL?, _ error: Error?) -> ()) {
         internalQueue.async {
             do {
                 let data = try Data(contentsOf: file)
                 let mimeType = OTRKitGetMimeTypeForExtension(file.pathExtension)
-                self.upload(data: data, shouldEncrypt: shouldEncrypt, filename: file.lastPathComponent, contentType: mimeType, completion: completion)
+                self.upload(media: media, data: data, shouldEncrypt: shouldEncrypt, filename: file.lastPathComponent, contentType: mimeType, completion: completion)
             } catch let error {
                 DDLogError("Error sending file URL \(file): \(error)")
             }
@@ -110,7 +111,8 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         
     }
     
-    private func upload(data: Data,
+    private func upload(media: OTRMediaItem,
+                        data: Data,
                         shouldEncrypt: Bool,
                  filename: String,
                  contentType: String,
@@ -159,20 +161,18 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             
             self.httpFileUpload.requestSlot(fromService: service.jid, filename: filename, size: UInt(outData.count), contentType: contentType, completion: { (slot: XMPPSlot?, iq: XMPPIQ?, error: Error?) in
                 guard let slot = slot else {
-                    if let error = error {
-                        DDLogError("\(service) failed to assign upload slot: \(error)")
-                        self.callbackQueue.async {
-                            completion(nil, error)
-                        }
+                    let outError = error ?? FileTransferError.serverError
+                    DDLogError("\(service) failed to assign upload slot: \(outError)")
+                    self.callbackQueue.async {
+                        completion(nil, outError)
                     }
                     return
                 }
-                let request = slot.putRequest
-                let upload = self.sessionManager.session.uploadTask(with: request, from: outData, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
-                    self.callbackQueue.async {
-                        if let error = error {
-                            completion(nil, error)
-                        } else if let response = response as? HTTPURLResponse, response.statusCode == 200 || response.statusCode == 201 {
+                self.sessionManager.upload(outData, to: slot.putURL, method: .put)
+                    .validate()
+                    .responseData(queue: self.callbackQueue) { response in
+                        switch response.result {
+                        case .success:
                             if let outKeyIv = outKeyIv {
                                 // If there's a AES-GCM key, we gotta put it in the url
                                 // and change the scheme to `aesgcm`
@@ -191,12 +191,20 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                                 // The plaintext case
                                 completion(slot.getURL, nil)
                             }
-                        } else {
-                            completion(nil, FileTransferError.serverError)
+                        case .failure(let error):
+                            completion(nil, error)
+                            DDLogError("Upload error: \(error)")
                         }
-                    }
-                })
-                upload.resume()
+                    }.uploadProgress(queue: self.internalQueue) { progress in
+                        DDLogVerbose("Download progress \(progress.fractionCompleted)")
+                        self.connection.asyncReadWrite { transaction in
+                            if let media = media.refetch(with: transaction) {
+                                media.transferProgress = Float(progress.fractionCompleted)
+                                media.save(with: transaction)
+                                media.touchParentMessage(with: transaction)
+                            }
+                        }
+                }
             })
         }
     }
