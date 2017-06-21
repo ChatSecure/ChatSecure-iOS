@@ -1224,6 +1224,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
+    // Needed for link interaction
+    cell.textView.delegate = self;
     return cell;
 }
 
