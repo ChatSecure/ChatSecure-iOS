@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIAlertAction (OTRDownloadMessage)
 
-+ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController;
++ (NSArray<UIAlertAction*>*) actionsForMediaMessage:(id<OTRMessageProtocol>)mediaMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController;
 
 @end
 

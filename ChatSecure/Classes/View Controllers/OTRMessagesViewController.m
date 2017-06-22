@@ -636,11 +636,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [actions addObject:[self viewProfileAction]];
     }
     
-    if ([message isKindOfClass:[OTRDownloadMessage class]]) {
-        OTRDownloadMessage *download = (OTRDownloadMessage*)message;
-        NSArray<UIAlertAction*> *downloadActions = [UIAlertAction actionsForDownloadMessage:download sourceView:self.view viewController:self];
-        [actions addObjectsFromArray:downloadActions];
-    }
+    NSArray<UIAlertAction*> *mediaActions = [UIAlertAction actionsForMediaMessage:message sourceView:self.view viewController:self];
+    [actions addObjectsFromArray:mediaActions];
     
     [actions addObject:[self cancleAction]];
     return actions;
@@ -1673,7 +1670,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
         OTRDownloadMessage *download = (OTRDownloadMessage*)message;
         // Janky hack to open URL for now
-        NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForDownloadMessage:download sourceView:self.view viewController:self];
+        NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForMediaMessage:download sourceView:self.view viewController:self];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:message.text message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [alert addAction:obj];

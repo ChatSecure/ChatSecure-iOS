@@ -71,17 +71,22 @@
 
 @implementation UIAlertAction (OTRDownloadMessage)
 
-+ (NSArray<UIAlertAction*>*) actionsForDownloadMessage:(OTRDownloadMessage*)downloadMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController {
-    NSParameterAssert(downloadMessage);
++ (NSArray<UIAlertAction*>*) actionsForMediaMessage:(id<OTRMessageProtocol>)mediaMessage sourceView:(UIView*)sourceView viewController:(UIViewController*)viewController {
+    NSParameterAssert(mediaMessage);
     NSParameterAssert(sourceView);
     NSParameterAssert(viewController);
-    if (!downloadMessage || !sourceView || !viewController) { return @[]; }
+    if (!mediaMessage || !sourceView || !viewController) { return @[]; }
     NSMutableArray<UIAlertAction*> *actions = [NSMutableArray new];
     
+    NSString *mediaItemUniqueId = mediaMessage.messageMediaItemKey;
+    NSString *messageText = mediaMessage.messageText;
     NSURL *url = nil;
-    // sometimes the scheme is aesgcm, which can't be shared normally
-    if ([downloadMessage.url.scheme isEqualToString:@"https"]) {
-        url = downloadMessage.url;
+    if (messageText.length) {
+        NSURL *maybeURL = [NSURL URLWithString:messageText];
+        // sometimes the scheme is aesgcm, which can't be shared normally
+        if ([maybeURL.scheme isEqualToString:@"https"]) {
+            url = maybeURL;
+        }
     }
     
     UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -90,8 +95,8 @@
             [activityItems addObject:url];
         }
         // This is sorta janky, but only support fetching images for now
-        if (downloadMessage.mediaItemUniqueId.length) {
-            UIImage *image = [OTRImages imageWithIdentifier:downloadMessage.mediaItemUniqueId];
+        if (mediaItemUniqueId.length) {
+            UIImage *image = [OTRImages imageWithIdentifier:mediaItemUniqueId];
             if (image) {
                 [activityItems addObject:image];
             }
