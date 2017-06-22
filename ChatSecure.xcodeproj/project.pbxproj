@@ -452,12 +452,21 @@
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D967CA8A1E516A95005FBB49 /* PushAccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */; };
 		D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */; };
+		D96F8E681EFC7209003DE8AE /* DTFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96F8E671EFC7209003DE8AE /* DTFoundation.framework */; };
+		D96F8E691EFC7209003DE8AE /* DTFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96F8E671EFC7209003DE8AE /* DTFoundation.framework */; };
+		D96F8E6A1EFC7209003DE8AE /* DTFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96F8E671EFC7209003DE8AE /* DTFoundation.framework */; };
+		D96F8E6B1EFC7212003DE8AE /* DTFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D96F8E671EFC7209003DE8AE /* DTFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
 		D97070A71EEF3909004FEBDE /* MediaDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97070A61EEF3909004FEBDE /* MediaDownloadView.swift */; };
 		D97175531E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
+		D984F6CE1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
+		D984F6CF1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
+		D984F6D01EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
+		D984F6D11EFC6D52008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
+		D984F6D21EFC6D52008D0CF7 /* Kvitto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D985BC771EBD307D00993D27 /* PurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985BC751EBD307D00993D27 /* PurchaseViewController.swift */; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -595,6 +604,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D96F8E6B1EFC7212003DE8AE /* DTFoundation.framework in Embed Frameworks */,
 				D95515901EFA0B5F008AA429 /* MBProgressHUD.framework in Embed Frameworks */,
 				D955159E1EFA0B60008AA429 /* AFNetworking.framework in Embed Frameworks */,
 				D95515921EFA0B5F008AA429 /* PureLayout.framework in Embed Frameworks */,
@@ -608,6 +618,7 @@
 				D955159C1EFA0B5F008AA429 /* ZXingObjC.framework in Embed Frameworks */,
 				D95515861EFA0B5F008AA429 /* Alamofire.framework in Embed Frameworks */,
 				D955158C1EFA0B5F008AA429 /* KVOController.framework in Embed Frameworks */,
+				D984F6D21EFC6D52008D0CF7 /* Kvitto.framework in Embed Frameworks */,
 				D95515881EFA0B5F008AA429 /* FormatterKit.framework in Embed Frameworks */,
 				D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */,
 			);
@@ -1091,6 +1102,7 @@
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D967CA881E516A95005FBB49 /* PushAccountTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushAccountTableViewCell.swift; sourceTree = "<group>"; };
 		D967CA8D1E516B8D005FBB49 /* PushAccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushAccountTableViewCell.xib; sourceTree = "<group>"; };
+		D96F8E671EFC7209003DE8AE /* DTFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DTFoundation.framework; path = Carthage/Build/iOS/DTFoundation.framework; sourceTree = "<group>"; };
 		D97070911EEF382D004FEBDE /* MediaDownloadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MediaDownloadView.xib; path = Interface/MediaDownloadView.xib; sourceTree = "<group>"; };
 		D97070A61EEF3909004FEBDE /* MediaDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDownloadView.swift; sourceTree = "<group>"; };
 		D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YapDatabaseViewConnection+ChatSecure.h"; sourceTree = "<group>"; };
@@ -1098,6 +1110,7 @@
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
 		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
+		D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kvitto.framework; path = Carthage/Build/iOS/Kvitto.framework; sourceTree = "<group>"; };
 		D985BC751EBD307D00993D27 /* PurchaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseViewController.swift; sourceTree = "<group>"; };
 		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRExistingAccountViewController.h; path = "Login View Controllers/OTRExistingAccountViewController.h"; sourceTree = "<group>"; };
@@ -1181,9 +1194,11 @@
 			files = (
 				D95515951EFA0B5F008AA429 /* TTTAttributedLabel.framework in Frameworks */,
 				D95515841EFA0A9F008AA429 /* AFNetworking.framework in Frameworks */,
+				D96F8E681EFC7209003DE8AE /* DTFoundation.framework in Frameworks */,
 				D955158D1EFA0B5F008AA429 /* Mantle.framework in Frameworks */,
 				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
+				D984F6D11EFC6D52008D0CF7 /* Kvitto.framework in Frameworks */,
 				D95515971EFA0B5F008AA429 /* UserVoice.framework in Frameworks */,
 				D95515851EFA0B5F008AA429 /* Alamofire.framework in Frameworks */,
 				D955157D1EFA0A9F008AA429 /* MBProgressHUD.framework in Frameworks */,
@@ -1193,6 +1208,7 @@
 				D95515991EFA0B5F008AA429 /* XLForm.framework in Frameworks */,
 				62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */,
 				D955157F1EFA0A9F008AA429 /* SAMKeychain.framework in Frameworks */,
+				D984F6CE1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */,
 				D955157B1EFA0A9F008AA429 /* KVOController.framework in Frameworks */,
 				D955157A1EFA0A9F008AA429 /* HTMLReader.framework in Frameworks */,
 			);
@@ -1206,6 +1222,7 @@
 				D9FD36011EFAFD3C00398CE4 /* FormatterKit.framework in Frameworks */,
 				D9FD36021EFAFD3C00398CE4 /* HTMLReader.framework in Frameworks */,
 				D9FD36031EFAFD3C00398CE4 /* KVOController.framework in Frameworks */,
+				D96F8E691EFC7209003DE8AE /* DTFoundation.framework in Frameworks */,
 				D9FD36041EFAFD3C00398CE4 /* Mantle.framework in Frameworks */,
 				D9FD36051EFAFD3C00398CE4 /* MBProgressHUD.framework in Frameworks */,
 				D9FD36061EFAFD3C00398CE4 /* PureLayout.framework in Frameworks */,
@@ -1215,6 +1232,7 @@
 				D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */,
 				D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */,
 				D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */,
+				D984F6CF1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */,
 				631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */,
 				7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */,
 			);
@@ -1228,6 +1246,7 @@
 				D9EC47821EFA03FC00C39B25 /* XLForm.framework in Frameworks */,
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
 				D9EC47681EFA03D800C39B25 /* AFNetworking.framework in Frameworks */,
+				D96F8E6A1EFC7209003DE8AE /* DTFoundation.framework in Frameworks */,
 				D9EC47781EFA03FC00C39B25 /* FormatterKit.framework in Frameworks */,
 				DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */,
 				D9EC477C1EFA03FC00C39B25 /* Mantle.framework in Frameworks */,
@@ -1237,6 +1256,7 @@
 				D9EC477D1EFA03FC00C39B25 /* MBProgressHUD.framework in Frameworks */,
 				D9EC477E1EFA03FC00C39B25 /* PureLayout.framework in Frameworks */,
 				D9EC47831EFA03FC00C39B25 /* ZXingObjC.framework in Frameworks */,
+				D984F6D01EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */,
 				D9EC477F1EFA03FC00C39B25 /* SAMKeychain.framework in Frameworks */,
 				D9EC477B1EFA03FC00C39B25 /* KVOController.framework in Frameworks */,
 			);
@@ -2088,6 +2108,8 @@
 		D9EC47691EFA03DF00C39B25 /* Carthage */ = {
 			isa = PBXGroup;
 			children = (
+				D96F8E671EFC7209003DE8AE /* DTFoundation.framework */,
+				D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */,
 				D9EC476A1EFA03FC00C39B25 /* Alamofire.framework */,
 				D9EC476B1EFA03FC00C39B25 /* FormatterKit.framework */,
 				D9EC476C1EFA03FC00C39B25 /* HTMLReader.framework */,
@@ -2799,6 +2821,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Kvitto.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DTFoundation.framework",
 			);
 			name = "[Carthage] Copy Frameworks";
 			outputPaths = (
@@ -2826,6 +2850,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/UserVoice.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Kvitto.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DTFoundation.framework",
 			);
 			name = "[Carthage] Copy Frameworks";
 			outputPaths = (

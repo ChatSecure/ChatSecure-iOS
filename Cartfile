@@ -11,3 +11,5 @@ github "uservoice/uservoice-ios-sdk" ~> 3.2
 github "facebook/KVOController" ~> 1.2
 github "xmartlabs/XLForm" ~> 3.3
 github "mattt/FormatterKit" ~> 1.8
+github "Cocoanetics/Kvitto" ~> 1.0
+github "Cocoanetics/DTFoundation" ~> 1.7
