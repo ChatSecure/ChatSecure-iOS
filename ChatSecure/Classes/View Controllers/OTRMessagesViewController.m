@@ -1072,7 +1072,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];
     OTRAccount *account = [self accountWithTransaction:transaction];
-    id<OTRMessageProtocol> message = [mediaItem parentMessageWithTransaction:transaction];
+    OTROutgoingMessage *message = (OTROutgoingMessage*)[mediaItem parentMessageWithTransaction:transaction];
+    if (![message isKindOfClass:OTROutgoingMessage.class]) {
+        DDLogError(@"Error sending file due to bad paramters");
+        return;
+    }
     
     OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
@@ -1085,19 +1089,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         buddy.lastMessageId = message.messageKey;
         [buddy saveWithTransaction:transaction];
         
-        // OTRDATA
-        //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
-        
         // XEP-0363
-        //[xmpp.fileTransferManager sendWithMediaItem:mediaItem buddy:buddy];
+        [xmpp.fileTransferManager sendWithMediaItem:mediaItem prefetchedData:data message:message];
     } else {
-        NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:buddy.uniqueId];
-        
-        // OTRDATA
-        //[[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:buddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:tag];
-        
         // XEP-0363
-        //[xmpp.fileTransferManager sendWithMediaItem:mediaItem buddy:buddy];
+        [xmpp.fileTransferManager sendWithMediaItem:mediaItem prefetchedData:nil message:message];
     }
     
     [mediaItem touchParentMessageWithTransaction:transaction];
