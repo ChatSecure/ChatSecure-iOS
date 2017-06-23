@@ -96,7 +96,7 @@ public class PurchaseViewController: UIViewController {
             })
             alert.addAction(ok)
             alert.show(self, sender: nil)
-            NSLog("User cannot make payments.")
+            DDLogError("User cannot make payments.")
             // TODO: show user cant make payments
             return
         }
@@ -113,7 +113,7 @@ public class PurchaseViewController: UIViewController {
         allMoneyButtons.forEach { (button, productEnum) in
             guard let product = products[productEnum] else {
                 button.isEnabled = false
-                NSLog("Product not found")
+                DDLogError("Product not found for \(productEnum)")
                 return
             }
             button.isEnabled = true
@@ -129,7 +129,7 @@ public class PurchaseViewController: UIViewController {
     }
     
     private func buy(product: SKProduct, sender: Any) {
-        NSLog("Buying \"\(product.localizedTitle)\" (\(product.productIdentifier))...")
+        DDLogInfo("Buying \"\(product.localizedTitle)\" (\(product.productIdentifier))...")
         let payment = SKPayment(product: product)
         SKPaymentQueue.default().add(payment)
     }
@@ -138,7 +138,7 @@ public class PurchaseViewController: UIViewController {
         if let button = sender as? UIButton, let productEnum = allMoneyButtons[button], let product = products[productEnum] {
             buy(product: product, sender: sender)
         } else {
-            NSLog("Could not buy product via button \(sender)")
+            DDLogError("Could not buy product via button \(sender)")
         }
     }
     
@@ -147,9 +147,9 @@ public class PurchaseViewController: UIViewController {
     }
     
     @IBAction func restoreButtonPressed(_ sender: Any) {
-        NSLog("Restore button pressed")
+        DDLogVerbose("Restore button pressed")
         SKPaymentQueue.default().transactions.forEach {
-            NSLog("transaction in queue: \($0)")
+            DDLogVerbose("transaction in queue: \($0)")
         }
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
@@ -174,18 +174,18 @@ extension PurchaseViewController: SKProductsRequestDelegate {
     public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         response.products.forEach {
             guard let product = $0.product else {
-                NSLog("Unrecognized product: \($0)")
+                DDLogWarn("Unrecognized product: \($0)")
                 return
             }
             products[product] = $0
-            NSLog("Product \"\($0.localizedTitle)\" (\($0.productIdentifier)):  \($0.price.floatValue)")
+            DDLogInfo("Product \"\($0.localizedTitle)\" (\($0.productIdentifier)):  \($0.price.floatValue)")
         }
         refreshMoneyButtons()
         MBProgressHUD.hide(for: self.view, animated: true)
     }
     
     public func request(_ request: SKRequest, didFailWithError error: Error) {
-        NSLog("Error loading products: \(error.localizedDescription)")
+        DDLogError("Error loading products: \(error.localizedDescription)")
         MBProgressHUD.hide(for: self.view, animated: true)
     }
 }
@@ -205,7 +205,7 @@ extension SKProduct {
     }
 }
 
-public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
+public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequestDelegate {
     public static let shared = TransactionObserver()
     let paymentQueue = SKPaymentQueue.default()
     public var transactionSuccess: ((_ transaction: SKPaymentTransaction) -> Void)?
@@ -214,27 +214,78 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         stopObserving()
     }
     
-    public static var receiptData: Data? {
-        var data: Data? = nil
+    public static var receipt: Receipt? {
         guard let url = Bundle.main.appStoreReceiptURL else {
             return nil
         }
-        do {
-            data = try Data(contentsOf: url)
-        } catch {}
-        return data
+        guard let receipt = Receipt(contentsOfURL: url) else {
+            return nil
+        }
+        return receipt
+    }
+    
+    public static var hasFreshReceipt: Bool {
+        guard let receipt = self.receipt,
+            let vendorId = UIDevice.current.identifierForVendor,
+            let bundleIdentifier = receipt.bundleIdentifier,
+            let receiptOpaque = receipt.opaqueValue,
+            let bundleIdData = receipt.bundleIdentifierData,
+            let sha1Hash = receipt.SHA1Hash,
+            let receiptVersion = receipt.appVersion,
+            bundleIdentifier == "com.chrisballinger.ChatSecure",
+            let appVersion = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String,
+            appVersion == receiptVersion
+            else {
+                return false
+        }
+        
+        // https://stackoverflow.com/a/41598602/805882
+        let uuid = vendorId.uuid // gives a uuid_t
+        let uuidBytes = Mirror(reflecting: uuid).children.map({$0.1 as! UInt8}) // converts the tuple into an array
+        let vendorData = Data(bytes: uuidBytes)
+        
+        var hashData = vendorData
+        hashData.append(receiptOpaque)
+        hashData.append(bundleIdData)
+        let hash = (hashData as NSData).withSHA1Hash()
+        
+        if hash != sha1Hash {
+            return false
+        }
+        return true
     }
     
     public static var hasValidReceipt: Bool {
-        guard let receipt = receiptData else {
+        guard let receipt = self.receipt,
+              self.hasFreshReceipt else {
+            // We should refresh the receipt
+            let refresh = SKReceiptRefreshRequest()
+            refresh.delegate = TransactionObserver.shared
+            refresh.start()
             return false
         }
         
-        //let dtReceipt = DTReceipt(contentsOfURL: )
+        if let expiration = receipt.receiptExpirationDate,
+            Date() > expiration {
+            return false
+        }
         
+        var hasActiveSubscription = false
+        if let iaps = receipt.inAppPurchaseReceipts {
+            for iap in iaps {
+                if let expiration = iap.subscriptionExpirationDate,
+                    Date() > expiration,
+                    let cancelationDate = iap.cancellationDate,
+                    Date() > cancelationDate {
+                    continue
+                } else if iap.purchaseDate != nil {
+                    hasActiveSubscription = true
+                    break
+                }
+            }
+        }
         
-        // We skip verification because we don't really care if the user has paid
-        return receipt.count > 0
+        return hasActiveSubscription
     }
     
     /** Start observing IAP transactions */
@@ -261,42 +312,52 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
                 restore(transaction: transaction)
                 break
             case .deferred:
-                NSLog("Transaction deferred: \(transaction)")
+                DDLogInfo("Transaction deferred: \(transaction)")
                 break
             case .purchasing:
-                NSLog("Transaction purchasing: \(transaction)")
+                DDLogInfo("Transaction purchasing: \(transaction)")
                 break
             }
         }
     }
     
     public func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-        NSLog("Payment queue restore finished")
+        DDLogInfo("Payment queue restore finished")
     }
     
     public func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-        NSLog("Payment queue restore failed with error \(error)")
+        DDLogWarn("Payment queue restore failed with error \(error)")
     }
     
     private func complete(transaction: SKPaymentTransaction) {
-        NSLog("Transaction complete: \(transaction)")
+        DDLogInfo("Transaction complete: \(transaction)")
         SKPaymentQueue.default().finishTransaction(transaction)
         transactionSuccess?(transaction)
     }
     
     private func restore(transaction: SKPaymentTransaction) {
         guard let _ = transaction.original?.payment.productIdentifier else {
-            NSLog("Cannot restore: No original transaction: \(transaction)")
+            DDLogWarn("Cannot restore: No original transaction: \(transaction)")
             return
         }
         
-        NSLog("Transaction restored: \(transaction)")
+        DDLogInfo("Transaction restored: \(transaction)")
         SKPaymentQueue.default().finishTransaction(transaction)
         transactionSuccess?(transaction)
     }
     
     private func fail(transaction: SKPaymentTransaction) {
-        NSLog("Transaction failed: \(transaction) \(String(describing: transaction.error))")
+        DDLogWarn("Transaction failed: \(transaction) \(String(describing: transaction.error))")
         SKPaymentQueue.default().finishTransaction(transaction)
+    }
+    
+    // MARK: SKRequestDelegate
+    
+    public func requestDidFinish(_ request: SKRequest) {
+        DDLogInfo("Receipt refreshed: \(request)")
+    }
+    
+    public func request(_ request: SKRequest, didFailWithError error: Error) {
+        DDLogWarn("Receipt fetch error: \(request) \(error)")
     }
 }
