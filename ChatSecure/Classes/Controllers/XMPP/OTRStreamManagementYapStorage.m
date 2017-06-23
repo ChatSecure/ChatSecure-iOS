@@ -263,9 +263,9 @@
  * Invoked when the extension needs values from a previous session.
  * This method is used to get values needed in order to determine if it can resume a previous stream.
  **/
-- (void)getResumptionId:(NSString **)resumptionIdPtr
+- (void)getResumptionId:(NSString * __autoreleasing *)resumptionIdPtr
                 timeout:(uint32_t *)timeoutPtr
-         lastDisconnect:(NSDate **)lastDisconnectPtr
+         lastDisconnect:(NSDate * __autoreleasing *)lastDisconnectPtr
               forStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -284,7 +284,7 @@
  **/
 - (void)getLastHandledByClient:(uint32_t *)lastHandledByClientPtr
            lastHandledByServer:(uint32_t *)lastHandledByServerPtr
-        pendingOutgoingStanzas:(NSArray **)pendingOutgoingStanzasPtr
+        pendingOutgoingStanzas:(NSArray * __autoreleasing *)pendingOutgoingStanzasPtr
                      forStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {

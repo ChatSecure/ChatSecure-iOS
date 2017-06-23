@@ -518,7 +518,7 @@ extension MessageQueueHandler {
     }
     
     func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:OTRXMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
-        guard let text = message.text else {
+        guard let text = message.text, text.characters.count > 0 else {
             completion(true, 0.0)
             return
         }

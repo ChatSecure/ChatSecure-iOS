@@ -32,7 +32,7 @@ completionQueue:(nullable dispatch_queue_t)completionQueue;
 
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
                   buddyUniqueId:(NSString *)buddyUniqueId
-                          error:(NSError**)error;
+                          error:(NSError* __autoreleasing *)error;
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;

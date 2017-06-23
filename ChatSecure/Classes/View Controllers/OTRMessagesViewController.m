@@ -1759,7 +1759,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if ([URL otr_isInviteLink]) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
         activity.webpageURL = URL;
-        [[OTRAppDelegate appDelegate] application:[UIApplication sharedApplication] continueUserActivity:activity restorationHandler:nil];
+        [[OTRAppDelegate appDelegate] application:[UIApplication sharedApplication] continueUserActivity:activity restorationHandler:^(NSArray * _Nullable restorableObjects) {
+            // TODO: restore stuff
+        }];
         return NO;
     }
     

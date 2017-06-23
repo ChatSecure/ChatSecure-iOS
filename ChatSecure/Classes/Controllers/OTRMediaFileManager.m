@@ -130,7 +130,7 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
 
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
                   buddyUniqueId:(NSString *)buddyUniqueId
-                          error:(NSError**)error {
+                          error:(NSError* __autoreleasing *)error {
     __block NSData *data = nil;
     [self performSyncRead:^{
         NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];

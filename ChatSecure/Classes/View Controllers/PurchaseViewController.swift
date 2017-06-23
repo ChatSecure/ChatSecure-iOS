@@ -11,6 +11,7 @@ import StoreKit
 import FormatterKit
 import MBProgressHUD
 import OTRAssets
+import Kvitto
 
 public extension PurchaseViewController {
     public class func show(from viewController: UIViewController) {
@@ -228,6 +229,10 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         guard let receipt = receiptData else {
             return false
         }
+        
+        //let dtReceipt = DTReceipt(contentsOfURL: )
+        
+        
         // We skip verification because we don't really care if the user has paid
         return receipt.count > 0
     }

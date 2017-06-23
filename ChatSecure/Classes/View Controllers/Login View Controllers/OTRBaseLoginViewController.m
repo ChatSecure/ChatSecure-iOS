@@ -270,7 +270,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         NSString *value = [nicknameRow value];
         NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];
         nicknameRow.value = newValue;
-        [self loginButtonPressed:nil];
+        [self loginButtonPressed:self.view];
         return;
     } else if (error.code == OTRXMPPXMLErrorPolicyViolation && self.loginAttempts < kOTRMaxLoginAttempts){
         // We've hit a policy violation. This occurs on duckgo because of special characters like russian alphabet.
@@ -284,7 +284,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         
         if (![newValue isEqualToString:value]) {
             nicknameRow.value = newValue;
-            [self loginButtonPressed:nil];
+            [self loginButtonPressed:self.view];
             return;
         }
     }
@@ -379,7 +379,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         UIAlertAction *saveAction = [UIAlertAction actionWithTitle:SAVE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             __typeof__(self) strongSelf = weakSelf;
             [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
-            [strongSelf loginButtonPressed:nil];
+            [strongSelf loginButtonPressed:self.view];
         }];
         [certAlert addAction:saveAction];
     }

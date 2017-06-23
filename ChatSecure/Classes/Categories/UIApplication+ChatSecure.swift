@@ -157,7 +157,7 @@ public extension UIApplication {
         return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:false)
     }
 
-    public func cancelRecurringLocalNotificationWith(identifier:String?) -> Bool {
+    @discardableResult public func cancelRecurringLocalNotificationWith(identifier:String?) -> Bool {
         return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:true)
     }
 
