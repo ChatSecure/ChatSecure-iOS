@@ -352,12 +352,31 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
     [self addIdleDate:idleDate toPresence:presence];
     [self.xmppStream sendElement:presence];
+    
+    // XEP-0352 Client State Indication
+    NSXMLElement *csi = [NSXMLElement indicateInactiveElement];
+    [self.xmppStream sendElement:csi];
 }
 
+- (void)goActive {
+    XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
+    [self.xmppStream sendElement:presence];
+    
+    // XEP-0352 Client State Indication
+    NSXMLElement *csi = [NSXMLElement indicateActiveElement];
+    [self.xmppStream sendElement:csi];
+}
+
+/** This will choose "active" or "away" based on UIApplication applicationState */
 - (void)goOnline
 {
-	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
-	[self.xmppStream sendElement:presence];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+            [self goActive];
+        } else {
+            [self goAway];
+        }
+    });
 }
 
 - (void)goOffline
@@ -366,6 +385,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
     [self addIdleDate:idleDate toPresence:presence]; // I don't think this does anything
 	[self.xmppStream sendElement:presence];
+    
+    // XEP-0352 Client State Indication
+    NSXMLElement *csi = [NSXMLElement indicateInactiveElement];
+    [self.xmppStream sendElement:csi];
 }
 
 - (NSString *)accountDomainWithError:(id)error;
@@ -838,11 +861,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        [self goOnline];
-    } else {
-        [self goAway];
-    }
+    [self goOnline];
     
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
@@ -1220,8 +1239,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     self.userInitiatedConnection = userInitiated;
     // Don't issue a reconnect if we're already connected and authenticated
     if ([self.xmppStream isConnected] && [self.xmppStream isAuthenticated]) {
-        XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
-        [[self xmppStream] sendElement:presence];
+        [self goOnline];
         return;
     }
     [self startConnection];

@@ -231,10 +231,10 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
             let receiptOpaque = receipt.opaqueValue,
             let bundleIdData = receipt.bundleIdentifierData,
             let sha1Hash = receipt.SHA1Hash,
-            let receiptVersion = receipt.appVersion,
-            bundleIdentifier == "com.chrisballinger.ChatSecure",
-            let appVersion = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String,
-            appVersion == receiptVersion
+            bundleIdentifier == "com.chrisballinger.ChatSecure"
+            //let receiptVersion = receipt.appVersion,
+            //let appVersion = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String,
+            //appVersion == receiptVersion
             else {
                 return false
         }
@@ -258,10 +258,6 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
     public static var hasValidReceipt: Bool {
         guard let receipt = self.receipt,
               self.hasFreshReceipt else {
-            // We should refresh the receipt
-            let refresh = SKReceiptRefreshRequest()
-            refresh.delegate = TransactionObserver.shared
-            refresh.start()
             return false
         }
         

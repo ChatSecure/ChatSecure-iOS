@@ -342,12 +342,12 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [Appirater appEnteredForeground:YES];
-    [self autoLoginFromBackground:NO];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [OTRProtocolManager sharedInstance].lastInteractionDate = [NSDate date];
+    [self autoLoginFromBackground:NO];
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
