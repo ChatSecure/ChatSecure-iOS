@@ -1475,7 +1475,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 /** Currently uses clock for queued, and checkmark for delivered. */
-- (nullable NSString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)outgoingMessage {
+- (nullable NSAttributedString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)outgoingMessage {
     if (!outgoingMessage) { return nil; }
     NSString *deliveryStatusString = nil;
     if(outgoingMessage.dateSent == nil && ![outgoingMessage isMediaMessage]) {
@@ -1484,10 +1484,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     } else if (outgoingMessage.isDelivered){
         deliveryStatusString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
     }
-    return deliveryStatusString;
+    if (deliveryStatusString != nil) {
+        UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
+        if (!font) {
+            font = [UIFont systemFontOfSize:12];
+        }
+        return [[NSAttributedString alloc] initWithString:deliveryStatusString attributes:@{NSFontAttributeName: font}];
+    }
+    return nil;
 }
 
-- (nullable NSAttributedString *) encryptionStatusStringForMesage:(nonnull id<OTRMessageProtocol>)message {
+- (nullable NSAttributedString *) encryptionStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message {
     NSString *lockString = nil;
     if (message.messageSecurity == OTRMessageTransportSecurityOTR) {
         lockString = [NSString stringWithFormat:@"%@ OTR ",[NSString fa_stringForFontAwesomeIcon:FALock]];
@@ -1520,7 +1527,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSDictionary *lockAttributes = [iconAttributes copy];
     
     ////// Lock Icon //////
-    NSAttributedString *lockString = [self encryptionStatusStringForMesage:message];
+    NSAttributedString *lockString = [self encryptionStatusStringForMessage:message];
     if (!lockString) {
         lockString = [[NSAttributedString alloc] initWithString:@""];
     }
@@ -1539,9 +1546,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
     if ([message isKindOfClass:[OTROutgoingMessage class]]) {
         OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;
-        NSString *deliveryString = [self deliveryStatusStringForMessage:outgoingMessage];
+        NSAttributedString *deliveryString = [self deliveryStatusStringForMessage:outgoingMessage];
         if (deliveryString) {
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:deliveryString attributes:iconAttributes]];
+            [attributedString appendAttributedString:deliveryString];
         }
     }
     
