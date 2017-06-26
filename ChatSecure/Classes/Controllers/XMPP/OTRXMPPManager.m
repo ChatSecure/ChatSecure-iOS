@@ -72,6 +72,12 @@ NSString *const OTRXMPPOldLoginStatusKey = @"OTRXMPPOldLoginStatusKey";
 NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
 NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
+/** For XEP-0352 CSI Client State Indication */
+typedef NS_ENUM(NSInteger, XMPPClientState) {
+    XMPPClientStateInactive,
+    XMPPClientStateActive,
+};
+
 @implementation OTRXMPPManager
 
 - (instancetype)init
@@ -353,18 +359,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self addIdleDate:idleDate toPresence:presence];
     [self.xmppStream sendElement:presence];
     
-    // XEP-0352 Client State Indication
-    NSXMLElement *csi = [NSXMLElement indicateInactiveElement];
-    [self.xmppStream sendElement:csi];
+    [self updateClientState:XMPPClientStateInactive];
 }
 
 - (void)goActive {
     XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
     [self.xmppStream sendElement:presence];
     
-    // XEP-0352 Client State Indication
-    NSXMLElement *csi = [NSXMLElement indicateActiveElement];
-    [self.xmppStream sendElement:csi];
+    [self updateClientState:XMPPClientStateActive];
 }
 
 /** This will choose "active" or "away" based on UIApplication applicationState */
@@ -386,8 +388,27 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self addIdleDate:idleDate toPresence:presence]; // I don't think this does anything
 	[self.xmppStream sendElement:presence];
     
-    // XEP-0352 Client State Indication
-    NSXMLElement *csi = [NSXMLElement indicateInactiveElement];
+    [self updateClientState:XMPPClientStateInactive];
+}
+
+
+
+/** XEP-0352 Client State Indication */
+- (void) updateClientState:(XMPPClientState)clientState {
+    NSXMLElement *csiFeature = [self.serverCapabilities.streamFeatures elementForName:@"csi" xmlns:@"urn:xmpp:csi:0"];
+    if (!csiFeature) {
+        return;
+    }
+    
+    NSXMLElement *csi = nil;
+    switch (clientState) {
+        case XMPPClientStateActive:
+            csi = [NSXMLElement indicateActiveElement];
+            break;
+        case XMPPClientStateInactive:
+            csi = [NSXMLElement indicateInactiveElement];
+            break;
+    }
     [self.xmppStream sendElement:csi];
 }
 
