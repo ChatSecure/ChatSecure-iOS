@@ -13,6 +13,33 @@ import OTRAssets
 
 public extension UIApplication {
     
+    /// Removes all but one foreground notifications for typing and message events sent from APNS
+    public func removeExtraForegroundNotifications() {
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+                var newMessageIdentifiers: [String] = []
+                var typingIdentifiers: [String] = []
+                
+                notifications.forEach { notification in
+                    if notification.request.content.body == NEW_MESSAGE_STRING() {
+                        newMessageIdentifiers.append(notification.request.identifier)
+                    } else if notification.request.content.body == SOMEONE_IS_TYPING_STRING() {
+                        typingIdentifiers.append(notification.request.identifier)
+                    }
+                    DDLogVerbose("notification delivered: \(notification)")
+                }
+                if newMessageIdentifiers.count > 1 {
+                    _ = newMessageIdentifiers.popLast()
+                }
+                if typingIdentifiers.count > 1 {
+                    _ = typingIdentifiers.popLast()
+                }
+                let allIdentifiers = newMessageIdentifiers + typingIdentifiers
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: allIdentifiers)
+            }
+        }
+    }
+    
     public func showLocalNotification(_ message:OTRMessageProtocol) {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0

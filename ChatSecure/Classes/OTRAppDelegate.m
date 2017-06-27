@@ -152,8 +152,6 @@
     [self.window makeKeyAndVisible];
     [TransactionObserver.shared startObserving];
     
-    application.applicationIconBadgeNumber = 0;
-    
     OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
     [notificationController start];
     
@@ -304,8 +302,11 @@
     DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
+    __block NSUInteger unread = 0;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        application.applicationIconBadgeNumber = [transaction numberOfUnreadMessages];
+        unread = [transaction numberOfUnreadMessages];
+    } completionBlock:^{
+        application.applicationIconBadgeNumber = unread;
     }];
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
@@ -365,8 +366,8 @@
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
-    //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
-    application.applicationIconBadgeNumber = 0;
+    
+    [UIApplication.sharedApplication removeExtraForegroundNotifications];
     
     if (self.fetchTimer) {
         if (self.fetchTimer.isValid) {
@@ -408,6 +409,7 @@
     NSDictionary *userInfo = timer.userInfo;
     void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIApplication.sharedApplication removeExtraForegroundNotifications];
         // We should probbaly return accurate fetch results
         if (completion) {
             completion(UIBackgroundFetchResultNewData);
