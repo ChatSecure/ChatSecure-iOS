@@ -229,7 +229,7 @@ DEPENDENCIES:
   - TUSafariActivity (~> 1.0)
   - VTAcknowledgementsViewController (~> 1.2)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 3.0)
+  - YapDatabase/SQLCipher (from `https://github.com/yapstudios/YapDatabase.git`, commit `d632658`)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `yap3`)
 
 EXTERNAL SOURCES:
@@ -260,6 +260,9 @@ EXTERNAL SOURCES:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
+  YapDatabase:
+    :commit: d632658
+    :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :branch: yap3
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -274,6 +277,9 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 0.3.0
+  YapDatabase:
+    :commit: d632658
+    :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :commit: d784806de99de76372418ecfaf9fc94de5a1412d
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -313,6 +319,6 @@ SPEC CHECKSUMS:
   YapDatabase: 0cef6c79948169c924ae325d430ffcfa8a5231c2
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: 7870123d211be7206f66df9225fbe64e73810ce3
+PODFILE CHECKSUM: a13baefdf5c6f86e5579f6ca723fe131039a344c
 
 COCOAPODS: 1.2.1
