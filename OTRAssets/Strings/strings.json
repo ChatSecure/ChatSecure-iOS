@@ -403,6 +403,10 @@
         "comment": "For a new settings value",
         "string": "New"
     },
+    "NEW_MESSAGE_STRING": {
+        "comment": "when a new message notification is received",
+        "string": "New Message!"
+    },
     "NEXT_STRING": {
         "comment": "Label for button to go to next step",
         "string": "Next"
@@ -650,6 +654,10 @@
     "SOURCE_STRING": {
         "comment": "let users know source is on Github",
         "string": "Check out the source here on Github"
+    },
+    "SOMEONE_IS_TYPING_STRING": {
+        "comment": "received a typing notification",
+        "string": "Someone is typing..."
     },
     "TOR_WARNING_MESSAGE_STRING": {
         "comment": "Message for warning about using tor network",

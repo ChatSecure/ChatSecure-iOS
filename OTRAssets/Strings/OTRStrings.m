@@ -266,6 +266,8 @@ NSString* NAME_STRING() { return [OTRLanguageManager translatedString:@"Name"]; 
 NSString* NEW_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"New Account"]; }
 /** "New SSL Certificate", Title for alert when a new SSL certificate is encountered */
 NSString* NEW_CERTIFICATE_STRING() { return [OTRLanguageManager translatedString:@"New SSL Certificate"]; }
+/** "New Message!", when a new message notification is received */
+NSString* NEW_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"New Message!"]; }
 /** "New", For a new settings value */
 NSString* NEW_STRING() { return [OTRLanguageManager translatedString:@"New"]; }
 /** "Next", Label for button to go to next step */
@@ -424,6 +426,8 @@ NSString* SHOW_USERVOICE_STRING() { return [OTRLanguageManager translatedString:
 NSString* SIGN_UP_STRING() { return [OTRLanguageManager translatedString:@"Sign Up"]; }
 /** "Skip", Label for button to skip this step */
 NSString* SKIP_STRING() { return [OTRLanguageManager translatedString:@"Skip"]; }
+/** "Someone is typing...", received a typing notification */
+NSString* SOMEONE_IS_TYPING_STRING() { return [OTRLanguageManager translatedString:@"Someone is typing..."]; }
 /** "Someone", A placeholder for a buddy's username like Someone wants to chat. */
 NSString* SOMEONE_STRING() { return [OTRLanguageManager translatedString:@"Someone"]; }
 /** "Check out the source here on Github", let users know source is on Github */

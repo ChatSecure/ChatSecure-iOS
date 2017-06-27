@@ -266,6 +266,8 @@ FOUNDATION_EXPORT NSString* NAME_STRING();
 FOUNDATION_EXPORT NSString* NEW_ACCOUNT_STRING();
 /** "New SSL Certificate", Title for alert when a new SSL certificate is encountered */
 FOUNDATION_EXPORT NSString* NEW_CERTIFICATE_STRING();
+/** "New Message!", when a new message notification is received */
+FOUNDATION_EXPORT NSString* NEW_MESSAGE_STRING();
 /** "New", For a new settings value */
 FOUNDATION_EXPORT NSString* NEW_STRING();
 /** "Next", Label for button to go to next step */
@@ -424,6 +426,8 @@ FOUNDATION_EXPORT NSString* SHOW_USERVOICE_STRING();
 FOUNDATION_EXPORT NSString* SIGN_UP_STRING();
 /** "Skip", Label for button to skip this step */
 FOUNDATION_EXPORT NSString* SKIP_STRING();
+/** "Someone is typing...", received a typing notification */
+FOUNDATION_EXPORT NSString* SOMEONE_IS_TYPING_STRING();
 /** "Someone", A placeholder for a buddy's username like Someone wants to chat. */
 FOUNDATION_EXPORT NSString* SOMEONE_STRING();
 /** "Check out the source here on Github", let users know source is on Github */
