@@ -103,13 +103,17 @@
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
     NSError *messageError = lastMessage.messageError;
+    NSString *messageText = lastMessage.messageText;
     if (messageError &&
         !messageError.isAutomaticDownloadError) {
-        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", lastMessage.messageText];
+        if (!messageText.length) {
+            messageText = ERROR_STRING();
+        }
+        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", messageText];
     } else if (mediaItem) {
         self.conversationLabel.text = mediaItem.displayText;
     } else {
-        self.conversationLabel.text = lastMessage.messageText;
+        self.conversationLabel.text = messageText;
     }
     if (unreadMessages > 0) {
         //unread message
