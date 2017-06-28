@@ -350,6 +350,7 @@
         //Invite buddies
         NSArray *arary = [self.inviteDictionary objectForKey:sender.roomJID.bare];
         if ([arary count]) {
+            [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
             [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 [arary enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:obj transaction:transaction];
@@ -380,25 +381,28 @@
 + (NSXMLElement *)defaultRoomConfiguration
 {
     NSXMLElement *form = [[NSXMLElement alloc] initWithName:@"x" xmlns:@"jabber:x:data"];
-    [form addAttributeWithName:@"type" stringValue:@"form"];
-    
+
+    NSXMLElement *formTypeField = [[NSXMLElement alloc] initWithName:@"field"];
+    [formTypeField addAttributeWithName:@"var" stringValue:@"FORM_TYPE"];
+    [formTypeField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"http://jabber.org/protocol/muc#roomconfig"]];
+
     NSXMLElement *publicField = [[NSXMLElement alloc] initWithName:@"field"];
     [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_publicroom"];
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(0)]];
     
     NSXMLElement *persistentField = [[NSXMLElement alloc] initWithName:@"field"];
-    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
-    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
+    [persistentField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
+    [persistentField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
     
     NSXMLElement *whoisField = [[NSXMLElement alloc] initWithName:@"field"];
-    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
-    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
+    [whoisField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
+    [whoisField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
 
     NSXMLElement *membersOnlyField = [[NSXMLElement alloc] initWithName:@"field"];
     [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
     [membersOnlyField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
 
-    
+    [form addChild:formTypeField];
     [form addChild:publicField];
     [form addChild:persistentField];
     [form addChild:whoisField];
