@@ -350,6 +350,7 @@
         //Invite buddies
         NSArray *arary = [self.inviteDictionary objectForKey:sender.roomJID.bare];
         if ([arary count]) {
+            [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
             [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 [arary enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:obj transaction:transaction];
