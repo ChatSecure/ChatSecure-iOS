@@ -387,12 +387,12 @@
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(0)]];
     
     NSXMLElement *persistentField = [[NSXMLElement alloc] initWithName:@"field"];
-    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
-    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
+    [persistentField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
+    [persistentField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
     
     NSXMLElement *whoisField = [[NSXMLElement alloc] initWithName:@"field"];
-    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
-    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
+    [whoisField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
+    [whoisField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
 
     NSXMLElement *membersOnlyField = [[NSXMLElement alloc] initWithName:@"field"];
     [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
