@@ -30,6 +30,8 @@ FOUNDATION_EXPORT NSString* ARCHIVE_STRING();
 FOUNDATION_EXPORT NSString* ARE_YOU_SURE_STRING();
 /** "Audio Message", Text for media message summary */
 FOUNDATION_EXPORT NSString* AUDIO_MESSAGE_STRING();
+/** "Automatic Downloads Disabled", error */
+FOUNDATION_EXPORT NSString* AUTOMATIC_DOWNLOADS_DISABLED_STRING();
 /** "Automatically Fetch Media", Title for other miscellaneous settings group */
 FOUNDATION_EXPORT NSString* AUTO_URL_FETCH_STRING();
 /** "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts.", Title for other miscellaneous settings group */
@@ -80,6 +82,8 @@ FOUNDATION_EXPORT NSString* CONNECT_STRING();
 FOUNDATION_EXPORT NSString* COPY_LINK_STRING();
 /** "Copy", Copy string to clipboard as in copy and paste */
 FOUNDATION_EXPORT NSString* COPY_STRING();
+/** "Could not parse URL.", Error description */
+FOUNDATION_EXPORT NSString* COULD_NOT_PARSE_URL_STRING();
 /** "Created by", Start of sentence that will be followed by names */
 FOUNDATION_EXPORT NSString* CREATED_BY_STRING();
 /** "Create New Account", Label for button to create a new account via in band registration */
@@ -154,8 +158,12 @@ FOUNDATION_EXPORT NSString* Enable_String();
 FOUNDATION_EXPORT NSString* Enable_Tor_String();
 /** "Facebook", the name for facebook */
 FOUNDATION_EXPORT NSString* FACEBOOK_STRING();
+/** "File exceeds maximum size.", Error string for when file is too big. */
+FOUNDATION_EXPORT NSString* FILE_EXCEEDS_MAX_SIZE_STRING();
 /** "File Message", Text for file message summary */
 FOUNDATION_EXPORT NSString* FILE_MESSAGE_STRING();
+/** "File not found.", Error */
+FOUNDATION_EXPORT NSString* FILE_NOT_FOUND_STRING();
 /** "Fix Background Fetch...", prompt to fix background fetch */
 FOUNDATION_EXPORT NSString* FIX_BACKGROUND_FETCH_STRING();
 /** "Fix Permissions...", prompt to fix permissions */
@@ -276,6 +284,8 @@ FOUNDATION_EXPORT NSString* NEXT_STRING();
 FOUNDATION_EXPORT NSString* NO_DEVICES_ACCOUNT_ERROR_STRING();
 /** "We could not find any trusted devices for this contact.", Error message for not finding any devices */
 FOUNDATION_EXPORT NSString* NO_DEVICES_BUDDY_ERROR_STRING();
+/** "No HTTP upload servers found.", Error string for when there are no XEP-0363 upload servers. */
+FOUNDATION_EXPORT NSString* NO_HTTP_UPLOAD_SERVERS_STRING();
 /** "Nickname", for choosing your XMPP vCard display name */
 FOUNDATION_EXPORT NSString* Nickname_String();
 /** "Offline", Label in buddy list for users that are offline */
@@ -344,6 +354,8 @@ FOUNDATION_EXPORT NSString* PICTURE_MESSAGE_STRING();
 FOUNDATION_EXPORT NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING();
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
 FOUNDATION_EXPORT NSString* PINNED_CERTIFICATES_STRING();
+/** "Please contact your server administrator.", Error string for when there is a server configuration error. */
+FOUNDATION_EXPORT NSString* PLEASE_CONTACT_SERVER_OP_STRING();
 /** "Port", Label for port number field for connecting to service */
 FOUNDATION_EXPORT NSString* PORT_STRING();
 /** "Could not retrieve public key from certificate", Error message when cannot get public key from SSL certificate */

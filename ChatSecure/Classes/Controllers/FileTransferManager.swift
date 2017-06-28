@@ -11,6 +11,7 @@ import XMPPFramework
 import CocoaLumberjack
 import OTRKit
 import Alamofire
+import OTRAssets
 
 public enum FileTransferError: CustomNSError {
     case unknown
@@ -22,6 +23,27 @@ public enum FileTransferError: CustomNSError {
     case keyGenerationError
     case cryptoError
     case automaticDownloadsDisabled
+    
+    public var localizedDescription: String {
+        switch self {
+        case .unknown:
+            return UNKNOWN_ERROR_STRING()
+        case .noServers:
+            return NO_HTTP_UPLOAD_SERVERS_STRING() + " " + PLEASE_CONTACT_SERVER_OP_STRING()
+        case .serverError:
+            return UNKNOWN_ERROR_STRING() + " " + PLEASE_CONTACT_SERVER_OP_STRING()
+        case .exceedsMaxSize:
+            return FILE_EXCEEDS_MAX_SIZE_STRING()
+        case .urlFormatting:
+            return COULD_NOT_PARSE_URL_STRING()
+        case .fileNotFound:
+            return FILE_NOT_FOUND_STRING()
+        case .cryptoError, .keyGenerationError:
+            return errSSLCryptoString()
+        case .automaticDownloadsDisabled:
+            return AUTOMATIC_DOWNLOADS_DISABLED_STRING()
+        }
+    }
 }
 
 public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
@@ -276,10 +298,37 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     public func send(image: UIImage, buddy: OTRBuddy) {
         internalQueue.async {
-            let scaleFactor: CGFloat = 0.75;
-            let newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
-            let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
-            guard let imageData = UIImageJPEGRepresentation(scaledImage, 0.7) else {
+            guard let service = self.servers.first, service.maxSize > 0 else {
+                DDLogError("No HTTP upload service available!")
+                return
+            }
+            
+            var sizeInBytes = 0
+            var scaleFactor: CGFloat = 1.00
+            var jpegQuality: CGFloat = 0.80
+            let qualityDecrement: CGFloat = 0.85
+            let scaleDecrement: CGFloat = 0.85
+            var scaledImageData: Data? = nil
+            var newSize = CGSize.zero
+            let maxTries = 10
+            var numTries = 0
+            while (sizeInBytes == 0 || sizeInBytes > service.maxSize) &&
+                numTries < maxTries {
+                numTries = numTries + 1
+                newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
+                let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
+                scaledImageData = UIImageJPEGRepresentation(scaledImage, jpegQuality)
+                if let imageData = scaledImageData {
+                    sizeInBytes = imageData.count
+                    scaleFactor = scaleFactor * scaleDecrement
+                    jpegQuality = jpegQuality * qualityDecrement
+                } else {
+                    DDLogError("Could not make JPEG out of image!")
+                    return
+                }
+            }
+            guard let imageData = scaledImageData else {
+                DDLogError("Could not make JPEG out of image!")
                 return
             }
             let filename = "\(UUID().uuidString).jpg"

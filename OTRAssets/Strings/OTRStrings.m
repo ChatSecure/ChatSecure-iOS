@@ -30,6 +30,8 @@ NSString* ARCHIVE_STRING() { return [OTRLanguageManager translatedString:@"Archi
 NSString* ARE_YOU_SURE_STRING() { return [OTRLanguageManager translatedString:@"Are you sure?"]; }
 /** "Audio Message", Text for media message summary */
 NSString* AUDIO_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Audio Message"]; }
+/** "Automatic Downloads Disabled", error */
+NSString* AUTOMATIC_DOWNLOADS_DISABLED_STRING() { return [OTRLanguageManager translatedString:@"Automatic Downloads Disabled"]; }
 /** "Automatically Fetch Media", Title for other miscellaneous settings group */
 NSString* AUTO_URL_FETCH_STRING() { return [OTRLanguageManager translatedString:@"Automatically Fetch Media"]; }
 /** "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts.", Title for other miscellaneous settings group */
@@ -80,6 +82,8 @@ NSString* CONNECT_STRING() { return [OTRLanguageManager translatedString:@"Conne
 NSString* COPY_LINK_STRING() { return [OTRLanguageManager translatedString:@"Copy Link"]; }
 /** "Copy", Copy string to clipboard as in copy and paste */
 NSString* COPY_STRING() { return [OTRLanguageManager translatedString:@"Copy"]; }
+/** "Could not parse URL.", Error description */
+NSString* COULD_NOT_PARSE_URL_STRING() { return [OTRLanguageManager translatedString:@"Could not parse URL."]; }
 /** "Created by", Start of sentence that will be followed by names */
 NSString* CREATED_BY_STRING() { return [OTRLanguageManager translatedString:@"Created by"]; }
 /** "Create New Account", Label for button to create a new account via in band registration */
@@ -154,8 +158,12 @@ NSString* Enable_String() { return [OTRLanguageManager translatedString:@"Enable
 NSString* Enable_Tor_String() { return [OTRLanguageManager translatedString:@"Enable Tor"]; }
 /** "Facebook", the name for facebook */
 NSString* FACEBOOK_STRING() { return [OTRLanguageManager translatedString:@"Facebook"]; }
+/** "File exceeds maximum size.", Error string for when file is too big. */
+NSString* FILE_EXCEEDS_MAX_SIZE_STRING() { return [OTRLanguageManager translatedString:@"File exceeds maximum size."]; }
 /** "File Message", Text for file message summary */
 NSString* FILE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"File Message"]; }
+/** "File not found.", Error */
+NSString* FILE_NOT_FOUND_STRING() { return [OTRLanguageManager translatedString:@"File not found."]; }
 /** "Fix Background Fetch...", prompt to fix background fetch */
 NSString* FIX_BACKGROUND_FETCH_STRING() { return [OTRLanguageManager translatedString:@"Fix Background Fetch..."]; }
 /** "Fix Permissions...", prompt to fix permissions */
@@ -276,6 +284,8 @@ NSString* NEXT_STRING() { return [OTRLanguageManager translatedString:@"Next"]; 
 NSString* NO_DEVICES_ACCOUNT_ERROR_STRING() { return [OTRLanguageManager translatedString:@"We could not find any trusted devices for this account."]; }
 /** "We could not find any trusted devices for this contact.", Error message for not finding any devices */
 NSString* NO_DEVICES_BUDDY_ERROR_STRING() { return [OTRLanguageManager translatedString:@"We could not find any trusted devices for this contact."]; }
+/** "No HTTP upload servers found.", Error string for when there are no XEP-0363 upload servers. */
+NSString* NO_HTTP_UPLOAD_SERVERS_STRING() { return [OTRLanguageManager translatedString:@"No HTTP upload servers found."]; }
 /** "Nickname", for choosing your XMPP vCard display name */
 NSString* Nickname_String() { return [OTRLanguageManager translatedString:@"Nickname"]; }
 /** "Offline", Label in buddy list for users that are offline */
@@ -344,6 +354,8 @@ NSString* PICTURE_MESSAGE_STRING() { return [OTRLanguageManager translatedString
 NSString* PINNED_CERTIFICATES_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Manage saved SSL certificates"]; }
 /** "Pinned Certificates", Button Lable to show all pinned SSL certificates */
 NSString* PINNED_CERTIFICATES_STRING() { return [OTRLanguageManager translatedString:@"Pinned Certificates"]; }
+/** "Please contact your server administrator.", Error string for when there is a server configuration error. */
+NSString* PLEASE_CONTACT_SERVER_OP_STRING() { return [OTRLanguageManager translatedString:@"Please contact your server administrator."]; }
 /** "Port", Label for port number field for connecting to service */
 NSString* PORT_STRING() { return [OTRLanguageManager translatedString:@"Port"]; }
 /** "Could not retrieve public key from certificate", Error message when cannot get public key from SSL certificate */
