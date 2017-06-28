@@ -380,8 +380,11 @@
 + (NSXMLElement *)defaultRoomConfiguration
 {
     NSXMLElement *form = [[NSXMLElement alloc] initWithName:@"x" xmlns:@"jabber:x:data"];
-    [form addAttributeWithName:@"type" stringValue:@"form"];
-    
+
+    NSXMLElement *formTypeField = [[NSXMLElement alloc] initWithName:@"field"];
+    [formTypeField addAttributeWithName:@"var" stringValue:@"FORM_TYPE"];
+    [formTypeField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"http://jabber.org/protocol/muc#roomconfig"]];
+
     NSXMLElement *publicField = [[NSXMLElement alloc] initWithName:@"field"];
     [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_publicroom"];
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(0)]];
@@ -398,7 +401,7 @@
     [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
     [membersOnlyField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
 
-    
+    [form addChild:formTypeField];
     [form addChild:publicField];
     [form addChild:persistentField];
     [form addChild:whoisField];
