@@ -276,10 +276,10 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     public func send(image: UIImage, buddy: OTRBuddy) {
         internalQueue.async {
-            let scaleFactor: CGFloat = 0.25;
+            let scaleFactor: CGFloat = 0.75;
             let newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
             let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
-            guard let imageData = UIImageJPEGRepresentation(scaledImage, 0.5) else {
+            guard let imageData = UIImageJPEGRepresentation(scaledImage, 0.7) else {
                 return
             }
             let filename = "\(UUID().uuidString).jpg"
