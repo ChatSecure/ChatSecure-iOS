@@ -162,7 +162,7 @@
     if (!account) { return; }
     id <OTRProtocol> protocol = [self protocolForAccount:account];
     if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
-        DDLogWarn(@"Account already connected %@", account);
+        //DDLogWarn(@"Account already connected %@", account);
     }
     
     if([account isKindOfClass:[OTROAuthXMPPAccount class]])
