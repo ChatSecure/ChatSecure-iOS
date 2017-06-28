@@ -114,10 +114,11 @@
         databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.xmppId = [message elementID];
         databaseMessage.messageText = [message body];
-        databaseMessage.messageDate = [message delayedDeliveryDate];
-        if (!databaseMessage.messageDate) {
-            databaseMessage.messageDate = [NSDate date];
+        NSDate *messageDate = [message delayedDeliveryDate];
+        if (!messageDate) {
+            messageDate = [NSDate date];
         }
+        databaseMessage.messageDate = messageDate;
         databaseMessage.senderJID = [fromJID full];
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
