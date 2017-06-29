@@ -26,15 +26,18 @@ extension UIImage {
             }
         }
     }
-    struct Quality {
+     struct Quality {
+        static let medium = Quality(initial: 0.65, decrementFactor: 0.65)
+        static let high = Quality(initial: 0.75, decrementFactor: 0.75)
+        
         /// This value cannot be > 1 or bad things will happen
-        let initial: CGFloat = 1.0
-        /// This value cannot be > 1 or bad things will happen
-        let decrementFactor: CGFloat = 0.85
+        let initial: CGFloat
+        /// Multiplied to reduce the initial value. This value cannot be > 1 or bad things will happen
+        let decrementFactor: CGFloat
     }
     func jpegData(dataSize: DataSize,
-                  resize: Quality = Quality(),
-                  jpeg: Quality = Quality(),
+                  resize: Quality = Quality.high,
+                  jpeg: Quality = Quality.high,
                   maxTries: UInt = 10) -> Data? {
         let image = self
         var sizeInBytes = 0
@@ -362,7 +365,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 message.save(with: transaction)
                 imageItem.save(with: transaction)
             })
-            guard let ourImageData = image.jpegData(dataSize: .maxBytes(1_000_000)) else {
+            guard let ourImageData = image.jpegData(dataSize: .unlimited, resize: UIImage.Quality.high, jpeg: UIImage.Quality.high, maxTries: 10) else {
                 DDLogError("Could not make JPEG out of image!")
                 return
             }
@@ -374,11 +377,14 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                         message.save(with: transaction)
                     }
                 })
-                guard let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize)) else {
-                    DDLogError("Could not make JPEG out of image!")
+                if ourImageData.count <= service.maxSize {
+                    self.send(mediaItem: imageItem, prefetchedData: ourImageData, message: message)
                     return
+                } else if let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize), resize: UIImage.Quality.medium, jpeg: UIImage.Quality.medium, maxTries: 10) {
+                    self.send(mediaItem: imageItem, prefetchedData: imageData, message: message)
+                } else {
+                    DDLogError("Could not make JPEG out of image! Bad size")
                 }
-                self.send(mediaItem: imageItem, prefetchedData: imageData, message: message)
             }, completionQueue: self.internalQueue)
         }
     }
