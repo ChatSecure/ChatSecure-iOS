@@ -13,6 +13,59 @@ import OTRKit
 import Alamofire
 import OTRAssets
 
+extension UIImage {
+    enum DataSize {
+        case unlimited
+        case maxBytes(UInt)
+        var numBytes: UInt {
+            switch self {
+            case .unlimited:
+                return UInt.max
+            case .maxBytes(let limit):
+                return limit
+            }
+        }
+    }
+    struct Quality {
+        /// This value cannot be > 1 or bad things will happen
+        let initial: CGFloat = 1.0
+        /// This value cannot be > 1 or bad things will happen
+        let decrementFactor: CGFloat = 0.85
+    }
+    func jpegData(dataSize: DataSize,
+                  resize: Quality = Quality(),
+                  jpeg: Quality = Quality(),
+                  maxTries: UInt = 10) -> Data? {
+        let image = self
+        var sizeInBytes = 0
+        var scaleFactor: CGFloat = resize.initial
+        var jpegQuality: CGFloat = jpeg.initial
+        let qualityDecrement: CGFloat = jpeg.decrementFactor
+        let scaleDecrement: CGFloat = resize.decrementFactor
+        var scaledImageData: Data? = nil
+        var newSize = CGSize.zero
+        let maxTries = 10
+        var numTries = 0
+        let maxSize = dataSize.numBytes
+        while (sizeInBytes == 0 || sizeInBytes > maxSize) &&
+            numTries < maxTries {
+                numTries = numTries + 1
+                newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
+                let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
+                scaledImageData = UIImageJPEGRepresentation(scaledImage, jpegQuality)
+                if let imageData = scaledImageData {
+                    sizeInBytes = imageData.count
+                    scaleFactor = scaleFactor * scaleDecrement
+                    jpegQuality = jpegQuality * qualityDecrement
+                } else {
+                    DDLogError("Could not make JPEG out of image!")
+                    return nil
+                }
+        }
+        return scaledImageData
+    }
+}
+
 public enum FileTransferError: CustomNSError {
     case unknown
     case noServers
@@ -302,43 +355,18 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 DDLogError("No HTTP upload service available!")
                 return
             }
-            
-            var sizeInBytes = 0
-            var scaleFactor: CGFloat = 1.00
-            var jpegQuality: CGFloat = 0.80
-            let qualityDecrement: CGFloat = 0.85
-            let scaleDecrement: CGFloat = 0.85
-            var scaledImageData: Data? = nil
-            var newSize = CGSize.zero
-            let maxTries = 10
-            var numTries = 0
-            while (sizeInBytes == 0 || sizeInBytes > service.maxSize) &&
-                numTries < maxTries {
-                numTries = numTries + 1
-                newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
-                let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
-                scaledImageData = UIImageJPEGRepresentation(scaledImage, jpegQuality)
-                if let imageData = scaledImageData {
-                    sizeInBytes = imageData.count
-                    scaleFactor = scaleFactor * scaleDecrement
-                    jpegQuality = jpegQuality * qualityDecrement
-                } else {
-                    DDLogError("Could not make JPEG out of image!")
-                    return
-                }
-            }
-            guard let imageData = scaledImageData else {
-                DDLogError("Could not make JPEG out of image!")
-                return
-            }
             let filename = "\(UUID().uuidString).jpg"
-            let imageItem = OTRImageItem(filename: filename, size: newSize, mimeType: "image/jpeg", isIncoming: false)
+            let imageItem = OTRImageItem(filename: filename, size: image.size, mimeType: "image/jpeg", isIncoming: false)
             let message = self.newOutgoingMessage(to: buddy, mediaItem: imageItem)
             self.connection.readWrite({ (transaction) in
                 message.save(with: transaction)
                 imageItem.save(with: transaction)
             })
-            OTRMediaFileManager.shared.setData(imageData, for: imageItem, buddyUniqueId: buddy.uniqueId, completion: { (bytesWritten: Int, error: Error?) in
+            guard let ourImageData = image.jpegData(dataSize: .maxBytes(1_000_000)) else {
+                DDLogError("Could not make JPEG out of image!")
+                return
+            }
+            OTRMediaFileManager.shared.setData(ourImageData, for: imageItem, buddyUniqueId: buddy.uniqueId, completion: { (bytesWritten: Int, error: Error?) in
                 self.connection.readWrite({ (transaction) in
                     imageItem.touchParentMessage(with: transaction)
                     if let error = error {
@@ -346,6 +374,10 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                         message.save(with: transaction)
                     }
                 })
+                guard let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize)) else {
+                    DDLogError("Could not make JPEG out of image!")
+                    return
+                }
                 self.send(mediaItem: imageItem, prefetchedData: imageData, message: message)
             }, completionQueue: self.internalQueue)
         }
