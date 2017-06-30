@@ -40,7 +40,7 @@ extension UIImage {
                   jpeg: Quality = Quality.high,
                   maxTries: UInt = 10) -> Data? {
         let image = self
-        var sizeInBytes = 0
+        var sizeInBytes: UInt = 0
         var scaleFactor: CGFloat = resize.initial
         var jpegQuality: CGFloat = jpeg.initial
         let qualityDecrement: CGFloat = jpeg.decrementFactor
@@ -57,7 +57,7 @@ extension UIImage {
                 let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
                 scaledImageData = UIImageJPEGRepresentation(scaledImage, jpegQuality)
                 if let imageData = scaledImageData {
-                    sizeInBytes = imageData.count
+                    sizeInBytes = UInt(imageData.count)
                     scaleFactor = scaleFactor * scaleDecrement
                     jpegQuality = jpegQuality * qualityDecrement
                 } else {
@@ -377,7 +377,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                         message.save(with: transaction)
                     }
                 })
-                if ourImageData.count <= service.maxSize {
+                if UInt(ourImageData.count) <= service.maxSize {
                     self.send(mediaItem: imageItem, prefetchedData: ourImageData, message: message)
                     return
                 } else if let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize), resize: UIImage.Quality.medium, jpeg: UIImage.Quality.medium, maxTries: 10) {
