@@ -423,6 +423,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 buddy.lastMessageId = @"";
             }
             buddy.displayName = request.jid;
+            buddy.pendingApproval = YES;
             [buddy saveWithTransaction:transaction];
         }];
         [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
