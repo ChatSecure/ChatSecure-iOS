@@ -16,6 +16,8 @@ import SignalProtocolObjC
  * This is the glue between XMPP/OMEMO and Signal
  */
 @objc open class OTROMEMOSignalCoordinator: NSObject {
+
+    public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
     
     open let signalEncryptionManager:OTRAccountSignalEncryptionManager
     open let omemoStorageManager:OTROMEMOStorageManager
@@ -617,7 +619,13 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         if (isOurDeviceList) {
             self.omemoStorageManager.storeOurDevices(deviceIds)
         } else {
-            self.omemoStorageManager.storeBuddyDevices(deviceIds, buddyUsername: jid.bare())
+            self.omemoStorageManager.storeBuddyDevices(deviceIds, buddyUsername: jid.bare(), completion: {() -> Void in
+
+                //Devices updated for buddy
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: OTROMEMOSignalCoordinator.DeviceListUpdateNotificationName, object: self, userInfo: ["jid":jid])
+                }
+            })
         }
     }
     

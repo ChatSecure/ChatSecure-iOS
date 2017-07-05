@@ -153,7 +153,7 @@ open class OTROMEMOStorageManager {
      - parameter devices: An array of the device numbers. Should be UInt32.
      - parameter buddyUsername: The bare JID for the buddy.
      */
-    open func storeBuddyDevices(_ devices:[NSNumber], buddyUsername:String) {
+    open func storeBuddyDevices(_ devices:[NSNumber], buddyUsername:String, completion:(()->Void)?) {
         self.databaseConnection.asyncReadWrite { (transaction) in
             // Fetch the buddy from the database.
             var buddy = OTRBuddy.fetch(withUsername: buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction)
@@ -167,6 +167,9 @@ open class OTROMEMOStorageManager {
             }
             if let bud = buddy {
                 self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: type(of: bud).collection, transaction: transaction)
+                if let completion = completion {
+                    completion()
+                }
             }
             
         }
