@@ -94,6 +94,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
 
 @property (nonatomic) BOOL loadingMessages;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+@property (nonatomic, strong) id currentMessage;
+@property (nonatomic, strong) NSCache *messageSizeCache;
 
 @end
 
@@ -105,6 +108,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = @"";
         self.senderDisplayName = @"";
         _state = [[MessagesViewControllerState alloc] init];
+        self.messageSizeCache = [NSCache new];
+        self.messageSizeCache.countLimit = kOTRMessagePageSize;
     }
     return self;
 }
@@ -998,19 +1003,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.viewHandler object:indexPath];
+    // Multiple invocations with the same indexPath tend to come in groups, no need to hit the DB each time.
+    // Even though the object is cached, the row ID calculation still takes time
+    if (![indexPath isEqual:self.currentIndexPath]) {
+        self.currentIndexPath = indexPath;
+        self.currentMessage = [self.viewHandler object:indexPath];
+    }
+    return self.currentMessage;
 }
 
-- (void)loadEarlierMessages
-{
-    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
-
-    [self updateRangeOptions:NO];
-
-    [self.collectionView layoutSubviews];
-    self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
-}
-
+/**
+ * Updates the flexible range of the DB connection.
+ * @param reset When NO, adds kOTRMessagePageSize to the range length, when YES resets the length to the kOTRMessagePageSize
+ */
 - (void)updateRangeOptions:(BOOL)reset
 {
     YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
@@ -1021,21 +1026,59 @@ typedef NS_ENUM(int, OTRDropDownType) {
         options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
                                                                 offset:0
                                                                   from:YapDatabaseViewEnd];
+        self.messageSizeCache.countLimit = kOTRMessagePageSize;
     } else {
         options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:options.length + kOTRMessagePageSize
                                                                 offset:0
                                                                   from:YapDatabaseViewEnd];
+        self.messageSizeCache.countLimit += kOTRMessagePageSize;
     }
     [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
 
-    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
-    [self.collectionView reloadData];
+    self.loadingMessages = YES;
 
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
-    }];
+    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
+
+    void (^doReload)() = ^{
+        [self.collectionView reloadData];
+
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+        }];
+
+        if (!reset) {
+            [self.collectionView layoutSubviews];
+            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
+        }
+
+        self.loadingMessages = NO;
+    };
+
+    if (reset) {
+        doReload();
+    }
+    else {
+        JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableArray *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
+            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
+                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
+                [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
+                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
+                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
+                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
+                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
+                                                                                           atIndexPath:nil
+                                                                                            withLayout:layout];
+                                      }];
+            dispatch_async(dispatch_get_main_queue(), doReload);
+        });
+    }
 }
 
 - (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
@@ -1332,6 +1375,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id <OTRMessageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
+
+    NSNumber *key = @(message.messageHash);
+    NSValue *sizeValue = [self.messageSizeCache objectForKey:key];
+    if (sizeValue != nil) {
+        return [sizeValue CGSizeValue];
+    }
+
+    // Although JSQMessagesBubblesSizeCalculator has its own cache, its size is fixed and quite small, so it quickly chokes on scrolling into the past
+    CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    [self.messageSizeCache setObject:[NSValue valueWithCGSize:size] forKey:key];
+    return size;
+}
+
 #pragma - mark UIPopoverPresentationControllerDelegate Methods
 
 - (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
@@ -1422,9 +1481,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         CGFloat pos = scrollView.contentOffset.y;
 
         if (self.showLoadEarlierMessagesHeader && (pos == highestOffset || pos < 0 && (scrollView.isDecelerating || scrollView.isDragging))) {
-            self.loadingMessages = YES;
-            [self loadEarlierMessages];
-            self.loadingMessages = NO;
+            [self updateRangeOptions:NO];
         } else if (pos == lowestOffset) {
             [self updateRangeOptions:YES];
         }
