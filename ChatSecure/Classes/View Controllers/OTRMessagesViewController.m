@@ -61,6 +61,7 @@
 @import MediaPlayer;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
+static NSUInteger const kOTRMessagePageSize = 50;
 
 typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypeNone          = 0,
@@ -87,6 +88,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
+
+@property (nonatomic) BOOL loadingMessages;
 
 @end
 
@@ -163,7 +166,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
     layout.sizeDelegate = self;
     self.collectionView.collectionViewLayout = layout;
-    
+
+    ///"Loading Earlier" header view
+    [self.collectionView registerNib:[UINib nibWithNibName:@"OTRMessagesLoadingView" bundle:OTRAssets.resourcesBundle]
+          forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                 withReuseIdentifier:[JSQMessagesLoadEarlierHeaderView headerReuseIdentifier]];
+
     //Subscribe to changes in encryption state
     __weak typeof(self)weakSelf = self;
     [self.KVOController observe:self.state keyPath:NSStringFromSelector(@selector(messageSecurity)) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
@@ -204,6 +212,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self scrollToBottomAnimated:animated];
     });
+    self.loadingMessages = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -259,8 +268,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
         }
     }
-    
-    
+
+    self.loadingMessages = YES;
     [self.collectionView reloadData];
 }
 
@@ -979,6 +988,43 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return [self.viewHandler object:indexPath];
 }
 
+- (void)loadEarlierMessages
+{
+    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
+
+    [self updateRangeOptions:NO];
+
+    [self.collectionView layoutSubviews];
+    self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
+}
+
+- (void)updateRangeOptions:(BOOL)reset
+{
+    YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
+    if (reset) {
+        if (options != nil && options.length <= kOTRMessagePageSize) {
+            return;
+        }
+        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
+                                                                offset:0
+                                                                  from:YapDatabaseViewEnd];
+    } else {
+        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:options.length + kOTRMessagePageSize
+                                                                offset:0
+                                                                  from:YapDatabaseViewEnd];
+    }
+    [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
+
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+    [self.collectionView reloadData];
+
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+    }];
+}
+
 - (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
 {
     BOOL showDate = NO;
@@ -1354,6 +1400,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self hideDropdownAnimated:YES completion:nil];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!self.loadingMessages) {
+        UIEdgeInsets insets = scrollView.contentInset;
+        CGFloat highestOffset = -insets.top;
+        CGFloat lowestOffset = scrollView.contentSize.height - scrollView.frame.size.height + insets.bottom;
+        CGFloat pos = scrollView.contentOffset.y;
+
+        if (self.showLoadEarlierMessagesHeader && (pos == highestOffset || pos < 0 && (scrollView.isDecelerating || scrollView.isDragging))) {
+            self.loadingMessages = YES;
+            [self loadEarlierMessages];
+            self.loadingMessages = NO;
+        } else if (pos == lowestOffset) {
+            [self updateRangeOptions:YES];
+        }
+    }
+}
+
 #pragma mark - UICollectionView DataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -1695,6 +1759,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     // The databse view is setup now so refresh from there
     [self updateViewWithKey:self.threadKey collection:self.threadCollection];
+    [self updateRangeOptions:YES];
     [self.collectionView reloadData];
 }
 
