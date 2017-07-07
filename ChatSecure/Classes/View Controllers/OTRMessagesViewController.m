@@ -69,7 +69,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol> {
+    JSQMessagesAvatarImage *_warningAvatarImage;
+    JSQMessagesAvatarImage *_accountAvatarImage;
+    JSQMessagesAvatarImage *_buddyAvatarImage;
+}
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 
@@ -286,6 +290,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
     
     // [self.inputToolbar.contentView.textView resignFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    _warningAvatarImage = nil;
+    _accountAvatarImage = nil;
+    _buddyAvatarImage = nil;
 }
 
 #pragma - mark Setters & getters
@@ -1471,32 +1484,59 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return nil;
     }
     
-    UIImage *avatarImage = nil;
     NSError *messageError = [message messageError];
     if ((messageError && !messageError.isAutomaticDownloadError) ||
         ![self isMessageTrusted:message]) {
-        avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
+        return [self warningAvatarImage];
     }
-    else if ([message isMessageIncoming]) {
-        __block OTRBuddy *buddy = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            buddy = [self buddyWithTransaction:transaction];
-        }];
-        avatarImage = [buddy avatarImage];
+    if ([message isMessageIncoming]) {
+        return [self buddyAvatarImage];
     }
-    else {
-        __block OTRAccount *account = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            account = [self accountWithTransaction:transaction];
-        }];
-        avatarImage = [account avatarImage];
-    }
-    
-    if (avatarImage) {
-        NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
+
+    return [self accountAvatarImage];
+}
+
+- (JSQMessagesAvatarImage *)createAvatarImage:(UIImage *(^)(YapDatabaseReadTransaction *))getImage
+{
+    __block UIImage *avatarImage;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+        avatarImage = getImage(transaction);
+    }];
+    if (avatarImage != nil) {
+        NSUInteger diameter = (NSUInteger) MIN(avatarImage.size.width, avatarImage.size.height);
         return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
     }
     return nil;
+}
+
+- (JSQMessagesAvatarImage *)warningAvatarImage
+{
+    if (_warningAvatarImage == nil) {
+        _warningAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [OTRImages circleWarningWithColor:[OTRColors warnColor]];
+        }];
+    }
+    return _warningAvatarImage;
+}
+
+- (JSQMessagesAvatarImage *)accountAvatarImage
+{
+    if (_accountAvatarImage == nil) {
+        _accountAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [[self accountWithTransaction:transaction] avatarImage];
+        }];
+    }
+    return _accountAvatarImage;
+}
+
+- (JSQMessagesAvatarImage *)buddyAvatarImage
+{
+    if (_buddyAvatarImage == nil) {
+        _buddyAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [[self buddyWithTransaction:transaction] avatarImage];
+        }];
+    }
+    return _buddyAvatarImage;
 }
 
 ////// Optional //////
