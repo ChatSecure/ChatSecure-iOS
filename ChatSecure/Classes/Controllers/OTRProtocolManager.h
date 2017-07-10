@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loginAccounts:(NSArray<OTRAccount*> *)accounts;
 - (void)goAwayForAllAccounts;
 - (void)disconnectAllAccounts;
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly andWait:(BOOL)wait;
 
 - (void)sendMessage:(OTROutgoingMessage *)message;
 

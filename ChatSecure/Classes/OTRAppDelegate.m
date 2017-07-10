@@ -310,17 +310,15 @@
     }];
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
-            [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
-            if (self.backgroundTimer)
-            {
-                [self.backgroundTimer invalidate];
-                self.backgroundTimer = nil;
-            }
-            [application endBackgroundTask:self.backgroundTask];
-            self.backgroundTask = UIBackgroundTaskInvalid;
-        });
+        DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
+        [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES andWait:YES];
+        if (self.backgroundTimer)
+        {
+            [self.backgroundTimer invalidate];
+            self.backgroundTimer = nil;
+        }
+        [application endBackgroundTask:self.backgroundTask];
+        self.backgroundTask = UIBackgroundTaskInvalid;
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -405,7 +403,7 @@
 }
 
 - (void) fetchTimerUpdate:(NSTimer*)timer {
-    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
+    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES andWait:YES];
     NSDictionary *userInfo = timer.userInfo;
     void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

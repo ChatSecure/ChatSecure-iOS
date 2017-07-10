@@ -519,29 +519,22 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
-        self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
-        [self goAway];
+        if (self.connectionStatus != OTRProtocolConnectionStatusDisconnecting) {
+            self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
+            [self goAway];
+        }
         return;
     }
     
     [self goOffline];
     [self.xmppStream disconnectAfterSending];
-    
-    __weak typeof(self)weakSelf = self;
-    __block NSArray<OTRXMPPBuddy*> *buddiesArray = nil;
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
-    } completionQueue:dispatch_get_main_queue() completionBlock:^{
-        
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
-        {
-            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [OTRBaseMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
-            }];
-        }
-    }];
+
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+    {
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [OTRBaseMessage deleteAllMessagesForAccountId:self.account.uniqueId transaction:transaction];
+        }];
+    }
 }
 
 - (void)disconnect

@@ -206,17 +206,32 @@
     }
 }
 
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly andWait:(BOOL)wait {
     @synchronized (self) {
-        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-            [protocol disconnectSocketOnly:socketOnly];
-        }];
+        for (id<OTRProtocol> manager in self.protocolManagers.allValues) {
+            [manager disconnectSocketOnly:socketOnly];
+        }
+        if (wait) {
+            while (true) {
+                BOOL stillDisconnecting = NO;
+                for (id <OTRProtocol> manager in self.protocolManagers.allValues) {
+                    if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
+                        stillDisconnecting = YES;
+                        break;
+                    }
+                }
+                if (!stillDisconnecting) {
+                    return;
+                }
+                [NSThread sleepForTimeInterval:.02];
+            }
+        }
     }
 }
 
 - (void)disconnectAllAccounts
 {
-    [self disconnectAllAccountsSocketOnly:NO];
+    [self disconnectAllAccountsSocketOnly:NO andWait:NO];
 }
 
 - (void)protocolDidChange:(NSDictionary *)change

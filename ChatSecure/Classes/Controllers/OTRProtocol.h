@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 NS_ASSUME_NONNULL_BEGIN
 @protocol OTRProtocol <NSObject>
 
-@property (nonatomic, readonly) OTRProtocolConnectionStatus connectionStatus;
+@property (atomic, readonly) OTRProtocolConnectionStatus connectionStatus;
 
 /** Send a message immediately. Bypasses (and used by) the message queue. */
 - (void) sendMessage:(OTROutgoingMessage*)message;
