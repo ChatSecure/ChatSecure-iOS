@@ -114,6 +114,7 @@
 		63FCB1371DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCB1361DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift */; };
 		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
 		8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */; };
+		9236F56B1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */; };
 		924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
 		924F67C71EA55C6F00528FB6 /* MigrationInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */; };
 		924F68571EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */; };
@@ -1044,6 +1045,7 @@
 		7A62FCE8FEC1E7C9644F8C38 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
 		8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OTRMessagesLoadingView.xib; sourceTree = "<group>"; };
 		9118152C0A7B287ABD07FF70 /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
+		9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRGroupAvatarGenerator.swift; sourceTree = "<group>"; };
 		924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigrationInfoHeaderView.xib; path = Interface/MigrationInfoHeaderView.xib; sourceTree = "<group>"; };
 		924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationInfoHeaderView.swift; sourceTree = "<group>"; };
 		924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigratedBuddyHeaderView.swift; sourceTree = "<group>"; };
@@ -1598,6 +1600,7 @@
 			isa = PBXGroup;
 			children = (
 				D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */,
+				9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */,
 				D978BC901BABE0F4009246CF /* OTRTheme.h */,
 				D978BC911BABE0F4009246CF /* OTRTheme.m */,
 				633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */,
@@ -3055,6 +3058,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9236F56B1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift in Sources */,
 				63D65D2A1DD68A2D00D9E52E /* OTRMessageEncryptionInfo.m in Sources */,
 				63D65D291DD689B500D9E52E /* OTRIncomingMessage.m in Sources */,
 				D93DDB291BA79A5400CD8331 /* OTRWelcomeViewController.swift in Sources */,
