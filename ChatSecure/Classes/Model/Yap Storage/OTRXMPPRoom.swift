@@ -81,7 +81,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         var image:UIImage? = OTRImages.image(withIdentifier: self.uniqueId)
         if image == nil {
             // If not cached, generate a default image and store that.
-            image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.uniqueId)
+            image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.uniqueId, width: 100, height: 100)
             OTRImages.setImage(image, forIdentifier: self.uniqueId)
         }
         return image!
