@@ -293,6 +293,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
             if (!buddy) { return; }
             buddy.pendingApproval = NO;
             [buddy saveWithTransaction:transaction];
+            [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": buddy}];
         }];
     }
 

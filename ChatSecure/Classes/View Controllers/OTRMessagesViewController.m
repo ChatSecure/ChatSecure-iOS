@@ -77,6 +77,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
+@property (nonatomic, weak) id pendingApprovalDidChangeNotificationObject;
+@property (nonatomic, weak) id deviceListUpdateNotificationObject;
+
 
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) OTRLockButton *lockButton;
@@ -355,7 +358,38 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self updateEncryptionState];
     [self updateJIDForwardingHeader];
     
+    __weak typeof(self)weakSelf = self;
+    if (self.pendingApprovalDidChangeNotificationObject == nil) {
+        self.pendingApprovalDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRBuddyPendingApprovalDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            OTRXMPPBuddy *notificationBuddy = [note.userInfo objectForKey:@"buddy"];
+            __block NSString *buddyKey = nil;
+            [strongSelf.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                buddyKey = [strongSelf buddyWithTransaction:transaction].uniqueId;
+            }];
+            if ([notificationBuddy.uniqueId isEqualToString:buddyKey]) {
+                [strongSelf fetchOMEMODeviceList];
+                [strongSelf sendPresenceProbe];
+            }
+        }];
+    }
+    
+    if (self.deviceListUpdateNotificationObject == nil) {
+        self.deviceListUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTROMEMOSignalCoordinator.DeviceListUpdateNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            XMPPJID *notificationJid = [note.userInfo objectForKey:@"jid"];
+            __block NSString *buddyUser = nil;
+            [strongSelf.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                buddyUser = [strongSelf buddyWithTransaction:transaction].username;
+            }];
+            if (notificationJid != nil && [notificationJid.bare isEqualToString:buddyUser]) {
+                [strongSelf updateEncryptionState];
+            }
+        }];
+    }
+    
     [self sendPresenceProbe];
+    [self fetchOMEMODeviceList];
 }
 
                            
@@ -390,7 +424,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         xmpp = [self xmppManagerWithTransaction:transaction];
         buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
     }];
-    if (!xmpp || ![buddy isKindOfClass:[OTRXMPPBuddy class]]) { return; }
+    if (!xmpp || ![buddy isKindOfClass:[OTRXMPPBuddy class]] || buddy.pendingApproval) { return; }
     [xmpp sendPresenceProbeForBuddy:buddy];
 }
 
@@ -770,12 +804,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     // Hack to manually re-fetch OMEMO devicelist because PEP sucks
     // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
-    id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-    if ([manager isKindOfClass:[OTRXMPPManager class]]) {
-        XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
-        OTRXMPPManager *xmpp = manager;
-        [xmpp.omemoSignalCoordinator.omemoModule fetchDeviceIdsForJID:jid elementId:nil];
-    }
+    [self fetchOMEMODeviceList];
     
     XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readOnlyDatabaseConnection];
 
@@ -786,6 +815,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];
+}
+
+
+// Hack to manually re-fetch OMEMO devicelist because PEP sucks
+// TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
+-(void) fetchOMEMODeviceList {
+    __block OTRAccount *account = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    if (!account || !buddy) {
+        return;
+    }
+    id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    if ([manager isKindOfClass:[OTRXMPPManager class]]) {
+        XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
+        OTRXMPPManager *xmpp = manager;
+        [xmpp.omemoSignalCoordinator.omemoModule fetchDeviceIdsForJID:jid elementId:nil];
+    }
 }
 
 - (UIBarButtonItem *)rightBarButtonItem
