@@ -61,6 +61,7 @@
 @import MediaPlayer;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
+static NSUInteger const kOTRMessagePageSize = 50;
 
 typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypeNone          = 0,
@@ -68,7 +69,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol> {
+    JSQMessagesAvatarImage *_warningAvatarImage;
+    JSQMessagesAvatarImage *_accountAvatarImage;
+    JSQMessagesAvatarImage *_buddyAvatarImage;
+}
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 
@@ -91,6 +96,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
 
+@property (nonatomic) BOOL loadingMessages;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+@property (nonatomic, strong) id currentMessage;
+@property (nonatomic, strong) NSCache *messageSizeCache;
+
 @end
 
 @implementation OTRMessagesViewController
@@ -101,6 +111,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = @"";
         self.senderDisplayName = @"";
         _state = [[MessagesViewControllerState alloc] init];
+        self.messageSizeCache = [NSCache new];
+        self.messageSizeCache.countLimit = kOTRMessagePageSize;
     }
     return self;
 }
@@ -166,7 +178,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
     layout.sizeDelegate = self;
     self.collectionView.collectionViewLayout = layout;
-    
+
+    ///"Loading Earlier" header view
+    [self.collectionView registerNib:[UINib nibWithNibName:@"OTRMessagesLoadingView" bundle:OTRAssets.resourcesBundle]
+          forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                 withReuseIdentifier:[JSQMessagesLoadEarlierHeaderView headerReuseIdentifier]];
+
     //Subscribe to changes in encryption state
     __weak typeof(self)weakSelf = self;
     [self.KVOController observe:self.state keyPath:NSStringFromSelector(@selector(messageSecurity)) options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
@@ -207,6 +224,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self scrollToBottomAnimated:animated];
     });
+    self.loadingMessages = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -262,8 +280,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
         }
     }
-    
-    
+
+    self.loadingMessages = YES;
     [self.collectionView reloadData];
 }
 
@@ -280,6 +298,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
     
     // [self.inputToolbar.contentView.textView resignFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    _warningAvatarImage = nil;
+    _accountAvatarImage = nil;
+    _buddyAvatarImage = nil;
 }
 
 #pragma - mark Setters & getters
@@ -1026,7 +1053,82 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.viewHandler object:indexPath];
+    // Multiple invocations with the same indexPath tend to come in groups, no need to hit the DB each time.
+    // Even though the object is cached, the row ID calculation still takes time
+    if (![indexPath isEqual:self.currentIndexPath]) {
+        self.currentIndexPath = indexPath;
+        self.currentMessage = [self.viewHandler object:indexPath];
+    }
+    return self.currentMessage;
+}
+
+/**
+ * Updates the flexible range of the DB connection.
+ * @param reset When NO, adds kOTRMessagePageSize to the range length, when YES resets the length to the kOTRMessagePageSize
+ */
+- (void)updateRangeOptions:(BOOL)reset
+{
+    YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
+    if (reset) {
+        if (options != nil && options.length <= kOTRMessagePageSize) {
+            return;
+        }
+        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
+                                                                offset:0
+                                                                  from:YapDatabaseViewEnd];
+        self.messageSizeCache.countLimit = kOTRMessagePageSize;
+    } else {
+        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:options.length + kOTRMessagePageSize
+                                                                offset:0
+                                                                  from:YapDatabaseViewEnd];
+        self.messageSizeCache.countLimit += kOTRMessagePageSize;
+    }
+    [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
+
+    self.loadingMessages = YES;
+
+    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
+
+    void (^doReload)() = ^{
+        [self.collectionView reloadData];
+
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+        }];
+
+        if (!reset) {
+            [self.collectionView layoutSubviews];
+            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
+        }
+
+        self.loadingMessages = NO;
+    };
+
+    if (reset) {
+        doReload();
+    }
+    else {
+        JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableArray *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
+            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
+                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
+                [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
+                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
+                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
+                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
+                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
+                                                                                           atIndexPath:nil
+                                                                                            withLayout:layout];
+                                      }];
+            dispatch_async(dispatch_get_main_queue(), doReload);
+        });
+    }
 }
 
 - (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
@@ -1323,6 +1425,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id <OTRMessageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
+
+    NSNumber *key = @(message.messageHash);
+    NSValue *sizeValue = [self.messageSizeCache objectForKey:key];
+    if (sizeValue != nil) {
+        return [sizeValue CGSizeValue];
+    }
+
+    // Although JSQMessagesBubblesSizeCalculator has its own cache, its size is fixed and quite small, so it quickly chokes on scrolling into the past
+    CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    [self.messageSizeCache setObject:[NSValue valueWithCGSize:size] forKey:key];
+    return size;
+}
+
 #pragma - mark UIPopoverPresentationControllerDelegate Methods
 
 - (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
@@ -1404,6 +1522,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self hideDropdownAnimated:YES completion:nil];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!self.loadingMessages) {
+        UIEdgeInsets insets = scrollView.contentInset;
+        CGFloat highestOffset = -insets.top;
+        CGFloat lowestOffset = scrollView.contentSize.height - scrollView.frame.size.height + insets.bottom;
+        CGFloat pos = scrollView.contentOffset.y;
+
+        if (self.showLoadEarlierMessagesHeader && (pos == highestOffset || pos < 0 && (scrollView.isDecelerating || scrollView.isDragging))) {
+            [self updateRangeOptions:NO];
+        } else if (pos == lowestOffset) {
+            [self updateRangeOptions:YES];
+        }
+    }
+}
+
 #pragma mark - UICollectionView DataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -1457,32 +1591,59 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return nil;
     }
     
-    UIImage *avatarImage = nil;
     NSError *messageError = [message messageError];
     if ((messageError && !messageError.isAutomaticDownloadError) ||
         ![self isMessageTrusted:message]) {
-        avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
+        return [self warningAvatarImage];
     }
-    else if ([message isMessageIncoming]) {
-        __block OTRBuddy *buddy = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            buddy = [self buddyWithTransaction:transaction];
-        }];
-        avatarImage = [buddy avatarImage];
+    if ([message isMessageIncoming]) {
+        return [self buddyAvatarImage];
     }
-    else {
-        __block OTRAccount *account = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            account = [self accountWithTransaction:transaction];
-        }];
-        avatarImage = [account avatarImage];
-    }
-    
-    if (avatarImage) {
-        NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
+
+    return [self accountAvatarImage];
+}
+
+- (JSQMessagesAvatarImage *)createAvatarImage:(UIImage *(^)(YapDatabaseReadTransaction *))getImage
+{
+    __block UIImage *avatarImage;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+        avatarImage = getImage(transaction);
+    }];
+    if (avatarImage != nil) {
+        NSUInteger diameter = (NSUInteger) MIN(avatarImage.size.width, avatarImage.size.height);
         return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
     }
     return nil;
+}
+
+- (JSQMessagesAvatarImage *)warningAvatarImage
+{
+    if (_warningAvatarImage == nil) {
+        _warningAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [OTRImages circleWarningWithColor:[OTRColors warnColor]];
+        }];
+    }
+    return _warningAvatarImage;
+}
+
+- (JSQMessagesAvatarImage *)accountAvatarImage
+{
+    if (_accountAvatarImage == nil) {
+        _accountAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [[self accountWithTransaction:transaction] avatarImage];
+        }];
+    }
+    return _accountAvatarImage;
+}
+
+- (JSQMessagesAvatarImage *)buddyAvatarImage
+{
+    if (_buddyAvatarImage == nil) {
+        _buddyAvatarImage = [self createAvatarImage:^(YapDatabaseReadTransaction *transaction) {
+            return [[self buddyWithTransaction:transaction] avatarImage];
+        }];
+    }
+    return _buddyAvatarImage;
 }
 
 ////// Optional //////
@@ -1745,6 +1906,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     // The databse view is setup now so refresh from there
     [self updateViewWithKey:self.threadKey collection:self.threadCollection];
+    [self updateRangeOptions:YES];
     [self.collectionView reloadData];
 }
 
