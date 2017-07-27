@@ -1110,22 +1110,28 @@ typedef NS_ENUM(int, OTRDropDownType) {
         doReload();
     }
     else {
-        JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+        // JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSMutableArray *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
+            NSMutableArray<id<JSQMessageData>> *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
             for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
                 // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
-                [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
+                id object = [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
+                if ([object conformsToProtocol:@protocol(JSQMessageData)]) {
+                    id<JSQMessageData> msg = object;
+                    [objects addObject:msg];
+                }
             }
-            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
-                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
-                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
-                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
-                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
-                                                                                           atIndexPath:nil
-                                                                                            withLayout:layout];
-                                      }];
+            // Although it would be nice to pre-calculate in the background
+            // the Xcode 9 main thread checker complains about the block below
+//            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
+//                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
+//                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
+//                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
+//                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
+//                                                                                           atIndexPath:nil
+//                                                                                            withLayout:layout];
+//                                      }];
             dispatch_async(dispatch_get_main_queue(), doReload);
         });
     }
@@ -1530,7 +1536,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         CGFloat lowestOffset = scrollView.contentSize.height - scrollView.frame.size.height + insets.bottom;
         CGFloat pos = scrollView.contentOffset.y;
 
-        if (self.showLoadEarlierMessagesHeader && (pos == highestOffset || pos < 0 && (scrollView.isDecelerating || scrollView.isDragging))) {
+        if (self.showLoadEarlierMessagesHeader && (pos == highestOffset || (pos < 0 && (scrollView.isDecelerating || scrollView.isDragging)))) {
             [self updateRangeOptions:NO];
         } else if (pos == lowestOffset) {
             [self updateRangeOptions:YES];
