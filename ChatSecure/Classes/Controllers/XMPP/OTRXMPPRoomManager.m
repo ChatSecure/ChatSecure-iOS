@@ -69,19 +69,9 @@
     
     XMPPRoom *room = [self.rooms objectForKey:jid.bare];
     NSString* accountId = self.xmppStream.tag;
-    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:accountId jid:jid.bare];
+    
     if (!room) {
-        
-        
-        //Update view mappings with this room
-        NSArray *groups = [self.unsentMessagesViewHandler groupsArray];
-        if (!groups) {
-            groups = [[NSArray alloc] init];
-        }
-        groups = [groups arrayByAddingObject:[OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare]];
-        NSString *viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameUnsentGroupMessagesViewName];
-        [self.unsentMessagesViewHandler setup:viewName groups:groups];
-        
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
         room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
         @synchronized(self.rooms) {
@@ -90,6 +80,16 @@
         [room activate:self.xmppStream];
         [room addDelegate:self delegateQueue:moduleQueue];
     }
+    
+    //Update view mappings with this room
+    NSArray *groups = [self.unsentMessagesViewHandler groupsArray];
+    if (!groups) {
+        groups = [[NSArray alloc] init];
+    }
+    groups = [groups arrayByAddingObject:databaseRoomKey];
+    NSString *viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameUnsentGroupMessagesViewName];
+    [self.unsentMessagesViewHandler setup:viewName groups:groups];
+    
     
     /** Create room database object */
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
