@@ -97,6 +97,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) UIView *jidForwardingHeaderView;
 
 @property (nonatomic) BOOL loadingMessages;
+@property (nonatomic) BOOL messageRangeExtended;
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 @property (nonatomic, strong) id currentMessage;
 @property (nonatomic, strong) NSCache *messageSizeCache;
@@ -113,6 +114,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         _state = [[MessagesViewControllerState alloc] init];
         self.messageSizeCache = [NSCache new];
         self.messageSizeCache.countLimit = kOTRMessagePageSize;
+        self.messageRangeExtended = NO;
     }
     return self;
 }
@@ -354,6 +356,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection
 {
+    self.currentIndexPath = nil;
     NSString *oldKey = self.threadKey;
     NSString *oldCollection = self.threadCollection;
     
@@ -1070,18 +1073,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
     if (reset) {
-        if (options != nil && options.length <= kOTRMessagePageSize) {
+        if (options != nil && !self.messageRangeExtended) {
             return;
         }
         options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
                                                                 offset:0
                                                                   from:YapDatabaseViewEnd];
         self.messageSizeCache.countLimit = kOTRMessagePageSize;
+        self.messageRangeExtended = NO;
     } else {
-        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:options.length + kOTRMessagePageSize
-                                                                offset:0
-                                                                  from:YapDatabaseViewEnd];
+        options = [options copyWithNewLength:options.length + kOTRMessagePageSize];
         self.messageSizeCache.countLimit += kOTRMessagePageSize;
+        self.messageRangeExtended = YES;
     }
     [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
 
@@ -1099,6 +1102,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }];
 
         if (!reset) {
+            [self.collectionView.collectionViewLayout invalidateLayout];
             [self.collectionView layoutSubviews];
             self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
         }
@@ -1443,7 +1447,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
     // Although JSQMessagesBubblesSizeCalculator has its own cache, its size is fixed and quite small, so it quickly chokes on scrolling into the past
     CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
-    [self.messageSizeCache setObject:[NSValue valueWithCGSize:size] forKey:key];
+    // The height of the first cell might change: on loading additional messages the date label most likely will disappear
+    if (indexPath.row > 0) {
+        [self.messageSizeCache setObject:[NSValue valueWithCGSize:size] forKey:key];
+    }
     return size;
 }
 
