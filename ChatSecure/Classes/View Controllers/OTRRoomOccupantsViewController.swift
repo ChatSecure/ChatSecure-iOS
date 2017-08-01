@@ -12,7 +12,7 @@ import PureLayout
 
 open class OTRRoomOccupantsViewController: UIViewController {
     
-    @IBOutlet weak var tableView:UITableView!
+    @IBOutlet open weak var tableView:UITableView!
     open var viewHandler:OTRYapViewHandler?
     open var roomKey:String?
     
