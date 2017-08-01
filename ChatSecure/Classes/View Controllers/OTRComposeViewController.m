@@ -567,7 +567,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         void (^joinRoom)(OTRAccount *account) = ^void(OTRAccount *account) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
             if (!xmpp) { return; }
-            [xmpp.roomManager joinRoom:roomJid withNickname:account.username subject:nil password:pass];
+            [xmpp.roomManager joinRoom:roomJid withNickname:account.displayName subject:nil password:pass];
         };
         if (accounts.count > 1) {
             OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];

@@ -196,7 +196,12 @@
     [self.mucModule discoverServices];
     //Once we've authenitcated we need to rejoin existing rooms
     NSMutableArray <OTRXMPPRoom *>*roomArray = [[NSMutableArray alloc] init];
+    __block NSString *nickname = self.xmppStream.myJID.user;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:self.xmppStream transaction:transaction];
+        if (account) {
+            nickname = account.displayName;
+        }
         [transaction enumerateKeysAndObjectsInCollection:[OTRXMPPRoom collection] usingBlock:^(NSString * _Nonnull key, id  _Nonnull object, BOOL * _Nonnull stop) {
             
             if ([object isKindOfClass:[OTRXMPPRoom class]]) {
@@ -215,7 +220,7 @@
         }];
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
         [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:self.xmppStream.myJID.bare subject:obj.subject password:obj.roomPassword];
+            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:nickname subject:obj.subject password:obj.roomPassword];
         }];
     }];
 }
@@ -321,7 +326,12 @@
     __block OTRXMPPBuddy *buddy = nil;
     NSString *fromJidString = [fromJID bare];
     NSString *accountUniqueId = self.xmppStream.tag;
+    __block NSString *nickname = sender.xmppStream.myJID.user;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:self.xmppStream transaction:transaction];
+        if (account) {
+            nickname = account.displayName;
+        }
         buddy = [OTRXMPPBuddy fetchBuddyWithUsername:fromJidString withAccountUniqueId:accountUniqueId transaction:transaction];
     }];
     // We were invited by someone not on our roster. Shady business!
@@ -329,7 +339,7 @@
         DDLogWarn(@"Received room invitation from someone not on our roster! %@ %@", fromJID, message);
         return;
     }
-    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare subject:nil password:password];
+    [self joinRoom:roomJID withNickname:nickname subject:nil password:password];
 }
 
 #pragma - mark XMPPRoomDelegate Methods
