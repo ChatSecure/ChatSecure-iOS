@@ -64,7 +64,7 @@ public class OTRYapViewHandler: NSObject {
         self.databaseConnection = databaseConnection
         super.init()
         self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: databaseChangeNotificationName), object: self.databaseConnection, queue: OperationQueue.main) {[weak self] (notification) -> Void in
-            self?.yapDatbaseModified(notification)
+            self?.yapDatabaseModified(notification)
         }
     }
     
@@ -141,7 +141,7 @@ public class OTRYapViewHandler: NSObject {
         return object;
     }
     
-    func yapDatbaseModified(_ notification:Notification) {
+    func yapDatabaseModified(_ notification:Notification) {
         guard let notifications = notification.userInfo? [DatabaseNotificationKey.ConnectionChanges] as? [Notification] else {
             return
         }

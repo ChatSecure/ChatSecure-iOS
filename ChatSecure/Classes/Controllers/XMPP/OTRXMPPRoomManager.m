@@ -48,10 +48,14 @@
     [self.mucModule activate:aXmppStream];
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
+    [self resetUnsentMessagesViewHandler];
+    return result;
+}
+
+- (void) resetUnsentMessagesViewHandler {
     self.unsentMessagesViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection
                                                             databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.unsentMessagesViewHandler.delegate = self;
-    return result;
 }
 
 - (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name subject:(NSString *)subject password:(nullable NSString *)password
@@ -88,6 +92,7 @@
     }
     groups = [groups arrayByAddingObject:databaseRoomKey];
     NSString *viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameUnsentGroupMessagesViewName];
+    [self resetUnsentMessagesViewHandler];
     [self.unsentMessagesViewHandler setup:viewName groups:groups];
     
     
