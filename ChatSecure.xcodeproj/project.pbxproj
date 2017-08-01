@@ -360,7 +360,7 @@
 		D93DDB9A1BA79A9C00CD8331 /* OTRLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F21A16D1A300C17BAE /* OTRLog.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB9E1BA79AA000CD8331 /* OTRUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FA1A16D1A300C17BAE /* OTRUtilities.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FC1A16D1A300C17BAE /* OTRXMPPError.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FC1A16D1A300C17BAE /* OTRXMPPError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBA11BA79AA300CD8331 /* OTRExistingAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -463,7 +463,6 @@
 		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
 		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
-		D984F6CE1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
 		D984F6CF1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
 		D984F6D01EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
 		D984F6D11EFC6D52008D0CF7 /* Kvitto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */; };
@@ -486,6 +485,7 @@
 		D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
 		D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
 		D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
+		D9A429D01F31169F00BD2545 /* UIAlertController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */; };
 		D9A7756F1E43F8A200027864 /* ProxyXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */; };
 		D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */; };
 		D9A7BCE71E4554E200888A8E /* OTRXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */; };
@@ -1126,6 +1126,7 @@
 		D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ChatSecure.m"; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ChatSecure.swift"; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
 		D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyXMPPStream.m; sourceTree = "<group>"; };
 		D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPStream.h; sourceTree = "<group>"; };
@@ -1210,7 +1211,6 @@
 				D95515991EFA0B5F008AA429 /* XLForm.framework in Frameworks */,
 				62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */,
 				D955157F1EFA0A9F008AA429 /* SAMKeychain.framework in Frameworks */,
-				D984F6CE1EFC6D41008D0CF7 /* Kvitto.framework in Frameworks */,
 				D955157B1EFA0A9F008AA429 /* KVOController.framework in Frameworks */,
 				D955157A1EFA0A9F008AA429 /* HTMLReader.framework in Frameworks */,
 			);
@@ -1597,6 +1597,7 @@
 		633105E71A16D1A300C17BAE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */,
 				D978BC901BABE0F4009246CF /* OTRTheme.h */,
 				D978BC911BABE0F4009246CF /* OTRTheme.m */,
 				633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */,
@@ -3171,6 +3172,7 @@
 				D93DDAD91BA79A2700CD8331 /* OTRStreamManagementStorageObject.m in Sources */,
 				632AA7371D481A6300F65733 /* OTRSignalObject.m in Sources */,
 				63FCB1371DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift in Sources */,
+				D9A429D01F31169F00BD2545 /* UIAlertController+ChatSecure.swift in Sources */,
 				D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */,
 				D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */,
 				63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */,

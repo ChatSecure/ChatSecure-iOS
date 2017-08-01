@@ -85,6 +85,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRXMPPServerInfo.h"
 #import "XMPPPushModule.h"
 #import "OTRAccountMigrator.h"
+#import "OTRXMPPError.h"
 
 #import "OTRImageItem.h"
 #import "OTRAudioItem.h"

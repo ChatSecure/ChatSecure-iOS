@@ -46,7 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
 @property (nonatomic, strong, readonly) ServerCheck *serverCheck;
 @property (nonatomic, strong, readonly) FileTransferManager *fileTransferManager;
-
+/** Useful for showing error messages related to connection, like SSL certs. Only safe for access from main queue. */
+@property (nonatomic, readonly, nullable) NSError *lastConnectionError;
 
 /** Call this if you want to register a new account on a compatible server */
 - (BOOL)startRegisteringNewAccount;

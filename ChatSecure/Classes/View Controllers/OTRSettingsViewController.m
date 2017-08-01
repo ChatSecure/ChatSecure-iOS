@@ -176,14 +176,16 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             XMPPAccountCell *accountCell = [tableView dequeueReusableCellWithIdentifier:[XMPPAccountCell cellIdentifier] forIndexPath:indexPath];
             [accountCell setAppearanceWithAccount:account];
             
-            if (xmpp.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
-                NSString *labelString = accountCell.accountNameLabel.text;
+            NSMutableString *labelString = [NSMutableString stringWithString:accountCell.accountNameLabel.text];
+            if (xmpp.lastConnectionError) {
+                [labelString appendString:@" ❌"];
+            } else if (xmpp.serverCheck.getCombinedPushStatus == ServerCheckPushStatusBroken) {
                 if ([OTRBranding shouldShowPushWarning]) {
-                    labelString = [labelString stringByAppendingString:@"  ⚠️"];
+                    [labelString appendString:@"  ⚠️"];
                 }
-                accountCell.accountNameLabel.text = labelString;
             }
-            
+            accountCell.accountNameLabel.text = labelString;
+
             accountCell.infoButtonAction = ^(UITableViewCell *cell, id sender) {
                 [self showAccountDetailsView:account];
             };

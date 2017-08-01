@@ -373,6 +373,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)goOnline
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self->_lastConnectionError = nil;
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
             [self goActive];
         } else {
@@ -566,7 +567,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
             return NO;
         }
     } else {
-        error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPUnsupportedAction userInfo:nil];
+        error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeUnsupportedAction userInfo:nil];
         [self failedToRegisterNewAccount:error];
         return NO;
     }
@@ -1470,6 +1471,7 @@ managedBuddyObjectID
     __weak typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
+        strongSelf->_lastConnectionError = error;
         
         NSMutableDictionary *userInfo = [@{kOTRProtocolLoginUserInitiated : @(self.userInitiatedConnection)} mutableCopy];
         if (error) {
@@ -1485,7 +1487,7 @@ managedBuddyObjectID
 - (OTRCertificatePinning *)certificatePinningModule
 {
     if(!_certificatePinningModule){
-        _certificatePinningModule = [OTRCertificatePinning defaultCertificates];
+        _certificatePinningModule = [[OTRCertificatePinning alloc] init];
         _certificatePinningModule.delegate = self;
     }
     return _certificatePinningModule;

@@ -247,15 +247,12 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     if (!error) {
         return;
     }
-    //show xmpp erors, cert errors, tor errors, oauth errors.
-    if (error.code == OTRXMPPSSLError) {
-        NSData * certData = error.userInfo[OTRXMPPSSLCertificateDataKey];
-        NSString * hostname = error.userInfo[OTRXMPPSSLHostnameKey];
-        uint32_t trustResultType = [error.userInfo[OTRXMPPSSLTrustResultKey] unsignedIntValue];
-        
-        [self showCertWarningForCertificateData:certData withHostname:hostname trustResultType:trustResultType];
-    }
-    else {
+    UIAlertController *certAlert = [UIAlertController certificateWarningAlertWithError:error saveHandler:^(UIAlertAction * _Nonnull action) {
+        [self loginButtonPressed:self.view];
+    }];
+    if (certAlert) {
+        [self presentViewController:certAlert animated:YES completion:nil];
+    } else {
         [self handleXMPPError:error];
     }
 }
@@ -343,50 +340,6 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
             [self presentViewController:alertController animated:YES completion:nil];
         }
     });
-}
-
-
-- (void)showCertWarningForCertificateData:(NSData *)certData withHostname:(NSString *)hostname trustResultType:(SecTrustResultType)resultType {
-    
-    SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
-    NSString * fingerprint = [OTRCertificatePinning sha256FingerprintForCertificate:certificate];
-    NSString * message = [NSString stringWithFormat:@"%@\n\nSHA256\n%@",hostname,fingerprint];
-    
-    UIAlertController *certAlert = [UIAlertController alertControllerWithTitle:NEW_CERTIFICATE_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
-    
-    if (![OTRCertificatePinning publicKeyWithCertData:certData]) {
-        //no public key not able to save because won't be able evaluate later
-        
-        message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nX %@",PUBLIC_KEY_ERROR_STRING()]];
-        
-        UIAlertAction *action = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleCancel handler:nil];
-        [certAlert addAction:action];
-    }
-    else {
-        if (resultType == kSecTrustResultProceed || resultType == kSecTrustResultUnspecified) {
-            //#52A352
-            message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\n✓ %@",VALID_CERTIFICATE_STRING()]];
-        }
-        else {
-            NSString * sslErrorMessage = [OTRXMPPError errorStringWithTrustResultType:resultType];
-            message = [message stringByAppendingString:[NSString stringWithFormat:@"\n\nX %@",sslErrorMessage]];
-        }
-        
-        UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:REJECT_STRING() style:UIAlertActionStyleDestructive handler:nil];
-        [certAlert addAction:rejectAction];
-        
-        __weak __typeof__(self) weakSelf = self;
-        UIAlertAction *saveAction = [UIAlertAction actionWithTitle:SAVE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            __typeof__(self) strongSelf = weakSelf;
-            [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
-            [strongSelf loginButtonPressed:self.view];
-        }];
-        [certAlert addAction:saveAction];
-    }
-    
-    certAlert.message = message;
-    
-    [self presentViewController:certAlert animated:YES completion:nil];
 }
 
 #pragma - mark Class Methods

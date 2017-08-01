@@ -67,10 +67,10 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 @implementation OTRCertificatePinning
 
-- (instancetype)initWithDefaultCertificates
+- (instancetype)init
 {
     if (self = [super init]) {
-        self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
+        _securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
         self.securityPolicy.validatesDomainName = NO;
         self.securityPolicy.allowInvalidCertificates = YES;
     }
@@ -114,15 +114,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     }
 }
 
-+ (instancetype)defaultCertificates
-{
-    return [[self alloc] initWithDefaultCertificates];
-}
-
-+ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
-    
-    NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
-    
++ (void)addCertificateData:(NSData*)certificateData withHostName:(NSString *)hostname {
+    NSData *certData = certificateData;
     if ([hostname length] && [certData length]) {
         SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
         keychainQuery.service = kOTRCertificateServiceName;
@@ -151,6 +144,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
             }
         }
     }
+}
+
++ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
+    NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
+    [self addCertificateData:certData withHostName:hostname];
 }
 
 + (NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
@@ -197,8 +195,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return allowedCertificate;
 }
 
-+(NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate {
-    NSData * certData = [self dataForCertificate:certificate];
++(NSString*)sha256FingerprintForCertificateData:(NSData*)certificateData {
+    NSData *certData = certificateData;
     NSUInteger bufferLength = CC_SHA256_DIGEST_LENGTH;
     unsigned char sha256Buffer[bufferLength];
     CC_SHA256(certData.bytes, (CC_LONG)certData.length, sha256Buffer);
@@ -208,6 +206,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
         [fingerprint appendFormat:@"%02x",sha256Buffer[i]];
     }
     return [fingerprint stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
++(NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate {
+    NSData * certData = [self dataForCertificate:certificate];
+    return [self sha256FingerprintForCertificateData:certData];
 }
 
 + (NSDictionary *)allCertificates {

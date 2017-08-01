@@ -24,7 +24,7 @@
     if ([OTRTorManager sharedInstance].torManager.isConnected) {
         [super connectUserInitiated:userInitiated];
     } else {
-        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
+        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
         [self failedToConnect:error];
     }
 }
@@ -60,7 +60,7 @@
     }
     
     if (!domainString.length) {
-        *error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPDomainError userInfo:@{NSLocalizedDescriptionKey:@"Tor accounts require a valid domain"}];
+        *error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeDomainError userInfo:@{NSLocalizedDescriptionKey:@"Tor accounts require a valid domain"}];
     }
     
     return domainString;

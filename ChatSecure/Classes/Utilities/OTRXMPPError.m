@@ -32,7 +32,7 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
         userInfo[OTRXMPPSSLHostnameKey] = hostName;
     }
     
-    NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPSSLError userInfo:userInfo];
+    NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeSSLError userInfo:userInfo];
     return error;
 }
 

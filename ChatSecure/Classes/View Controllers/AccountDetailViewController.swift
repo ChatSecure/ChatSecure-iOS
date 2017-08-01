@@ -84,8 +84,12 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
            OTRBranding.shouldShowPushWarning {
             serverInfoText = "\(serverInfoText)  ⚠️"
         }
+        var editAccountText = EDIT_ACCOUNT_STRING()
+        if xmpp.lastConnectionError != nil {
+            editAccountText = "\(editAccountText)  ❌"
+        }
         detailCells = [
-            DetailCellInfo(title: EDIT_ACCOUNT_STRING(), action: { [weak self] (_, _, sender) -> (Void) in
+            DetailCellInfo(title: editAccountText, action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
                 strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
             }),
