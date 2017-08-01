@@ -14,7 +14,8 @@ public extension UIAlertController {
     /** Returns a cert-pinning alert if needed */
     public static func certificateWarningAlert(error: Error, saveHandler: @escaping (_ action: UIAlertAction) -> Void) -> UIAlertController? {
         let nsError = error as NSError
-        guard nsError.code == OTRXMPPErrorCode.sslError.rawValue,
+        guard let errorCode = OTRXMPPErrorCode(rawValue: UInt(nsError.code)),
+            errorCode == .sslError,
             let certData = nsError.userInfo[OTRXMPPSSLCertificateDataKey] as? Data,
             let hostname = nsError.userInfo[OTRXMPPSSLHostnameKey] as? String,
             let trustResultTypeValue = nsError.userInfo[OTRXMPPSSLTrustResultKey] as? UInt32,
