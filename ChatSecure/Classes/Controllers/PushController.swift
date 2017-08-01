@@ -569,13 +569,13 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     //MARK: Push Preferences
     
     open static func getPushPreference() -> PushPreference {
-        guard let value = (UserDefaults.standard.value(forKey: kOTRPushEnabledKey) as AnyObject).boolValue else {
-            return PushPreference.undefined
+        guard let value = UserDefaults.standard.object(forKey: kOTRPushEnabledKey) as? NSNumber else {
+            return .undefined
         }
-        if value {
-            return PushPreference.enabled
+        if value.boolValue == true {
+            return .enabled
         } else {
-            return PushPreference.disabled
+            return .disabled
         }
     }
     
