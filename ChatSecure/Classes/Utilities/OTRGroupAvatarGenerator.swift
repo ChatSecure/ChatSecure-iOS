@@ -10,7 +10,7 @@ import Foundation
 
 open class OTRGroupAvatarGenerator {
     
-    open static func avatarImage(withUniqueIdentifier identifier: String, width: Int, height: Int) -> UIImage {
+    open static func avatarImage(withUniqueIdentifier identifier: String, width: Int, height: Int) -> UIImage? {
         
         // Create a pseudo-random random number generator and seed it with the identifier
         // hash. This will ensure that we get the same image every time we call it with
@@ -62,7 +62,7 @@ open class OTRGroupAvatarGenerator {
         }
         let newImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        return newImage!
+        return newImage
     }
     
     static func colorWithHexString(hexColorString:String) -> UIColor {
@@ -79,8 +79,9 @@ open class OTRGroupAvatarGenerator {
     
     // A LCG to create pseudo-random numbers (using a seed)
     //
+    // Inspired by: https://stackoverflow.com/questions/24027216/how-do-you-generate-a-random-number-in-swift
     class LinearCongruentialGenerator {
-        var lastRandom = 42.0
+        var lastRandom = 0.0
         let m = 139968.0
         let a = 3877.0
         let c = 29573.0
