@@ -16,7 +16,7 @@ extern NSString *const OTRXMPPSSLTrustResultKey;
 extern NSString *const OTRXMPPSSLCertificateDataKey;
 extern NSString *const OTRXMPPSSLHostnameKey;
 
-typedef NS_ENUM(NSUInteger, OTRXMPPErrorCode) {
+typedef NS_ENUM(NSInteger, OTRXMPPErrorCode) {
     OTRXMPPErrorCodeUnsupportedAction,
     OTRXMPPErrorCodeSSLError,
     OTRXMPPErrorCodeDomainError,
