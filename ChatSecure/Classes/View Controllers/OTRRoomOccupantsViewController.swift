@@ -12,16 +12,22 @@ import PureLayout
 
 open class OTRRoomOccupantsViewController: UIViewController {
     
-    let tableView = UITableView(frame: CGRect.zero, style: .plain)
-    var viewHandler:OTRYapViewHandler?
+    @IBOutlet open weak var tableView:UITableView!
+    open var viewHandler:OTRYapViewHandler?
+    open var roomKey:String?
     
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
+        setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
+    }
+
+    public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
+        self.roomKey = roomKey
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         viewHandler?.delegate = self
         viewHandler?.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -30,12 +36,14 @@ open class OTRRoomOccupantsViewController: UIViewController {
         super.viewDidLoad()
         
         //Setup Table View
+        if (self.tableView == nil) {
+            self.tableView = UITableView(frame: CGRect.zero, style: .plain)
+            self.view.addSubview(self.tableView)
+            self.tableView.autoPinEdgesToSuperviewEdges()
+        }
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        self.view.addSubview(self.tableView)
-        self.tableView.autoPinEdgesToSuperviewEdges()
     }
     
 }
@@ -43,12 +51,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
 extension OTRRoomOccupantsViewController:OTRYapViewHandlerDelegateProtocol {
 
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
-        self.tableView.reloadData()
+        self.tableView?.reloadData()
     }
     
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
         //TODO: pretty animations
-        self.tableView.reloadData()
+        self.tableView?.reloadData()
     }
 }
 

@@ -77,7 +77,17 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func avatarImage() -> UIImage {
-        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
+        if let image = OTRImages.image(withIdentifier: self.uniqueId) {
+            return image
+        } else {
+            // If not cached, generate a default image and store that.
+            if let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.uniqueId, width: 100, height: 100) {
+                OTRImages.setImage(image, forIdentifier: self.uniqueId)
+                return image
+            } else {
+                return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
+            }
+        }
     }
     
     public func currentStatus() -> OTRThreadStatus {
