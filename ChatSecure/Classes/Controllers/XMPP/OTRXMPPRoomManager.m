@@ -330,10 +330,11 @@
     }
     __block OTRXMPPBuddy *buddy = nil;
     NSString *fromJidString = [fromJID bare];
-    NSString *accountUniqueId = self.xmppStream.tag;
-    __block NSString *nickname = sender.xmppStream.myJID.user;
+    XMPPStream *stream = self.xmppStream;
+    NSString *accountUniqueId = stream.tag;
+    __block NSString *nickname = stream.myJID.user;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:self.xmppStream transaction:transaction];
+        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         if (account) {
             nickname = account.displayName;
         }
