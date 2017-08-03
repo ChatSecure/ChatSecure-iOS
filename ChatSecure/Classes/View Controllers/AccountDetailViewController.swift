@@ -122,6 +122,13 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     
     @objc func loginStatusChanged(_ notification: Notification) {
         tableView.reloadData()
+        // Show certificate warnings
+        if let lastError = xmpp.lastConnectionError,
+            let certWarning = UIAlertController.certificateWarningAlert(error: lastError, saveHandler: { action in
+                self.attemptLogin(action)
+            }) {
+            present(certWarning, animated: true, completion: nil)
+        }
     }
     
     // MARK: - User Actions
@@ -194,6 +201,16 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     
     @objc private func doneButtonPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func attemptLogin(_ sender: Any) {
+        let protocols = OTRProtocolManager.sharedInstance()
+        if let _ = self.account.password,
+            self.account.accountType != .xmppTor {
+            protocols.loginAccount(self.account)
+        } else {
+            self.pushLoginView(account: self.account, sender: sender)
+        }
     }
 
     // MARK: - Table view data source & delegate
@@ -313,13 +330,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
             cell.button.setTitle(LOGIN_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
-                let protocols = OTRProtocolManager.sharedInstance()
-                if let _ = strongSelf.account.password,
-                    strongSelf.account.accountType != .xmppTor {
-                    protocols.loginAccount(strongSelf.account)
-                } else {
-                    strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
-                }
+                strongSelf.attemptLogin(sender)
             }
             break
         case .connected:
