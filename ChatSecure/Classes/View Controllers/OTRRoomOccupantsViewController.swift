@@ -10,76 +10,77 @@ import Foundation
 import UIKit
 import PureLayout
 
-open class OTRRoomOccupantsViewController: UIViewController {
+public class OTRRoomOccupantsViewController: UIViewController {
     
-    @IBOutlet open weak var tableView:UITableView!
-    open var viewHandler:OTRYapViewHandler?
-    open var roomKey:String?
+    let tableView: UITableView
+    let viewHandler: OTRYapViewHandler
+    let roomKey: String
+    static let CellIdentifier = "Cell"
     
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
-        super.init(nibName: nil, bundle: nil)
-        setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
-    }
-
-    public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
+        self.tableView = UITableView(frame: CGRect.zero, style: .plain)
         self.roomKey = roomKey
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
-        viewHandler?.delegate = self
-        viewHandler?.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
+        super.init(nibName: nil, bundle: nil)
+        setupViewHandler()
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("Not implemented")
+    }
+
+    private func setupViewHandler() {
+        viewHandler.delegate = self
+        viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
     }
     
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        
-        //Setup Table View
-        if (self.tableView == nil) {
-            self.tableView = UITableView(frame: CGRect.zero, style: .plain)
-            self.view.addSubview(self.tableView)
-            self.tableView.autoPinEdgesToSuperviewEdges()
-        }
+    private func setupTableView() {
+        self.view.addSubview(self.tableView)
+        self.tableView.autoPinEdgesToSuperviewEdges()
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+    }
+
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        setupTableView()
     }
     
 }
 
-extension OTRRoomOccupantsViewController:OTRYapViewHandlerDelegateProtocol {
+extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
 
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
-        self.tableView?.reloadData()
+        self.tableView.reloadData()
     }
     
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
         //TODO: pretty animations
-        self.tableView?.reloadData()
+        self.tableView.reloadData()
     }
 }
 
-extension OTRRoomOccupantsViewController:UITableViewDataSource {
+extension OTRRoomOccupantsViewController: UITableViewDataSource {
     //Int and UInt issue https://github.com/yapstudios/YapDatabase/issues/116
     public func numberOfSections(in tableView: UITableView) -> Int {
-        if let sections = self.viewHandler?.mappings?.numberOfSections() {
+        if let sections = self.viewHandler.mappings?.numberOfSections() {
             return Int(sections)
         }
         return 0
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let rows = self.viewHandler?.mappings?.numberOfItems(inSection: UInt(section)) {
+        if let rows = self.viewHandler.mappings?.numberOfItems(inSection: UInt(section)) {
             return Int(rows)
         }
         return 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath)
         
-        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant {
+        if let roomOccupant = self.viewHandler.object(indexPath) as? OTRXMPPRoomOccupant {
             cell.textLabel?.text = roomOccupant.realJID ?? roomOccupant.jid
         } else {
             cell.detailTextLabel?.text = ""
