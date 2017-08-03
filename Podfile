@@ -26,7 +26,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
   pod 'QRCodeReaderViewController', '~> 4.0'
-  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '0.3.0'
+  pod 'ParkedTextField', '~> 0.3.1'
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
   # Utility
