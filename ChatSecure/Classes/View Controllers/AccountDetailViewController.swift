@@ -11,7 +11,13 @@ import OTRAssets
 import PureLayout
 
 struct DetailCellInfo {
+    enum ActionType {
+        case editAccount
+        case manageKeys
+        case serverInfo
+    }
     let title: String
+    let type: ActionType
     let action: (_ tableView: UITableView, _ indexPath: IndexPath, _ sender: Any) -> (Void)
 }
 
@@ -79,25 +85,16 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     }
     
     private func setupDetailCells() {
-        var serverInfoText = SERVER_INFORMATION_STRING()
-        if xmpp.serverCheck.getCombinedPushStatus() == .broken &&
-           OTRBranding.shouldShowPushWarning {
-            serverInfoText = "\(serverInfoText)  ⚠️"
-        }
-        var editAccountText = EDIT_ACCOUNT_STRING()
-        if xmpp.lastConnectionError != nil {
-            editAccountText = "\(editAccountText)  ❌"
-        }
         detailCells = [
-            DetailCellInfo(title: editAccountText, action: { [weak self] (_, _, sender) -> (Void) in
+            DetailCellInfo(title: EDIT_ACCOUNT_STRING(), type: .editAccount, action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
                 strongSelf.pushLoginView(account: strongSelf.account, sender: sender)
             }),
-            DetailCellInfo(title: MANAGE_MY_KEYS(), action: { [weak self] (_, _, sender) -> (Void) in
+            DetailCellInfo(title: MANAGE_MY_KEYS(), type: .manageKeys, action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
                 strongSelf.pushKeyManagementView(account: strongSelf.account, sender: sender)
             }),
-            DetailCellInfo(title: serverInfoText, action: { [weak self] (_, _, sender) -> (Void) in
+            DetailCellInfo(title: SERVER_INFORMATION_STRING(), type: .serverInfo, action: { [weak self] (_, _, sender) -> (Void) in
                 guard let strongSelf = self else { return }
                 strongSelf.pushServerInfoView(account: strongSelf.account, sender: sender)
             })
@@ -340,7 +337,24 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     func detailCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         let detail = detailCells[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: DetailCellIdentifier, for: indexPath)
-        cell.textLabel?.text = detail.title
+        var title = detail.title
+        switch  detail.type {
+        case .editAccount:
+            let editAccountText = EDIT_ACCOUNT_STRING()
+            if xmpp.lastConnectionError != nil {
+                title = "\(editAccountText)  ❌"
+            }
+        case .serverInfo:
+            let serverInfoText = SERVER_INFORMATION_STRING()
+            if xmpp.serverCheck.getCombinedPushStatus() == .broken &&
+                OTRBranding.shouldShowPushWarning {
+                title = "\(serverInfoText)  ⚠️"
+            }
+        default:
+            break
+        }
+        
+        cell.textLabel?.text = title
         cell.accessoryType = .disclosureIndicator
         return cell
     }

@@ -18,7 +18,7 @@ public class OTRRoomOccupantsViewController: UIViewController {
     static let CellIdentifier = "Cell"
     
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
-        self.tableView = UITableView(frame: CGRect.zero, style: .plain)
+        self.tableView = UITableView(frame: .zero, style: .plain)
         self.roomKey = roomKey
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         super.init(nibName: nil, bundle: nil)
