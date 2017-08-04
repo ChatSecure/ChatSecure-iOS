@@ -65,8 +65,10 @@
 #pragma - mark Button Actions
 
 - (void)didSelectOccupantsButton:(id)sender {
-    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
-    [self.navigationController pushViewController:occupantsViewController animated:YES];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRRoomOccupants" bundle:[OTRAssets resourcesBundle]];
+    OTRRoomOccupantsViewController *occupantsVC = [storyboard instantiateViewControllerWithIdentifier:@"roomOccupants"];
+    [occupantsVC setupViewHandlerWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
+    [self.navigationController pushViewController:occupantsVC animated:YES];
 }
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date

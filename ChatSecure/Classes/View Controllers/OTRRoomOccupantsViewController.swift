@@ -13,6 +13,8 @@ import PureLayout
 public class OTRRoomOccupantsViewController: UIViewController {
     
     @IBOutlet open weak var tableView:UITableView!
+    @IBOutlet weak var largeAvatarView:UIImageView!
+    
     open var viewHandler:OTRYapViewHandler?
     open var roomKey:String?
     open var room:OTRXMPPRoom?
@@ -42,26 +44,80 @@ public class OTRRoomOccupantsViewController: UIViewController {
         viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
     }
     
-    private func setupTableView() {
-        self.view.addSubview(self.tableView)
-        self.tableView.autoPinEdgesToSuperviewEdges()
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.headerRows.append("name")
+        self.headerRows.append("share")
+        self.headerRows.append("addFriends")
+        self.headerRows.append("mute")
+        self.headerRows.append("members")
+        self.footerRows.append("leave")
+        
+        let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.roomKey!, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
+        largeAvatarView.image = image
+
+        //Setup Table View
+        if (self.tableView == nil) {
+            self.tableView = UITableView(frame: CGRect.zero, style: .plain)
+            self.view.addSubview(self.tableView)
+            self.tableView.autoPinEdgesToSuperviewEdges()
+        }
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.register(OTRBuddyInfoCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
     }
     
     open func createHeaderCell(indexPath:IndexPath, type:String) -> UITableViewCell {
-        return UITableViewCell()
+        switch type {
+        case "name":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupName", for: indexPath)
+            if let key = self.roomKey {
+                OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+                    if let room = OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction) {
+                        cell.textLabel?.text = room.subject
+                        cell.detailTextLabel?.text = "" // Do we have creation date?
+                    }
+                })
+            }
+            cell.selectionStyle = .none
+            return cell
+        case "share":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupShare", for: indexPath)
+            return cell
+        case "addFriends":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupAddFriends", for: indexPath)
+            return cell
+        case "mute":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupMute", for: indexPath)
+            return cell
+        case "members":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupMembers", for: indexPath)
+            cell.selectionStyle = .none
+            return cell
+            
+        default:
+            return UITableViewCell()
+        }
     }
     
     open func createFooterCell(indexPath:IndexPath, type:String) -> UITableViewCell {
-        return UITableViewCell()
+        switch type {
+        case "leave":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupLeave", for: indexPath)
+            return cell
+            
+        default:
+            return UITableViewCell()
+        }
     }
     
     open func didSelectHeaderCell(indexPath:IndexPath, type:String) {
+        print("Selected \(type)")
     }
     
     open func didSelectFooterCell(indexPath:IndexPath, type:String) {
+        print("Selected \(type)")
     }
     
     open func heightForHeaderCell(indexPath:IndexPath, type:String) -> CGFloat {
