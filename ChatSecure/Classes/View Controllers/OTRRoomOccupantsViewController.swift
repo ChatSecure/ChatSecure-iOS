@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import PureLayout
 
-public class OTRRoomOccupantsViewController: UIViewController {
+open class OTRRoomOccupantsViewController: UIViewController {
     
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
@@ -23,7 +23,15 @@ public class OTRRoomOccupantsViewController: UIViewController {
     static let CellIdentifier = "Cell"
     
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
-        self.tableView = UITableView(frame: .zero, style: .plain)
+        super.init(nibName: nil, bundle: nil)
+        setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         self.roomKey = roomKey
         databaseConnection.read({ (transaction) in
             if let key = self.roomKey {
@@ -31,17 +39,10 @@ public class OTRRoomOccupantsViewController: UIViewController {
             }
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
-        super.init(nibName: nil, bundle: nil)
-        setupViewHandler()
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("Not implemented")
-    }
-
-    private func setupViewHandler() {
-        viewHandler.delegate = self
-        viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
+        if let viewHandler = self.viewHandler, let roomKey = self.roomKey {
+            viewHandler.delegate = self
+            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
+        }
     }
     
     override open func viewDidLoad() {
@@ -132,12 +133,12 @@ public class OTRRoomOccupantsViewController: UIViewController {
 extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
 
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
-        self.tableView.reloadData()
+        self.tableView?.reloadData()
     }
     
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
         //TODO: pretty animations
-        self.tableView.reloadData()
+        self.tableView?.reloadData()
     }
 }
 
