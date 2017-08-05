@@ -99,10 +99,6 @@
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
-            
-            return;
-        }
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         if (databaseRoom.joined &&
             ([message elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
