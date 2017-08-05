@@ -16,12 +16,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
     @IBOutlet weak var largeAvatarView:UIImageView!
     
     open var viewHandler:OTRYapViewHandler?
-    open var roomKey:String?
     open var room:OTRXMPPRoom?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     static let CellIdentifier = "Cell"
     
+    static let HeaderCellGroupName = "cellGroupName"
+    static let HeaderCellShare = "cellGroupShare"
+    static let HeaderCellAddFriends = "cellGroupAddFriends"
+    static let HeaderCellMute = "cellGroupMute"
+    static let HeaderCellMembers = "cellGroupMembers"
+    static let FooterCellLeave = "cellGroupLeave"
+
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
         setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
@@ -32,14 +38,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
 
     public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
-        self.roomKey = roomKey
         databaseConnection.read({ (transaction) in
-            if let key = self.roomKey {
-                self.room = OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction)
-            }
+            self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
-        if let viewHandler = self.viewHandler, let roomKey = self.roomKey {
+        if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
             viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
         }
@@ -48,22 +51,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.headerRows.append("name")
-        self.headerRows.append("share")
-        self.headerRows.append("addFriends")
-        self.headerRows.append("mute")
-        self.headerRows.append("members")
-        self.footerRows.append("leave")
+        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellGroupName)
+        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellShare)
+        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellAddFriends)
+        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMute)
+        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMembers)
+        self.footerRows.append(OTRRoomOccupantsViewController.FooterCellLeave)
         
-        let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.roomKey!, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
-        largeAvatarView.image = image
-
-        //Setup Table View
-        if (self.tableView == nil) {
-            self.tableView = UITableView(frame: CGRect.zero, style: .plain)
-            self.view.addSubview(self.tableView)
-            self.tableView.autoPinEdgesToSuperviewEdges()
+        if let roomUniqueId = self.room?.uniqueId {
+            let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: roomUniqueId, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
+            largeAvatarView.image = image
         }
+        
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.register(OTRBuddyInfoCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
@@ -71,46 +70,21 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func createHeaderCell(indexPath:IndexPath, type:String) -> UITableViewCell {
         switch type {
-        case "name":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupName", for: indexPath)
-            if let key = self.roomKey {
-                OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                    if let room = OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction) {
-                        cell.textLabel?.text = room.subject
-                        cell.detailTextLabel?.text = "" // Do we have creation date?
-                    }
-                })
+        case OTRRoomOccupantsViewController.HeaderCellGroupName:
+            let cell = tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
+            if let room = self.room {
+                cell.textLabel?.text = room.subject
+                cell.detailTextLabel?.text = "" // Do we have creation date?
             }
             cell.selectionStyle = .none
             return cell
-        case "share":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupShare", for: indexPath)
-            return cell
-        case "addFriends":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupAddFriends", for: indexPath)
-            return cell
-        case "mute":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupMute", for: indexPath)
-            return cell
-        case "members":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupMembers", for: indexPath)
-            cell.selectionStyle = .none
-            return cell
-            
         default:
-            return UITableViewCell()
+            return tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
         }
     }
     
     open func createFooterCell(indexPath:IndexPath, type:String) -> UITableViewCell {
-        switch type {
-        case "leave":
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cellGroupLeave", for: indexPath)
-            return cell
-            
-        default:
-            return UITableViewCell()
-        }
+        return tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
     }
     
     open func didSelectHeaderCell(indexPath:IndexPath, type:String) {
@@ -186,9 +160,9 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         let adjustedIndexPath = IndexPath(row: indexPath.row, section: indexPath.section - 1)
         let cell:OTRBuddyInfoCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCell
         var buddy:OTRXMPPBuddy? = nil
-        if let roomOccupant = self.viewHandler?.object(adjustedIndexPath) as? OTRXMPPRoomOccupant, let room = self.room {
+        if let roomOccupant = self.viewHandler?.object(adjustedIndexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                    buddy = OTRXMPPBuddy.fetch(withUsername: roomOccupant.realJID ?? roomOccupant.jid!, withAccountUniqueId: room.accountUniqueId!, transaction: transaction)
+                    buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)

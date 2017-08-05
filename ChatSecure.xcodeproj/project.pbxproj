@@ -121,8 +121,8 @@
 		924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */; };
 		924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */; };
 		9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */; };
-		9251C3081F3460DA003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3061F3460DA003ACE4A /* ios-icon-font.ttf */; };
-		9251C3091F3460DA003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3071F3460DA003ACE4A /* MaterialIcons-Regular.ttf */; };
+		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
+		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
 		D9040CB11EF1EB050027A862 /* OTRMediaItem+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9040CB01EF1EB050027A862 /* OTRMediaItem+Private.h */; };
 		D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */; };
@@ -1055,8 +1055,8 @@
 		924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigratedBuddyHeaderView.xib; path = Interface/MigratedBuddyHeaderView.xib; sourceTree = "<group>"; };
 		924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRServerDeprecation.swift; sourceTree = "<group>"; };
 		9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRRoomOccupants.storyboard; path = Interface/OTRRoomOccupants.storyboard; sourceTree = "<group>"; };
-		9251C3061F3460DA003ACE4A /* ios-icon-font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ios-icon-font.ttf"; sourceTree = "<group>"; };
-		9251C3071F3460DA003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
+		9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ios-icon-font.ttf"; sourceTree = "<group>"; };
+		9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
 		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
 		962ED3D89B1F330A2A34928B /* Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1315,8 +1315,6 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9251C3061F3460DA003ACE4A /* ios-icon-font.ttf */,
-				9251C3071F3460DA003ACE4A /* MaterialIcons-Regular.ttf */,
 				D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */,
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
@@ -2063,6 +2061,8 @@
 		D93027571BAA381F000CC975 /* OTRResources */ = {
 			isa = PBXGroup;
 			children = (
+				9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */,
+				9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */,
 				D97070911EEF382D004FEBDE /* MediaDownloadView.xib */,
 				D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */,
 				D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */,
@@ -2619,8 +2619,6 @@
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */,
-				9251C3081F3460DA003ACE4A /* ios-icon-font.ttf in Resources */,
-				9251C3091F3460DA003ACE4A /* MaterialIcons-Regular.ttf in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
@@ -2655,6 +2653,7 @@
 				924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */,
 				D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */,
 				D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */,
+				9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */,
 				D9B9B1351DC7F3BF0007F5A7 /* UserInfoProfileCell.xib in Resources */,
 				D99F178C1BAB947E00604558 /* Secrets.plist in Resources */,
 				D9BC71E11E53B4A3007A3C4F /* TwoButtonTableViewCell.xib in Resources */,
@@ -2662,6 +2661,7 @@
 				D99F17881BAB936100604558 /* Localizable.strings in Resources */,
 				D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */,
 				D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */,
+				9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */,
 				D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */,
 				D91C866D1E4E7F07008BD763 /* ServerCapabilityTableViewCell.xib in Resources */,
 				D937184E1EC13D7B00766D49 /* Purchase.storyboard in Resources */,
