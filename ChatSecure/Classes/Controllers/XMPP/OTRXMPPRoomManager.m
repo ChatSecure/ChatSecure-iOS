@@ -344,10 +344,10 @@
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
+    
     [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
     
-    dispatch_async(moduleQueue, ^{
-        
+    [self performBlockAsync:^{
         //Set Rome Subject
         NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
         if (subject) {
@@ -368,8 +368,7 @@
                 }];
             }];
         }
-    });
-    
+    }];
 }
 
 #pragma - mark OTRYapViewHandlerDelegateProtocol Methods

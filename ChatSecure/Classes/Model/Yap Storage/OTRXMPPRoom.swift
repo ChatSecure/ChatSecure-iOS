@@ -14,6 +14,7 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
     open var isArchived = false
     open var muteExpiration:Date?
     open var accountUniqueId:String?
+    /** Your full JID for the room e.g. xmpp-development@conference.deusty.com/robbiehanson */
     open var ownJID:String?
     open var jid:String?
     open var joined = false
