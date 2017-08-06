@@ -78,7 +78,6 @@
 		639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */; };
 		63A1CD571DAF4E7C00527779 /* OTRDatabaseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1CD561DAF4E7C00527779 /* OTRDatabaseEntry.swift */; };
-		63A1F1C61DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A1F1C51DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift */; };
 		63AB1A071C0D116A005FA351 /* OTRSplitViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */; };
 		63B578641D51600300D80ED3 /* OTRSignalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B578631D51600300D80ED3 /* OTRSignalTest.swift */; };
 		63BA43DC1D41826F007FAF7F /* OTRSignalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BA43DB1D41826F007FAF7F /* OTRSignalStorageManager.swift */; };
@@ -522,6 +521,7 @@
 		D9BD54151E567A20007077FB /* UIViewController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BD54141E567A20007077FB /* UIViewController+ChatSecure.swift */; };
 		D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BEF8DF1DCE6E12009945D1 /* OTRXMPPManager_Private.h */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
+		D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */ = {isa = PBXBuildFile; fileRef = D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9E8277F1E28222F0071F40D /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9EC47681EFA03D800C39B25 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
@@ -966,7 +966,6 @@
 		639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTouchAndHoldGestureRecognizer.h; sourceTree = "<group>"; };
 		639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTouchAndHoldGestureRecognizer.m; sourceTree = "<group>"; };
 		63A1CD561DAF4E7C00527779 /* OTRDatabaseEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRDatabaseEntry.swift; sourceTree = "<group>"; };
-		63A1F1C51DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRYOTRYapMessageSendAction.swift; sourceTree = "<group>"; };
 		63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRSplitViewCoordinator.swift; sourceTree = "<group>"; };
 		63B578631D51600300D80ED3 /* OTRSignalTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRSignalTest.swift; sourceTree = "<group>"; };
 		63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStreamManagementYapStorage.h; sourceTree = "<group>"; };
@@ -1167,6 +1166,7 @@
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
+		D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRYapMessageSendAction.swift; sourceTree = "<group>"; };
 		D9E8277D1E2819F20071F40D /* strings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = strings.json; path = OTRAssets/Strings/strings.json; sourceTree = SOURCE_ROOT; };
 		D9EC47671EFA03D800C39B25 /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = Carthage/Build/iOS/AFNetworking.framework; sourceTree = "<group>"; };
 		D9EC476A1EFA03FC00C39B25 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
@@ -1961,10 +1961,10 @@
 		63CBD68E1C642B8100AC6D1F /* YapActions */ = {
 			isa = PBXGroup;
 			children = (
+				D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */,
 				63CBD68F1C642B9E00AC6D1F /* BuddyActions.swift */,
 				6326D9AD1DC3D0F100D72403 /* OTRYapMessageSendAction.h */,
 				6326D9AE1DC3D0F100D72403 /* OTRYapMessageSendAction.m */,
-				63A1F1C51DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift */,
 			);
 			name = YapActions;
 			sourceTree = "<group>";
@@ -2201,6 +2201,7 @@
 				D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */,
 				D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */,
 				638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */,
+				D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */,
 				637ABBCB1DD5330200B18DD2 /* OTRIncomingMessage.h in Headers */,
 				D93DDBB61BA79ABB00CD8331 /* OTRComposeViewController.h in Headers */,
 				D93DDBB71BA79ABD00CD8331 /* OTRConversationViewController.h in Headers */,
@@ -3107,7 +3108,6 @@
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStorage.m in Sources */,
 				D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */,
-				63A1F1C61DC3DA90008701F0 /* OTRYOTRYapMessageSendAction.swift in Sources */,
 				D93DDA941BA79A2400CD8331 /* OTRXMPPBuddyTimers.m in Sources */,
 				D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */,
 				D93DDA951BA79A2400CD8331 /* OTRXMPPManager.m in Sources */,

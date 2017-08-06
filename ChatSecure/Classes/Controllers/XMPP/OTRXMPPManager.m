@@ -613,7 +613,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [messages enumerateObjectsUsingBlock:^(OTROutgoingMessage * _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
             //2. Create send message task
-            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message];
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:nil];
             //3. save both to database
             [message saveWithTransaction:transaction];
             [sendingAction saveWithTransaction:transaction];

@@ -14,10 +14,9 @@
 @end
 
 @implementation OTRYapMessageSendAction
-
-- (instancetype)initWithMessageKey:(NSString *)messageKey messageCollection:(NSString *)messageCollection buddyKey:(NSString *)buddyKey date:(NSDate *)date {
-    return [self initWithMessageKey:messageKey messageCollection:messageCollection threadKey:buddyKey threadCollection:[OTRBuddy collection] date:date];
-}
+// Why is auto property synthesis not working? Come on Xcode 9 beta...
+@synthesize threadKey = _threadKey;
+@synthesize threadCollection = _threadCollection;
 
 - (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey
                          messageCollection:(nonnull NSString *)messageCollection
@@ -25,11 +24,11 @@
                           threadCollection:(nonnull NSString*)threadCollection
                                       date:(nonnull NSDate *)date {
     if (self = [self init]) {
-        self.messageKey = [messageKey copy];
-        self.messageCollection = [messageCollection copy];
-        self.threadKey = [threadKey copy];
-        self.threadCollection = [threadCollection copy];
-        self.date = date;
+        _messageKey = [messageKey copy];
+        _messageCollection = [messageCollection copy];
+        _threadKey = [threadKey copy];
+        _threadCollection = [threadCollection copy];
+        _date = date;
     }
     return self;
 }
@@ -62,9 +61,12 @@
 }
 
 /** Generates an action that will send specified message. Unsaved! Message must be saved for operation to succeed! */
-+ (instancetype)sendActionForMessage:(id<OTRMessageProtocol>)message {
++ (instancetype)sendActionForMessage:(id<OTRMessageProtocol>)message date:(nullable NSDate *)date {
     NSParameterAssert(message != nil);
-    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.messageKey messageCollection:message.messageCollection threadKey:message.threadId threadCollection:<#(nonnull NSString *)#> date:<#(nonnull NSDate *)#>];
+    if (!date) {
+        date = NSDate.date;
+    }
+    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.messageKey messageCollection:message.messageCollection threadKey:message.threadId threadCollection:message.threadCollection date:date];
     return sendingAction;
 }
 

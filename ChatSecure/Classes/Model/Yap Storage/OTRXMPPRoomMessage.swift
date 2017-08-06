@@ -79,6 +79,10 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         return self.roomUniqueId
     }
     
+    public var threadCollection: String {
+        return OTRXMPPRoom.collection
+    }
+    
     public var isMessageIncoming: Bool {
         return self.state.incoming()
     }

@@ -658,7 +658,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             } else {
                 dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
                 dbMessage.date = [NSDate date];
-                OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:dbMessage.uniqueId messageCollection:[dbMessage messageCollection] buddyKey:dbMessage.buddyUniqueId date:dbMessage.date];
+                OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:dbMessage date:dbMessage.date];
                 [sendingAction saveWithTransaction:transaction];
             }
             [dbMessage saveWithTransaction:transaction];

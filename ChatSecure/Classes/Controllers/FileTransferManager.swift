@@ -432,8 +432,8 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     private func queueOutgoingMessage(message: OTROutgoingMessage) {
-        let sendAction = OTRYapMessageSendAction(messageKey: message.uniqueId, messageCollection: message.messageCollection, buddyKey: message.buddyUniqueId, date: message.date)
-        self.connection.readWrite { (transaction) in
+        let sendAction = OTRYapMessageSendAction(forMessage: message, date: nil)
+        self.connection.readWrite { transaction in
             message.save(with: transaction)
             sendAction.save(with: transaction)
             if let buddy = message.threadOwner(with: transaction) as? OTRBuddy {

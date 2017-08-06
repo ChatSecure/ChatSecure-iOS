@@ -52,6 +52,10 @@ extension PushMessage: OTRMessageProtocol {
         return self.buddyKey
     }
     
+    public var threadCollection: String {
+        return OTRBuddy.collection
+    }
+    
     public var isMessageIncoming: Bool {
         return false
     }

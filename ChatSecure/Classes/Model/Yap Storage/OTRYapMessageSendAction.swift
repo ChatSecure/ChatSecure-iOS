@@ -10,8 +10,7 @@ import Foundation
 import YapTaskQueue
 import YapDatabase
 
-
-extension OTRYapMessageSendAction:  YapTaskQueueAction {
+public extension OTRYapMessageSendAction: YapTaskQueueAction {
     
     /// The yap key of this item
     public func yapKey() -> String {
@@ -39,7 +38,7 @@ extension OTRYapMessageSendAction:  YapTaskQueueAction {
     
 }
 
-extension OTRYapMessageSendAction: YapDatabaseRelationshipNode {
+public extension OTRYapMessageSendAction: YapDatabaseRelationshipNode {
     
     // Relationship only really used to make sure tasks are deleted when messages are deleted
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
