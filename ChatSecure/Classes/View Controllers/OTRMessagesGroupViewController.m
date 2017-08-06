@@ -96,6 +96,9 @@
         databaseMessage.state = RoomMessageStateNeedsSending;
 
         [databaseMessage saveWithTransaction:transaction];
+        
+        OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:databaseMessage date:databaseMessage.messageDate];
+        [sendingAction saveWithTransaction:transaction];
     }];
     
 }

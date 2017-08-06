@@ -8,7 +8,9 @@
 
 @import Foundation;
 @import XMPPFramework;
-@class XMPPJID, YapDatabaseConnection;
+@import YapDatabase;
+
+@class OTRXMPPRoomMessage;
 
 @interface OTRXMPPRoomManager : XMPPModule
 
@@ -19,7 +21,10 @@
 - (nullable NSString *)joinRoom:(nonnull XMPPJID *)jid withNickname:(nonnull NSString *)name subject:(nullable NSString *)subject password:(nullable NSString*)password;
 
 - (void)leaveRoom:(nonnull XMPPJID *)jid;
+- (nullable XMPPRoom*) roomForJID:(nonnull XMPPJID*)jid;
 
 - (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
+
++ (nonnull XMPPMessage *)xmppMessage:(nonnull OTRXMPPRoomMessage *)databaseMessage;
 
 @end

@@ -29,32 +29,6 @@ public extension YapDatabase {
         self.asyncRegister(view, withName: name.name(), completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
-    public func asyncRegisterUnsentGroupMessagesView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
-        self.asyncRegisterView(YapDatabaseViewGrouping.withObjectBlock({ (readTransaction, collection, key, object) -> String! in
-            guard let message = object as? OTRXMPPRoomMessage else {
-                return nil
-            }
-            
-            guard let roomId = message.roomUniqueId, message.state == .needsSending else {
-                return nil
-            }
-            
-            return roomId
-            
-        }), sorting: YapDatabaseViewSorting.withObjectBlock({ (readTransaction, group, collection1, key1, object1, collection2, key2, object2) -> ComparisonResult in
-            
-            guard let date1 = (object1 as? OTRXMPPRoomMessage)?.messageDate else {
-                return .orderedSame
-            }
-            
-            guard let date2 = (object2 as? OTRXMPPRoomMessage)?.messageDate else  {
-                return .orderedSame
-            }
-            
-            return date1.compare(date2)
-        }), version: "1", whiteList: [OTRXMPPRoomMessage.collection], name: .unsentGroupMessagesViewName, completionQueue:completionQueue, completionBlock:completionBlock)
-    }
-    
     public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
         
         let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection , key , object ) -> String! in

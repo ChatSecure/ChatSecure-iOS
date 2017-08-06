@@ -58,7 +58,7 @@
 		63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */; };
 		6365CEFF1E2453F6009E213F /* ChatSecureUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365CEFE1E2453F6009E213F /* ChatSecureUITests.swift */; };
 		636767E91D83562700432B48 /* TestXMPPAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636767E81D83562700432B48 /* TestXMPPAccount.swift */; };
-		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; };
 		636DE07E1E5E476200D8D868 /* portrait-orientation.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 636DE07D1E5E476200D8D868 /* portrait-orientation.jpg */; };
 		6370CCB91CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */; };

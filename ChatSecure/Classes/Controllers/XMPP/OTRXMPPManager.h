@@ -29,8 +29,9 @@
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
 #import "OTRServerCapabilities.h"
+#import "OTRXMPPRoomManager.h"
 
-@class OTRXMPPAccount, OTRXMPPRoomManager;
+@class OTRXMPPAccount;
 @class OTROMEMOSignalCoordinator;
 @class XMPPPushModule, ServerCheck, FileTransferManager;
 

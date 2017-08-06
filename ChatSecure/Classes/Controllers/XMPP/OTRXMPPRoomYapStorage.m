@@ -99,6 +99,11 @@
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
+            // This message already exists and shouldn't be inserted
+            DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
+            return;
+        }
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         if (databaseRoom.joined &&
             ([message elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
@@ -222,6 +227,7 @@
     }
     
     //May need to check if the message is unique. Unsure if this is a real problem. Look at XMPPRoomCoreDataStorage.m existsMessage:
+    
     [self insertIncomingMessage:message intoRoom:room];
 }
 - (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {

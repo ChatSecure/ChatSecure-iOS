@@ -8,6 +8,7 @@
 
 import Foundation
 import YapTaskQueue
+import XMPPFramework
 
 private class OutstandingActionInfo: Hashable, Equatable {
     let action:YapTaskQueueAction
@@ -172,9 +173,8 @@ public class MessageQueueHandler:NSObject {
     
     //MARK: Database Functions
     
-    fileprivate func fetchMessage(_ key:String, collection:String, transaction:YapDatabaseReadTransaction) -> OTROutgoingMessage? {
-        
-        guard let message = transaction.object(forKey: key, inCollection: collection) as? OTROutgoingMessage else {
+    fileprivate func fetchMessage(_ key:String, collection:String, transaction:YapDatabaseReadTransaction) -> OTRMessageProtocol? {
+        guard let message = transaction.object(forKey: key, inCollection: collection) as? OTRMessageProtocol else {
             return nil
         }
         return message
@@ -207,32 +207,81 @@ public class MessageQueueHandler:NSObject {
         }
     }
     
+    fileprivate func sendDirectMessage(_ message: OTROutgoingMessage,
+                                       buddy: OTRXMPPBuddy,
+                                       account: OTRAccount,
+                                       accountProtocol: OTRXMPPManager,
+                                       messageSendingAction:OTRYapMessageSendAction,
+                                       completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        switch message.messageSecurity {
+        case .plaintext:
+            self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
+            OTRProtocolManager.sharedInstance().send(message)
+            break
+        case .plaintextWithOTR:
+            self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: false, completion: completion)
+            break
+        case .OTR:
+            self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: true, completion: completion)
+            break
+        case .OMEMO:
+            self.sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
+            break
+        case .invalid:
+            fatalError("Invalid message security. This should never happen... so let's crash!")
+            break
+        }
+    }
+    
+    fileprivate func sendGroupMessage(_ message: OTRXMPPRoomMessage,
+                                      thread: OTRThreadOwner,
+                                      account: OTRAccount,
+                                      accountProtocol: OTRXMPPManager,
+                                      messageSendingAction:OTRYapMessageSendAction,
+                                      completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
+        let roomManager = accountProtocol.roomManager
+        guard let roomJidString = message.roomJID,
+            let roomJid = XMPPJID(string: roomJidString),
+            let room = roomManager.room(for: roomJid) else {
+            // Can't send a message to nowhere...
+            completion(true, 0.0)
+            return
+        }
+        self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
+        let xmppMessage = OTRXMPPRoomManager.xmppMessage(message)
+        room.send(xmppMessage)
+        databaseConnection.readWrite { transaction in
+            if let sentMessage = message.refetch(with: transaction) {
+                sentMessage.state = .pendingSent
+                sentMessage.save(with: transaction)
+            }
+        }
+        completion(true, 0.0)
+    }
+    
     fileprivate func sendMessage(_ messageSendingAction:OTRYapMessageSendAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
         
         let messageKey = messageSendingAction.messageKey
         let messageCollection = messageSendingAction.messageCollection
-        var msg:OTROutgoingMessage? = nil
+        var anyMessage: OTRMessageProtocol? = nil
         self.databaseConnection.read { (transaction) in
-            msg = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
+            anyMessage = self.fetchMessage(messageKey, collection: messageCollection, transaction: transaction)
         }
         
-        guard let message = msg else {
+        guard let message = anyMessage else {
             // Somehow we have an action without a message. This is very strange. Do not like.
             // We tell the queue broker that we handle it successfully so it will be rmeoved and go on to the next action.
             completion(true, 0.0)
             return
         }
         
-        var bud:OTRBuddy? = nil
+        var threadOwner: OTRThreadOwner? = nil
         var acc:OTRAccount? = nil
         self.databaseConnection.read({ (transaction) in
-            bud = OTRBuddy.fetchObject(withUniqueID: message.buddyUniqueId, transaction: transaction)
-            if let accountKey = bud?.accountUniqueId {
-                acc = OTRAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
-            }
-            
+            threadOwner = message.threadOwner(with: transaction)
+            acc = threadOwner?.account(with: transaction)
         })
-        guard let buddy = bud,let account = acc else {
+        guard let thread = threadOwner, let account = acc else {
             completion(true, 0.0)
             return
         }
@@ -252,24 +301,14 @@ public class MessageQueueHandler:NSObject {
         
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus == .connected) {
-            
-            switch message.messageSecurity {
-            case .plaintext:
-                self.waitingForMessage(message.uniqueId, messageCollection: messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-                OTRProtocolManager.sharedInstance().send(message)
-                break
-            case .plaintextWithOTR:
-                self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: false, completion: completion)
-                break
-            case .OTR:
-                self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: true, completion: completion)
-                break
-            case .OMEMO:
-                self.sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
-                break
-            case .invalid:
-                fatalError("Invalid message security. This should never happen... so let's crash!")
-                break
+            if let groupMessage = message as? OTRXMPPRoomMessage {
+                sendGroupMessage(groupMessage, thread: thread, account: account, accountProtocol: accountProtocol, messageSendingAction: messageSendingAction, completion: completion)
+            } else if let directMessage = message as? OTROutgoingMessage, let buddy = thread as? OTRXMPPBuddy {
+                sendDirectMessage(directMessage, buddy: buddy, account: account, accountProtocol: accountProtocol, messageSendingAction: messageSendingAction, completion: completion)
+            } else {
+                // Unsupported message type
+                completion(true, 0.0)
+                return
             }
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: messageSendingAction, timer: nil, completion: completion))

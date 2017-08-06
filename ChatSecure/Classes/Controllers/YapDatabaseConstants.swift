@@ -9,7 +9,6 @@
 import Foundation
 
 @objc public enum DatabaseExtensionName: Int {
-    case unsentGroupMessagesViewName
     case groupOccupantsViewName
     case buddyDeleteActionViewName
     case relationshipExtensionName
@@ -21,7 +20,6 @@ import Foundation
     
     public func name() -> String {
         switch self {
-            case .unsentGroupMessagesViewName: return "UnsentGroupMessagesViewName"
             case .groupOccupantsViewName: return "GroupOccupantsViewName"
             case .buddyDeleteActionViewName: return "BuddyDeleteActionViewName"
             case .relationshipExtensionName: return "OTRYapDatabaseRelationshipName"
