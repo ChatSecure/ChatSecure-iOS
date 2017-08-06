@@ -1,5 +1,5 @@
 //
-//  OTRYOTRYapMessageSendAction.swift
+//  OTRYapMessageSendAction.swift
 //  ChatSecure
 //
 //  Created by David Chiles on 10/28/16.
@@ -26,7 +26,7 @@ extension OTRYapMessageSendAction:  YapTaskQueueAction {
     /// The queue that this item is in.
     public func queueName() -> String {
         let brokerName = YapDatabaseConstants.extensionName(.messageQueueBrokerViewName)
-        return "\(brokerName).\(self.buddyKey)"
+        return "\(brokerName).\(self.threadKey)"
     }
     
     /// How this item should be sorted compared to other items in it's queue

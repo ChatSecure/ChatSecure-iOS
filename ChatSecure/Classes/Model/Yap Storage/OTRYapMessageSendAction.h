@@ -21,15 +21,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nonnull) NSString *messageKey;
 @property (nonatomic, strong, nonnull) NSString *messageCollection;
-@property (nonatomic, strong, nonnull) NSString *buddyKey;
+@property (nonatomic, strong, nonnull) NSString *threadKey;
+@property (nonatomic, strong, nullable) NSString *threadCollection;
 @property (nonatomic, strong, nonnull) NSDate *date;
 
-- (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection buddyKey:(nonnull NSString *)buddyKey date:(nonnull NSDate *)date;
+- (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey
+                         messageCollection:(nonnull NSString *)messageCollection
+                                  buddyKey:(nonnull NSString *)buddyKey
+                                      date:(nonnull NSDate *)date DEPRECATED_MSG_ATTRIBUTE("Deprecated in favor of threadKey/collection");
+
+- (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey
+                         messageCollection:(nonnull NSString *)messageCollection
+                                 threadKey:(nonnull NSString *)threadKey
+                          threadCollection:(nonnull NSString*)threadCollection
+                                      date:(nonnull NSDate *)date;
 
 + (nonnull NSString *)actionKeyForMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection;
 
 /** Generates an action that will send specified message. Unsaved! Message must be saved for operation to succeed! */
-+ (instancetype)sendActionForMessage:(OTROutgoingMessage*)message;
++ (instancetype)sendActionForMessage:(id<OTRMessageProtocol>)message;
 
 @end
 NS_ASSUME_NONNULL_END

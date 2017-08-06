@@ -165,6 +165,10 @@
     return self.buddyUniqueId;
 }
 
+- (NSString*)threadCollection {
+    return [OTRBuddy collection];
+}
+
 - (NSString *)messageMediaItemKey
 {
     return self.mediaItemUniqueId;

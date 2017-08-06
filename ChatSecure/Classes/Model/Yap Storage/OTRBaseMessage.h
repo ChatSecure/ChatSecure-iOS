@@ -29,7 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 @property (nonatomic, readonly) NSString *messageKey;
 @property (nonatomic, readonly) NSString *messageCollection;
+/** In reality this shouldn't be nil, but could be if something bad happens. */
 @property (nonatomic, readonly, nullable) NSString *threadId;
+@property (nonatomic, readonly, nonnull) NSString *threadCollection;
 @property (nonatomic, readonly) BOOL isMessageIncoming;
 @property (nonatomic, readonly, nullable) NSString *messageMediaItemKey;
 @property (nonatomic, readonly, nullable) NSError *messageError;
