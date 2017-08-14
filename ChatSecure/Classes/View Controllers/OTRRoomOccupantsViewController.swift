@@ -58,8 +58,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMembers)
         self.footerRows.append(OTRRoomOccupantsViewController.FooterCellLeave)
         
-        if let roomUniqueId = self.room?.uniqueId {
-            let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: roomUniqueId, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
+        if let room = self.room {
+            let seed = XMPPJID(string: room.jid).user ?? room.uniqueId
+            let image = OTRGroupAvatarGenerator.avatarImage(withSeed: seed, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
             largeAvatarView.image = image
         }
         

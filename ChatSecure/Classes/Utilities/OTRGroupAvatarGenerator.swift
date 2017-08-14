@@ -10,13 +10,12 @@ import Foundation
 
 open class OTRGroupAvatarGenerator {
     
-    open static func avatarImage(withUniqueIdentifier identifier: String, width: Int, height: Int) -> UIImage? {
+    open static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
         
         // Create a pseudo-random random number generator and seed it with the identifier
         // hash. This will ensure that we get the same image every time we call it with
         // the same identifier!
-        
-        let generator = LinearCongruentialGenerator(seed: identifier.hash)
+        let generator = LinearCongruentialGenerator(seed: seed.javaHash())
         let range = 0.3 * Double(height)
         let halfrange = Int(range / 2)
         let a = Int(generator.random() * range) - halfrange
@@ -95,5 +94,17 @@ open class OTRGroupAvatarGenerator {
             lastRandom = ((lastRandom * a + c).truncatingRemainder(dividingBy: m))
             return lastRandom / m
         }
+    }
+}
+
+// An extension to return a java-compatible hash of a string
+// See for example: http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/lang/String.java#String.hashCode%28%29
+extension String {
+    func javaHash() -> Int {
+        var hash:Int32 = 0
+        for char in self.utf16 {
+            hash = Int32.addWithOverflow(Int32.multiplyWithOverflow(31, hash).0, Int32(UInt(char))).0
+        }
+        return Int(hash)
     }
 }

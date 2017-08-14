@@ -81,7 +81,8 @@ extension OTRXMPPRoom:OTRThreadOwner {
             return image
         } else {
             // If not cached, generate a default image and store that.
-            if let image = OTRGroupAvatarGenerator.avatarImage(withUniqueIdentifier: self.uniqueId, width: 100, height: 100) {
+            let seed = XMPPJID(string: self.jid).user ?? self.uniqueId
+            if let image = OTRGroupAvatarGenerator.avatarImage(withSeed: seed, width: 100, height: 100) {
                 OTRImages.setImage(image, forIdentifier: self.uniqueId)
                 return image
             } else {
