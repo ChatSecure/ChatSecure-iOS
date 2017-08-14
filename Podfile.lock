@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (4.5.0)
   - Appirater (2.1.2)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
@@ -22,6 +23,9 @@ PODS:
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
+  - DTFoundation/Core (1.7.12)
+  - DTFoundation/DTASN1 (1.7.12):
+    - DTFoundation/Core
   - GCDWebServer (3.4):
     - GCDWebServer/Core (= 3.4)
   - GCDWebServer/Core (3.4)
@@ -100,6 +104,11 @@ PODS:
     - KSCrash/Reporting/Tools
   - KSCrash/Reporting/Tools (1.15.11):
     - KSCrash/Recording
+  - Kvitto (1.0.2):
+    - DTFoundation/DTASN1 (~> 1.7.9)
+    - Kvitto/Core (= 1.0.2)
+  - Kvitto/Core (1.0.2):
+    - DTFoundation/DTASN1 (~> 1.7.9)
   - libidn (1.33)
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
@@ -202,6 +211,7 @@ PODS:
     - YapDatabase/SQLCipher (~> 3.0)
 
 DEPENDENCIES:
+  - Alamofire (~> 4.4)
   - Appirater (~> 2.0)
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
@@ -217,6 +227,7 @@ DEPENDENCIES:
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - JTSImageViewController (~> 1.4)
   - KSCrash (~> 1.15.3)
+  - Kvitto (~> 1.0)
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
@@ -273,6 +284,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
+  Alamofire: f28cdffd29de33a7bfa022cbd63ae95a27fae140
   Appirater: f1c9e53e8b612193e6256144f6a0fd2e31f4340d
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
@@ -281,6 +293,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 7eadd3f59e1a6c84e2aefc93e9ff7b55156fe174
   CocoaLumberjack: 0d8cb05e834c1b391771fb3397d9a553accd33a9
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
+  DTFoundation: 26a164ef510877387906fb92bff524a792db4bf8
   GCDWebServer: 20d53c3181b3c78d865e93e326faf506306f5338
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
@@ -289,6 +302,7 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
   KSCrash: 7bd106ca4a2247774deeeb587c740ce0207de8f3
+  Kvitto: 4c2ec1058187f89c5fe2463701acbf9c4324e229
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
@@ -307,6 +321,6 @@ SPEC CHECKSUMS:
   YapDatabase: 69ca88a2dfee305fde4412cf670c76f75aa7ccd0
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: 05d04b86b6a635c613a04cd80844fe023fd70d4a
+PODFILE CHECKSUM: 598d9fe226e12456b7e0baa975e17767d0a5d78f
 
-COCOAPODS: 1.3.0
+COCOAPODS: 1.3.1

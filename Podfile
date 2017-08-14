@@ -72,6 +72,10 @@ abstract_target 'ChatSecureCorePods' do
   # pod 'KVOController', '~> 1.0'
   # pod 'XLForm', '~> 3.3'
   # pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
+  ### Moved back to CocoaPods due to Swift 3->4 issues ###
+  pod 'Alamofire', '~> 4.4'
+  pod 'Kvitto', '~> 1.0'
+
 
   target 'ChatSecureCore'
   target 'ChatSecureTests'

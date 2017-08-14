@@ -1,6 +1,5 @@
 github "ChatSecure/Mantle" "2.1.0_headerfix"
 github "nolanw/HTMLReader" "1d0dda3"
-github "Alamofire/Alamofire" ~> 4.4
 github "AFNetworking/AFNetworking" ~> 3.1
 #github "TheLevelUp/ZXingObjC" ~> 3.2
 github "ChatSecure/ZXingObjC" "xcode9-fix"
@@ -13,5 +12,8 @@ github "ChatSecure/uservoice-ios-sdk" "xcode9-fix"
 github "facebook/KVOController" ~> 1.2
 github "xmartlabs/XLForm" ~> 3.3
 github "mattt/FormatterKit" ~> 1.8
-github "Cocoanetics/Kvitto" ~> 1.0
-github "Cocoanetics/DTFoundation" ~> 1.7
+
+### Using CocoaPods due to Swift 3->4 issues ###
+# github "Cocoanetics/Kvitto" ~> 1.0 
+# github "Cocoanetics/DTFoundation" ~> 1.7
+# github "Alamofire/Alamofire" ~> 4.4
