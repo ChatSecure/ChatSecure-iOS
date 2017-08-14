@@ -142,8 +142,8 @@
     //Once we've authenitcated we need to rejoin existing rooms
     NSMutableArray <OTRXMPPRoom *>*roomArray = [[NSMutableArray alloc] init];
     __block NSString *nickname = self.xmppStream.myJID.user;
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:self.xmppStream transaction:transaction];
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:sender transaction:transaction];
         if (account) {
             nickname = account.displayName;
         }
@@ -158,15 +158,14 @@
             
         } withFilter:^BOOL(NSString * _Nonnull key) {
             //OTRXMPPRoom is saved with the jid and account id as part of the key
-            if ([key containsString:self.xmppStream.tag]) {
+            if ([key containsString:sender.tag]) {
                 return YES;
             }
             return NO;
         }];
-    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
-        [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:nickname subject:obj.subject password:obj.roomPassword];
-        }];
+    }];
+    [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:nickname subject:obj.subject password:obj.roomPassword];
     }];
 }
 
@@ -304,18 +303,24 @@
         }
         
         //Invite buddies
-        NSArray *arary = [self.inviteDictionary objectForKey:sender.roomJID.bare];
-        if ([arary count]) {
-            [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                [arary enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
-                    if (buddy) {
-                        [self inviteUser:buddy.bareJID toRoom:sender.roomJID withMessage:nil];
-                    }
-                }];
-            }];
+        NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
+        if (!buddyUniqueIds.count) {
+            return;
         }
+        NSMutableArray<OTRXMPPBuddy*> *buddies = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
+        [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
+        
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            [buddyUniqueIds enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
+                if (buddy) {
+                    [buddies addObject:buddy];
+                }
+            }];
+        }];
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self inviteUser:buddy.bareJID toRoom:sender.roomJID withMessage:nil];
+        }];
     }];
 }
 
