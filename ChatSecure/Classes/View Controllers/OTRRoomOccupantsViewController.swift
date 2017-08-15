@@ -19,6 +19,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open var room:OTRXMPPRoom?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
+    fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+    
     static let CellIdentifier = "Cell"
     
     static let HeaderCellGroupName = "cellGroupName"
@@ -46,6 +48,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
             viewHandler.delegate = self
             viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
         }
+    }
+    
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.fetchMembersList(self)
     }
     
     override open func viewDidLoad() {
@@ -102,6 +109,30 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func heightForFooterCell(indexPath:IndexPath, type:String) -> CGFloat {
         return 44
+    }
+}
+
+extension OTRRoomOccupantsViewController {
+    
+    /** Do not call this within a yap transaction! */
+    fileprivate func xmppRoom() -> XMPPRoom? {
+        var xmpp: OTRXMPPManager? = nil
+        self.readConnection?.read { transaction in
+            if let account = self.room?.account(with: transaction) {
+                xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager
+            }
+        }
+        guard let room = self.room,
+            let jid = room.jid,
+            let roomJid = XMPPJID(string: jid),
+            let xmppRoom = xmpp?.roomManager.room(for: roomJid)
+            else { return nil }
+        return xmppRoom
+    }
+    
+    fileprivate func fetchMembersList(_ sender: Any) {
+        guard let xmppRoom = xmppRoom() else { return }
+        xmppRoom.fetchMembersList()
     }
 }
 

@@ -7,8 +7,9 @@
 //
 
 #import "OTRMessagesViewController.h"
+#import "OTRMessagesHoldTalkViewController.h"
 
-@interface OTRMessagesGroupViewController : OTRMessagesViewController
+@interface OTRMessagesGroupViewController : OTRMessagesHoldTalkViewController
 
 - (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name;
 
