@@ -28,8 +28,6 @@
 
 @import OTRAssets;
 
-static CGFloat OTRBuddyInfoCellHeight = 80.0;
-
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;

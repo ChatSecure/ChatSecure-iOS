@@ -168,6 +168,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
             }
+            cell.avatarImageView.layer.cornerRadius = (OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0
         }
         cell.selectionStyle = .none
         return cell
@@ -181,7 +182,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
         } else if isFooterSection(section: indexPath.section) {
             return heightForFooterCell(indexPath:indexPath, type:footerRows[indexPath.row])
         }
-        return 80.0
+        return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -190,7 +191,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
         } else if isFooterSection(section: indexPath.section) {
             return heightForFooterCell(indexPath:indexPath, type:footerRows[indexPath.row])
         }
-        return 80.0
+        return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

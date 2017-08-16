@@ -15,6 +15,7 @@
 @import PureLayout;
 #import "OTRDatabaseManager.h"
 
+const CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @interface OTRBuddyInfoCell ()
 
