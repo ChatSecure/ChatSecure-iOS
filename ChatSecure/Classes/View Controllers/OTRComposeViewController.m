@@ -442,7 +442,6 @@
         
         [cell setThread:threadOwner account:account];
         
-        [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {

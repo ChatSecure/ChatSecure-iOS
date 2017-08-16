@@ -168,7 +168,6 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
             }
-            cell.avatarImageView.layer.cornerRadius = (OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0
         }
         cell.selectionStyle = .none
         return cell
