@@ -95,7 +95,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self.avatarImageView.layer setCornerRadius:(self.avatarImageView.frame.size.height-2.0*OTRBuddyImageCellPadding)/2.0];
+    [self.avatarImageView.layer setCornerRadius:(self.contentView.frame.size.height-2*OTRBuddyImageCellPadding)/2.0];
 }
 
 + (NSString *)reuseIdentifier
