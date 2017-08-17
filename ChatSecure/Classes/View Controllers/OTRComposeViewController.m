@@ -28,7 +28,7 @@
 
 @import OTRAssets;
 
-@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
+@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate, OTRComposeGroupViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
@@ -273,7 +273,10 @@
 }
 
 - (void) groupButtonPressed:(id)sender {
-    [self switchSelectionMode];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRComposeGroup" bundle:[OTRAssets resourcesBundle]];
+    OTRComposeGroupViewController *vc = (OTRComposeGroupViewController *)[storyboard instantiateInitialViewController];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)switchSelectionMode {
@@ -716,5 +719,10 @@
     [self.tableView reloadData];
 }
 
+#pragma - mark OTRComposeGroupViewControllerDelegate
+
+- (void)onBuddiesSelected:(NSSet *)buddies groupName:(NSString *)groupName {
+    [self completeSelectingBuddies:buddies groupName:groupName];
+}
 
 @end
