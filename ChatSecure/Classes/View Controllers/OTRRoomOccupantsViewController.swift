@@ -14,6 +14,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
+   
+    // For matching navigation bar and avatar
+    var navigationBarShadow:UIImage?
+    var navigationBarBackground:UIImage?
+    var topBounceView:UIView?
     
     open var viewHandler:OTRYapViewHandler?
     open var room:OTRXMPPRoom?
@@ -67,6 +72,52 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.register(OTRBuddyInfoCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.tableView {
+            // Adjust the frame of the overscroll view
+            if let topBounceView = self.topBounceView {
+                let frame = CGRect(x: 0, y: 0, width: self.tableView.frame.size.width, height: self.tableView.contentOffset.y)
+                topBounceView.frame = frame
+            }
+        }
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Store shadow and background, so we can restore them
+        self.navigationBarShadow = self.navigationController?.navigationBar.shadowImage
+        self.navigationBarBackground = self.navigationController?.navigationBar.backgroundImage(for: .default)
+        
+        // Make the navigation bar the same color as the top color of the avatar image
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        if let room = self.room {
+            let seed = XMPPJID(string: room.jid).user ?? room.uniqueId
+            let avatarTopColor = UIColor(cgColor: OTRGroupAvatarGenerator.avatarTopColor(withSeed: seed))
+            self.navigationController?.navigationBar.barTintColor = avatarTopColor
+            
+            // Create a view for the bounce background, with same color as the topmost
+            // avatar color.
+            if self.topBounceView == nil {
+                self.topBounceView = UIView()
+                if let view = self.topBounceView {
+                    view.backgroundColor = avatarTopColor
+                    self.tableView.addSubview(view)
+                }
+            }
+        }
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Restore navigation bar
+        self.navigationController?.navigationBar.barTintColor = UINavigationBar.appearance().barTintColor
+        self.navigationController?.navigationBar.shadowImage = self.navigationBarShadow
+        self.navigationController?.navigationBar.setBackgroundImage(self.navigationBarBackground, for: .default)
     }
     
     open func createHeaderCell(indexPath:IndexPath, type:String) -> UITableViewCell {
