@@ -30,6 +30,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     static let HeaderCellShare = "cellGroupShare"
     static let HeaderCellAddFriends = "cellGroupAddFriends"
     static let HeaderCellMute = "cellGroupMute"
+    static let HeaderCellUnmute = "cellGroupUnmute"
     static let HeaderCellMembers = "cellGroupMembers"
     static let FooterCellLeave = "cellGroupLeave"
 
@@ -130,6 +131,15 @@ open class OTRRoomOccupantsViewController: UIViewController {
             }
             cell.selectionStyle = .none
             return cell
+        case OTRRoomOccupantsViewController.HeaderCellMute:
+            var identifier = type
+            if let room = self.room {
+                if room.isMuted {
+                    identifier = OTRRoomOccupantsViewController.HeaderCellUnmute
+                }
+            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+            return cell
         default:
             return tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
         }
@@ -141,6 +151,22 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func didSelectHeaderCell(indexPath:IndexPath, type:String) {
         print("Selected \(type)")
+        switch type {
+        case OTRRoomOccupantsViewController.HeaderCellMute:
+            if let room = self.room {
+                if room.isMuted {
+                    room.muteExpiration = nil
+                } else {
+                    room.muteExpiration = Date.distantFuture
+                }
+                OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+                    room.save(with: transaction)
+                })
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+            break
+        default: break
+        }
     }
     
     open func didSelectFooterCell(indexPath:IndexPath, type:String) {
