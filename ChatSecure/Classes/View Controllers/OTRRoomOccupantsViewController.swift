@@ -57,7 +57,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         super.viewDidLoad()
         
         self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellGroupName)
-        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellShare)
+        //self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellShare)
         self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellAddFriends)
         self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMute)
         self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMembers)
