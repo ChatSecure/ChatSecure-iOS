@@ -82,10 +82,19 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if selectedItems.count > 0 {
             if let delegate = delegate {
                 var buddyIds = Set<String>()
+                var generatedGroupName = ""
                 for buddy in selectedItems {
                     buddyIds.insert(buddy.uniqueId)
+                    if generatedGroupName.characters.count > 0 {
+                        generatedGroupName.append(", ")
+                    }
+                    generatedGroupName.append(buddy.displayName)
                 }
-                delegate.onBuddiesSelected(buddyIds as NSSet, groupName: "Group")
+                if generatedGroupName.characters.count > 30 {
+                    generatedGroupName = generatedGroupName.substring(to: generatedGroupName.index(generatedGroupName.startIndex, offsetBy: 27)).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
+                    generatedGroupName.append("...")
+                }
+                delegate.onBuddiesSelected(buddyIds as NSSet, groupName: generatedGroupName)
             }
         }
     }
