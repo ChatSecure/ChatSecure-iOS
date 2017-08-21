@@ -374,7 +374,7 @@
 		D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3B81B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBA51BA79AA700CD8331 /* OTRQRCodeReaderDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3BB1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDBA51BA79AA700CD8331 /* OTRQRCodeReaderDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3BB1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };

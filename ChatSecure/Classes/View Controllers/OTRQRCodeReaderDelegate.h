@@ -7,7 +7,7 @@
 //
 
 @import Foundation;
-#import "QRCodeReaderViewController.h"
+@import QRCodeReaderViewController;
 @class OTRAccount;
 
 @interface OTRQRCodeReaderDelegate : NSObject <QRCodeReaderDelegate>
