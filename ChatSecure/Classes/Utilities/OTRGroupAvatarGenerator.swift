@@ -9,7 +9,13 @@
 import Foundation
 
 open class OTRGroupAvatarGenerator {
-    
+
+    static let arrayOfColors:[CGColor] = [
+        colorWithHexString(hexColorString: "#ff58e2c2").cgColor,
+        colorWithHexString(hexColorString: "#fff44058").cgColor,
+        colorWithHexString(hexColorString: "#fff7e53b").cgColor
+    ]
+        
     open static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
         
         // Create a pseudo-random random number generator and seed it with the identifier
@@ -23,11 +29,6 @@ open class OTRGroupAvatarGenerator {
         let c = Int(generator.random() * range) - halfrange
         let d = Int(generator.random() * range) - halfrange
         
-        let arrayOfColors:[CGColor] = [
-            colorWithHexString(hexColorString: "#ff58e2c2").cgColor,
-            colorWithHexString(hexColorString: "#fff44058").cgColor,
-            colorWithHexString(hexColorString: "#fff7e53b").cgColor
-        ]
         let colorTop = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
         let colorMiddle = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
         let colorBottom = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
@@ -64,6 +65,11 @@ open class OTRGroupAvatarGenerator {
         return newImage
     }
     
+    open static func avatarTopColor(withSeed seed: String) -> CGColor {
+        let generator = LinearCongruentialGenerator(seed: seed.javaHash())
+        return arrayOfColors[Int(generator.random(at: 5).multiplied(by: Double(arrayOfColors.count)))]
+    }
+    
     static func colorWithHexString(hexColorString:String) -> UIColor {
         let scanner = Scanner(string: hexColorString)
         scanner.scanLocation = 1
@@ -93,6 +99,14 @@ open class OTRGroupAvatarGenerator {
         public func random() -> Double {
             lastRandom = ((lastRandom * a + c).truncatingRemainder(dividingBy: m))
             return lastRandom / m
+        }
+        
+        public func random(at: Int) -> Double {
+            var ret:Double = 0
+            for _ in 0..<at {
+                ret = random()
+            }
+            return ret
         }
     }
 }

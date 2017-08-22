@@ -28,9 +28,7 @@
 
 @import OTRAssets;
 
-static CGFloat OTRBuddyInfoCellHeight = 80.0;
-
-@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
+@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate, OTRComposeGroupViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
@@ -275,7 +273,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 }
 
 - (void) groupButtonPressed:(id)sender {
-    [self switchSelectionMode];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRComposeGroup" bundle:[OTRAssets resourcesBundle]];
+    OTRComposeGroupViewController *vc = (OTRComposeGroupViewController *)[storyboard instantiateInitialViewController];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)switchSelectionMode {
@@ -444,7 +445,6 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         
         [cell setThread:threadOwner account:account];
         
-        [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {
@@ -719,5 +719,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self.tableView reloadData];
 }
 
+#pragma - mark OTRComposeGroupViewControllerDelegate
+
+- (void)onBuddiesSelected:(NSSet *)buddies groupName:(NSString *)groupName {
+    [self completeSelectingBuddies:buddies groupName:groupName];
+}
 
 @end
