@@ -48,6 +48,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 @property (nonatomic, strong, nullable) NSString *inMemoryPassphrase;
 
 @property (nonatomic, strong) id yapDatabaseNotificationToken;
+@property (nonatomic, readonly, nullable) YapTaskQueueBroker *messageQueueBroker;
 
 @end
 

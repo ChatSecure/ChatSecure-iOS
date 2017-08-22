@@ -56,11 +56,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.fetchMembersList(self)
-    }
-    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
@@ -275,6 +270,22 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
+            } else if let roomJid = roomOccupant.jid,
+                let jidStr = roomOccupant.realJID,
+                let displayName = roomOccupant.roomName {
+                // Create temporary buddy
+                // Do not save here or it will auto-trust random people
+                let uniqueId = roomJid + account
+                let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
+                buddy.username = jidStr
+                buddy.displayName = displayName
+                var status: OTRThreadStatus = .available
+                if !roomOccupant.available {
+                    status = .offline
+                }
+                OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
+                cell.setThread(buddy, account: nil)
+                DDLogInfo("No trusted buddy found for occupant \(roomOccupant)")
             }
         }
         cell.selectionStyle = .none

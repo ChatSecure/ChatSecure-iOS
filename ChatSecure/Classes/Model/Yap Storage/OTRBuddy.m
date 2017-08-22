@@ -228,7 +228,7 @@
 }
 
 - (OTRThreadStatus)currentStatus {
-    return [[OTRBuddyCache sharedInstance] threadStatusForBuddy:self];
+    return [OTRBuddyCache.shared threadStatusForBuddy:self];
 }
 
 - (BOOL)isGroupThread {
@@ -238,19 +238,19 @@
 #pragma mark Dynamic Properties
 
 - (NSString*) statusMessage {
-    return [[OTRBuddyCache sharedInstance] statusMessageForBuddy:self];
+    return [OTRBuddyCache.shared statusMessageForBuddy:self];
 }
 
 - (OTRChatState) chatState {
-    return [[OTRBuddyCache sharedInstance] chatStateForBuddy:self];
+    return [OTRBuddyCache.shared chatStateForBuddy:self];
 }
 
 - (OTRChatState) lastSentChatState {
-    return [[OTRBuddyCache sharedInstance] lastSentChatStateForBuddy:self];
+    return [OTRBuddyCache.shared lastSentChatStateForBuddy:self];
 }
 
 - (OTRThreadStatus) status {
-    return [[OTRBuddyCache sharedInstance] threadStatusForBuddy:self];
+    return [OTRBuddyCache.shared threadStatusForBuddy:self];
 }
 
 - (BOOL) isMuted {

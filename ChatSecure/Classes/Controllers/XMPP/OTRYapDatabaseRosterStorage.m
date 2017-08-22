@@ -276,13 +276,13 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
         }
         
         if ([[presence status] length]) {
-            [[OTRBuddyCache sharedInstance] setStatusMessage:[presence status] forBuddy:newBuddy];
+            [OTRBuddyCache.shared setStatusMessage:[presence status] forBuddy:newBuddy];
         }
         else {
-            [[OTRBuddyCache sharedInstance] setStatusMessage:defaultMessage forBuddy:newBuddy];
+            [OTRBuddyCache.shared setStatusMessage:defaultMessage forBuddy:newBuddy];
         }
     }
-    [[OTRBuddyCache sharedInstance] setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
+    [OTRBuddyCache.shared setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
     
     // If this contact is pending approval but you see their presence
@@ -315,7 +315,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
         lastSeen = delayedDeliveryDate;
     }
     if (lastSeen) {
-        [[OTRBuddyCache sharedInstance] setLastSeenDate:lastSeen forBuddy:newBuddy];
+        [OTRBuddyCache.shared setLastSeenDate:lastSeen forBuddy:newBuddy];
     }
     
     // Save if it's a new buddy

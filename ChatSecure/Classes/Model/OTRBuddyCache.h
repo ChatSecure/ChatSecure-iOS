@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Thread safe getters and setters for ephemeral in-memory storage of some buddy properties */
 @interface OTRBuddyCache : NSObject
 
-+ (instancetype) sharedInstance;
+@property (class, nonatomic, readonly) OTRBuddyCache *shared;
 
 /** 
  Clears everything for a buddy

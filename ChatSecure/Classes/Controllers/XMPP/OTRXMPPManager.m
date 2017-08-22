@@ -858,7 +858,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     } completionBlock:^{
         // We don't need to save in here because we're using OTRBuddyCache in memory storage
         if (!self.streamManagementDelegate.streamManagementEnabled) {
-            [[OTRBuddyCache sharedInstance] purgeAllPropertiesForBuddies:allBuddies];
+            [OTRBuddyCache.shared purgeAllPropertiesForBuddies:allBuddies];
         }
     }];
 }
@@ -1336,7 +1336,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
         
         if(shouldSend)
         {
-            [[OTRBuddyCache sharedInstance] setLastSentChatState:chatState forBuddy:buddy];
+            [OTRBuddyCache.shared setLastSentChatState:chatState forBuddy:buddy];
             [self.xmppStream sendElement:xMessage];
         }
     });

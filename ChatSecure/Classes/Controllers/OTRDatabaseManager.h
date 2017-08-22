@@ -9,11 +9,12 @@
 @import Foundation;
 
 @import YapDatabase;
+@import YapTaskQueue;
 
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 
-@class MessageQueueHandler, YapTaskQueueBroker;
+@class MessageQueueHandler;
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const OTRMessagesSecondaryIndex;
@@ -36,7 +37,6 @@ extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnN
 @property (nonatomic, readonly, nullable) YapDatabaseConnection *longLivedReadOnlyConnection;
 
 @property (nonatomic, readonly, nullable) MessageQueueHandler *messageQueueHandler;
-@property (nonatomic, readonly, nullable) YapTaskQueueBroker *messageQueueBroker;
 
 
 /**

@@ -428,7 +428,7 @@
 		D93DDBE21BA7A06A00CD8331 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */; };
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
-		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; };
+		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */; };
 		D955157A1EFA0A9F008AA429 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476C1EFA03FC00C39B25 /* HTMLReader.framework */; };
 		D955157B1EFA0A9F008AA429 /* KVOController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476E1EFA03FC00C39B25 /* KVOController.framework */; };
@@ -722,7 +722,7 @@
 		633105351A16D1A300C17BAE /* OTRXMPPBuddyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddyTimers.h; sourceTree = "<group>"; };
 		633105361A16D1A300C17BAE /* OTRXMPPBuddyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBuddyTimers.m; sourceTree = "<group>"; };
 		633105371A16D1A300C17BAE /* OTRXMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPManager.h; sourceTree = "<group>"; };
-		633105381A16D1A300C17BAE /* OTRXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPManager.m; sourceTree = "<group>"; };
+		633105381A16D1A300C17BAE /* OTRXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRXMPPManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPTorManager.h; sourceTree = "<group>"; };
 		6331053C1A16D1A300C17BAE /* OTRXMPPTorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPTorManager.m; sourceTree = "<group>"; };
 		6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapDatabaseRosterStorage.h; sourceTree = "<group>"; };
@@ -776,7 +776,7 @@
 		633105C61A16D1A300C17BAE /* OTRXMPPTorAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPTorAccount.h; sourceTree = "<group>"; };
 		633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPTorAccount.m; sourceTree = "<group>"; };
 		633105CA1A16D1A300C17BAE /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
-		633105CB1A16D1A300C17BAE /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
+		633105CB1A16D1A300C17BAE /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRBuddy.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OTRMessage+JSQMessageData.h"; sourceTree = "<group>"; };
 		633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OTRMessage+JSQMessageData.m"; sourceTree = "<group>"; };
 		633105CE1A16D1A300C17BAE /* OTRBaseMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseMessage.h; sourceTree = "<group>"; };
@@ -792,7 +792,7 @@
 		633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificatePinning.h; sourceTree = "<group>"; };
 		633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificatePinning.m; sourceTree = "<group>"; };
 		633105EA1A16D1A300C17BAE /* OTRChatDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatDemo.h; sourceTree = "<group>"; };
-		633105EB1A16D1A300C17BAE /* OTRChatDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatDemo.m; sourceTree = "<group>"; };
+		633105EB1A16D1A300C17BAE /* OTRChatDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRChatDemo.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		633105EC1A16D1A300C17BAE /* OTRColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRColors.h; sourceTree = "<group>"; };
 		633105ED1A16D1A300C17BAE /* OTRColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRColors.m; sourceTree = "<group>"; };
 		633105EE1A16D1A300C17BAE /* OTRConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConstants.h; sourceTree = "<group>"; };
@@ -835,7 +835,7 @@
 		633106321A16D1A300C17BAE /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
 		633106331A16D1A300C17BAE /* OTRListSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSettingViewController.m; sourceTree = "<group>"; };
 		633106341A16D1A300C17BAE /* OTRMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesViewController.h; sourceTree = "<group>"; };
-		633106351A16D1A300C17BAE /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesViewController.m; sourceTree = "<group>"; };
+		633106351A16D1A300C17BAE /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRMessagesViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
 		6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeViewController.h; sourceTree = "<group>"; };

@@ -53,14 +53,14 @@
                 buddy.displayName = name;
                 buddy.username = jidString;
                 buddy.accountUniqueId  = account.uniqueId;
-                [[OTRBuddyCache sharedInstance] setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
+                [OTRBuddyCache.shared setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
                 buddy.preferredSecurity = OTRSessionSecurityOMEMO;
                 NSData *fingerprintData = [OTRPasswordGenerator randomDataWithLength:32];
                 OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
                 [device saveWithTransaction:transaction];
             }
             
-            [[OTRBuddyCache sharedInstance] setThreadStatus:(NSInteger)OTRThreadStatusAvailable+idx forBuddy:buddy resource:nil];
+            [OTRBuddyCache.shared setThreadStatus:(NSInteger)OTRThreadStatusAvailable+idx forBuddy:buddy resource:nil];
             
             NSArray *textArray = [self shuffleHelloArray:helloArray];
             

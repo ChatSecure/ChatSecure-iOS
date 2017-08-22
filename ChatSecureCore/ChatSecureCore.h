@@ -14,6 +14,7 @@ FOUNDATION_EXPORT double ChatSecureCoreVersionNumber;
 //! Project version string for ChatSecureCore.
 FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 
+#import "OTRBuddyCache.h"
 #import "OTRUserInfoProfile.h"
 #import "OTRAccount.h"
 #import "OTRXMPPManager.h"

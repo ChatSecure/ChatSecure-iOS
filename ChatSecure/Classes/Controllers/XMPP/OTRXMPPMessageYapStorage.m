@@ -100,11 +100,11 @@
         [self handleDeliverResponse:xmppMessage transaction:transaction];
         
         // If we receive a message from an online buddy that counts as them interacting with us
-        OTRThreadStatus status = [[OTRBuddyCache sharedInstance] threadStatusForBuddy:messageBuddy];
+        OTRThreadStatus status = [OTRBuddyCache.shared threadStatusForBuddy:messageBuddy];
         if (status != OTRThreadStatusOffline &&
             ![xmppMessage hasReceiptResponse] &&
             ![xmppMessage isErrorMessage]) {
-            [[OTRBuddyCache sharedInstance] setLastSeenDate:[NSDate date] forBuddy:messageBuddy];
+            [OTRBuddyCache.shared setLastSeenDate:[NSDate date] forBuddy:messageBuddy];
         }
         
         // Check if this is a bounced outgoing message / error
@@ -161,7 +161,7 @@
         else if([xmppMessage hasGoneChatState])
             chatState = OTRChatStateGone;
     }
-    [[OTRBuddyCache sharedInstance] setChatState:chatState forBuddy:messageBuddy];
+    [OTRBuddyCache.shared setChatState:chatState forBuddy:messageBuddy];
 }
 
 - (void)handleDeliverResponse:(XMPPMessage *)xmppMessage transaction:(YapDatabaseReadWriteTransaction *)transaction

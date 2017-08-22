@@ -7,7 +7,8 @@
 //
 #import "OTRYapDatabaseObject.h"
 #import "OTROutgoingMessage.h"
-@import YapTaskQueue;
+@import YapTaskQueue; // debugger AST fail
+@protocol YapTaskQueueAction;
 
 /**
  * This class represents a send action. The way it works is at the same time or after a OTRMessage 
