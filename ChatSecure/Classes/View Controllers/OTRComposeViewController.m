@@ -31,6 +31,7 @@
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate, OTRComposeGroupViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) OTRVerticalStackView *tableViewHeader;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) OTRYapViewHandler *searchViewHandler;
@@ -44,7 +45,6 @@
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *groupBarButtonItem;
 @property (nonatomic, strong) UISegmentedControl *inboxArchiveControl;
-
 @end
 
 @implementation OTRComposeViewController
@@ -95,6 +95,25 @@
     self.tableView.dataSource = self;
     self.tableView.rowHeight = OTRBuddyInfoCellHeight;
     [self.view addSubview:self.tableView];
+    
+    self.tableViewHeader = [[OTRVerticalStackView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [self.tableViewHeader setBackgroundColor:UIColor.groupTableViewBackgroundColor];
+    self.tableView.tableHeaderView = self.tableViewHeader;
+    
+    // Add the "Add friends" button
+    UITableViewCell *cellAddFriends = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cellAddFriends.textLabel.text = ADD_BUDDY_STRING();
+    cellAddFriends.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    __weak typeof(self)weakSelf = self;
+    [self.tableViewHeader addStackedSubview:cellAddFriends identifier:ADD_BUDDY_STRING() gravity:OTRVerticalStackViewGravityBottom height:80 callback:^() {
+        // TODO: we should migrate to a persistent queue so when
+        // you add a buddy offline it will eventually work
+        // See: https://github.com/ChatSecure/ChatSecure-iOS/issues/679
+        NSArray *accounts = [OTRAccountsManager allAccounts];
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf addBuddy:accounts];
+    }];
+
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
@@ -195,8 +214,15 @@
     //self.searchController.searchBar.placeholder = SEARCH_STRING;
     self.searchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
     self.searchController.searchBar.delegate = self;
-    
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    [self.tableViewHeader addStackedSubview:self.searchController.searchBar identifier:nil gravity:OTRVerticalStackViewGravityTop];
+}
+
+// Make sure bar stays at the top
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
+    if ([bar isKindOfClass:UISearchBar.class]) {
+        return UIBarPositionTopAttached;
+    }
+    return UIBarPositionTop;
 }
 
 - (BOOL)isSearchResultsControllerTableView:(UITableView *)tableView
@@ -297,14 +323,6 @@
     
 }
 
-- (BOOL)canAddBuddies
-{
-    // TODO: we should migrate to a persistent queue so when
-    // you add a buddy offline it will eventually work
-    // See: https://github.com/ChatSecure/ChatSecure-iOS/issues/679
-    return YES;
-}
-
 - (id<OTRThreadOwner>)threadOwnerAtIndexPath:(NSIndexPath *)indexPath withTableView:(UITableView *)tableView
 {
     NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
@@ -388,72 +406,36 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
-    BOOL canAddBuddies = [self canAddBuddies];
-    NSInteger sections = [viewHandler.mappings numberOfSections];
-    
-    //If we can add buddies and it's not the search table view then add a section
-    if (canAddBuddies && ![self isSearchResultsControllerTableView:tableView]) {
-        sections += 1;
-    }
-    return sections;
+    return [viewHandler.mappings numberOfSections];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger numberOfRows = 0;
-    if (section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
-        numberOfRows = 1;
-    }
-    else {
-        OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
-        numberOfRows = [viewHandler.mappings numberOfItemsInSection:0];
-    }
-   
-    return numberOfRows;
+    OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
+    return [viewHandler.mappings numberOfItemsInSection:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
-        // add new buddy cell
-        static NSString *addCellIdentifier = @"addCellIdentifier";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addCellIdentifier];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
-        }
-        if (_selectionModeIsSingle) {
-            cell.textLabel.text = ADD_BUDDY_STRING();
-        } else {
-            cell.textLabel.text = JOIN_GROUP_STRING();
-        }
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
-        return cell;
-    }
-    else {
-        OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
-        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
-        
-        __block OTRAccount *account = nil;
-        [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            BOOL showAccount = [self shouldShowAccountLabelWithTransaction:transaction];
-            if (showAccount) {
-                account = [OTRAccount accountForThread:threadOwner transaction:transaction];
-            }
-        }];
-        
-        [cell setThread:threadOwner account:account];
-        
-        if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        } else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-        }
-        return cell;
-    }
+    OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
+    id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:indexPath withTableView:tableView];
     
+    __block OTRAccount *account = nil;
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        BOOL showAccount = [self shouldShowAccountLabelWithTransaction:transaction];
+        if (showAccount) {
+            account = [OTRAccount accountForThread:threadOwner transaction:transaction];
+        }
+    }];
     
+    [cell setThread:threadOwner account:account];
+    
+    if ([self.selectedBuddiesIdSet containsObject:[threadOwner threadIdentifier]]) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    return cell;
 }
 
 /** By default will show account if numAccounts > 0*/
@@ -480,37 +462,19 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
-        return UITableViewCellEditingStyleNone;
-    } else {
-        return UITableViewCellEditingStyleDelete;
-    }
-    
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSArray *accounts = [OTRAccountsManager allAccounts];
-    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView])
-    {
-        if (_selectionModeIsSingle) {
-            [self addBuddy:accounts];
-        } else {
-            // join group
-            [self joinGroup:tableView];
-        }
-    }
-    else {
-        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-        id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
-        if (self.selectionModeIsSingle == YES) {
-            NSSet <NSString *>*buddySet = [NSSet setWithObject:[threadOwner threadIdentifier]];
-            [self completeSelectingBuddies:buddySet groupName:nil];
-        } else {
-            [self selectedThreadOwner:[threadOwner threadIdentifier]];
-            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }
+    id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:indexPath withTableView:tableView];
+    if (self.selectionModeIsSingle == YES) {
+        NSSet <NSString *>*buddySet = [NSSet setWithObject:[threadOwner threadIdentifier]];
+        [self completeSelectingBuddies:buddySet groupName:nil];
+    } else {
+        [self selectedThreadOwner:[threadOwner threadIdentifier]];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 
@@ -623,71 +587,55 @@
     
     [tableView beginUpdates];
     
-    BOOL canAddBuddies = [self canAddBuddies];
-    
     for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
     {
-        NSUInteger sectionIndex = sectionChange.index;
-        if (canAddBuddies && !isSearchViewHandler) {
-            sectionIndex += 1;
-        }
-        
         switch (sectionChange.type)
         {
             case YapDatabaseViewChangeDelete :
             {
-                [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
-            case YapDatabaseViewChangeMove :
-            case YapDatabaseViewChangeUpdate :
+            case YapDatabaseViewChangeUpdate:
+            case YapDatabaseViewChangeMove:
                 break;
         }
     }
     
-    
-    
     for (YapDatabaseViewRowChange *rowChange in rowChanges)
     {
-        NSIndexPath *indexPath = rowChange.indexPath;
-        NSIndexPath *newIndexPath = rowChange.newIndexPath;
-        if (canAddBuddies && !isSearchViewHandler) {
-            indexPath = [NSIndexPath indexPathForItem:rowChange.indexPath.row inSection:1];
-            newIndexPath = [NSIndexPath indexPathForItem:rowChange.newIndexPath.row inSection:1];
-        }
-        
         switch (rowChange.type)
         {
             case YapDatabaseViewChangeDelete :
             {
-                [tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                [tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [tableView insertRowsAtIndexPaths:@[ newIndexPath ]
+                [tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeMove :
             {
-                [tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                [tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
-                [tableView insertRowsAtIndexPaths:@[ newIndexPath ]
+                [tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeUpdate :
             {
-                [tableView reloadRowsAtIndexPaths:@[ indexPath ]
+                [tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
                                       withRowAnimation:UITableViewRowAnimationNone];
                 break;
             }
@@ -723,6 +671,9 @@
 
 - (void)onBuddiesSelected:(NSSet *)buddies groupName:(NSString *)groupName {
     [self completeSelectingBuddies:buddies groupName:groupName];
+}
+
+- (void)onCancelled:(UIViewController *)viewController {    
 }
 
 @end

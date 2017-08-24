@@ -13,6 +13,7 @@ import OTRAssets
 
 @objc public protocol OTRComposeGroupViewControllerDelegate {
     func onBuddiesSelected(_ buddies:NSSet,groupName:String) -> Void
+    func onCancelled(_ viewController:UIViewController?) -> Void
 }
 
 open class OTRComposeGroupViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, OTRComposeGroupBuddyCellDelegate,OTRYapViewHandlerDelegateProtocol
@@ -226,6 +227,16 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             }
             
             return attributes
+        }
+    }
+    
+    override open func willMove(toParentViewController parent: UIViewController?)
+    {
+        if parent == nil
+        {
+            if let delegate = self.delegate {
+                delegate.onCancelled(self)
+            }
         }
     }
 }
