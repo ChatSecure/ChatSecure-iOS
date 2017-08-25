@@ -36,6 +36,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
     static let HeaderCellMembers = "cellGroupMembers"
     static let FooterCellLeave = "cellGroupLeave"
 
+    open var tableHeaderView:OTRVerticalStackView?
+    open var tableFooterView:OTRVerticalStackView?
+    
     public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
         setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
@@ -59,12 +62,40 @@ open class OTRRoomOccupantsViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellGroupName)
-        //self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellShare)
-        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellAddFriends)
-        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMute)
-        self.headerRows.append(OTRRoomOccupantsViewController.HeaderCellMembers)
-        self.footerRows.append(OTRRoomOccupantsViewController.FooterCellLeave)
+        tableHeaderView = OTRVerticalStackView()
+        tableFooterView = OTRVerticalStackView()
+        
+        let headerCells = [
+            OTRRoomOccupantsViewController.HeaderCellGroupName,
+            OTRRoomOccupantsViewController.HeaderCellAddFriends,
+            OTRRoomOccupantsViewController.HeaderCellMute,
+            OTRRoomOccupantsViewController.HeaderCellUnmute,
+            OTRRoomOccupantsViewController.HeaderCellMembers
+        ]
+        
+        let footerCells = [
+            OTRRoomOccupantsViewController.FooterCellLeave
+        ]
+
+        for name in headerCells {
+            let cell = createHeaderCell(type: name)
+            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: { 
+                self.didSelectHeaderCell(type: name)
+            })
+        }
+        for name in footerCells {
+            let cell = createFooterCell(type: name)
+            tableFooterView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: {
+                self.didSelectFooterCell(type: name)
+            })
+        }
+        
+        // Add the avatar view topmost
+        tableHeaderView?.addStackedSubview(largeAvatarView, identifier: "avatar", gravity: .top)
+        
+        self.tableView.tableHeaderView = self.tableHeaderView
+        self.tableView.tableFooterView = self.tableFooterView
+        updateMuteUnmuteCell()
         
         if let room = self.room {
             let seed = XMPPJID(string: room.jid).user ?? room.uniqueId
@@ -123,38 +154,40 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(self.navigationBarBackground, for: .default)
     }
     
-    open func createHeaderCell(indexPath:IndexPath, type:String) -> UITableViewCell {
+    private func updateMuteUnmuteCell() {
+        var muted = false
+        if let room = self.room {
+            muted = room.isMuted
+        }
+        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellMute, hidden: muted)
+        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellUnmute, hidden: !muted)
+    }
+    
+    open func createHeaderCell(type:String) -> UITableViewCell {
+        var cell:UITableViewCell?
         switch type {
         case OTRRoomOccupantsViewController.HeaderCellGroupName:
-            let cell = tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
             if let room = self.room {
-                cell.textLabel?.text = room.subject
-                cell.detailTextLabel?.text = "" // Do we have creation date?
+                cell?.textLabel?.text = room.subject
+                cell?.detailTextLabel?.text = "" // Do we have creation date?
             }
-            cell.selectionStyle = .none
-            return cell
-        case OTRRoomOccupantsViewController.HeaderCellMute:
-            var identifier = type
-            if let room = self.room {
-                if room.isMuted {
-                    identifier = OTRRoomOccupantsViewController.HeaderCellUnmute
-                }
-            }
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
-            return cell
+            cell?.selectionStyle = .none
+            break
         default:
-            return tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
+            break
         }
+        return cell ?? UITableViewCell()
     }
     
-    open func createFooterCell(indexPath:IndexPath, type:String) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
+    open func createFooterCell(type:String) -> UITableViewCell {
+        return tableView.dequeueReusableCell(withIdentifier: type) ?? UITableViewCell()
     }
     
-    open func didSelectHeaderCell(indexPath:IndexPath, type:String) {
-        print("Selected \(type)")
+    open func didSelectHeaderCell(type:String) {
         switch type {
-        case OTRRoomOccupantsViewController.HeaderCellMute:
+        case OTRRoomOccupantsViewController.HeaderCellMute, OTRRoomOccupantsViewController.HeaderCellUnmute:
             if let room = self.room {
                 if room.isMuted {
                     room.muteExpiration = nil
@@ -164,23 +197,14 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
                     room.save(with: transaction)
                 })
-                tableView.reloadRows(at: [indexPath], with: .automatic)
+                updateMuteUnmuteCell()
             }
             break
         default: break
         }
     }
     
-    open func didSelectFooterCell(indexPath:IndexPath, type:String) {
-        print("Selected \(type)")
-    }
-    
-    open func heightForHeaderCell(indexPath:IndexPath, type:String) -> CGFloat {
-        return 44
-    }
-    
-    open func heightForFooterCell(indexPath:IndexPath, type:String) -> CGFloat {
-        return 44
+    open func didSelectFooterCell(type:String) {
     }
 }
 
@@ -223,48 +247,17 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
 extension OTRRoomOccupantsViewController: UITableViewDataSource {
     //Int and UInt issue https://github.com/yapstudios/YapDatabase/issues/116
     public func numberOfSections(in tableView: UITableView) -> Int {
-        if let sections = self.viewHandler?.mappings?.numberOfSections() {
-            return 2 + Int(sections)
-        }
-        return 2
+        return Int(self.viewHandler?.mappings?.numberOfSections() ?? 0)
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isHeaderSection(section: section) {
-            return headerRows.count
-        } else if isFooterSection(section: section) {
-            return footerRows.count
-        }
-        if let rows = self.viewHandler?.mappings?.numberOfItems(inSection: UInt(section - 1)) {
-            return Int(rows)
-        }
-        return 0
-    }
-    
-    open func isHeaderSection(section:Int) -> Bool {
-        return section == 0
-    }
-    
-    open func isFooterSection(section:Int) -> Bool {
-        if let sections = self.viewHandler?.mappings?.numberOfSections() {
-            if (section == (Int(sections) + 1)) {
-                return true
-            }
-            return false
-        }
-        return section == 1
+        return Int(self.viewHandler?.mappings?.numberOfItems(inSection: UInt(section)) ?? 0)
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if isHeaderSection(section: indexPath.section) {
-            return createHeaderCell(indexPath: indexPath, type: headerRows[indexPath.row])
-        } else if isFooterSection(section: indexPath.section) {
-            return createFooterCell(indexPath: indexPath, type: footerRows[indexPath.row])
-        }
-        let adjustedIndexPath = IndexPath(row: indexPath.row, section: indexPath.section - 1)
         let cell:OTRBuddyInfoCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCell
         var buddy:OTRXMPPBuddy? = nil
-        if let roomOccupant = self.viewHandler?.object(adjustedIndexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                     buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
             })
@@ -295,30 +288,14 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
 
 extension OTRRoomOccupantsViewController:UITableViewDelegate {
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if isHeaderSection(section: indexPath.section) {
-            return heightForHeaderCell(indexPath:indexPath, type:headerRows[indexPath.row])
-        } else if isFooterSection(section: indexPath.section) {
-            return heightForFooterCell(indexPath:indexPath, type:footerRows[indexPath.row])
-        }
         return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if isHeaderSection(section: indexPath.section) {
-            return heightForHeaderCell(indexPath:indexPath, type:headerRows[indexPath.row])
-        } else if isFooterSection(section: indexPath.section) {
-            return heightForFooterCell(indexPath:indexPath, type:footerRows[indexPath.row])
-        }
         return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if isHeaderSection(section: indexPath.section) {
-            didSelectHeaderCell(indexPath:indexPath, type:headerRows[indexPath.row])
-        } else if isFooterSection(section: indexPath.section) {
-            didSelectFooterCell(indexPath:indexPath, type:footerRows[indexPath.row])
-        }
     }
-    
 }
