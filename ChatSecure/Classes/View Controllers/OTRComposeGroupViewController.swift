@@ -79,7 +79,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         self.doneButton.isEnabled = (selectedItems.count > 0)
     }
     
-    @IBAction func didPressDone(_ sender: Any) {
+    @IBAction open func didPressDone(_ sender: Any) {
         if selectedItems.count > 0 {
             if let delegate = delegate {
                 var buddyIds = Set<String>()
@@ -97,6 +97,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                 }
                 delegate.onBuddiesSelected(buddyIds as NSSet, groupName: generatedGroupName)
             }
+            dismiss(animated: true, completion: nil)
         }
     }
 
