@@ -96,7 +96,7 @@
     self.tableView.rowHeight = OTRBuddyInfoCellHeight;
     [self.view addSubview:self.tableView];
     
-    self.tableViewHeader = [[OTRVerticalStackView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableViewHeader = [[OTRVerticalStackView alloc] init];
     [self.tableViewHeader setBackgroundColor:UIColor.groupTableViewBackgroundColor];
     self.tableView.tableHeaderView = self.tableViewHeader;
     

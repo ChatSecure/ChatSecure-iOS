@@ -30,6 +30,10 @@ import PureLayout
     private var visibleSubviews:[ViewInfo] = []
     private var initialized:Bool = false
     
+    public convenience init() {
+        self.init(frame: CGRect.zero, style: .plain)
+    }
+    
     public func addStackedSubview(_ view:UIView) {
         addStackedSubview(view, identifier:nil, gravity: .middle, height: 0, callback: nil)
     }
