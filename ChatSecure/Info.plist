@@ -74,7 +74,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome.ttf</string>
-	</array>
+        <string>OTRResources.bundle/MaterialIcons-Regular.ttf</string>
+        <string>OTRResources.bundle/ios-icon-font.ttf</string>
+    </array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

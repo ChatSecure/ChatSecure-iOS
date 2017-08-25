@@ -10,6 +10,9 @@
 #import "OTRAccount.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+extern const CGFloat OTRBuddyInfoCellHeight;
+
 @interface OTRBuddyInfoCell : OTRBuddyImageCell
 
 @property (nonatomic, strong, readonly) UILabel *nameLabel;

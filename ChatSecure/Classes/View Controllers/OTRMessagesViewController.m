@@ -595,8 +595,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if (![buddy isKindOfClass:[OTRBuddy class]]) {
                 return;
             }
-            NSDate *lastSeen = [[OTRBuddyCache sharedInstance] lastSeenDateForBuddy:buddy];
-            OTRThreadStatus status = [[OTRBuddyCache sharedInstance] threadStatusForBuddy:buddy];
+            NSDate *lastSeen = [OTRBuddyCache.shared lastSeenDateForBuddy:buddy];
+            OTRThreadStatus status = [OTRBuddyCache.shared threadStatusForBuddy:buddy];
             if (!lastSeen) {
                 titleView.subtitleLabel.text = buddy.username;
                 return;

@@ -289,6 +289,10 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
+- (void) xmppRoom:(XMPPRoom *)sender didFetchMembersList:(NSArray *)items {
+    DDLogInfo(@"Fetched members list: %@", items);
+}
+
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
     
