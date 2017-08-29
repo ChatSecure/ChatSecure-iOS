@@ -23,7 +23,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         }
         
         if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
-            if let messagesVC = appDelegate.theme.groupMessagesViewController() as? OTRMessagesGroupViewController {
+            if let messagesVC = appDelegate.theme.messagesViewController() as? OTRMessagesViewController {
                 messagesVC.setup(withBuddies: buddyKeys, accountId: accountKey, name:name)
                 //setup 'back' button in nav bar
                 let navigationController = UINavigationController(rootViewController: messagesVC)
@@ -52,15 +52,6 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate
         
         var messagesViewController:OTRMessagesViewController? = appDelegate?.messagesViewController
-        
-        // 1. If it is a hold-to-talk now but should be a group thread the create group thread. Else if is group
-        if let _  = messagesViewController as? OTRMessagesHoldTalkViewController, threadOwner.isGroupThread() {
-            messagesViewController = appDelegate?.theme.groupMessagesViewController() as? OTRMessagesViewController
-        } else if let _ = messagesViewController as? OTRMessagesGroupViewController, !threadOwner.isGroupThread() {
-            messagesViewController = appDelegate?.theme.messagesViewController() as? OTRMessagesViewController
-        }
-        
-        
         guard let mVC = messagesViewController else {
             return
         }

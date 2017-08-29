@@ -45,7 +45,6 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRConversationViewController.h"
 #import "OTRMessagesViewController.h"
 #import "OTRMessagesHoldTalkViewController.h"
-#import "OTRMessagesGroupViewController.h"
 #import "OTRComposeViewController.h"
 #import "OTRSettingsViewController.h"
 #import "OTRNewBuddyViewController.h"

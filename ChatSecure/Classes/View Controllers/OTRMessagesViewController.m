@@ -347,6 +347,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
 }
 
+- (nullable OTRXMPPRoom *)roomWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    id <OTRThreadOwner> object = [self threadObjectWithTransaction:transaction];
+    if ([object isKindOfClass:[OTRXMPPRoom class]]) {
+        return (OTRXMPPRoom *)object;
+    }
+    return nil;
+}
+
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id <OTRThreadOwner> thread =  [self threadObjectWithTransaction:transaction];
     if (!thread) { return nil; }
@@ -812,13 +820,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return trusted;
 }
 
+- (BOOL) isGroupChat {
+    __block OTRXMPPRoom *room = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        room = [self roomWithTransaction:transaction];
+    }];
+    return (room != nil);
+}
+
 #pragma - mark Profile Button Methods
 
 - (void)setupInfoButton {
-    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    infoButton.accessibilityIdentifier = @"profileButton";
-    [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    if ([self isGroupChat]) {
+        UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
+        self.navigationItem.rightBarButtonItem = barButtonItem;
+    } else {
+        UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        infoButton.accessibilityIdentifier = @"profileButton";
+        [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    }
 }
 
 - (void) infoButtonPressed:(id)sender {
@@ -847,6 +868,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self presentViewController:verifyNav animated:YES completion:nil];
 }
 
+- (void)didSelectOccupantsButton:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRRoomOccupants" bundle:[OTRAssets resourcesBundle]];
+    OTRRoomOccupantsViewController *occupantsVC = [storyboard instantiateViewControllerWithIdentifier:@"roomOccupants"];
+    [occupantsVC setupViewHandlerWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
+    [self.navigationController pushViewController:occupantsVC animated:YES];
+}
 
 // Hack to manually re-fetch OMEMO devicelist because PEP sucks
 // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
@@ -1395,6 +1422,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
+    if(![text length]) {
+        return;
+    }
+    
     self.navigationController.providesPresentationContextTransitionStyle = YES;
     self.navigationController.definesPresentationContext = YES;
     
@@ -1404,6 +1435,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     //   A side effect is that sent messages may not appear in the UI immediately
     [self finishSendingMessage];
     
+    if (![self isGroupChat]) {
     //1. Create new message database object
     __block OTROutgoingMessage *message = nil;
     __block OTRXMPPManager *xmpp = nil;
@@ -1416,6 +1448,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if (!message || !xmpp) { return; }
         [xmpp enqueueMessage:message];
     }];
+    } else {
+        __weak __typeof__(self) weakSelf = self;
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            __typeof__(self) strongSelf = weakSelf;
+            
+            OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
+            databaseMessage.messageText = text;
+            databaseMessage.messageDate = [NSDate date];
+            databaseMessage.roomUniqueId = self.threadKey;
+            OTRXMPPRoom *room = (OTRXMPPRoom *)[strongSelf threadObjectWithTransaction:transaction];
+            databaseMessage.roomJID = room.jid;
+            databaseMessage.roomUniqueId = room.uniqueId;
+            databaseMessage.senderJID = room.ownJID;
+            databaseMessage.state = RoomMessageStateNeedsSending;
+            
+            [databaseMessage saveWithTransaction:transaction];
+            
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:databaseMessage date:databaseMessage.messageDate];
+            [sendingAction saveWithTransaction:transaction];
+        }];
+    }
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -1609,6 +1662,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
         ![self isMessageTrusted:message]) {
         return [self warningAvatarImage];
     }
+    
+    if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
+        OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
+        __block OTRXMPPRoomOccupant *roomOccupant = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            [transaction enumerateRoomOccupantsWithJid:roomMessage.senderJID block:^(OTRXMPPRoomOccupant * _Nonnull occupant, BOOL * _Null_unspecified stop) {
+                roomOccupant = occupant;
+                *stop = YES;
+            }];
+        }];
+        UIImage *avatarImage = [roomOccupant avatarImage];
+        if (avatarImage) {
+            NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
+            return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
+        }
+    }
+    
     if ([message isMessageIncoming]) {
         return [self buddyAvatarImage];
     }
@@ -2121,6 +2191,22 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             [self setThreadKey:buddy.uniqueId collection:[OTRBuddy collection]];
         }];
     }
+}
+
+#pragma - mark Group chat support
+
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
+{
+    __block OTRAccount *account = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+    }];
+    OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    NSString *service = [xmppManager.roomManager.conferenceServicesJID firstObject];
+    NSString *roomName = [NSUUID UUID].UUIDString;
+    XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
+    self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
+    [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
 @end

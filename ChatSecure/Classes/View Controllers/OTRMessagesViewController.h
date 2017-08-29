@@ -13,7 +13,7 @@
 @import OTRKit;
 @import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
+@class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
 @protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
@@ -36,6 +36,8 @@
 
 @property (nonatomic, strong, nonnull, readonly) MessagesViewControllerState *state;
 
+- (void)setupWithBuddies:(nonnull NSArray<NSString *> *)buddies accountId:(nonnull NSString *)accountId name:(nullable NSString *)name;
+
 - (void)setThreadKey:(nullable NSString *)key collection:(nullable NSString *)collection;
 - (void)sendAudioFileURL:(nonnull NSURL *)url;
 - (void)sendImageFilePath:(nonnull NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
@@ -51,6 +53,10 @@
 - (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(nonnull NSIndexPath *)indexPath;
+
+/** Group chat support */
+- (nullable OTRXMPPRoom *)roomWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (BOOL) isGroupChat;
 
 /** This is called on every key stroke so be careful here. Used in subclasses*/
 - (void)isTyping;
