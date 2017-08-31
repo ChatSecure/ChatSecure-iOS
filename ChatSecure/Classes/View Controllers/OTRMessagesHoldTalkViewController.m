@@ -233,7 +233,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         }
     }
     
-    if (self.state.canSendMedia) {
+    if ([self canSendMedia]) {
         //Encrypted Show camera button
         self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
         self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;

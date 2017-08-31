@@ -1254,6 +1254,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark Sending Media Items
 
+- (BOOL)canSendMedia {
+    return self.state.canSendMedia || [self isGroupChat];
+}
+
 - (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];

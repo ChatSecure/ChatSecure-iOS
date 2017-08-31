@@ -54,6 +54,8 @@
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
+- (BOOL)canSendMedia;
+
 /** Group chat support */
 - (nullable OTRXMPPRoom *)roomWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (BOOL) isGroupChat;
