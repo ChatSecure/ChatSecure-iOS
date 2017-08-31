@@ -96,4 +96,10 @@
     return view;
 }
 
+- (void)populateFromDataAtUrl:(NSURL *)url {
+    AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
+                                                 options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
+    self.timeLength = CMTimeGetSeconds(audioAsset.duration);
+}
+
 @end
