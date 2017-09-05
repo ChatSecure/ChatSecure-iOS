@@ -144,10 +144,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self refreshTitleView:titleView];
     self.navigationItem.titleView = titleView;
     
-    // Profile Info Button
-    [self setupInfoButton];
-    
-    
     ////// Send Button //////
     self.sendButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
     
@@ -392,6 +388,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     [self.collectionView reloadData];
+    
+    // Profile Info Button
+    [self setupInfoButton];
     
     [self updateEncryptionState];
     [self updateJIDForwardingHeader];
