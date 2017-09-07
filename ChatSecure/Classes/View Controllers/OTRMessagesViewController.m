@@ -1522,16 +1522,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSParameterAssert(photo);
     if (!photo) { return; }
     __block OTRXMPPManager *xmpp = nil;
-    __block OTRBuddy *buddy = nil;
+    __block id<OTRThreadOwner> thread = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         xmpp = [self xmppManagerWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
+        thread = [self threadObjectWithTransaction:transaction];
     }];
     NSParameterAssert(xmpp);
-    NSParameterAssert(buddy);
-    if (!xmpp || !buddy) { return; }
+    NSParameterAssert(thread);
+    if (!xmpp || !thread) { return; }
 
-    [xmpp.fileTransferManager sendWithImage:photo buddy:buddy];
+    [xmpp.fileTransferManager sendWithImage:photo thread:thread];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods
@@ -1545,16 +1545,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if (!videoURL) { return; }
     __block OTRXMPPManager *xmpp = nil;
-    __block OTRBuddy *buddy = nil;
+    __block id<OTRThreadOwner> thread = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         xmpp = [self xmppManagerWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
+        thread = [self threadObjectWithTransaction:transaction];
     }];
     NSParameterAssert(xmpp);
-    NSParameterAssert(buddy);
-    if (!xmpp || !buddy) { return; }
-    
-    [xmpp.fileTransferManager sendWithVideoURL:videoURL buddy:buddy];
+    NSParameterAssert(thread);
+    if (!xmpp || !thread) { return; }
+
+    [xmpp.fileTransferManager sendWithVideoURL:videoURL thread:thread];
 }
 
 - (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
@@ -1566,16 +1566,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if (!url) { return; }
     __block OTRXMPPManager *xmpp = nil;
-    __block OTRBuddy *buddy = nil;
+    __block id<OTRThreadOwner> thread = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         xmpp = [self xmppManagerWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
+        thread = [self threadObjectWithTransaction:transaction];
     }];
     NSParameterAssert(xmpp);
-    NSParameterAssert(buddy);
-    if (!xmpp || !buddy) { return; }
+    NSParameterAssert(thread);
+    if (!xmpp || !thread) { return; }
     
-    [xmpp.fileTransferManager sendWithAudioURL:url buddy:buddy];
+    [xmpp.fileTransferManager sendWithAudioURL:url thread:thread];
 }
 
 - (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize

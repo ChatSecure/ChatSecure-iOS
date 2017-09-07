@@ -174,12 +174,20 @@
     return self.mediaItemUniqueId;
 }
 
+- (void) setMessageError:(NSError *)messageError {
+    self.error = messageError;
+}
+
 - (NSError *)messageError {
     return self.error;
 }
 
 - (NSString*) messageText {
     return self.text;
+}
+
+- (void) setMessageText:(NSString *)messageText {
+    self.text = messageText;
 }
 
 - (NSString *)remoteMessageId

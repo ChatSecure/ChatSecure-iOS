@@ -28,6 +28,24 @@ open class PushMessage: OTRYapDatabaseObject {
 }
 
 extension PushMessage: OTRMessageProtocol {
+    public var messageText: String? {
+        get {
+            return nil
+        }
+        set(messageText) {
+            
+        }
+    }
+
+    public var messageError: Error? {
+        get {
+            return self.error
+        }
+        set(messageError) {
+            // let's do nothing here
+        }
+    }
+
     public func downloads() -> [OTRDownloadMessage] {
         return []
     }
@@ -64,10 +82,6 @@ extension PushMessage: OTRMessageProtocol {
         return nil
     }
     
-    public var messageError: Error? {
-        return self.error
-    }
-    
     public var messageSecurity: OTRMessageTransportSecurity {
         return .plaintext
     }
@@ -78,10 +92,6 @@ extension PushMessage: OTRMessageProtocol {
     
     public var messageDate: Date {
         return self.pushDate
-    }
-    
-    public var messageText: String? {
-        return nil
     }
     
     public var remoteMessageId: String? {

@@ -38,6 +38,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var messageDate = Date.distantPast
     open var xmppId:String? = UUID().uuidString
     open var read = true
+    open var error:Error?
     
     open var roomUniqueId:String?
     
@@ -61,6 +62,15 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public var messageError: Error? {
+        get {
+            return self.error
+        }
+        set(messageError) {
+            self.error = messageError
+        }
+    }
+
     //MARK: OTRMessageProtocol
     
     public var isMessageRead: Bool {
@@ -88,10 +98,6 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public var messageMediaItemKey: String? {
-        return nil
-    }
-    
-    public var messageError: Error? {
         return nil
     }
     
