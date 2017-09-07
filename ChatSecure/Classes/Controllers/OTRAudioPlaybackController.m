@@ -160,7 +160,9 @@
     [self.currentAudioControlsView.playPuaseProgressView removeProgressArc];
     [self.labelTimer invalidate];
     self.labelTimer = nil;
-    [self.currentAudioControlsView setTime:self.currentAudioItem.timeLength];
+    if (self.currentAudioItem != nil) {
+        [self.currentAudioControlsView setTime:self.currentAudioItem.timeLength];
+    }
     _currentAudioItem = nil;
 }
 
