@@ -174,6 +174,10 @@
     return self.mediaItemUniqueId;
 }
 
+- (void) setMessageMediaItemKey:(NSString *)messageMediaItemKey {
+    self.mediaItemUniqueId = messageMediaItemKey;
+}
+
 - (void) setMessageError:(NSError *)messageError {
     self.error = messageError;
 }

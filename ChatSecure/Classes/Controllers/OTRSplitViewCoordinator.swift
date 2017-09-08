@@ -51,7 +51,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         
         let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate
         
-        var messagesViewController:OTRMessagesViewController? = appDelegate?.messagesViewController
+        let messagesViewController:OTRMessagesViewController? = appDelegate?.messagesViewController
         guard let mVC = messagesViewController else {
             return
         }

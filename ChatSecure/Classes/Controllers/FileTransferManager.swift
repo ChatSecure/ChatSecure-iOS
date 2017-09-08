@@ -413,6 +413,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             message.roomJID = room.jid
             message.senderJID = room.ownJID
             message.state = .needsSending
+            message.mediaItemId = mediaItem.uniqueId
             return message
         }
         return nil

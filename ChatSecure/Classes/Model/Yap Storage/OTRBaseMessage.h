@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSString *threadId;
 @property (nonatomic, readonly, nonnull) NSString *threadCollection;
 @property (nonatomic, readonly) BOOL isMessageIncoming;
-@property (nonatomic, readonly, nullable) NSString *messageMediaItemKey;
+@property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;
 @property (nonatomic, readwrite, nullable) NSError *messageError;
 @property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
 @property (nonatomic, readonly) BOOL isMessageRead;
