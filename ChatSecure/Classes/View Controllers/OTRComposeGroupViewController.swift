@@ -12,8 +12,8 @@ import PureLayout
 import OTRAssets
 
 @objc public protocol OTRComposeGroupViewControllerDelegate {
-    func onBuddiesSelected(_ buddies:NSSet,groupName:String) -> Void
-    func onCancelled(_ viewController:UIViewController?) -> Void
+    func groupBuddiesSelected(_ composeViewController: OTRComposeGroupViewController,  buddyUniqueIds:[String], groupName:String) -> Void
+    func groupSelectionCancelled(_ composeViewController: OTRComposeGroupViewController) -> Void
 }
 
 open class OTRComposeGroupViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, OTRComposeGroupBuddyCellDelegate,OTRYapViewHandlerDelegateProtocol
@@ -82,10 +82,10 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     @IBAction open func didPressDone(_ sender: Any) {
         if selectedItems.count > 0 {
             if let delegate = delegate {
-                var buddyIds = Set<String>()
+                var buddyIds:[String] = []
                 var generatedGroupName = ""
                 for buddy in selectedItems {
-                    buddyIds.insert(buddy.uniqueId)
+                    buddyIds.append(buddy.uniqueId)
                     if generatedGroupName.characters.count > 0 {
                         generatedGroupName.append(", ")
                     }
@@ -95,7 +95,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     generatedGroupName = generatedGroupName.substring(to: generatedGroupName.index(generatedGroupName.startIndex, offsetBy: 27)).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
                     generatedGroupName.append("...")
                 }
-                delegate.onBuddiesSelected(buddyIds as NSSet, groupName: generatedGroupName)
+                delegate.groupBuddiesSelected(self, buddyUniqueIds: buddyIds, groupName: generatedGroupName)
             }
             dismiss(animated: true, completion: nil)
         }
@@ -233,11 +233,8 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     override open func willMove(toParentViewController parent: UIViewController?)
     {
-        if parent == nil
-        {
-            if let delegate = self.delegate {
-                delegate.onCancelled(self)
-            }
+        if parent == nil, let delegate = self.delegate {
+            delegate.groupSelectionCancelled(self)
         }
     }
 }

@@ -22,15 +22,13 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
-            if let messagesVC = appDelegate.theme.messagesViewController() as? OTRMessagesViewController {
-                messagesVC.setup(withBuddies: buddyKeys, accountId: accountKey, name:name)
-                //setup 'back' button in nav bar
-                let navigationController = UINavigationController(rootViewController: messagesVC)
-                navigationController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem;
-                navigationController.topViewController!.navigationItem.leftItemsSupplementBackButton = true;
-                splitVC.showDetailViewController(navigationController, sender: nil)
-            }
+        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate, let messagesVC = appDelegate.theme.messagesViewController() as? OTRMessagesViewController {
+            messagesVC.setup(withBuddies: buddyKeys, accountId: accountKey, name:name)
+            //setup 'back' button in nav bar
+            let navigationController = UINavigationController(rootViewController: messagesVC)
+            navigationController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem;
+            navigationController.topViewController!.navigationItem.leftItemsSupplementBackButton = true;
+            splitVC.showDetailViewController(navigationController, sender: nil)
         }
     }
     

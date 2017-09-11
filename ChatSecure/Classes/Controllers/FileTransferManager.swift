@@ -650,10 +650,8 @@ extension FileTransferManager {
             self.connection.asyncReadWrite({ (transaction) in
                 mediaItem.transferProgress = 1.0
                 
-                if let audioItem = mediaItem as? OTRAudioItem {
-                    if let url = OTRMediaServer.sharedInstance().url(for: mediaItem, buddyUniqueId: downloadMessage.buddyUniqueId) {
-                        audioItem.populateFromData(at: url)
-                    }
+                if let audioItem = mediaItem as? OTRAudioItem, let url = OTRMediaServer.sharedInstance().url(for: mediaItem, buddyUniqueId: downloadMessage.buddyUniqueId) {
+                    audioItem.populateFromData(at: url)
                 }
                 
                 mediaItem.save(with: transaction)

@@ -54,8 +54,6 @@
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
-- (BOOL)canSendMedia;
-
 /** Group chat support */
 - (nullable OTRXMPPRoom *)roomWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (BOOL) isGroupChat;
@@ -71,8 +69,5 @@
 
 /** override this method to customize what should be shown at the beginning of the message status */
 - (nullable NSAttributedString *) encryptionStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message;
-
-/** Override this to return a fallback conference service JID. Will only be called if no conference server was discovered. Return nil to abort group chat creation. May be used to show warning message to user. */
-- (nullable NSString *)getFallbackConferenceServiceJID;
 
 @end

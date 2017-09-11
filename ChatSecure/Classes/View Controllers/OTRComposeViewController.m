@@ -669,11 +669,11 @@
 
 #pragma - mark OTRComposeGroupViewControllerDelegate
 
-- (void)onBuddiesSelected:(NSSet *)buddies groupName:(NSString *)groupName {
-    [self completeSelectingBuddies:buddies groupName:groupName];
+- (void)groupBuddiesSelected:(OTRComposeGroupViewController *)composeViewController buddyUniqueIds:(NSArray<NSString *> *)buddyUniqueIds groupName:(NSString *)groupName {
+    [self completeSelectingBuddies:[NSSet setWithArray:buddyUniqueIds] groupName:groupName];
 }
 
-- (void)onCancelled:(UIViewController *)viewController {    
+- (void)groupSelectionCancelled:(OTRComposeGroupViewController *)composeViewController {
 }
 
 @end

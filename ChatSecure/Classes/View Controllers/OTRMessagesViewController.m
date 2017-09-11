@@ -1253,10 +1253,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark Sending Media Items
 
-- (BOOL)canSendMedia {
-    return self.state.canSendMedia || [self isGroupChat];
-}
-
 - (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     OTRBuddy *buddy = [self buddyWithTransaction:transaction];
@@ -2206,19 +2202,12 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     }];
     OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     NSString *service = [xmppManager.roomManager.conferenceServicesJID firstObject];
-    if (service == nil) {
-        service = [self getFallbackConferenceServiceJID];
-    }
     if (service != nil) {
         NSString *roomName = [NSUUID UUID].UUIDString;
         XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
         self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
     }
-}
-
-- (NSString *)getFallbackConferenceServiceJID {
-    return nil;
 }
 
 @end
