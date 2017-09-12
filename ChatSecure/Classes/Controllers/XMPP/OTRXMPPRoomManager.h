@@ -25,6 +25,8 @@
 
 - (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
 
+- (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds toRoom:(nonnull XMPPRoom*)room;
+
 + (nonnull XMPPMessage *)xmppMessage:(nonnull OTRXMPPRoomMessage *)databaseMessage;
 
 @end

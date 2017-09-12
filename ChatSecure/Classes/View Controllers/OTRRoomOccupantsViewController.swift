@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import PureLayout
 import BButton
+import OTRAssets
 
 open class OTRRoomOccupantsViewController: UIViewController {
     
@@ -80,7 +81,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
         for name in headerCells {
             let cell = createHeaderCell(type: name)
-            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: { 
+            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: {
                 self.didSelectHeaderCell(type: name)
             })
         }
@@ -213,6 +214,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 updateMuteUnmuteCell()
             }
             break
+        case OTRRoomOccupantsViewController.HeaderCellAddFriends:
+            addMoreFriends()
+            break
         default: break
         }
     }
@@ -239,6 +243,15 @@ open class OTRRoomOccupantsViewController: UIViewController {
         })
         self.present(alert, animated: true, completion: nil)
     }
+    
+    private func addMoreFriends() {
+        let storyboard = UIStoryboard(name: "OTRComposeGroup", bundle: OTRAssets.resourcesBundle)
+        if let vc = storyboard.instantiateInitialViewController() as? OTRComposeGroupViewController {
+            vc.delegate = self
+            vc.excludeRoomOccupants(viewHandler: self.viewHandler, room: self.room)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
 
 extension OTRRoomOccupantsViewController {
@@ -257,6 +270,16 @@ extension OTRRoomOccupantsViewController {
             let xmppRoom = xmpp?.roomManager.room(for: roomJid)
             else { return nil }
         return xmppRoom
+    }
+    
+    fileprivate func xmppRoomManager() -> OTRXMPPRoomManager? {
+        var xmpp: OTRXMPPManager? = nil
+        self.readConnection?.read { transaction in
+            if let account = self.room?.account(with: transaction) {
+                xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager
+            }
+        }
+        return xmpp?.roomManager
     }
     
     fileprivate func fetchMembersList(_ sender: Any) {
@@ -330,5 +353,19 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+extension OTRRoomOccupantsViewController: OTRComposeGroupViewControllerDelegate {
+    
+    public func groupSelectionCancelled(_ composeViewController: OTRComposeGroupViewController) {
+    }
+    
+    public func groupBuddiesSelected(_ composeViewController: OTRComposeGroupViewController, buddyUniqueIds: [String], groupName: String) {
+        // Add them to the room
+        if let xmppRoom = self.xmppRoom(), let xmppRoomManager = self.xmppRoomManager() {
+            xmppRoomManager.inviteBuddies(buddyUniqueIds, to: xmppRoom)
+        }
+        self.navigationController?.popToViewController(self, animated: true)
     }
 }
