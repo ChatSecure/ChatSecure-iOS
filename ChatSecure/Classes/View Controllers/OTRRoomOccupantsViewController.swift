@@ -223,16 +223,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
     func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
         let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
-            if let newSubject = alert.textFields?.first?.text, let room = self.room {
+            if let newSubject = alert.textFields?.first?.text {
                 if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellGroupName) as? UITableViewCell {
                     cell.textLabel?.text = newSubject
                 }
-                OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
-                    if let account = room.account(with: transaction),
-                        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager, let xmppRoom = xmpp.roomManager.room(for: XMPPJID(string: room.jid)) {
-                        xmppRoom.changeSubject(newSubject)
-                    }
-                })
+                if let xmppRoom = self.xmppRoom() {
+                    xmppRoom.changeSubject(newSubject)
+                }
             }
         }))
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
