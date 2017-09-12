@@ -370,6 +370,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
     }];
     
+    // Clear out old state (don't just alloc a new object, we have KVOs attached to this!)
+    self.state.canSendMedia = NO;
+    self.state.canKnock = NO;
+    self.state.messageSecurity = OTRMessageTransportSecurityInvalid;
+    self.state.hasText = NO;
+    self.state.isThreadOnline = NO;
+    self.showTypingIndicator = NO;
+    
     // This is set to nil so the refreshTitleView: method knows to reset username instead of last seen time
     [self titleView].subtitleLabel.text = nil;
     
@@ -512,8 +520,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if (!previousState && self.state.isThreadOnline) {
             [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
         }
+    } else if ([collection isEqualToString:[OTRXMPPRoom collection]]) {
+        __block OTRXMPPRoom *room = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            room = [OTRXMPPRoom fetchObjectWithUniqueID:key transaction:transaction];
+        }];
+        self.state.isThreadOnline = room.currentStatus != OTRThreadStatusOffline;
+        [self didUpdateState];
+        [self refreshTitleView:[self titleView]];
     }
-    
     [self tryToMarkAllMessagesAsRead];
 }
 
@@ -904,38 +919,54 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
-    __block OTRBuddy *buddy = nil;
-    __block OTRAccount *account = nil;
-    __block OTRXMPPManager *xmpp = nil;
-    __block OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
-    
-    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [self buddyWithTransaction:transaction];
-        account = [buddy accountWithTransaction:transaction];
-        xmpp = [self xmppManagerWithTransaction:transaction];
-        messageSecurity = [buddy preferredTransportSecurityWithTransaction:transaction];
-    } completionBlock:^{
-        if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
-            DDLogError(@"updateEncryptionState error: missing parameters");
-            return;
-        }
-        BOOL canSendMedia = NO;
+    if ([self isGroupChat]) {
+        __block OTRXMPPManager *xmpp = nil;
+        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            xmpp = [self xmppManagerWithTransaction:transaction];
+        } completionBlock:^{
+            BOOL canSendMedia = NO;
+            // Check for XEP-0363 HTTP upload
+            // TODO: move this check elsewhere so it isnt dependent on refreshing crypto state
+            if (xmpp != nil && xmpp.fileTransferManager.canUploadFiles) {
+                canSendMedia = YES;
+            }
+            self.state.canSendMedia = canSendMedia;
+            self.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+            [self didUpdateState];
+        }];
+    } else {
+        __block OTRBuddy *buddy = nil;
+        __block OTRAccount *account = nil;
+        __block OTRXMPPManager *xmpp = nil;
+        __block OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
         
-        OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
-        // Check for XEP-0363 HTTP upload
-        // TODO: move this check elsewhere so it isnt dependent on refreshing crypto state
-        if (xmpp.fileTransferManager.canUploadFiles) {
-            canSendMedia = YES;
-        } else if (messageState == OTRKitMessageStateEncrypted &&
-                   buddy.status != OTRThreadStatusOffline) {
-            // If other side supports OTR, assume OTRDATA is possible
-            canSendMedia = YES;
-        }
-        
-        self.state.canSendMedia = canSendMedia;
-        self.state.messageSecurity = messageSecurity;
-        [self didUpdateState];
-    }];
+        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            buddy = [self buddyWithTransaction:transaction];
+            account = [buddy accountWithTransaction:transaction];
+            xmpp = [self xmppManagerWithTransaction:transaction];
+            messageSecurity = [buddy preferredTransportSecurityWithTransaction:transaction];
+        } completionBlock:^{
+            BOOL canSendMedia = NO;
+            // Check for XEP-0363 HTTP upload
+            // TODO: move this check elsewhere so it isnt dependent on refreshing crypto state
+            if (xmpp != nil && xmpp.fileTransferManager.canUploadFiles) {
+                canSendMedia = YES;
+            }
+            if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
+                DDLogError(@"updateEncryptionState error: missing parameters");
+            } else {
+                OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+                if (messageState == OTRKitMessageStateEncrypted &&
+                    buddy.status != OTRThreadStatusOffline) {
+                    // If other side supports OTR, assume OTRDATA is possible
+                    canSendMedia = YES;
+                }
+            }
+            self.state.canSendMedia = canSendMedia;
+            self.state.messageSecurity = messageSecurity;
+            [self didUpdateState];
+        }];
+    }
 }
 
 - (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState buddyStatus:(OTRThreadStatus)status textViewHasText:(BOOL)hasText
