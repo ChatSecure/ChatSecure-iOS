@@ -174,11 +174,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 cell?.detailTextLabel?.text = "" // Do we have creation date?
             }
             
-            let font:UIFont? = UIFont(name: kFontAwesomeFont, size: 30)
+            let font:UIFont? = UIFont(name: "Material Icons", size: 24)
             let button = UIButton(type: UIButtonType.custom)
             if (font != nil) {
                 button.titleLabel?.font = font
-                button.setTitle(NSString.fa_string(forFontAwesomeIcon: FAIcon.FAEdit), for: UIControlState())
+                button.setTitle("", for: UIControlState())
                 button.setTitleColor(UIColor.black, for: UIControlState())
                 button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
                 button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
