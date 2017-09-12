@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import PureLayout
+import BButton
 
 open class OTRRoomOccupantsViewController: UIViewController {
     
@@ -172,6 +173,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 cell?.textLabel?.text = room.subject
                 cell?.detailTextLabel?.text = "" // Do we have creation date?
             }
+            
+            let font:UIFont? = UIFont(name: kFontAwesomeFont, size: 30)
+            let button = UIButton(type: UIButtonType.custom)
+            if (font != nil) {
+                button.titleLabel?.font = font
+                button.setTitle(NSString.fa_string(forFontAwesomeIcon: FAIcon.FAEdit), for: UIControlState())
+                button.setTitleColor(UIColor.black, for: UIControlState())
+                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                cell?.accessoryView = button
+                cell?.isUserInteractionEnabled = true
+            }
             cell?.selectionStyle = .none
             break
         default:
@@ -205,6 +218,29 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
     
     open func didSelectFooterCell(type:String) {
+    }
+    
+    func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
+        let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
+            if let newSubject = alert.textFields?.first?.text, let room = self.room {
+                if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellGroupName) as? UITableViewCell {
+                    cell.textLabel?.text = newSubject
+                }
+                OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+                    if let account = room.account(with: transaction),
+                        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager, let xmppRoom = xmpp.roomManager.room(for: XMPPJID(string: room.jid)) {
+                        xmppRoom.changeSubject(newSubject)
+                    }
+                })
+            }
+        }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
+        alert.addTextField(configurationHandler: {(textField: UITextField!) in
+            textField.placeholder = self.room?.subject
+            textField.isSecureTextEntry = false
+        })
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
