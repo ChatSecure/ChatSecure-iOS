@@ -240,7 +240,8 @@ NSString *OTRPushAccountGroup = @"Account";
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
         {
-            return [((id <OTRMessageProtocol>)object) threadId];
+            id <OTRMessageProtocol> message = object;
+            return [message threadId];
         }
         return nil;
     }];

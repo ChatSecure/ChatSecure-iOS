@@ -49,7 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSString *parentObjectKey;
 @property (nonatomic, strong, nullable) NSString *parentObjectCollection;
 
+/** Returns parent object if it still exists */
 - (nullable id) parentObjectWithTransaction:(YapDatabaseReadTransaction*)transaction;
+/** Attempts to touch parent object */
 - (void) touchParentObjectWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
 
 @end

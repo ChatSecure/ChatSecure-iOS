@@ -718,7 +718,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [actions addObject:resendAction];
     }
     
-    if (![message isKindOfClass:[OTRChatMessageGroup class]]) {
+    if (![message isKindOfClass:[OTRXMPPRoomMessage class]]) {
         [actions addObject:[self viewProfileAction]];
     }
     

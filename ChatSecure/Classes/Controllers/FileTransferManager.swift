@@ -495,45 +495,50 @@ extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
     public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
-        if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
-            DDLogVerbose("Download of message not needed \(message.messageKey)")
-            return
-        }
-        var downloads: [OTRDownloadMessage] = []
-        var disableAutomaticURLFetching = false
-        if !force {
-            readConnection.read { (transaction) in
-                downloads = message.existingDownloads(with: transaction)
-                if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
-                    disableAutomaticURLFetching = account.disableAutomaticURLFetching
-                }
-            }
-        }
-        if downloads.count == 0 {
-            downloads = message.downloads()
-            if downloads.count == 0 {
+        DispatchQueue.global(qos: .default).async {
+            if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
+                DDLogVerbose("Download of message not needed \(message.messageKey)")
                 return
             }
-            connection.readWrite({ (transaction) in
-                for download in downloads {
-                    if disableAutomaticURLFetching {
-                        let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
-                        media.parentObjectKey = download.uniqueId
-                        media.parentObjectCollection = OTRDownloadMessage.collection
-                        media.save(with: transaction)
-                        download.mediaItemUniqueId = media.uniqueId
-                        download.error = FileTransferError.automaticDownloadsDisabled
+            var downloads: [OTRDownloadMessage] = []
+            var disableAutomaticURLFetching = false
+            if !force {
+                readConnection.read { (transaction) in
+                    downloads = message.existingDownloads(with: transaction)
+                    if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
+                        disableAutomaticURLFetching = account.disableAutomaticURLFetching
                     }
-                    download.save(with: transaction)
                 }
-            })
-        }
-        if disableAutomaticURLFetching {
-            DDLogVerbose("Automatic URL fetching disabled \(message.messageKey)")
-            return
-        }
-        for download in downloads {
-            downloadMediaIfNeeded(download)
+            }
+            if downloads.count == 0 {
+                downloads = message.downloads()
+                if downloads.count == 0 {
+                    return
+                }
+                self.connection.readWrite({ (transaction) in
+                    for download in downloads {
+                        if disableAutomaticURLFetching {
+                            let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
+                            media.parentObjectKey = download.uniqueId
+                            media.parentObjectCollection = OTRDownloadMessage.collection
+                            media.save(with: transaction)
+                            download.mediaItemUniqueId = media.uniqueId
+                            download.error = FileTransferError.automaticDownloadsDisabled
+                        }
+                        download.save(with: transaction)
+                        if let test = download.refetch(with: transaction) {
+                            DDLogInfo("WTF")
+                        }
+                    }
+                })
+            }
+            if disableAutomaticURLFetching {
+                DDLogVerbose("Automatic URL fetching disabled \(message.messageKey)")
+                return
+            }
+            for download in downloads {
+                self.downloadMediaIfNeeded(download)
+            }
         }
     }
     
@@ -667,6 +672,8 @@ extension FileTransferManager {
                 if let message = downloadMessage.refetch(with: transaction) {
                     message.error = nil
                     message.save(with: transaction)
+                } else {
+                    DDLogError("Failed to refetch download message WTF \(downloadMessage)")
                 }
             }, completionQueue: DispatchQueue.main,
                completionBlock: {

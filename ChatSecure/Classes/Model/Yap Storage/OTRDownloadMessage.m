@@ -36,6 +36,15 @@
     return self;
 }
 
+- (NSString*) threadCollection {
+    // This is a hack to support group messages
+    if ([self.parentObjectCollection isEqualToString:[OTRXMPPRoomMessage collection]]) {
+        return [OTRXMPPRoom collection];
+    } else {
+        return [super threadCollection];
+    }
+}
+
 - (nullable NSArray<YapDatabaseRelationshipEdge *> *)yapDatabaseRelationshipEdges {
     NSMutableArray *edges = [NSMutableArray arrayWithCapacity:3];
     NSArray *superEdges = [super yapDatabaseRelationshipEdges];

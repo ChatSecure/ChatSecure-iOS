@@ -98,7 +98,9 @@
     XMPPJID *fromJID = [message from];
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
+    __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
@@ -139,6 +141,8 @@
         [databaseMessage saveWithTransaction:transaction];
     } completionBlock:^{
         if(databaseMessage) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
             [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
         }
     }];

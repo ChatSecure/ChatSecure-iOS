@@ -126,6 +126,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
+    [self touchParentObjectWithTransaction:transaction];
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {

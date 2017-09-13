@@ -201,7 +201,11 @@
 
 - (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
+    id object = [transaction objectForKey:self.threadId inCollection:self.threadCollection];
+    if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+        return object;
+    }
+    return nil;
 }
 
 - (nullable OTRBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
