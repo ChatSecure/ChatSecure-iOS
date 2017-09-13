@@ -44,8 +44,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 @end
 
+@protocol OTRChildObjectProtocol
+@required
+@property (nonatomic, strong, nullable) NSString *parentObjectKey;
+@property (nonatomic, strong, nullable) NSString *parentObjectCollection;
+
+- (nullable id) parentObjectWithTransaction:(YapDatabaseReadTransaction*)transaction;
+- (void) touchParentObjectWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
+
+@end
+
 /** This is for objects that point to a parent message, for instance OTRDownloadMessage or OTRMediaItem */
-@protocol OTRMessageChildProtocol <NSObject>
+@protocol OTRMessageChildProtocol
 @required
 - (nullable id<OTRMessageProtocol>) parentMessageWithTransaction:(YapDatabaseReadTransaction*)transaction;
 - (void) touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;

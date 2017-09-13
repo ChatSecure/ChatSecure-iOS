@@ -317,10 +317,13 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 DDLogError("No message could be created for \(thread) \(mediaItem)")
                 return
             }
+            mediaItem.parentObjectKey = message.messageKey
+            mediaItem.parentObjectCollection = message.messageCollection
             let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier())
             self.connection.readWrite { transaction in
                 message.save(with: transaction)
                 mediaItem.save(with: transaction)
+                
             }
             OTRMediaFileManager.shared.copyData(fromFilePath: url.path, toEncryptedPath: newPath, completion: { (result, copyError: Error?) in
                 var prefetchedData: Data? = nil
@@ -367,6 +370,8 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 DDLogError("No message could be created")
                 return
             }
+            imageItem.parentObjectKey = message.messageKey
+            imageItem.parentObjectCollection = message.messageCollection
             self.connection.readWrite { transaction in
                 message.save(with: transaction)
                 imageItem.save(with: transaction)
@@ -513,6 +518,8 @@ extension FileTransferManager {
                 for download in downloads {
                     if disableAutomaticURLFetching {
                         let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
+                        media.parentObjectKey = download.uniqueId
+                        media.parentObjectCollection = OTRDownloadMessage.collection
                         media.save(with: transaction)
                         download.mediaItemUniqueId = media.uniqueId
                         download.error = FileTransferError.automaticDownloadsDisabled
@@ -580,6 +587,8 @@ extension FileTransferManager {
             mediaItem = OTRMediaItem(forMessage: downloadMessage, transaction: transaction)
             mediaItem?.remove(with: transaction)
             mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
+            mediaItem?.parentObjectKey = downloadMessage.uniqueId
+            mediaItem?.parentObjectCollection = OTRDownloadMessage.collection
             mediaItem?.save(with: transaction)
             downloadMessage.mediaItemUniqueId = mediaItem?.uniqueId
             downloadMessage.save(with: transaction)

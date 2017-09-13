@@ -13,7 +13,7 @@
 #import "OTRBaseMessage.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData, OTRMessageChildProtocol>
+@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData, OTRMessageChildProtocol, OTRChildObjectProtocol>
 
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readonly) NSString *filename;

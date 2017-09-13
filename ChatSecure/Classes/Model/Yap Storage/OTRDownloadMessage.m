@@ -14,6 +14,11 @@
 #import "UIActivity+ChatSecure.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
+@interface OTRDownloadMessage()
+@property (nonatomic, strong, readonly) NSString *parentMessageKey;
+@property (nonatomic, strong, readonly) NSString *parentMessageCollection;
+@end
+
 @implementation OTRDownloadMessage
 
 - (instancetype) initWithParentMessage:(id<OTRMessageProtocol>)parentMessage
@@ -49,10 +54,26 @@
     return edges;
 }
 
+- (nullable id) parentObjectWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    if (!self.parentObjectKey || !self.parentObjectCollection) {
+        return nil;
+    }
+    id parent = [transaction objectForKey:self.parentObjectKey inCollection:self.parentObjectCollection];
+    return parent;
+}
+
+- (void) touchParentObjectWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    if (!self.parentObjectKey || !self.parentObjectCollection) {
+        return;
+    }
+    [transaction touchObjectForKey:self.parentObjectKey inCollection:self.parentObjectCollection];
+}
+
+
 - (nullable id<OTRMessageProtocol>) parentMessageWithTransaction:(YapDatabaseReadTransaction*)transaction {
     NSParameterAssert(transaction);
     if (!transaction) { return nil; }
-    id object = [transaction objectForKey:self.parentMessageKey inCollection:self.parentMessageCollection];
+    id object = [self parentObjectWithTransaction:transaction];
     if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
         return object;
     }
@@ -65,6 +86,22 @@
     id<OTRMessageProtocol> message = [self parentMessageWithTransaction:transaction];
     if (!message) { return; }
     [message touchWithTransaction:transaction];
+}
+
+- (NSString*) parentObjectKey {
+    return _parentMessageKey;
+}
+
+- (void) setParentObjectKey:(NSString *)parentObjectKey {
+    _parentMessageKey = parentObjectKey;
+}
+
+- (NSString*) parentObjectCollection {
+    return _parentMessageCollection;
+}
+
+- (void) setParentObjectCollection:(NSString *)parentObjectCollection {
+    _parentMessageCollection = parentObjectCollection;
 }
 
 @end

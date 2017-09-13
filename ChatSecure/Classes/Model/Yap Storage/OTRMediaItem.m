@@ -36,6 +36,8 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 
 @implementation OTRMediaItem
 @synthesize mimeType = _mimeType;
+@synthesize parentObjectKey = _parentObjectKey;
+@synthesize parentObjectCollection = _parentObjectCollection;
 @dynamic displayText;
 
 - (instancetype) initWithFilename:(NSString *)filename mimeType:(NSString*)mimeType isIncoming:(BOOL)isIncoming {
@@ -130,8 +132,28 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
 }
+
+- (nullable id) parentObjectWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    if (!self.parentObjectKey || !self.parentObjectCollection) {
+        return nil;
+    }
+    id parent = [transaction objectForKey:self.parentObjectKey inCollection:self.parentObjectCollection];
+    return parent;
+}
+
+- (void) touchParentObjectWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    if (!self.parentObjectKey || !self.parentObjectCollection) {
+        return;
+    }
+    [transaction touchObjectForKey:self.parentObjectKey inCollection:self.parentObjectCollection];
+}
+
 - (id<OTRMessageProtocol>)parentMessageWithTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
+    id parent = [self parentObjectWithTransaction:readTransaction];
+    if (parent && [parent conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+        return parent;
+    }
     __block id<OTRMessageProtocol> message = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
