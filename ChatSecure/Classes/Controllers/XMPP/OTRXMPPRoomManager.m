@@ -138,8 +138,6 @@
         return;
     }
     NSMutableArray<OTRXMPPBuddy*> *buddies = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
-    [self.inviteDictionary removeObjectForKey:room.roomJID.bare];
-    
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         [buddyUniqueIds enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
@@ -329,6 +327,7 @@
         
         //Invite buddies
         NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
+        [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
         [self inviteBuddies:buddyUniqueIds toRoom:sender];
     }];
 }
