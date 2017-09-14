@@ -393,6 +393,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self updateViewWithKey:self.threadKey collection:self.threadCollection];
         [self.viewHandler setup:OTRFilteredChatDatabaseViewExtensionName groups:@[self.threadKey]];
         [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
+    } else {
+        // Reset the view handler
+        self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
+        self.viewHandler.delegate = self;
+        self.senderDisplayName = @"";
+        self.senderId = @"";
     }
     
     [self.collectionView reloadData];
@@ -885,6 +891,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)didSelectOccupantsButton:(id)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRRoomOccupants" bundle:[OTRAssets resourcesBundle]];
     OTRRoomOccupantsViewController *occupantsVC = [storyboard instantiateViewControllerWithIdentifier:@"roomOccupants"];
+    occupantsVC.delegate = self;
     [occupantsVC setupViewHandlerWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
     [self.navigationController pushViewController:occupantsVC animated:YES];
 }
@@ -2239,6 +2246,28 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
     }
+}
+
+#pragma - mark OTRRoomOccupantsViewControllerDelegate
+
+- (void)didLeaveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {
+    __block OTRXMPPRoom *room = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        room = [self roomWithTransaction:transaction];
+    }];
+    if (room) {
+        [self setThreadKey:nil collection:nil];
+        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [room removeWithTransaction:transaction];
+        }];
+    }
+    [self.navigationController popViewControllerAnimated:NO];
+    if ([[self.navigationController viewControllers] count] > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self.navigationController.navigationController popViewControllerAnimated:YES];
+    }
+    
 }
 
 @end

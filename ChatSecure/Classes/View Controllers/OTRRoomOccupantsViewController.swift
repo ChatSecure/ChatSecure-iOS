@@ -12,8 +12,14 @@ import PureLayout
 import BButton
 import OTRAssets
 
+@objc public protocol OTRRoomOccupantsViewControllerDelegate {
+    func didLeaveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
+}
+
 open class OTRRoomOccupantsViewController: UIViewController {
-    
+ 
+    @objc public var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
+
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
    
@@ -222,6 +228,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
     
     open func didSelectFooterCell(type:String) {
+        switch type {
+        case OTRRoomOccupantsViewController.FooterCellLeave:
+            if let room = self.room, let roomJid = XMPPJID(string: room.jid), let xmppRoomManager = self.xmppRoomManager() {
+                //Leave room
+                xmppRoomManager.leaveRoom(roomJid)
+                if let delegate = self.delegate {
+                    delegate.didLeaveRoom(self)
+                }
+            }
+            break
+        default: break
+        }
     }
     
     func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {

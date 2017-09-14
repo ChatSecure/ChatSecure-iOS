@@ -15,7 +15,7 @@
 
 @class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
-@protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
+@protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData, OTRRoomOccupantsViewControllerDelegate;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
@@ -24,7 +24,7 @@
 
 @end
 
-@interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
+@interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate, OTRRoomOccupantsViewControllerDelegate>
 
 @property (nonatomic, strong, nonnull) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, strong, nonnull) YapDatabaseConnection *readWriteDatabaseConnection;
