@@ -270,6 +270,10 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    open func viewOccupantInfo(_ occupant:OTRXMPPRoomOccupant) {
+        // Show profile view?
+    }
 }
 
 extension OTRRoomOccupantsViewController {
@@ -371,6 +375,9 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant {
+            viewOccupantInfo(roomOccupant)
+        }
     }
 }
 
