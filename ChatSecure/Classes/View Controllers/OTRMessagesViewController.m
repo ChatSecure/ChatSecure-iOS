@@ -69,7 +69,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol> {
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol, OTRRoomOccupantsViewControllerDelegate> {
     JSQMessagesAvatarImage *_warningAvatarImage;
     JSQMessagesAvatarImage *_accountAvatarImage;
     JSQMessagesAvatarImage *_buddyAvatarImage;
