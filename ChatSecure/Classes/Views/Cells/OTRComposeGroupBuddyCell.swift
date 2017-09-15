@@ -29,7 +29,7 @@ open class OTRComposeGroupBuddyCell: UICollectionViewCell {
         image.clipsToBounds = true
         
         label.text = buddy.displayName
-        image.image = buddy.avatarImage()
+        image.image = buddy.avatarImage
         updateShadow()
     }
     

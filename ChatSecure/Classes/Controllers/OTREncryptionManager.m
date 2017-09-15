@@ -678,9 +678,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:audioItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                 
                 NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:message.buddyUniqueId];
-                AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:url
-                                                             options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
-                audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
+                [audioItem populateFromDataAtUrl:url];
                 
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [audioItem saveWithTransaction:transaction];

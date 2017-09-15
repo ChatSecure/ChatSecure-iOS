@@ -98,7 +98,9 @@
     XMPPJID *fromJID = [message from];
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
+    __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
@@ -139,6 +141,8 @@
         [databaseMessage saveWithTransaction:transaction];
     } completionBlock:^{
         if(databaseMessage) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
             [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
         }
     }];
@@ -171,6 +175,7 @@
     XMPPJID *presenceJID = [presence from];
     NSArray *children = [presence children];
     __block XMPPJID *buddyJID = nil;
+    __block NSString *buddyRole = nil;
     [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([[element xmlns] containsString:XMPPMUCNamespace]) {
             NSArray *items = [element children];
@@ -180,6 +185,7 @@
                     buddyJID = [XMPPJID jidWithString:jid];
                     *stop = YES;
                 }
+                buddyRole = [item attributeStringValueForName:@"role"];
             }];
             *stop = YES;
         }
@@ -204,9 +210,12 @@
         
         occupant.roomName = [presenceJID resource];
         
-        
-    
-        [occupant saveWithTransaction:transaction];
+        if ([[presence type] isEqualToString:@"unavailable"] && [buddyRole isEqualToString:@"none"]) {
+            // Buddy left the room!
+            [occupant removeWithTransaction:transaction];
+        } else {
+            [occupant saveWithTransaction:transaction];
+        }
     }];
 }
 

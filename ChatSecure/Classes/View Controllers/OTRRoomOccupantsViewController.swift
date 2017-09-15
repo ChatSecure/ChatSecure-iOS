@@ -9,9 +9,17 @@
 import Foundation
 import UIKit
 import PureLayout
+import BButton
+import OTRAssets
+
+@objc public protocol OTRRoomOccupantsViewControllerDelegate {
+    func didLeaveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
+}
 
 open class OTRRoomOccupantsViewController: UIViewController {
-    
+ 
+    public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
+
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
    
@@ -79,7 +87,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
         for name in headerCells {
             let cell = createHeaderCell(type: name)
-            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: { 
+            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: {
                 self.didSelectHeaderCell(type: name)
             })
         }
@@ -172,6 +180,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 cell?.textLabel?.text = room.subject
                 cell?.detailTextLabel?.text = "" // Do we have creation date?
             }
+            
+            let font:UIFont? = UIFont(name: "Material Icons", size: 24)
+            let button = UIButton(type: UIButtonType.custom)
+            if (font != nil) {
+                button.titleLabel?.font = font
+                button.setTitle("", for: UIControlState())
+                button.setTitleColor(UIColor.black, for: UIControlState())
+                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                cell?.accessoryView = button
+                cell?.isUserInteractionEnabled = true
+            }
             cell?.selectionStyle = .none
             break
         default:
@@ -200,11 +220,59 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 updateMuteUnmuteCell()
             }
             break
+        case OTRRoomOccupantsViewController.HeaderCellAddFriends:
+            addMoreFriends()
+            break
         default: break
         }
     }
     
     open func didSelectFooterCell(type:String) {
+        switch type {
+        case OTRRoomOccupantsViewController.FooterCellLeave:
+            if let room = self.room, let roomJid = XMPPJID(string: room.jid), let xmppRoomManager = self.xmppRoomManager() {
+                //Leave room
+                xmppRoomManager.leaveRoom(roomJid)
+                if let delegate = self.delegate {
+                    delegate.didLeaveRoom(self)
+                }
+            }
+            break
+        default: break
+        }
+    }
+    
+    func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
+        let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
+            if let newSubject = alert.textFields?.first?.text {
+                if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellGroupName) as? UITableViewCell {
+                    cell.textLabel?.text = newSubject
+                }
+                if let xmppRoom = self.xmppRoom() {
+                    xmppRoom.changeSubject(newSubject)
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
+        alert.addTextField(configurationHandler: {(textField: UITextField!) in
+            textField.placeholder = self.room?.subject
+            textField.isSecureTextEntry = false
+        })
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func addMoreFriends() {
+        let storyboard = UIStoryboard(name: "OTRComposeGroup", bundle: OTRAssets.resourcesBundle)
+        if let vc = storyboard.instantiateInitialViewController() as? OTRComposeGroupViewController {
+            vc.delegate = self
+            vc.excludeRoomOccupants(viewHandler: self.viewHandler, room: self.room)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    open func viewOccupantInfo(_ occupant:OTRXMPPRoomOccupant) {
+        // Show profile view?
     }
 }
 
@@ -224,6 +292,16 @@ extension OTRRoomOccupantsViewController {
             let xmppRoom = xmpp?.roomManager.room(for: roomJid)
             else { return nil }
         return xmppRoom
+    }
+    
+    fileprivate func xmppRoomManager() -> OTRXMPPRoomManager? {
+        var xmpp: OTRXMPPManager? = nil
+        self.readConnection?.read { transaction in
+            if let account = self.room?.account(with: transaction) {
+                xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager
+            }
+        }
+        return xmpp?.roomManager
     }
     
     fileprivate func fetchMembersList(_ sender: Any) {
@@ -297,5 +375,22 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant {
+            viewOccupantInfo(roomOccupant)
+        }
+    }
+}
+
+extension OTRRoomOccupantsViewController: OTRComposeGroupViewControllerDelegate {
+    
+    public func groupSelectionCancelled(_ composeViewController: OTRComposeGroupViewController) {
+    }
+    
+    public func groupBuddiesSelected(_ composeViewController: OTRComposeGroupViewController, buddyUniqueIds: [String], groupName: String) {
+        // Add them to the room
+        if let xmppRoom = self.xmppRoom(), let xmppRoomManager = self.xmppRoomManager() {
+            xmppRoomManager.inviteBuddies(buddyUniqueIds, to: xmppRoom)
+        }
+        self.navigationController?.popToViewController(self, animated: true)
     }
 }

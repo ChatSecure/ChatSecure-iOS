@@ -33,7 +33,6 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
-#import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"

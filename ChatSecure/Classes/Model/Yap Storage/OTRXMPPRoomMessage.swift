@@ -38,6 +38,8 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var messageDate = Date.distantPast
     open var xmppId:String? = UUID().uuidString
     open var read = true
+    open var error:Error?
+    open var mediaItemId: String?
     
     open var roomUniqueId:String?
     
@@ -61,6 +63,15 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public var messageError: Error? {
+        get {
+            return self.error
+        }
+        set(messageError) {
+            self.error = messageError
+        }
+    }
+
     //MARK: OTRMessageProtocol
     
     public var isMessageRead: Bool {
@@ -88,11 +99,12 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public var messageMediaItemKey: String? {
-        return nil
-    }
-    
-    public var messageError: Error? {
-        return nil
+        get {
+            return self.mediaItemId
+        }
+        set(messageMediaItemKey) {
+            self.mediaItemId = messageMediaItemKey
+        }
     }
     
     public var messageSecurity: OTRMessageTransportSecurity {
@@ -177,6 +189,9 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func isMediaMessage() -> Bool {
+        if self.messageMediaItemKey != nil {
+            return true
+        }
         return false
     }
     
@@ -190,6 +205,17 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
     public func messageRead() -> Bool {
         return self.read
+    }
+    
+    public func media() -> JSQMessageMediaData? {
+        guard let mediaId = self.mediaItemId else {
+            return nil
+        }
+        var media: JSQMessageMediaData? = nil
+        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+            media = OTRMediaItem.fetchObject(withUniqueID: mediaId, transaction: transaction)
+        })
+        return media
     }
     
 }

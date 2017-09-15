@@ -70,8 +70,6 @@
 		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; };
 		6381F3601DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6381F35F1DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift */; };
 		63828AA01D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63828A9F1D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift */; };
-		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */; };
 		639120931D8CA1E200F4100E /* OTROmemoStorageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639120921D8CA1E200F4100E /* OTROmemoStorageTest.swift */; };
 		63917C3E1DFA20D900341D96 /* OTRModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63917C3D1DFA20D900341D96 /* OTRModelTest.swift */; };
 		63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */; };
@@ -940,8 +938,6 @@
 		638045691BB4C832002D8BAE /* PushDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushDeserializer.swift; sourceTree = "<group>"; };
 		6381F35F1DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPChangePasswordManager.swift; sourceTree = "<group>"; };
 		63828A9F1D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOSignalCoordinator.swift; sourceTree = "<group>"; };
-		638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesGroupViewController.h; sourceTree = "<group>"; };
-		638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesGroupViewController.m; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
 		638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseLoginViewController.m; sourceTree = "<group>"; };
 		638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXLFormCreator.h; sourceTree = "<group>"; };
@@ -2008,8 +2004,6 @@
 			children = (
 				633106341A16D1A300C17BAE /* OTRMessagesViewController.h */,
 				633106351A16D1A300C17BAE /* OTRMessagesViewController.m */,
-				638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */,
-				638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */,
 				63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */,
 				63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */,
 				63FA130B1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift */,
@@ -2209,7 +2203,6 @@
 				63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */,
 				D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */,
 				D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */,
-				638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */,
 				D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */,
 				637ABBCB1DD5330200B18DD2 /* OTRIncomingMessage.h in Headers */,
 				D93DDBB61BA79ABB00CD8331 /* OTRComposeViewController.h in Headers */,
@@ -3178,7 +3171,6 @@
 				D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */,
 				D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */,
 				D93DDACE1BA79A2600CD8331 /* OTRViewSetting.m in Sources */,
-				638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */,
 				D93DDACF1BA79A2600CD8331 /* OTRFacebookOAuthXMPPAccount.m in Sources */,
 				D93DDAD01BA79A2600CD8331 /* OTRAccount.m in Sources */,
 				D93DDAD11BA79A2600CD8331 /* OTRGoogleOAuthXMPPAccount.m in Sources */,

@@ -29,16 +29,24 @@ class FileTransferIntegrationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testDownloadsRelationship() {
-        
-        let incomingMessage = OTRIncomingMessage(uniqueId: NSUUID().uuidString)
+    func testIncomingDirectMessage() {
+        let incomingMessage = OTRIncomingMessage()!
+        internalTestDownloadsRelationship(incomingMessage: incomingMessage)
+    }
+    
+    func testIncomingGroupMessage() {
+        let incomingMessage = OTRXMPPRoomMessage()!
+        internalTestDownloadsRelationship(incomingMessage: incomingMessage)
+    }
+    
+    private func internalTestDownloadsRelationship(incomingMessage: OTRMessageProtocol) {
         // this should be split into four messages
         var text = "i like cheese"
         let urls = ["https://cheese.com", "https://cheeze.biz/cheddar.jpg", "aesgcm://example.com/12345.png"]
         for url in urls {
             text = text + " " + url
         }
-        incomingMessage.text = text
+        incomingMessage.messageText = text
         writeConnection.readWrite { (transaction) in
             incomingMessage.save(with: transaction)
         }

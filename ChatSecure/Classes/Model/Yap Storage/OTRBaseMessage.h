@@ -33,19 +33,31 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSString *threadId;
 @property (nonatomic, readonly, nonnull) NSString *threadCollection;
 @property (nonatomic, readonly) BOOL isMessageIncoming;
-@property (nonatomic, readonly, nullable) NSString *messageMediaItemKey;
-@property (nonatomic, readonly, nullable) NSError *messageError;
+@property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;
+@property (nonatomic, readwrite, nullable) NSError *messageError;
 @property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
 @property (nonatomic, readonly) BOOL isMessageRead;
 @property (nonatomic, readonly) NSDate *messageDate;
-@property (nonatomic, readonly, nullable) NSString *messageText;
+@property (nonatomic, readwrite, nullable) NSString *messageText;
 @property (nonatomic, readonly, nullable) NSString *remoteMessageId;
 
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 @end
 
+@protocol OTRChildObjectProtocol
+@required
+@property (nonatomic, strong, nullable) NSString *parentObjectKey;
+@property (nonatomic, strong, nullable) NSString *parentObjectCollection;
+
+/** Returns parent object if it still exists */
+- (nullable id) parentObjectWithTransaction:(YapDatabaseReadTransaction*)transaction;
+/** Attempts to touch parent object */
+- (void) touchParentObjectWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
+
+@end
+
 /** This is for objects that point to a parent message, for instance OTRDownloadMessage or OTRMediaItem */
-@protocol OTRMessageChildProtocol <NSObject>
+@protocol OTRMessageChildProtocol
 @required
 - (nullable id<OTRMessageProtocol>) parentMessageWithTransaction:(YapDatabaseReadTransaction*)transaction;
 - (void) touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;

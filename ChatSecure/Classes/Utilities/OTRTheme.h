@@ -31,9 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns new instance. Override this in subclass to use a different message view controller class */
 - (__kindof JSQMessagesViewController *) messagesViewController;
 
-/** Returns new instance. Override this in subclass to use a different group message view controller class */
-- (__kindof JSQMessagesViewController *) groupMessagesViewController;
-
 /** Returns new instance. Override this in subclass to use a different settings view controller class */
 - (__kindof UIViewController *) settingsViewController;
 

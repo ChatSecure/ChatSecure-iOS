@@ -12,8 +12,8 @@ import PureLayout
 import OTRAssets
 
 @objc public protocol OTRComposeGroupViewControllerDelegate {
-    func onBuddiesSelected(_ buddies:NSSet,groupName:String) -> Void
-    func onCancelled(_ viewController:UIViewController?) -> Void
+    func groupBuddiesSelected(_ composeViewController: OTRComposeGroupViewController,  buddyUniqueIds:[String], groupName:String) -> Void
+    func groupSelectionCancelled(_ composeViewController: OTRComposeGroupViewController) -> Void
 }
 
 open class OTRComposeGroupViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, OTRComposeGroupBuddyCellDelegate,OTRYapViewHandlerDelegateProtocol
@@ -29,7 +29,9 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     var selectedItems:[OTRXMPPBuddy] = []
     var prototypeCell:OTRComposeGroupBuddyCell?
-
+    var excludedItems:[String]? = nil
+    var waitingForExcludedItems = false
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         
@@ -82,10 +84,10 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     @IBAction open func didPressDone(_ sender: Any) {
         if selectedItems.count > 0 {
             if let delegate = delegate {
-                var buddyIds = Set<String>()
+                var buddyIds:[String] = []
                 var generatedGroupName = ""
                 for buddy in selectedItems {
-                    buddyIds.insert(buddy.uniqueId)
+                    buddyIds.append(buddy.uniqueId)
                     if generatedGroupName.characters.count > 0 {
                         generatedGroupName.append(", ")
                     }
@@ -95,7 +97,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     generatedGroupName = generatedGroupName.substring(to: generatedGroupName.index(generatedGroupName.startIndex, offsetBy: 27)).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
                     generatedGroupName.append("...")
                 }
-                delegate.onBuddiesSelected(buddyIds as NSSet, groupName: generatedGroupName)
+                delegate.groupBuddiesSelected(self, buddyUniqueIds: buddyIds, groupName: generatedGroupName)
             }
             dismiss(animated: true, completion: nil)
         }
@@ -163,6 +165,14 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             })
             cell.setThread(threadOwner, account: account)
             cell.setChecked(checked: selectedItems.contains(threadOwner))
+            var isExcluded = false
+            if let excludedItems = self.excludedItems, excludedItems.contains(threadOwner.uniqueId) {
+                isExcluded = true
+            }
+            cell.isUserInteractionEnabled = !isExcluded
+            cell.nameLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
+            cell.accountLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
+            cell.identifierLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
             return cell
         }
         return UITableViewCell()
@@ -179,7 +189,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
+        if !self.waitingForExcludedItems, let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             if !selectedItems.contains(buddy) {
                 selectedItems.append(buddy)
                 collectionView.reloadData()
@@ -208,6 +218,36 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         }
     }
     
+    open func excludeRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
+        self.waitingForExcludedItems = true
+        DispatchQueue.global().async {
+            if let room = room, let viewHandler = viewHandler, let mappings = viewHandler.mappings {
+                for section in 0..<mappings.numberOfSections() {
+                    for row in 0..<mappings.numberOfItems(inSection: section) {
+                        var buddy:OTRXMPPBuddy? = nil
+                        if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
+                            
+                            let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+                            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+                                buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                            })
+                            if let buddy = buddy {
+                                if self.excludedItems == nil {
+                                    self.excludedItems = []
+                                }
+                                self.excludedItems?.append(buddy.uniqueId)
+                            }
+                        }
+                    }
+                }
+            }
+            DispatchQueue.main.async {
+                self.waitingForExcludedItems = false
+                self.tableView?.reloadData()
+            }
+        }
+    }
+    
     // From https://stackoverflow.com/questions/22539979/left-align-cells-in-uicollectionview
     class LeftAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
         
@@ -233,11 +273,8 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     override open func willMove(toParentViewController parent: UIViewController?)
     {
-        if parent == nil
-        {
-            if let delegate = self.delegate {
-                delegate.onCancelled(self)
-            }
+        if parent == nil, let delegate = self.delegate {
+            delegate.groupSelectionCancelled(self)
         }
     }
 }

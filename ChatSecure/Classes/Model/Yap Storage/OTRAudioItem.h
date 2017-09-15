@@ -26,5 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
                          mimeType:(nullable NSString*)mimeType
                        isIncoming:(BOOL)isIncoming NS_UNAVAILABLE;
 
+/** Read length (and possibly other properties) from the given url */
+- (void)populateFromDataAtUrl:(NSURL *)url;
+
 @end
 NS_ASSUME_NONNULL_END

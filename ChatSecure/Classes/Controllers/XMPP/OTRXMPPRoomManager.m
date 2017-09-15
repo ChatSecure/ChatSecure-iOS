@@ -133,6 +133,32 @@
     [room inviteUser:user withMessage:message];
 }
 
+- (void)setUser:(XMPPJID *)user affiliation:(NSString *)affiliation inRoom:(XMPPJID *)roomJID
+{
+    XMPPRoom *room = [self roomForJID:roomJID];
+    [room editRoomPrivileges:@[[XMPPRoom itemWithAffiliation:affiliation jid:user]]];
+}
+
+- (void)inviteBuddies:(NSArray<NSString *> *)buddyUniqueIds toRoom:(XMPPRoom *)room {
+    if (!buddyUniqueIds.count) {
+        return;
+    }
+    NSMutableArray<OTRXMPPBuddy*> *buddies = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        [buddyUniqueIds enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
+            if (buddy) {
+                [buddies addObject:buddy];
+            }
+        }];
+    }];
+    [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self inviteUser:buddy.bareJID toRoom:room.roomJID withMessage:nil];
+        [self setUser:buddy.bareJID affiliation:@"admin" inRoom:room.roomJID];
+    }];
+
+}
+
 #pragma - mark XMPPStreamDelegate Methods
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
@@ -308,23 +334,8 @@
         
         //Invite buddies
         NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
-        if (!buddyUniqueIds.count) {
-            return;
-        }
-        NSMutableArray<OTRXMPPBuddy*> *buddies = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
         [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
-        
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            [buddyUniqueIds enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
-                if (buddy) {
-                    [buddies addObject:buddy];
-                }
-            }];
-        }];
-        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self inviteUser:buddy.bareJID toRoom:sender.roomJID withMessage:nil];
-        }];
+        [self inviteBuddies:buddyUniqueIds toRoom:sender];
     }];
 }
 

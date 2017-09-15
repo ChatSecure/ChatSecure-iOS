@@ -10,7 +10,6 @@
 #import "OTRConversationViewController.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "OTRComposeViewController.h"
-#import "OTRMessagesGroupViewController.h"
 #import "OTRInviteViewController.h"
 #import "OTRSettingsViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -33,12 +32,6 @@
 
 - (__kindof UIViewController*) conversationViewController {
     return [[OTRConversationViewController alloc] init];
-}
-
-/** Override this in subclass to use a different message view controller class */
-- (JSQMessagesViewController *) groupMessagesViewController
-{
-    return [OTRMessagesGroupViewController messagesViewController];
 }
 
 /** Override this in subclass to use a different group message view controller class */

@@ -55,24 +55,26 @@ import PureLayout
         }
         
         var subview = view
-        subview.translatesAutoresizingMaskIntoConstraints = true
         var subviewHeight = height
         if subviewHeight == 0 {
             subviewHeight = subview.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
         }
-        subview.translatesAutoresizingMaskIntoConstraints = false
         if !(subview is UITableViewCell) {
             let cell = UITableViewCell()
             cell.backgroundColor = self.backgroundColor
             
+            if subview is UISearchBar {
+                // The UISearchBar uses all kinds of adding/removing views, so put that
+                // in a wrapper we have control over.
+                let wrapperView = UIView()
+                wrapperView.addSubview(subview)
+                subview = wrapperView
+            }
             cell.contentView.addSubview(subview)
             subview.autoPinEdge(.top, to: .top, of: cell.contentView)
             subview.autoPinEdge(.left, to: .left, of: cell.contentView)
             subview.autoPinEdge(.right, to: .right, of: cell.contentView)
             subview.autoPinEdge(.bottom, to: .bottom, of: cell.contentView)
-            if subview is UISearchBar {
-                subview.translatesAutoresizingMaskIntoConstraints = true
-            }
             subview = cell
         }
         

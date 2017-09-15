@@ -174,12 +174,24 @@
     return self.mediaItemUniqueId;
 }
 
+- (void) setMessageMediaItemKey:(NSString *)messageMediaItemKey {
+    self.mediaItemUniqueId = messageMediaItemKey;
+}
+
+- (void) setMessageError:(NSError *)messageError {
+    self.error = messageError;
+}
+
 - (NSError *)messageError {
     return self.error;
 }
 
 - (NSString*) messageText {
     return self.text;
+}
+
+- (void) setMessageText:(NSString *)messageText {
+    self.text = messageText;
 }
 
 - (NSString *)remoteMessageId
@@ -189,7 +201,11 @@
 
 - (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
+    id object = [transaction objectForKey:self.threadId inCollection:self.threadCollection];
+    if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+        return object;
+    }
+    return nil;
 }
 
 - (nullable OTRBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {

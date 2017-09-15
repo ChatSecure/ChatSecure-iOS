@@ -205,6 +205,7 @@
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
+                buddy.pendingApproval = YES;
                 // hack to show buddy in conversations view
                 buddy.lastMessageId = @"";
             }
