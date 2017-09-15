@@ -11,11 +11,15 @@ import Foundation
 open class OTRGroupAvatarGenerator {
 
     static let arrayOfColors:[CGColor] = [
-        colorWithHexString(hexColorString: "#ff58e2c2").cgColor,
-        colorWithHexString(hexColorString: "#fff44058").cgColor,
-        colorWithHexString(hexColorString: "#fff7e53b").cgColor
+        colorWithHexString(hexColorString: "#fff73d54").cgColor,
+        colorWithHexString(hexColorString: "#fffff74f").cgColor,
+        colorWithHexString(hexColorString: "#ffb2142f").cgColor,
+        colorWithHexString(hexColorString: "#ff4fcaff").cgColor,
+        colorWithHexString(hexColorString: "#ff86ff76").cgColor,
+        colorWithHexString(hexColorString: "#ffcc4317").cgColor,
+        colorWithHexString(hexColorString: "#ff8376ff").cgColor
     ]
-        
+    
     open static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
         
         // Create a pseudo-random random number generator and seed it with the identifier
