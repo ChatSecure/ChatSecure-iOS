@@ -175,6 +175,7 @@
     XMPPJID *presenceJID = [presence from];
     NSArray *children = [presence children];
     __block XMPPJID *buddyJID = nil;
+    __block NSString *buddyRole = nil;
     [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([[element xmlns] containsString:XMPPMUCNamespace]) {
             NSArray *items = [element children];
@@ -184,6 +185,7 @@
                     buddyJID = [XMPPJID jidWithString:jid];
                     *stop = YES;
                 }
+                buddyRole = [item attributeStringValueForName:@"role"];
             }];
             *stop = YES;
         }
@@ -208,9 +210,12 @@
         
         occupant.roomName = [presenceJID resource];
         
-        
-    
-        [occupant saveWithTransaction:transaction];
+        if ([[presence type] isEqualToString:@"unavailable"] && [buddyRole isEqualToString:@"none"]) {
+            // Buddy left the room!
+            [occupant removeWithTransaction:transaction];
+        } else {
+            [occupant saveWithTransaction:transaction];
+        }
     }];
 }
 
