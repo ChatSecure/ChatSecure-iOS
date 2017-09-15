@@ -18,7 +18,7 @@ import OTRAssets
 
 open class OTRRoomOccupantsViewController: UIViewController {
  
-    @objc public var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
+    public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
 
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
