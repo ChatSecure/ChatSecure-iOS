@@ -192,11 +192,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if !self.waitingForExcludedItems, let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             if !selectedItems.contains(buddy) {
                 selectedItems.append(buddy)
-                collectionView.reloadData()
-                didUpdateCollectionView()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                updateFiltering()
+            } else if let index = selectedItems.index(of: buddy) {
+                selectedItems.remove(at: index)
             }
+            collectionView.reloadData()
+            didUpdateCollectionView()
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            updateFiltering()
         }
     }
     
