@@ -75,8 +75,12 @@ extension PushMessage: OTRMessageProtocol {
         return OTRBaseMessage.collection
     }
     
-    public var threadId: String? {
-        return self.buddyKey
+    public var threadId: String {
+        if let threadId = self.buddyKey {
+            return threadId
+        } else {
+            fatalError("ThreadId should not be nil!")
+        }
     }
     
     public var threadCollection: String {

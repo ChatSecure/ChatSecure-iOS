@@ -11,14 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol OTRDownloadMessage <OTRMessageProtocol, OTRMessageChildProtocol, OTRChildObjectProtocol, OTRYapDatabaseObjectProtocol>
+@property (nonatomic, strong, readonly) NSURL *url;
++ (id<OTRDownloadMessage>) downloadWithParentMessage:(id<OTRMessageProtocol>)parentMessage
+                                   url:(NSURL*)url;
+@end
+
 // this class is intended to simplify downloading of media URLs
 // that are contained within incoming messages
-@interface OTRDownloadMessage : OTRBaseMessage <YapDatabaseRelationshipNode, OTRMessageChildProtocol, OTRChildObjectProtocol>
-
-@property (nonatomic, strong, readonly) NSURL *url;
-
-- (instancetype) initWithParentMessage:(id<OTRMessageProtocol>)parentMessage
-                                   url:(NSURL*)url;
+@interface OTRDirectDownloadMessage : OTRBaseMessage <YapDatabaseRelationshipNode, OTRDownloadMessage>
 
 @end
 

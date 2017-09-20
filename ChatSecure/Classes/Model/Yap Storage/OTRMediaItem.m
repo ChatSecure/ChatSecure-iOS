@@ -272,25 +272,25 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 }
 
 /** ⚠️ Do not call from within an existing database transaction */
-- (nullable OTRDownloadMessage*) downloadMessage {
+- (nullable id<OTRDownloadMessage>) downloadMessage {
     __block id<OTRMessageProtocol> message = nil;
     [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         message = [self parentMessageWithTransaction:transaction];
     }];
-    if ([message isKindOfClass:[OTRDownloadMessage class]]) {
-        return (OTRDownloadMessage*)message;
+    if ([message conformsToProtocol:@protocol(OTRDownloadMessage)]) {
+        return (id<OTRDownloadMessage>)message;
     }
     return nil;
 }
 
 - (UIView*) errorView {
-    OTRDownloadMessage *message = [self downloadMessage];
+    id<OTRDownloadMessage> message = [self downloadMessage];
     if (message.messageError) {
         MediaDownloadView *downloadView = [MediaDownloadView otr_viewFromNib];
         if (!downloadView) {
             return nil;
         }
-        [downloadView setMediaItem:self message:(OTRDownloadMessage*)message];
+        [downloadView setMediaItem:self message:message];
         downloadView.backgroundColor = [UIColor jsq_messageBubbleLightGrayColor];
         CGSize size = [self mediaViewDisplaySize];
         downloadView.frame = CGRectMake(0, 0, size.width, size.height);

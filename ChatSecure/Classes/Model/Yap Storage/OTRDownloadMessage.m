@@ -14,12 +14,17 @@
 #import "UIActivity+ChatSecure.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-@interface OTRDownloadMessage()
+@interface OTRDirectDownloadMessage()
 @property (nonatomic, strong, readonly) NSString *parentMessageKey;
 @property (nonatomic, strong, readonly) NSString *parentMessageCollection;
 @end
 
-@implementation OTRDownloadMessage
+@implementation OTRDirectDownloadMessage
+@synthesize url = _url;
+
++ (id<OTRDownloadMessage>) downloadWithParentMessage:(id<OTRMessageProtocol>)parentMessage url:(nonnull NSURL *)url {
+    return [[OTRDirectDownloadMessage alloc] initWithParentMessage:parentMessage url:url];
+}
 
 - (instancetype) initWithParentMessage:(id<OTRMessageProtocol>)parentMessage
                                    url:(NSURL*)url {
@@ -171,4 +176,15 @@
     return actions;
 }
 
+@end
+
+// Shim model for legacy database migration
+@interface OTRDownloadMessage: MTLModel
+@end
+
+@implementation OTRDownloadMessage
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    return (OTRDownloadMessage*)[[OTRDirectDownloadMessage alloc] initWithCoder:aDecoder];
+}
 @end

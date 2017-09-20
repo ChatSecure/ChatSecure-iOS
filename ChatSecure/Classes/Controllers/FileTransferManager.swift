@@ -520,15 +520,12 @@ extension FileTransferManager {
                         if disableAutomaticURLFetching {
                             let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
                             media.parentObjectKey = download.uniqueId
-                            media.parentObjectCollection = OTRDownloadMessage.collection
+                            media.parentObjectCollection = download.messageCollection
                             media.save(with: transaction)
-                            download.mediaItemUniqueId = media.uniqueId
-                            download.error = FileTransferError.automaticDownloadsDisabled
+                            download.messageMediaItemKey = media.uniqueId
+                            download.messageError = FileTransferError.automaticDownloadsDisabled
                         }
                         download.save(with: transaction)
-                        if let test = download.refetch(with: transaction) {
-                            DDLogInfo("WTF")
-                        }
                     }
                 })
             }
@@ -545,8 +542,8 @@ extension FileTransferManager {
     /** Downloads media for a single downloadmessage */
     public func downloadMediaIfNeeded(_ downloadMessage: OTRDownloadMessage) {
         // Bail out if we've already downloaded the media
-        if downloadMessage.mediaItemUniqueId != nil &&
-            downloadMessage.error == nil {
+        if downloadMessage.messageMediaItemKey != nil &&
+            downloadMessage.messageError == nil {
             // DDLogWarn("Already downloaded media for this item")
             return
         }
@@ -579,7 +576,7 @@ extension FileTransferManager {
     private func setError(_ error: Error, onMessage downloadMessage: OTRDownloadMessage) {
         self.connection.readWrite { transaction in
             if let message = downloadMessage.refetch(with: transaction) {
-                message.error = error
+                message.messageError = error
                 message.save(with: transaction)
             }
         }
@@ -593,9 +590,9 @@ extension FileTransferManager {
             mediaItem?.remove(with: transaction)
             mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
             mediaItem?.parentObjectKey = downloadMessage.uniqueId
-            mediaItem?.parentObjectCollection = OTRDownloadMessage.collection
+            mediaItem?.parentObjectCollection = downloadMessage.messageCollection
             mediaItem?.save(with: transaction)
-            downloadMessage.mediaItemUniqueId = mediaItem?.uniqueId
+            downloadMessage.messageMediaItemKey = mediaItem?.uniqueId
             downloadMessage.save(with: transaction)
         }
         guard let media = mediaItem else {
@@ -655,7 +652,7 @@ extension FileTransferManager {
             }
             DDLogVerbose("Decrpytion successful")
         }
-        OTRMediaFileManager.sharedInstance().setData(data, for: mediaItem, buddyUniqueId: downloadMessage.buddyUniqueId, completion: { (bytesWritten, error) in
+        OTRMediaFileManager.sharedInstance().setData(data, for: mediaItem, buddyUniqueId: downloadMessage.threadId, completion: { (bytesWritten, error) in
             if let error = error {
                 self.setError(error, onMessage: downloadMessage)
                 DDLogError("Error copying data: \(error)")
@@ -664,13 +661,14 @@ extension FileTransferManager {
             self.connection.asyncReadWrite({ (transaction) in
                 mediaItem.transferProgress = 1.0
                 
-                if let audioItem = mediaItem as? OTRAudioItem, let url = OTRMediaServer.sharedInstance().url(for: mediaItem, buddyUniqueId: downloadMessage.buddyUniqueId) {
+                if let audioItem = mediaItem as? OTRAudioItem, let url = OTRMediaServer.sharedInstance().url(for: mediaItem, buddyUniqueId: downloadMessage.threadId) {
                     audioItem.populateFromData(at: url)
                 }
                 
                 mediaItem.save(with: transaction)
+                // downloadMessage.save(with: transaction)
                 if let message = downloadMessage.refetch(with: transaction) {
-                    message.error = nil
+                    message.messageError = nil
                     message.save(with: transaction)
                 } else {
                     DDLogError("Failed to refetch download message WTF \(downloadMessage)")

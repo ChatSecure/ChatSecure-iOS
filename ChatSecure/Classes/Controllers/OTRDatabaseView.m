@@ -12,6 +12,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRIncomingMessage.h"
+#import "OTRLog.h"
 #import "OTROutgoingMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -241,9 +242,17 @@ NSString *OTRPushAccountGroup = @"Account";
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
         {
             id <OTRMessageProtocol> message = object;
-            return [message threadId];
+            NSString *threadId = [message threadId];
+            if (!threadId) {
+                DDLogError(@"Message has no threadId! %@", message);
+                return nil;
+            } else {
+                return threadId;
+            }
+        } else {
+            DDLogError(@"Object in view does not conform to OTRMessageProtocol! %@", object);
+            return nil;
         }
-        return nil;
     }];
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {

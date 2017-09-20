@@ -93,9 +93,9 @@
 #pragma mark OTRDownloadMessageProtocol
 
 /**  If available, existing instances will be returned. */
-- (NSArray<OTRDownloadMessage*>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+- (NSArray<id<OTRDownloadMessage>>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
     id<OTRMessageProtocol> message = self;
-    NSMutableArray<OTRDownloadMessage*> *downloadMessages = [NSMutableArray array];
+    NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
@@ -103,7 +103,7 @@
         DDLogWarn(@"%@ not registered!", extensionName);
     }
     [relationship enumerateEdgesWithName:edgeName destinationKey:message.messageKey collection:message.messageCollection usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRDownloadMessage *download = [OTRDownloadMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        OTRDirectDownloadMessage *download = [OTRDirectDownloadMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (download) {
             [downloadMessages addObject:download];
         }
@@ -112,11 +112,11 @@
 }
 
 /** Returns an unsaved array of downloadable URLs. */
-- (NSArray<OTRDownloadMessage*>*) downloads {
+- (NSArray<id<OTRDownloadMessage>>*) downloads {
     id<OTRMessageProtocol> message = self;
-    NSMutableArray<OTRDownloadMessage*> *downloadMessages = [NSMutableArray array];
+    NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
     [self.downloadableNSURLs enumerateObjectsUsingBlock:^(NSURL * _Nonnull url, NSUInteger idx, BOOL * _Nonnull stop) {
-        OTRDownloadMessage *download = [[OTRDownloadMessage alloc] initWithParentMessage:message url:url];
+        id<OTRDownloadMessage> download = [OTRDirectDownloadMessage downloadWithParentMessage:message url:url];
         [downloadMessages addObject:download];
     }];
     return downloadMessages;

@@ -485,6 +485,7 @@
 		D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
 		D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
 		D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
+		D9A1E6551F7309C100E42118 /* OTRDownloadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1E6541F7309C100E42118 /* OTRDownloadMessage.swift */; };
 		D9A429D01F31169F00BD2545 /* UIAlertController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */; };
 		D9A7756F1E43F8A200027864 /* ProxyXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */; };
 		D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */; };
@@ -1129,6 +1130,7 @@
 		D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+ChatSecure.m"; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
+		D9A1E6541F7309C100E42118 /* OTRDownloadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRDownloadMessage.swift; sourceTree = "<group>"; };
 		D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ChatSecure.swift"; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
 		D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyXMPPStream.m; sourceTree = "<group>"; };
@@ -1533,6 +1535,7 @@
 		633105B81A16D1A300C17BAE /* Yap Storage */ = {
 			isa = PBXGroup;
 			children = (
+				D9A1E6541F7309C100E42118 /* OTRDownloadMessage.swift */,
 				D91F9EF91ED6301500AEA62C /* OTRDownloadMessage.h */,
 				D91F9EFA1ED6301500AEA62C /* OTRDownloadMessage.m */,
 				63D150F81D8A0B46006FB2E2 /* OMEMO-Storage */,
@@ -3253,6 +3256,7 @@
 				D9B79B961ECF951F00883963 /* OTRFileItem.m in Sources */,
 				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
 				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
+				D9A1E6551F7309C100E42118 /* OTRDownloadMessage.swift in Sources */,
 				924F68611EA8A00D00528FB6 /* OTRServerDeprecation.swift in Sources */,
 				D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */,
 				D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */,

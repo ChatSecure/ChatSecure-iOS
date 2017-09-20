@@ -13,14 +13,14 @@
 @protocol OTRThreadOwner;
 
 NS_ASSUME_NONNULL_BEGIN
-@class OTRDownloadMessage;
+@protocol OTRDownloadMessage;
 
 @protocol OTRDownloadMessageProtocol <NSObject>
 @required
 /** Returns an unsaved array of downloadable URLs. */
-- (NSArray<OTRDownloadMessage*>*) downloads;
+- (NSArray<id<OTRDownloadMessage>>*) downloads;
 /**  If available, existing instances will be returned. */
-- (NSArray<OTRDownloadMessage*>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
+- (NSArray<id<OTRDownloadMessage>>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
 /** Checks if edge count > 0 */
 - (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction;
 @end
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *messageKey;
 @property (nonatomic, readonly) NSString *messageCollection;
 /** In reality this shouldn't be nil, but could be if something bad happens. */
-@property (nonatomic, readonly, nullable) NSString *threadId;
+@property (nonatomic, readonly, nonnull) NSString *threadId;
 @property (nonatomic, readonly, nonnull) NSString *threadCollection;
 @property (nonatomic, readonly) BOOL isMessageIncoming;
 @property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;

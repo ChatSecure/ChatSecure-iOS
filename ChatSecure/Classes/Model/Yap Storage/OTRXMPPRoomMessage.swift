@@ -83,11 +83,15 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public var messageCollection: String {
-        return type(of: self).collection
+        return OTRXMPPRoomMessage.collection
     }
     
-    public var threadId: String? {
-        return self.roomUniqueId
+    public var threadId: String {
+        if let threadId = self.roomUniqueId {
+            return threadId
+        } else {
+            fatalError("ThreadId should not be nil!")
+        }
     }
     
     public var threadCollection: String {
@@ -116,10 +120,83 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public func threadOwner(with transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
-        guard let key = self.threadId else {
+        return OTRXMPPRoom.fetchObject(withUniqueID: self.threadId, transaction: transaction)
+    }
+}
+
+public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
+    
+    private var parentMessageKey: String?
+    private var parentMessageCollection: String?
+    private var downloadURL: URL?
+    
+    public static func download(withParentMessage parentMessage: OTRMessageProtocol, url: URL) -> OTRDownloadMessage {
+        let download = OTRGroupDownloadMessage()!
+        
+        download.downloadURL = url
+        download.parentMessageKey = parentMessage.messageKey
+        download.parentMessageCollection = parentMessage.messageCollection
+        download.messageText = url.absoluteString
+        download.messageDate = parentMessage.messageDate
+        download.roomUniqueId = parentMessage.threadId
+        if let groupMessage = parentMessage as? OTRXMPPRoomMessage {
+            download.senderJID = groupMessage.senderJID
+            download.displayName = groupMessage.displayName
+            download.roomJID = groupMessage.roomJID
+        }
+        return download
+    }
+    
+    public override static var collection: String {
+        return OTRXMPPRoomMessage.collection
+    }
+    
+    public var url: URL {
+        return self.downloadURL ?? URL(string: "")!
+    }
+    
+    public func parentMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
+        if let message = parentObject(with: transaction) as? OTRMessageProtocol {
+            return message
+        } else {
             return nil
         }
-        return OTRXMPPRoom.fetchObject(withUniqueID: key, transaction: transaction)
+    }
+    
+    public func touchParentMessage(with transaction: YapDatabaseReadWriteTransaction) {
+        touchParentObject(with: transaction)
+    }
+    
+    public var parentObjectKey: String? {
+        get {
+            return self.parentMessageKey
+        }
+        set {
+            self.parentMessageKey = newValue
+        }
+    }
+    
+    public var parentObjectCollection: String? {
+        get {
+            return self.parentMessageCollection
+        }
+        set {
+            self.parentMessageCollection = newValue
+        }
+    }
+    
+    public func parentObject(with transaction: YapDatabaseReadTransaction) -> Any? {
+        guard let key = self.parentMessageKey, let collection = self.parentMessageCollection else {
+            return nil
+        }
+        return transaction.object(forKey: key, inCollection: collection)
+    }
+    
+    public func touchParentObject(with transaction: YapDatabaseReadWriteTransaction) {
+        guard let key = self.parentMessageKey, let collection = self.parentMessageCollection else {
+            return
+        }
+        transaction.touchObject(forKey: key, inCollection: collection)
     }
 }
 
@@ -127,7 +204,7 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     public func downloads() -> [OTRDownloadMessage] {
         var downloads: [OTRDownloadMessage] = []
         for url in self.downloadableURLs {
-            let download = OTRDownloadMessage(parentMessage: self, url: url)
+            let download = OTRGroupDownloadMessage.download(withParentMessage: self, url: url)
             downloads.append(download)
         }
         return downloads
@@ -142,7 +219,7 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
         }
         let edgeName = YapDatabaseConstants.edgeName(.download)
         relationship.enumerateEdges(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection) { (edge, stop) in
-            if let download = OTRDownloadMessage.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
+            if let download = OTRGroupDownloadMessage.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
                 downloads.append(download)
             }
         }
@@ -171,7 +248,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
             if (self.state.incoming()) {
                 result = self.senderJID
             } else {
-                guard let key = self.threadId, let thread = transaction.object(forKey: key, inCollection: OTRXMPPRoom.collection) as? OTRXMPPRoom else {
+                guard let thread = transaction.object(forKey: self.threadId, inCollection: OTRXMPPRoom.collection) as? OTRXMPPRoom else {
                     return
                 }
                 result = thread.accountUniqueId

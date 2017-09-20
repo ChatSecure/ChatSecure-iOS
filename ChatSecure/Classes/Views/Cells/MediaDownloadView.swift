@@ -28,7 +28,7 @@ public class MediaDownloadView: UIView {
     public var downloadAction: ((_ view: MediaDownloadView, _ sender: Any) -> ())?
     
     public func setMediaItem(_ mediaItem: OTRMediaItem, message: OTRDownloadMessage) {
-        if let error = message.error {
+        if let error = message.messageError {
             let nsError = error as NSError
             if nsError.isAutomaticDownloadError {
                 statusLabel.text = mediaItem.displayText()

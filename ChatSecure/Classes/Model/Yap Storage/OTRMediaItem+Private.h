@@ -13,5 +13,5 @@
 /** Returns view to help assist in manually (re)downloading media, or nil if not needed */
 - (nullable UIView*) errorView;
 /** ⚠️ Do not call from within an existing database transaction */
-- (nullable OTRDownloadMessage*) downloadMessage;
+- (nullable id<OTRDownloadMessage>) downloadMessage;
 @end

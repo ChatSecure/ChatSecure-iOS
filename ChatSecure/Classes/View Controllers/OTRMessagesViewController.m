@@ -2005,8 +2005,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     }
     else if ([item isKindOfClass:[OTRAudioItem class]]) {
         [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-    } else if ([message isKindOfClass:[OTRDownloadMessage class]]) {
-        OTRDownloadMessage *download = (OTRDownloadMessage*)message;
+    } else if ([message conformsToProtocol:@protocol(OTRDownloadMessage)]) {
+        id<OTRDownloadMessage> download = (id<OTRDownloadMessage>)message;
         // Janky hack to open URL for now
         NSArray<UIAlertAction*> *actions = [UIAlertAction actionsForMediaMessage:download sourceView:self.view viewController:self];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:message.text message:nil preferredStyle:UIAlertControllerStyleActionSheet];
