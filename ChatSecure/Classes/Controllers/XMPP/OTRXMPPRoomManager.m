@@ -133,12 +133,6 @@
     [room inviteUser:user withMessage:message];
 }
 
-- (void)setUser:(XMPPJID *)user affiliation:(NSString *)affiliation inRoom:(XMPPJID *)roomJID
-{
-    XMPPRoom *room = [self roomForJID:roomJID];
-    [room editRoomPrivileges:@[[XMPPRoom itemWithAffiliation:affiliation jid:user]]];
-}
-
 - (void)inviteBuddies:(NSArray<NSString *> *)buddyUniqueIds toRoom:(XMPPRoom *)room {
     if (!buddyUniqueIds.count) {
         return;
@@ -154,7 +148,6 @@
     }];
     [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
         [self inviteUser:buddy.bareJID toRoom:room.roomJID withMessage:nil];
-        [self setUser:buddy.bareJID affiliation:@"admin" inRoom:room.roomJID];
     }];
 
 }
