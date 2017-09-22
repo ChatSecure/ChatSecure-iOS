@@ -12,18 +12,14 @@ import XCTest
 class FileTransferIntegrationTests: XCTestCase {
     
     var databaseManager: OTRDatabaseManager!
-    var readConnection: YapDatabaseConnection {
-        return databaseManager.readOnlyDatabaseConnection!
-    }
-    var writeConnection: YapDatabaseConnection {
-        return databaseManager.readWriteDatabaseConnection!
-    }
+    var connection: YapDatabaseConnection!
     
     override func setUp() {
         super.setUp()
         FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
         let uuid = UUID().uuidString
         self.databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(uuid)
+        self.connection = self.databaseManager.readWriteDatabaseConnection!
     }
     
     override func tearDown() {
@@ -50,25 +46,45 @@ class FileTransferIntegrationTests: XCTestCase {
             text = text + " " + url
         }
         incomingMessage.messageText = text
-        writeConnection.readWrite { (transaction) in
+        connection.readWrite { (transaction) in
+            debugPrint("Saving message \(incomingMessage.messageCollection) \(incomingMessage.messageKey)")
             incomingMessage.save(with: transaction)
+            let refetch = incomingMessage.refetch(with: transaction)
+            XCTAssertNotNil(refetch)
         }
         
         var hasDownloads = false
-        readConnection.read({ (transaction) in
+        connection.read({ (transaction) in
+            let refetch = incomingMessage.refetch(with: transaction)
+            XCTAssertNotNil(refetch)
             hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
         })
         XCTAssertFalse(hasDownloads)
         
         let downloads = incomingMessage.downloads()
         XCTAssert(downloads.count > 0)
-        writeConnection.readWrite { (transaction) in
+        connection.readWrite { (transaction) in
             for download in downloads {
+                debugPrint("Saving download \(download.messageCollection) \(download.messageKey)")
                 download.save(with: transaction)
+                let refetch = download.refetch(with: transaction)
+                XCTAssertNotNil(refetch)
+                debugPrint("Attempting parent fetch \(download.parentObjectCollection!) \(download.parentObjectKey!)")
+
+                let parentObject = download.parentObject(with: transaction)
+                let parentMessage = download.parentMessage(with: transaction)
+                let parentRefetch = incomingMessage.refetch(with: transaction)
+                XCTAssertNotNil(parentRefetch)
+                XCTAssertNotNil(parentObject)
+                XCTAssertNotNil(parentMessage)
             }
         }
         var savedDownloads: [OTRDownloadMessage] = []
-        readConnection.read({ (transaction) in
+        connection.read({ (transaction) in
+            for download in downloads {
+                let refetch = download.refetch(with: transaction)
+                XCTAssertNotNil(refetch)
+            }
             hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
             savedDownloads = incomingMessage.existingDownloads(with: transaction)
         })

@@ -124,6 +124,7 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
 }
 
+
 public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     
     private var parentMessageKey: String?
@@ -189,7 +190,8 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
         guard let key = self.parentMessageKey, let collection = self.parentMessageCollection else {
             return nil
         }
-        return transaction.object(forKey: key, inCollection: collection)
+        let object = transaction.object(forKey: key, inCollection: collection)
+        return object
     }
     
     public func touchParentObject(with transaction: YapDatabaseReadWriteTransaction) {
@@ -197,6 +199,20 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
             return
         }
         transaction.touchObject(forKey: key, inCollection: collection)
+    }
+    
+    //MARK: YapRelationshipNode
+    public override func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+        var edges: [YapDatabaseRelationshipEdge] = []
+        if let superEdges = super.yapDatabaseRelationshipEdges() {
+            edges.append(contentsOf: superEdges)
+        }
+        if let parentKey = self.parentMessageKey, let parentCollection = self.parentMessageCollection {
+            let edgeName = RelationshipEdgeName.download
+            let parentEdge = YapDatabaseRelationshipEdge(name: edgeName, destinationKey: parentKey, collection: parentCollection, nodeDeleteRules: [.notifyIfSourceDeleted, .notifyIfDestinationDeleted])
+            edges.append(parentEdge)
+        }
+        return edges
     }
 }
 

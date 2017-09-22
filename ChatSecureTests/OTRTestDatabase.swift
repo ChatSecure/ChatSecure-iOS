@@ -31,8 +31,8 @@ extension FileManager {
                 let fullPath = (directory as NSString).appendingPathComponent(path)
                 try FileManager().removeItem(atPath: fullPath)
             }
-        } catch {
-            
+        } catch let err {
+            debugPrint("Error clearing test database \(err)")
         }
     }
 }
