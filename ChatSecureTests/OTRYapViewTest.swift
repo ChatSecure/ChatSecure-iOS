@@ -54,7 +54,7 @@ class OTRYapViewTest: XCTestCase {
             let viewChangeExpectation = self.expectation(description: "Insert buddy")
         
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
-        let viewHandler = OTRYapViewHandler(databaseConnection: databaseManager.longLivedReadOnlyConnection!, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
+        let viewHandler = OTRYapViewHandler(databaseConnection: databaseManager.longLivedReadOnlyConnection!, databaseChangeNotificationName: DatabaseNotificationName.longLivedTransactionChanges)
         //For this test we'll look at the buddy view
         viewHandler.setup(OTRAllBuddiesDatabaseViewExtensionName, groups: [OTRBuddyGroup])
         let delegate = ViewHandlerTestDelegate(didSetup: {

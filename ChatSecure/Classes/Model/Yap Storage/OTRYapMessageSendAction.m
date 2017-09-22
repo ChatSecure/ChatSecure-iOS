@@ -82,7 +82,7 @@
 }
 
 - (NSString*) queueName {
-    NSString *brokerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
+    NSString *brokerName = DatabaseExtensionName.messageQueueBrokerViewName;
     NSString *queueName = [NSString stringWithFormat:@"%@.%@", brokerName, self.threadKey];
     return queueName;
 }

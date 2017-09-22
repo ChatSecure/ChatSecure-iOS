@@ -76,8 +76,8 @@
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
+    NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
     NSUInteger numberOfMessages = [[transaction ext:extensionName] edgeCountWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection]];
     return (numberOfMessages > 0);
 }
@@ -269,7 +269,7 @@
 {
     NSArray *edges = nil;
     if (self.accountUniqueId) {
-        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+        NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
         YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                               destinationKey:self.accountUniqueId
                                                                                   collection:[OTRAccount collection]
@@ -293,8 +293,8 @@
 {
     __block OTRBuddy *finalBuddy = nil;
     
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
+    NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         //Some how we're getting OTRXMPPPresensceSubscritionreuest
         OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];

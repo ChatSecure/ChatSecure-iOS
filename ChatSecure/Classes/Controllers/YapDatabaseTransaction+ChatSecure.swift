@@ -27,7 +27,7 @@ public extension YapDatabaseReadTransaction {
     }
     
     public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         let queryString = "Where \(OTRYapDatabaseSignalSessionSecondaryIndexColumnName) = ?"
@@ -41,7 +41,7 @@ public extension YapDatabaseReadTransaction {
     
     /** The jid here is the full jid not real jid or nickname */
     public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         

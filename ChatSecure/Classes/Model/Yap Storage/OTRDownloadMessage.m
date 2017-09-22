@@ -58,7 +58,7 @@
     }
     
     if (self.parentMessageKey) {
-        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
+        NSString *edgeName = RelationshipEdgeName.download;
         YapDatabaseRelationshipEdge *parentEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.parentMessageKey
                                                                                 collection:self.parentMessageCollection

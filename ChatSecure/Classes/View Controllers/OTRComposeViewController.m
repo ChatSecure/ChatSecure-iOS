@@ -126,13 +126,13 @@
     [self setupSearchController];
     
     //////// View Handlers /////////
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName longLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRFilteredBuddiesName groups:@[OTRBuddyGroup]];
     
-    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
+    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName longLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
-    NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+    NSString *searchViewName = DatabaseExtensionName.buddySearchResultsViewName;
     [self.searchViewHandler setup:searchViewName groupBlock:^BOOL(NSString * _Nonnull group, YapDatabaseReadTransaction * _Nonnull transaction) {
         return YES;
     } sortBlock:^NSComparisonResult(NSString * _Nonnull group1, NSString * _Nonnull group2, YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -653,7 +653,7 @@
         searchString = [NSString stringWithFormat:@"%@*",searchString];
         [self.searchQueue enqueueQuery:searchString];
         [self.searchConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+            NSString *searchViewName = DatabaseExtensionName.buddySearchResultsViewName;
             [[transaction ext:searchViewName] performSearchWithQueue:self.searchQueue];
         }];
     }

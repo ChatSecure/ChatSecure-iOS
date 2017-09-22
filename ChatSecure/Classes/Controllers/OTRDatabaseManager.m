@@ -149,9 +149,9 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
         NSArray <NSNotification *>*changes = [weakSelf.longLivedReadOnlyConnection beginLongLivedReadTransaction];
         if (changes != nil) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]
+            [[NSNotificationCenter defaultCenter] postNotificationName:[DatabaseNotificationName longLivedTransactionChanges]
                                                                 object:weakSelf.longLivedReadOnlyConnection
-                                                              userInfo:@{[DatabaseNotificationKey ConnectionChanges]:changes}];
+                                                              userInfo:@{[DatabaseNotificationKey connectionChanges]:changes}];
         }
         
     }];
@@ -166,17 +166,17 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         // Register realtionship extension
         YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
         
-        [self.database registerExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName]];
+        [self.database registerExtension:databaseRelationship withName:DatabaseExtensionName.relationshipExtensionName];
         
         // Register Secondary Index
         YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
-        [self.database registerExtension:secondaryIndex withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameSecondaryIndexName]];
+        [self.database registerExtension:secondaryIndex withName:DatabaseExtensionName.secondaryIndexName];
         YapDatabaseSecondaryIndex *messageIndex = [self setupMessageSecondaryIndexes];
         [self.database registerExtension:messageIndex withName:OTRMessagesSecondaryIndex];
         
         // Register action manager
         self.actionManager = [[YapDatabaseActionManager alloc] init];
-        NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
+        NSString *actionManagerName = DatabaseExtensionName.actionManagerName;
         [self.database registerExtension:self.actionManager withName:actionManagerName];
         
         [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
@@ -186,17 +186,17 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [OTRDatabaseView registerAllSubscriptionRequestsViewWithDatabase:self.database];
         
         
-        NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
+        NSString *name = DatabaseExtensionName.messageQueueBrokerViewName;
         _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];
         
         
         //Register Buddy username & displayName FTS and corresponding view
         YapDatabaseFullTextSearch *buddyFTS = [OTRYapExtensions buddyFTS];
-        NSString *FTSName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddyFTSExtensionName];
+        NSString *FTSName = DatabaseExtensionName.buddyFTSExtensionName;
         NSString *AllBuddiesName = OTRAllBuddiesDatabaseViewExtensionName;
         [self.database registerExtension:buddyFTS withName:FTSName];
         YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
-        NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+        NSString* viewName = DatabaseExtensionName.buddySearchResultsViewName;
         [self.database registerExtension:searchResultsView withName:viewName];
     };
     

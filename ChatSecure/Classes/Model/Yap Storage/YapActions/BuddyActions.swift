@@ -98,7 +98,7 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
     
     /// The queue that this item is in.
     public func queueName() -> String {
-        let brokerName = YapDatabaseConstants.extensionName(.messageQueueBrokerViewName)
+        let brokerName = DatabaseExtensionName.messageQueueBrokerViewName
         return "\(brokerName).\(self.buddyKey)"
     }
     
@@ -113,7 +113,7 @@ open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
 
 open class OTRYapAddBuddyAction :OTRYapBuddyAction, YapDatabaseRelationshipNode {
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
-        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.buddyActionEdgeName.name(), destinationKey: self.buddyKey, collection: OTRBuddy.collection, nodeDeleteRules: .deleteSourceIfDestinationDeleted)
+        let edge = YapDatabaseRelationshipEdge(name: RelationshipEdgeName.buddyActionEdgeName, destinationKey: self.buddyKey, collection: OTRBuddy.collection, nodeDeleteRules: .deleteSourceIfDestinationDeleted)
         return [edge]
     }
 }

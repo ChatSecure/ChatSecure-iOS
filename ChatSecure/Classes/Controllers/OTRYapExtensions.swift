@@ -15,8 +15,8 @@ open class OTRYapExtensions:NSObject {
     /// Creates a FTS extension on the buddy's username and display name
     open class func buddyFTS() -> YapDatabaseFullTextSearch {
         
-        let usernameColumnName = BuddyFTSColumnName.username.name()
-        let displayNameColumnName = BuddyFTSColumnName.displayName.name()
+        let usernameColumnName = BuddyFTSColumnName.username
+        let displayNameColumnName = BuddyFTSColumnName.displayName
         
         let searchHandler = YapDatabaseFullTextSearchHandler.withObjectBlock { (dict, collection, key, object) in
             guard let buddy = object as? OTRBuddy else {

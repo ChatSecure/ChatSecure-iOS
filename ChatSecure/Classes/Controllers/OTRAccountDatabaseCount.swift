@@ -28,7 +28,7 @@ import YapDatabase
     fileprivate let viewHandler:OTRYapViewHandler
     
     public init(databaseConnection:YapDatabaseConnection, delegate:OTRAccountDatabaseCountDelegate?) {
-        self.viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
+        self.viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection, databaseChangeNotificationName: DatabaseNotificationName.longLivedTransactionChanges)
         
         self.delegate = delegate
         

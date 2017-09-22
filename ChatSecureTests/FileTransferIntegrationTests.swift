@@ -22,7 +22,8 @@ class FileTransferIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
         FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
-        self.databaseManager = OTRTestDatabaseManager.setupDatabaseWithName("Test")
+        let uuid = UUID().uuidString
+        self.databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(uuid)
     }
     
     override func tearDown() {
@@ -31,11 +32,13 @@ class FileTransferIntegrationTests: XCTestCase {
     
     func testIncomingDirectMessage() {
         let incomingMessage = OTRIncomingMessage()!
+        incomingMessage.buddyUniqueId = "6E7D268E-D63B-485C-99EA-7B8F78D779E2"
         internalTestDownloadsRelationship(incomingMessage: incomingMessage)
     }
     
     func testIncomingGroupMessage() {
         let incomingMessage = OTRXMPPRoomMessage()!
+        incomingMessage.roomUniqueId = "7A3C3546-F19C-497B-970F-C3199F2C5E71"
         internalTestDownloadsRelationship(incomingMessage: incomingMessage)
     }
     
@@ -58,6 +61,7 @@ class FileTransferIntegrationTests: XCTestCase {
         XCTAssertFalse(hasDownloads)
         
         let downloads = incomingMessage.downloads()
+        XCTAssert(downloads.count > 0)
         writeConnection.readWrite { (transaction) in
             for download in downloads {
                 download.save(with: transaction)
