@@ -28,6 +28,14 @@ open class PushMessage: OTRYapDatabaseObject {
 }
 
 extension PushMessage: OTRMessageProtocol {
+    public var isMessageSent: Bool {
+        return true
+    }
+    
+    public var isMessageDelivered: Bool {
+        return true
+    }
+    
     public var messageMediaItemKey: String? {
         get {
             return nil

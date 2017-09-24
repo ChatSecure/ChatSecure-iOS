@@ -36,10 +36,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;
 @property (nonatomic, readwrite, nullable) NSError *messageError;
 @property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
+/** Only applies to incoming messages */
 @property (nonatomic, readonly) BOOL isMessageRead;
 @property (nonatomic, readonly) NSDate *messageDate;
 @property (nonatomic, readwrite, nullable) NSString *messageText;
 @property (nonatomic, readonly, nullable) NSString *remoteMessageId;
+/** Only applies to outgoing messages */
+@property (nonatomic, readonly) BOOL isMessageSent;
+/** Only applies to outgoing messages */
+@property (nonatomic, readonly) BOOL isMessageDelivered;
 
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 @end

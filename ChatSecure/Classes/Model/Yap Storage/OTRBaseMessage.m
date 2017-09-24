@@ -135,6 +135,14 @@
 
 #pragma - mark OTRMessage Protocol methods
 
+- (BOOL) isMessageDelivered {
+    return NO;
+}
+
+- (BOOL) isMessageSent {
+    return NO;
+}
+
 // Override in subclass
 - (BOOL)isMessageIncoming {
     return YES;

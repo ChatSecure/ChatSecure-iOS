@@ -61,4 +61,12 @@
     return YES;
 }
 
+- (BOOL) isMessageSent {
+    return self.dateSent != nil;
+}
+
+- (BOOL) isMessageDelivered {
+    return self.isDelivered;
+}
+
 @end

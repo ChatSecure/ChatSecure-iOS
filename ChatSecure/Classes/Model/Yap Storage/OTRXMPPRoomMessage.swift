@@ -11,10 +11,11 @@ import YapDatabase
 import CocoaLumberjack
 
 @objc public enum RoomMessageState:Int {
-    case received = 0
+    case received = 0 // incoming messages only
     case needsSending = 1
     case pendingSent = 2
     case sent = 3
+    case delivered = 4 // counts as delivered if >1 receipts
     
     public func incoming() -> Bool {
         switch self {
@@ -34,6 +35,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var senderJID:String?
     open var displayName:String?
     open var state:RoomMessageState = .received
+    open var deliveredDate = Date.distantPast
     open var messageText:String?
     open var messageDate = Date.distantPast
     open var xmppId:String? = UUID().uuidString
@@ -63,6 +65,16 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public var isMessageSent: Bool {
+        return state == .pendingSent
+            || state == .sent
+            || state == .delivered
+    }
+    
+    public var isMessageDelivered: Bool {
+        return deliveredDate > NSDate.distantPast
+    }
+    
     public var messageError: Error? {
         get {
             return self.error
@@ -311,4 +323,41 @@ extension OTRXMPPRoomMessage:JSQMessageData {
         return media
     }
     
+}
+
+public extension OTRXMPPRoomMessage {
+    @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
+        guard message.isGroupChatMessage(),
+            message.hasReceiptResponse(),
+            !message.isErrorMessage(),
+            let messageId = message.receiptResponseID() else {
+            return
+        }
+        writeConnection.asyncReadWrite { (transaction) in
+            var roomMessage: OTRXMPPRoomMessage? = nil
+            transaction.enumerateMessages(id: messageId) { (messageProtocol, stop) in
+                if let message = messageProtocol as? OTRXMPPRoomMessage {
+                    roomMessage = message
+                    stop.pointee = true
+                }
+            }
+            // Mark messages as delivered, that aren't previous incoming messages
+            if let deliveredMessage = roomMessage?.refetch(with: transaction),
+                !deliveredMessage.isMessageIncoming {
+                deliveredMessage.state = .delivered
+                deliveredMessage.deliveredDate = Date()
+                deliveredMessage.save(with: transaction)
+            }
+        }
+    }
+    
+    @objc public static func handleDeliveryReceiptRequest(message: XMPPMessage, xmppStream:XMPPStream) {
+        guard message.hasReceiptRequest(),
+            !message.hasReceiptResponse(),
+        let response = message.generateReceiptResponse() else {
+            return
+        }
+        xmppStream.send(response)
+    }
+
 }

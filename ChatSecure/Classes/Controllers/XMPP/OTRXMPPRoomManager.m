@@ -14,6 +14,7 @@
 @import YapDatabase;
 #import "OTRLog.h"
 
+
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 
 @property (nonatomic, strong, readonly) NSMutableDictionary<XMPPJID*,XMPPRoom*> *rooms;
@@ -216,7 +217,8 @@
         }];
         
     }
-    
+    // Handle group chat message receipts
+    [OTRXMPPRoomMessage handleDeliveryReceiptResponseWithMessage:message writeConnection:self.databaseConnection];
 }
 
 #pragma - mark XMPPMUCDelegate Methods
@@ -420,6 +422,7 @@
     XMPPMessage *message = [XMPPMessage message];
     [message addChild:body];
     [message addAttributeWithName:@"id" stringValue:databaseMessage.xmppId];
+    [message addReceiptRequest];
     return message;
 }
 @end

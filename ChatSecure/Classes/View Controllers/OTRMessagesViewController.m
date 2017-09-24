@@ -1806,13 +1806,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 /** Currently uses clock for queued, and checkmark for delivered. */
-- (nullable NSAttributedString*) deliveryStatusStringForMessage:(nonnull OTROutgoingMessage*)outgoingMessage {
-    if (!outgoingMessage) { return nil; }
+- (nullable NSAttributedString*) deliveryStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message {
+    if (!message) { return nil; }
+    // Only applies to outgoing messages
+    if ([message isMessageIncoming]) {
+        return nil;
+    }
     NSString *deliveryStatusString = nil;
-    if(outgoingMessage.dateSent == nil && ![outgoingMessage isMediaMessage]) {
+    if(message.isMessageSent == NO && ![message messageMediaItemKey]) {
         // Waiting to send message. This message is in the queue.
         deliveryStatusString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
-    } else if (outgoingMessage.isDelivered){
+    } else if (message.isMessageDelivered){
         deliveryStatusString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
     }
     if (deliveryStatusString != nil) {
@@ -1874,13 +1878,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [mutableCopy setObject:[UIColor redColor] forKey:NSForegroundColorAttributeName];
         lockAttributes = mutableCopy;
     }
-
-    if ([message isKindOfClass:[OTROutgoingMessage class]]) {
-        OTROutgoingMessage *outgoingMessage = (OTROutgoingMessage *)message;
-        NSAttributedString *deliveryString = [self deliveryStatusStringForMessage:outgoingMessage];
-        if (deliveryString) {
-            [attributedString appendAttributedString:deliveryString];
-        }
+    
+    NSAttributedString *deliveryString = [self deliveryStatusStringForMessage:message];
+    if (deliveryString) {
+        [attributedString appendAttributedString:deliveryString];
     }
     
     if([[message messageMediaItemKey] length] > 0) {

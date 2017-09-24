@@ -101,6 +101,9 @@
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        //[OTRXMPPRoomMessage handleDeliveryReceiptResponseWithMessage:message transaction:transaction];
+        [OTRXMPPRoomMessage handleDeliveryReceiptRequestWithMessage:message xmppStream:room.xmppStream];
+        
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
@@ -223,6 +226,7 @@
  * Stores or otherwise handles the given message element.
  **/
 - (void)handleIncomingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
+    //DDLogVerbose(@"OTRXMPPRoomYapStorage handleIncomingMessage: %@", message);
     XMPPJID *myRoomJID = room.myRoomJID;
     XMPPJID *messageJID = [message from];
     
@@ -240,7 +244,7 @@
     [self insertIncomingMessage:message intoRoom:room];
 }
 - (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
-    
+    //DDLogVerbose(@"OTRXMPPRoomYapStorage handleOutgoingMessage: %@", message);
 }
 
 /**
