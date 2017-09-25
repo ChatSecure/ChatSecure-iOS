@@ -134,6 +134,19 @@
     [room inviteUser:user withMessage:message];
 }
 
+- (OTRXMPPRoomOccupant * _Nullable) roomOccupantForUser:(XMPPJID *)user inRoom:(XMPPJID *)roomJID {
+    XMPPRoom *room = [self roomForJID:roomJID];
+    __block OTRXMPPRoomOccupant *occupant = nil;
+    if (room != nil && [room.xmppRoomStorage isKindOfClass:OTRXMPPRoomYapStorage.class]) {
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            NSString *roomJID = room.roomJID.bare;
+            NSString *accountId = room.xmppStream.tag;
+            occupant = [(OTRXMPPRoomYapStorage*)room.xmppRoomStorage roomOccupantForJID:user.full roomJID:roomJID accountId:accountId inTransaction:transaction];
+        }];
+    }
+    return occupant;
+}
+
 - (void)inviteBuddies:(NSArray<NSString *> *)buddyUniqueIds toRoom:(XMPPRoom *)room {
     if (!buddyUniqueIds.count) {
         return;

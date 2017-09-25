@@ -9,6 +9,41 @@
 import Foundation
 import YapDatabase
 
+@objc public enum RoomOccupantRole:Int {
+    case none = 0
+    case participant = 1
+    case moderator = 2
+    
+    public func canModifySubject() -> Bool {
+        switch self {
+        case .moderator: return true // TODO - Check muc#roomconfig_changesubject, participants may be allowed to change subject based on config!
+        default: return false
+        }
+    }
+    
+    public func canInviteOthers() -> Bool {
+        switch self {
+        case .moderator: return true // TODO - participants may be allowed
+        default: return false
+        }
+    }
+}
+
+@objc public enum RoomOccupantAffiliation:Int {
+    case none = 0
+    case outcast = 1
+    case member = 2
+    case admin = 3
+    case owner = 4
+    
+    public func isOwner() -> Bool {
+        switch self {
+        case .owner: return true
+        default: return false
+        }
+    }
+}
+
 open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
     
     open static let roomEdgeName = "OTRRoomOccupantEdgeName"
@@ -21,6 +56,12 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     /** This is the name your known as in the room. Seems to be username without domain */
     open var roomName:String?
     
+    /** This is the role of the occupant in the room */
+    open var role:RoomOccupantRole = .none
+
+    /** This is the affiliation of the occupant in the room */
+    open var affiliation:RoomOccupantAffiliation = .none
+
     /**When given by the server we get the room participants reall JID*/
     open var realJID:String?
     

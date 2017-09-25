@@ -178,6 +178,7 @@
     NSArray *children = [presence children];
     __block XMPPJID *buddyJID = nil;
     __block NSString *buddyRole = nil;
+    __block NSString *buddyAffiliation = nil;
     [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([[element xmlns] containsString:XMPPMUCNamespace]) {
             NSArray *items = [element children];
@@ -188,6 +189,7 @@
                     *stop = YES;
                 }
                 buddyRole = [item attributeStringValueForName:@"role"];
+                buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
             }];
             *stop = YES;
         }
@@ -212,6 +214,28 @@
         
         occupant.roomName = [presenceJID resource];
         
+        // Role
+        if ([buddyRole isEqualToString:@"moderator"]) {
+            occupant.role = RoomOccupantRoleModerator;
+        } else if ([buddyRole isEqualToString:@"participant"]) {
+            occupant.role = RoomOccupantRoleParticipant;
+        } else {
+            occupant.role = RoomOccupantRoleNone;
+        }
+
+        // Affiliation
+        if ([buddyAffiliation isEqualToString:@"owner"]) {
+            occupant.affiliation = RoomOccupantAffiliationOwner;
+        } else if ([buddyAffiliation isEqualToString:@"admin"]) {
+            occupant.affiliation = RoomOccupantAffiliationAdmin;
+        } else if ([buddyAffiliation isEqualToString:@"member"]) {
+            occupant.affiliation = RoomOccupantAffiliationMember;
+        } else if ([buddyAffiliation isEqualToString:@"outcast"]) {
+            occupant.affiliation = RoomOccupantAffiliationOutcast;
+        } else {
+            occupant.affiliation = RoomOccupantAffiliationNone;
+        }
+
         if ([[presence type] isEqualToString:@"unavailable"] && [buddyRole isEqualToString:@"none"]) {
             // Buddy left the room!
             [occupant removeWithTransaction:transaction];

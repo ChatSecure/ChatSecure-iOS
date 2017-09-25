@@ -30,6 +30,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open var viewHandler:OTRYapViewHandler?
     open var room:OTRXMPPRoom?
+    open var ownOccupant:OTRXMPPRoomOccupant?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
@@ -59,6 +60,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
     public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
+            if let room = self.room, let manager = self.xmppRoomManager() {
+                self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:room.ownJID), inRoom: XMPPJID(string:room.jid))
+                if let o = self.ownOccupant {
+                    print("Got it")
+                }
+            }
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
@@ -73,13 +80,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
         tableHeaderView = OTRVerticalStackView()
         tableFooterView = OTRVerticalStackView()
         
-        let headerCells = [
+        var headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
-            OTRRoomOccupantsViewController.HeaderCellAddFriends,
             OTRRoomOccupantsViewController.HeaderCellMute,
             OTRRoomOccupantsViewController.HeaderCellUnmute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
+
+        // Add friends depends on the role
+        if let ownOccupant = self.ownOccupant, ownOccupant.role.canInviteOthers() {
+            headerCells.insert(OTRRoomOccupantsViewController.HeaderCellAddFriends, at: 1)
+        }
         
         let footerCells = [
             OTRRoomOccupantsViewController.FooterCellLeave
@@ -183,7 +194,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             
             let font:UIFont? = UIFont(name: "Material Icons", size: 24)
             let button = UIButton(type: UIButtonType.custom)
-            if (font != nil) {
+            if font != nil, let ownOccupant = self.ownOccupant, ownOccupant.role.canModifySubject() {
                 button.titleLabel?.font = font
                 button.setTitle("", for: UIControlState())
                 button.setTitleColor(UIColor.black, for: UIControlState())
