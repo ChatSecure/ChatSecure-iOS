@@ -62,9 +62,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
             if let room = self.room, let manager = self.xmppRoomManager() {
                 self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:room.ownJID), inRoom: XMPPJID(string:room.jid))
-                if let o = self.ownOccupant {
-                    print("Got it")
-                }
             }
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
@@ -352,6 +349,20 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
+                if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
+                    cell.nameLabel.text?.append(" (You)")
+                }
+                if roomOccupant.affiliation == .owner {
+                    cell.accountLabel.text = "Room owner"
+                } else if roomOccupant.affiliation == .admin {
+                    cell.accountLabel.text = "Room admin"
+                }
+                if roomOccupant.role == .moderator {
+                    if let chars = cell.accountLabel.text, chars.characters.count > 0 {
+                        cell.accountLabel.text?.append(", ")
+                    }
+                    cell.accountLabel.text?.append("Moderator")
+                }
             } else if let roomJid = roomOccupant.jid,
                 let jidStr = roomOccupant.realJID,
                 let displayName = roomOccupant.roomName {
