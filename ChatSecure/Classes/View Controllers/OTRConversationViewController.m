@@ -113,12 +113,18 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     __block BOOL hasAccounts = NO;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    NSParameterAssert(OTRDatabaseManager.shared.readOnlyDatabaseConnection != nil);
+    if (!OTRDatabaseManager.shared.readOnlyDatabaseConnection) {
+        DDLogWarn(@"Database isn't setup yet! Skipping onboarding...");
+        return;
+    }
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
         }
     }];
+    
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
 
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
