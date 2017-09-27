@@ -8,57 +8,39 @@
 
 #import "OTRMessagesViewController.h"
 
-#import "OTRDatabaseView.h"
-#import "OTRDatabaseManager.h"
-#import "OTRLog.h"
-
-#import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "OTRMessage+JSQMessageData.h"
-@import JSQMessagesViewController;
-@import MobileCoreServices;
-#import "OTRProtocolManager.h"
-#import "OTRXMPPTorAccount.h"
-#import "OTRXMPPManager.h"
-#import "OTRLockButton.h"
-#import "OTRButtonView.h"
-@import OTRAssets;
-#import "OTRTitleSubtitleView.h"
-@import OTRKit;
-@import FormatterKit;
-#import "OTRImages.h"
-#import "UIActivityViewController+ChatSecure.h"
-#import "OTRUtilities.h"
-#import "OTRProtocolManager.h"
-#import "OTRColors.h"
-#import "JSQMessagesCollectionViewCell+ChatSecure.h"
-@import BButton;
 #import "OTRAttachmentPicker.h"
-#import "OTRImageItem.h"
-#import "OTRVideoItem.h"
-#import "OTRAudioItem.h"
-@import JTSImageViewController;
 #import "OTRAudioControlsView.h"
-#import "OTRPlayPauseProgressView.h"
+#import "OTRAudioItem.h"
 #import "OTRAudioPlaybackController.h"
-#import "OTRMediaFileManager.h"
-#import "OTRMediaServer.h"
-#import "UIImage+ChatSecure.h"
-#import "OTRBaseLoginViewController.h"
-
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRYapMessageSendAction.h"
-#import "UIViewController+ChatSecure.h"
+#import "OTRBuddy.h"
 #import "OTRBuddyCache.h"
-#import "OTRTextItem.h"
-#import "OTRHTMLItem.h"
-#import "OTRFileItem.h"
-@import YapDatabase;
-@import PureLayout;
+#import "OTRButtonView.h"
+#import "OTRColors.h"
+#import "OTRDatabaseManager.h"
+#import "OTRImageItem.h"
+#import "OTRImages.h"
+#import "OTRLockButton.h"
+#import "OTRLog.h"
+#import "OTRMediaServer.h"
+#import "OTRProtocolManager.h"
+#import "OTRTitleSubtitleView.h"
+#import "OTRUtilities.h"
+#import "OTRVideoItem.h"
+#import "OTRXMPPManager.h"
+#import "OTRXMPPTorAccount.h"
+#import "OTRYapMessageSendAction.h"
+#import "UIActivityViewController+ChatSecure.h"
+#import "UIImage+ChatSecure.h"
+#import "UIViewController+ChatSecure.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+@import BButton;
+@import FormatterKit;
+@import JTSImageViewController;
 @import KVOController;
-
-@import AVFoundation;
 @import MediaPlayer;
+@import MobileCoreServices;
+@import OTRAssets;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 static NSUInteger const kOTRMessagePageSize = 50;
@@ -75,43 +57,45 @@ typedef NS_ENUM(int, OTRDropDownType) {
     JSQMessagesAvatarImage *_buddyAvatarImage;
 }
 
-@property (nonatomic, strong) OTRYapViewHandler *viewHandler;
+@property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
+@property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
 
+// UI
 @property (nonatomic, strong) JSQMessagesBubbleImage *outgoingBubbleImage;
 @property (nonatomic, strong) JSQMessagesBubbleImage *incomingBubbleImage;
+@property (nonatomic, strong) UIView *jidForwardingHeaderView;
+@property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
+@property (nonatomic, strong) OTRLockButton *lockButton;
+@property (nonatomic, strong) OTRButtonView *buttonDropdownView;
+@property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 
+// data
+@property (nonatomic, strong) OTRYapViewHandler *viewHandler;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+@property (nonatomic, strong) id currentMessage;
+@property (nonatomic, strong) NSCache *messageSizeCache;
+@property (nonatomic) BOOL loadingMessages;
+@property (nonatomic) BOOL messageRangeExtended;
+
+// notifications
 @property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 @property (nonatomic, weak) id pendingApprovalDidChangeNotificationObject;
 @property (nonatomic, weak) id deviceListUpdateNotificationObject;
 
-
-@property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
-@property (nonatomic, strong) OTRLockButton *lockButton;
-@property (nonatomic, strong) OTRButtonView *buttonDropdownView;
-
-@property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
-@property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
-
-@property (nonatomic, strong) NSTimer *lastSeenRefreshTimer;
-@property (nonatomic, strong) UIView *jidForwardingHeaderView;
-
-@property (nonatomic) BOOL loadingMessages;
-@property (nonatomic) BOOL messageRangeExtended;
-@property (nonatomic, strong) NSIndexPath *currentIndexPath;
-@property (nonatomic, strong) id currentMessage;
-@property (nonatomic, strong) NSCache *messageSizeCache;
-
 @end
+
+#pragma mark -
 
 @implementation OTRMessagesViewController
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+#pragma mark - constructor / destructor
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        _state = [[MessagesViewControllerState alloc] init];
         self.senderId = @"";
         self.senderDisplayName = @"";
-        _state = [[MessagesViewControllerState alloc] init];
         self.messageSizeCache = [NSCache new];
         self.messageSizeCache.countLimit = kOTRMessagePageSize;
         self.messageRangeExtended = NO;
@@ -119,49 +103,45 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return self;
 }
 
-#pragma - mark Lifecylce Methods
-
 - (void) dealloc {
-    [self.lastSeenRefreshTimer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.lastSeenRefreshTimer invalidate];
 }
 
-- (void)viewDidLoad
-{
+#pragma mark - lifecycle
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
     
-     ////// bubbles //////
+    // message bubbles
     JSQMessagesBubbleImageFactory *bubbleImageFactory = [[JSQMessagesBubbleImageFactory alloc] init];
-                                                         
     self.outgoingBubbleImage = [bubbleImageFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleBlueColor]];
-    
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
-    ////// TitleView //////
+    // title
     OTRTitleSubtitleView *titleView = [self titleView];
     [self refreshTitleView:titleView];
     self.navigationItem.titleView = titleView;
     
-    ////// Send Button //////
+    // send button
     self.sendButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
     
-    ////// Attachment Button //////
+    // attachment button
     self.inputToolbar.contentView.leftBarButtonItem = nil;
     self.cameraButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.cameraButton.bounds = CGRectMake(0, 0, 32, 32);
     self.cameraButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
     self.cameraButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.cameraButton setTitle:[NSString fa_stringForFontAwesomeIcon:FACamera] forState:UIControlStateNormal];
-    self.cameraButton.frame = CGRectMake(0, 0, 32, 32);
     
-    ////// Microphone Button //////
+    // microphone button
     self.microphoneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.microphoneButton.frame = CGRectMake(0, 0, 32, 32);
+    self.microphoneButton.bounds = CGRectMake(0, 0, 32, 32);
     self.microphoneButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
     self.microphoneButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.microphoneButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAMicrophone]
-          forState:UIControlStateNormal];
+    [self.microphoneButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAMicrophone] forState:UIControlStateNormal];
     
     self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
     
@@ -214,20 +194,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     [self tryToMarkAllMessagesAsRead];
     // This is a hack to attempt fixing https://github.com/ChatSecure/ChatSecure-iOS/issues/657
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self scrollToBottomAnimated:animated];
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [self scrollToBottomAnimated:NO];
+//    });
     self.loadingMessages = NO;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
     if (self.lastSeenRefreshTimer) {
@@ -283,10 +263,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView reloadData];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    // clear timer
     [self.lastSeenRefreshTimer invalidate];
     self.lastSeenRefreshTimer = nil;
     
@@ -294,12 +274,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
-    
-    // [self.inputToolbar.contentView.textView resignFirstResponder];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 
     _warningAvatarImage = nil;
@@ -307,13 +284,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
     _buddyAvatarImage = nil;
 }
 
-#pragma - mark Setters & getters
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutJIDForwardingHeader];
+}
 
-- (OTRAttachmentPicker *)attachmentPicker
-{
+#pragma mark - accessors
+
+- (OTRAttachmentPicker *)attachmentPicker {
     if (!_attachmentPicker) {
         _attachmentPicker = [[OTRAttachmentPicker alloc] initWithParentViewController:self delegate:self];
     }
+    
     return _attachmentPicker;
 }
 
@@ -325,6 +307,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     return indexPaths;
 }
+
+#pragma mark - data
 
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     if (!self.threadKey || !self.threadCollection || !transaction) { return nil; }
@@ -358,8 +342,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return account;
 }
 
-- (void)setThreadKey:(NSString *)key collection:(NSString *)collection
-{
+- (void)setThreadKey:(NSString *)key collection:(NSString *)collection {
     self.currentIndexPath = nil;
     NSString *oldKey = self.threadKey;
     NSString *oldCollection = self.threadCollection;
@@ -410,6 +393,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self updateJIDForwardingHeader];
     
     __weak typeof(self)weakSelf = self;
+    
     if (self.pendingApprovalDidChangeNotificationObject == nil) {
         self.pendingApprovalDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRBuddyPendingApprovalDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
@@ -443,44 +427,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self fetchOMEMODeviceList];
 }
 
-                           
-- (YapDatabaseConnection *)readOnlyDatabaseConnection
-{
-    if (!_readOnlyDatabaseConnection) {
-        _readOnlyDatabaseConnection = [OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection;
-    }
-    return _readOnlyDatabaseConnection;
-}
-                           
-- (YapDatabaseConnection *)readWriteDatabaseConnection
-{
-    if (!_readWriteDatabaseConnection) {
-            _readWriteDatabaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
-    }
-    return _readWriteDatabaseConnection;
-}
-                        
-
-- (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
-    OTRAccount *account = [self accountWithTransaction:transaction];
-    if (!account) { return nil; }
-    return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-}
-
-/** Will send a probe to fetch last seen */
-- (void) sendPresenceProbe {
-    __block OTRXMPPManager *xmpp = nil;
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        xmpp = [self xmppManagerWithTransaction:transaction];
-        buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
-    }];
-    if (!xmpp || ![buddy isKindOfClass:[OTRXMPPBuddy class]] || buddy.pendingApproval) { return; }
-    [xmpp sendPresenceProbeForBuddy:buddy];
-}
-
-- (void)updateViewWithKey:(NSString *)key collection:(NSString *)collection
-{
+- (void)updateViewWithKey:(NSString *)key collection:(NSString *)collection {
     if ([collection isEqualToString:[OTRBuddy collection]]) {
         __block OTRBuddy *buddy = nil;
         __block OTRAccount *account = nil;
@@ -489,13 +436,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
             account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
         }];
         
-        
-        
         //Update UI now
         if (buddy.chatState == OTRChatStateComposing || buddy.chatState == OTRChatStatePaused) {
             self.showTypingIndicator = YES;
-        }
-        else {
+        } else {
             self.showTypingIndicator = NO;
         }
         
@@ -521,7 +465,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         });
         
         [self refreshTitleView:[self titleView]];
-
+        
         // Auto-inititate OTR when contact comes online
         if (!previousState && self.state.isThreadOnline) {
             [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
@@ -538,47 +482,282 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self tryToMarkAllMessagesAsRead];
 }
 
-- (void)tryToMarkAllMessagesAsRead {
-    // Set all messages as read
-    if ([self otr_isVisible]) {
-        __weak __typeof__(self) weakSelf = self;
-        __block id <OTRThreadOwner>threadOwner = nil;
-        __block NSArray <id <OTRMessageProtocol>>* unreadMessages = nil;
-        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            threadOwner = [weakSelf threadObjectWithTransaction:transaction];
-            if (!threadOwner) { return; }
-            unreadMessages = [transaction allUnreadMessagesForThread:threadOwner];
-        } completionBlock:^{
-            
-            if ([unreadMessages count] == 0) {
-                return;
-            }
-            
-            //Mark as read
-            
-            NSMutableArray <id <OTRMessageProtocol>>*toBeSaved = [[NSMutableArray alloc] init];
-            
-            [unreadMessages enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj isKindOfClass:[OTRIncomingMessage class]]) {
-                    OTRIncomingMessage *message = [((OTRIncomingMessage *)obj) copy];
-                    message.read = YES;
-                    [toBeSaved addObject:message];
-                } else if ([obj isKindOfClass:[OTRXMPPRoomMessage class]]) {
-                    OTRXMPPRoomMessage *message = [((OTRXMPPRoomMessage *)obj) copy];
-                    message.read = YES;
-                    [toBeSaved addObject:message];
-                }
-            }];
-            
-            [weakSelf.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                [toBeSaved enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [transaction setObject:obj forKey:[obj messageKey] inCollection:[obj messageCollection]];
-                }];
-                [transaction touchObjectForKey:[threadOwner threadIdentifier] inCollection:[threadOwner threadCollection]];
-            }];
+- (void)saveCurrentMessageText:(NSString *)text threadKey:(NSString *)key colleciton:(NSString *)collection {
+    if (![key length] || ![collection length]) {
+        return;
+    }
+    
+    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
+        if (thread == nil) {
+            // this can happen when we've just approved a contact, then the thread key
+            // might have changed.
+            return;
+        }
+        [thread setCurrentMessageText:text];
+        [transaction setObject:thread forKey:key inCollection:collection];
+        
+        //Send inactive chat State
+        OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
+        OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+        if (![text length]) {
+            [xmppManager sendChatState:OTRChatStateInactive withBuddyID:[thread threadIdentifier]];
+        }
+    }];
+}
+
+//* Takes the current value out of the thread object and sets it to the text view and nils out result*/
+- (void)moveLastComposingTextForThreadKey:(NSString *)key colleciton:(NSString *)collection toTextView:(UITextView *)textView {
+    if (![key length] || ![collection length] || !textView) {
+        return;
+    }
+    __block id <OTRThreadOwner> thread = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [[transaction objectForKey:key inCollection:collection] copy];
+    }];
+    // Don't remove text you're already composing
+    NSString *oldThreadText = [thread currentMessageText];
+    if (!textView.text.length && oldThreadText.length) {
+        textView.text = oldThreadText;
+        [self receivedTextViewChanged:textView];
+    }
+    if (oldThreadText.length) {
+        [thread setCurrentMessageText:nil];
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction setObject:thread forKey:key inCollection:collection];
         }];
     }
 }
+                           
+- (YapDatabaseConnection *)readOnlyDatabaseConnection {
+    if (!_readOnlyDatabaseConnection) {
+        _readOnlyDatabaseConnection = [OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection;
+    }
+    return _readOnlyDatabaseConnection;
+}
+                           
+- (YapDatabaseConnection *)readWriteDatabaseConnection {
+    if (!_readWriteDatabaseConnection) {
+        _readWriteDatabaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    }
+    return _readWriteDatabaseConnection;
+}
+                        
+
+- (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    OTRAccount *account = [self accountWithTransaction:transaction];
+    if (!account) {
+        return nil;
+    }
+    
+    return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+}
+
+// Hack to manually re-fetch OMEMO devicelist because PEP sucks
+// TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
+-(void)fetchOMEMODeviceList {
+    __block OTRAccount *account = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    if (!account || !buddy) {
+        return;
+    }
+    id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    if ([manager isKindOfClass:[OTRXMPPManager class]]) {
+        XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
+        OTRXMPPManager *xmpp = manager;
+        [xmpp.omemoSignalCoordinator.omemoModule fetchDeviceIdsForJID:jid elementId:nil];
+    }
+}
+
+- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath {
+    // Multiple invocations with the same indexPath tend to come in groups, no need to hit the DB each time.
+    // Even though the object is cached, the row ID calculation still takes time
+    if (![indexPath isEqual:self.currentIndexPath]) {
+        self.currentIndexPath = indexPath;
+        self.currentMessage = [self.viewHandler object:indexPath];
+    }
+    return self.currentMessage;
+}
+
+/**
+ * Updates the flexible range of the DB connection.
+ * @param reset When NO, adds kOTRMessagePageSize to the range length, when YES resets the length to the kOTRMessagePageSize
+ */
+- (void)updateRangeOptions:(BOOL)reset {
+    YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
+    if (reset) {
+        if (options != nil && !self.messageRangeExtended) {
+            return;
+        }
+        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
+                                                                offset:0
+                                                                  from:YapDatabaseViewEnd];
+        self.messageSizeCache.countLimit = kOTRMessagePageSize;
+        self.messageRangeExtended = NO;
+    } else {
+        options = [options copyWithNewLength:options.length + kOTRMessagePageSize];
+        self.messageSizeCache.countLimit += kOTRMessagePageSize;
+        self.messageRangeExtended = YES;
+    }
+    [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
+    
+    self.loadingMessages = YES;
+    
+    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
+    
+    void (^doReload)() = ^{
+        [self.collectionView reloadData];
+        
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+        }];
+        
+        if (!reset) {
+            [self.collectionView.collectionViewLayout invalidateLayout];
+            [self.collectionView layoutSubviews];
+            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
+        }
+        
+        self.loadingMessages = NO;
+    };
+    
+    if (reset) {
+        doReload();
+    }
+    else {
+        // JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSMutableArray<id<JSQMessageData>> *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
+            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
+                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
+                id object = [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
+                if ([object conformsToProtocol:@protocol(JSQMessageData)]) {
+                    id<JSQMessageData> msg = object;
+                    [objects addObject:msg];
+                }
+            }
+            // Although it would be nice to pre-calculate in the background
+            // the Xcode 9 main thread checker complains about the block below
+            //            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
+            //                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
+            //                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
+            //                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
+            //                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
+            //                                                                                           atIndexPath:nil
+            //                                                                                            withLayout:layout];
+            //                                      }];
+            dispatch_async(dispatch_get_main_queue(), doReload);
+        });
+    }
+}
+
+- (BOOL)isPushMessageAtIndexPath:(NSIndexPath *)indexPath {
+    id message = [self messageAtIndexPath:indexPath];
+    return [message isKindOfClass:[PushMessage class]];
+}
+
+- (BOOL)isMessageTrusted:(id <OTRMessageProtocol>)message {
+    BOOL trusted = YES;
+    if (![message isKindOfClass:[OTRBaseMessage class]]) {
+        return trusted;
+    }
+    
+    OTRBaseMessage *baseMessage = (OTRBaseMessage *)message;
+    
+    if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
+        NSData *otrFingerprintData = baseMessage.messageSecurityInfo.otrFingerprint;
+        if ([otrFingerprintData length]) {
+            trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
+        }
+    } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
+        NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
+        NSString *omemoDeviceYapCollection = baseMessage.messageSecurityInfo.omemoDeviceYapCollection;
+        __block OTROMEMODevice *device = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
+        }];
+        if(device != nil) {
+            trusted = [device isTrusted];
+        }
+    }
+    return trusted;
+}
+
+- (BOOL)isGroupChat {
+    __block OTRXMPPRoom *room = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        room = [self roomWithTransaction:transaction];
+    }];
+    return (room != nil);
+}
+
+#pragma mark - presence
+
+/** Will send a probe to fetch last seen */
+- (void) sendPresenceProbe {
+    __block OTRXMPPManager *xmpp = nil;
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        xmpp = [self xmppManagerWithTransaction:transaction];
+        buddy = (OTRXMPPBuddy*)[self buddyWithTransaction:transaction];
+    }];
+    if (!xmpp || ![buddy isKindOfClass:[OTRXMPPBuddy class]] || buddy.pendingApproval) { return; }
+    [xmpp sendPresenceProbeForBuddy:buddy];
+}
+
+#pragma mark - read / unread
+
+- (void)tryToMarkAllMessagesAsRead {
+    if (![self otr_isVisible]) {
+        return;
+    }
+
+    __weak __typeof__(self) weakSelf = self;
+    __block id <OTRThreadOwner>threadOwner = nil;
+    __block NSArray <id <OTRMessageProtocol>>* unreadMessages = nil;
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        threadOwner = [weakSelf threadObjectWithTransaction:transaction];
+        if (!threadOwner) { return; }
+        unreadMessages = [transaction allUnreadMessagesForThread:threadOwner];
+    } completionBlock:^{
+        
+        if ([unreadMessages count] == 0) {
+            return;
+        }
+        
+        //Mark as read
+        
+        NSMutableArray <id <OTRMessageProtocol>>*toBeSaved = [[NSMutableArray alloc] init];
+        
+        [unreadMessages enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[OTRIncomingMessage class]]) {
+                OTRIncomingMessage *message = [((OTRIncomingMessage *)obj) copy];
+                message.read = YES;
+                [toBeSaved addObject:message];
+            } else if ([obj isKindOfClass:[OTRXMPPRoomMessage class]]) {
+                OTRXMPPRoomMessage *message = [((OTRXMPPRoomMessage *)obj) copy];
+                message.read = YES;
+                [toBeSaved addObject:message];
+            }
+        }];
+        
+        [weakSelf.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [toBeSaved enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [transaction setObject:obj forKey:[obj messageKey] inCollection:[obj messageCollection]];
+            }];
+            [transaction touchObjectForKey:[threadOwner threadIdentifier] inCollection:[threadOwner threadCollection]];
+        }];
+    }];
+}
+
+#pragma mark - UI setup
 
 - (OTRTitleSubtitleView * __nonnull)titleView {
     UIView *titleView = self.navigationItem.titleView;
@@ -588,13 +767,40 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
 }
 
+- (void)setupInfoButton {
+    if ([self isGroupChat]) {
+        UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(occupantsButtonPressed:)];
+        self.navigationItem.rightBarButtonItem = barButtonItem;
+    } else {
+        UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        infoButton.accessibilityIdentifier = @"profileButton";
+        [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    }
+}
+
+- (UIBarButtonItem *)rightBarButtonItem {
+    if (!self.lockBarButtonItem) {
+        self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    }
+    return self.lockBarButtonItem;
+}
+
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState buddyStatus:(OTRThreadStatus)status textViewHasText:(BOOL)hasText {
+    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+}
+
+#pragma mark - refresh timer
+
 - (void)refreshTitleTimerUpdate:(NSTimer*)timer {
     [self refreshTitleView:[self titleView]];
 }
 
-/** Updates the title view with the current thread information on this view controller*/
-- (void)refreshTitleView:(OTRTitleSubtitleView *)titleView
-{
+#pragma mark - updates
+
+- (void)refreshTitleView:(OTRTitleSubtitleView *)titleView {
     __block id<OTRThreadOwner> thread = nil;
     __block OTRAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -609,10 +815,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         OTRBuddy *buddy = (OTRBuddy*)thread;
         UIColor *color = [buddy avatarBorderColor];
         if (color) { // only show online status
-            statusImage = [OTRImages circleWithRadius:50
-                                      lineWidth:0
-                                      lineColor:nil
-                                      fillColor:color];
+            statusImage = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:color];
         }
         
         dispatch_block_t refreshTimeBlock = ^{
@@ -620,15 +823,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 buddy = (OTRBuddy*)[self threadObjectWithTransaction:transaction];
             }];
+            
             if (![buddy isKindOfClass:[OTRBuddy class]]) {
                 return;
             }
+            
             NSDate *lastSeen = [OTRBuddyCache.shared lastSeenDateForBuddy:buddy];
             OTRThreadStatus status = [OTRBuddyCache.shared threadStatusForBuddy:buddy];
             if (!lastSeen) {
                 titleView.subtitleLabel.text = buddy.username;
                 return;
             }
+            
             TTTTimeIntervalFormatter *tf = [[TTTTimeIntervalFormatter alloc] init];
             tf.presentTimeIntervalMargin = 60;
             tf.usesAbbreviatedCalendarUnits = YES;
@@ -659,273 +865,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     titleView.titleImageView.image = statusImage;
-
 }
 
-/**
- This generates a UIAlertAction where the handler fetches the outgoing message (optionaly duplicates). Then if media message resend media message. If not update messageSecurityInfo and date and create new sending action.
- */
-- (UIAlertAction *)resendOutgoingMessageActionForMessageKey:(NSString *)messageKey
-                                          messageCollection:(NSString *)messageCollection
-                                readWriteDatabaseConnection:(YapDatabaseConnection*)databaseConnection
-                                           duplicateMessage:(BOOL)duplicateMessaage
-                                                      title:(NSString *)title
-{
-    UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            OTROutgoingMessage *dbMessage = [[transaction objectForKey:messageKey inCollection:messageCollection] copy];
-            if (duplicateMessaage) {
-                dbMessage = [OTROutgoingMessage duplicateMessage:dbMessage];
-            }
-            dbMessage.error = nil;
-            
-            // Check if this is a media message. For now these are handled differently
-            if ([dbMessage.mediaItemUniqueId length]) {
-                OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
-                [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
-            } else {
-                dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
-                dbMessage.date = [NSDate date];
-                OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:dbMessage date:dbMessage.date];
-                [sendingAction saveWithTransaction:transaction];
-            }
-            [dbMessage saveWithTransaction:transaction];
-        }];
-    }];
-    return action;
-}
-
-- (nonnull UIAlertAction *)viewProfileAction {
-    return [UIAlertAction actionWithTitle:VIEW_PROFILE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self infoButtonPressed:action];
-    }];
-}
-
-- (nonnull UIAlertAction *)cancleAction {
-    return [UIAlertAction actionWithTitle:CANCEL_STRING()
-                                    style:UIAlertActionStyleCancel
-                                  handler:nil];
-}
-
-- (NSArray <UIAlertAction *>*)actionForMessage:(id<OTRMessageProtocol>)message {
-    NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
-    
-    
-    if ([message isKindOfClass:[OTROutgoingMessage class]] ) {
-        OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
-        
-        BOOL duplicate = YES;
-        NSError *error = [message messageError];
-        if (error != nil) {
-            duplicate = NO;
-        }
-        // This is an outgoing message so we can offer to resend
-        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING()];
-        [actions addObject:resendAction];
-    }
-    
-    if (![message isKindOfClass:[OTRXMPPRoomMessage class]]) {
-        [actions addObject:[self viewProfileAction]];
-    }
-    
-    NSArray<UIAlertAction*> *mediaActions = [UIAlertAction actionsForMediaMessage:message sourceView:self.view viewController:self];
-    [actions addObjectsFromArray:mediaActions];
-    
-    [actions addObject:[self cancleAction]];
-    return actions;
-}
-
-- (void)didTapAvatar:(id<OTRMessageProtocol>)message sender:(id)sender {
-    NSError *error =  [message messageError];
-    NSString *title = nil;
-    NSString *alertMessage = nil;
-    
-    NSString * sendingType = UNENCRYPTED_STRING();
-    switch (self.state.messageSecurity) {
-        case OTRMessageTransportSecurityOTR:
-            sendingType = @"OTR";
-            break;
-        case OTRMessageTransportSecurityOMEMO:
-            sendingType = @"OMEMO";
-            break;
-            
-        default:
-            break;
-    }
-    
-    if ([message isKindOfClass:[OTROutgoingMessage class]]) {
-        title = RESEND_MESSAGE_TITLE();
-        alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
-    }
-    
-    if (error) {
-        NSUInteger otrFingerprintError = 32872;
-        title = ERROR_STRING();
-        alertMessage = error.localizedDescription;
-        
-        if (error.code == otrFingerprintError) {
-            alertMessage = NO_DEVICES_BUDDY_ERROR_STRING();
-        }
-        
-        if([message isKindOfClass:[OTROutgoingMessage class]]) {
-            //If it's an outgoing message the error title should be that we were unable to send the message.
-            title = UNABLE_TO_SEND_STRING();
-            
-            
-            
-            NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
-            alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
-            
-            //If this is an error about not having a trusted identity then we should offer to connect to the
-            if (error.code == OTROMEMOErrorNoDevicesForBuddy ||
-                error.code == OTROMEMOErrorNoDevices ||
-                error.code == otrFingerprintError) {
-                
-                alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
-            }
-        }
-    }
-    
-    
-    if (![self isMessageTrusted:message]) {
-        title = UNTRUSTED_DEVICE_STRING();
-        if ([message isMessageIncoming]) {
-            alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING();
-        } else {
-            alertMessage = UNTRUSTED_DEVICE_SENT_STRING();
-        }
-        alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
-    }
-    
-    NSArray <UIAlertAction*>*actions = [self actionForMessage:message];
-    if ([actions count] > 0) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:alertMessage preferredStyle:UIAlertControllerStyleActionSheet];
-        [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [alertController addAction:obj];
-        }];
-        if ([sender isKindOfClass:[UIView class]]) {
-            UIView *sourceView = sender;
-            alertController.popoverPresentationController.sourceView = sourceView;
-            alertController.popoverPresentationController.sourceRect = sourceView.bounds;
-        }
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-}
-
-- (BOOL)isMessageTrusted:(id <OTRMessageProtocol>)message {
-    BOOL trusted = YES;
-    if (![message isKindOfClass:[OTRBaseMessage class]]) {
-        return trusted;
-    }
-    
-    OTRBaseMessage *baseMessage = (OTRBaseMessage *)message;
-    
-    
-    if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
-        NSData *otrFingerprintData = baseMessage.messageSecurityInfo.otrFingerprint;
-        if ([otrFingerprintData length]) {
-            trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
-        }
-    } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
-        NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
-        NSString *omemoDeviceYapCollection = baseMessage.messageSecurityInfo.omemoDeviceYapCollection;
-        __block OTROMEMODevice *device = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
-        }];
-        if(device != nil) {
-            trusted = [device isTrusted];
-        }
-    }
-    return trusted;
-}
-
-- (BOOL) isGroupChat {
-    __block OTRXMPPRoom *room = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        room = [self roomWithTransaction:transaction];
-    }];
-    return (room != nil);
-}
-
-#pragma - mark Profile Button Methods
-
-- (void)setupInfoButton {
-    if ([self isGroupChat]) {
-        UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
-        self.navigationItem.rightBarButtonItem = barButtonItem;
-    } else {
-        UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-        infoButton.accessibilityIdentifier = @"profileButton";
-        [infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
-    }
-}
-
-- (void) infoButtonPressed:(id)sender {
-    __block OTRAccount *account = nil;
-    __block OTRBuddy *buddy = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [self accountWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
-    }];
-    if (!account || !buddy) {
-        return;
-    }
-    
-    // Hack to manually re-fetch OMEMO devicelist because PEP sucks
-    // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
-    [self fetchOMEMODeviceList];
-    
-    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readOnlyDatabaseConnection];
-
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:self.readOnlyDatabaseConnection form:form];
-    verify.completionBlock = ^{
-        [self updateEncryptionState];
-    };
-    UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
-    verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:verifyNav animated:YES completion:nil];
-}
-
-- (void)didSelectOccupantsButton:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRRoomOccupants" bundle:[OTRAssets resourcesBundle]];
-    OTRRoomOccupantsViewController *occupantsVC = [storyboard instantiateViewControllerWithIdentifier:@"roomOccupants"];
-    occupantsVC.delegate = self;
-    [occupantsVC setupViewHandlerWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
-    [self.navigationController pushViewController:occupantsVC animated:YES];
-}
-
-// Hack to manually re-fetch OMEMO devicelist because PEP sucks
-// TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
--(void) fetchOMEMODeviceList {
-    __block OTRAccount *account = nil;
-    __block OTRBuddy *buddy = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [self accountWithTransaction:transaction];
-        buddy = [self buddyWithTransaction:transaction];
-    }];
-    if (!account || !buddy) {
-        return;
-    }
-    id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-    if ([manager isKindOfClass:[OTRXMPPManager class]]) {
-        XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
-        OTRXMPPManager *xmpp = manager;
-        [xmpp.omemoSignalCoordinator.omemoModule fetchDeviceIdsForJID:jid elementId:nil];
-    }
-}
-
-- (UIBarButtonItem *)rightBarButtonItem
-{
-    if (!self.lockBarButtonItem) {
-        self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
-    }
-    return self.lockBarButtonItem;
-}
-
--(void)updateEncryptionState
-{
+-(void)updateEncryptionState {
     if ([self isGroupChat]) {
         __block OTRXMPPManager *xmpp = nil;
         [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -976,237 +918,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState buddyStatus:(OTRThreadStatus)status textViewHasText:(BOOL)hasText
-{
-    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-    self.inputToolbar.contentView.leftBarButtonItem = nil;
-}
-
-- (void)connectButtonPressed:(id)sender
-{
-    [self hideDropdownAnimated:YES completion:nil];
-    __block OTRAccount *account = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [self accountWithTransaction:transaction];
-    }];
-    
-    if (account == nil) {
-        return;
-    }
-    
-    //If we have the password then we can login with that password otherwise show login UI to enter password
-    if ([account.password length]) {
-        [[OTRProtocolManager sharedInstance] loginAccount:account userInitiated:YES];
-        
-    } else {
-        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithAccount:account];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
-        nav.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:nav animated:YES completion:nil];
-    }
-    
-    
-}
-
-#pragma - mark  dropDown Methods
-
-- (void)showDropdownWithTitle:(NSString *)title buttons:(NSArray *)buttons animated:(BOOL)animated tag:(NSInteger)tag
-{
-    NSTimeInterval duration = 0.3;
-    if (!animated) {
-        duration = 0.0;
-    }
-    
-    self.buttonDropdownView = [[OTRButtonView alloc] initWithTitle:title buttons:buttons];
-    self.buttonDropdownView.tag = tag;
-    
-    CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
-    
-    [self.view addSubview:self.buttonDropdownView];
-    
-    [self.buttonDropdownView autoSetDimension:ALDimensionHeight toSize:height];
-    [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-    [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinToTopLayoutGuideOfViewController:self withInset:height*-1];
-    
-    [self.buttonDropdownView layoutIfNeeded];
-    
-    [UIView animateWithDuration:duration animations:^{
-        self.buttonDropdownView.topLayoutConstraint.constant = 0.0;
-        [self.buttonDropdownView layoutIfNeeded];
-    } completion:nil];
-    
-}
-
-- (void)hideDropdownAnimated:(BOOL)animated completion:(void (^)(void))completion
-{
-    if (!self.buttonDropdownView) {
-        if (completion) {
-            completion();
-        }
-    }
-    else {
-        NSTimeInterval duration = 0.3;
-        if (!animated) {
-            duration = 0.0;
-        }
-        
-        [UIView animateWithDuration:duration animations:^{
-            CGFloat height = self.buttonDropdownView.frame.size.height;
-            self.buttonDropdownView.topLayoutConstraint.constant = height*-1;
-            [self.buttonDropdownView layoutIfNeeded];
-            
-        } completion:^(BOOL finished) {
-            if (finished) {
-                [self.buttonDropdownView removeFromSuperview];
-                self.buttonDropdownView = nil;
-            }
-            
-            if (completion) {
-                completion();
-            }
-        }];
-    }
-}
-
-- (void)saveCurrentMessageText:(NSString *)text threadKey:(NSString *)key colleciton:(NSString *)collection
-{
-    if (![key length] || ![collection length]) {
-        return;
-    }
-    
-    [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
-        if (thread == nil) {
-            // this can happen when we've just approved a contact, then the thread key
-            // might have changed.
-            return;
-        }
-        [thread setCurrentMessageText:text];
-        [transaction setObject:thread forKey:key inCollection:collection];
-        
-        //Send inactive chat State
-        OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
-        OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        if (![text length]) {
-            [xmppManager sendChatState:OTRChatStateInactive withBuddyID:[thread threadIdentifier]];
-        }
-    }];
-}
-
-//* Takes the current value out of the thread object and sets it to the text view and nils out result*/
-- (void)moveLastComposingTextForThreadKey:(NSString *)key colleciton:(NSString *)collection toTextView:(UITextView *)textView {
-    if (![key length] || ![collection length] || !textView) {
-        return;
-    }
-    __block id <OTRThreadOwner> thread = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        thread = [[transaction objectForKey:key inCollection:collection] copy];
-    }];
-    // Don't remove text you're already composing
-    NSString *oldThreadText = [thread currentMessageText];
-    if (!textView.text.length && oldThreadText.length) {
-        textView.text = oldThreadText;
-        [self receivedTextViewChanged:textView];
-    }
-    if (oldThreadText.length) {
-        [thread setCurrentMessageText:nil];
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [transaction setObject:thread forKey:key inCollection:collection];
-        }];
-    }
-}
-
-- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Multiple invocations with the same indexPath tend to come in groups, no need to hit the DB each time.
-    // Even though the object is cached, the row ID calculation still takes time
-    if (![indexPath isEqual:self.currentIndexPath]) {
-        self.currentIndexPath = indexPath;
-        self.currentMessage = [self.viewHandler object:indexPath];
-    }
-    return self.currentMessage;
-}
-
-/**
- * Updates the flexible range of the DB connection.
- * @param reset When NO, adds kOTRMessagePageSize to the range length, when YES resets the length to the kOTRMessagePageSize
- */
-- (void)updateRangeOptions:(BOOL)reset
-{
-    YapDatabaseViewRangeOptions *options = [self.viewHandler.mappings rangeOptionsForGroup:self.threadKey];
-    if (reset) {
-        if (options != nil && !self.messageRangeExtended) {
-            return;
-        }
-        options = [YapDatabaseViewRangeOptions flexibleRangeWithLength:kOTRMessagePageSize
-                                                                offset:0
-                                                                  from:YapDatabaseViewEnd];
-        self.messageSizeCache.countLimit = kOTRMessagePageSize;
-        self.messageRangeExtended = NO;
-    } else {
-        options = [options copyWithNewLength:options.length + kOTRMessagePageSize];
-        self.messageSizeCache.countLimit += kOTRMessagePageSize;
-        self.messageRangeExtended = YES;
-    }
-    [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
-
-    self.loadingMessages = YES;
-
-    CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
-
-    void (^doReload)() = ^{
-        [self.collectionView reloadData];
-
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
-        }];
-
-        if (!reset) {
-            [self.collectionView.collectionViewLayout invalidateLayout];
-            [self.collectionView layoutSubviews];
-            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
-        }
-
-        self.loadingMessages = NO;
-    };
-
-    if (reset) {
-        doReload();
-    }
-    else {
-        // JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSMutableArray<id<JSQMessageData>> *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
-            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
-                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
-                id object = [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
-                if ([object conformsToProtocol:@protocol(JSQMessageData)]) {
-                    id<JSQMessageData> msg = object;
-                    [objects addObject:msg];
-                }
-            }
-            // Although it would be nice to pre-calculate in the background
-            // the Xcode 9 main thread checker complains about the block below
-//            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
-//                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
-//                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
-//                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
-//                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
-//                                                                                           atIndexPath:nil
-//                                                                                            withLayout:layout];
-//                                      }];
-            dispatch_async(dispatch_get_main_queue(), doReload);
-        });
-    }
-}
-
-- (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath {
     BOOL showDate = NO;
     if (indexPath.row == 0) {
         showDate = YES;
@@ -1245,13 +957,108 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return YES;
 }
 
-- (BOOL)isPushMessageAtIndexPath:(NSIndexPath *)indexPath {
-    id message = [self messageAtIndexPath:indexPath];
-    return [message isKindOfClass:[PushMessage class]];
+#pragma mark - input
+
+- (void)infoButtonPressed:(id)sender {
+    __block OTRAccount *account = nil;
+    __block OTRBuddy *buddy = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+        buddy = [self buddyWithTransaction:transaction];
+    }];
+    if (!account || !buddy) {
+        return;
+    }
+    
+    // Hack to manually re-fetch OMEMO devicelist because PEP sucks
+    // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
+    [self fetchOMEMODeviceList];
+    
+    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readOnlyDatabaseConnection];
+    
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:self.readOnlyDatabaseConnection form:form];
+    verify.completionBlock = ^{
+        [self updateEncryptionState];
+    };
+    UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
+    verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:verifyNav animated:YES completion:nil];
 }
 
-- (void)receivedTextViewChangedNotification:(NSNotification *)notification
-{
+- (void)occupantsButtonPressed:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"OTRRoomOccupants" bundle:[OTRAssets resourcesBundle]];
+    OTRRoomOccupantsViewController *occupantsVC = [storyboard instantiateViewControllerWithIdentifier:@"roomOccupants"];
+    occupantsVC.delegate = self;
+    [occupantsVC setupViewHandlerWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection roomKey:self.threadKey];
+    [self.navigationController pushViewController:occupantsVC animated:YES];
+}
+
+- (void)didPressAccessoryButton:(UIButton *)sender {
+    if ([sender isEqual:self.cameraButton]) {
+        [self.attachmentPicker showAlertControllerFromSourceView:sender withCompletion:nil];
+    }
+}
+
+#pragma mark - UIAlertActions
+
+/**
+ This generates a UIAlertAction where the handler fetches the outgoing message (optionaly duplicates). Then if media message resend media message. If not update messageSecurityInfo and date and create new sending action.
+ */
+- (UIAlertAction *)resendOutgoingMessageActionForMessageKey:(NSString *)messageKey messageCollection:(NSString *)messageCollection readWriteDatabaseConnection:(YapDatabaseConnection*)databaseConnection duplicateMessage:(BOOL)duplicateMessaage title:(NSString *)title {
+    UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            OTROutgoingMessage *dbMessage = [[transaction objectForKey:messageKey inCollection:messageCollection] copy];
+            if (duplicateMessaage) {
+                dbMessage = [OTROutgoingMessage duplicateMessage:dbMessage];
+            }
+            dbMessage.error = nil;
+            
+            // Check if this is a media message. For now these are handled differently
+            if ([dbMessage.mediaItemUniqueId length]) {
+                OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
+                [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
+            } else {
+                dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
+                dbMessage.date = [NSDate date];
+                OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:dbMessage date:dbMessage.date];
+                [sendingAction saveWithTransaction:transaction];
+            }
+            [dbMessage saveWithTransaction:transaction];
+        }];
+    }];
+    return action;
+}
+
+- (NSArray <UIAlertAction *>*)actionForMessage:(id<OTRMessageProtocol>)message {
+    NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
+    
+    // resend action
+    if ([message isKindOfClass:[OTROutgoingMessage class]] ) {
+        OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
+        
+        BOOL duplicate = [msg messageError] == nil ? YES : NO;
+        
+        // This is an outgoing message so we can offer to resend
+        [actions addObject:[self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING()]];
+    }
+    
+    // view profile action
+    if ([message isKindOfClass:[OTRXMPPRoomMessage class]] == NO) {
+        [actions addObject:[UIAlertAction actionWithTitle:VIEW_PROFILE_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self infoButtonPressed:action];
+        }]];
+    }
+    
+    NSArray<UIAlertAction*> *mediaActions = [UIAlertAction actionsForMediaMessage:message sourceView:self.view viewController:self];
+    [actions addObjectsFromArray:mediaActions];
+    [actions addObject:[UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil]];
+    
+    return actions;
+}
+
+#pragma mark - notifications
+
+- (void)receivedTextViewChangedNotification:(NSNotification *)notification {
     //Check if the text state changes from having some text to some or vice versa
     UITextView *textView = notification.object;
     [self receivedTextViewChanged:textView];
@@ -1272,10 +1079,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     return;
-
 }
 
-#pragma - mark Update UI
+#pragma mark - subclass overrides
 
 - (void)didUpdateState {
     
@@ -1289,7 +1095,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-#pragma - mark Sending Media Items
+#pragma mark - Sending Media Items
 
 - (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
@@ -1322,10 +1128,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [mediaItem touchParentMessageWithTransaction:transaction];
 }
 
-#pragma - mark Media Display Methods
+#pragma mark - Media Display Methods
 
-- (void)showImage:(OTRImageItem *)imageItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
-{
+- (void)showImage:(OTRImageItem *)imageItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
     //FIXME: Possible for image to not be in cache?
     UIImage *image = [OTRImages imageWithIdentifier:imageItem.uniqueId];
     JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
@@ -1339,16 +1144,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         imageInfo.referenceCornerRadius = 10;
     }
     
-    JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
-                                           initWithImageInfo:imageInfo
-                                           mode:JTSImageViewControllerMode_Image
-                                           backgroundStyle:JTSImageViewControllerBackgroundOption_Blurred];
+    JTSImageViewController *imageViewer = [[JTSImageViewController alloc] initWithImageInfo:imageInfo
+                                                                                       mode:JTSImageViewControllerMode_Image
+                                                                            backgroundStyle:JTSImageViewControllerBackgroundOption_Blurred];
     
     [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOriginalPosition];
 }
 
-- (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
-{
+- (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
     if (videoItem.filename) {
         NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.threadKey];
         MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
@@ -1356,18 +1159,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
-- (void)playOrPauseAudio:(OTRAudioItem *)audioItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
-{
+- (void)playOrPauseAudio:(OTRAudioItem *)audioItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
     NSError *error = nil;
-    if  ([audioItem.uniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
+    
+    if ([audioItem.uniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
         if  ([self.audioPlaybackController isPlaying]) {
             [self.audioPlaybackController pauseCurrentlyPlaying];
-        }
-        else {
+        } else {
             [self.audioPlaybackController resumeCurrentlyPlaying];
         }
-    }
-    else {
+    } else {
         [self.audioPlaybackController stopCurrentlyPlaying];
         OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
         [self.audioPlaybackController attachAudioControlsView:audioControls];
@@ -1377,7 +1178,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (error) {
          DDLogError(@"Audio Playback Error: %@",error);
     }
-   
 }
 
 - (OTRAudioControlsView *)audioControllsfromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
@@ -1448,8 +1248,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return cell;
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
+- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     if (action == @selector(delete:)) {
         return YES;
     }
@@ -1457,8 +1256,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
-- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
-{
+- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date {
     if(![text length]) {
         return;
     }
@@ -1473,18 +1271,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self finishSendingMessage];
     
     if (![self isGroupChat]) {
-    //1. Create new message database object
-    __block OTROutgoingMessage *message = nil;
-    __block OTRXMPPManager *xmpp = nil;
-    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-        if (!buddy) { return; }
-        message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
-        xmpp = [self xmppManagerWithTransaction:transaction];
-    } completionBlock:^{
-        if (!message || !xmpp) { return; }
-        [xmpp enqueueMessage:message];
-    }];
+        //1. Create new message database object
+        __block OTROutgoingMessage *message = nil;
+        __block OTRXMPPManager *xmpp = nil;
+        [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+            if (!buddy) { return; }
+            message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
+            xmpp = [self xmppManagerWithTransaction:transaction];
+        } completionBlock:^{
+            if (!message || !xmpp) { return; }
+            [xmpp enqueueMessage:message];
+        }];
     } else {
         __weak __typeof__(self) weakSelf = self;
         [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
@@ -1508,25 +1306,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
-- (void)didPressAccessoryButton:(UIButton *)sender
-{
-    if ([sender isEqual:self.cameraButton]) {
-        [self.attachmentPicker showAlertControllerFromSourceView:sender withCompletion:nil];
-    }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
+- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     if (action == @selector(delete:)) {
         [self deleteMessageAtIndexPath:indexPath];
-    }
-    else {
+    } else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     id <OTRMessageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
 
     NSNumber *key = @(message.messageHash);
@@ -1537,14 +1325,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
     // Although JSQMessagesBubblesSizeCalculator has its own cache, its size is fixed and quite small, so it quickly chokes on scrolling into the past
     CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    
     // The height of the first cell might change: on loading additional messages the date label most likely will disappear
     if (indexPath.row > 0) {
         [self.messageSizeCache setObject:[NSValue valueWithCGSize:size] forKey:key];
     }
+    
     return size;
 }
 
-#pragma - mark UIPopoverPresentationControllerDelegate Methods
+#pragma mark - UIPopoverPresentationControllerDelegate Methods
 
 - (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
     // Without setting this, there will be a crash on iPad
@@ -1568,15 +1358,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [xmpp.fileTransferManager sendWithImage:photo thread:thread];
 }
 
-#pragma - mark OTRAttachmentPickerDelegate Methods
+#pragma mark - OTRAttachmentPickerDelegate Methods
 
-- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
-{
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info {
     [self sendPhoto:photo asJPEG:YES shouldResize:YES];
 }
 
-- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL
-{
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL {
     if (!videoURL) { return; }
     __block OTRXMPPManager *xmpp = nil;
     __block id<OTRThreadOwner> thread = nil;
@@ -1591,13 +1379,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [xmpp.fileTransferManager sendWithVideoURL:videoURL thread:thread];
 }
 
-- (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
-{
+- (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source {
     return @[(NSString*)kUTTypeImage];
 }
 
-- (void)sendAudioFileURL:(NSURL *)url
-{
+- (void)sendAudioFileURL:(NSURL *)url {
     if (!url) { return; }
     __block OTRXMPPManager *xmpp = nil;
     __block id<OTRThreadOwner> thread = nil;
@@ -1612,21 +1398,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [xmpp.fileTransferManager sendWithAudioURL:url thread:thread];
 }
 
-- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize
-{
+- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize {
     [self sendPhoto:[UIImage imageWithContentsOfFile:filePath] asJPEG:asJPEG shouldResize:shouldResize];
 }
 
+#pragma mark - UIScrollViewDelegate Methods
 
-#pragma - mark UIScrollViewDelegate Methods
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    [self hideDropdownAnimated:YES completion:nil];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (!self.loadingMessages) {
         UIEdgeInsets insets = scrollView.contentInset;
         CGFloat highestOffset = -insets.top;
@@ -1648,10 +1426,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return numberOfMessages;
 }
 
-#pragma - mark JSQMessagesCollectionViewDataSource Methods
+#pragma mark - JSQMessagesCollectionViewDataSource Methods
 
-- (NSString *)senderDisplayName
-{
+- (NSString *)senderDisplayName {
     __block OTRAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [self accountWithTransaction:transaction];
@@ -1766,8 +1543,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return _buddyAvatarImage;
 }
 
-////// Optional //////
-
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
@@ -1794,8 +1569,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath {
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
         id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
         NSString *displayName = [message senderDisplayName];
@@ -1925,7 +1699,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 
-#pragma - mark  JSQMessagesCollectionViewDelegateFlowLayout Methods
+#pragma mark -  JSQMessagesCollectionViewDelegateFlowLayout Methods
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
@@ -1980,31 +1754,106 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    [self didTapAvatar:message sender:avatarImageView];
+    
+    NSError *error =  [message messageError];
+    NSString *title = nil;
+    NSString *alertMessage = nil;
+    
+    NSString * sendingType = UNENCRYPTED_STRING();
+    switch (self.state.messageSecurity) {
+        case OTRMessageTransportSecurityOTR:
+            sendingType = @"OTR";
+            break;
+        case OTRMessageTransportSecurityOMEMO:
+            sendingType = @"OMEMO";
+            break;
+            
+        default:
+            break;
+    }
+    
+    if ([message isKindOfClass:[OTROutgoingMessage class]]) {
+        title = RESEND_MESSAGE_TITLE();
+        alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
+    }
+    
+    if (error) {
+        NSUInteger otrFingerprintError = 32872;
+        title = ERROR_STRING();
+        alertMessage = error.localizedDescription;
+        
+        if (error.code == otrFingerprintError) {
+            alertMessage = NO_DEVICES_BUDDY_ERROR_STRING();
+        }
+        
+        if([message isKindOfClass:[OTROutgoingMessage class]]) {
+            //If it's an outgoing message the error title should be that we were unable to send the message.
+            title = UNABLE_TO_SEND_STRING();
+            
+            
+            
+            NSString *resendDescription = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
+            alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",resendDescription]];
+            
+            //If this is an error about not having a trusted identity then we should offer to connect to the
+            if (error.code == OTROMEMOErrorNoDevicesForBuddy ||
+                error.code == OTROMEMOErrorNoDevices ||
+                error.code == otrFingerprintError) {
+                
+                alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
+            }
+        }
+    }
+    
+    
+    if (![self isMessageTrusted:message]) {
+        title = UNTRUSTED_DEVICE_STRING();
+        if ([message isMessageIncoming]) {
+            alertMessage = UNTRUSTED_DEVICE_REVEIVED_STRING();
+        } else {
+            alertMessage = UNTRUSTED_DEVICE_SENT_STRING();
+        }
+        alertMessage = [alertMessage stringByAppendingString:[NSString stringWithFormat:@"\n%@",VIEW_PROFILE_DESCRIPTION_STRING()]];
+    }
+    
+    NSArray <UIAlertAction*>*actions = [self actionForMessage:message];
+    if ([actions count] > 0) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:alertMessage preferredStyle:UIAlertControllerStyleActionSheet];
+        [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [alertController addAction:obj];
+        }];
+        
+        alertController.popoverPresentationController.sourceView = avatarImageView;
+        alertController.popoverPresentationController.sourceRect = avatarImageView.bounds;
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if (!message.isMediaMessage) {
         return;
     }
+    
     __block OTRMediaItem *item = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
          item = [OTRMediaItem mediaItemForMessage:message transaction:transaction];
     }];
-    if (!item) { return; }
+    
+    if (!item) {
+        return;
+    }
+    
     if (item.transferProgress != 1 && item.isIncoming) {
         return;
     }
     
     if ([item isKindOfClass:[OTRImageItem class]]) {
         [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-    }
-    else if ([item isKindOfClass:[OTRVideoItem class]]) {
+    } else if ([item isKindOfClass:[OTRVideoItem class]]) {
         [self showVideo:(OTRVideoItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
-    }
-    else if ([item isKindOfClass:[OTRAudioItem class]]) {
+    } else if ([item isKindOfClass:[OTRAudioItem class]]) {
         [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
     } else if ([message conformsToProtocol:@protocol(OTRDownloadMessage)]) {
         id<OTRDownloadMessage> download = (id<OTRDownloadMessage>)message;
@@ -2014,37 +1863,35 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [actions enumerateObjectsUsingBlock:^(UIAlertAction * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [alert addAction:obj];
         }];
-        [alert addAction:[self cancleAction]];
+        [alert addAction:[UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil]];
         alert.popoverPresentationController.sourceView = self.view;
         alert.popoverPresentationController.sourceRect = self.view.bounds;
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
-#pragma - mark database view delegate
+#pragma mark - OTRYapViewHandlerDelegateProtocol
 
-- (void)didSetupMappings:(OTRYapViewHandler *)handler
-{
+- (void)didSetupMappings:(OTRYapViewHandler *)handler {
     // The databse view is setup now so refresh from there
     [self updateViewWithKey:self.threadKey collection:self.threadCollection];
     [self updateRangeOptions:YES];
     [self.collectionView reloadData];
 }
 
-- (void)didReceiveChanges:(OTRYapViewHandler *)handler key:(NSString *)key collection:(NSString *)collection
-{
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler key:(NSString *)key collection:(NSString *)collection {
     [self updateViewWithKey:key collection:collection];
 }
 
-- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
-{
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges {
     if (!rowChanges.count) {
         return;
     }
+    
     NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
     NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
     
-    if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+    if (numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
         //Inserted new item, probably at the end
         //Get last message and test if isIncoming
         NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
@@ -2061,41 +1908,32 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     } else {
         //deleted a message or message updated
         [self.collectionView performBatchUpdates:^{
-            
-            for (YapDatabaseViewRowChange *rowChange in rowChanges)
-            {
-                switch (rowChange.type)
-                {
+            for (YapDatabaseViewRowChange *rowChange in rowChanges) {
+                switch (rowChange.type) {
                     case YapDatabaseViewChangeDelete :
-                    {
                         [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
                         break;
-                    }
+                    
                     case YapDatabaseViewChangeInsert :
-                    {
                         [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
                         break;
-                    }
+                        
                     case YapDatabaseViewChangeMove :
-                    {
                         [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
                         break;
-                    }
+                        
                     case YapDatabaseViewChangeUpdate :
-                    {
                         [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
                         break;
-                    }
                 }
             }
         } completion:nil];
     }
 }
 
-#pragma - mark UITextViewDelegateMethods
+#pragma mark - UITextViewDelegate
 
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
-{
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
     if ([URL otr_isInviteLink]) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
         activity.webpageURL = URL;
@@ -2120,12 +1958,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return NO;
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    [self layoutJIDForwardingHeader];
-}
-
-#pragma - mark Buddy Migration methods
+#pragma mark - Buddy Migration methods
 
 - (nullable XMPPJID *)getForwardingJIDForBuddy:(OTRXMPPBuddy *)xmppBuddy {
     XMPPJID *ret = nil;
@@ -2231,10 +2064,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-#pragma - mark Group chat support
+#pragma mark - Group chat support
 
-- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
-{
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name {
     __block OTRAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
@@ -2249,7 +2081,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-#pragma - mark OTRRoomOccupantsViewControllerDelegate
+#pragma mark - OTRRoomOccupantsViewControllerDelegate
 
 - (void)didLeaveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {
     __block OTRXMPPRoom *room = nil;
