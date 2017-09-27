@@ -45,11 +45,15 @@ open class OTRWelcomeViewController: UIViewController {
     // MARK: - Navigation
 
     override open func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "createNewAccountSegue" {
-            let createAccountVC: OTRBaseLoginViewController = segue.destination as! OTRBaseLoginViewController
-            createAccountVC.form = XLFormDescriptor.registerNewAccountForm(with: .jabber)
-            createAccountVC.loginHandler = OTRXMPPCreateAccountHandler()
+        guard let loginVC = segue.destination as? OTRBaseLoginViewController else {
+            return
         }
+        if segue.identifier == "createNewAccountSegue" {
+            loginVC.form = XLFormDescriptor.registerNewAccountForm(with: .jabber)
+        } else if segue.identifier == "addExistingAccount" {
+            loginVC.form = XLFormDescriptor.existingAccountForm(with: .jabber)
+        }
+        loginVC.loginHandler = OTRXMPPCreateAccountHandler()
     }
     
     @IBAction func skipButtonPressed(_ sender: AnyObject) {

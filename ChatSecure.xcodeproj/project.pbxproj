@@ -491,7 +491,6 @@
 		D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */; };
 		D9A7BCE71E4554E200888A8E /* OTRXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */; };
 		D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */; };
-		D9AA246C1CAB401800337ECA /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */; };
 		D9ABD71E1ED787EE00219A9C /* OTRHTMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */; };
 		D9ABD71F1ED787EE00219A9C /* OTRHTMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */; };
 		D9ABD72B1ED7886100219A9C /* OTRTextItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD7291ED7886100219A9C /* OTRTextItem.h */; };
@@ -1136,7 +1135,6 @@
 		D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyXMPPStream.m; sourceTree = "<group>"; };
 		D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPStream.h; sourceTree = "<group>"; };
 		D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPStream.m; sourceTree = "<group>"; };
-		D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = "Pods/gtm-oauth2/Source/Touch/GTMOAuth2ViewTouch.xib"; sourceTree = SOURCE_ROOT; };
 		D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRHTMLItem.h; sourceTree = "<group>"; };
 		D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRHTMLItem.m; sourceTree = "<group>"; };
 		D9ABD7291ED7886100219A9C /* OTRTextItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTextItem.h; sourceTree = "<group>"; };
@@ -1307,7 +1305,6 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D9AA246B1CAB401800337ECA /* GTMOAuth2ViewTouch.xib */,
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
 				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
@@ -2611,7 +2608,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
-				D9AA246C1CAB401800337ECA /* GTMOAuth2ViewTouch.xib in Resources */,
 				D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
