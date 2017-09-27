@@ -46,6 +46,8 @@ class OTRSignalTest: XCTestCase {
         let otherEncryptionManager = try! OTRAccountSignalEncryptionManager(accountKey: otherAccount.uniqueId, databaseConnection: otherDatabaseConnection)
         
         otherDatabaseConnection.readWrite( { (transaction) in
+            let refetch = otherAccount.refetch(with: transaction)
+            XCTAssertNotNil(refetch)
             let buddy = OTRBuddy()!
             buddy.accountUniqueId = otherAccount.uniqueId
             buddy.username = ourAccount.username
@@ -55,6 +57,8 @@ class OTRSignalTest: XCTestCase {
             device.save(with:transaction)
         })
         ourDatabaseConnection.readWrite ({ (transaction) in
+            let refetch = ourAccount.refetch(with: transaction)
+            XCTAssertNotNil(refetch)
             let buddy = OTRBuddy()!
             buddy.accountUniqueId = ourAccount.uniqueId
             buddy.username = otherAccount.username

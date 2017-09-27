@@ -19,6 +19,7 @@
 
 - (instancetype)initWithUniqueId:(NSString *)uniqueId
 {
+    NSParameterAssert(uniqueId);
     if (self = [super init]) {
         _uniqueId = [uniqueId copy];
     }
@@ -27,21 +28,25 @@
 
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [transaction setObject:self forKey:self.uniqueId inCollection:[[self class] collection]];
+    NSString *collection = self.class.collection;
+    [transaction setObject:self forKey:self.uniqueId inCollection:collection];
 }
 
 - (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [transaction removeObjectForKey:self.uniqueId inCollection:[[self class] collection]];
+    NSString *collection = self.class.collection;
+    [transaction removeObjectForKey:self.uniqueId inCollection:collection];
 }
 
 - (void)touchWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
-    [transaction touchObjectForKey:self.uniqueId inCollection:self.class.collection];
+    NSString *collection = self.class.collection;
+    [transaction touchObjectForKey:self.uniqueId inCollection:collection];
 }
 
 /** This will fetch an updated instance of the object */
 - (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
-    id object = [[[self class] fetchObjectWithUniqueID:self.uniqueId transaction:transaction] copy];
+    id object = [self.class fetchObjectWithUniqueID:self.uniqueId transaction:transaction];
+    object = [object copy];
     return object;
 }
 
@@ -49,11 +54,11 @@
 
 + (NSString *)collection
 {
-    return NSStringFromClass([self class]);
+    return NSStringFromClass(self.class);
 }
 
 + (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
-    NSString *collection = [self collection];
+    NSString *collection = self.collection;
     NSParameterAssert(collection);
     NSParameterAssert(uniqueID);
     NSParameterAssert(transaction);
@@ -61,7 +66,7 @@
         return nil;
     }
     id object = [transaction objectForKey:uniqueID inCollection:collection];
-    NSParameterAssert(!object || [object isKindOfClass:[self class]]);
+    NSParameterAssert(!object || [object isKindOfClass:self.class]);
     return object;
 }
 
