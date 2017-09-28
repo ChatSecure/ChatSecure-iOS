@@ -129,7 +129,9 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         self.connection = connection
         self.sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
         super.init()
-        httpFileUpload.activate(serverCapabilities.xmppStream)
+        if let stream = serverCapabilities.xmppStream {
+            httpFileUpload.activate(stream)
+        }
         httpFileUpload.addDelegate(self, delegateQueue: DispatchQueue.main)
         serverCapabilities.addDelegate(self, delegateQueue: DispatchQueue.main)
         self.refreshCapabilities()
@@ -718,7 +720,7 @@ public extension OTRXMPPRoomMessage {
 fileprivate extension XMPPMessage {
     /** XEP-0066: Out of Band Data jabber:x:oob */
     var outOfBandURL: URL? {
-        guard let oob = elements(forXmlns: "jabber:x:oob").first as? XMLElement,
+        guard let oob = elements(forXmlns: "jabber:x:oob").first,
             let urlElement = oob.elements(forName: "url").first,
             let urlString = urlElement.stringValue else {
                 return nil
@@ -742,7 +744,8 @@ public extension XMLElement {
         let features = self.elements(forName: "feature")
         var supported = false
         for feature in features {
-            if let value = feature.attributeStringValue(forName: "var"), value == XMPPHTTPFileUploadNamespace  {
+            if let value = feature.attributeStringValue(forName: "var"),
+                value == XMPPHTTPFileUploadNamespace  {
                 supported = true
                 break
             }
@@ -753,7 +756,7 @@ public extension XMLElement {
     /// Returns 0 on failure, or max file size in bytes
     func maxHTTPUploadSize() -> UInt {
         var maxSize: UInt = 0
-        guard let xes = self.elements(forXmlns: "jabber:x:data") as? [XMLElement] else { return 0 }
+        let xes = self.elements(forXmlns: "jabber:x:data")
         
         for x in xes {
             let fields = x.elements(forName: "field")

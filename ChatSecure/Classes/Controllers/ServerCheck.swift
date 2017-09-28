@@ -67,8 +67,8 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     
     // This will refresh the pushStatusUpdate block
     private func updatePushStatus() {
-        guard let push = result.pushInfo else { return }
-        if let jid = XMPPJID(user: nil, domain: push.pubsubEndpoint, resource: nil),
+        guard let push = result.pushInfo, let pubsubEndpoint = push.pubsubEndpoint else { return }
+        if let jid = XMPPJID(user: nil, domain: pubsubEndpoint, resource: nil),
            let status = xmpp?.xmppPushModule.registrationStatus(forServerJID: jid) {
             result.pushStatus = status
             postUpdateNotification()

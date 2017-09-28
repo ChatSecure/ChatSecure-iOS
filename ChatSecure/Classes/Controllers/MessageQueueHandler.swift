@@ -381,9 +381,10 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus == .connected) {
+        if accountProtocol.connectionStatus == .connected,
+            let jidStr = removeBuddyAction.buddyJid {
             // Add the buddy to our roster
-            let jid = XMPPJID(string: removeBuddyAction.buddyJid)
+            let jid = XMPPJID(string: jidStr)
             accountProtocol.xmppRoster.removeUser(jid)
             completion(true, 0.0)
         } else if (account.autologin == true) {

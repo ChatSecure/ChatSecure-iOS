@@ -29,7 +29,7 @@ import SignalProtocolObjC
     open let workQueue:DispatchQueue
     fileprivate var myJID:XMPPJID? {
         get {
-            return omemoModule?.xmppStream.myJID
+            return omemoModule?.xmppStream?.myJID
         }
     }
     let preKeyCount:UInt = 100
@@ -58,7 +58,7 @@ import SignalProtocolObjC
             return false;
         }
         
-        return jid.isEqual(to: ourJID, options: XMPPJIDCompareBare)
+        return jid.isEqual(to: ourJID, options: .bare)
     }
     
     /** Always call on internal work queue */
@@ -98,7 +98,7 @@ import SignalProtocolObjC
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
-        guard let devs = devices, let username = user else {
+        guard let devs = devices, let username = user, let jid = XMPPJID(string:username) else {
             self.callbackQueue.async(execute: {
                 completion(false)
             })
@@ -130,7 +130,7 @@ import SignalProtocolObjC
                         group.leave()
                     }
                     //Fetch the bundle
-                    strongself.omemoModule?.fetchBundle(forDeviceId: device.deviceId.uint32Value, jid: XMPPJID(string:username), elementId: elementId)
+                    strongself.omemoModule?.fetchBundle(forDeviceId: device.deviceId.uint32Value, jid: jid, elementId: elementId)
                 }
             }
             
@@ -210,7 +210,7 @@ import SignalProtocolObjC
             }
             
             guard let messageBody = message.text,
-                let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud else {
+                let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud, let buddyJid = XMPPJID(string: buddy.username) else {
                 return
             }
             do {
@@ -265,7 +265,7 @@ import SignalProtocolObjC
                     let finalPayload = NSMutableData()
                     finalPayload.append(payloadData)
                     finalPayload.append(authTag)
-                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: XMPPJID(string: buddy.username), payload: finalPayload as Data, elementId: messageId)
+                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: buddyJid, payload: finalPayload as Data, elementId: messageId)
                     strongSelf.callbackQueue.async(execute: {
                         completion(true,nil)
                     })
@@ -369,7 +369,7 @@ import SignalProtocolObjC
             if key.deviceId == rid {
                 let keyData = key.data
                 do {
-                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare(), deviceId: senderDeviceId)
+                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare, deviceId: senderDeviceId)
                     // have successfully decripted the AES key. We should break and use it to decrypt the payload
                     break
                 } catch let error {
@@ -379,7 +379,7 @@ import SignalProtocolObjC
                         // duplicate messages are benign and can be ignored
                         return
                     }
-                    let buddyAddress = SignalAddress(name: fromJID.bare(), deviceId: Int32(senderDeviceId))
+                    let buddyAddress = SignalAddress(name: fromJID.bare, deviceId: Int32(senderDeviceId))
                     if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
                         // Session is corrupted
                         let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
@@ -426,15 +426,15 @@ import SignalProtocolObjC
             guard let ourJID = self.myJID else {
                 return
             }
-            var relatedBuddyUsername = fromJID.bare() as String!
+            var relatedBuddyUsername: String? = fromJID.bare
             var innerMessage = message
             if (message.isTrustedMessageCarbon(forMyJID: ourJID)) {
                 //This came from another of our devices this is really going to be an outgoing message
                 innerMessage = message.messageCarbonForwarded()
                 if (message.isReceivedMessageCarbon()) {
-                    relatedBuddyUsername = innerMessage.from().bare() as String
+                    relatedBuddyUsername = innerMessage.from?.bare
                 } else {
-                    relatedBuddyUsername = innerMessage.to().bare() as String
+                    relatedBuddyUsername = innerMessage.to?.bare
                     let outgoingMessage = OTROutgoingMessage()
                     outgoingMessage?.dateSent = Date()
                     databaseMessage = outgoingMessage!
@@ -455,7 +455,7 @@ import SignalProtocolObjC
                 let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
                 let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection)
                 databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection)
-                if let id = innerMessage.elementID() {
+                if let id = innerMessage.elementID {
                     databaseMessage.messageId = id
                 }
                 
@@ -516,7 +516,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     public func omemo(_ omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], from fromJID: XMPPJID, incomingElement: XMPPElement) {
         DDLogVerbose("deviceListUpdate: \(fromJID) \(deviceIds)")
         self.workQueue.async { [weak self] in
-            if let eid = incomingElement.elementID() {
+            if let eid = incomingElement.elementID {
                 self?.callAndRemoveOutstandingBundleBlock(eid, success: true)
             }
         }
@@ -552,7 +552,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
         }
         
         self.workQueue.async { [weak self] in
-            let elementId = outgoingIq.elementID()
+            let elementId = outgoingIq.elementID
             if (bundle.preKeys.count == 0) {
                 self?.callAndRemoveOutstandingBundleBlock(elementId!, success: false)
                 return
@@ -566,7 +566,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
             let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
             do {
-                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare(), bundle: incomingBundle)
+                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare, bundle: incomingBundle)
                 result = true
             } catch let err {
                 DDLogWarn("Error consuming incoming bundle: \(err) \(responseIq.prettyXMLString())")
@@ -578,7 +578,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     public func omemo(_ omemo: OMEMOModule, failedToFetchBundleForDeviceId deviceId: UInt32, from fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         
         self.workQueue.async { [weak self] in
-            let elementId = outgoingIq.elementID()
+            let elementId = outgoingIq.elementID
             self?.callAndRemoveOutstandingBundleBlock(elementId!, success: false)
         }
     }
@@ -619,7 +619,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         if (isOurDeviceList) {
             self.omemoStorageManager.storeOurDevices(deviceIds)
         } else {
-            self.omemoStorageManager.storeBuddyDevices(deviceIds, buddyUsername: jid.bare(), completion: {() -> Void in
+            self.omemoStorageManager.storeBuddyDevices(deviceIds, buddyUsername: jid.bare, completion: {() -> Void in
 
                 //Devices updated for buddy
                 DispatchQueue.main.async {
@@ -635,7 +635,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
             devices = self.omemoStorageManager.getDevicesForOurAccount(nil)
             
         } else {
-            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare(), trusted:nil)
+            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare, trusted:nil)
         }
         //Convert from devices array to NSNumber array.
         return (devices?.map({ (device) -> NSNumber in
@@ -706,6 +706,6 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     }
 
     public func isSessionValid(_ jid: XMPPJID, deviceId: UInt32) -> Bool {
-        return self.signalEncryptionManager.sessionRecordExistsForUsername(jid.bare(), deviceId: Int32(deviceId))
+        return self.signalEncryptionManager.sessionRecordExistsForUsername(jid.bare, deviceId: Int32(deviceId))
     }
 }

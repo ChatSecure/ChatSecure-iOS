@@ -28,7 +28,7 @@ private extension String {
 public extension NSData {
     /// hex, split every 8 bytes by a space
     @objc public func humanReadableFingerprint() -> String {
-        return (self as NSData).xmpp_hexStringValue().splitEvery(8).joined(separator: " ")
+        return (self as NSData).xmpp_hexStringValue.splitEvery(8).joined(separator: " ")
     }
 }
 

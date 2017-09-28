@@ -31,7 +31,7 @@ import XMPPFramework
     open func updatePhoto(_ completion:@escaping (_ success:Bool)->Void) -> Void {
         
         //make sure the stream is authenticated
-        guard let isAuthenticated = self.xmppvCardTempModule?.xmppStream.isAuthenticated(), isAuthenticated == true else {
+        guard let isAuthenticated = self.xmppvCardTempModule?.xmppStream?.isAuthenticated, isAuthenticated == true else {
             DispatchQueue.main.async(execute: { 
                 completion(false)
                 self.completion = nil
@@ -46,7 +46,7 @@ import XMPPFramework
             // * The vCardModule to do teh work of updaing and fetching
             // * myJID for fetching
             guard let strongSelf = self,
-                let vCardModule = self?.xmppvCardTempModule, let myJID = vCardModule.xmppStream.myJID  else {
+                let vCardModule = self?.xmppvCardTempModule, let myJID = vCardModule.xmppStream?.myJID  else {
                     DispatchQueue.main.async(execute: {
                         completion(false)
                         self?.completion = nil

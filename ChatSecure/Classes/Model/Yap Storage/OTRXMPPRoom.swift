@@ -82,7 +82,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
             return image
         } else {
             // If not cached, generate a default image and store that.
-            let seed = XMPPJID(string: self.jid).user ?? self.uniqueId
+            let seed = self.avatarSeed
             if let image = OTRGroupAvatarGenerator.avatarImage(withSeed: seed, width: 100, height: 100) {
                 OTRImages.setImage(image, forIdentifier: self.uniqueId)
                 return image
@@ -126,5 +126,18 @@ extension OTRXMPPRoom:OTRThreadOwner {
     
     public func isGroupThread() -> Bool {
         return true
+    }
+}
+
+extension OTRXMPPRoom {
+    /// Generates seed value for OTRGroupAvatarGenerator
+    var avatarSeed: String {
+        var seed = self.uniqueId
+        if let jidStr = self.jid,
+            let jid = XMPPJID(string: jidStr),
+            let user = jid.user {
+            seed = user
+        }
+        return seed
     }
 }

@@ -106,7 +106,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         updateMuteUnmuteCell()
         
         if let room = self.room {
-            let seed = XMPPJID(string: room.jid).user ?? room.uniqueId
+            let seed = room.avatarSeed
             let image = OTRGroupAvatarGenerator.avatarImage(withSeed: seed, width: Int(largeAvatarView.frame.width), height: Int(largeAvatarView.frame.height))
             largeAvatarView.image = image
         }
@@ -137,7 +137,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         if let room = self.room {
-            let seed = XMPPJID(string: room.jid).user ?? room.uniqueId
+            let seed = room.avatarSeed
             let avatarTopColor = UIColor(cgColor: OTRGroupAvatarGenerator.avatarTopColor(withSeed: seed))
             self.navigationController?.navigationBar.barTintColor = avatarTopColor
             
@@ -230,7 +230,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open func didSelectFooterCell(type:String) {
         switch type {
         case OTRRoomOccupantsViewController.FooterCellLeave:
-            if let room = self.room, let roomJid = XMPPJID(string: room.jid), let xmppRoomManager = self.xmppRoomManager() {
+            if let room = self.room, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let xmppRoomManager = self.xmppRoomManager() {
                 //Leave room
                 xmppRoomManager.leaveRoom(roomJid)
                 if let delegate = self.delegate {

@@ -327,9 +327,9 @@ extension OTRXMPPRoomMessage:JSQMessageData {
 
 public extension OTRXMPPRoomMessage {
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
-        guard message.isGroupChatMessage(),
+        guard message.isGroupChatMessage,
             message.hasReceiptResponse(),
-            !message.isErrorMessage(),
+            !message.isErrorMessage,
             let messageId = message.receiptResponseID() else {
             return
         }

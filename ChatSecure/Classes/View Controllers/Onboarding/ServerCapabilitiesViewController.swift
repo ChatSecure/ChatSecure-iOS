@@ -40,10 +40,9 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
     
     /// This will delete ALL your XEP-0357 push registration for this pubsub node
     private func unregisterForXMPPPush(_ sender: Any?) {
-        guard let push = check.result.pushInfo else {
-            return
-        }
-        guard let jid = XMPPJID(user: nil, domain: push.pubsubEndpoint, resource: nil) else {
+        guard let push = check.result.pushInfo,
+            let pubsubEndpoint = push.pubsubEndpoint,
+            let jid = XMPPJID(user: nil, domain: pubsubEndpoint, resource: nil) else {
             return
         }
         check.xmpp?.xmppPushModule.disablePush(forServerJID: jid, node: nil, elementId: nil)

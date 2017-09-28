@@ -41,20 +41,19 @@ import XMPPFramework
     }
     
     //Mark: XMPPStream delegate functions
-    open func xmppStream(_ sender: XMPPStream!, didSend message: XMPPMessage!) {
-        
-        guard let messageId = message.attributeStringValue(forName: "id"), message.isChatMessage() else {
+    open func xmppStream(_ sender: XMPPStream, didSend message: XMPPMessage) {
+        guard message.isChatMessage,
+            let messageId = message.attributeStringValue(forName: "id") else {
             return
         }
-        
         if let message = self.fetchMessage(messageId) {
             self.delegate?.didSendMessage(message.messageKey, messageCollection: message.messageCollection)
         }
     }
     
-    open func xmppStream(_ sender: XMPPStream!, didFailToSend message: XMPPMessage!, error: Error!) {
-        
-        guard let messageId = message.attributeStringValue(forName: "id"), message.isChatMessage() else {
+    open func xmppStream(_ sender: XMPPStream, didFailToSend message: XMPPMessage, error: Error) {
+        guard message.isChatMessage,
+            let messageId = message.attributeStringValue(forName: "id") else {
             return
         }
         
