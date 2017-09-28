@@ -212,8 +212,8 @@ NSString *OTRPushAccountGroup = @"Account";
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
             id<OTRMessageProtocol> message = object;
             // Filter out messages that are just URLs and have downloads
-            if (!message.messageText &&
-                !message.messageMediaItemKey &&
+            if (!message.messageMediaItemKey &&
+                message.messageText.isSingleURLOnly &&
                 [message hasExistingDownloadsWithTransaction:transaction]) {
                 return NO;
             }
