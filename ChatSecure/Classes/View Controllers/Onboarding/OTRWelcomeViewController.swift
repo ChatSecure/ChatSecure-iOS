@@ -50,10 +50,11 @@ open class OTRWelcomeViewController: UIViewController {
         }
         if segue.identifier == "createNewAccountSegue" {
             loginVC.form = XLFormDescriptor.registerNewAccountForm(with: .jabber)
+            loginVC.loginHandler = OTRXMPPCreateAccountHandler()
         } else if segue.identifier == "addExistingAccount" {
             loginVC.form = XLFormDescriptor.existingAccountForm(with: .jabber)
+            loginVC.loginHandler = OTRXMPPLoginHandler()
         }
-        loginVC.loginHandler = OTRXMPPCreateAccountHandler()
     }
     
     @IBAction func skipButtonPressed(_ sender: AnyObject) {
