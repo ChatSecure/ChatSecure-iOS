@@ -326,6 +326,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
 }
 
 public extension OTRXMPPRoomMessage {
+    /// Marks our sent messages as delivered when we receive a matching receipt
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
         guard message.isGroupChatMessage(),
             message.hasReceiptResponse(),
@@ -351,6 +352,7 @@ public extension OTRXMPPRoomMessage {
         }
     }
     
+    /// Sends a response receipt when receiving a delivery receipt request
     @objc public static func handleDeliveryReceiptRequest(message: XMPPMessage, xmppStream:XMPPStream) {
         guard message.hasReceiptRequest(),
             !message.hasReceiptResponse(),

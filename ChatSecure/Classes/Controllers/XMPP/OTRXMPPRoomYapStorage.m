@@ -101,9 +101,8 @@
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
-        //[OTRXMPPRoomMessage handleDeliveryReceiptResponseWithMessage:message transaction:transaction];
+        // Sends a response receipt when receiving a delivery receipt request
         [OTRXMPPRoomMessage handleDeliveryReceiptRequestWithMessage:message xmppStream:room.xmppStream];
-        
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
