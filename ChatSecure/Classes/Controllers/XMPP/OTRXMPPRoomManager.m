@@ -115,6 +115,9 @@
 {
     XMPPRoom *room = [self roomForJID:jid];
     [room leaveRoom];
+    [self removeRoomForJID:jid];
+    [room removeDelegate:self];
+    [room deactivate];
 }
 
 - (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject

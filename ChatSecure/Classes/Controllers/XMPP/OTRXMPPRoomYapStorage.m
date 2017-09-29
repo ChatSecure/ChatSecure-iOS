@@ -109,6 +109,12 @@
             return;
         }
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        if(!databaseRoom) {
+            databaseRoom = [[OTRXMPPRoom alloc] init];
+            databaseRoom.lastRoomMessageId = @""; // Hack to make it show up in list
+            databaseRoom.accountUniqueId = accountId;
+            databaseRoom.jid = roomJID;
+        }
         if (databaseRoom.joined &&
             ([message elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
             [message elementForName:@"x" xmlns:@"jabber:x:conference"])) {
