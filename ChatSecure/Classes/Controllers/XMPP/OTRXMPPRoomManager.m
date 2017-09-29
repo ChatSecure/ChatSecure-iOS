@@ -423,11 +423,23 @@
     [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
     [membersOnlyField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
 
+    NSXMLElement *getMemberListField = [[NSXMLElement alloc] initWithName:@"field"];
+    [getMemberListField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_getmemberlist"];
+    [getMemberListField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"moderator"]];
+    [getMemberListField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"participant"]];
+
+    NSXMLElement *presenceBroadcastField = [[NSXMLElement alloc] initWithName:@"field"];
+    [presenceBroadcastField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_presencebroadcast"];
+    [presenceBroadcastField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"moderator"]];
+    [presenceBroadcastField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"participant"]];
+
     [form addChild:formTypeField];
     [form addChild:publicField];
     [form addChild:persistentField];
     [form addChild:whoisField];
     [form addChild:membersOnlyField];
+    [form addChild:getMemberListField];
+    [form addChild:presenceBroadcastField];
     
     return form;
 }
