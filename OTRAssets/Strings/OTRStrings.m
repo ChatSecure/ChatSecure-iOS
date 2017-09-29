@@ -176,10 +176,18 @@ NSString* FORGOT_PASSPHRASE_STRING() { return [OTRLanguageManager translatedStri
 NSString* GITHUB_STRING() { return [OTRLanguageManager translatedString:@"GitHub"]; }
 /** "Google Talk", the name for Google talk */
 NSString* GOOGLE_TALK_STRING() { return [OTRLanguageManager translatedString:@"Google Talk"]; }
+/** "Room admin", This will be shown as affiliation for admins in the group profile view */
+NSString* GROUP_AFFILIATION_ADMIN() { return [OTRLanguageManager translatedString:@"Room admin"]; }
+/** "Room owner", This will be shown as affiliation for owners in the group profile view */
+NSString* GROUP_AFFILIATION_OWNER() { return [OTRLanguageManager translatedString:@"Room owner"]; }
 /** "Group Chat", a subtitle label for a group chat */
 NSString* GROUP_CHAT_STRING() { return [OTRLanguageManager translatedString:@"Group Chat"]; }
+/** " (You)", This will be shown after your own JID in the group profile view */
+NSString* GROUP_INFO_YOU() { return [OTRLanguageManager translatedString:@" (You)"]; }
 /** "Group Name", The title for the view to enter a group chat name or label */
 NSString* GROUP_NAME_STRING() { return [OTRLanguageManager translatedString:@"Group Name"]; }
+/** "Moderator", This will be shown as role for moderators in the group profile view */
+NSString* GROUP_ROLE_MODERATOR() { return [OTRLanguageManager translatedString:@"Moderator"]; }
 /** "Generate Secure Password", whether or not we should generate a strong password for them */
 NSString* Generate_Secure_Password() { return [OTRLanguageManager translatedString:@"Generate Secure Password"]; }
 /** "We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else.", help text for password generator */

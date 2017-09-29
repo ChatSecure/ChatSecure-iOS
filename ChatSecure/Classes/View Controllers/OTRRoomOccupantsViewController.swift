@@ -350,18 +350,18 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
                 if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
-                    cell.nameLabel.text?.append(" (You)")
+                    cell.nameLabel.text?.append(GROUP_INFO_YOU())
                 }
                 if roomOccupant.affiliation == .owner {
-                    cell.accountLabel.text = "Room owner"
+                    cell.accountLabel.text = GROUP_AFFILIATION_OWNER()
                 } else if roomOccupant.affiliation == .admin {
-                    cell.accountLabel.text = "Room admin"
+                    cell.accountLabel.text = GROUP_AFFILIATION_ADMIN()
                 }
                 if roomOccupant.role == .moderator {
                     if let chars = cell.accountLabel.text, chars.characters.count > 0 {
-                        cell.accountLabel.text?.append(", ")
+                        cell.accountLabel.text?.append(Locale.current.groupingSeparator ?? ", ")
                     }
-                    cell.accountLabel.text?.append("Moderator")
+                    cell.accountLabel.text?.append(GROUP_ROLE_MODERATOR())
                 }
             } else if let roomJid = roomOccupant.jid,
                 let jidStr = roomOccupant.realJID,
