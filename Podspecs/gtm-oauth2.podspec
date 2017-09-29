@@ -12,9 +12,10 @@ Pod::Spec.new do |s|
 
   s.source_files = "Source/*.{h,m}"
   s.ios.source_files = "Source/Touch/*.{h,m}"
-  s.ios.resources = "Source/Touch/*.xib"
+  # Xibs are too old, and we will be removing this entirely anyway
+  # s.ios.resources = "Source/Touch/*.xib"
   s.osx.source_files = "Source/Mac/*.{h,m}"
-  s.osx.resources = "Source/Mac/*.xib"
+  # s.osx.resources = "Source/Mac/*.xib"
   s.requires_arc = false
 
   # See https://github.com/google/google-api-objectivec-client/issues/88#issuecomment-130027861
