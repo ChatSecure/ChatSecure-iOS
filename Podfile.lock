@@ -296,7 +296,7 @@ SPEC CHECKSUMS:
   DTFoundation: 26a164ef510877387906fb92bff524a792db4bf8
   GCDWebServer: 20d53c3181b3c78d865e93e326faf506306f5338
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
-  gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
+  gtm-oauth2: 05f40d662527bf1f71dc878da1c585ba67547e74
   IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
   JSQMessagesViewController: 00d0382ca20f3a0913c876754be5b00a6a66aaee
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
