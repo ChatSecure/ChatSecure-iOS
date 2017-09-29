@@ -115,7 +115,7 @@ open class OTRSignalStorageManager: NSObject {
     internal func currentMaxPreKeyId() ->  UInt32? {
         var maxId:UInt32?
         self.databaseConnection.read { (transaction) in
-            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName) as? YapDatabaseSecondaryIndexTransaction else {
+            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
                 return
             }
             let query = YapDatabaseQuery.init(aggregateFunction: "MAX(\(OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName))", string: "WHERE \(OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters: ["\(self.accountKey)"])
@@ -136,7 +136,7 @@ open class OTRSignalStorageManager: NSObject {
     internal func fetchAllPreKeys(_ includeDeleted:Bool) -> [OTRSignalPreKey] {
         var preKeys = [OTRSignalPreKey]()
         self.databaseConnection.read { (transaction) in
-            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName) as? YapDatabaseSecondaryIndexTransaction else {
+            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
                 return
             }
             

@@ -220,7 +220,7 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
             edges.append(contentsOf: superEdges)
         }
         if let parentKey = self.parentMessageKey, let parentCollection = self.parentMessageCollection {
-            let edgeName = RelationshipEdgeName.download
+            let edgeName = RelationshipEdgeName.download.name()
             let parentEdge = YapDatabaseRelationshipEdge(name: edgeName, destinationKey: parentKey, collection: parentCollection, nodeDeleteRules: [.notifyIfSourceDeleted, .notifyIfDestinationDeleted])
             edges.append(parentEdge)
         }
@@ -240,12 +240,12 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     
     public func existingDownloads(with transaction: YapDatabaseReadTransaction) -> [OTRDownloadMessage] {
         var downloads: [OTRDownloadMessage] = []
-        let extensionName = DatabaseExtensionName.relationshipExtensionName
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
             DDLogWarn("\(extensionName) not registered!");
             return []
         }
-        let edgeName = RelationshipEdgeName.download
+        let edgeName = YapDatabaseConstants.edgeName(.download)
         relationship.enumerateEdges(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection) { (edge, stop) in
             if let download = OTRGroupDownloadMessage.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
                 downloads.append(download)
@@ -255,12 +255,12 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     }
     
     public func hasExistingDownloads(with transaction: YapDatabaseReadTransaction) -> Bool {
-        let extensionName = DatabaseExtensionName.relationshipExtensionName
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
             DDLogWarn("\(extensionName) not registered!");
             return false
         }
-        let edgeName = RelationshipEdgeName.download
+        let edgeName = YapDatabaseConstants.edgeName(.download)
         let count = relationship.edgeCount(withName: edgeName)
         return count > 0
     }

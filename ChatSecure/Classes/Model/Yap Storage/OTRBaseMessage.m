@@ -55,7 +55,7 @@
 {
     NSArray *edges = nil;
     if (self.buddyUniqueId) {
-        NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
         YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.buddyUniqueId
                                                                                 collection:[OTRBuddy collection]
@@ -65,7 +65,7 @@
     }
     
     if (self.mediaItemUniqueId) {
-        NSString *edgeName = RelationshipEdgeName.messageMediaEdgeName;
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
         YapDatabaseRelationshipEdge *mediaEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.mediaItemUniqueId
                                                                                 collection:[OTRMediaItem collection]
@@ -96,8 +96,8 @@
 - (NSArray<id<OTRDownloadMessage>>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
     id<OTRMessageProtocol> message = self;
     NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.download;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
     if (!relationship) {
         DDLogWarn(@"%@ not registered!", extensionName);
@@ -123,8 +123,8 @@
 }
 
 - (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.download;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
     if (!relationship) {
         DDLogWarn(@"%@ not registered!", extensionName);
@@ -231,8 +231,8 @@
 
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
@@ -245,8 +245,8 @@
 
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:uniqueAccountId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [self deleteAllMessagesForBuddyId:edge.sourceKey transaction:transaction];
     }];

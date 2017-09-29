@@ -46,7 +46,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         prototypeCell = cellNib.instantiate(withOwner: nil, options: nil)[0] as? OTRComposeGroupBuddyCell
         
         if let connection = OTRDatabaseManager.shared.longLivedReadOnlyConnection {
-            self.viewHandler = OTRYapViewHandler(databaseConnection: connection, databaseChangeNotificationName: DatabaseNotificationName.longLivedTransactionChanges)
+            self.viewHandler = OTRYapViewHandler(databaseConnection: connection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
             self.viewHandler?.delegate = self
             self.viewHandler?.setup(OTRFilteredBuddiesName, groups:[OTRBuddyGroup])
         }

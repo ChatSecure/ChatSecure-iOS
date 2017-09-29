@@ -25,7 +25,7 @@
 
 - (nullable NSArray<YapDatabaseRelationshipEdge *> *)yapDatabaseRelationshipEdges
 {
-    NSString *edgeName = RelationshipEdgeName.signalSignedPreKey;
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameSignalSignedPreKey];
     YapDatabaseRelationshipEdge *edge = [YapDatabaseRelationshipEdge edgeWithName:edgeName destinationKey:self.accountKey collection:[OTRAccount collection] nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
     if (edge) {
         return @[edge];

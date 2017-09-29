@@ -367,7 +367,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         }
         
         var tokens: [TokenContainer] = []
-        if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName) as? YapDatabaseRelationshipTransaction {
+        if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
             relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection, using: { (edge, stop) -> Void in
                 
                 if let tokenContainer = transaction.object(forKey: edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {

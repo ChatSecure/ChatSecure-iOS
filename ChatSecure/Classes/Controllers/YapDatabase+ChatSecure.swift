@@ -11,9 +11,9 @@ import YapDatabase
 
 public extension YapDatabase {
     
-    func asyncRegisterView(_ grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:String, completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
+    func asyncRegisterView(_ grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseExtensionName, completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
         
-        if (self.registeredExtension(name) != nil ) {
+        if (self.registeredExtension(name.name()) != nil ) {
             let queue:DispatchQueue = completionQueue ?? DispatchQueue.main
             if let block = completionBlock {
                 queue.async(execute: { () -> Void in
@@ -26,7 +26,7 @@ public extension YapDatabase {
         let options = YapDatabaseViewOptions()
         options.allowedCollections = YapWhitelistBlacklist(whitelist: whiteList)
         let view = YapDatabaseAutoView(grouping: grouping, sorting: sorting, versionTag: version, options: options)
-        self.asyncRegister(view, withName: name, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegister(view, withName: name.name(), completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
     public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
@@ -56,6 +56,6 @@ public extension YapDatabase {
             return name1.localizedCompare(name2)
         }
         
-        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection], name: DatabaseExtensionName.groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
 }

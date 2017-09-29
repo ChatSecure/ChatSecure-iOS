@@ -63,7 +63,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
-            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName, groups: [roomKey])
+            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
         }
     }
     

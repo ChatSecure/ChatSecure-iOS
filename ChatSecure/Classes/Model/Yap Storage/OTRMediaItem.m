@@ -127,8 +127,8 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     [self touchParentObjectWithTransaction:transaction];
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.messageMediaEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
@@ -156,8 +156,8 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         return parent;
     }
     __block id<OTRMessageProtocol> message = nil;
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.messageMediaEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
     [[readTransaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         message = [OTRBaseMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
         *stop = YES;
