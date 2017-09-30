@@ -27,6 +27,8 @@
 /** This dictionary is a temporary holding for setting a room subject. Once the room is created teh subject is set from this dictionary. */
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSString*> *tempRoomSubject;
 
+/** This array is a temporary holding with rooms we should configure once connected */
+@property (nonatomic, strong, readonly) NSMutableArray<NSString*> *roomsToConfigure;
 
 @end
 
@@ -37,6 +39,7 @@
         _mucModule = [[XMPPMUC alloc] init];
         _inviteDictionary = [[NSMutableDictionary alloc] init];
         _tempRoomSubject = [[NSMutableDictionary alloc] init];
+        _roomsToConfigure = [[NSMutableArray alloc] init];
         _rooms = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -127,7 +130,7 @@
             [self.inviteDictionary setObject:buddiesArray forKey:roomName.bare];
         }];
     }
-    
+    [self.roomsToConfigure addObject:roomName.bare];
     return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
@@ -326,17 +329,32 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
-- (void) xmppRoom:(XMPPRoom *)sender didFetchMembersList:(NSArray *)items {
+- (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray *)items {
     DDLogInfo(@"Fetched members list: %@", items);
+    OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
+    
+    NSString *accountId = room.xmppStream.tag;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+
+        [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *jid = [item attributeStringValueForName:@"jid"];
+            if ([jid length]) {
+                [storage roomOccupantForJID:jid roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
+            }
+        }];
+    }];
 }
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
-    
-    [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
-    
     [self performBlockAsync:^{
-        //Set Rome Subject
+        //Configure room if we are the creator
+        if ([self.roomsToConfigure containsObject:sender.roomJID.bare]) {
+            [self.roomsToConfigure removeObject:sender.roomJID.bare];
+            [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
+        }
+        
+        //Set Room Subject
         NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
         if (subject) {
             [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
@@ -347,6 +365,9 @@
         NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
         [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
         [self inviteBuddies:buddyUniqueIds toRoom:sender];
+        
+        //Fetch member list
+        [sender fetchMembersList];
     }];
 }
 

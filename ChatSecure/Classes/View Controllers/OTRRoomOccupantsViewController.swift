@@ -63,6 +63,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             if let room = self.room, let manager = self.xmppRoomManager() {
                 self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:room.ownJID), inRoom: XMPPJID(string:room.jid))
             }
+            self.fetchMembersList()
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
@@ -312,7 +313,7 @@ extension OTRRoomOccupantsViewController {
         return xmpp?.roomManager
     }
     
-    fileprivate func fetchMembersList(_ sender: Any) {
+    fileprivate func fetchMembersList() {
         guard let xmppRoom = xmppRoom() else { return }
         xmppRoom.fetchMembersList()
     }
