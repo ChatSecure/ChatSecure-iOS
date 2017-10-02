@@ -104,4 +104,11 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
     [super updateConstraints];
 }
 
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.nameLabel.textColor = [UIColor blackColor];
+    self.identifierLabel.textColor = [UIColor darkTextColor];
+    self.accountLabel.textColor = [UIColor lightGrayColor];
+}
+
 @end

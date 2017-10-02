@@ -13,6 +13,7 @@ import YapDatabase
     case none = 0
     case participant = 1
     case moderator = 2
+    case visitor = 3
     
     public func canModifySubject() -> Bool {
         switch self {

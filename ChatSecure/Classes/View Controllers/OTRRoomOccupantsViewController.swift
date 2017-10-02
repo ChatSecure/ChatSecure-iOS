@@ -60,8 +60,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
     public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
-            if let room = self.room, let manager = self.xmppRoomManager() {
-                self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:room.ownJID), inRoom: XMPPJID(string:room.jid))
+            if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
+                self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:ownJid), inRoom: XMPPJID(string:roomJid))
             }
             self.fetchMembersList()
         })
@@ -363,6 +363,11 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                         cell.accountLabel.text?.append(Locale.current.groupingSeparator ?? ", ")
                     }
                     cell.accountLabel.text?.append(GROUP_ROLE_MODERATOR())
+                } else if roomOccupant.role == .none {
+                    // Not present in the room
+                    cell.nameLabel.textColor = UIColor.lightGray
+                    cell.identifierLabel.textColor = UIColor.lightGray
+                    cell.accountLabel.textColor = UIColor.lightGray
                 }
             } else if let roomJid = roomOccupant.jid,
                 let jidStr = roomOccupant.realJID,

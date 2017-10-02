@@ -30,7 +30,7 @@
     return self;
 }
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction
+- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block OTRXMPPRoomOccupant *occupant = nil;
         
@@ -40,8 +40,7 @@
     [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:databaseRoom.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         
         OTRXMPPRoomOccupant *tempOccupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if([tempOccupant.jid isEqualToString:jid]) {
-            
+        if((realJID != nil && [tempOccupant.realJID isEqualToString:realJID]) || (jid != nil && [tempOccupant.jid isEqualToString:jid])) {
             occupant = tempOccupant;
             *stop = YES;
         }
@@ -50,6 +49,7 @@
     if(!occupant) {
         occupant = [[OTRXMPPRoomOccupant alloc] init];
         occupant.jid = jid;
+        occupant.realJID = realJID;
         occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
     }
     return occupant;
@@ -98,6 +98,7 @@
     XMPPJID *fromJID = [message from];
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
+    __block OTRXMPPRoom *databaseRoom = nil;
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
@@ -108,7 +109,7 @@
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
             return;
         }
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         if(!databaseRoom) {
             databaseRoom = [[OTRXMPPRoom alloc] init];
             databaseRoom.lastRoomMessageId = @""; // Hack to make it show up in list
@@ -134,7 +135,7 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
@@ -151,7 +152,12 @@
         if(databaseMessage) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
             [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
-            [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+            // If delayedDeliveryDate is set we are retrieving history. Don't show
+            // notifications in that case. Also, don't show notifications for archived
+            // rooms.
+            if (!message.delayedDeliveryDate && !databaseRoom.isArchived) {
+                [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+            }
         }
     }];
 }
@@ -204,7 +210,7 @@
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
         
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:nil roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
@@ -225,6 +231,8 @@
             occupant.role = RoomOccupantRoleModerator;
         } else if ([buddyRole isEqualToString:@"participant"]) {
             occupant.role = RoomOccupantRoleParticipant;
+        } else if ([buddyRole isEqualToString:@"visitor"]) {
+            occupant.role = RoomOccupantRoleVisitor;
         } else {
             occupant.role = RoomOccupantRoleNone;
         }
@@ -241,13 +249,7 @@
         } else {
             occupant.affiliation = RoomOccupantAffiliationNone;
         }
-
-        if ([[presence type] isEqualToString:@"unavailable"] && [buddyRole isEqualToString:@"none"]) {
-            // Buddy left the room!
-            [occupant removeWithTransaction:transaction];
-        } else {
-            [occupant saveWithTransaction:transaction];
-        }
+        [occupant saveWithTransaction:transaction];
     }];
 }
 
