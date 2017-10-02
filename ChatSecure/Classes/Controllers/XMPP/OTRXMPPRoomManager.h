@@ -11,6 +11,7 @@
 @import YapDatabase;
 
 @class OTRXMPPRoomMessage;
+@class OTRXMPPRoomOccupant;
 
 @interface OTRXMPPRoomManager : XMPPModule
 
@@ -26,7 +27,7 @@
 - (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
 
 - (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds toRoom:(nonnull XMPPRoom*)room;
-
+- (OTRXMPPRoomOccupant * _Nullable) roomOccupantForUser:(nonnull XMPPJID *)user inRoom:(nonnull XMPPJID *)roomJID;
 + (nonnull XMPPMessage *)xmppMessage:(nonnull OTRXMPPRoomMessage *)databaseMessage;
 
 @end

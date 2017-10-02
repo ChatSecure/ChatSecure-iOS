@@ -192,11 +192,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if !self.waitingForExcludedItems, let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             if !selectedItems.contains(buddy) {
                 selectedItems.append(buddy)
-                collectionView.reloadData()
-                didUpdateCollectionView()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                updateFiltering()
+            } else if let index = selectedItems.index(of: buddy) {
+                selectedItems.remove(at: index)
             }
+            collectionView.reloadData()
+            didUpdateCollectionView()
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            updateFiltering()
         }
     }
     
@@ -226,8 +228,12 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
-                            
                             let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+                            
+                            // Don't exclude people not currently in the room, we
+                            // want to be able to reinvite them.
+                            guard roomOccupant.role != .none else { continue }
+                            
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                                 buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
                             })

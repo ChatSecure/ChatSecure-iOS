@@ -2244,7 +2244,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (service != nil) {
         NSString *roomName = [NSUUID UUID].UUIDString;
         XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
-        self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
+        self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.displayName subject:name];
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
     }
 }

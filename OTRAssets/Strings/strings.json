@@ -1171,5 +1171,17 @@
     }, "ACTIVE_STRING": {
         "comment": "This will be displayed in the UI as 'Active 10m ago' ",
         "string": "Active"
+    }, "GROUP_INFO_YOU": {
+        "comment": "This will be shown after your own JID in the group profile view",
+        "string": " (You)"
+    }, "GROUP_AFFILIATION_OWNER": {
+        "comment": "This will be shown as affiliation for owners in the group profile view",
+        "string": "Room owner"
+    }, "GROUP_AFFILIATION_ADMIN": {
+        "comment": "This will be shown as affiliation for admins in the group profile view",
+        "string": "Room admin"
+    }, "GROUP_ROLE_MODERATOR": {
+        "comment": "This will be shown as role for moderators in the group profile view",
+        "string": "Moderator"
     }
 }

@@ -30,6 +30,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open var viewHandler:OTRYapViewHandler?
     open var room:OTRXMPPRoom?
+    open var ownOccupant:OTRXMPPRoomOccupant?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
@@ -59,6 +60,10 @@ open class OTRRoomOccupantsViewController: UIViewController {
     public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
+            if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
+                self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:ownJid), inRoom: XMPPJID(string:roomJid))
+            }
+            self.fetchMembersList()
         })
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
@@ -73,13 +78,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
         tableHeaderView = OTRVerticalStackView()
         tableFooterView = OTRVerticalStackView()
         
-        let headerCells = [
+        var headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
-            OTRRoomOccupantsViewController.HeaderCellAddFriends,
             OTRRoomOccupantsViewController.HeaderCellMute,
             OTRRoomOccupantsViewController.HeaderCellUnmute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
+
+        // Add friends depends on the role
+        if let ownOccupant = self.ownOccupant, ownOccupant.role.canInviteOthers() {
+            headerCells.insert(OTRRoomOccupantsViewController.HeaderCellAddFriends, at: 1)
+        }
         
         let footerCells = [
             OTRRoomOccupantsViewController.FooterCellLeave
@@ -183,7 +192,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             
             let font:UIFont? = UIFont(name: "Material Icons", size: 24)
             let button = UIButton(type: UIButtonType.custom)
-            if (font != nil) {
+            if font != nil, let ownOccupant = self.ownOccupant, ownOccupant.role.canModifySubject() {
                 button.titleLabel?.font = font
                 button.setTitle("", for: UIControlState())
                 button.setTitleColor(UIColor.black, for: UIControlState())
@@ -304,7 +313,7 @@ extension OTRRoomOccupantsViewController {
         return xmpp?.roomManager
     }
     
-    fileprivate func fetchMembersList(_ sender: Any) {
+    fileprivate func fetchMembersList() {
         guard let xmppRoom = xmppRoom() else { return }
         xmppRoom.fetchMembersList()
     }
@@ -341,6 +350,25 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
+                if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
+                    cell.nameLabel.text?.append(GROUP_INFO_YOU())
+                }
+                if roomOccupant.affiliation == .owner {
+                    cell.accountLabel.text = GROUP_AFFILIATION_OWNER()
+                } else if roomOccupant.affiliation == .admin {
+                    cell.accountLabel.text = GROUP_AFFILIATION_ADMIN()
+                }
+                if roomOccupant.role == .moderator {
+                    if let chars = cell.accountLabel.text, chars.characters.count > 0 {
+                        cell.accountLabel.text?.append(Locale.current.groupingSeparator ?? ", ")
+                    }
+                    cell.accountLabel.text?.append(GROUP_ROLE_MODERATOR())
+                } else if roomOccupant.role == .none {
+                    // Not present in the room
+                    cell.nameLabel.textColor = UIColor.lightGray
+                    cell.identifierLabel.textColor = UIColor.lightGray
+                    cell.accountLabel.textColor = UIColor.lightGray
+                }
             } else if let roomJid = roomOccupant.jid,
                 let jidStr = roomOccupant.realJID,
                 let displayName = roomOccupant.roomName {

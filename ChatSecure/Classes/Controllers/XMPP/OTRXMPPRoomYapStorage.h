@@ -12,11 +12,15 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 
+@class OTRXMPPRoomOccupant;
+
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
+
+- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction;
 
 - (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
 @end
