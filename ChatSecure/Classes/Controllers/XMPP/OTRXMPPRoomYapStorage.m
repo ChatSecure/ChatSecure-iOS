@@ -209,19 +209,20 @@
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
+        // Get the real JID, need to find occupant by EITHER room jid or real JID
+        NSString *realJID = nil;
+        if (buddyJID) {
+            realJID = buddyJID.bare;
+        } else {
+            // Not really sure what's going on here
+            realJID = [presenceJID resource];
+        }
         
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:nil roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:realJID roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
             occupant.available = YES;
-        }
-        
-        if (buddyJID) {
-            occupant.realJID = buddyJID.bare;
-        } else {
-            // Not really sure what's going on here
-            occupant.realJID = [presenceJID resource];
         }
         
         occupant.roomName = [presenceJID resource];
