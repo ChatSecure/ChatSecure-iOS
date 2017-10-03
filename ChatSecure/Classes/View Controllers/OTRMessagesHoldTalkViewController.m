@@ -202,8 +202,6 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
         [xmppManager sendChatState:OTRChatStateComposing withBuddyID:[strongSelf threadKey]];
     }];
-    
-    
 }
 
 - (void)didFinishTyping {
@@ -213,8 +211,6 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
         [xmppManager sendChatState:OTRChatStateActive withBuddyID:[strongSelf threadKey]];
     }];
-    
-    
 }
 
 - (void)didUpdateState
