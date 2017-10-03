@@ -33,6 +33,10 @@ open class OTRBuddyInfoCheckableCell: OTRBuddyInfoCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func setCheckImage(image:UIImage?) {
+        checkView.image = image
+    }
+    
     func setChecked(checked:Bool) {
         checkView.isHidden = !checked
     }

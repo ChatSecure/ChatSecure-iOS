@@ -176,18 +176,12 @@ FOUNDATION_EXPORT NSString* FORGOT_PASSPHRASE_STRING();
 FOUNDATION_EXPORT NSString* GITHUB_STRING();
 /** "Google Talk", the name for Google talk */
 FOUNDATION_EXPORT NSString* GOOGLE_TALK_STRING();
-/** "Room admin", This will be shown as affiliation for admins in the group profile view */
-FOUNDATION_EXPORT NSString* GROUP_AFFILIATION_ADMIN();
-/** "Room owner", This will be shown as affiliation for owners in the group profile view */
-FOUNDATION_EXPORT NSString* GROUP_AFFILIATION_OWNER();
 /** "Group Chat", a subtitle label for a group chat */
 FOUNDATION_EXPORT NSString* GROUP_CHAT_STRING();
-/** " (You)", This will be shown after your own JID in the group profile view */
+/** "you", This will be shown after your own JID in the group profile view */
 FOUNDATION_EXPORT NSString* GROUP_INFO_YOU();
 /** "Group Name", The title for the view to enter a group chat name or label */
 FOUNDATION_EXPORT NSString* GROUP_NAME_STRING();
-/** "Moderator", This will be shown as role for moderators in the group profile view */
-FOUNDATION_EXPORT NSString* GROUP_ROLE_MODERATOR();
 /** "Generate Secure Password", whether or not we should generate a strong password for them */
 FOUNDATION_EXPORT NSString* Generate_Secure_Password();
 /** "We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else.", help text for password generator */
