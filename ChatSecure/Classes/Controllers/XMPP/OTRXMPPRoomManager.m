@@ -147,7 +147,7 @@
         [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             NSString *roomJID = room.roomJID.bare;
             NSString *accountId = room.xmppStream.tag;
-            occupant = [(OTRXMPPRoomYapStorage*)room.xmppRoomStorage roomOccupantForJID:user.full realJID:nil roomJID:roomJID accountId:accountId inTransaction:transaction];
+            occupant = [(OTRXMPPRoomYapStorage*)room.xmppRoomStorage roomOccupantForJID:user.full realJID:nil roomJID:roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         }];
     }
     return occupant;
@@ -339,9 +339,13 @@
         [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *jid = [item attributeStringValueForName:@"jid"];
             if ([jid length]) {
-                OTRXMPPRoomOccupant *occupant = [storage roomOccupantForJID:nil realJID:jid roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
-                if (occupant.jid == nil) {
-                    // Not currently an occupant, we just created this one, need to save.
+                // Make sure occupant object exists/is created
+                OTRXMPPRoomOccupant *occupant = [storage roomOccupantForJID:nil realJID:jid roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:NO];
+                if(!occupant) {
+                    occupant = [[OTRXMPPRoomOccupant alloc] init];
+                    occupant.jid = nil;
+                    occupant.realJID = jid;
+                    occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:room.roomJID.bare];
                     [occupant saveWithTransaction:transaction];
                 }
             }
