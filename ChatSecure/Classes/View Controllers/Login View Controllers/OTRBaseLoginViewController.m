@@ -120,8 +120,6 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                         [account removeKeychainPassword:nil];
                     }
                     [strongSelf handleError:error];
-                } else if (self.existingAccount) {
-                    [self dismissViewControllerAnimated:YES completion:nil];
                 } else if (account) {
                     self.account = account;
                     [self handleSuccessWithNewAccount:account sender:sender];
@@ -136,6 +134,10 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [account saveWithTransaction:transaction];
     }];
+    
+    if (self.existingAccount) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
     
     // If push isn't enabled, prompt to enable it
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
