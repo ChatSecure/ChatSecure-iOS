@@ -120,6 +120,8 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
                         [account removeKeychainPassword:nil];
                     }
                     [strongSelf handleError:error];
+                } else if (self.existingAccount) {
+                    [self dismissViewControllerAnimated:YES completion:nil];
                 } else if (account) {
                     self.account = account;
                     [self handleSuccessWithNewAccount:account sender:sender];
