@@ -30,7 +30,7 @@
     return self;
 }
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction
+- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction alwaysReturnObject:(BOOL)alwaysReturnObject
 {
     __block OTRXMPPRoomOccupant *occupant = nil;
         
@@ -46,7 +46,7 @@
         }
     }];
     
-    if(!occupant) {
+    if(!occupant && alwaysReturnObject) {
         occupant = [[OTRXMPPRoomOccupant alloc] init];
         occupant.jid = jid;
         occupant.realJID = realJID;
@@ -135,7 +135,7 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
@@ -209,19 +209,20 @@
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
+        // Get the real JID, need to find occupant by EITHER room jid or real JID
+        NSString *realJID = nil;
+        if (buddyJID) {
+            realJID = buddyJID.bare;
+        } else {
+            // Not really sure what's going on here
+            realJID = [presenceJID resource];
+        }
         
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:nil roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:realJID roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
             occupant.available = YES;
-        }
-        
-        if (buddyJID) {
-            occupant.realJID = buddyJID.bare;
-        } else {
-            // Not really sure what's going on here
-            occupant.realJID = [presenceJID resource];
         }
         
         occupant.roomName = [presenceJID resource];

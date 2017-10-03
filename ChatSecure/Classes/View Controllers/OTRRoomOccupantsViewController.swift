@@ -34,6 +34,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+    open var crownImage:UIImage?
     
     static let CellIdentifier = "Cell"
     
@@ -120,9 +121,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
             largeAvatarView.image = image
         }
         
+        self.crownImage = UIImage(named: "crown", in: OTRAssets.resourcesBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(OTRBuddyInfoCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -342,7 +345,8 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:OTRBuddyInfoCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCell
+        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
+        cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
@@ -351,33 +355,15 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
                 if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
-                    cell.nameLabel.text?.append(GROUP_INFO_YOU())
+                    cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
                 }
-                if roomOccupant.affiliation == .owner {
-                    cell.accountLabel.text = GROUP_AFFILIATION_OWNER()
-                } else if roomOccupant.affiliation == .admin {
-                    cell.accountLabel.text = GROUP_AFFILIATION_ADMIN()
-                }
-                if roomOccupant.role == .moderator {
-                    if let chars = cell.accountLabel.text, chars.characters.count > 0 {
-                        cell.accountLabel.text?.append(Locale.current.groupingSeparator ?? ", ")
-                    }
-                    cell.accountLabel.text?.append(GROUP_ROLE_MODERATOR())
-                } else if roomOccupant.role == .none {
-                    // Not present in the room
-                    cell.nameLabel.textColor = UIColor.lightGray
-                    cell.identifierLabel.textColor = UIColor.lightGray
-                    cell.accountLabel.textColor = UIColor.lightGray
-                }
-            } else if let roomJid = roomOccupant.jid,
-                let jidStr = roomOccupant.realJID,
-                let displayName = roomOccupant.roomName {
+            } else if let roomJid = room.jid {
                 // Create temporary buddy
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = jidStr
-                buddy.displayName = displayName
+                buddy.username = jid
+                buddy.displayName = roomOccupant.roomName ?? jid
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
                     status = .offline
@@ -385,6 +371,18 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
                 cell.setThread(buddy, account: nil)
                 DDLogInfo("No trusted buddy found for occupant \(roomOccupant)")
+            }
+            
+            if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
+                cell.setChecked(checked: true)
+            } else {
+                cell.setChecked(checked: false)
+            }
+            if roomOccupant.role == .none {
+                // Not present in the room
+                cell.nameLabel.textColor = UIColor.lightGray
+                cell.identifierLabel.textColor = UIColor.lightGray
+                cell.accountLabel.textColor = UIColor.lightGray
             }
         }
         cell.selectionStyle = .none
