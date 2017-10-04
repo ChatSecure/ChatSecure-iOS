@@ -52,6 +52,15 @@
         occupant.realJID = realJID;
         occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
     }
+    
+    // Make sure we fill in the jids if we haven't got them already (note: we might well assign nil to them here, basically a no-op, but if we have them they will be set)
+    if (!occupant.jid) {
+        occupant.jid = jid;
+    }
+    if (!occupant.realJID) {
+        occupant.realJID = realJID;
+    }
+    
     return occupant;
 }
 
@@ -137,6 +146,9 @@
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         databaseMessage.displayName = occupant.realJID;
+        if (!databaseMessage.displayName) {
+            databaseMessage.displayName = [fromJID bare];
+        }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
