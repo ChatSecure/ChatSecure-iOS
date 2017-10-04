@@ -24,7 +24,7 @@
 
 - (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)viewController delegate:(id<OTRAttachmentPickerDelegate>)delegate
 {
-    if (self = [self init]) {
+    if (self = [super init]) {
         _parentViewController = viewController;
         _delegate = delegate;
     }

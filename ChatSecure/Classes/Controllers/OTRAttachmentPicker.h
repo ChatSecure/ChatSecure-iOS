@@ -10,6 +10,7 @@
 @import UIKit;
 @class OTRAttachmentPicker;
 
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRAttachmentPickerDelegate <NSObject>
 
 @required
@@ -31,12 +32,17 @@
 
 @interface OTRAttachmentPicker : NSObject <UIImagePickerControllerDelegate>
 
+/** Use this to store any extra info you might need later in the delegate callback. */
+@property (nonatomic, nullable) id tag;
+
 @property (nonatomic, weak, readonly) UIViewController<UIPopoverPresentationControllerDelegate> *parentViewController;
 @property (nonatomic, weak, readonly) id<OTRAttachmentPickerDelegate> delegate;
 
-- (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)parentViewController delegate:(id<OTRAttachmentPickerDelegate>)delegate;
+- (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)parentViewController delegate:(id<OTRAttachmentPickerDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
-- (void)showAlertControllerFromSourceView:(UIView *)senderView withCompletion:(void (^)(void))completion;
+- (void)showAlertControllerFromSourceView:(UIView *)senderView withCompletion:( void (^ _Nullable )(void))completion;
 
 
 @end
+NS_ASSUME_NONNULL_END
