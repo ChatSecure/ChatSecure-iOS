@@ -62,7 +62,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
             if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
-                self.ownOccupant = manager.roomOccupant(forUser: XMPPJID(string:ownJid), inRoom: XMPPJID(string:roomJid))
+                self.ownOccupant = manager.roomOccupant(forJID:ownJid, realJID:ownJid, inRoom:roomJid)
             }
             self.fetchMembersList()
         })
@@ -370,7 +370,6 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 }
                 OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
                 cell.setThread(buddy, account: nil)
-                DDLogInfo("No trusted buddy found for occupant \(roomOccupant)")
             }
             
             if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
