@@ -27,6 +27,7 @@ typedef NS_ENUM(NSUInteger, OTRSessionSecurity) {
     OTRSessionSecurityPlaintextWithOTR = 2,
     OTRSessionSecurityOTR = 3,
     OTRSessionSecurityOMEMO = 4,
+    /** This is deprecated, this option will now only use OMEMO */
     OTRSessionSecurityOMEMOandOTR = 5
 };
 
