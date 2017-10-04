@@ -543,7 +543,7 @@
     }
 }
 
-- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     NSDictionary *userInfo = response.notification.request.content.userInfo;
     if ([userInfo[kOTRNotificationType] isEqualToString:kOTRNotificationTypeNone]) {
         // Nothing

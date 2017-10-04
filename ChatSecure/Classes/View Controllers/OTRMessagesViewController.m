@@ -668,28 +668,35 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (UIAlertAction *)resendOutgoingMessageActionForMessageKey:(NSString *)messageKey
                                           messageCollection:(NSString *)messageCollection
                                 readWriteDatabaseConnection:(YapDatabaseConnection*)databaseConnection
-                                           duplicateMessage:(BOOL)duplicateMessaage
                                                       title:(NSString *)title
 {
     UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            OTROutgoingMessage *dbMessage = [[transaction objectForKey:messageKey inCollection:messageCollection] copy];
-            if (duplicateMessaage) {
-                dbMessage = [OTROutgoingMessage duplicateMessage:dbMessage];
-            }
-            dbMessage.error = nil;
-            
-            // Check if this is a media message. For now these are handled differently
-            if ([dbMessage.mediaItemUniqueId length]) {
-                OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:dbMessage.mediaItemUniqueId transaction:transaction];
-                [self sendMediaItem:mediaItem data:nil tag:dbMessage transaction:transaction];
+            id object = [[transaction objectForKey:messageKey inCollection:messageCollection] copy];
+            id<OTRMessageProtocol> message = nil;
+            if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+                message = (id<OTRMessageProtocol>)object;
             } else {
-                dbMessage.messageSecurityInfo =[[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:self.state.messageSecurity];
-                dbMessage.date = [NSDate date];
-                OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:dbMessage date:dbMessage.date];
+                return;
+            }
+            // Messages that never sent properly don't need to be duplicated client-side
+            NSError *messageError = message.messageError;
+            message = [message duplicateMessage];
+            message.messageError = nil;
+            message.messageSecurity = self.state.messageSecurity;
+            message.messageDate = [NSDate date];
+            [message saveWithTransaction:transaction];
+            
+            // We only need to re-upload failed media messages
+            // otherwise just resend the URL directly
+            if (message.messageMediaItemKey.length &&
+                (!message.messageText.length || messageError)) {
+                OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.messageMediaItemKey transaction:transaction];
+                [self sendMediaItem:mediaItem data:nil message:message transaction:transaction];
+            } else {
+                OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:message.messageDate];
                 [sendingAction saveWithTransaction:transaction];
             }
-            [dbMessage saveWithTransaction:transaction];
         }];
     }];
     return action;
@@ -710,17 +717,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSArray <UIAlertAction *>*)actionForMessage:(id<OTRMessageProtocol>)message {
     NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
     
-    
-    if ([message isKindOfClass:[OTROutgoingMessage class]] ) {
-        OTROutgoingMessage *msg = (OTROutgoingMessage *)message;
-        
-        BOOL duplicate = YES;
-        NSError *error = [message messageError];
-        if (error != nil) {
-            duplicate = NO;
-        }
+    if (!message.isMessageIncoming) {
         // This is an outgoing message so we can offer to resend
-        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:msg.uniqueId messageCollection:[OTROutgoingMessage collection] readWriteDatabaseConnection:self.readWriteDatabaseConnection duplicateMessage:duplicate title:RESEND_STRING()];
+        UIAlertAction *resendAction = [self resendOutgoingMessageActionForMessageKey:message.messageKey messageCollection:message.messageCollection readWriteDatabaseConnection:self.readWriteDatabaseConnection  title:RESEND_STRING()];
         [actions addObject:resendAction];
     }
     
@@ -1291,33 +1290,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark Sending Media Items
 
-- (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag transaction:(YapDatabaseReadWriteTransaction *)transaction
+- (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data message:(id<OTRMessageProtocol>)message transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-    OTRAccount *account = [self accountWithTransaction:transaction];
-    OTROutgoingMessage *message = (OTROutgoingMessage*)[mediaItem parentMessageWithTransaction:transaction];
-    if (![message isKindOfClass:OTROutgoingMessage.class]) {
+    id<OTRThreadOwner> thread = [self threadObjectWithTransaction:transaction];
+    OTRXMPPManager *xmpp = [self xmppManagerWithTransaction:transaction];
+    if (!message || !thread || !xmpp) {
         DDLogError(@"Error sending file due to bad paramters");
         return;
     }
-    
-    OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-    XMPPJID *jid = [XMPPJID jidWithString:buddy.username];
-    if (![xmpp isKindOfClass:[OTRXMPPManager class]] || !jid) {
-        DDLogError(@"Error sending file due to bad paramters");
-        return;
-    }
-    
     if (data) {
-        buddy.lastMessageId = message.messageKey;
-        [buddy saveWithTransaction:transaction];
-        
-        // XEP-0363
-        [xmpp.fileTransferManager sendWithMediaItem:mediaItem prefetchedData:data message:message];
-    } else {
-        // XEP-0363
-        [xmpp.fileTransferManager sendWithMediaItem:mediaItem prefetchedData:nil message:message];
+        thread.lastMessageIdentifier = message.messageKey;
+        [thread saveWithTransaction:transaction];
     }
+    // XEP-0363
+    [xmpp.fileTransferManager sendWithMediaItem:mediaItem prefetchedData:data message:message];
     
     [mediaItem touchParentMessageWithTransaction:transaction];
 }

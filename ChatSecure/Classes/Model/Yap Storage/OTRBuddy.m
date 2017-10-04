@@ -197,6 +197,14 @@
 
 #pragma - mark OTRThreadOwner Methods
 
+- (NSString*) lastMessageIdentifier {
+    return self.lastMessageId;
+}
+
+- (void) setLastMessageIdentifier:(NSString *)lastMessageIdentifier {
+    self.lastMessageId = lastMessageIdentifier;
+}
+
 - (NSString *)threadName
 {
     NSString *threadName = [self.displayName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

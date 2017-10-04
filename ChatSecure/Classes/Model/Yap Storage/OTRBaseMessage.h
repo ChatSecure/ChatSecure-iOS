@@ -35,10 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isMessageIncoming;
 @property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;
 @property (nonatomic, readwrite, nullable) NSError *messageError;
-@property (nonatomic, readonly) OTRMessageTransportSecurity messageSecurity;
+@property (nonatomic, readwrite) OTRMessageTransportSecurity messageSecurity;
 /** Only applies to incoming messages */
 @property (nonatomic, readonly) BOOL isMessageRead;
-@property (nonatomic, readonly) NSDate *messageDate;
+@property (nonatomic, readwrite) NSDate *messageDate;
 @property (nonatomic, readwrite, nullable) NSString *messageText;
 @property (nonatomic, readonly, nullable) NSString *remoteMessageId;
 /** Only applies to outgoing messages */
@@ -47,6 +47,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isMessageDelivered;
 
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+/**
+ This creates a duplicate message. The only properties that are coppied over are
+ - text
+ - error
+ - mediaItemUniqueId
+ - buddyUnieqId
+ - messageSecurityInfo
+ This new object will have a new unique id and message id
+ */
+- (id<OTRMessageProtocol>) duplicateMessage;
 @end
 
 @protocol OTRChildObjectProtocol
@@ -91,15 +101,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable OTRBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 
-/** 
- This creates a duplicate message. The only properties that are coppied over are 
-    - text
-    - error
-    - mediaItemUniqueId 
-    - buddyUnieqId 
-    - messageSecurityInfo
- This new object will have a new unique id and message id
- */
-+ (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message;
 @end
 NS_ASSUME_NONNULL_END

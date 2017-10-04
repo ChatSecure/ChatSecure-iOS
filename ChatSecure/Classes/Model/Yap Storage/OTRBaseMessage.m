@@ -135,6 +135,14 @@
 
 #pragma - mark OTRMessage Protocol methods
 
+- (NSDate*) messageDate {
+    return self.date;
+}
+
+- (void) setMessageDate:(NSDate *)messageDate {
+    self.date = messageDate;
+}
+
 - (BOOL) isMessageDelivered {
     return NO;
 }
@@ -157,16 +165,17 @@
     return self.messageSecurityInfo.messageSecurity;
 }
 
+- (void) setMessageSecurity:(OTRMessageTransportSecurity)messageSecurity {
+    OTRMessageEncryptionInfo *info = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:messageSecurity];
+    self.messageSecurityInfo = info;
+}
+
 - (NSString *)messageKey {
     return self.uniqueId;
 }
 
 - (NSString *)messageCollection {
     return [self.class collection];
-}
-
-- (NSDate *)messageDate {
-    return  self.date;
 }
 
 - (NSString *)threadId {
@@ -272,8 +281,9 @@
     }
 }
 
-+ (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message {
-    OTRBaseMessage *newMessage = [[[message class] alloc] init];
+- (id<OTRMessageProtocol>)duplicateMessage {
+    OTRBaseMessage *message = self;
+    OTRBaseMessage *newMessage = [[[self class] alloc] init];
     newMessage.text = message.text;
     newMessage.error = message.error;
     newMessage.mediaItemUniqueId = message.mediaItemUniqueId;

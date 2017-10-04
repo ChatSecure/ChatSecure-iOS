@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
     OTRThreadStatusOffline      = 5
 };
 
-@protocol OTRThreadOwner <NSObject>
+@protocol OTRThreadOwner <OTRYapDatabaseObjectProtocol>
 @required
 /** If thread should be hidden from main lists */
 @property (nonatomic, readwrite) BOOL isArchived;
@@ -36,6 +36,8 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (nullable NSString *)currentMessageText;
 - (nonnull UIImage *)avatarImage;
 - (OTRThreadStatus)currentStatus;
+/** The database identifier for the thread's most recent message. @warn ⚠️ This is no longer used for fetching with lastMessageWithTransaction: and may be invalid, but is being kept around due to a hack to force-show new threads that are empty. */
+@property (nonatomic, strong, readwrite, nullable) NSString* lastMessageIdentifier;
 - (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 - (BOOL)isGroupThread;

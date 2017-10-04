@@ -9,6 +9,7 @@
 import Foundation
 import YapTaskQueue
 import XMPPFramework
+import CocoaLumberjack
 
 private class OutstandingActionInfo: Hashable, Equatable {
     let action:YapTaskQueueAction
@@ -244,6 +245,7 @@ public class MessageQueueHandler:NSObject {
             let roomJid = XMPPJID(string: roomJidString),
             let room = roomManager.room(for: roomJid) else {
             // Can't send a message to nowhere...
+            DDLogError("Cannot send group message to nowhere \(message)")
             completion(true, 0.0)
             return
         }

@@ -30,7 +30,6 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open static let roomEdgeName = "OTRRoomMesageEdgeName"
     
     open var roomJID:String?
-    
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     open var senderJID:String?
     open var displayName:String?
@@ -42,7 +41,6 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var read = true
     open var error:Error?
     open var mediaItemId: String?
-    
     open var roomUniqueId:String?
     
     open override var hash: Int {
@@ -65,6 +63,21 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public func duplicateMessage() -> OTRMessageProtocol {
+        let newMessage = OTRXMPPRoomMessage()!
+        newMessage.messageText = self.messageText
+        newMessage.messageError = self.messageError
+        newMessage.messageMediaItemKey = self.messageMediaItemKey
+        newMessage.roomUniqueId = self.roomUniqueId
+        newMessage.roomJID = self.roomJID
+        newMessage.senderJID = self.senderJID
+        newMessage.displayName = self.displayName
+        newMessage.messageSecurity = self.messageSecurity
+        newMessage.state = .needsSending
+        newMessage.xmppId = UUID().uuidString
+        return newMessage
+    }
+    
     public var isMessageSent: Bool {
         return state == .pendingSent
             || state == .sent
@@ -124,7 +137,12 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public var messageSecurity: OTRMessageTransportSecurity {
-        return .plaintext;
+        get {
+            return .plaintext;
+        }
+        set {
+            // currently only plaintext is supported
+        }
     }
     
     public var remoteMessageId: String? {
