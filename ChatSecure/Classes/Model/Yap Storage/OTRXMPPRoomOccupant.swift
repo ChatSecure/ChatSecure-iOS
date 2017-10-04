@@ -69,7 +69,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     open var roomUniqueId:String?
     
     open func avatarImage() -> UIImage {
-        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.realJID)
+        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
     }
     
     //MARK: YapDatabaseRelationshipNode Methods
