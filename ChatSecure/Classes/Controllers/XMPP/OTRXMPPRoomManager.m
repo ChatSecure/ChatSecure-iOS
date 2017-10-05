@@ -86,6 +86,9 @@
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
+        } else {
+            // Clear out roles, we'll getpresence updates once we join
+            [self clearOccupantRolesInRoom:room withTransaction:transaction];
         }
         
         //Other Room properties should be set here
@@ -121,6 +124,17 @@
     [self removeRoomForJID:jid];
     [room removeDelegate:self];
     [room deactivate];
+}
+
+- (void)clearOccupantRolesInRoom:(OTRXMPPRoom *)room withTransaction:(YapDatabaseReadWriteTransaction * _Nonnull)transaction {
+    //Enumerate of room eges to occupants
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:room.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        
+        OTRXMPPRoomOccupant *occupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        occupant.role = RoomOccupantRoleNone;
+        [occupant saveWithTransaction:transaction];
+    }];
 }
 
 - (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject
@@ -376,6 +390,16 @@
         
         //Fetch member list
         [sender fetchMembersList];
+    }];
+}
+
+- (void)xmppRoomDidLeave:(XMPPRoom *)sender {
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:[sender.roomJID bare]];
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+        if (room) {
+            [self clearOccupantRolesInRoom:room withTransaction:transaction];
+        }
     }];
 }
 
