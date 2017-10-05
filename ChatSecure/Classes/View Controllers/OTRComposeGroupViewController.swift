@@ -29,7 +29,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     var selectedItems:[OTRXMPPBuddy] = []
     var prototypeCell:OTRComposeGroupBuddyCell?
-    var excludedItems:[String]? = nil
+    var existingItems:[String]? = nil
     var waitingForExcludedItems = false
     
     override open func viewDidLoad() {
@@ -165,14 +165,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             })
             cell.setThread(threadOwner, account: account)
             cell.setChecked(checked: selectedItems.contains(threadOwner))
-            var isExcluded = false
-            if let excludedItems = self.excludedItems, excludedItems.contains(threadOwner.uniqueId) {
-                isExcluded = true
+            var isExistingOccupant = false
+            if let existingItems = self.existingItems, existingItems.contains(threadOwner.uniqueId) {
+                isExistingOccupant = true
             }
-            cell.isUserInteractionEnabled = !isExcluded
-            cell.nameLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
-            cell.accountLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
-            cell.identifierLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
+            cell.nameLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
+            cell.accountLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
+            cell.identifierLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
             return cell
         }
         return UITableViewCell()
@@ -220,7 +219,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         }
     }
     
-    open func excludeRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
+    open func setExistingRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
         self.waitingForExcludedItems = true
         DispatchQueue.global().async {
             if let room = room, let viewHandler = viewHandler, let mappings = viewHandler.mappings {
@@ -229,19 +228,14 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
                             let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
-                            
-                            // Don't exclude people not currently in the room, we
-                            // want to be able to reinvite them.
-                            guard roomOccupant.role != .none else { continue }
-                            
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                                 buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
                             })
                             if let buddy = buddy {
-                                if self.excludedItems == nil {
-                                    self.excludedItems = []
+                                if self.existingItems == nil {
+                                    self.existingItems = []
                                 }
-                                self.excludedItems?.append(buddy.uniqueId)
+                                self.existingItems?.append(buddy.uniqueId)
                             }
                         }
                     }

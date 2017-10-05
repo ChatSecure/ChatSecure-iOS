@@ -278,7 +278,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         let storyboard = UIStoryboard(name: "OTRComposeGroup", bundle: OTRAssets.resourcesBundle)
         if let vc = storyboard.instantiateInitialViewController() as? OTRComposeGroupViewController {
             vc.delegate = self
-            vc.excludeRoomOccupants(viewHandler: self.viewHandler, room: self.room)
+            vc.setExistingRoomOccupants(viewHandler: self.viewHandler, room: self.room)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
