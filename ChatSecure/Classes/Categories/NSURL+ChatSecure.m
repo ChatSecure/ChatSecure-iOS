@@ -143,7 +143,8 @@
     urlComponents.fragment = nil;
     urlComponents.path = nil;
     NSURL *baseURL = urlComponents.URL;
-    NSString *fakeUrlString = [NSString stringWithFormat:@"%@/%@", baseURL.absoluteString, utf8String];
+    NSString *fakeUrlString = [NSString stringWithFormat:@"%@/%@", baseURL.absoluteString, [utf8String stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet]];
+    
     NSURL *fakeURL = [NSURL URLWithString:fakeUrlString];
     if (!fakeURL) {
         completion(nil, nil);
