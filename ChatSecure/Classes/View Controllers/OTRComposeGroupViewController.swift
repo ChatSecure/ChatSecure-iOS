@@ -18,7 +18,7 @@ import OTRAssets
 
 open class OTRComposeGroupViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, OTRComposeGroupBuddyCellDelegate,OTRYapViewHandlerDelegateProtocol
 {
-    @objc public var delegate:OTRComposeGroupViewControllerDelegate? = nil
+    @objc public weak var delegate:OTRComposeGroupViewControllerDelegate? = nil
     
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
