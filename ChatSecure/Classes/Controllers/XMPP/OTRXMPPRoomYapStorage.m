@@ -210,10 +210,10 @@
                 NSString *jid = [item attributeStringValueForName:@"jid"];
                 if ([jid length]) {
                     buddyJID = [XMPPJID jidWithString:jid];
+                    buddyRole = [item attributeStringValueForName:@"role"];
+                    buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
                     *stop = YES;
                 }
-                buddyRole = [item attributeStringValueForName:@"role"];
-                buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
             }];
             *stop = YES;
         }
