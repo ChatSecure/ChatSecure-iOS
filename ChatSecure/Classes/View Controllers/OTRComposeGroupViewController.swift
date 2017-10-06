@@ -29,7 +29,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     var selectedItems:[OTRXMPPBuddy] = []
     var prototypeCell:OTRComposeGroupBuddyCell?
-    var existingItems:[String]? = nil
+    var excludedItems = Set<String>()
     var waitingForExcludedItems = false
     
     override open func viewDidLoad() {
@@ -165,9 +165,9 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             })
             cell.setThread(threadOwner, account: account)
             cell.setChecked(checked: selectedItems.contains(threadOwner))
-            var isExistingOccupant = false
-            if let existingItems = self.existingItems, existingItems.contains(threadOwner.uniqueId) {
-                isExistingOccupant = true
+            var isExcluded = false
+            if excludedItems.contains(threadOwner.uniqueId) {
+                isExcluded = true
             }
             cell.nameLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
             cell.accountLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
@@ -232,10 +232,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                                 buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
                             })
                             if let buddy = buddy {
-                                if self.existingItems == nil {
-                                    self.existingItems = []
-                                }
-                                self.existingItems?.append(buddy.uniqueId)
+                                self.excludedItems.insert(buddy.uniqueId)
                             }
                         }
                     }
