@@ -248,6 +248,9 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
 
 extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     public func downloads() -> [OTRDownloadMessage] {
+        guard self.isMessageIncoming else {
+            return []
+        }
         var downloads: [OTRDownloadMessage] = []
         for url in self.downloadableURLs {
             let download = OTRGroupDownloadMessage.download(withParentMessage: self, url: url)
@@ -257,6 +260,9 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     }
     
     public func existingDownloads(with transaction: YapDatabaseReadTransaction) -> [OTRDownloadMessage] {
+        guard self.isMessageIncoming else {
+            return []
+        }
         var downloads: [OTRDownloadMessage] = []
         let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
@@ -273,6 +279,9 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     }
     
     public func hasExistingDownloads(with transaction: YapDatabaseReadTransaction) -> Bool {
+        guard self.isMessageIncoming else {
+            return false
+        }
         let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
             DDLogWarn("\(extensionName) not registered!");

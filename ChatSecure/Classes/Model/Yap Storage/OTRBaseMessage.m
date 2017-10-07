@@ -94,6 +94,9 @@
 
 /**  If available, existing instances will be returned. */
 - (NSArray<id<OTRDownloadMessage>>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    if (!self.isMessageIncoming) {
+        return @[];
+    }
     id<OTRMessageProtocol> message = self;
     NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
@@ -113,6 +116,9 @@
 
 /** Returns an unsaved array of downloadable URLs. */
 - (NSArray<id<OTRDownloadMessage>>*) downloads {
+    if (!self.isMessageIncoming) {
+        return @[];
+    }
     id<OTRMessageProtocol> message = self;
     NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
     [self.downloadableNSURLs enumerateObjectsUsingBlock:^(NSURL * _Nonnull url, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -123,6 +129,9 @@
 }
 
 - (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    if (!self.isMessageIncoming) {
+        return NO;
+    }
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];

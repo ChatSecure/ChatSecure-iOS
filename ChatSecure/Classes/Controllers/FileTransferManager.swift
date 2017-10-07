@@ -876,3 +876,31 @@ public extension String {
         return urls
     }
 }
+
+public extension FileTransferManager {
+    /// Returns whether or not message should be displayed or hidden from collection. Single incoming URLs should be hidden, for example.
+    @objc public static func shouldDisplayMessage(_ message: OTRMessageProtocol, transaction: YapDatabaseReadTransaction) -> Bool {
+        guard let messageText = message.messageText else {
+            if message.messageMediaItemKey != nil {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        // Filter out messages that are aesgcm scheme file transfers
+        // and don't have media attached
+        if messageText.contains("aesgcm://"),
+            message.messageError == nil {
+            return false
+        }
+        
+        // Filter out messages that are just URLs and have downloads
+        if messageText.isSingleURLOnly,
+            message.hasExistingDownloads(with: transaction) {
+            return false
+        }
+
+        return true
+    }
+}

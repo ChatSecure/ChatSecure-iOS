@@ -14,6 +14,9 @@ class FileTransferIntegrationTests: XCTestCase {
     
     var databaseManager: OTRDatabaseManager!
     var connection: YapDatabaseConnection!
+    let account = OTRXMPPAccount(username: "test@test.com", accountType: .jabber)!
+    let buddy = OTRXMPPBuddy()!
+    let room = OTRXMPPRoom()!
     
     override func setUp() {
         super.setUp()
@@ -22,6 +25,14 @@ class FileTransferIntegrationTests: XCTestCase {
         let uuid = UUID().uuidString
         self.databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(uuid)
         self.connection = self.databaseManager.database!.newConnection()
+        
+        buddy.accountUniqueId = account.uniqueId
+        room.accountUniqueId = account.uniqueId
+        connection.readWrite { (t) in
+            self.account.save(with: t)
+            self.buddy.save(with: t)
+            self.room.save(with: t)
+        }
     }
     
     override func tearDown() {
@@ -29,38 +40,77 @@ class FileTransferIntegrationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testIncomingDirectMessage() {
-        let account = OTRXMPPAccount(username: "test@test.com", accountType: .jabber)!
-        let buddy = OTRXMPPBuddy()!
-        buddy.accountUniqueId = account.uniqueId
-        let incomingMessage = OTRIncomingMessage()!
-        incomingMessage.buddyUniqueId = buddy.uniqueId
-        connection.readWrite { (transaction) in
-            account.save(with: transaction)
-            buddy.save(with: transaction)
-            incomingMessage.save(with: transaction)
-        }
-        internalTestDownloadsRelationship(incomingMessage: incomingMessage)
+    func testIncomingDirectMessageMultipleURLs() {
+        let message = OTRIncomingMessage()!
+        message.buddyUniqueId = buddy.uniqueId
+        // this should be split into four messages
+        let text = "i like cheese"
+        let urls = ["https://cheese.com", "https://cheeze.biz/cheddar.jpg"]
+        
+        internalTestIncomingDownloadsRelationship(incomingMessage: message, text: text, urls: urls)
     }
+    
+    func testIncomingDirectMessageSingleURL() {
+        let message = OTRIncomingMessage()!
+        message.buddyUniqueId = buddy.uniqueId
+        let text = ""
+        let urls = ["https://example.com/12345.png"]
+        internalTestIncomingDownloadsRelationship(incomingMessage: message, text: text, urls: urls)
+    }
+    
+    func testIncomingDirectMessageSingleOMEMO() {
+        let message = OTRIncomingMessage()!
+        message.buddyUniqueId = buddy.uniqueId
+        let text = ""
+        let urls = ["aesgcm://example.com/12345.png"]
+        internalTestIncomingDownloadsRelationship(incomingMessage: message, text: text, urls: urls, shouldDisplayMessage: false)
+    }
+    
     
     func testIncomingGroupMessage() {
-        let account = OTRXMPPAccount(username: "test@test.com", accountType: .jabber)!
-        let room = OTRXMPPRoom()!
-        room.accountUniqueId = account.uniqueId
         let incomingMessage = OTRXMPPRoomMessage()!
         incomingMessage.roomUniqueId = room.uniqueId
-        connection.readWrite { (transaction) in
-            account.save(with: transaction)
-            room.save(with: transaction)
-            incomingMessage.save(with: transaction)
-        }
-        internalTestDownloadsRelationship(incomingMessage: incomingMessage)
+        // this should be split into four messages
+        let text = "i like cheese"
+        let urls = ["https://cheese.com", "https://cheeze.biz/cheddar.jpg"]
+        internalTestIncomingDownloadsRelationship(incomingMessage: incomingMessage, text: text, urls: urls)
     }
     
-    private func internalTestDownloadsRelationship(incomingMessage: OTRMessageProtocol) {
-        // this should be split into four messages
-        var text = "i like cheese"
-        let urls = ["https://cheese.com", "https://cheeze.biz/cheddar.jpg", "aesgcm://example.com/12345.png"]
+    func testIncomingGroupMessageOMEMO() {
+        let incomingMessage = OTRXMPPRoomMessage()!
+        incomingMessage.roomUniqueId = room.uniqueId
+        let text = ""
+        let urls = ["aesgcm://example.com/12345.png"]
+        internalTestIncomingDownloadsRelationship(incomingMessage: incomingMessage, text: text, urls: urls, shouldDisplayMessage: false)
+    }
+    
+    /// NOTE: When we add MAM support, some internal logic in
+    /// FileTransferManager and elsewhere may need to be changed
+    /// because we will receive URLs/aesgcm links that we've sent on
+    /// other clients that need to be downloaded.
+    func testOutgoingDirectMessage() {
+        let outgoingMessage = OTROutgoingMessage()!
+        outgoingMessage.buddyUniqueId = buddy.uniqueId
+        outgoingMessage.messageText = "https://test.com"
+        internalTestOutgoingDownloadsRelationship(outgoingMessage: outgoingMessage)
+    }
+    
+    func testOutgoingGroupMessage() {
+        let outgoingMessage = OTRXMPPRoomMessage()!
+        outgoingMessage.roomUniqueId = room.uniqueId
+        outgoingMessage.state = .needsSending
+        outgoingMessage.messageText = "https://test.com"
+        internalTestOutgoingDownloadsRelationship(outgoingMessage: outgoingMessage)
+    }
+    
+    // MARK: Internal Test Helpers
+    
+    /// `urls` will be appended to `text`
+    private func internalTestIncomingDownloadsRelationship(incomingMessage: OTRMessageProtocol, text inText: String, urls: [String], shouldDisplayMessage: Bool = true) {
+        connection.readWrite { (transaction) in
+            incomingMessage.save(with: transaction)
+        }
+        var text = inText
         for url in urls {
             text = text + " " + url
         }
@@ -79,6 +129,9 @@ class FileTransferIntegrationTests: XCTestCase {
             let refetch = incomingMessage.refetch(with: transaction)
             XCTAssertNotNil(refetch)
             hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
+            
+            let shouldDisplay = FileTransferManager.shouldDisplayMessage(incomingMessage, transaction: transaction)
+            XCTAssertEqual(shouldDisplay, shouldDisplayMessage)
         }
         XCTAssertFalse(hasDownloads)
         
@@ -108,10 +161,29 @@ class FileTransferIntegrationTests: XCTestCase {
             }
             hasDownloads = incomingMessage.hasExistingDownloads(with: transaction)
             savedDownloads = incomingMessage.existingDownloads(with: transaction)
+            
         }
         XCTAssertTrue(hasDownloads)
         XCTAssertEqual(urls.count, savedDownloads.count)
     }
     
+    private func internalTestOutgoingDownloadsRelationship(outgoingMessage: OTRMessageProtocol) {
+        connection.readWrite { (transaction) in
+            outgoingMessage.save(with: transaction)
+        }
+        var hasDownloads = false
+        connection.read { (transaction) in
+            hasDownloads = outgoingMessage.hasExistingDownloads(with: transaction)
+            let shouldDisplayMessage = FileTransferManager.shouldDisplayMessage(outgoingMessage, transaction: transaction)
+            XCTAssertTrue(shouldDisplayMessage)
+        }
+        XCTAssertFalse(hasDownloads)
+        
+        let downloads = outgoingMessage.downloads()
+        XCTAssert(downloads.count == 0)
+    }
+    
     
 }
+
+
