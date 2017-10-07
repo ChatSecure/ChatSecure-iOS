@@ -541,6 +541,7 @@ extension FileTransferManager {
                         }
                         download.save(with: transaction)
                     }
+                    message.touch(with: transaction)
                 })
             }
             if disableAutomaticURLFetching {
@@ -880,16 +881,20 @@ public extension String {
 public extension FileTransferManager {
     /// Returns whether or not message should be displayed or hidden from collection. Single incoming URLs should be hidden, for example.
     @objc public static func shouldDisplayMessage(_ message: OTRMessageProtocol, transaction: YapDatabaseReadTransaction) -> Bool {
+        // Always show media messages
+        if message.messageMediaItemKey != nil {
+            return true
+        }
+        // Always show downloads
+        if message is OTRDownloadMessage {
+            return true
+        }
+        // Hide non-media messages that have no text
         guard let messageText = message.messageText else {
-            if message.messageMediaItemKey != nil {
-                return true
-            } else {
-                return false
-            }
+            return false
         }
         
         // Filter out messages that are aesgcm scheme file transfers
-        // and don't have media attached
         if messageText.contains("aesgcm://"),
             message.messageError == nil {
             return false

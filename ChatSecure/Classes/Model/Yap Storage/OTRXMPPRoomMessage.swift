@@ -288,7 +288,7 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
             return false
         }
         let edgeName = YapDatabaseConstants.edgeName(.download)
-        let count = relationship.edgeCount(withName: edgeName)
+        let count = relationship.edgeCount(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection)
         return count > 0
     }
 }

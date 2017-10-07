@@ -138,7 +138,7 @@
     if (!relationship) {
         DDLogWarn(@"%@ not registered!", extensionName);
     }
-    NSUInteger count = [relationship edgeCountWithName:edgeName];
+    NSUInteger count = [relationship edgeCountWithName:edgeName destinationKey:self.messageKey collection:self.messageCollection];
     return count > 0;
 }
 
