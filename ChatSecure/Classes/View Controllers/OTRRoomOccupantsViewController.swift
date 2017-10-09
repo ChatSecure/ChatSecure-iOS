@@ -64,8 +64,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
             if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
                 self.ownOccupant = manager.roomOccupant(forJID:ownJid, realJID:ownJid, inRoom:roomJid)
             }
-            self.fetchMembersList()
         })
+        self.fetchMembersList()
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self

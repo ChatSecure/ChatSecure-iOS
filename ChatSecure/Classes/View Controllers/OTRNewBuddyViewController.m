@@ -274,6 +274,7 @@
             [queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if ([obj.name isEqualToString:otr]) {
                     fingerprint = obj.value;
+                    fingerprint = [fingerprint stringByReplacingOccurrencesOfString:@" " withString:@""];
                     *stop = YES;
                 }
             }];
