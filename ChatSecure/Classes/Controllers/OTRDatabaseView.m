@@ -211,21 +211,9 @@ NSString *OTRPushAccountGroup = @"Account";
     YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)]) {
             id<OTRMessageProtocol> message = object;
-            // Filter out messages that are just URLs and have downloads
-            if (!message.messageText &&
-                !message.messageMediaItemKey &&
-                [message hasExistingDownloadsWithTransaction:transaction]) {
-                return NO;
-            }
-            // Filter out messages that are aesgcm scheme file transfers
-            // and don't have media attached
-            if ([message.messageText containsString:@"aesgcm://"] &&
-                !message.messageMediaItemKey &&
-                !message.messageError) {
-                return NO;
-            }
+            BOOL shouldDisplay = [FileTransferManager shouldDisplayMessage:message transaction:transaction];
+            return shouldDisplay;
         }
-
         return YES;
     }];
     filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName filtering:filtering versionTag:@"6" options:options];

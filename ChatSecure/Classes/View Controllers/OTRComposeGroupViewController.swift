@@ -18,7 +18,7 @@ import OTRAssets
 
 open class OTRComposeGroupViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource, OTRComposeGroupBuddyCellDelegate,OTRYapViewHandlerDelegateProtocol
 {
-    @objc public var delegate:OTRComposeGroupViewControllerDelegate? = nil
+    @objc public weak var delegate:OTRComposeGroupViewControllerDelegate? = nil
     
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
@@ -29,7 +29,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     
     var selectedItems:[OTRXMPPBuddy] = []
     var prototypeCell:OTRComposeGroupBuddyCell?
-    var excludedItems:[String]? = nil
+    var existingItems = Set<String>()
     var waitingForExcludedItems = false
     
     override open func viewDidLoad() {
@@ -46,7 +46,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         prototypeCell = cellNib.instantiate(withOwner: nil, options: nil)[0] as? OTRComposeGroupBuddyCell
         
         if let connection = OTRDatabaseManager.shared.longLivedReadOnlyConnection {
-            self.viewHandler = OTRYapViewHandler(databaseConnection: connection, databaseChangeNotificationName: DatabaseNotificationName.longLivedTransactionChanges)
+            self.viewHandler = OTRYapViewHandler(databaseConnection: connection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
             self.viewHandler?.delegate = self
             self.viewHandler?.setup(OTRFilteredBuddiesName, groups:[OTRBuddyGroup])
         }
@@ -165,14 +165,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             })
             cell.setThread(threadOwner, account: account)
             cell.setChecked(checked: selectedItems.contains(threadOwner))
-            var isExcluded = false
-            if let excludedItems = self.excludedItems, excludedItems.contains(threadOwner.uniqueId) {
-                isExcluded = true
+            var isExistingOccupant = false
+            if existingItems.contains(threadOwner.uniqueId) {
+                isExistingOccupant = true
             }
-            cell.isUserInteractionEnabled = !isExcluded
-            cell.nameLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
-            cell.accountLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
-            cell.identifierLabel.textColor = isExcluded ? UIColor.gray : UIColor.black
+            cell.nameLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
+            cell.accountLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
+            cell.identifierLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
             return cell
         }
         return UITableViewCell()
@@ -192,11 +191,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if !self.waitingForExcludedItems, let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             if !selectedItems.contains(buddy) {
                 selectedItems.append(buddy)
-                collectionView.reloadData()
-                didUpdateCollectionView()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                updateFiltering()
+            } else if let index = selectedItems.index(of: buddy) {
+                selectedItems.remove(at: index)
             }
+            collectionView.reloadData()
+            didUpdateCollectionView()
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            updateFiltering()
         }
     }
     
@@ -218,7 +219,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         }
     }
     
-    open func excludeRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
+    open func setExistingRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
         self.waitingForExcludedItems = true
         DispatchQueue.global().async {
             if let room = room, let viewHandler = viewHandler, let mappings = viewHandler.mappings {
@@ -226,16 +227,12 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
-                            
                             let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                                 buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
                             })
                             if let buddy = buddy {
-                                if self.excludedItems == nil {
-                                    self.excludedItems = []
-                                }
-                                self.excludedItems?.append(buddy.uniqueId)
+                                self.existingItems.insert(buddy.uniqueId)
                             }
                         }
                     }

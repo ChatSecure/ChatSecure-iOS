@@ -11,6 +11,6 @@
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([OTRAppDelegate class]));
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass(OTRAppDelegate.class));
     }
 }

@@ -105,7 +105,7 @@
     cellAddFriends.textLabel.text = ADD_BUDDY_STRING();
     cellAddFriends.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     __weak typeof(self)weakSelf = self;
-    [self.tableViewHeader addStackedSubview:cellAddFriends identifier:ADD_BUDDY_STRING() gravity:OTRVerticalStackViewGravityBottom height:80 callback:^() {
+    [self.tableViewHeader addStackedSubview:cellAddFriends identifier:ADD_BUDDY_STRING() gravity:OTRVerticalStackViewGravityMiddle height:80 callback:^() {
         // TODO: we should migrate to a persistent queue so when
         // you add a buddy offline it will eventually work
         // See: https://github.com/ChatSecure/ChatSecure-iOS/issues/679
@@ -113,7 +113,14 @@
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [strongSelf addBuddy:accounts];
     }];
-
+    // Add the "Join Group" button
+    UITableViewCell *cellJoinGroup = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cellJoinGroup.textLabel.text = JOIN_GROUP_STRING();
+    cellJoinGroup.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [self.tableViewHeader addStackedSubview:cellJoinGroup identifier:JOIN_GROUP_STRING() gravity:OTRVerticalStackViewGravityBottom height:80 callback:^() {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf joinGroup:cellJoinGroup];
+    }];
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
@@ -126,13 +133,13 @@
     [self setupSearchController];
     
     //////// View Handlers /////////
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName longLivedTransactionChanges]];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRFilteredBuddiesName groups:@[OTRBuddyGroup]];
     
-    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName longLivedTransactionChanges]];
+    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
-    NSString *searchViewName = DatabaseExtensionName.buddySearchResultsViewName;
+    NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
     [self.searchViewHandler setup:searchViewName groupBlock:^BOOL(NSString * _Nonnull group, YapDatabaseReadTransaction * _Nonnull transaction) {
         return YES;
     } sortBlock:^NSComparisonResult(NSString * _Nonnull group1, NSString * _Nonnull group2, YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -512,7 +519,7 @@
 - (void) joinGroup:(id)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:JOIN_GROUP_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = XMPP_USERNAME_EXAMPLE_STRING();
+        textField.placeholder = @"room@conference.example.com";
     }];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = [NSString stringWithFormat:@"%@ (%@)", PASSWORD_STRING(), OPTIONAL_STRING()];
@@ -532,6 +539,7 @@
             OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
             if (!xmpp) { return; }
             [xmpp.roomManager joinRoom:roomJid withNickname:account.displayName subject:nil password:pass];
+            [self dismissViewControllerAnimated:YES completion:nil];
         };
         if (accounts.count > 1) {
             OTRChooseAccountViewController *chooser = [[OTRChooseAccountViewController alloc] init];
@@ -653,7 +661,7 @@
         searchString = [NSString stringWithFormat:@"%@*",searchString];
         [self.searchQueue enqueueQuery:searchString];
         [self.searchConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            NSString *searchViewName = DatabaseExtensionName.buddySearchResultsViewName;
+            NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
             [[transaction ext:searchViewName] performSearchWithQueue:self.searchQueue];
         }];
     }

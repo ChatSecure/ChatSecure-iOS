@@ -27,6 +27,8 @@
 /** This dictionary is a temporary holding for setting a room subject. Once the room is created teh subject is set from this dictionary. */
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSString*> *tempRoomSubject;
 
+/** This array is a temporary holding with rooms we should configure once connected */
+@property (nonatomic, strong, readonly) NSMutableArray<NSString*> *roomsToConfigure;
 
 @end
 
@@ -37,6 +39,7 @@
         _mucModule = [[XMPPMUC alloc] init];
         _inviteDictionary = [[NSMutableDictionary alloc] init];
         _tempRoomSubject = [[NSMutableDictionary alloc] init];
+        _roomsToConfigure = [[NSMutableArray alloc] init];
         _rooms = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -83,6 +86,9 @@
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
+        } else {
+            // Clear out roles, we'll getpresence updates once we join
+            [self clearOccupantRolesInRoom:room withTransaction:transaction];
         }
         
         //Other Room properties should be set here
@@ -115,6 +121,20 @@
 {
     XMPPRoom *room = [self roomForJID:jid];
     [room leaveRoom];
+    [self removeRoomForJID:jid];
+    [room removeDelegate:self];
+    [room deactivate];
+}
+
+- (void)clearOccupantRolesInRoom:(OTRXMPPRoom *)room withTransaction:(YapDatabaseReadWriteTransaction * _Nonnull)transaction {
+    //Enumerate of room eges to occupants
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:room.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        
+        OTRXMPPRoomOccupant *occupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        occupant.role = RoomOccupantRoleNone;
+        [occupant saveWithTransaction:transaction];
+    }];
 }
 
 - (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject
@@ -124,7 +144,7 @@
             [self.inviteDictionary setObject:buddiesArray forKey:roomName.bare];
         }];
     }
-    
+    [self.roomsToConfigure addObject:roomName.bare];
     return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
@@ -132,6 +152,19 @@
 {
     XMPPRoom *room = [self roomForJID:roomJID];
     [room inviteUser:user withMessage:message];
+}
+
+- (OTRXMPPRoomOccupant * _Nullable) roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID inRoom:(NSString *)roomJID {
+    XMPPRoom *room = [self roomForJID:[XMPPJID jidWithString:roomJID]];
+    __block OTRXMPPRoomOccupant *occupant = nil;
+    if (room != nil && [room.xmppRoomStorage isKindOfClass:OTRXMPPRoomYapStorage.class]) {
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            NSString *roomJID = room.roomJID.bare;
+            NSString *accountId = room.xmppStream.tag;
+            occupant = [(OTRXMPPRoomYapStorage*)room.xmppRoomStorage roomOccupantForJID:jid realJID:realJID roomJID:roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
+        }];
+    }
+    return occupant;
 }
 
 - (void)inviteBuddies:(NSArray<NSString *> *)buddyUniqueIds toRoom:(XMPPRoom *)room {
@@ -310,17 +343,40 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
-- (void) xmppRoom:(XMPPRoom *)sender didFetchMembersList:(NSArray *)items {
+- (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray *)items {
     DDLogInfo(@"Fetched members list: %@", items);
+    OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
+    
+    NSString *accountId = room.xmppStream.tag;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+
+        [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *jid = [item attributeStringValueForName:@"jid"];
+            if ([jid length]) {
+                // Make sure occupant object exists/is created
+                OTRXMPPRoomOccupant *occupant = [storage roomOccupantForJID:nil realJID:jid roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:NO];
+                if(!occupant) {
+                    occupant = [[OTRXMPPRoomOccupant alloc] init];
+                    occupant.jid = nil;
+                    occupant.realJID = jid;
+                    occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:room.roomJID.bare];
+                    [occupant saveWithTransaction:transaction];
+                }
+            }
+        }];
+    }];
 }
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
-    
-    [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
-    
     [self performBlockAsync:^{
-        //Set Rome Subject
+        //Configure room if we are the creator
+        if ([self.roomsToConfigure containsObject:sender.roomJID.bare]) {
+            [self.roomsToConfigure removeObject:sender.roomJID.bare];
+            [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
+        }
+        
+        //Set Room Subject
         NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
         if (subject) {
             [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
@@ -331,6 +387,19 @@
         NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
         [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
         [self inviteBuddies:buddyUniqueIds toRoom:sender];
+        
+        //Fetch member list
+        [sender fetchMembersList];
+    }];
+}
+
+- (void)xmppRoomDidLeave:(XMPPRoom *)sender {
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:[sender.roomJID bare]];
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+        if (room) {
+            [self clearOccupantRolesInRoom:room withTransaction:transaction];
+        }
     }];
 }
 
@@ -407,11 +476,23 @@
     [membersOnlyField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_membersonly"];
     [membersOnlyField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
 
+    NSXMLElement *getMemberListField = [[NSXMLElement alloc] initWithName:@"field"];
+    [getMemberListField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_getmemberlist"];
+    [getMemberListField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"moderator"]];
+    [getMemberListField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"participant"]];
+
+    NSXMLElement *presenceBroadcastField = [[NSXMLElement alloc] initWithName:@"field"];
+    [presenceBroadcastField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_presencebroadcast"];
+    [presenceBroadcastField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"moderator"]];
+    [presenceBroadcastField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"participant"]];
+
     [form addChild:formTypeField];
     [form addChild:publicField];
     [form addChild:persistentField];
     [form addChild:whoisField];
     [form addChild:membersOnlyField];
+    [form addChild:getMemberListField];
+    [form addChild:presenceBroadcastField];
     
     return form;
 }

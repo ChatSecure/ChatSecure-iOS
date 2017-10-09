@@ -145,10 +145,10 @@ import SignalProtocolObjC
     
     fileprivate func fetchUsername(_ yapKey:String, yapCollection:String, transaction:YapDatabaseReadTransaction) -> String? {
         if let object = transaction.object(forKey: yapKey, inCollection: yapCollection) {
-            if object is OTRAccount {
-                return (object as AnyObject).username
-            } else if object is OTRBuddy {
-                return (object as AnyObject).username
+            if let account = object as? OTRAccount {
+                return account.username
+            } else if let buddy = object as? OTRBuddy {
+                return buddy.username
             }
         }
         return nil

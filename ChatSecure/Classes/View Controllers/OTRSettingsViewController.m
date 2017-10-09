@@ -56,10 +56,13 @@
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
-@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol,OTRSettingDelegate,OTRDonateSettingDelegate>
+@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol,OTRSettingDelegate,OTRDonateSettingDelegate, UIPopoverPresentationControllerDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) UITableView *tableView;
+
+/** This is only non-nil during avatar picking */
+@property (nonatomic, nullable) OTRAttachmentPicker *avatarPicker;
 
 @end
 
@@ -80,7 +83,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [super viewDidLoad];
     
     //User main thread database connection
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName longLivedTransactionChanges]];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRAllAccountDatabaseViewExtensionName groups:@[OTRAllAccountGroup]];
     
@@ -190,7 +193,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
                 [self showAccountDetailsView:account];
             };
             accountCell.avatarButtonAction = ^(UITableViewCell *cell, id sender) {
-                
+                self.avatarPicker = [[OTRAttachmentPicker alloc] initWithParentViewController:self delegate:self];
+                self.avatarPicker.tag = account;
+                [self.avatarPicker showAlertControllerFromSourceView:cell withCompletion:nil];
             };
             accountCell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell = accountCell;
@@ -375,10 +380,21 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #pragma - mark OTRAttachmentPickerDelegate
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info {
-    
+    self.avatarPicker = nil;
+    OTRXMPPAccount *account = attachmentPicker.tag;
+    if (![account isKindOfClass:OTRXMPPAccount.class]) {
+        return;
+    }
+    OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+    if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
+        return;
+    }
+    [xmpp setAvatar:photo completion:nil];
 }
 
-- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL { }
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL {
+    self.avatarPicker = nil;
+}
 
 - (NSArray <NSString *>*)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker preferredMediaTypesForSource:(UIImagePickerControllerSourceType)source
 {

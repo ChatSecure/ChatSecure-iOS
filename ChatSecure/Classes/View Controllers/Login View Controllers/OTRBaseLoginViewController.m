@@ -135,6 +135,10 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         [account saveWithTransaction:transaction];
     }];
     
+    if (self.existingAccount) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    
     // If push isn't enabled, prompt to enable it
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
         [self pushInviteViewController:sender];

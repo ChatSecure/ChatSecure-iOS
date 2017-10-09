@@ -55,7 +55,7 @@
 {
     NSArray *edges = nil;
     if (self.buddyUniqueId) {
-        NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
         YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.buddyUniqueId
                                                                                 collection:[OTRBuddy collection]
@@ -65,7 +65,7 @@
     }
     
     if (self.mediaItemUniqueId) {
-        NSString *edgeName = RelationshipEdgeName.messageMediaEdgeName;
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
         YapDatabaseRelationshipEdge *mediaEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.mediaItemUniqueId
                                                                                 collection:[OTRMediaItem collection]
@@ -94,10 +94,13 @@
 
 /**  If available, existing instances will be returned. */
 - (NSArray<id<OTRDownloadMessage>>*) existingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    if (!self.isMessageIncoming) {
+        return @[];
+    }
     id<OTRMessageProtocol> message = self;
     NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.download;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
     if (!relationship) {
         DDLogWarn(@"%@ not registered!", extensionName);
@@ -113,6 +116,9 @@
 
 /** Returns an unsaved array of downloadable URLs. */
 - (NSArray<id<OTRDownloadMessage>>*) downloads {
+    if (!self.isMessageIncoming) {
+        return @[];
+    }
     id<OTRMessageProtocol> message = self;
     NSMutableArray<id<OTRDownloadMessage>> *downloadMessages = [NSMutableArray array];
     [self.downloadableNSURLs enumerateObjectsUsingBlock:^(NSURL * _Nonnull url, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -123,17 +129,28 @@
 }
 
 - (BOOL) hasExistingDownloadsWithTransaction:(YapDatabaseReadTransaction*)transaction {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.download;
+    if (!self.isMessageIncoming) {
+        return NO;
+    }
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameDownload];
     YapDatabaseRelationshipTransaction *relationship = [transaction ext:extensionName];
     if (!relationship) {
         DDLogWarn(@"%@ not registered!", extensionName);
     }
-    NSUInteger count = [relationship edgeCountWithName:edgeName];
+    NSUInteger count = [relationship edgeCountWithName:edgeName destinationKey:self.messageKey collection:self.messageCollection];
     return count > 0;
 }
 
 #pragma - mark OTRMessage Protocol methods
+
+- (NSDate*) messageDate {
+    return self.date;
+}
+
+- (void) setMessageDate:(NSDate *)messageDate {
+    self.date = messageDate;
+}
 
 - (BOOL) isMessageDelivered {
     return NO;
@@ -157,16 +174,17 @@
     return self.messageSecurityInfo.messageSecurity;
 }
 
+- (void) setMessageSecurity:(OTRMessageTransportSecurity)messageSecurity {
+    OTRMessageEncryptionInfo *info = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:messageSecurity];
+    self.messageSecurityInfo = info;
+}
+
 - (NSString *)messageKey {
     return self.uniqueId;
 }
 
 - (NSString *)messageCollection {
     return [self.class collection];
-}
-
-- (NSDate *)messageDate {
-    return  self.date;
 }
 
 - (NSString *)threadId {
@@ -231,8 +249,8 @@
 
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
@@ -245,8 +263,8 @@
 
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:uniqueAccountId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [self deleteAllMessagesForBuddyId:edge.sourceKey transaction:transaction];
     }];
@@ -272,8 +290,9 @@
     }
 }
 
-+ (instancetype _Nullable)duplicateMessage:(nonnull OTRBaseMessage *)message {
-    OTRBaseMessage *newMessage = [[[message class] alloc] init];
+- (id<OTRMessageProtocol>)duplicateMessage {
+    OTRBaseMessage *message = self;
+    OTRBaseMessage *newMessage = [[[self class] alloc] init];
     newMessage.text = message.text;
     newMessage.error = message.error;
     newMessage.mediaItemUniqueId = message.mediaItemUniqueId;

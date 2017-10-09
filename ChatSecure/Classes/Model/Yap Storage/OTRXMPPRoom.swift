@@ -39,6 +39,15 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    public var lastMessageIdentifier: String? {
+        get {
+            return self.lastRoomMessageId
+        }
+        set(lastMessageIdentifier) {
+            self.lastRoomMessageId = lastMessageIdentifier
+        }
+    }
+    
     public func account(with transaction: YapDatabaseReadTransaction) -> OTRAccount? {
         return OTRAccount.fetchObject(withUniqueID: threadAccountIdentifier(), transaction: transaction)
     }

@@ -163,8 +163,6 @@ open class UserProfileViewController: XLFormViewController {
         let plaintextOtrRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Opportunistic_OTR())
         let otrRow = XLFormRowDescriptor(tag: OTRRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OTR")
         let omemoRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO")
-        let omemoOtrRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO & OTR")
-
         
         var hasDevices = false
         
@@ -176,7 +174,6 @@ open class UserProfileViewController: XLFormViewController {
         
         if (!hasDevices) {
             omemoRow.disabled = NSNumber(value: true as Bool)
-            omemoOtrRow.disabled = NSNumber(value: true as Bool)
         }
         
         let trueValue = NSNumber(value: true as Bool)
@@ -194,13 +191,13 @@ open class UserProfileViewController: XLFormViewController {
             omemoRow.value = trueValue
             break
         case .omemOandOTR:
-            omemoOtrRow.value = trueValue
+            omemoRow.value = trueValue
             break
         case .plaintextWithOTR:
             plaintextOtrRow.value = trueValue
         }
         
-        let formRows = [bestAvailableRow, plaintextOnlyRow, plaintextOtrRow, otrRow, omemoRow, omemoOtrRow]
+        let formRows = [bestAvailableRow, plaintextOnlyRow, plaintextOtrRow, otrRow, omemoRow]
         
         var currentRow: XLFormRowDescriptor? = nil
         var rowsToDeselect: NSMutableSet = NSMutableSet()
@@ -246,8 +243,6 @@ open class UserProfileViewController: XLFormViewController {
                 preferredSecurity = .bestAvailable
             } else if (plaintextOtrRow.value as AnyObject?)?.boolValue == true {
                 preferredSecurity = .plaintextWithOTR
-            } else if (omemoOtrRow.value as AnyObject?)?.boolValue == true {
-                preferredSecurity = .omemOandOTR
             }
             
             OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in

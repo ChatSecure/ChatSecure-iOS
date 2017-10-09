@@ -30,9 +30,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open var viewHandler:OTRYapViewHandler?
     open var room:OTRXMPPRoom?
+    open var ownOccupant:OTRXMPPRoomOccupant?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+    open var crownImage:UIImage?
     
     static let CellIdentifier = "Cell"
     
@@ -59,11 +61,15 @@ open class OTRRoomOccupantsViewController: UIViewController {
     public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
+            if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
+                self.ownOccupant = manager.roomOccupant(forJID:ownJid, realJID:ownJid, inRoom:roomJid)
+            }
         })
+        self.fetchMembersList()
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
-            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName, groups: [roomKey])
+            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
         }
     }
     
@@ -73,13 +79,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
         tableHeaderView = OTRVerticalStackView()
         tableFooterView = OTRVerticalStackView()
         
-        let headerCells = [
+        var headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
-            OTRRoomOccupantsViewController.HeaderCellAddFriends,
             OTRRoomOccupantsViewController.HeaderCellMute,
             OTRRoomOccupantsViewController.HeaderCellUnmute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
+
+        // Add friends depends on the role
+        if let ownOccupant = self.ownOccupant, ownOccupant.role.canInviteOthers() {
+            headerCells.insert(OTRRoomOccupantsViewController.HeaderCellAddFriends, at: 1)
+        }
         
         let footerCells = [
             OTRRoomOccupantsViewController.FooterCellLeave
@@ -111,9 +121,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
             largeAvatarView.image = image
         }
         
+        self.crownImage = UIImage(named: "crown", in: OTRAssets.resourcesBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(OTRBuddyInfoCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -183,7 +195,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             
             let font:UIFont? = UIFont(name: "Material Icons", size: 24)
             let button = UIButton(type: UIButtonType.custom)
-            if (font != nil) {
+            if font != nil, let ownOccupant = self.ownOccupant, ownOccupant.role.canModifySubject() {
                 button.titleLabel?.font = font
                 button.setTitle("", for: UIControlState())
                 button.setTitleColor(UIColor.black, for: UIControlState())
@@ -266,7 +278,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         let storyboard = UIStoryboard(name: "OTRComposeGroup", bundle: OTRAssets.resourcesBundle)
         if let vc = storyboard.instantiateInitialViewController() as? OTRComposeGroupViewController {
             vc.delegate = self
-            vc.excludeRoomOccupants(viewHandler: self.viewHandler, room: self.room)
+            vc.setExistingRoomOccupants(viewHandler: self.viewHandler, room: self.room)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -304,7 +316,7 @@ extension OTRRoomOccupantsViewController {
         return xmpp?.roomManager
     }
     
-    fileprivate func fetchMembersList(_ sender: Any) {
+    fileprivate func fetchMembersList() {
         guard let xmppRoom = xmppRoom() else { return }
         xmppRoom.fetchMembersList()
     }
@@ -333,7 +345,8 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:OTRBuddyInfoCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCell
+        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
+        cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
@@ -341,22 +354,34 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
-            } else if let roomJid = roomOccupant.jid,
-                let jidStr = roomOccupant.realJID,
-                let displayName = roomOccupant.roomName {
+                if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
+                    cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
+                }
+            } else if let roomJid = room.jid {
                 // Create temporary buddy
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = jidStr
-                buddy.displayName = displayName
+                buddy.username = jid
+                buddy.displayName = roomOccupant.roomName ?? jid
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
                     status = .offline
                 }
                 OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
                 cell.setThread(buddy, account: nil)
-                DDLogInfo("No trusted buddy found for occupant \(roomOccupant)")
+            }
+            
+            if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
+                cell.setChecked(checked: true)
+            } else {
+                cell.setChecked(checked: false)
+            }
+            if roomOccupant.role == .none {
+                // Not present in the room
+                cell.nameLabel.textColor = UIColor.lightGray
+                cell.identifierLabel.textColor = UIColor.lightGray
+                cell.accountLabel.textColor = UIColor.lightGray
             }
         }
         cell.selectionStyle = .none

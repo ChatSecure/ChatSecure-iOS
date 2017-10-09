@@ -30,7 +30,6 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open static let roomEdgeName = "OTRRoomMesageEdgeName"
     
     open var roomJID:String?
-    
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     open var senderJID:String?
     open var displayName:String?
@@ -42,7 +41,6 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var read = true
     open var error:Error?
     open var mediaItemId: String?
-    
     open var roomUniqueId:String?
     
     open override var hash: Int {
@@ -65,6 +63,21 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public func duplicateMessage() -> OTRMessageProtocol {
+        let newMessage = OTRXMPPRoomMessage()!
+        newMessage.messageText = self.messageText
+        newMessage.messageError = self.messageError
+        newMessage.messageMediaItemKey = self.messageMediaItemKey
+        newMessage.roomUniqueId = self.roomUniqueId
+        newMessage.roomJID = self.roomJID
+        newMessage.senderJID = self.senderJID
+        newMessage.displayName = self.displayName
+        newMessage.messageSecurity = self.messageSecurity
+        newMessage.state = .needsSending
+        newMessage.xmppId = UUID().uuidString
+        return newMessage
+    }
+    
     public var isMessageSent: Bool {
         return state == .pendingSent
             || state == .sent
@@ -124,7 +137,12 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     }
     
     public var messageSecurity: OTRMessageTransportSecurity {
-        return .plaintext;
+        get {
+            return .plaintext;
+        }
+        set {
+            // currently only plaintext is supported
+        }
     }
     
     public var remoteMessageId: String? {
@@ -220,7 +238,7 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
             edges.append(contentsOf: superEdges)
         }
         if let parentKey = self.parentMessageKey, let parentCollection = self.parentMessageCollection {
-            let edgeName = RelationshipEdgeName.download
+            let edgeName = RelationshipEdgeName.download.name()
             let parentEdge = YapDatabaseRelationshipEdge(name: edgeName, destinationKey: parentKey, collection: parentCollection, nodeDeleteRules: [.notifyIfSourceDeleted, .notifyIfDestinationDeleted])
             edges.append(parentEdge)
         }
@@ -230,6 +248,9 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
 
 extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     public func downloads() -> [OTRDownloadMessage] {
+        guard self.isMessageIncoming else {
+            return []
+        }
         var downloads: [OTRDownloadMessage] = []
         for url in self.downloadableURLs {
             let download = OTRGroupDownloadMessage.download(withParentMessage: self, url: url)
@@ -239,13 +260,16 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     }
     
     public func existingDownloads(with transaction: YapDatabaseReadTransaction) -> [OTRDownloadMessage] {
+        guard self.isMessageIncoming else {
+            return []
+        }
         var downloads: [OTRDownloadMessage] = []
-        let extensionName = DatabaseExtensionName.relationshipExtensionName
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
             DDLogWarn("\(extensionName) not registered!");
             return []
         }
-        let edgeName = RelationshipEdgeName.download
+        let edgeName = YapDatabaseConstants.edgeName(.download)
         relationship.enumerateEdges(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection) { (edge, stop) in
             if let download = OTRGroupDownloadMessage.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
                 downloads.append(download)
@@ -255,13 +279,16 @@ extension OTRXMPPRoomMessage: OTRDownloadMessageProtocol {
     }
     
     public func hasExistingDownloads(with transaction: YapDatabaseReadTransaction) -> Bool {
-        let extensionName = DatabaseExtensionName.relationshipExtensionName
+        guard self.isMessageIncoming else {
+            return false
+        }
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
         guard let relationship = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
             DDLogWarn("\(extensionName) not registered!");
             return false
         }
-        let edgeName = RelationshipEdgeName.download
-        let count = relationship.edgeCount(withName: edgeName)
+        let edgeName = YapDatabaseConstants.edgeName(.download)
+        let count = relationship.edgeCount(withName: edgeName, destinationKey: self.messageKey, collection: self.messageCollection)
         return count > 0
     }
 }
@@ -326,6 +353,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
 }
 
 public extension OTRXMPPRoomMessage {
+    /// Marks our sent messages as delivered when we receive a matching receipt
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
         guard message.isGroupChatMessage,
             message.hasReceiptResponse(),
@@ -351,6 +379,7 @@ public extension OTRXMPPRoomMessage {
         }
     }
     
+    /// Sends a response receipt when receiving a delivery receipt request
     @objc public static func handleDeliveryReceiptRequest(message: XMPPMessage, xmppStream:XMPPStream) {
         guard message.hasReceiptRequest(),
             !message.hasReceiptResponse(),

@@ -1171,5 +1171,8 @@
     }, "ACTIVE_STRING": {
         "comment": "This will be displayed in the UI as 'Active 10m ago' ",
         "string": "Active"
+    }, "GROUP_INFO_YOU": {
+        "comment": "This will be shown after your own JID in the group profile view",
+        "string": "you"
     }
 }

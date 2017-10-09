@@ -247,11 +247,14 @@
     OTRAccount *account = self.xmppManager.account;
 
     if (newStatus == OTRLoginStatusAuthenticated) {
+        // Only call completion once
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         if (self.completion) {
             self.completion(account,nil);
         }
     }
     else if (error) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         if (self.completion) {
             self.completion(account,error);
         }

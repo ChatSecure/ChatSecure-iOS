@@ -30,28 +30,37 @@
     return self;
 }
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction
+- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction alwaysReturnObject:(BOOL)alwaysReturnObject
 {
     __block OTRXMPPRoomOccupant *occupant = nil;
         
     OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
     //Enumerate of room eges to occupants
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:databaseRoom.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         
         OTRXMPPRoomOccupant *tempOccupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if([tempOccupant.jid isEqualToString:jid]) {
-            
+        if((realJID != nil && [tempOccupant.realJID isEqualToString:realJID]) || (jid != nil && [tempOccupant.jid isEqualToString:jid])) {
             occupant = tempOccupant;
             *stop = YES;
         }
     }];
     
-    if(!occupant) {
+    if(!occupant && alwaysReturnObject) {
         occupant = [[OTRXMPPRoomOccupant alloc] init];
         occupant.jid = jid;
+        occupant.realJID = realJID;
         occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
     }
+    
+    // Make sure we fill in the jids if we haven't got them already (note: we might well assign nil to them here, basically a no-op, but if we have them they will be set)
+    if (!occupant.jid) {
+        occupant.jid = jid;
+    }
+    if (!occupant.realJID) {
+        occupant.realJID = realJID;
+    }
+    
     return occupant;
 }
 
@@ -98,18 +107,24 @@
     XMPPJID *fromJID = [message from];
     
     __block OTRXMPPRoomMessage *databaseMessage = nil;
+    __block OTRXMPPRoom *databaseRoom = nil;
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
-        //[OTRXMPPRoomMessage handleDeliveryReceiptResponseWithMessage:message transaction:transaction];
+        // Sends a response receipt when receiving a delivery receipt request
         [OTRXMPPRoomMessage handleDeliveryReceiptRequestWithMessage:message xmppStream:room.xmppStream];
-        
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
             return;
         }
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        if(!databaseRoom) {
+            databaseRoom = [[OTRXMPPRoom alloc] init];
+            databaseRoom.lastRoomMessageId = @""; // Hack to make it show up in list
+            databaseRoom.accountUniqueId = accountId;
+            databaseRoom.jid = roomJID;
+        }
         if (databaseRoom.joined &&
             ([message elementForName:@"x" xmlns:XMPPMUCUserNamespace] ||
             [message elementForName:@"x" xmlns:@"jabber:x:conference"])) {
@@ -129,8 +144,11 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         databaseMessage.displayName = occupant.realJID;
+        if (!databaseMessage.displayName) {
+            databaseMessage.displayName = [fromJID bare];
+        }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
@@ -146,7 +164,12 @@
         if(databaseMessage) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
             [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
-            [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+            // If delayedDeliveryDate is set we are retrieving history. Don't show
+            // notifications in that case. Also, don't show notifications for archived
+            // rooms.
+            if (!message.delayedDeliveryDate && !databaseRoom.isArchived) {
+                [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+            }
         }
     }];
 }
@@ -179,6 +202,7 @@
     NSArray *children = [presence children];
     __block XMPPJID *buddyJID = nil;
     __block NSString *buddyRole = nil;
+    __block NSString *buddyAffiliation = nil;
     [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([[element xmlns] containsString:XMPPMUCNamespace]) {
             NSArray *items = [element children];
@@ -186,9 +210,10 @@
                 NSString *jid = [item attributeStringValueForName:@"jid"];
                 if ([jid length]) {
                     buddyJID = [XMPPJID jidWithString:jid];
+                    buddyRole = [item attributeStringValueForName:@"role"];
+                    buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
                     *stop = YES;
                 }
-                buddyRole = [item attributeStringValueForName:@"role"];
             }];
             *stop = YES;
         }
@@ -196,29 +221,48 @@
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
+        // Get the real JID, need to find occupant by EITHER room jid or real JID
+        NSString *realJID = nil;
+        if (buddyJID) {
+            realJID = buddyJID.bare;
+        } else {
+            // Not really sure what's going on here
+            realJID = [presenceJID resource];
+        }
         
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:realJID roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
             occupant.available = YES;
         }
         
-        if (buddyJID) {
-            occupant.realJID = buddyJID.bare;
-        } else {
-            // Not really sure what's going on here
-            occupant.realJID = [presenceJID resource];
-        }
-        
         occupant.roomName = [presenceJID resource];
         
-        if ([[presence type] isEqualToString:@"unavailable"] && [buddyRole isEqualToString:@"none"]) {
-            // Buddy left the room!
-            [occupant removeWithTransaction:transaction];
+        // Role
+        if ([buddyRole isEqualToString:@"moderator"]) {
+            occupant.role = RoomOccupantRoleModerator;
+        } else if ([buddyRole isEqualToString:@"participant"]) {
+            occupant.role = RoomOccupantRoleParticipant;
+        } else if ([buddyRole isEqualToString:@"visitor"]) {
+            occupant.role = RoomOccupantRoleVisitor;
         } else {
-            [occupant saveWithTransaction:transaction];
+            occupant.role = RoomOccupantRoleNone;
         }
+
+        // Affiliation
+        if ([buddyAffiliation isEqualToString:@"owner"]) {
+            occupant.affiliation = RoomOccupantAffiliationOwner;
+        } else if ([buddyAffiliation isEqualToString:@"admin"]) {
+            occupant.affiliation = RoomOccupantAffiliationAdmin;
+        } else if ([buddyAffiliation isEqualToString:@"member"]) {
+            occupant.affiliation = RoomOccupantAffiliationMember;
+        } else if ([buddyAffiliation isEqualToString:@"outcast"]) {
+            occupant.affiliation = RoomOccupantAffiliationOutcast;
+        } else {
+            occupant.affiliation = RoomOccupantAffiliationNone;
+        }
+        [occupant saveWithTransaction:transaction];
     }];
 }
 

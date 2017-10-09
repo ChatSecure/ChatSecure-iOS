@@ -28,6 +28,10 @@ open class PushMessage: OTRYapDatabaseObject {
 }
 
 extension PushMessage: OTRMessageProtocol {
+    public func duplicateMessage() -> OTRMessageProtocol {
+        return PushMessage()
+    }
+    
     public var isMessageSent: Bool {
         return true
     }
@@ -100,7 +104,10 @@ extension PushMessage: OTRMessageProtocol {
     }
     
     public var messageSecurity: OTRMessageTransportSecurity {
-        return .plaintext
+        get {
+            return .plaintext
+        }
+        set {}
     }
     
     public var isMessageRead: Bool {
@@ -108,7 +115,12 @@ extension PushMessage: OTRMessageProtocol {
     }
     
     public var messageDate: Date {
-        return self.pushDate
+        set {
+            self.pushDate = newValue
+        }
+        get {
+            return self.pushDate
+        }
     }
     
     public var remoteMessageId: String? {

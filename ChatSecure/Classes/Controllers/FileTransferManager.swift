@@ -27,6 +27,7 @@ extension UIImage {
         }
     }
      struct Quality {
+        static let low = Quality(initial: 0.4, decrementFactor: 0.65)
         static let medium = Quality(initial: 0.65, decrementFactor: 0.65)
         static let high = Quality(initial: 0.75, decrementFactor: 0.75)
         
@@ -36,8 +37,8 @@ extension UIImage {
         let decrementFactor: CGFloat
     }
     func jpegData(dataSize: DataSize,
-                  resize: Quality = Quality.high,
-                  jpeg: Quality = Quality.high,
+                  resize: Quality = Quality.medium,
+                  jpeg: Quality = Quality.medium,
                   maxTries: UInt = 10) -> Data? {
         let image = self
         var sizeInBytes: UInt = 0
@@ -192,7 +193,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     private func upload(media: OTRMediaItem,
-                        data: Data,
+                        data inData: Data,
                         shouldEncrypt: Bool,
                  filename: String,
                  contentType: String,
@@ -205,6 +206,18 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 }
                 return
             }
+            var data = inData
+            
+            // When resending images, sometimes we need to recompress them
+            // to fit the max upload limit
+            if UInt(data.count) > service.maxSize,
+                let _ = media as? OTRImageItem,
+                let image = UIImage(data: inData),
+                let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize), resize: UIImage.Quality.medium, jpeg: UIImage.Quality.medium, maxTries: 10)
+                {
+                    data = imageData
+            }
+            
             if UInt(data.count) > service.maxSize {
                 DDLogError("HTTP Upload exceeds max size \(data.count) > \(service.maxSize)")
                 self.callbackQueue.async {
@@ -390,13 +403,14 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                         message.save(with: transaction)
                     }
                 })
-                if UInt(ourImageData.count) <= service.maxSize {
-                    self.send(mediaItem: imageItem, prefetchedData: ourImageData, message: message)
-                    return
-                } else if let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize), resize: UIImage.Quality.medium, jpeg: UIImage.Quality.medium, maxTries: 10) {
+                if let imageData = image.jpegData(dataSize: .maxBytes(service.maxSize), resize: UIImage.Quality.medium, jpeg: UIImage.Quality.medium, maxTries: 10) {
                     self.send(mediaItem: imageItem, prefetchedData: imageData, message: message)
                 } else {
                     DDLogError("Could not make JPEG out of image! Bad size")
+                    message.messageError = FileTransferError.exceedsMaxSize
+                    self.connection.readWrite { transaction in
+                        message.save(with: transaction)
+                    }
                 }
             }, completionQueue: self.internalQueue)
         }
@@ -529,6 +543,7 @@ extension FileTransferManager {
                         }
                         download.save(with: transaction)
                     }
+                    message.touch(with: transaction)
                 })
             }
             if disableAutomaticURLFetching {
@@ -863,5 +878,37 @@ public extension String {
             return false
         }
         return urls
+    }
+}
+
+public extension FileTransferManager {
+    /// Returns whether or not message should be displayed or hidden from collection. Single incoming URLs should be hidden, for example.
+    @objc public static func shouldDisplayMessage(_ message: OTRMessageProtocol, transaction: YapDatabaseReadTransaction) -> Bool {
+        // Always show media messages
+        if message.messageMediaItemKey != nil {
+            return true
+        }
+        // Always show downloads
+        if message is OTRDownloadMessage {
+            return true
+        }
+        // Hide non-media messages that have no text
+        guard let messageText = message.messageText else {
+            return false
+        }
+        
+        // Filter out messages that are aesgcm scheme file transfers
+        if messageText.contains("aesgcm://"),
+            message.messageError == nil {
+            return false
+        }
+        
+        // Filter out messages that are just URLs and have downloads
+        if messageText.isSingleURLOnly,
+            message.hasExistingDownloads(with: transaction) {
+            return false
+        }
+
+        return true
     }
 }

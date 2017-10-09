@@ -197,7 +197,7 @@ class PushStorage: NSObject, PushStorageProtocol {
                 return
             }
             
-            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName) as? YapDatabaseRelationshipTransaction {
+            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
                 relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection, using: { (edge, stop) -> Void in
                     
                     if let tokenContainer = transaction.object(forKey: edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
@@ -270,7 +270,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     func numberOfTokensForBuddy(_ buddyKey: String, createdByThisAccount: Bool) -> Int {
         var count = 0
         self.databaseConnection.read { (transaction) -> Void in
-            guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName) as? YapDatabaseRelationshipTransaction else {
+            guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
                 return
             }
             relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection, using: { (edge, stop) -> Void in
@@ -306,7 +306,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     func buddy(_ token: String) -> OTRBuddy? {
         var buddy:OTRBuddy? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName) as? YapDatabaseRelationshipTransaction {
+            if let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction {
                 relationshipTransaction.enumerateEdges(withName: kBuddyTokenRelationshipEdgeName, sourceKey: token, collection: TokenContainer.collection, using: { (edge, stop) -> Void in
                     buddy = transaction.object(forKey: edge.destinationKey, inCollection: edge.destinationCollection) as? OTRBuddy
                     if buddy != nil {

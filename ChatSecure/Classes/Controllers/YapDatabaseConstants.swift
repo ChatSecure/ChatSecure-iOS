@@ -8,40 +8,90 @@
 
 import Foundation
 
-public class DatabaseExtensionName: NSObject {
-    public static let groupOccupantsViewName = "GroupOccupantsViewName"
-    public static let buddyDeleteActionViewName = "BuddyDeleteActionViewName"
-    public static let relationshipExtensionName = "OTRYapDatabaseRelationshipName"
-    public static let actionManagerName = "OTRYapDatabaseActionManager"
-    public static let secondaryIndexName = "OTRYapDatabseMessageIdSecondaryIndexExtension"
-    public static let buddyFTSExtensionName = "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
-    public static let buddySearchResultsViewName = "DatabaseExtensionName.BuddySearchResultsView"
-    public static let messageQueueBrokerViewName = "DatabaseExtensionName.MessageQueueBrokerViewName"
+@objc public enum DatabaseExtensionName: Int {
+    case groupOccupantsViewName
+    case buddyDeleteActionViewName
+    case relationshipExtensionName
+    case actionManagerName
+    case secondaryIndexName
+    case buddyFTSExtensionName
+    case buddySearchResultsViewName
+    case messageQueueBrokerViewName
+    
+    public func name() -> String {
+        switch self {
+            case .groupOccupantsViewName: return "GroupOccupantsViewName"
+            case .buddyDeleteActionViewName: return "BuddyDeleteActionViewName"
+            case .relationshipExtensionName: return "OTRYapDatabaseRelationshipName"
+            case .actionManagerName: return "OTRYapDatabaseActionManager"
+            case .secondaryIndexName: return "OTRYapDatabseMessageIdSecondaryIndexExtension"
+            case .buddyFTSExtensionName: return "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
+            case .buddySearchResultsViewName: return "DatabaseExtensionName.BuddySearchResultsView"
+            case .messageQueueBrokerViewName: return "DatabaseExtensionName.MessageQueueBrokerViewName"
+        }
+    }
 }
 
-public class RelationshipEdgeName: NSObject {
-    public static let buddyAccountEdgeName = "account"
-    public static let subscriptionRequestAccountEdgeName = "OTRXMPPPresenceSubscriptionRequestEdges.account"
-    public static let messageBuddyEdgeName = "buddy"
-    public static let messageMediaEdgeName = "media"
-    public static let omemoDeviceEdgeName = "OmemoDeviceEdgeName"
-    public static let signalSignedPreKey = "SignalSignedPreKey"
-    public static let messageActionEdgeName = "MessageActionEdgeName"
-    public static let buddyActionEdgeName = "BuddyActionEdgeName"
-    /// for OTRDownloadMessage -> OTRBaseMessage
-    public static let download = "download"
+@objc public enum RelationshipEdgeName: Int {
+    case buddyAccountEdgeName
+    case subscriptionRequestAccountEdgeName
+    case messageBuddyEdgeName
+    case messageMediaEdgeName
+    case omemoDeviceEdgeName
+    case signalSignedPreKey
+    case messageActionEdgeName
+    case buddyActionEdgeName
+    case download // for OTRDownloadMessage -> OTRBaseMessage
+    
+    public func name() -> String {
+        switch self {
+            case .buddyAccountEdgeName: return "account"
+            case .subscriptionRequestAccountEdgeName: return "OTRXMPPPresenceSubscriptionRequestEdges.account"
+            case .messageBuddyEdgeName: return "buddy"
+            case .messageMediaEdgeName: return "media"
+            case .omemoDeviceEdgeName: return "OmemoDeviceEdgeName"
+            case .signalSignedPreKey: return "SignalSignedPreKey"
+            case .messageActionEdgeName: return "MessageActionEdgeName"
+            case .buddyActionEdgeName: return "BuddyActionEdgeName"
+            case .download: return "download"
+        }
+    }
 }
 
 public class DatabaseNotificationName:NSObject {
-    public static let longLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
+    public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
 }
 
-public class DatabaseNotificationKey:NSObject {
-    public static let extensionName = "DatabaseNotificationKey.ExtensionName"
-    public static let connectionChanges = "DatabaseNotificationKey.ConnectionChanges"
+open class DatabaseNotificationKey:NSObject {
+    open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
+    open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
 }
 
-public class BuddyFTSColumnName: NSObject {
-    public static let username = "username"
-    public static let displayName = "displayName"
+@objc public enum BuddyFTSColumnName:Int {
+    case username
+    case displayName
+    
+    public func name() -> String {
+        switch self {
+        case .username: return "username"
+        case .displayName: return "displayName"
+        }
+    }
+}
+
+/// This is for briding to obj-c. Looking for a better way of using swift enums and stirngs.
+@objc open class YapDatabaseConstants: NSObject {
+
+    open class func edgeName(_ edgeName:RelationshipEdgeName) -> String {
+        return edgeName.name()
+    }
+    
+    open class func extensionName(_ extensionName:DatabaseExtensionName) -> String {
+        return extensionName.name()
+    }
+    
+    open class func buddyFTSColumnName(_ columnName:BuddyFTSColumnName) -> String {
+        return columnName.name()
+    }
+    
 }

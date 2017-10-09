@@ -22,6 +22,8 @@ install:
   - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
   - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
+  - mkdir -p ./Carthage/Build/iOS/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Carthage-iOS.zip -d ./Carthage/Build
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
   - mv ./Submodules/CPAProxy/CPAProxyDependencies ./Submodules/CPAProxy/CPAProxyDependencies-iOS
   - cp -r ./Submodules/CPAProxy/CPAProxyDependencies-iOS ./Submodules/CPAProxy/CPAProxyDependencies-macOS
@@ -29,10 +31,11 @@ install:
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
-  - carthage update --platform ios --cache-builds
+  # Skip re-building of Carthage dependencies in favor of using precompiled
+  # - carthage update --platform ios --cache-builds
   - bundle exec pod repo update
   - bundle exec pod install
 script:
   - set -o pipefail
-  - travis_retry xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" test | xcpretty -c
+  - xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" test | xcpretty -c
   

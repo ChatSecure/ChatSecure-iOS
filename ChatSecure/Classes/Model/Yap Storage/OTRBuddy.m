@@ -76,8 +76,8 @@
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.messageBuddyEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
     NSUInteger numberOfMessages = [[transaction ext:extensionName] edgeCountWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection]];
     return (numberOfMessages > 0);
 }
@@ -197,6 +197,14 @@
 
 #pragma - mark OTRThreadOwner Methods
 
+- (NSString*) lastMessageIdentifier {
+    return self.lastMessageId;
+}
+
+- (void) setLastMessageIdentifier:(NSString *)lastMessageIdentifier {
+    self.lastMessageId = lastMessageIdentifier;
+}
+
 - (NSString *)threadName
 {
     NSString *threadName = [self.displayName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -269,7 +277,7 @@
 {
     NSArray *edges = nil;
     if (self.accountUniqueId) {
-        NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
         YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                               destinationKey:self.accountUniqueId
                                                                                   collection:[OTRAccount collection]
@@ -293,8 +301,8 @@
 {
     __block OTRBuddy *finalBuddy = nil;
     
-    NSString *extensionName = DatabaseExtensionName.relationshipExtensionName;
-    NSString *edgeName = RelationshipEdgeName.buddyAccountEdgeName;
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         //Some how we're getting OTRXMPPPresensceSubscritionreuest
         OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];

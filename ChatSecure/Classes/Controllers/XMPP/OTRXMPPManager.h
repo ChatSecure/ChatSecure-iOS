@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
  The best way to check for changes is to listen for Yap Database changes on the account object. 
  The completion block is called once the image is uploaded and the server responds.
  */
-- (void)setAvatar:(UIImage *)newImage completion:(void (^)(BOOL success))completion;
+- (void)setAvatar:(UIImage *)newImage completion:(void (^ _Nullable)(BOOL success))completion;
 
 /** Force a vCard update (by manipulating pixel values in the avatar image)
  */
