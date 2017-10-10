@@ -282,10 +282,10 @@
  * Invoked when the extension needs values from a previous session.
  * This method is used to get values needed in order to resume a previous stream.
  **/
-- (void)getLastHandledByClient:(uint32_t *)lastHandledByClientPtr
-           lastHandledByServer:(uint32_t *)lastHandledByServerPtr
-        pendingOutgoingStanzas:(NSArray * __autoreleasing *)pendingOutgoingStanzasPtr
-                     forStream:(XMPPStream *)stream
+- (void)getLastHandledByClient:(uint32_t * _Nullable)lastHandledByClientPtr
+           lastHandledByServer:(uint32_t * _Nullable)lastHandledByServerPtr
+        pendingOutgoingStanzas:(NSArray<XMPPStreamManagementOutgoingStanza*> * _Nullable __autoreleasing * _Nullable)pendingOutgoingStanzasPtr
+                     forStream:(XMPPStream *)stream;
 {
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRStreamManagementStorageObject *storageObject = [OTRStreamManagementStorageObject fetchObjectWithUniqueID:[self accountUniqueIdForStream:stream] transaction:transaction];

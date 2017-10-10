@@ -8,6 +8,8 @@
 
 #import "OTRYapDatabaseObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+@class XMPPStreamManagementOutgoingStanza;
 @interface OTRStreamManagementStorageObject : OTRYapDatabaseObject
 
 //Use account uniqueId as the actual unique for faster lookup
@@ -15,8 +17,9 @@
 @property (nonatomic) uint32_t timeout;
 @property (nonatomic) uint32_t lastHandledByClient;
 @property (nonatomic) uint32_t lastHandledByServer;
-@property (nonatomic, strong) NSDate *lastDisconnectDate;
-@property (nonatomic, strong) NSString *resumptionId;
-@property (nonatomic, strong) NSArray *pendingOutgoingStanzasArray;
+@property (nonatomic, strong, nullable) NSDate *lastDisconnectDate;
+@property (nonatomic, strong, nullable) NSString *resumptionId;
+@property (nonatomic, strong, nullable) NSArray<XMPPStreamManagementOutgoingStanza*> *pendingOutgoingStanzasArray;
 
 @end
+NS_ASSUME_NONNULL_END

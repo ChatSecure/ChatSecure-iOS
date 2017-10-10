@@ -22,14 +22,14 @@ import YapDatabase
         self.databaseConnection = databaseConnection
     }
     
-    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, wasEnabled enabled: DDXMLElement!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement, wasEnabled enabled: XMLElement) {
         self.streamManagementEnabled = true
     }
-    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, wasNotEnabled failed: DDXMLElement!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement, wasNotEnabled failed: XMLElement) {
         self.streamManagementEnabled = false
     }
     
-    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement!, didReceiveAckForStanzaIds stanzaIds: [Any]!) {
+    @objc open func xmppStreamManagement(_ sender: XMPPStreamManagement, didReceiveAckForStanzaIds stanzaIds: [Any]) {
         
         self.databaseConnection.asyncReadWrite { (transaction) in
             for object in stanzaIds {

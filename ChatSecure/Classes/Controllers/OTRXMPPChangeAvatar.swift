@@ -75,7 +75,7 @@ import XMPPFramework
 }
 
 extension OTRXMPPChangeAvatar: XMPPvCardTempModuleDelegate {
-    public func xmppvCardTempModuleDidUpdateMyvCard(_ vCardTempModule: XMPPvCardTempModule!) {
+    public func xmppvCardTempModuleDidUpdateMyvCard(_ vCardTempModule: XMPPvCardTempModule) {
         //If we have a completion block
         if let completion = self.completion, self.waitingForVCardFetch == true {
             // call update again. This time there should be a vcard in the storage and we'll be able to update
@@ -84,7 +84,7 @@ extension OTRXMPPChangeAvatar: XMPPvCardTempModuleDelegate {
         self.waitingForVCardFetch = false
     }
     
-    public func xmppvCardTempModule(_ vCardTempModule: XMPPvCardTempModule!, failedToUpdateMyvCard error: DDXMLElement!) {
+    public func xmppvCardTempModule(_ vCardTempModule: XMPPvCardTempModule, failedToUpdateMyvCard error: XMLElement?) {
         
         self.waitingForVCardFetch = false
         

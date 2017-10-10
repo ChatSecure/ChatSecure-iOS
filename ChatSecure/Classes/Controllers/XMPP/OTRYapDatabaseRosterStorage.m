@@ -252,22 +252,22 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     NSString *newStatusMessage = OFFLINE_STRING();
     if (buddy && !([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence])) {
         NSString *defaultMessage = OFFLINE_STRING();
-        switch (presence.intShow)
+        switch (presence.showValue)
         {
-            case 0  :
+            case XMPPPresenceShowDND  :
                 newStatus = OTRThreadStatusDoNotDisturb;
                 newStatusMessage = DO_NOT_DISTURB_STRING();
                 break;
-            case 1  :
+            case XMPPPresenceShowXA  :
                 newStatus = OTRThreadStatusExtendedAway;
                 newStatusMessage = EXTENDED_AWAY_STRING();
                 break;
-            case 2  :
+            case XMPPPresenceShowAway  :
                 newStatus = OTRThreadStatusAway;
                 newStatusMessage = AWAY_STRING();
                 break;
-            case 3  :
-            case 4  :
+            case XMPPPresenceShowOther  :
+            case XMPPPresenceShowChat  :
                 newStatus = OTRThreadStatusAvailable;
                 newStatusMessage = AVAILABLE_STRING();
                 break;
@@ -363,7 +363,12 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     return jidArray;
 }
 
-- (void)getSubscription:(NSString *__autoreleasing *)subscription ask:(NSString *__autoreleasing *)ask nickname:(NSString *__autoreleasing *)nickname groups:(NSArray *__autoreleasing *)groups forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
+- (void)getSubscription:(NSString * _Nullable * _Nullable)subscription
+                    ask:(NSString * _Nullable * _Nullable)ask
+               nickname:(NSString * _Nullable * _Nullable)nickname
+                 groups:(NSArray<NSString*> * _Nullable * _Nullable)groups
+                 forJID:(XMPPJID *)jid
+             xmppStream:(XMPPStream *)stream
 {
     //Can't tell if this is ever called so just a stub for now
     //OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
