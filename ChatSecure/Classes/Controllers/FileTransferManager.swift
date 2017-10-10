@@ -732,19 +732,6 @@ public extension OTRXMPPRoomMessage {
 
 // MARK: - Extensions
 
-fileprivate extension XMPPMessage {
-    /** XEP-0066: Out of Band Data jabber:x:oob */
-    var outOfBandURL: URL? {
-        guard let oob = elements(forXmlns: "jabber:x:oob").first,
-            let urlElement = oob.elements(forName: "url").first,
-            let urlString = urlElement.stringValue else {
-                return nil
-        }
-        let url = URL(string: urlString)
-        return url
-    }
-}
-
 fileprivate struct HTTPServer {
     /// service jid for upload service
     let jid: XMPPJID

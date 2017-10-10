@@ -351,8 +351,9 @@ public class MessageQueueHandler:NSObject {
         //Ensure protocol is connected or if not and autologin then connnect
         if (accountProtocol.connectionStatus == .connected) {
             // Add the buddy to our roster
-            let jid = XMPPJID(string: buddy.username)
-            accountProtocol.xmppRoster.addUser(jid, withNickname:buddy.displayName)
+            if let jid = XMPPJID(string: buddy.username) {
+                accountProtocol.xmppRoster.addUser(jid, withNickname:buddy.displayName)
+            }
             completion(true, 0.0)
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: addBuddyAction, timer: nil, completion: completion))
@@ -386,8 +387,9 @@ public class MessageQueueHandler:NSObject {
         if accountProtocol.connectionStatus == .connected,
             let jidStr = removeBuddyAction.buddyJid {
             // Add the buddy to our roster
-            let jid = XMPPJID(string: jidStr)
-            accountProtocol.xmppRoster.removeUser(jid)
+            if let jid = XMPPJID(string: jidStr) {
+                accountProtocol.xmppRoster.removeUser(jid)
+            }
             completion(true, 0.0)
         } else if (account.autologin == true) {
             self.waitingForAccount(account.uniqueId, action: OutstandingActionInfo(action: removeBuddyAction, timer: nil, completion: completion))

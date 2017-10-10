@@ -32,9 +32,11 @@ class OTROMEMOIntegrationTest: XCTestCase {
     }
     
     /** Create two user accounts and save each other as buddies */
-    func setupTwoAccounts(_ name:String) {
-        let aliceName = "\(name)-alice"
-        let bobName = "\(name)-bob"
+    func setupTwoAccounts(_ inName:String) {
+        let charactersToRemove = CharacterSet.alphanumerics.inverted
+        let name = inName.components(separatedBy: charactersToRemove).joined().lowercased()
+        let aliceName = "\(name).alice"
+        let bobName = "\(name).bob"
         self.aliceUser = self.setupUserWithName(aliceName,buddyName: bobName)
         self.aliceOmemoModule = OTROMEMOTestModule(omemoStorage: self.aliceUser!.signalOMEMOCoordinator, xmlNamespace: .conversationsLegacy, dispatchQueue: nil)
         self.aliceOmemoModule?.addDelegate(self.aliceUser!.signalOMEMOCoordinator, delegateQueue: self.aliceUser!.signalOMEMOCoordinator.workQueue)
@@ -81,7 +83,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
      */
     func testDeviceSetup() {
         self.setupTwoAccounts(#function)
-        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(XMPPStream())
         let buddy = self.bobUser!.buddy
         let connection = self.bobUser?.databaseManager.readOnlyDatabaseConnection
         connection?.read({ (transaction) in
@@ -99,7 +101,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
     */
     func testFetchingBundleSetup() {
         self.setupTwoAccounts(#function)
-        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(XMPPStream())
         let expectation = self.expectation(description: "Sending Message")
         let messageText = "This is message from Bob to Alice"
         let message = OTROutgoingMessage()!
@@ -136,7 +138,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
     
     func testRemoveDevice() {
         self.setupTwoAccounts(#function)
-        self.bobOmemoModule?.xmppStreamDidAuthenticate(nil)
+        self.bobOmemoModule?.xmppStreamDidAuthenticate(XMPPStream())
         let expectation = self.expectation(description: "Remove Devices")
         let deviceNumber = NSNumber(value: 5 as Int32)
         let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.trustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection, publicIdentityKeyData: nil, lastSeenDate: nil)

@@ -428,16 +428,17 @@ import SignalProtocolObjC
             }
             var relatedBuddyUsername: String? = fromJID.bare
             var innerMessage = message
-            if (message.isTrustedMessageCarbon(forMyJID: ourJID)) {
+            if message.isTrustedMessageCarbon(forMyJID: ourJID),
+                let forwarded = message.messageCarbonForwarded {
                 //This came from another of our devices this is really going to be an outgoing message
-                innerMessage = message.messageCarbonForwarded()
-                if (message.isReceivedMessageCarbon()) {
+                innerMessage = forwarded
+                if (message.isReceivedMessageCarbon) {
                     relatedBuddyUsername = innerMessage.from?.bare
                 } else {
                     relatedBuddyUsername = innerMessage.to?.bare
-                    let outgoingMessage = OTROutgoingMessage()
-                    outgoingMessage?.dateSent = Date()
-                    databaseMessage = outgoingMessage!
+                    let outgoingMessage = OTROutgoingMessage()!
+                    outgoingMessage.dateSent = Date()
+                    databaseMessage = outgoingMessage
                 }
             }
             

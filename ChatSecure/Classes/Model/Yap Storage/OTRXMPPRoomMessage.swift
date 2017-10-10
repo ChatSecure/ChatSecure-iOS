@@ -356,9 +356,9 @@ public extension OTRXMPPRoomMessage {
     /// Marks our sent messages as delivered when we receive a matching receipt
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
         guard message.isGroupChatMessage,
-            message.hasReceiptResponse(),
+            message.hasReceiptResponse,
             !message.isErrorMessage,
-            let messageId = message.receiptResponseID() else {
+            let messageId = message.receiptResponseID else {
             return
         }
         writeConnection.asyncReadWrite { (transaction) in
@@ -381,9 +381,9 @@ public extension OTRXMPPRoomMessage {
     
     /// Sends a response receipt when receiving a delivery receipt request
     @objc public static func handleDeliveryReceiptRequest(message: XMPPMessage, xmppStream:XMPPStream) {
-        guard message.hasReceiptRequest(),
-            !message.hasReceiptResponse(),
-        let response = message.generateReceiptResponse() else {
+        guard message.hasReceiptRequest,
+            !message.hasReceiptResponse,
+        let response = message.generateReceiptResponse else {
             return
         }
         xmppStream.send(response)
