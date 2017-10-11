@@ -83,7 +83,6 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "YapDatabaseViewConnection+ChatSecure.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPServerInfo.h"
-#import "XMPPPushModule.h"
 #import "OTRAccountMigrator.h"
 #import "OTRXMPPError.h"
 #import "OTRXMPPRoomManager.h"
