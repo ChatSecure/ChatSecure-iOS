@@ -235,6 +235,9 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (![self shouldFetchMediaData]) {
+            return;
+        }
         // The superview should handle creating the actual imageview
         // this code is used to fetch the image from the data store and then cache in ram
         __block id<OTRThreadOwner> thread = nil;
@@ -250,13 +253,12 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         NSError *error = nil;
         NSData *data = [OTRMediaFileManager.shared dataForItem:self buddyUniqueId:thread.threadIdentifier error:&error];
         if(!data.length) {
-            DDLogWarn(@"No data found for media item: %@", error);
-            return;
-        }
-        BOOL result = [self handleMediaData:data message:message];
-        if (!result) {
-            DDLogError(@"Could not handle display for media item %@", self);
-            return;
+            DDLogError(@"No data found for media item: %@", error);
+        } else {
+            BOOL result = [self handleMediaData:data message:message];
+            if (!result) {
+                DDLogError(@"Could not handle display for media item %@", self);
+            }
         }
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             [self touchParentMessageWithTransaction:transaction];
@@ -347,12 +349,12 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     
     if (aspectRatio < 1) {
         //Taller then wider then use max height and resize width
-        CGFloat newWidth = maxHeight * aspectRatio;
+        CGFloat newWidth = floorf(maxHeight * aspectRatio);
         return CGSizeMake(newWidth, maxHeight);
     }
     else {
         //Wider than taller then use max width and resize height
-        CGFloat newHeight = maxWidth * 1/aspectRatio;
+        CGFloat newHeight = floorf(maxWidth * 1/aspectRatio);
         return CGSizeMake(maxWidth, newHeight);
     }
 }

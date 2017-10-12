@@ -55,6 +55,7 @@
         [self fetchMediaData];
         return nil;
     }
+    self.size = image.size;
     CGSize size = [self mediaViewDisplaySize];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     imageView.frame = CGRectMake(0, 0, size.width, size.height);
@@ -72,9 +73,10 @@
     [super handleMediaData:mediaData message:message];
     UIImage *image = [UIImage imageWithData:mediaData];
     if (!image) {
-        DDLogWarn(@"Media item data is not an image!");
+        DDLogError(@"Media item data is not an image!");
         return NO;
     }
+    self.size = image.size;
     [OTRImages setImage:image forIdentifier:self.uniqueId];
     return YES;
 }
