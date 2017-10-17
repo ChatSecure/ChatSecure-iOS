@@ -29,6 +29,9 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ParkedTextField', '~> 0.3.1'
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
+  # Debugging
+  pod 'Reveal-SDK', :configurations => ['Debug']
+
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.3.0'
   # pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :commit => 'acc32864538c5d75b41a4bfa364b1431cf89954d' # Fixes compile error on Xcode 9
@@ -51,7 +54,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
-  pod 'YapDatabase/SQLCipher', '~> 3.0.1'
+  pod 'YapDatabase/SQLCipher', '~> 3.0.2'
   # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/yapstudios/YapDatabase.git', :commit => 'd632658'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'

@@ -28,6 +28,10 @@
 
 - (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds toRoom:(nonnull XMPPRoom*)room;
 - (OTRXMPPRoomOccupant * _Nullable) roomOccupantForJID:(nullable NSString *)jid realJID:(nullable NSString *)realJID inRoom:(nonnull NSString *)roomJID;
-+ (nonnull XMPPMessage *)xmppMessage:(nonnull OTRXMPPRoomMessage *)databaseMessage;
 
+@end
+
+@interface XMPPRoom(RoomManager)
+/** Creates and sends XMPPMessage stanza from roomMessage */
+- (void) sendRoomMessage:(nonnull OTRXMPPRoomMessage *)roomMessage;
 @end

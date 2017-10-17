@@ -497,13 +497,20 @@
     return form;
 }
 
-+ (XMPPMessage *)xmppMessage:(OTRXMPPRoomMessage *)databaseMessage {
-    NSParameterAssert(databaseMessage);
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:databaseMessage.text];
-    XMPPMessage *message = [XMPPMessage message];
-    [message addChild:body];
-    [message addAttributeWithName:@"id" stringValue:databaseMessage.xmppId];
+@end
+
+@implementation XMPPRoom(RoomManager)
+- (void) sendRoomMessage:(OTRXMPPRoomMessage *)roomMessage {
+    NSParameterAssert(roomMessage);
+    if (!roomMessage) { return; }
+    NSString *elementId = roomMessage.xmppId;
+    if (!elementId.length) {
+        elementId = roomMessage.uniqueId;
+    }
+    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:roomMessage.text];
+    // type=groupchat and to=room.full are set inside XMPPRoom.sendMessage
+    XMPPMessage *message = [XMPPMessage messageWithType:nil elementID:roomMessage.xmppId child:body];
     [message addReceiptRequest];
-    return message;
+    [self sendMessage:message];
 }
 @end

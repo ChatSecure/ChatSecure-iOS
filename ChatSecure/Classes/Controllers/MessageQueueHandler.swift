@@ -250,8 +250,7 @@ public class MessageQueueHandler:NSObject {
             return
         }
         self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-        let xmppMessage = OTRXMPPRoomManager.xmppMessage(message)
-        room.send(xmppMessage)
+        room.send(message)
         databaseConnection.readWrite { transaction in
             if let sentMessage = message.refetch(with: transaction) {
                 sentMessage.state = .pendingSent

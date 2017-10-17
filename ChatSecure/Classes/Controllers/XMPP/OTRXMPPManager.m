@@ -217,6 +217,9 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	[self.xmppvCardAvatarModule activate:self.xmppStream];
 	[self.xmppCapabilities      activate:self.xmppStream];
     
+    _stanzaIdModule = [[XMPPStanzaIdModule alloc] init];
+    [self.stanzaIdModule activate:self.xmppStream];
+    
 	// Add ourself as a delegate to anything we may be interested in
     
 	[self.xmppStream addDelegate:self delegateQueue:self.workQueue];

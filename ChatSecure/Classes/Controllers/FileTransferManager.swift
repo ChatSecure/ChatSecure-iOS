@@ -513,7 +513,7 @@ extension FileTransferManager {
     public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
         DispatchQueue.global(qos: .default).async {
             if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
-                DDLogVerbose("Download of message not needed \(message.messageKey)")
+                //DDLogVerbose("Download of message not needed \(message.messageKey)")
                 return
             }
             var downloads: [OTRDownloadMessage] = []
