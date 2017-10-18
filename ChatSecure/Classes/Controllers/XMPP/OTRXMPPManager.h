@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
 
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
+@property (nonatomic, strong, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 @property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;

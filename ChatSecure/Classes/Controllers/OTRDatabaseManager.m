@@ -39,6 +39,7 @@ NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDa
 NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName";
 
+
 @interface OTRDatabaseManager ()
 
 @property (nonatomic, strong, nullable) YapDatabase *database;
@@ -234,6 +235,8 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     [setup addColumn:OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:SecondaryIndexName.originId withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:SecondaryIndexName.stanzaId withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -249,10 +252,16 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
             if (message.threadId) {
                 [dict setObject:message.threadId forKey:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
             }
+            if (message.originId.length) {
+                [dict setObject:message.originId forKey:SecondaryIndexName.originId];
+            }
+            if (message.stanzaId.length) {
+                [dict setObject:message.stanzaId forKey:SecondaryIndexName.stanzaId];
+            }
         }
     }];
 
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"2"];
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"5"];
     
     return secondaryIndex;
 }

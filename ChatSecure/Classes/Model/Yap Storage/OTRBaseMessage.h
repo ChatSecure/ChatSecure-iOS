@@ -40,11 +40,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isMessageRead;
 @property (nonatomic, readwrite) NSDate *messageDate;
 @property (nonatomic, readwrite, nullable) NSString *messageText;
+/** This should be the same as XMPPMessage.elementId */
 @property (nonatomic, readonly, nullable) NSString *remoteMessageId;
 /** Only applies to outgoing messages */
 @property (nonatomic, readonly) BOOL isMessageSent;
 /** Only applies to outgoing messages */
 @property (nonatomic, readonly) BOOL isMessageDelivered;
+
+/** XEP-0359: origin-id */
+@property (nonatomic, strong, nullable) NSString *originId;
+/** XEP-0359: stanza-id */
+@property (nonatomic, strong, nullable) NSString *stanzaId;
 
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 /**
@@ -84,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nonnull) NSDate *date;
 
 @property (nonatomic, strong, nullable) NSString *text;
+/** XMPP element id */
 @property (nonatomic, strong, nonnull) NSString *messageId;
 @property (nonatomic, strong, nullable) NSError *error;
 

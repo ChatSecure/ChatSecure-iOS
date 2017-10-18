@@ -42,6 +42,8 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     open var error:Error?
     open var mediaItemId: String?
     open var roomUniqueId:String?
+    open var originId:String?
+    open var stanzaId:String?
     
     open override var hash: Int {
         get {
@@ -363,7 +365,7 @@ public extension OTRXMPPRoomMessage {
         }
         writeConnection.asyncReadWrite { (transaction) in
             var roomMessage: OTRXMPPRoomMessage? = nil
-            transaction.enumerateMessages(id: messageId) { (messageProtocol, stop) in
+            transaction.enumerateMessages(elementId: messageId, originId: message.originId, stanzaId: nil) { (messageProtocol, stop) in
                 if let message = messageProtocol as? OTRXMPPRoomMessage {
                     roomMessage = message
                     stop.pointee = true

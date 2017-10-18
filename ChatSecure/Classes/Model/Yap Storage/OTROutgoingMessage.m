@@ -15,7 +15,7 @@
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTROutgoingMessage *deliveredMessage = nil;
-    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+    [transaction enumerateMessagesWithElementId:messageId originId:messageId stanzaId:nil block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
         if ([message isKindOfClass:[self class]]) {
             deliveredMessage = (OTROutgoingMessage *)message;
             *stop = YES;

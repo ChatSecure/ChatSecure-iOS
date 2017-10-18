@@ -11,13 +11,30 @@ import YapDatabase.YapDatabaseSecondaryIndex
 
 public extension YapDatabaseReadTransaction {
     
-    public func enumerateMessages(id:String, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+    /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359
+    public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
         guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName) = ?"
-        let query = YapDatabaseQuery(string: queryString, parameters: [id])
+        var parameters: [String] = []
+        var queryString = ""
+        let addQuery: ((_ column: String, _ value: String?) -> Void) = { (column, value) in
+            guard let value = value else { return }
+            var stringStart = "WHERE"
+            if parameters.count > 0 {
+                stringStart = " OR"
+            }
+            queryString += "\(stringStart) \(column) = ?"
+            parameters.append(value)
+        }
+        addQuery(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName, elementId)
+        addQuery(SecondaryIndexName.originId, originId)
+        addQuery(SecondaryIndexName.stanzaId, stanzaId)
+        guard parameters.count > 0, queryString.characters.count > 0 else {
+            return
+        }
+        let query = YapDatabaseQuery(string: queryString, parameters: parameters)
         
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
             if let message = self.object(forKey: key, inCollection: collection) as? OTRMessageProtocol {

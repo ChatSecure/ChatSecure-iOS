@@ -11,6 +11,7 @@
 #import "OTRAccount.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRLog.h"
+#import "OTRXMPPManager_Private.h"
 @import YapDatabase;
 @import XMPPFramework;
 
@@ -68,10 +69,9 @@
     return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:accountId jid:roomJID] transaction:transaction];
 }
 
-- (BOOL)existsMessage:(XMPPMessage *)message from:(XMPPJID *)fromJID account:(NSString *)acountKey transaction:(YapDatabaseReadTransaction *)transaction
+- (BOOL)existsMessage:(XMPPMessage *)message from:(XMPPJID *)fromJID stanzaId:(nullable NSString*)stanzaId transaction:(YapDatabaseReadTransaction *)transaction
 {
     NSDate *remoteTimestamp = [message delayedDeliveryDate];
-    
     if (!remoteTimestamp)
     {
         // When the xmpp server sends us a room message, it will always timestamp delayed messages.
@@ -80,24 +80,19 @@
         
         return NO;
     }
-    
-    NSString *elementID = [message elementID];
-    if ([elementID length]) {
-        __block BOOL result = NO;
-        [transaction enumerateMessagesWithId:elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-            //Need to check room JID
-            //So if message has same ID and same room jid that's got to be the same message, right?
-            if ([databaseMessage isKindOfClass:[OTRXMPPRoomMessage class]]) {
-                OTRXMPPRoomMessage *msg = (OTRXMPPRoomMessage *)databaseMessage;
-                if ([msg.roomJID isEqualToString:fromJID.bare]) {
-                    *stop = YES;
-                    result = YES;
-                }}
-        }];
-        return result;
-    }
-    
-    return NO;
+    NSString *elementID = message.elementID;
+    __block BOOL result = NO;
+    [transaction enumerateMessagesWithElementId:elementID originId:nil stanzaId:stanzaId block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+        //Need to check room JID
+        //So if message has same ID and same room jid that's got to be the same message, right?
+        if ([databaseMessage isKindOfClass:[OTRXMPPRoomMessage class]]) {
+            OTRXMPPRoomMessage *msg = (OTRXMPPRoomMessage *)databaseMessage;
+            if ([msg.roomJID isEqualToString:fromJID.bare]) {
+                *stop = YES;
+                result = YES;
+            }}
+    }];
+    return result;
 }
 
 - (void)insertIncomingMessage:(XMPPMessage *)message intoRoom:(XMPPRoom *)room
@@ -105,15 +100,24 @@
     NSString *accountId = room.xmppStream.tag;
     NSString *roomJID = room.roomJID.bare;
     XMPPJID *fromJID = [message from];
-    
+    if (!accountId || !roomJID || !fromJID) {
+        return;
+    }
     __block OTRXMPPRoomMessage *databaseMessage = nil;
     __block OTRXMPPRoom *databaseRoom = nil;
-    __block OTRAccount *account = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         // Sends a response receipt when receiving a delivery receipt request
         [OTRXMPPRoomMessage handleDeliveryReceiptRequestWithMessage:message xmppStream:room.xmppStream];
-        if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
+        
+        // Extract XEP-0359 stanza-id
+        NSString *stanzaId = [message extractStanzaIdWithAccount:account];
+        NSString *originId = message.originId;
+        databaseMessage.originId = originId;
+        databaseMessage.stanzaId = stanzaId;
+        
+        if ([self existsMessage:message from:fromJID stanzaId:stanzaId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
             DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
             return;

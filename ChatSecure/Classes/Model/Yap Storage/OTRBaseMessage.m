@@ -27,6 +27,8 @@
 
 
 @implementation OTRBaseMessage
+@synthesize originId = _originId;
+@synthesize stanzaId = _stanzaId;
 
 - (id)init
 {
@@ -272,7 +274,7 @@
 
 + (id<OTRMessageProtocol>)messageForMessageId:(NSString *)messageId incoming:(BOOL)incoming transaction:(YapDatabaseReadTransaction *)transaction {
     __block id<OTRMessageProtocol> deliveredMessage = nil;
-    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+    [transaction enumerateMessagesWithElementId:messageId originId:nil stanzaId:nil block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
         if ([message isMessageIncoming] == incoming) {
             //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
             deliveredMessage = message;

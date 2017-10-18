@@ -10,6 +10,8 @@ import Foundation
 
 ///A simple message object to mark when push or knock messages were sent off
 open class PushMessage: OTRYapDatabaseObject {
+    open var originId:String?
+    open var stanzaId:String?
     
     /// The buddy the knock was sent to
     open var buddyKey:String?

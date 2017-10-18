@@ -8,6 +8,13 @@
 
 import Foundation
 
+public class SecondaryIndexName: NSObject {
+    /// XEP-0359 origin-id
+    public static let originId = "SecondaryIndexNameOriginId"
+    /// XEP-0359 stanza-id
+    public static let stanzaId = "SecondaryIndexNameStanzaId"
+}
+
 @objc public enum DatabaseExtensionName: Int {
     case groupOccupantsViewName
     case buddyDeleteActionViewName

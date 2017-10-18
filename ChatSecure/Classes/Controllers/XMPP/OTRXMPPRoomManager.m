@@ -250,6 +250,7 @@
         }];
         
     }
+    
     // Handle group chat message receipts
     [OTRXMPPRoomMessage handleDeliveryReceiptResponseWithMessage:message writeConnection:self.databaseConnection];
 }

@@ -429,6 +429,7 @@
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
 		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */; };
+		D94D5A0F1F98132300AC23BF /* XMPPMessage+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94D5A0E1F98132300AC23BF /* XMPPMessage+ChatSecure.swift */; };
 		D955157A1EFA0A9F008AA429 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476C1EFA03FC00C39B25 /* HTMLReader.framework */; };
 		D955157B1EFA0A9F008AA429 /* KVOController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476E1EFA03FC00C39B25 /* KVOController.framework */; };
 		D955157D1EFA0A9F008AA429 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47701EFA03FC00C39B25 /* MBProgressHUD.framework */; };
@@ -1095,6 +1096,7 @@
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
 		D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCache.m; sourceTree = "<group>"; };
+		D94D5A0E1F98132300AC23BF /* XMPPMessage+ChatSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XMPPMessage+ChatSecure.swift"; sourceTree = "<group>"; };
 		D95553D71C4F16730019667A /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D9599BB91E284BCA006A4450 /* StringsConverter.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = StringsConverter.py; path = Strings/StringsConverter.py; sourceTree = "<group>"; };
 		D9599BBA1E284BCA006A4450 /* StringsUnused.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = StringsUnused.py; path = Strings/StringsUnused.py; sourceTree = "<group>"; };
@@ -1331,6 +1333,7 @@
 		633105011A16D1A300C17BAE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D94D5A0E1F98132300AC23BF /* XMPPMessage+ChatSecure.swift */,
 				D997E3F21EAECD1400BF72EF /* UITableView+ChatSecure.h */,
 				D997E3F31EAECD1400BF72EF /* UITableView+ChatSecure.m */,
 				D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */,
@@ -3091,6 +3094,7 @@
 				D93DDA7E1BA79A2400CD8331 /* UIViewController+ChatSecure.m in Sources */,
 				6358FDE01CDC097A00C9D3B6 /* OTRXMPPMessageStatusModule.swift in Sources */,
 				D93DDA7F1BA79A2400CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */,
+				D94D5A0F1F98132300AC23BF /* XMPPMessage+ChatSecure.swift in Sources */,
 				D93DDA801BA79A2400CD8331 /* NSString+ChatSecure.m in Sources */,
 				D93DDA811BA79A2400CD8331 /* NSFileManager+ChatSecure.m in Sources */,
 				D93DDA821BA79A2400CD8331 /* OTRAttachmentPicker.m in Sources */,

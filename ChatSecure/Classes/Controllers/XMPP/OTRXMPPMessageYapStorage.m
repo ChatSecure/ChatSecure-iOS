@@ -133,21 +133,14 @@
         }
         
         // Extract XEP-0359 stanza-id
-        NSString *stanzaId = nil;
         NSString *originId = xmppMessage.originId;
-        NSDictionary<XMPPJID*,NSString*> *stanzaIds = xmppMessage.stanzaIds;
-        if (stanzaIds.count) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
-            XMPPCapabilities *capabilities = xmpp.xmppCapabilities;
-            BOOL hasValidStanzaId = [capabilities hasValidStanzaId:xmppMessage];
-            XMPPJID *myJID = account.bareJID;
-            if (hasValidStanzaId && myJID) {
-                stanzaId = stanzaIds[myJID];
-            }
-        }
+        NSString *stanzaId = [xmppMessage extractStanzaIdWithAccount:account];
+        message.originId = originId;
+        message.stanzaId = stanzaId;
         
-        if ([self isDuplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
+        if ([self isDuplicateMessage:xmppMessage stanzaId:stanzaId buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
             DDLogWarn(@"Duplicate message received: %@", xmppMessage);
+            return;
         }
         
         if (message.text) {
@@ -186,18 +179,20 @@
     }
 }
 
-/** It is a violation of the XMPP spec to discard messages with duplicate stanza ids */
-- (BOOL)isDuplicateMessage:(XMPPMessage *)message buddyUniqueId:(NSString *)buddyUniqueId transaction:(YapDatabaseReadWriteTransaction *)transaction
+/** It is a violation of the XMPP spec to discard messages with duplicate stanza elementIds. We must use XEP-0359 stanza-id only. */
+- (BOOL)isDuplicateMessage:(XMPPMessage *)message stanzaId:(NSString*)stanzaId buddyUniqueId:(NSString *)buddyUniqueId transaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     __block BOOL result = NO;
-    if ([message.elementID length]) {
-        [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-            if ([[databaseMessage threadId] isEqualToString:buddyUniqueId]) {
-                *stop = YES;
-                result = YES;
-            }
-        }];
+    if (!stanzaId.length) {
+        return NO;
     }
+
+    [transaction enumerateMessagesWithElementId:nil originId:nil stanzaId:stanzaId block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+        if ([[databaseMessage threadId] isEqualToString:buddyUniqueId]) {
+            *stop = YES;
+            result = YES;
+        }
+    }];
     return result;
 }
 
@@ -216,31 +211,41 @@
     }
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyForUsername:username accountName:stream.tag transaction:transaction];
+        NSString *accountId = stream.tag;
+        OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
         
         if (!buddy) {
             return;
         }
+        // Extract XEP-0359 stanza-id
+        NSString *originId = forwardedMessage.originId;
+        NSString *stanzaId = [forwardedMessage extractStanzaIdWithAccount:account];
+
         if (incoming) {
             [self handleChatState:forwardedMessage username:username stream:stream transaction:transaction];
             [self handleDeliverResponse:forwardedMessage transaction:transaction];
         }
-        if ([self isDuplicateMessage:forwardedMessage buddyUniqueId:buddy.uniqueId transaction:transaction]) {
+        
+        if ([self isDuplicateMessage:forwardedMessage stanzaId:stanzaId buddyUniqueId:buddy.uniqueId transaction:transaction]) {
             DDLogWarn(@"Duplicate message received: %@", forwardedMessage);
+            return;
         }
         if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
+            OTRBaseMessage *message = nil;
             if (incoming) {
-                OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+                OTRIncomingMessage *incomingMessage = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
                 NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
                 if([activeThreadYapKey isEqualToString:message.threadId]) {
-                    message.read = YES;
+                    incomingMessage.read = YES;
                 }
-                [message saveWithTransaction:transaction];
+                message = incomingMessage;
             } else {
-                OTROutgoingMessage *message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                [message saveWithTransaction:transaction];
+                message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
             }
+            message.originId = originId;
+            message.stanzaId = stanzaId;
+            [message saveWithTransaction:transaction];
         }
     }];
 }
