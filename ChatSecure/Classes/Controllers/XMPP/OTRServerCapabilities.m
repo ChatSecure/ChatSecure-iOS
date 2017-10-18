@@ -429,7 +429,6 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     }];
     self.allCapabilities = newCaps;
     [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
-
 }
 
 - (NSSet<XMPPJID*>*) jidsFromItems:(NSArray<NSXMLElement*>*)items {
@@ -443,22 +442,6 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         [jids addObject:jid];
     }];
     return jids;
-}
-
-/** Executes block synchronously on moduleQueue */
-- (void) performBlock:(dispatch_block_t)block {
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_sync(moduleQueue, block);
-}
-
-/** Executes block asynchronously on moduleQueue */
-- (void) performBlockAsync:(dispatch_block_t)block {
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_async(moduleQueue, block);
 }
 
 @end

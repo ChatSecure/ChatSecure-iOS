@@ -19,6 +19,7 @@
 #import "OTRThreadOwner.h"
 #import "OTRBuddyCache.h"
 #import "OTRXMPPError.h"
+#import "OTRXMPPManager_Private.h"
 
 @implementation OTRXMPPMessageYapStorage
 
@@ -129,6 +130,20 @@
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
         if([activeThreadYapKey isEqualToString:message.threadId]) {
             message.read = YES;
+        }
+        
+        // Extract XEP-0359 stanza-id
+        NSString *stanzaId = nil;
+        NSString *originId = xmppMessage.originId;
+        NSDictionary<XMPPJID*,NSString*> *stanzaIds = xmppMessage.stanzaIds;
+        if (stanzaIds.count) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+            XMPPCapabilities *capabilities = xmpp.xmppCapabilities;
+            BOOL hasValidStanzaId = [capabilities hasValidStanzaId:xmppMessage];
+            XMPPJID *myJID = account.bareJID;
+            if (hasValidStanzaId && myJID) {
+                stanzaId = stanzaIds[myJID];
+            }
         }
         
         if ([self isDuplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
