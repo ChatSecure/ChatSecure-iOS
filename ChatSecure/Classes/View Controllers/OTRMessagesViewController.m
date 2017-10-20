@@ -2001,8 +2001,17 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             [alert addAction:obj];
         }];
         [alert addAction:[self cancleAction]];
+        
+        // Get the anchor
         alert.popoverPresentationController.sourceView = self.view;
         alert.popoverPresentationController.sourceRect = self.view.bounds;
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        if ([cell isKindOfClass:[JSQMessagesCollectionViewCell class]]) {
+            UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
+            alert.popoverPresentationController.sourceRect = cellContainterView.bounds;
+            alert.popoverPresentationController.sourceView = cellContainterView;
+        }
+
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
