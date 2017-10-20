@@ -2027,8 +2027,48 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (!rowChanges.count) {
         return;
     }
+    
+    // Important to clear our "one message cache" here, since things may have changed.
+    self.currentIndexPath = nil;
+    
     NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
     NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
+    
+    [self.collectionView performBatchUpdates:^{
+        
+        for (YapDatabaseViewRowChange *rowChange in rowChanges)
+        {
+            switch (rowChange.type)
+            {
+                case YapDatabaseViewChangeDelete :
+                {
+                    [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
+                    break;
+                }
+                case YapDatabaseViewChangeInsert :
+                {
+                    [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
+                    break;
+                }
+                case YapDatabaseViewChangeMove :
+                {
+                    [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
+                    break;
+                }
+                case YapDatabaseViewChangeUpdate :
+                {
+                    // Update could be e.g. when we are done auto-loading a link. We
+                    // need to reset the stored size of this item, so the image/message
+                    // will get the correct bubble height.
+                    id <JSQMessageData> message = [self messageAtIndexPath:rowChange.indexPath];
+                    [self.collectionView.collectionViewLayout.bubbleSizeCalculator resetBubbleSizeCacheForMessageData:message];
+                    [self.messageSizeCache removeObjectForKey:@(message.messageHash)];
+                    [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
+                    break;
+                }
+            }
+        }
+    } completion:nil];
     
     if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
         //Inserted new item, probably at the end
@@ -2040,41 +2080,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         } else {
             // We can't use finishSendingMessage here because it might
             // accidentally clear out unsent message text
-            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
-            [self.collectionView reloadData];
             [self scrollToBottomAnimated:YES];
         }
-    } else {
-        //deleted a message or message updated
-        [self.collectionView performBatchUpdates:^{
-            
-            for (YapDatabaseViewRowChange *rowChange in rowChanges)
-            {
-                switch (rowChange.type)
-                {
-                    case YapDatabaseViewChangeDelete :
-                    {
-                        [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
-                        break;
-                    }
-                    case YapDatabaseViewChangeInsert :
-                    {
-                        [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
-                        break;
-                    }
-                    case YapDatabaseViewChangeMove :
-                    {
-                        [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
-                        break;
-                    }
-                    case YapDatabaseViewChangeUpdate :
-                    {
-                        [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
-                        break;
-                    }
-                }
-            }
-        } completion:nil];
     }
 }
 
