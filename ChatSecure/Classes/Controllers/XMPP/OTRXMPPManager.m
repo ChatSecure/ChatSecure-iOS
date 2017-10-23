@@ -250,6 +250,12 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.messageCarbons addDelegate:self.messageStorage delegateQueue:self.messageStorage.moduleDelegateQueue];
     [self.messageCarbons activate:self.xmppStream];
     
+    // Message archiving
+    _xmppMAM = [[XMPPMessageArchiveManagement alloc] init];
+    [self.xmppMAM addDelegate:self.messageStorage delegateQueue:self.messageStorage.moduleDelegateQueue];
+    [self.xmppMAM activate:self.xmppStream];
+    
+    
     //Stream Management
     _streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:self.databaseConnection];
     
@@ -277,8 +283,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     MessageQueueHandler *queueHandler = [OTRDatabaseManager sharedInstance].messageQueueHandler;
     _messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
     [self.messageStatusModule activate:self.xmppStream];
-    
-    
     
     //OMEMO
     if ([[OTRAppDelegate appDelegate].theme enableOMEMO]) {
@@ -890,6 +894,9 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
+    
+    // Testing MAM
+    [self.xmppMAM retrieveMessageArchiveWithFields:nil withResultSet:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error

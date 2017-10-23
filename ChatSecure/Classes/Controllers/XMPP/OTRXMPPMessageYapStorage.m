@@ -76,9 +76,12 @@
         return;
     }
     // We handle carbons elsewhere via XMPPMessageCarbonsDelegate
-    if ([xmppMessage isMessageCarbon]) {
+    // We handle MAM elsewhere as well
+    if (xmppMessage.isMessageCarbon ||
+        xmppMessage.mamResult) {
         return;
     }
+    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         if (![stream.tag isKindOfClass:[NSString class]]) {
             DDLogError(@"Error - No account tag on stream %@", stream);
@@ -196,26 +199,33 @@
     return result;
 }
 
-- (void)handleCarbonMessage:(XMPPMessage *)forwardedMessage stream:(XMPPStream *)stream outgoing:(BOOL)isOutgoing
+/// Handles both Carbons and MAM
+- (void)handleForwardedMessage:(XMPPMessage *)forwardedMessage delayedDeliveryDate:(nullable NSDate*)delayedDeliveryDate stream:(XMPPStream *)stream outgoing:(BOOL)isOutgoing
 {
+    if (!forwardedMessage.isMessageWithBody ||
+        forwardedMessage.isErrorMessage ||
+        [OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
+        DDLogWarn(@"Discarding forwarded message: %@", forwardedMessage.prettyXMLString);
+        return;
+    }
     //Sent Message Carbons are sent by our account to another
     //So from is our JID and to is buddy
     BOOL incoming = !isOutgoing;
     
-    
     NSString *username = nil;
     if (incoming) {
-        username = [[forwardedMessage from] bare];
+        username = forwardedMessage.from.bare;
     } else {
-        username = [[forwardedMessage to] bare];
+        username = forwardedMessage.to.bare;
     }
-    
+    if (!username.length) { return; }
+    NSString *accountId = stream.tag;
+    if (!accountId.length) { return; }
+
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
-        NSString *accountId = stream.tag;
         OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
-        
-        if (!buddy) {
+        if (!buddy || !account) {
             return;
         }
         // Extract XEP-0359 stanza-id
@@ -231,32 +241,60 @@
             DDLogWarn(@"Duplicate message received: %@", forwardedMessage);
             return;
         }
-        if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
-            OTRBaseMessage *message = nil;
-            if (incoming) {
-                OTRIncomingMessage *incomingMessage = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
-                NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
-                if([activeThreadYapKey isEqualToString:message.threadId]) {
-                    incomingMessage.read = YES;
-                }
-                message = incomingMessage;
-            } else {
-                message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+        OTRBaseMessage *message = nil;
+        if (incoming) {
+            OTRIncomingMessage *incomingMessage = [self incomingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
+            NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+            if([activeThreadYapKey isEqualToString:message.threadId]) {
+                incomingMessage.read = YES;
             }
-            message.originId = originId;
-            message.stanzaId = stanzaId;
-            [message saveWithTransaction:transaction];
+            message = incomingMessage;
+        } else {
+            message = [self outgoingMessageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
         }
+        if (delayedDeliveryDate) {
+            message.date = delayedDeliveryDate;
+        }
+        message.originId = originId;
+        message.stanzaId = stanzaId;
+        [message saveWithTransaction:transaction];
     }];
 }
 
-#pragma - mark XMPPMessageCarbonsDelegate
+#pragma mark - XMPPMessageCarbonsDelegate
 
 - (void)xmppMessageCarbons:(XMPPMessageCarbons *)xmppMessageCarbons willReceiveMessage:(XMPPMessage *)message outgoing:(BOOL)isOutgoing { }
 
 - (void)xmppMessageCarbons:(XMPPMessageCarbons *)xmppMessageCarbons didReceiveMessage:(XMPPMessage *)message outgoing:(BOOL)isOutgoing
 {
-    [self handleCarbonMessage:message stream:xmppMessageCarbons.xmppStream outgoing:isOutgoing];
+    [self handleForwardedMessage:message delayedDeliveryDate:nil stream:xmppMessageCarbons.xmppStream outgoing:isOutgoing];
+}
+
+#pragma mark - XMPPMessageArchiveManagementDelegate
+
+- (void)xmppMessageArchiveManagement:(XMPPMessageArchiveManagement *)xmppMessageArchiveManagement didFinishReceivingMessagesWithSet:(XMPPResultSet *)resultSet {
+    DDLogVerbose(@"MAM didFinishReceivingMessagesWithSet: %@", resultSet.prettyXMLString);
+}
+- (void)xmppMessageArchiveManagement:(XMPPMessageArchiveManagement *)xmppMessageArchiveManagement didReceiveMAMMessage:(XMPPMessage *)message {
+    DDLogVerbose(@"MAM didReceiveMAMMessage: %@", message.prettyXMLString);
+    NSXMLElement *result = message.mamResult;
+    XMPPMessage *forwardedMessage = result.forwardedMessage;
+    if (!forwardedMessage) { return; }
+    NSDate *delayedDeliveryDate = result.forwardedStanzaDelayedDeliveryDate;
+    XMPPJID *fromJID = forwardedMessage.from;
+    if (!fromJID) { return; }
+    BOOL isOutgoing = [fromJID isEqualToJID:xmppMessageArchiveManagement.xmppStream.myJID options:XMPPJIDCompareBare];
+    [self handleForwardedMessage:forwardedMessage delayedDeliveryDate:delayedDeliveryDate stream:xmppMessageArchiveManagement.xmppStream outgoing:isOutgoing];
+}
+- (void)xmppMessageArchiveManagement:(XMPPMessageArchiveManagement *)xmppMessageArchiveManagement didFailToReceiveMessages:(XMPPIQ *)error {
+    DDLogError(@"MAM didFailToReceiveMessages: %@", error.prettyXMLString);
+}
+
+- (void)xmppMessageArchiveManagement:(XMPPMessageArchiveManagement *)xmppMessageArchiveManagement didReceiveFormFields:(XMPPIQ *)iq {
+    DDLogVerbose(@"MAM didReceiveFormFields: %@", iq.prettyXMLString);
+}
+- (void)xmppMessageArchiveManagement:(XMPPMessageArchiveManagement *)xmppMessageArchiveManagement didFailToReceiveFormFields:(XMPPIQ *)iq {
+    DDLogError(@"MAM didFailToReceiveFormFields: %@", iq.prettyXMLString);
 }
 
 @end
