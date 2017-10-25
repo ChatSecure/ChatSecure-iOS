@@ -39,6 +39,27 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    /** New outgoing message. Unsaved! */
+    public func outgoingMessage(withText text: String, transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol {
+        let message = OTRXMPPRoomMessage()!
+        message.messageText = text
+        message.messageDate = Date()
+        message.roomJID = self.jid
+        message.roomUniqueId = self.uniqueId
+        message.senderJID = self.ownJID
+        message.state = .needsSending
+        return message
+    }
+    
+    public var currentMessageText: String? {
+        get {
+            return self.messageText
+        }
+        set(currentMessageText) {
+            self.messageText = currentMessageText
+        }
+    }
+    
     public var lastMessageIdentifier: String? {
         get {
             return self.lastRoomMessageId
@@ -49,7 +70,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func account(with transaction: YapDatabaseReadTransaction) -> OTRAccount? {
-        return OTRAccount.fetchObject(withUniqueID: threadAccountIdentifier(), transaction: transaction)
+        return OTRAccount.fetchObject(withUniqueID: threadAccountIdentifier, transaction: transaction)
     }
     
     public var isMuted: Bool {
@@ -62,31 +83,23 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return false
     }
     
-    public func threadName() -> String {
+    public var threadName: String {
         return self.subject ?? self.jid ?? ""
     }
     
-    public func threadIdentifier() -> String {
+    public var threadIdentifier: String {
         return self.uniqueId
     }
     
-    public func threadCollection() -> String {
+    public var threadCollection: String {
         return OTRXMPPRoom.collection
     }
     
-    public func threadAccountIdentifier() -> String {
+    public var threadAccountIdentifier: String {
         return self.accountUniqueId ?? ""
     }
     
-    public func setCurrentMessageText(_ text: String?) {
-        self.messageText = text
-    }
-    
-    public func currentMessageText() -> String? {
-        return self.messageText
-    }
-    
-    public func avatarImage() -> UIImage {
+    public var avatarImage: UIImage {
         if let image = OTRImages.image(withIdentifier: self.uniqueId) {
             return image
         } else {
@@ -96,12 +109,12 @@ extension OTRXMPPRoom:OTRThreadOwner {
                 OTRImages.setImage(image, forIdentifier: self.uniqueId)
                 return image
             } else {
-                return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
+                return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName)
             }
         }
     }
     
-    public func currentStatus() -> OTRThreadStatus {
+    public var currentStatus: OTRThreadStatus {
         switch self.joined {
         case true:
             return .available
@@ -115,7 +128,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         guard let viewTransaction = transaction.ext(OTRFilteredChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
             return nil
         }
-        let message = viewTransaction.lastObject(inGroup: self.threadIdentifier()) as? OTRMessageProtocol
+        let message = viewTransaction.lastObject(inGroup: self.threadIdentifier) as? OTRMessageProtocol
         return message
     }
     
@@ -133,7 +146,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return count
     }
     
-    public func isGroupThread() -> Bool {
+    public var isGroupThread: Bool {
         return true
     }
 }

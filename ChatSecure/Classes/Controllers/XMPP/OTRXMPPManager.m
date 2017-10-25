@@ -601,33 +601,38 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 
 /** Enqueues a message to be sent by message queue */
-- (void) enqueueMessage:(OTROutgoingMessage*)message {
+- (void) enqueueMessage:(id<OTRMessageProtocol>)message {
     NSParameterAssert(message);
     if (!message) { return; }
     [self enqueueMessages:@[message]];
 }
 
 /** Enqueues an array of messages to be sent by message queue */
-- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages {
+- (void) enqueueMessages:(NSArray<id<OTRMessageProtocol>>*)messages {
     NSParameterAssert(messages);
     if (!messages.count) {
         return;
     }
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [messages enumerateObjectsUsingBlock:^(OTROutgoingMessage * _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+        [messages enumerateObjectsUsingBlock:^(id<OTRMessageProtocol> _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (message.isMessageIncoming) {
+                // We cannot send incoming messages
+                DDLogError(@"Cannot send incoming message: %@", message);
+                return;
+            }
             //2. Create send message task
-            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:nil];
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:message.messageDate];
             //3. save both to database
             [message saveWithTransaction:transaction];
             [sendingAction saveWithTransaction:transaction];
-            //Update buddy
-            OTRBuddy *buddy = [message buddyWithTransaction:transaction];
-            if (!buddy) {
+            //Update thread
+            id<OTRThreadOwner> thread = [message threadOwnerWithTransaction:transaction];
+            if (!thread) {
                 return;
             }
-            buddy.composingMessageString = nil;
-            buddy.lastMessageId = message.uniqueId;
-            [buddy saveWithTransaction:transaction];
+            thread.currentMessageText = nil;
+            thread.lastMessageIdentifier = message.uniqueId;
+            [thread saveWithTransaction:transaction];
         }];
     }];
 }

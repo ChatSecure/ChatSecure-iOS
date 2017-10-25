@@ -34,7 +34,7 @@ extension UITableViewCell {
     func setAppearance(userInfo: OTRUserInfoProfile, usernameLabel: UILabel, displayNameLabel: UILabel, avatarImageView: UIImageView) {
         var displayName = userInfo.displayName
         if let userInfo = userInfo as? OTRThreadOwner {
-            displayName = userInfo.threadName()
+            displayName = userInfo.threadName
         }
         usernameLabel.text = userInfo.username
         displayNameLabel.text = displayName

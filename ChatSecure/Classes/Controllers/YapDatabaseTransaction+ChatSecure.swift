@@ -93,7 +93,7 @@ public extension YapDatabaseReadTransaction {
             return []
         }
         let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
-        let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier()])
+        let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier])
         var result = [OTRMessageProtocol]()
         let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
             if let message = object as? OTRMessageProtocol {

@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
     OTRThreadStatusOffline      = 5
 };
 
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRThreadOwner <OTRYapDatabaseObjectProtocol>
 @required
 /** If thread should be hidden from main lists */
@@ -28,22 +29,24 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 /** How long until the thread is unmuted. If nil, thread will be considered unmuted. */
 @property (nonatomic, strong, nullable) NSDate *muteExpiration;
 
-- (nonnull NSString *)threadName;
-- (nonnull NSString *)threadIdentifier;
-- (nonnull NSString *)threadCollection;
-- (nonnull NSString *)threadAccountIdentifier;
-- (void)setCurrentMessageText:(nullable NSString*)text;
-- (nullable NSString *)currentMessageText;
-- (nonnull UIImage *)avatarImage;
-- (OTRThreadStatus)currentStatus;
+@property (nonatomic, readonly) NSString *threadName;
+@property (nonatomic, readonly) NSString *threadIdentifier;
+@property (nonatomic, readonly) NSString *threadCollection;
+@property (nonatomic, readonly) NSString *threadAccountIdentifier;
+@property (nonatomic, readwrite, nullable) NSString *currentMessageText;
+@property (nonatomic, readonly) UIImage *avatarImage;
+@property (nonatomic, readonly) OTRThreadStatus currentStatus;
 /** The database identifier for the thread's most recent message. @warn ⚠️ This is no longer used for fetching with lastMessageWithTransaction: and may be invalid, but is being kept around due to a hack to force-show new threads that are empty. */
 @property (nonatomic, strong, readwrite, nullable) NSString* lastMessageIdentifier;
-- (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
-- (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
-- (BOOL)isGroupThread;
+- (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:( YapDatabaseReadTransaction *)transaction;
+- (NSUInteger)numberOfUnreadMessagesWithTransaction:( YapDatabaseReadTransaction*)transaction;
+@property (nonatomic, readonly) BOOL isGroupThread;
 
-- (nullable OTRAccount*)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
+/** New outgoing message. Unsaved! */
+- (id<OTRMessageProtocol>)outgoingMessageWithText:(NSString*)text transaction:(YapDatabaseReadTransaction*)transaction;
 @end
+NS_ASSUME_NONNULL_END
 
 

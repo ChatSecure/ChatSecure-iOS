@@ -117,7 +117,9 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         if let threadId = self.roomUniqueId {
             return threadId
         } else {
-            fatalError("ThreadId should not be nil!")
+            DDLogError("RoomMessage is orphaned and not attached to a room! \(self.uniqueId)")
+            // Returning empty string may prevent a crash, but is not ideal...
+            return ""
         }
     }
     

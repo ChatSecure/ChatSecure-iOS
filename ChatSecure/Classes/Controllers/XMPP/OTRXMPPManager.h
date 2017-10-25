@@ -91,10 +91,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) goOnline;
 
 /** Enqueues a message to be sent by message queue */
-- (void) enqueueMessage:(OTROutgoingMessage*)message;
+- (void) enqueueMessage:(id<OTRMessageProtocol>)message;
 
 /** Enqueues an array of messages to be sent by message queue */
-- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages;
+- (void) enqueueMessages:(NSArray<id<OTRMessageProtocol>>*)messages;
 
 @end
 

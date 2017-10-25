@@ -54,11 +54,11 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
+        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
         
         //Set nav controller root view controller to mVC and then show detail with nav controller
         
-        mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
+        mVC.setThreadKey(threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
         
         //iPad check where there are two navigation controllers and we want the second one
         if splitVC.viewControllers.count > 1 && ((splitVC.viewControllers[1] as? UINavigationController)?.viewControllers.contains(mVC)) ?? false {

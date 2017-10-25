@@ -197,6 +197,18 @@
 
 #pragma - mark OTRThreadOwner Methods
 
+/** New outgoing message w/ preferred message security. Unsaved! */
+- (id<OTRMessageProtocol>) outgoingMessageWithText:(NSString *)text transaction:(YapDatabaseReadTransaction *)transaction {
+    NSParameterAssert(text);
+    NSParameterAssert(transaction);
+    OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
+    message.text = text;
+    message.buddyUniqueId = self.uniqueId;
+    OTRMessageTransportSecurity preferredSecurity = [self preferredTransportSecurityWithTransaction:transaction];
+    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:preferredSecurity];
+    return message;
+}
+
 - (NSString*) lastMessageIdentifier {
     return self.lastMessageId;
 }

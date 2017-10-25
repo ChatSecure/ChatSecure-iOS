@@ -334,7 +334,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             }
             mediaItem.parentObjectKey = message.messageKey
             mediaItem.parentObjectCollection = message.messageCollection
-            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier())
+            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier)
             self.connection.readWrite { transaction in
                 message.save(with: transaction)
                 mediaItem.save(with: transaction)
@@ -395,7 +395,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 DDLogError("Could not make JPEG out of image!")
                 return
             }
-            OTRMediaFileManager.shared.setData(ourImageData, for: imageItem, buddyUniqueId: thread.threadIdentifier(), completion: { (bytesWritten: Int, error: Error?) in
+            OTRMediaFileManager.shared.setData(ourImageData, for: imageItem, buddyUniqueId: thread.threadIdentifier, completion: { (bytesWritten: Int, error: Error?) in
                 self.connection.readWrite({ (transaction) in
                     imageItem.touchParentMessage(with: transaction)
                     if let error = error {
@@ -430,7 +430,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         } else if let room = thread as? OTRXMPPRoom {
             let message = OTRXMPPRoomMessage()!
             message.messageDate = Date()
-            message.roomUniqueId = room.threadIdentifier()
+            message.roomUniqueId = room.threadIdentifier
             message.roomJID = room.jid
             message.senderJID = room.ownJID
             message.state = .needsSending
@@ -521,7 +521,7 @@ extension FileTransferManager {
             if !force {
                 readConnection.read { (transaction) in
                     downloads = message.existingDownloads(with: transaction)
-                    if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
+                    if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier, transaction: transaction) {
                         disableAutomaticURLFetching = account.disableAutomaticURLFetching
                     }
                 }

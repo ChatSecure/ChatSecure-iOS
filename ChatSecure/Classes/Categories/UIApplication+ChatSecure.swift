@@ -52,7 +52,7 @@ public extension UIApplication {
         guard let threadOwner = thread else {
             return
         }
-        let threadName = threadOwner.threadName()
+        let threadName = threadOwner.threadName
         
         var text = "\(threadName)"
         
@@ -75,7 +75,7 @@ public extension UIApplication {
     
     public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
         var name = SOMEONE_STRING()
-        if let threadName = thread?.threadName() {
+        if let threadName = thread?.threadName {
             name = threadName
         }
         
@@ -101,7 +101,7 @@ public extension UIApplication {
         var name = SOMEONE_STRING()
         if let buddyName = (thread as? OTRBuddy)?.displayName {
             name = buddyName
-        } else if let threadName = thread?.threadName() {
+        } else if let threadName = thread?.threadName {
             name = threadName
         }
         
@@ -117,8 +117,8 @@ public extension UIApplication {
             var identifier:String? = nil
             var userInfo:[AnyHashable:Any]? = nil
             if let t = thread {
-                identifier = t.threadIdentifier()
-                userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+                identifier = t.threadIdentifier
+                userInfo = [kOTRNotificationThreadKey:t.threadIdentifier, kOTRNotificationThreadCollection:t.threadCollection]
             }
             self.showLocalNotificationWith(identifier: identifier, body: text, badge: unreadCount, userInfo: userInfo, recurring: false)
         }

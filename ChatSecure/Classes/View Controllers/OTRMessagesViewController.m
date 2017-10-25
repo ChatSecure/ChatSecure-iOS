@@ -1445,7 +1445,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
-    if(![text length]) {
+    if(!text.length) {
         return;
     }
     
@@ -1458,40 +1458,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     //   A side effect is that sent messages may not appear in the UI immediately
     [self finishSendingMessage];
     
-    if (![self isGroupChat]) {
-    //1. Create new message database object
-    __block OTROutgoingMessage *message = nil;
+    __block id<OTRMessageProtocol> message = nil;
     __block OTRXMPPManager *xmpp = nil;
-    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-        if (!buddy) { return; }
-        message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        id<OTRThreadOwner> thread = [self threadObjectWithTransaction:transaction];
+        message = [thread outgoingMessageWithText:text transaction:transaction];
         xmpp = [self xmppManagerWithTransaction:transaction];
-    } completionBlock:^{
-        if (!message || !xmpp) { return; }
-        [xmpp enqueueMessage:message];
     }];
-    } else {
-        __weak __typeof__(self) weakSelf = self;
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            __typeof__(self) strongSelf = weakSelf;
-            
-            OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
-            databaseMessage.messageText = text;
-            databaseMessage.messageDate = [NSDate date];
-            databaseMessage.roomUniqueId = self.threadKey;
-            OTRXMPPRoom *room = (OTRXMPPRoom *)[strongSelf threadObjectWithTransaction:transaction];
-            databaseMessage.roomJID = room.jid;
-            databaseMessage.roomUniqueId = room.uniqueId;
-            databaseMessage.senderJID = room.ownJID;
-            databaseMessage.state = RoomMessageStateNeedsSending;
-            
-            [databaseMessage saveWithTransaction:transaction];
-            
-            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:databaseMessage date:databaseMessage.messageDate];
-            [sendingAction saveWithTransaction:transaction];
-        }];
-    }
+    if (!message || !xmpp) { return; }
+    [xmpp enqueueMessage:message];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender

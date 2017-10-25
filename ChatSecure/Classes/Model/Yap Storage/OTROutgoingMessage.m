@@ -36,19 +36,6 @@
     }
 }
 
-/** New outgoing message w/ preferred message security. Unsaved! */
-+ (instancetype) messageToBuddy:(OTRBuddy *)buddy text:(NSString *)text transaction:(YapDatabaseReadTransaction *)transaction {
-    NSParameterAssert(buddy);
-    NSParameterAssert(text);
-    NSParameterAssert(transaction);
-    OTROutgoingMessage *message = [[OTROutgoingMessage alloc] init];
-    message.text = text;
-    message.buddyUniqueId = buddy.uniqueId;
-    OTRMessageTransportSecurity preferredSecurity = [buddy preferredTransportSecurityWithTransaction:transaction];
-    message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithMessageSecurity:preferredSecurity];
-    return message;
-}
-
 #pragma MARK - OTRMessageProtocol 
 
 - (BOOL)isMessageIncoming

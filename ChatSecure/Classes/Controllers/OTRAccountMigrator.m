@@ -104,7 +104,7 @@
     NSURL *shareLink = [NSURL otr_shareLink:NSURL.otr_shareBaseURL jid:self.migratedAccount.bareJID queryItems:@[item]];
     
     NSString *messageText = [NSString stringWithFormat:@"%@: %@", MY_NEW_ACCOUNT_INFO_STRING(), (shareLink != nil) ? shareLink : self.migratedAccount.bareJID.bare];
-    NSMutableArray<OTROutgoingMessage*> *outgoingMessages = [NSMutableArray array];
+    NSMutableArray<id<OTRMessageProtocol>> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = @[];
     __block NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray array];
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
@@ -130,7 +130,7 @@
             
             // If spamming friends, create some messages for them
             if (self.shouldSpamFriends) {
-                OTROutgoingMessage *message = [OTROutgoingMessage messageToBuddy:obj text:messageText transaction:transaction];
+                id<OTRMessageProtocol> message = [obj outgoingMessageWithText:messageText transaction:transaction];
                 [outgoingMessages addObject:message];
             }
         }];
