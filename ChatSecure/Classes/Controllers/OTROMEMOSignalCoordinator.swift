@@ -17,16 +17,16 @@ import SignalProtocolObjC
  */
 @objc open class OTROMEMOSignalCoordinator: NSObject {
 
-    public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
+    @objc public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
     
     open let signalEncryptionManager:OTRAccountSignalEncryptionManager
     open let omemoStorageManager:OTROMEMOStorageManager
-    open let accountYapKey:String
-    open let databaseConnection:YapDatabaseConnection
-    open weak var omemoModule:OMEMOModule?
-    open weak var omemoModuleQueue:DispatchQueue?
-    open var callbackQueue:DispatchQueue
-    open let workQueue:DispatchQueue
+    @objc open let accountYapKey:String
+    @objc open let databaseConnection:YapDatabaseConnection
+    @objc open weak var omemoModule:OMEMOModule?
+    @objc open weak var omemoModuleQueue:DispatchQueue?
+    @objc open var callbackQueue:DispatchQueue
+    @objc open let workQueue:DispatchQueue
     fileprivate var myJID:XMPPJID? {
         get {
             return omemoModule?.xmppStream?.myJID

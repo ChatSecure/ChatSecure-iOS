@@ -12,17 +12,17 @@ import Foundation
 @objc open class MessagesViewControllerState:NSObject {
     
     /** This should reflect whether the textview currently has text */
-    open var hasText = false
+    @objc open var hasText = false
     
     /** This should reflect if the current thread can send a knock message and therefore show knock UI */
-    open var canKnock = false
+    @objc open var canKnock = false
     
     /** Reflects media messages can be send. Right now OTRData is only supported so based on if OTR session exists */
-    open var canSendMedia = false
+    @objc open var canSendMedia = false
     
     /** This should reflect how messages should be sent and what the buddy prefrences are */
-    open var messageSecurity = OTRMessageTransportSecurity.plaintext
+    @objc open var messageSecurity = OTRMessageTransportSecurity.plaintext
     
     /** This should reflect if the thread(buddy) is online or not so show knock UI or not. */
-    open var isThreadOnline = false
+    @objc open var isThreadOnline = false
 }

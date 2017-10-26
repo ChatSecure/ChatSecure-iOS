@@ -14,7 +14,7 @@ import OTRAssets
 import Kvitto
 
 public extension PurchaseViewController {
-    public class func show(from viewController: UIViewController) {
+    @objc public class func show(from viewController: UIViewController) {
         let assets = OTRAssets.resourcesBundle
         let storyboard = UIStoryboard(name: "Purchase", bundle: assets)
         guard let vc = storyboard.instantiateInitialViewController() else { return }
@@ -206,7 +206,7 @@ extension SKProduct {
 }
 
 public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequestDelegate {
-    public static let shared = TransactionObserver()
+    @objc public static let shared = TransactionObserver()
     let paymentQueue = SKPaymentQueue.default()
     public var transactionSuccess: ((_ transaction: SKPaymentTransaction) -> Void)?
     
@@ -255,7 +255,7 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
         return true
     }
     
-    public static var hasValidReceipt: Bool {
+    @objc public static var hasValidReceipt: Bool {
         guard let receipt = self.receipt,
               self.hasFreshReceipt else {
             return false
@@ -285,11 +285,11 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
     }
     
     /** Start observing IAP transactions */
-    public func startObserving() {
+    @objc public func startObserving() {
         paymentQueue.add(self)
     }
     
-    public func stopObserving() {
+    @objc public func stopObserving() {
         paymentQueue.remove(self)
     }
     

@@ -16,8 +16,8 @@ import YapTaskQueue
 
 open class BuddyAction: OTRYapDatabaseObject, YapActionable {
     
-    open var action:BuddyActionType = .delete
-    open var buddy:OTRBuddy?
+    @objc open var action:BuddyActionType = .delete
+    @objc open var buddy:OTRBuddy?
     
     open func yapActionItems() -> [YapActionItem]? {
         
@@ -74,9 +74,9 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
     }
 }
 
-open class OTRYapBuddyAction :OTRYapDatabaseObject, YapTaskQueueAction {
-    open var buddyKey:String = ""
-    open var date:Date = Date()
+@objc open class OTRYapBuddyAction: OTRYapDatabaseObject, YapTaskQueueAction {
+    @objc open var buddyKey:String = ""
+    @objc open var date:Date = Date()
 
     override open var uniqueId: String {
         return buddyKey
@@ -119,6 +119,6 @@ open class OTRYapAddBuddyAction :OTRYapBuddyAction, YapDatabaseRelationshipNode 
 }
 
 open class OTRYapRemoveBuddyAction :OTRYapBuddyAction {
-    open var accountKey:String?
-    open var buddyJid:String?
+    @objc open var accountKey:String?
+    @objc open var buddyJid:String?
 }

@@ -10,7 +10,7 @@ import Foundation
 
 public extension OTRXMPPAccount {
 
-    public var needsMigration: Bool {
+    @objc public var needsMigration: Bool {
         guard let jid = bareJID else { return false }
         if OTRServerDeprecation.isDeprecated(server: jid.domain) {
             if !autologin, let xmpp = OTRProtocolManager.shared.protocol(for: self) as? OTRXMPPManager,

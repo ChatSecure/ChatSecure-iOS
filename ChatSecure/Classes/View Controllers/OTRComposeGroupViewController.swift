@@ -94,7 +94,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     generatedGroupName.append(buddy.displayName)
                 }
                 if generatedGroupName.characters.count > 30 {
-                    generatedGroupName = generatedGroupName.substring(to: generatedGroupName.index(generatedGroupName.startIndex, offsetBy: 27)).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
+                    generatedGroupName = generatedGroupName.prefix(27).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
                     generatedGroupName.append("...")
                 }
                 delegate.groupBuddiesSelected(self, buddyUniqueIds: buddyIds, groupName: generatedGroupName)

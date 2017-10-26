@@ -13,7 +13,7 @@ import OTRAssets
 
 open class UserProfileViewController: XLFormViewController {
     
-    open var completionBlock: (()->Void)?
+    @objc open var completionBlock: (()->Void)?
     
     // Crypto Chooser row tags
     open static let DefaultRowTag = "DefaultRowTag"
@@ -41,7 +41,7 @@ open class UserProfileViewController: XLFormViewController {
         return xmpp.omemoSignalCoordinator
     }()
     
-    public init(accountKey:String, connection: YapDatabaseConnection, form: XLFormDescriptor) {
+    @objc public init(accountKey:String, connection: YapDatabaseConnection, form: XLFormDescriptor) {
         self.accountKey = accountKey
         self.connection = connection
         super.init(nibName: nil, bundle: nil)
@@ -71,7 +71,7 @@ open class UserProfileViewController: XLFormViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    open func doneButtonPressed(_ sender: AnyObject?) {
+    @objc open func doneButtonPressed(_ sender: AnyObject?) {
         var devicesToSave: [OTROMEMODevice] = []
         var otrFingerprintsToSave: [OTRFingerprint] = []
         for (_, value) in form.formValues() {
@@ -292,7 +292,7 @@ open class UserProfileViewController: XLFormViewController {
     }
     
     
-    open static func profileFormDescriptorForAccount(_ account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
+    @objc open static func profileFormDescriptorForAccount(_ account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
         let form = XLFormDescriptor(title: Profile_String())
         
         let yourProfileSection = XLFormSectionDescriptor.formSection(withTitle: Me_String())

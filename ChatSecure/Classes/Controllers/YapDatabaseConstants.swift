@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class SecondaryIndexName: NSObject {
+@objc public class SecondaryIndexName: NSObject {
     /// XEP-0359 origin-id
-    public static let originId = "SecondaryIndexNameOriginId"
+    @objc public static let originId = "SecondaryIndexNameOriginId"
     /// XEP-0359 stanza-id
-    public static let stanzaId = "SecondaryIndexNameStanzaId"
+    @objc public static let stanzaId = "SecondaryIndexNameStanzaId"
 }
 
 @objc public enum DatabaseExtensionName: Int {
@@ -65,13 +65,13 @@ public class SecondaryIndexName: NSObject {
     }
 }
 
-public class DatabaseNotificationName:NSObject {
-    public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
+@objc public class DatabaseNotificationName:NSObject {
+    @objc public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
 }
 
-open class DatabaseNotificationKey:NSObject {
-    open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
-    open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
+@objc open class DatabaseNotificationKey:NSObject {
+    @objc open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
+    @objc open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
 }
 
 @objc public enum BuddyFTSColumnName:Int {
@@ -89,15 +89,15 @@ open class DatabaseNotificationKey:NSObject {
 /// This is for briding to obj-c. Looking for a better way of using swift enums and stirngs.
 @objc open class YapDatabaseConstants: NSObject {
 
-    open class func edgeName(_ edgeName:RelationshipEdgeName) -> String {
+    @objc open class func edgeName(_ edgeName:RelationshipEdgeName) -> String {
         return edgeName.name()
     }
     
-    open class func extensionName(_ extensionName:DatabaseExtensionName) -> String {
+    @objc open class func extensionName(_ extensionName:DatabaseExtensionName) -> String {
         return extensionName.name()
     }
     
-    open class func buddyFTSColumnName(_ columnName:BuddyFTSColumnName) -> String {
+    @objc open class func buddyFTSColumnName(_ columnName:BuddyFTSColumnName) -> String {
         return columnName.name()
     }
     

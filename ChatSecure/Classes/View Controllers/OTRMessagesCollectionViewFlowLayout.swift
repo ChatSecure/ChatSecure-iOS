@@ -14,11 +14,11 @@ import JSQMessagesViewController
     func hasBubbleSizeForCellAtIndexPath(_ indexPath: IndexPath) -> Bool
 }
 
-open class OTRMessagesCollectionViewFlowLayout:JSQMessagesCollectionViewFlowLayout {
+@objc open class OTRMessagesCollectionViewFlowLayout:JSQMessagesCollectionViewFlowLayout {
     
-    open weak var sizeDelegate:OTRMessagesCollectionViewFlowLayoutSizeProtocol?
+    @objc open weak var sizeDelegate:OTRMessagesCollectionViewFlowLayoutSizeProtocol?
     
-    override open func messageBubbleSizeForItem(at indexPath: IndexPath!) -> CGSize {
+    @objc override open func messageBubbleSizeForItem(at indexPath: IndexPath!) -> CGSize {
         guard let delegate = self.sizeDelegate, !delegate.hasBubbleSizeForCellAtIndexPath(indexPath) else {
             return super.messageBubbleSizeForItem(at: indexPath)
         }

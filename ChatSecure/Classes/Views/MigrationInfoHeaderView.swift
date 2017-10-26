@@ -12,7 +12,7 @@ open class MigrationInfoHeaderView: UIView {
     @IBOutlet public var titleLabel: UILabel!
     @IBOutlet public var descriptionLabel: UILabel!
     @IBOutlet public var startButton: UIButton!
-    public var account: OTRXMPPAccount?
+    @objc public var account: OTRXMPPAccount?
     
     override open func layoutSubviews() {
         super.layoutSubviews()

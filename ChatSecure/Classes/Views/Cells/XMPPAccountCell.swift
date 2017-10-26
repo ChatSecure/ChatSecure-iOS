@@ -17,14 +17,14 @@ public class XMPPAccountCell: UITableViewCell {
     @IBOutlet public weak var accountNameLabel: UILabel!
     @IBOutlet public weak var infoButton: UIButton!
     
-    public var infoButtonAction: CellButtonBlock?
-    public var avatarButtonAction: CellButtonBlock?
+    @objc public var infoButtonAction: CellButtonBlock?
+    @objc public var avatarButtonAction: CellButtonBlock?
     
-    public class func cellIdentifier() -> String {
+    @objc public class func cellIdentifier() -> String {
         return "XMPPAccountCell"
     }
     
-    public class func cellHeight() -> CGFloat {
+    @objc public class func cellHeight() -> CGFloat {
         return 80
     }
     
@@ -32,11 +32,11 @@ public class XMPPAccountCell: UITableViewCell {
         avatarButton.backgroundColor = nil
     }
     
-    public func setAppearance(buddy: OTRBuddy) {
+    @objc public func setAppearance(buddy: OTRBuddy) {
         setAppearance(userInfo: buddy)
     }
 
-    public func setAppearance(account: OTRXMPPAccount) {
+    @objc public func setAppearance(account: OTRXMPPAccount) {
         setAppearance(userInfo: account)
     }
     

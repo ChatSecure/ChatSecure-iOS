@@ -18,7 +18,7 @@ import XMPPFramework
     fileprivate var waitingForVCardFetch:Bool = false
     fileprivate var completion:((Bool)->Void)?
     
-    public init(photoData:Data, xmppvCardTempModule:XMPPvCardTempModule?) {
+    @objc public init(photoData:Data, xmppvCardTempModule:XMPPvCardTempModule?) {
         self.photoData = photoData
         self.xmppvCardTempModule = xmppvCardTempModule
         super.init()
@@ -28,7 +28,7 @@ import XMPPFramework
      This does the actual work of updating the vCard fot the stream's myJID.
      First it makes sure it has an up to date vCard
      **/
-    open func updatePhoto(_ completion:@escaping (_ success:Bool)->Void) -> Void {
+    @objc open func updatePhoto(_ completion:@escaping (_ success:Bool)->Void) -> Void {
         
         //make sure the stream is authenticated
         guard let isAuthenticated = self.xmppvCardTempModule?.xmppStream?.isAuthenticated, isAuthenticated == true else {

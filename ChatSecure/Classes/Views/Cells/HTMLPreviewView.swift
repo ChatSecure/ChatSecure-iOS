@@ -17,7 +17,7 @@ public class HTMLPreviewView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var domainLabel: UILabel!
     
-    public func setURL(_ url: URL?, title: String?) {
+    @objc public func setURL(_ url: URL?, title: String?) {
         domainLabel.text = url?.host
         titleLabel.text = title ?? OPEN_IN_SAFARI()
     }

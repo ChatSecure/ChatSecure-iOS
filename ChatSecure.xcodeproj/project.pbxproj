@@ -424,7 +424,6 @@
 		D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBE21BA7A06A00CD8331 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */; };
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
 		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -506,6 +505,7 @@
 		D9AE3A311BA8D84500255537 /* OTRBranding.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE3A2F1BA8D84500255537 /* OTRBranding.m */; };
 		D9AE3A321BA8D9AB00255537 /* OTRConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EE1A16D1A300C17BAE /* OTRConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
+		D9B3EC221FA196CE00E63C7F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */; };
 		D9B79B951ECF951F00883963 /* OTRFileItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9B79B931ECF951F00883963 /* OTRFileItem.h */; };
 		D9B79B961ECF951F00883963 /* OTRFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B79B941ECF951F00883963 /* OTRFileItem.m */; };
 		D9B7C5CE1EC3C9ED008D99E6 /* OTRAccountMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = D93718521EC267F800766D49 /* OTRAccountMigrator.m */; };
@@ -950,7 +950,6 @@
 		63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewControllerState.swift; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatSecureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AFB81A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddyManager.h; sourceTree = "<group>"; };
@@ -1148,6 +1147,7 @@
 		D9AE3A231BA8D02800255537 /* OTRImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = OTRImages.xcassets; path = Images/OTRImages.xcassets; sourceTree = "<group>"; };
 		D9AE3A2E1BA8D84500255537 /* OTRBranding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBranding.h; sourceTree = "<group>"; };
 		D9AE3A2F1BA8D84500255537 /* OTRBranding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBranding.m; sourceTree = "<group>"; };
+		D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9B79B931ECF951F00883963 /* OTRFileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFileItem.h; sourceTree = "<group>"; };
 		D9B79B941ECF951F00883963 /* OTRFileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFileItem.m; sourceTree = "<group>"; };
 		D9B9B1311DC7F3AC0007F5A7 /* UserInfoProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoProfileCell.swift; sourceTree = "<group>"; };
@@ -1877,6 +1877,7 @@
 		6396AF9C1A169D54009F3E6C /* ChatSecure */ = {
 			isa = PBXGroup;
 			children = (
+				D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */,
 				D95553D71C4F16730019667A /* ChatSecure.entitlements */,
 				633104D71A169EE600C17BAE /* Resources */,
 				6396AF9D1A169D54009F3E6C /* Supporting Files */,
@@ -1888,7 +1889,6 @@
 			isa = PBXGroup;
 			children = (
 				6396AF9E1A169D54009F3E6C /* Info.plist */,
-				6396AF9F1A169D54009F3E6C /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2492,7 +2492,7 @@
 					6396AF991A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 4T8JLQR6GR;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
@@ -3040,7 +3040,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93DDBE21BA7A06A00CD8331 /* main.m in Sources */,
+				D9B3EC221FA196CE00E63C7F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3410,6 +3410,7 @@
 		6365CF041E2453F6009E213F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -3426,7 +3427,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = ChatSecure;
 			};
 			name = Debug;
@@ -3434,6 +3435,7 @@
 		6365CF051E2453F6009E213F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				COPY_PHASE_STRIP = NO;
@@ -3444,7 +3446,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = ChatSecure;
 			};
 			name = Release;
@@ -3593,7 +3595,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -3629,7 +3631,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -3657,8 +3659,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -3680,7 +3681,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -3710,7 +3711,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -3742,7 +3743,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

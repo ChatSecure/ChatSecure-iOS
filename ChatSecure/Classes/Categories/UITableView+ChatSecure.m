@@ -54,7 +54,7 @@
         }];
         
         if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
-            
+            OTRXMPPRoom *room = (OTRXMPPRoom*)thread;
             //Leave room
             NSString *accountKey = [thread threadAccountIdentifier];
             __block OTRAccount *account = nil;
@@ -62,7 +62,7 @@
                 account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
             }];
             OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            XMPPJID *jid = [XMPPJID jidWithString:((OTRXMPPRoom *)thread).jid];
+            XMPPJID *jid = [XMPPJID jidWithString:room.jid];
             [xmppManager.roomManager leaveRoom:jid];
             
             //Delete database items

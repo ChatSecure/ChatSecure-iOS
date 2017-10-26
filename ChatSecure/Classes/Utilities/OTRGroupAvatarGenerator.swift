@@ -33,9 +33,9 @@ open class OTRGroupAvatarGenerator {
         let c = Int(generator.random() * range) - halfrange
         let d = Int(generator.random() * range) - halfrange
         
-        let colorTop = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
-        let colorMiddle = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
-        let colorBottom = arrayOfColors[Int(generator.random().multiplied(by: Double(arrayOfColors.count)))]
+        let colorTop = arrayOfColors[Int(generator.random() *  Double(arrayOfColors.count))]
+        let colorMiddle = arrayOfColors[Int(generator.random() * Double(arrayOfColors.count))]
+        let colorBottom = arrayOfColors[Int(generator.random() * Double(arrayOfColors.count))]
         
         UIGraphicsBeginImageContext(CGSize(width: width, height: height))
         if let ctx = UIGraphicsGetCurrentContext() {
@@ -71,7 +71,7 @@ open class OTRGroupAvatarGenerator {
     
     open static func avatarTopColor(withSeed seed: String) -> CGColor {
         let generator = LinearCongruentialGenerator(seed: seed.javaHash())
-        return arrayOfColors[Int(generator.random(at: 5).multiplied(by: Double(arrayOfColors.count)))]
+        return arrayOfColors[Int(generator.random(at: 5) * Double(arrayOfColors.count))]
     }
     
     static func colorWithHexString(hexColorString:String) -> UIColor {
@@ -121,7 +121,9 @@ extension String {
     func javaHash() -> Int {
         var hash:Int32 = 0
         for char in self.utf16 {
-            hash = Int32.addWithOverflow(Int32.multiplyWithOverflow(31, hash).0, Int32(UInt(char))).0
+            let lhs: Int32 = Int32(31).multipliedReportingOverflow(by: hash).0
+            let rhs: Int32 = Int32(UInt(char))
+            hash = lhs.addingReportingOverflow(rhs).0
         }
         return Int(hash)
     }

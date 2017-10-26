@@ -17,12 +17,12 @@ import OTRAssets
  */
 public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDelegate {
     
-    public weak var xmpp: OTRXMPPManager?
-    public let push: PushController
+    @objc public weak var xmpp: OTRXMPPManager?
+    @objc public let push: PushController
     
-    public var result = ServerCheckResult()
+    @objc public var result = ServerCheckResult()
     
-    public static let UpdateNotificationName = Notification.Name(rawValue: "ServerCheckUpdateNotification")
+    @objc public static let UpdateNotificationName = Notification.Name(rawValue: "ServerCheckUpdateNotification")
 
     deinit {
         xmpp?.serverCapabilities.removeDelegate(self)
@@ -31,7 +31,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     }
     
     
-    public init(xmpp: OTRXMPPManager, push: PushController) {
+    @objc public init(xmpp: OTRXMPPManager, push: PushController) {
         self.push = push
         self.xmpp = xmpp
         super.init()
@@ -42,7 +42,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
         fetch()
     }
     
-    public func getCombinedPushStatus() -> ServerCheckPushStatus {
+    @objc public func getCombinedPushStatus() -> ServerCheckPushStatus {
         if let xmpp = xmpp, xmpp.connectionStatus != .connected {
             return .unknown
         }
@@ -52,14 +52,14 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     
     
     /// set pushInfoReady, capabilitiesReady, pushStatusUpdate to get result
-    public func fetch() {
+    @objc public func fetch() {
         refreshPush()
         refreshCapabilities()
         checkReady()
     }
     
     /// Must be called from main queue
-    public func refresh() {
+    @objc public func refresh() {
         result.pushInfo = nil
         xmpp?.serverCapabilities.fetchAllCapabilities()
         fetch()
