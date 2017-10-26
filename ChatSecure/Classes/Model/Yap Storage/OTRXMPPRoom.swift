@@ -9,19 +9,19 @@
 import UIKit
 import YapDatabase.YapDatabaseRelationship
 
-open class OTRXMPPRoom: OTRYapDatabaseObject {
+@objc open class OTRXMPPRoom: OTRYapDatabaseObject {
     
-    open var isArchived = false
-    open var muteExpiration:Date?
-    open var accountUniqueId:String?
+    @objc open var isArchived = false
+    @objc open var muteExpiration:Date?
+    @objc open var accountUniqueId:String?
     /** Your full JID for the room e.g. xmpp-development@conference.deusty.com/robbiehanson */
-    open var ownJID:String?
-    open var jid:String?
-    open var joined = false
-    open var messageText:String?
-    open var lastRoomMessageId:String?
-    open var subject:String?
-    open var roomPassword:String?
+    @objc open var ownJID:String?
+    @objc open var jid:String?
+    @objc open var joined = false
+    @objc open var messageText:String?
+    @objc open var lastRoomMessageId:String?
+    @objc open var subject:String?
+    @objc open var roomPassword:String?
     override open var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
@@ -33,7 +33,7 @@ open class OTRXMPPRoom: OTRYapDatabaseObject {
         }
     }
     
-    open class func createUniqueId(_ accountId:String, jid:String) -> String {
+    @objc open class func createUniqueId(_ accountId:String, jid:String) -> String {
         return accountId + jid
     }
 }

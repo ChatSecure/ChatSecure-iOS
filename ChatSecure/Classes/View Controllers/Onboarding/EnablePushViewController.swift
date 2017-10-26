@@ -13,7 +13,7 @@ import MBProgressHUD
 open class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
-    open var account: OTRAccount?
+    @objc open var account: OTRAccount?
     fileprivate var userLaunchedToSettings: Bool = false
     private var hud: MBProgressHUD?
 
@@ -68,7 +68,7 @@ open class EnablePushViewController: UIViewController {
         }
     }
     
-    func didRegisterUserNotificationSettings(_ notification: Notification) {
+    @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
         if PushController.canReceivePushNotifications() {
             showNextScreen()
         } else {

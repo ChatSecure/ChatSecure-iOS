@@ -9,11 +9,11 @@
 import Foundation
 
 open class OTRServerDeprecation: NSObject {
-    open var name:String
-    open var domain:String
-    open var shutdownDate:Date?
+    @objc open var name:String
+    @objc open var domain:String
+    @objc open var shutdownDate:Date?
     
-    public init(name:String, domain:String, shutdownDate:Date?) {
+    @objc public init(name:String, domain:String, shutdownDate:Date?) {
         self.name = name
         self.domain = domain
         self.shutdownDate = shutdownDate
@@ -24,11 +24,11 @@ open class OTRServerDeprecation: NSObject {
         dukgo.domain:dukgo,
     ]
     
-    open static func isDeprecated(server: String) -> Bool {
+    @objc open static func isDeprecated(server: String) -> Bool {
         return deprecationInfo(withServer: server) != nil
     }
     
-    open static func deprecationInfo(withServer server:String) -> OTRServerDeprecation? {
+    @objc open static func deprecationInfo(withServer server:String) -> OTRServerDeprecation? {
         return allDeprecatedServers[server.lowercased()];
     }
 }

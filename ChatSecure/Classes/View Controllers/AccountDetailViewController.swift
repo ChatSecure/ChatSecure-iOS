@@ -48,7 +48,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     
     let xmpp: OTRXMPPManager
     
-    public init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
+    @objc public init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
         self.account = account
         self.longLivedReadConnection = longLivedReadConnection
         self.writeConnection = writeConnection

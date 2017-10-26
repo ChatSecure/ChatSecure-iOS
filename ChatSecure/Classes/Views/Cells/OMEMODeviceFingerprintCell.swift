@@ -34,12 +34,12 @@ public extension NSData {
 
 public extension XLFormBaseCell {
     
-    public class func defaultRowDescriptorType() -> String {
+    @objc public class func defaultRowDescriptorType() -> String {
         let type = NSStringFromClass(self)
         return type
     }
     
-    public class func registerCellClass(_ forType: String) {
+    @objc public class func registerCellClass(_ forType: String) {
         let bundle = OTRAssets.resourcesBundle
         let path = bundle.bundlePath
         guard let bundleName = (path as NSString?)?.lastPathComponent else {

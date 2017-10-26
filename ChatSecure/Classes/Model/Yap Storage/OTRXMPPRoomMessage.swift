@@ -27,23 +27,23 @@ import CocoaLumberjack
 
 open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     
-    open static let roomEdgeName = "OTRRoomMesageEdgeName"
+    @objc open static let roomEdgeName = "OTRRoomMesageEdgeName"
     
-    open var roomJID:String?
+    @objc open var roomJID:String?
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
-    open var senderJID:String?
-    open var displayName:String?
-    open var state:RoomMessageState = .received
-    open var deliveredDate = Date.distantPast
-    open var messageText:String?
-    open var messageDate = Date.distantPast
-    open var xmppId:String? = UUID().uuidString
-    open var read = true
-    open var error:Error?
-    open var mediaItemId: String?
-    open var roomUniqueId:String?
-    open var originId:String?
-    open var stanzaId:String?
+    @objc open var senderJID:String?
+    @objc open var displayName:String?
+    @objc open var state:RoomMessageState = .received
+    @objc open var deliveredDate = Date.distantPast
+    @objc open var messageText:String?
+    @objc open var messageDate = Date.distantPast
+    @objc open var xmppId:String? = UUID().uuidString
+    @objc open var read = true
+    @objc open var error:Error?
+    @objc open var mediaItemId: String?
+    @objc open var roomUniqueId:String?
+    @objc open var originId:String?
+    @objc open var stanzaId:String?
     
     open override var hash: Int {
         get {

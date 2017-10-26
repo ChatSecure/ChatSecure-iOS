@@ -9,15 +9,15 @@
 import Foundation
 
 ///A simple message object to mark when push or knock messages were sent off
-open class PushMessage: OTRYapDatabaseObject {
+@objc open class PushMessage: OTRYapDatabaseObject {
     open var originId:String?
     open var stanzaId:String?
     
     /// The buddy the knock was sent to
-    open var buddyKey:String?
+    @objc open var buddyKey:String?
     
     /// Any error from the ChatSecure-Push-Server
-    open var error:NSError?
+    @objc open var error:NSError?
     
     /// the date the push was sent, used for sorting
     open var pushDate:Date = Date()

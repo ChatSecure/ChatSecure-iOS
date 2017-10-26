@@ -18,7 +18,7 @@ import OTRAssets
 
 open class OTRRoomOccupantsViewController: UIViewController {
  
-    public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
+    @objc public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
 
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
@@ -49,7 +49,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open var tableHeaderView:OTRVerticalStackView?
     open var tableFooterView:OTRVerticalStackView?
     
-    public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
+    @objc public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
         setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
     }
@@ -58,7 +58,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         super.init(coder: aDecoder)
     }
 
-    public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
+    @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
             if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
@@ -254,7 +254,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
     }
     
-    func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
+    @objc func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
         let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
             if let newSubject = alert.textFields?.first?.text {

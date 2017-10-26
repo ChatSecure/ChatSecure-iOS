@@ -22,7 +22,7 @@ open class ShareControllerURLSource: NSObject, UIActivityItemSource {
         return self.url!
     }
     
-    public func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
+    public func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType?) -> Any? {
         return self.url
     }
     
@@ -38,7 +38,7 @@ open class ShareControllerURLSource: NSObject, UIActivityItemSource {
 }
 
 open class ShareController: NSObject {
-    open static func shareAccount(_ account: OTRAccount, sender: Any, viewController: UIViewController) {
+    @objc open static func shareAccount(_ account: OTRAccount, sender: Any, viewController: UIViewController) {
         let fingerprintTypes = Set([NSNumber(value: OTRFingerprintType.OTR.rawValue as Int32)])
         
         account.generateShareURL(withFingerprintTypes: fingerprintTypes, completion: { (url: URL?, error: Error?) -> Void in
@@ -61,7 +61,7 @@ open class ShareController: NSObject {
         
     }
     
-    open static func getShareSource(_ account: OTRAccount, url: URL) -> AnyObject {
+    @objc open static func getShareSource(_ account: OTRAccount, url: URL) -> AnyObject {
         return ShareControllerURLSource(account: account, url: url)
     }
 }

@@ -12,7 +12,7 @@ import UIKit
 
 public extension UINavigationController {
     
-    public func otr_baseViewContorllers() -> [UIViewController] {
+    @objc public func otr_baseViewContorllers() -> [UIViewController] {
         var result:[UIViewController] = []
         let viewController = self.viewControllers
         for vc in viewController {

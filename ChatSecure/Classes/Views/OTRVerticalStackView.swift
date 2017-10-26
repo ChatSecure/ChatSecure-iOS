@@ -34,19 +34,19 @@ import PureLayout
         self.init(frame: CGRect.zero, style: .plain)
     }
     
-    public func addStackedSubview(_ view:UIView) {
+    @objc public func addStackedSubview(_ view:UIView) {
         addStackedSubview(view, identifier:nil, gravity: .middle, height: 0, callback: nil)
     }
 
-    public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity) {
+    @objc public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity) {
         addStackedSubview(view, identifier:identifier, gravity: gravity, height: 0, callback: nil)
     }
 
-    public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity, height:CGFloat) {
+    @objc public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity, height:CGFloat) {
         addStackedSubview(view, identifier:identifier, gravity: gravity, height: height, callback: nil)
     }
 
-    public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity, height:CGFloat, callback:(() -> Void)?) {
+    @objc public func addStackedSubview(_ view:UIView, identifier:String?, gravity:Gravity, height:CGFloat, callback:(() -> Void)?) {
         
         if !initialized {
             initialized = true

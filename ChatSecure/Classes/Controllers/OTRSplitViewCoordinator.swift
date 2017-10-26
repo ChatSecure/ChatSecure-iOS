@@ -10,10 +10,10 @@ import Foundation
 
 open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDelegate, OTRComposeViewControllerDelegate {
     
-    open weak var splitViewController:UISplitViewController? = nil
+    @objc open weak var splitViewController:UISplitViewController? = nil
     let databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection) {
+    @objc public init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
     }
     
@@ -42,7 +42,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         }
     }
     
-    open func enterConversationWithThread(_ threadOwner:OTRThreadOwner, sender:AnyObject?) {
+    @objc open func enterConversationWithThread(_ threadOwner:OTRThreadOwner, sender:AnyObject?) {
         guard let splitVC = self.splitViewController else {
             return
         }
@@ -118,7 +118,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         self.splitViewController?.dismiss(animated: true, completion: nil)
     }
     
-    open func showConversationsViewController() {
+    @objc open func showConversationsViewController() {
         if self.splitViewController?.presentedViewController != nil {
             self.splitViewController?.dismiss(animated: true, completion: nil)
         }

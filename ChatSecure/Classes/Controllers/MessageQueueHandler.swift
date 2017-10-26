@@ -73,7 +73,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate var accountLoginNotificationObserver:NSObjectProtocol?
     fileprivate var messageStateDidChangeNotificationObserver:NSObjectProtocol?
     
-    public init(dbConnection:YapDatabaseConnection) {
+    @objc public init(dbConnection:YapDatabaseConnection) {
         self.databaseConnection = dbConnection
         self.operationQueue.maxConcurrentOperationCount = 1
         super.init()

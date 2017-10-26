@@ -16,7 +16,7 @@ open class OTRXMPPChangePasswordManager:NSObject {
     fileprivate let password:String
     fileprivate let xmppStream:XMPPStream
     
-    public init(newPassword:String, xmppStream:XMPPStream, completion:@escaping (_ success:Bool,_ error:Error?) -> Void) {
+    @objc public init(newPassword:String, xmppStream:XMPPStream, completion:@escaping (_ success:Bool,_ error:Error?) -> Void) {
         self.registrationModule = XMPPRegistration()
         self.xmppStream = xmppStream
         self.registrationModule.activate(self.xmppStream)
@@ -27,7 +27,7 @@ open class OTRXMPPChangePasswordManager:NSObject {
         self.registrationModule.addDelegate(self, delegateQueue: DispatchQueue.main)
     }
     
-    open func changePassword() -> Bool {
+    @objc open func changePassword() -> Bool {
         return self.registrationModule.changePassword(self.password)
     }
     

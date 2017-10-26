@@ -13,7 +13,7 @@ import YapDatabase.YapDatabaseSearchResultsView
 open class OTRYapExtensions:NSObject {
     
     /// Creates a FTS extension on the buddy's username and display name
-    open class func buddyFTS() -> YapDatabaseFullTextSearch {
+    @objc open class func buddyFTS() -> YapDatabaseFullTextSearch {
         
         let usernameColumnName = BuddyFTSColumnName.username.name()
         let displayNameColumnName = BuddyFTSColumnName.displayName.name()

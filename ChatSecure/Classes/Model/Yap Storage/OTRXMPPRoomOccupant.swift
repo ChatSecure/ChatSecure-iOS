@@ -47,28 +47,28 @@ import YapDatabase
 
 open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
     
-    open static let roomEdgeName = "OTRRoomOccupantEdgeName"
+    @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
-    open var available = false
+    @objc open var available = false
     
     /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
-    open var jid:String?
+    @objc open var jid:String?
     
     /** This is the name your known as in the room. Seems to be username without domain */
-    open var roomName:String?
+    @objc open var roomName:String?
     
     /** This is the role of the occupant in the room */
-    open var role:RoomOccupantRole = .none
+    @objc open var role:RoomOccupantRole = .none
 
     /** This is the affiliation of the occupant in the room */
-    open var affiliation:RoomOccupantAffiliation = .none
+    @objc open var affiliation:RoomOccupantAffiliation = .none
 
     /**When given by the server we get the room participants reall JID*/
-    open var realJID:String?
+    @objc open var realJID:String?
     
-    open var roomUniqueId:String?
+    @objc open var roomUniqueId:String?
     
-    open func avatarImage() -> UIImage {
+    @objc open func avatarImage() -> UIImage {
         return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
     }
     

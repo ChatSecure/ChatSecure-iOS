@@ -19,7 +19,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
     private let tableSections: [TableSection] = [.Push, .Server]
     private var xmppPushStatus: XMPPPushStatus = .unknown
     
-    public init (serverCheck: ServerCheck) {
+    @objc public init (serverCheck: ServerCheck) {
         self.check = serverCheck
         self.check.fetch()
         self.tableView = UITableView(frame: CGRect.zero, style: .grouped)
@@ -57,7 +57,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         }
     }
     
-    func serverCheckUpdate(_ notification: Notification) {
+    @objc func serverCheckUpdate(_ notification: Notification) {
         if let caps = check.result.capabilities {
             capabilities = Array(caps.values)
         }

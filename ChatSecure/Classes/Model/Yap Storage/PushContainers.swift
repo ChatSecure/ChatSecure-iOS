@@ -40,11 +40,11 @@ open class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
 }
 
 open class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
-    open var pushToken:Token?
-    var date = Date()
-    var accountKey: String?
-    var buddyKey: String?
-    var endpoint:URL?
+    @objc open var pushToken:Token?
+    @objc var date = Date()
+    @objc var accountKey: String?
+    @objc var buddyKey: String?
+    @objc var endpoint:URL?
     
     override open var uniqueId:String {
         get {

@@ -13,7 +13,7 @@ open class MigratedBuddyHeaderView: UIView {
     @IBOutlet public var descriptionLabel: UILabel!
     @IBOutlet public var switchButton: UIButton!
     @IBOutlet public var ignoreButton: UIButton!
-    public var forwardingJID: XMPPJID?
+    @objc public var forwardingJID: XMPPJID?
     
     override open func layoutSubviews() {
         super.layoutSubviews()

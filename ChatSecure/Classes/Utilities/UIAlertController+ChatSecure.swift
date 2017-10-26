@@ -12,7 +12,7 @@ import OTRAssets
 public extension UIAlertController {
     
     /** Returns a cert-pinning alert if needed */
-    public static func certificateWarningAlert(error: Error, saveHandler: @escaping (_ action: UIAlertAction) -> Void) -> UIAlertController? {
+    @objc public static func certificateWarningAlert(error: Error, saveHandler: @escaping (_ action: UIAlertAction) -> Void) -> UIAlertController? {
         let nsError = error as NSError
         guard let errorCode = OTRXMPPErrorCode(rawValue: nsError.code),
             errorCode == .sslError,

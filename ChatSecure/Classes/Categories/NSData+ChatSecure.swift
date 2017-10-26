@@ -24,7 +24,7 @@ public extension NSString {
     ///
     /// - returns: Data represented by this hexadecimal string.
     
-    public func dataFromHex() -> Data? {
+    @objc public func dataFromHex() -> Data? {
         let characters = (self as String).characters
         var data = Data(capacity: characters.count / 2)
         

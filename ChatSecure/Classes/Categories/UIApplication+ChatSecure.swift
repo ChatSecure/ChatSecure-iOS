@@ -14,7 +14,7 @@ import OTRAssets
 public extension UIApplication {
     
     /// Removes all but one foreground notifications for typing and message events sent from APNS
-    public func removeExtraForegroundNotifications() {
+    @objc public func removeExtraForegroundNotifications() {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
                 var newMessageIdentifiers: [String] = []
@@ -40,7 +40,7 @@ public extension UIApplication {
         }
     }
     
-    public func showLocalNotification(_ message:OTRMessageProtocol) {
+    @objc public func showLocalNotification(_ message:OTRMessageProtocol) {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0
         var mediaItem: OTRMediaItem? = nil
@@ -73,7 +73,7 @@ public extension UIApplication {
         self.showLocalNotificationFor(threadOwner, text: text, unreadCount: Int(unreadCount))
     }
     
-    public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
+    @objc public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
         var name = SOMEONE_STRING()
         if let threadName = thread?.threadName {
             name = threadName
@@ -85,7 +85,7 @@ public extension UIApplication {
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
-    public func showLocalNotificationForSubscriptionRequestFrom(_ jid:String?) {
+    @objc public func showLocalNotificationForSubscriptionRequestFrom(_ jid:String?) {
         var name = SOMEONE_STRING()
         if let jidName = jid {
             name = jidName
@@ -97,7 +97,7 @@ public extension UIApplication {
         self.showLocalNotificationWith(identifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
     }
     
-    public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
+    @objc public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
         var name = SOMEONE_STRING()
         if let buddyName = (thread as? OTRBuddy)?.displayName {
             name = buddyName
@@ -124,7 +124,7 @@ public extension UIApplication {
         }
     }
     
-    public func showLocalNotificationWith(identifier:String?, body:String, badge:Int, userInfo:[AnyHashable:Any]?, recurring:Bool) {
+    @objc public func showLocalNotificationWith(identifier:String?, body:String, badge:Int, userInfo:[AnyHashable:Any]?, recurring:Bool) {
         DispatchQueue.main.async {
             if recurring, self.hasRecurringLocalNotificationWith(identifier: identifier) {
                 return // Already pending
@@ -180,11 +180,11 @@ public extension UIApplication {
         }
     }
     
-    public func hasRecurringLocalNotificationWith(identifier:String?) -> Bool {
+    @objc public func hasRecurringLocalNotificationWith(identifier:String?) -> Bool {
         return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:false)
     }
 
-    @discardableResult public func cancelRecurringLocalNotificationWith(identifier:String?) -> Bool {
+    @objc @discardableResult public func cancelRecurringLocalNotificationWith(identifier:String?) -> Bool {
         return hasRecurringLocalNotificationWith(identifier:identifier, cancelIfFound:true)
     }
 

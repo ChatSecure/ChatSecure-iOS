@@ -79,7 +79,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     let timeBufffer:TimeInterval = 60*60*24
     var pubsubEndpoint: NSString?
     
-    public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
+    @objc public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
         self.storage = PushStorage(databaseConnection: databaseConnection)
         super.init()
@@ -115,18 +115,18 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
             }, callbackQueue: callbackQueue)
     }
     
-    open func createNewRandomPushAccount(_ completion:@escaping (_ success: Bool, _ error: NSError?) -> Void) {
+    @objc open func createNewRandomPushAccount(_ completion:@escaping (_ success: Bool, _ error: NSError?) -> Void) {
         
         //Username is limited to 30 characters and passwords are limited to 100
         var username = UUID().uuidString
-        username = username.substring(to: username.characters.index(username.startIndex, offsetBy: 30))
+        username = String(username.prefix(30))
         guard var password = OTRPasswordGenerator.password(withLength: 100) else {
             self.callbackQueue.addOperation({ () -> Void in
                 completion(false, nil)
             })
             return;
         }
-        password = password.substring(to: password.characters.index(password.startIndex, offsetBy: 100))
+        password = String(password.prefix(100))
         
         self.apiClient.registerNewUser(username, password: password, email: nil) {[weak self] (account, error) -> Void in
             if let newAccount = account {
@@ -148,11 +148,11 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
      
      - returns: The push storage object that controls storing and retrieving push tokens
      */
-    open func pushStorage() -> PushStorageProtocol {
+    @objc open func pushStorage() -> PushStorageProtocol {
         return self.storage
     }
     
-    open func registerThisDevice(_ apns:String, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
+    @objc open func registerThisDevice(_ apns:String, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
         self.apiClient.registerDevice(apns, name: nil, deviceID: nil) {[weak self] (device, error) -> Void in
             if let newDevice = device {
                 self?.storage.saveThisDevice(newDevice)
@@ -169,7 +169,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         }
     }
     
-    open func updateThisDevice(_ apns:String, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
+    @objc open func updateThisDevice(_ apns:String, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
         DispatchQueue.global().async {[weak self] () -> Void in
             guard let device = self?.storage.thisDevice() else {
                 self?.callbackQueue.addOperation({ () -> Void in
@@ -203,7 +203,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         
     }
     
-    open func getPubsubEndpoint(_ completion:@escaping (_ endpoint:String?,_ error:Error?) -> Void) {
+    @objc open func getPubsubEndpoint(_ completion:@escaping (_ endpoint:String?,_ error:Error?) -> Void) {
         if let pubsubEndpoint = pubsubEndpoint {
             self.callbackQueue.addOperation({ 
                 completion(pubsubEndpoint as String, nil)
@@ -218,11 +218,11 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         }
     }
     
-    open func getMessagesEndpoint() -> URL {
+    @objc open func getMessagesEndpoint() -> URL {
         return self.apiClient.messageEndpont()
     }
     
-    open func getNewPushToken(_ buddyKey:String?, completion:@escaping (_ token:TokenContainer?,_ error:NSError?) -> Void) {
+    @objc open func getNewPushToken(_ buddyKey:String?, completion:@escaping (_ token:TokenContainer?,_ error:NSError?) -> Void) {
         DispatchQueue.global().async {[weak self] () -> Void in
             guard let tokenContainer = self?.storage.unusedToken() else {
                 self?.updateUnusedTokenStore({[weak self] (success, error) -> Void in
@@ -280,7 +280,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     
     @param completion this closure is called once a tokens have been fetched or on failure
     */
-    open func updateUnusedTokenStore(_ completion:@escaping (_ success:Bool,_ error:Error?) -> Void) {
+    @objc open func updateUnusedTokenStore(_ completion:@escaping (_ success:Bool,_ error:Error?) -> Void) {
         
         DispatchQueue.global().async {[weak self] () -> Void in
             guard let id = self?.storage.thisDevice()?.id else {
@@ -332,7 +332,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         }
     }
     
-    open func saveReceivedPushToken(_ tokenString:String, buddyKey:String, endpoint:String, completion:@escaping (_ success:Bool, _ error:NSError?)->Void) {
+    @objc open func saveReceivedPushToken(_ tokenString:String, buddyKey:String, endpoint:String, completion:@escaping (_ success:Bool, _ error:NSError?)->Void) {
         
         DispatchQueue.global().async {[weak self] () -> Void in
             guard let endpointURL = URL(string: endpoint) else  {
@@ -361,7 +361,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         
     }
     
-    open func tokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
+    @objc open func tokensForBuddy(_ buddyKey:String, createdByThisAccount:Bool, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
         guard let buddy = transaction.object(forKey: buddyKey, inCollection: OTRBuddy.collection) as? OTRBuddy else {
             throw NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
         }
@@ -418,7 +418,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
 
     //MARK: Sending Message
-    open func sendKnock(_ buddyKey:String, completion:@escaping (_ success:Bool, _ error:NSError?) -> Void) {
+    @objc open func sendKnock(_ buddyKey:String, completion:@escaping (_ success:Bool, _ error:NSError?) -> Void) {
         DispatchQueue.global().async {[weak self] () -> Void in
             do {
                 guard let token = try self?.storage.tokensForBuddy(buddyKey, createdByThisAccount: false).first else {
@@ -473,7 +473,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     
     
     //MARK: APNS Token
-    open func didRegisterForRemoteNotificationsWithDeviceToken(_ data:Data) -> Void {
+    @objc open func didRegisterForRemoteNotificationsWithDeviceToken(_ data:Data) -> Void {
         
         DispatchQueue.global().async {[weak self] () -> Void in
             let pushTokenString = data.hexString();
@@ -529,7 +529,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     }
     
     //MARK: OTRPushTLVHandlerDelegate
-    open func receivePush(_ tlvData: Data!, username: String!, accountName: String!, protocolString: String!, fingerprint:OTRFingerprint!) {
+    @objc open func receivePush(_ tlvData: Data!, username: String!, accountName: String!, protocolString: String!, fingerprint:OTRFingerprint!) {
         
         let buddy = self.storage.buddy(username, accountName: accountName)
         
@@ -568,7 +568,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     
     //MARK: Push Preferences
     
-    open static func getPushPreference() -> PushPreference {
+    @objc open static func getPushPreference() -> PushPreference {
         guard let value = UserDefaults.standard.object(forKey: kOTRPushEnabledKey) as? NSNumber else {
             return .undefined
         }
@@ -621,7 +621,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         })
     }
     
-    open static func registerForPushNotifications() {
+    @objc open static func registerForPushNotifications() {
         if #available(iOS 10.0, *) {
             let center = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.badge, .alert, .sound], completionHandler: { (granted, error) in
@@ -640,7 +640,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
         }
     }
     
-    open static func canReceivePushNotifications() -> Bool {
+    @objc open static func canReceivePushNotifications() -> Bool {
         var isEnabled = false
         if let settings = UIApplication.shared.currentUserNotificationSettings {
             isEnabled = settings.types != UIUserNotificationType()

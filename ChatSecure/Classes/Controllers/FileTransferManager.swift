@@ -113,7 +113,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     let sessionManager: SessionManager
     private var servers: [HTTPServer] = []
     
-    public var canUploadFiles: Bool {
+    @objc public var canUploadFiles: Bool {
         return self.servers.first != nil
     }
     
@@ -122,7 +122,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         serverCapabilities.removeDelegate(self)
     }
     
-    public init(connection: YapDatabaseConnection,
+    @objc public init(connection: YapDatabaseConnection,
                 serverCapabilities: OTRServerCapabilities,
                 sessionConfiguration: URLSessionConfiguration) {
         self.serverCapabilities = serverCapabilities
@@ -141,7 +141,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     // MARK: - Public Methods
     
     /// This will fetch capabilities and setup XMPP transfer module if needed
-    public func refreshCapabilities() {
+    @objc public func refreshCapabilities() {
         guard let allCapabilities = serverCapabilities.allCapabilities else {
             serverCapabilities.fetchAllCapabilities()
             return
@@ -302,7 +302,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         }
     }
     
-    public func send(videoURL url: URL, thread: OTRThreadOwner) {
+    @objc public func send(videoURL url: URL, thread: OTRThreadOwner) {
         internalQueue.async {
             self.send(url: url, thread: thread, type: .video)
         }
@@ -367,13 +367,13 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         }
     }
     
-    public func send(audioURL url: URL, thread: OTRThreadOwner) {
+    @objc public func send(audioURL url: URL, thread: OTRThreadOwner) {
         internalQueue.async {
             self.send(url: url, thread: thread, type: .audio)
         }
     }
     
-    public func send(image: UIImage, thread: OTRThreadOwner) {
+    @objc public func send(image: UIImage, thread: OTRThreadOwner) {
         internalQueue.async {
             guard let service = self.servers.first, service.maxSize > 0 else {
                 DDLogError("No HTTP upload service available!")
@@ -440,7 +440,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         return nil
     }
     
-    public func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTRMessageProtocol) {
+    @objc public func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTRMessageProtocol) {
         var shouldEncrypt = false
         switch message.messageSecurity {
         case .OMEMO, .OTR:
@@ -510,7 +510,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
-    public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
+    @objc public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
         DispatchQueue.global(qos: .default).async {
             if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
                 //DDLogVerbose("Download of message not needed \(message.messageKey)")
