@@ -254,15 +254,14 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         NSData *data = [OTRMediaFileManager.shared dataForItem:self buddyUniqueId:thread.threadIdentifier error:&error];
         if(!data.length) {
             DDLogError(@"No data found for media item: %@", error);
+        } else if (![self handleMediaData:data message:message]) {
+            DDLogError(@"Could not handle display for media item %@", self);
         } else {
-            BOOL result = [self handleMediaData:data message:message];
-            if (!result) {
-                DDLogError(@"Could not handle display for media item %@", self);
-            }
+            // Success, touch parent message to display it.
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [self touchParentMessageWithTransaction:transaction];
+            }];
         }
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [self touchParentMessageWithTransaction:transaction];
-        }];
     });
 }
 

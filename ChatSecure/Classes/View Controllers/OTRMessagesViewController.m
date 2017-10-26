@@ -1150,58 +1150,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.messageRangeExtended = YES;
     }
     [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
-
+    
     self.loadingMessages = YES;
-
+    
     CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
-
-    void (^doReload)() = ^{
-        [self.collectionView reloadData];
-
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
-        }];
-
-        if (!reset) {
-            [self.collectionView.collectionViewLayout invalidateLayout];
-            [self.collectionView layoutSubviews];
-            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
-        }
-
-        self.loadingMessages = NO;
-    };
-
-    if (reset) {
-        doReload();
+    
+    [self.collectionView reloadData];
+    
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+    }];
+    
+    if (!reset) {
+        [self.collectionView.collectionViewLayout invalidateLayout];
+        [self.collectionView layoutSubviews];
+        self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
     }
-    else {
-        // JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSMutableArray<id<JSQMessageData>> *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
-            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
-                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
-                id object = [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
-                if ([object conformsToProtocol:@protocol(JSQMessageData)]) {
-                    id<JSQMessageData> msg = object;
-                    [objects addObject:msg];
-                }
-            }
-            // Although it would be nice to pre-calculate in the background
-            // the Xcode 9 main thread checker complains about the block below
-//            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
-//                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
-//                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
-//                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
-//                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
-//                                                                                           atIndexPath:nil
-//                                                                                            withLayout:layout];
-//                                      }];
-            dispatch_async(dispatch_get_main_queue(), doReload);
-        });
-    }
+    
+    self.loadingMessages = NO;
 }
 
 - (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
@@ -2052,21 +2020,24 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
                 }
             }
         }
-    } completion:nil];
-    
-    if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
-        //Inserted new item, probably at the end
-        //Get last message and test if isIncoming
-        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-        id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-        if ([lastMessage isMessageIncoming]) {
-            [self finishReceivingMessage];
+    } completion:^(BOOL finished){
+        if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+            //Inserted new item, probably at the end
+            //Get last message and test if isIncoming
+            NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
+            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            if ([lastMessage isMessageIncoming]) {
+                [self finishReceivingMessage];
+            } else {
+                // We can't use finishSendingMessage here because it might
+                // accidentally clear out unsent message text
+                [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+                [self scrollToBottomAnimated:YES];
+            }
         } else {
-            // We can't use finishSendingMessage here because it might
-            // accidentally clear out unsent message text
-            [self scrollToBottomAnimated:YES];
+            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
         }
-    }
+    }];
 }
 
 #pragma - mark UITextViewDelegateMethods
@@ -2095,6 +2066,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
+}
+
+- (void)viewWillLayoutSubviews {
+    self.currentIndexPath = nil;
+    [super viewWillLayoutSubviews];
 }
 
 - (void)viewDidLayoutSubviews {
