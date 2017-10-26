@@ -2068,6 +2068,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return NO;
 }
 
+- (void)viewWillLayoutSubviews {
+    self.currentIndexPath = nil;
+    [super viewWillLayoutSubviews];
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     [self layoutJIDForwardingHeader];
