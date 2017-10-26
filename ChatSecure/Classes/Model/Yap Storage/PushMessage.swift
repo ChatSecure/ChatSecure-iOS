@@ -10,8 +10,8 @@ import Foundation
 
 ///A simple message object to mark when push or knock messages were sent off
 @objc open class PushMessage: OTRYapDatabaseObject {
-    open var originId:String?
-    open var stanzaId:String?
+    @objc open var originId:String?
+    @objc open var stanzaId:String?
     
     /// The buddy the knock was sent to
     @objc open var buddyKey:String?
@@ -20,7 +20,7 @@ import Foundation
     @objc open var error:NSError?
     
     /// the date the push was sent, used for sorting
-    open var pushDate:Date = Date()
+    @objc open var pushDate:Date = Date()
     
     ///Send it to the same collection of other messages
     open class override var collection: String {

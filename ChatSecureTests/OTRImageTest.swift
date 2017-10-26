@@ -19,7 +19,7 @@ class OTRImageTest: XCTestCase {
     }
     
     func imageForName(_ name:String, type:String) -> UIImage? {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle(for: OTRImageTest.self)
         guard let path = bundle.path(forResource: name, ofType: type) else {
             return nil
         }

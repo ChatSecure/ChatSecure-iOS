@@ -15,8 +15,8 @@ let kBuddyTokenRelationshipEdgeName = "OTRPushBuddyTokenRelationshipEdgeName"
 let kAccountTokenRelationshipEdgeName = "OTRPushAccountTokenRelationshipEdgeName"
 
 open class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
-    var pushDevice:Device?
-    var pushAccountKey:String?
+    @objc var pushDevice:Device?
+    @objc var pushAccountKey:String?
     
     
     

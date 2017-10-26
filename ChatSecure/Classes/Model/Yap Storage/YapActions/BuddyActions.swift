@@ -16,8 +16,8 @@ import YapTaskQueue
 
 open class BuddyAction: OTRYapDatabaseObject, YapActionable {
     
-    open var action:BuddyActionType = .delete
-    open var buddy:OTRBuddy?
+    @objc open var action:BuddyActionType = .delete
+    @objc open var buddy:OTRBuddy?
     
     open func yapActionItems() -> [YapActionItem]? {
         
