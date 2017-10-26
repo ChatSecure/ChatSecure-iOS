@@ -186,8 +186,8 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
         return OTRXMPPRoomMessage.collection
     }
     
-    public var url: URL {
-        return self.downloadURL ?? URL(string: "")!
+    public var url: URL? {
+        return self.downloadURL
     }
     
     public func parentMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {

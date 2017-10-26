@@ -533,8 +533,9 @@ extension FileTransferManager {
                 }
                 self.connection.readWrite({ (transaction) in
                     for download in downloads {
-                        if disableAutomaticURLFetching {
-                            let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
+                        if disableAutomaticURLFetching,
+                            let filename = download.downloadableURL?.absoluteString {
+                            let media = OTRMediaItem.incomingItem(withFilename: filename, mimeType: nil)
                             media.parentObjectKey = download.uniqueId
                             media.parentObjectCollection = download.messageCollection
                             media.save(with: transaction)
@@ -564,7 +565,10 @@ extension FileTransferManager {
             // DDLogWarn("Already downloaded media for this item")
             return
         }
-        let url = downloadMessage.downloadableURL
+        guard let url = downloadMessage.downloadableURL else {
+            DDLogWarn("Attempted to download message but couldn't parse a URL \(downloadMessage)")
+            return
+        }
         self.sessionManager.session.getTasksWithCompletionHandler { (tasks, _, _) in
             // Bail out if we've already got a task for this
             for task in tasks where task.originalRequest?.url == url {
@@ -700,9 +704,9 @@ extension FileTransferManager {
 
 extension OTRDownloadMessage {
     /// Turn aesgcm links into https links
-    var downloadableURL: URL {
-        var downloadableURL = url
-        if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+    var downloadableURL: URL? {
+        guard var downloadableURL = url else { return nil }
+        if downloadableURL.isAesGcm, var components = URLComponents(url: downloadableURL, resolvingAgainstBaseURL: true) {
             components.scheme = URLScheme.https.rawValue
             if let rawURL = components.url {
                 downloadableURL = rawURL

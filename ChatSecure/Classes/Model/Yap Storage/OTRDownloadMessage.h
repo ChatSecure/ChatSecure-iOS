@@ -12,7 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol OTRDownloadMessage <OTRMessageProtocol, OTRMessageChildProtocol, OTRChildObjectProtocol, OTRYapDatabaseObjectProtocol>
-@property (nonatomic, strong, readonly) NSURL *url;
+/** This can occasionally be nil if bad things happen */
+@property (nonatomic, strong, readonly, nullable) NSURL *url;
 + (id<OTRDownloadMessage>) downloadWithParentMessage:(id<OTRMessageProtocol>)parentMessage
                                    url:(NSURL*)url;
 @end
