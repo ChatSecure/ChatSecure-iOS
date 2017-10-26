@@ -2052,21 +2052,24 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
                 }
             }
         }
-    } completion:nil];
-    
-    if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
-        //Inserted new item, probably at the end
-        //Get last message and test if isIncoming
-        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-        id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-        if ([lastMessage isMessageIncoming]) {
-            [self finishReceivingMessage];
+    } completion:^(BOOL finished){
+        if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+            //Inserted new item, probably at the end
+            //Get last message and test if isIncoming
+            NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
+            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            if ([lastMessage isMessageIncoming]) {
+                [self finishReceivingMessage];
+            } else {
+                // We can't use finishSendingMessage here because it might
+                // accidentally clear out unsent message text
+                [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+                [self scrollToBottomAnimated:YES];
+            }
         } else {
-            // We can't use finishSendingMessage here because it might
-            // accidentally clear out unsent message text
-            [self scrollToBottomAnimated:YES];
+            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
         }
-    }
+    }];
 }
 
 #pragma - mark UITextViewDelegateMethods
