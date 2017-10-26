@@ -15,6 +15,7 @@
 #import "OTROutgoingMessage.h"
 #import "OTRLog.h"
 #import "OTRMediaItem+Private.h"
+#import "UIImage+ChatSecure.h"
 
 @interface OTRImageItem()
 @property (nonatomic, readonly) CGFloat width;
@@ -57,11 +58,26 @@
     }
     self.size = image.size;
     CGSize size = [self mediaViewDisplaySize];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.frame = CGRectMake(0, 0, size.width, size.height);
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
+
+    NSString *thumbnailKey = [NSString stringWithFormat:@"%@-thumb", self.uniqueId];
+    UIImage *imageThumb = [OTRImages imageWithIdentifier:thumbnailKey];
+    if (!imageThumb) {
+        __weak typeof(UIImageView *)weakImageView = imageView;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            UIImage *resizedImage = [UIImage otr_imageWithImage:image scaledToSize:size];
+            [OTRImages setImage:resizedImage forIdentifier:thumbnailKey];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(weakImageView)strongImageView = weakImageView;
+                [strongImageView setImage:resizedImage];
+            });
+        });
+    } else {
+        [imageView setImage:imageThumb];
+    }
     return imageView;
 }
 
