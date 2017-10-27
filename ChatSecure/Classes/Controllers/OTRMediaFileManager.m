@@ -128,10 +128,13 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
     }];
 }
 
+/* Internal. If "length" is set, only return the length of the data, otherwise the data ifself */
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
                   buddyUniqueId:(NSString *)buddyUniqueId
-                          error:(NSError* __autoreleasing *)error {
+                          error:(NSError* __autoreleasing *)error
+                         length:(NSNumber* __autoreleasing *)length {
     __block NSData *data = nil;
+    __block NSNumber *dataLength = nil;
     [self performSyncRead:^{
         NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (!filePath) {
@@ -151,10 +154,29 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
         if (error && *error) {
             return;
         }
-        NSNumber *length = fileAttributes[NSFileSize];
-        data = [self.ioCipher readDataFromFileAtPath:filePath length:length.integerValue offset:0 error:error];
+        if (length != nil) {
+            dataLength = fileAttributes[NSFileSize];
+        } else {
+            NSNumber *length = fileAttributes[NSFileSize];
+            data = [self.ioCipher readDataFromFileAtPath:filePath length:length.integerValue offset:0 error:error];
+        }
     }];
+    if (length != nil) {
+        *length = dataLength;
+    }
     return data;
+}
+
+- (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
+                  buddyUniqueId:(NSString *)buddyUniqueId
+                          error:(NSError* __autoreleasing *)error {
+    return [self dataForItem:mediaItem buddyUniqueId:buddyUniqueId error:error length:nil];
+}
+
+- (NSNumber *)dataLengthForItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError * _Nullable __autoreleasing *)error {
+    NSNumber *length = nil;
+    [self dataForItem:mediaItem buddyUniqueId:buddyUniqueId error:error length:&length];
+    return length;
 }
 
 #pragma - mark Class Methods
