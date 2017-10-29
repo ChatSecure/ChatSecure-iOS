@@ -96,9 +96,11 @@
                                                                            description:PINNED_CERTIFICATES_DESCRIPTION_STRING()];
     
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    
-    
+
+    OTRBoolSetting *backupKeySetting = [[OTRBoolSetting alloc] initWithTitle:ALLOW_DB_PASSPHRASE_BACKUP_TITLE_STRING()
+                                                                 description:ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING()
+                                                                 settingsKey:kOTRSettingKeyAllowDBPassphraseBackup];
+
     if (![PushController canReceivePushNotifications] ||
         [PushController getPushPreference] != PushPreferenceEnabled) {
         OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING() description:nil viewControllerClass:[EnablePushViewController class]];
@@ -112,7 +114,7 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING() settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
-    NSArray * securitySettings = @[certSetting];
+    NSArray * securitySettings = @[certSetting, backupKeySetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING() settings:securitySettings];
     [settingsGroups addObject:securitySettingsGroup];
     
