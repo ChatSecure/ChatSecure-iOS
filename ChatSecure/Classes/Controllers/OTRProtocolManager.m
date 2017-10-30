@@ -30,6 +30,7 @@
 #import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPushTLVHandler.h"
+#import <BBlock/NSObject+BBlock.h>
 @import YapDatabase;
 
 @import KVOController;
@@ -206,32 +207,37 @@
     }
 }
 
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly andWait:(BOOL)wait {
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly timeout:(NSTimeInterval)timeout completionBlock:(nullable void (^)())completionBlock
+{
     @synchronized (self) {
-        for (id<OTRProtocol> manager in self.protocolManagers.allValues) {
-            [manager disconnectSocketOnly:socketOnly];
-        }
-        if (wait) {
-            while (true) {
-                BOOL stillDisconnecting = NO;
-                for (id <OTRProtocol> manager in self.protocolManagers.allValues) {
-                    if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
-                        stillDisconnecting = YES;
-                        break;
-                    }
-                }
-                if (!stillDisconnecting) {
-                    return;
-                }
-                [NSThread sleepForTimeInterval:.02];
+        dispatch_group_t group = dispatch_group_create();
+        for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
+            if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
+                dispatch_group_enter(group);
+                __block NSString *token = nil;
+                token = [manager addObserverForKeyPath:@"connectionStatus"
+                                               options:0
+                                                 block:^(NSString *keyPath, NSObject <OTRProtocol> *mgr, NSDictionary *change) {
+                                                     if (mgr.connectionStatus == OTRProtocolConnectionStatusDisconnected) {
+                                                         dispatch_group_leave(group);
+                                                         [mgr removeObserverForToken:token];
+                                                     }
+                                                 }];
+                [manager disconnectSocketOnly:socketOnly];
             }
+        }
+        if (timeout > 0) {
+            dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t) (timeout * NSEC_PER_SEC)));
+        }
+        if (completionBlock != nil) {
+            completionBlock();
         }
     }
 }
 
 - (void)disconnectAllAccounts
 {
-    [self disconnectAllAccountsSocketOnly:NO andWait:NO];
+    [self disconnectAllAccountsSocketOnly:NO timeout:0 completionBlock:nil];
 }
 
 - (void)protocolDidChange:(NSDictionary *)change

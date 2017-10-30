@@ -519,7 +519,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
-        if (self.connectionStatus != OTRProtocolConnectionStatusDisconnecting) {
+        if (self.connectionStatus == OTRProtocolConnectionStatusConnecting || self.connectionStatus == OTRProtocolConnectionStatusConnected) {
             self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
             [self goAway];
         }
