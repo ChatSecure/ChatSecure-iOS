@@ -2224,4 +2224,23 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     
 }
 
+- (void)didArchiveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {
+    __block OTRXMPPRoom *room = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        room = [self roomWithTransaction:transaction];
+    }];
+    if (room) {
+        [self setThreadKey:nil collection:nil];
+        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            room.isArchived = YES;
+            [room saveWithTransaction:transaction];
+        }];
+    }
+    [self.navigationController popViewControllerAnimated:NO];
+    if ([[self.navigationController viewControllers] count] > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self.navigationController.navigationController popViewControllerAnimated:YES];
+    }
+}
 @end

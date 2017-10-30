@@ -14,6 +14,7 @@ import OTRAssets
 
 @objc public protocol OTRRoomOccupantsViewControllerDelegate {
     func didLeaveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
+    func didArchiveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
 }
 
 open class OTRRoomOccupantsViewController: UIViewController {
