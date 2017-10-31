@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readwrite) BOOL isRegisteringNewAccount;
 @property (nonatomic, readwrite) BOOL userInitiatedConnection;
 @property (nonatomic, readwrite) OTRLoginStatus loginStatus;
-@property (nonatomic, readwrite) OTRProtocolConnectionStatus connectionStatus;
+@property (atomic, readwrite) OTRProtocolConnectionStatus connectionStatus;
 
 - (void)setupStream;
 - (void)teardownStream;

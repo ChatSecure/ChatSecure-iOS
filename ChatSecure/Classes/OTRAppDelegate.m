@@ -310,17 +310,16 @@
     }];
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
-            [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
-            if (self.backgroundTimer)
-            {
-                [self.backgroundTimer invalidate];
-                self.backgroundTimer = nil;
-            }
+        DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
+        if (self.backgroundTimer)
+        {
+            [self.backgroundTimer invalidate];
+            self.backgroundTimer = nil;
+        }
+        [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES timeout:application.backgroundTimeRemaining - .5 completionBlock:^{
             [application endBackgroundTask:self.backgroundTask];
             self.backgroundTask = UIBackgroundTaskInvalid;
-        });
+        }];
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -405,16 +404,18 @@
 }
 
 - (void) fetchTimerUpdate:(NSTimer*)timer {
-    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
-    NSDictionary *userInfo = timer.userInfo;
-    void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIApplication.sharedApplication removeExtraForegroundNotifications];
-        // We should probbaly return accurate fetch results
-        if (completion) {
-            completion(UIBackgroundFetchResultNewData);
-        }
-    });
+    void (^completion)(UIBackgroundFetchResult) = timer.userInfo[@"completion"];
+    NSTimeInterval timeout = [[UIApplication sharedApplication] backgroundTimeRemaining] - .5;
+
+    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES timeout:timeout completionBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIApplication.sharedApplication removeExtraForegroundNotifications];
+            // We should probably return accurate fetch results
+            if (completion) {
+                completion(UIBackgroundFetchResultNewData);
+            }
+        });
+    }];
     self.fetchTimer = nil;
 }
 
