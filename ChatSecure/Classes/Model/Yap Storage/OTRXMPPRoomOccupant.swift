@@ -82,7 +82,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     
     @objc open func avatarImage() -> UIImage {
         if let buddy = self.realBuddy {
-            return OTRImages.avatarImage(withUniqueIdentifier: buddy.uniqueId, avatarData: nil, displayName: buddy.displayName, username: buddy.username)
+            return buddy.avatarImage
         }
         return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
     }
