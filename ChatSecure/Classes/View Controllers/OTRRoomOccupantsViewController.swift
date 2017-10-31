@@ -360,9 +360,13 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
-            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+            buddy = roomOccupant.realBuddy as? OTRXMPPBuddy
+            if buddy == nil {
+                OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                     buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
-            })
+                })
+                roomOccupant.realBuddy = buddy
+            }
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
                 if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
