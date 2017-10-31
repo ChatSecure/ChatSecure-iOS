@@ -211,23 +211,26 @@
 {
     @synchronized (self) {
         dispatch_group_t group = dispatch_group_create();
+        NSMutableDictionary<NSString*, NSObject<OTRProtocol>*> *observingManagersForTokens = [NSMutableDictionary new];
         for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
             if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
                 dispatch_group_enter(group);
-                __block NSString *token = nil;
-                token = [manager addObserverForKeyPath:@"connectionStatus"
-                                               options:0
-                                                 block:^(NSString *keyPath, NSObject <OTRProtocol> *mgr, NSDictionary *change) {
-                                                     if (mgr.connectionStatus == OTRProtocolConnectionStatusDisconnected) {
-                                                         dispatch_group_leave(group);
-                                                         [mgr removeObserverForToken:token];
-                                                     }
-                                                 }];
+                NSString *token = [manager addObserverForKeyPath:NSStringFromSelector(@selector(connectionStatus))
+                                                         options:0
+                                                           block:^(NSString *keyPath, id<OTRProtocol> mgr, NSDictionary *change) {
+                                                               if (mgr.connectionStatus == OTRProtocolConnectionStatusDisconnected) {
+                                                                   dispatch_group_leave(group);
+                                                               }
+                                                           }];
+                observingManagersForTokens[token] = manager;
                 [manager disconnectSocketOnly:socketOnly];
             }
         }
         if (timeout > 0) {
             dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t) (timeout * NSEC_PER_SEC)));
+        }
+        for (NSString *token in observingManagersForTokens.allKeys) {
+            [observingManagersForTokens[token] removeObserverForToken:token];
         }
         if (completionBlock != nil) {
             completionBlock();
