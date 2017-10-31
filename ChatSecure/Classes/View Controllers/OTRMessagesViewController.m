@@ -358,6 +358,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return account;
 }
 
+- (nullable OTRXMPPRoomOccupant *)occupantWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction forFullJid:(nonnull NSString*)fullJid inRoom:(nonnull NSString *)roomUniqueId {
+    
+    __block OTRXMPPRoomOccupant *occupant = nil;
+    
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:roomUniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRXMPPRoomOccupant *tempOccupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        if([tempOccupant.jid isEqualToString:fullJid]) {
+            occupant = tempOccupant;
+            *stop = YES;
+        }
+    }];
+    return occupant;
+}
+
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection
 {
     self.currentIndexPath = nil;
@@ -1632,13 +1647,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
         OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            [transaction enumerateRoomOccupantsWithJid:roomMessage.senderJID block:^(OTRXMPPRoomOccupant * _Nonnull occupant, BOOL * _Null_unspecified stop) {
-                roomOccupant = occupant;
-                *stop = YES;
-            }];
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+            roomOccupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
         }];
-        UIImage *avatarImage = [roomOccupant avatarImage];
+        UIImage *avatarImage = nil;
+        if (roomOccupant) {
+            avatarImage = [roomOccupant avatarImage];
+        } else {
+            avatarImage = [OTRImages avatarImageWithUsername:[[XMPPJID jidWithString:roomMessage.senderJID] resource]];
+        }
         if (avatarImage) {
             NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
             return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
@@ -1727,7 +1744,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
         id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-        NSString *displayName = [message senderDisplayName];
+        
+        __block NSString *displayName = nil;
+        if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
+            OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
+            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                OTRXMPPRoomOccupant *occupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
+                if (occupant) {
+                    if ([occupant realBuddy] != nil) {
+                        displayName = [[occupant realBuddy] displayName];
+                    } else {
+                        displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                    }
+                }
+            }];
+        }
+        if (!displayName) {
+            displayName = [message senderDisplayName];
+        }
         return [[NSAttributedString alloc] initWithString:displayName];
     }
     
