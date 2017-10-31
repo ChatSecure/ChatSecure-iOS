@@ -151,7 +151,7 @@
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         databaseMessage.displayName = occupant.realJID;
         if (!databaseMessage.displayName) {
-            databaseMessage.displayName = [fromJID bare];
+            databaseMessage.displayName = [fromJID full];
         }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
