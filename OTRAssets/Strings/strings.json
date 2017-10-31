@@ -7,6 +7,14 @@
         "comment": "segmented control value for active friends",
         "string": "Active"
     },
+    "ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING": {
+        "comment": "Description for allowing DB passphrase backup",
+        "string": "Applies only to encrypted backups"
+    },
+    "ALLOW_DB_PASSPHRASE_BACKUP_TITLE_STRING": {
+        "comment": "Title for allowing DB passphrase backup",
+        "string": "Allow DB Key Backups"
+    },
     "AUDIO_MESSAGE_STRING": {
         "comment": "Text for media message summary",
         "string": "Audio Message"

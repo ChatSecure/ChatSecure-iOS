@@ -22,6 +22,10 @@ FOUNDATION_EXPORT NSString* ADD_EXISTING_STRING();
 FOUNDATION_EXPORT NSString* ADD_STRING();
 /** "Advanced", String to describe advanced set of settings */
 FOUNDATION_EXPORT NSString* ADVANCED_STRING();
+/** "Applies only to encrypted backups", Description for allowing DB passphrase backup */
+FOUNDATION_EXPORT NSString* ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING();
+/** "Allow DB Key Backups", Title for allowing DB passphrase backup */
+FOUNDATION_EXPORT NSString* ALLOW_DB_PASSPHRASE_BACKUP_TITLE_STRING();
 /** "Archive", Verb. action for archiving an old conversation */
 FOUNDATION_EXPORT NSString* ARCHIVE_ACTION_STRING();
 /** "Archive", Noun. segmented control value for displaying archived conversations */

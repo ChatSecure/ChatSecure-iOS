@@ -27,6 +27,7 @@
 @import YapTaskQueue;
 
 #import "OTRSignalSession.h"
+#import "OTRSettingsManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRMessagesSecondaryIndex = @"OTRMessagesSecondaryIndex";
@@ -49,11 +50,29 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 @property (nonatomic, strong, nullable) NSString *inMemoryPassphrase;
 
 @property (nonatomic, strong) id yapDatabaseNotificationToken;
+@property (nonatomic, strong) id allowPassphraseBackupNotificationToken;
 @property (nonatomic, readonly, nullable) YapTaskQueueBroker *messageQueueBroker;
 
 @end
 
 @implementation OTRDatabaseManager
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        __weak __typeof__(self) weakSelf = self;
+        self.allowPassphraseBackupNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:kOTRSettingsValueUpdatedNotification
+                                                                                                        object:kOTRSettingKeyAllowDBPassphraseBackup
+                                                                                                         queue:[NSOperationQueue mainQueue]
+                                                                                                    usingBlock:^(NSNotification *_Nonnull note) {
+                                                                                                        [weakSelf updatePassphraseAccessibility];
+                                                                                                    }];
+    }
+
+    return self;
+}
+
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
     return [self setupDatabaseWithName:databaseName withMediaStorage:YES];
 }
@@ -77,6 +96,9 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 - (void)dealloc {
     if (self.yapDatabaseNotificationToken != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.yapDatabaseNotificationToken];
+    }
+    if (self.allowPassphraseBackupNotificationToken != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.allowPassphraseBackupNotificationToken];
     }
 }
 
@@ -372,6 +394,24 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         return [SAMKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
     }
     
+}
+
+- (void)updatePassphraseAccessibility
+{
+    if (self.hasPassphrase && self.inMemoryPassphrase == nil) {
+        BOOL allowBackup = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowDBPassphraseBackup];
+
+        CFTypeRef previousAccessibilityType = [SAMKeychain accessibilityType];
+        [SAMKeychain setAccessibilityType:allowBackup ? kSecAttrAccessibleAfterFirstUnlock : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+
+        NSError *error = nil;
+        [self setDatabasePassphrase:self.databasePassphrase remember:YES error:&error];
+        if (error) {
+            DDLogError(@"Password Error: %@",error);
+        }
+
+        [SAMKeychain setAccessibilityType:previousAccessibilityType];
+    }
 }
 
 #pragma - mark Singlton Methodd
