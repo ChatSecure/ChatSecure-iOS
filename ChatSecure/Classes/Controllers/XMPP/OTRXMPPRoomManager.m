@@ -51,6 +51,10 @@
     [self.mucModule activate:aXmppStream];
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
+    
+    //Register view for sending message queue and occupants
+    [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
+    
     return result;
 }
 
@@ -61,10 +65,6 @@
             [self.tempRoomSubject setObject:subject forKey:jid.bare];
         }
     });
-    
-    //Register view for sending message queue and occupants
-    [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
-    
     
     XMPPRoom *room = [self roomForJID:jid];
     NSString* accountId = self.xmppStream.tag;
