@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (4.5.1)
-  - Appirater (2.2.0)
+  - Appirater (2.3.0)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -287,7 +287,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
-  Appirater: eccc7b82b47f2bffaf0023bc49862b36680c542f
+  Appirater: fdcc628d29d826852f07af124f669ba5cb412275
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
