@@ -421,22 +421,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #pragma mark OTRFeedbackSettingDelegate method
 
 - (void) presentFeedbackViewForSetting:(OTRSetting *)setting {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SEND_FEEDBACK_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *showFeedbackAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        NSURL *url = [NSURL URLWithString:@"/issues" relativeToURL:OTRBranding.githubURL];
-        [UIApplication.sharedApplication openURL:url];
-    }];
-    
-    [alertController addAction:cancelAlertAction];
-    [alertController addAction:showFeedbackAlertAction];
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
-    
-    alertController.popoverPresentationController.sourceView = cell;
-    alertController.popoverPresentationController.sourceRect = cell.bounds;
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+    NSURL *githubURL = OTRBranding.githubURL;
+    if (!githubURL) { return; }
+    NSURL *githubIssues = [githubURL URLByAppendingPathComponent:@"issues"];
+    [UIApplication.sharedApplication openURL:githubIssues];
 }
 
 #pragma - mark YapDatabse Methods
