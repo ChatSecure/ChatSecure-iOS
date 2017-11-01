@@ -62,6 +62,13 @@
         occupant.realJID = realJID;
     }
     
+    // Fill in related buddy object if we have it
+    if (occupant.realJID) {
+        OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:occupant.realJID withAccountUniqueId:accountId transaction:transaction];
+        if (buddy) {
+            occupant.buddyUniqueId = buddy.uniqueId;
+        }
+    }
     return occupant;
 }
 

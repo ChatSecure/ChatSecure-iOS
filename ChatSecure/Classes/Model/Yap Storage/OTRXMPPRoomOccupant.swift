@@ -65,24 +65,20 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     @objc open var affiliation:RoomOccupantAffiliation = .none
 
     /**When given by the server we get the room participants reall JID*/
-    @objc open var realJID:String? {
-        didSet {
-            if let realJid = self.realJID, let roomUniqueId = self.roomUniqueId {
-                OTRDatabaseManager.shared.readOnlyDatabaseConnection?.asyncRead({ (transaction) in
-                    if let room = OTRXMPPRoom.fetchObject(withUniqueID: roomUniqueId, transaction: transaction), let accountUniqueId = room.accountUniqueId {
-                        self.realBuddy = OTRBuddy.fetch(withUsername: realJid, withAccountUniqueId: accountUniqueId, transaction: transaction)
-                    }
-                })
-            }
-        }
-    }
-    @objc open var realBuddy:OTRBuddy?
-    
+    @objc open var realJID:String?
+
+    @objc open var buddyUniqueId:String?
     @objc open var roomUniqueId:String?
     
     @objc open func avatarImage() -> UIImage {
-        if let buddy = self.realBuddy {
-            return buddy.avatarImage
+        if self.buddyUniqueId != nil {
+            var buddy:OTRXMPPBuddy?
+            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+                buddy = self.buddy(with: transaction)
+            })
+            if let buddy = buddy {
+                return buddy.avatarImage
+            }
         }
         return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
     }
@@ -95,19 +91,11 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
         }
         return nil
     }
-    
-    // MARK: Disable Mantle Storage of Dynamic Properties
-    
-    override open class func encodingBehaviorsByPropertyKey() -> [AnyHashable:Any]? {
-        var ret = super.encodingBehaviorsByPropertyKey()
-        ret?["realBuddy"] = MTLModelEncodingBehaviorExcluded
-        return ret
-    }
-    
-    override open class func storageBehaviorForProperty(withKey propertyKey:String) -> MTLPropertyStorage {
-        if propertyKey.compare("realBuddy") == .orderedSame {
-            return MTLPropertyStorageNone
+
+    @objc open func buddy(with transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
+        if let buddyUniqueId = self.buddyUniqueId {
+            return OTRXMPPBuddy.fetchObject(withUniqueID: buddyUniqueId, transaction: transaction)
         }
-        return super.storageBehaviorForProperty(withKey: propertyKey)
+        return nil
     }
 }

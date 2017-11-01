@@ -1751,8 +1751,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 OTRXMPPRoomOccupant *occupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
                 if (occupant) {
-                    if ([occupant realBuddy] != nil) {
-                        displayName = [[occupant realBuddy] displayName];
+                    OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
+                    if (buddy) {
+                        displayName = [buddy displayName];
                     } else {
                         displayName = [[XMPPJID jidWithString:occupant.jid] resource];
                     }
