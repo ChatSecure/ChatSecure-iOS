@@ -227,6 +227,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.currentIndexPath = nil;
+    
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
