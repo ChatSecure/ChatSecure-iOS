@@ -447,8 +447,6 @@
 		D95515941EFA0B5F008AA429 /* SAMKeychain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47721EFA03FC00C39B25 /* SAMKeychain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D95515951EFA0B5F008AA429 /* TTTAttributedLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47731EFA03FC00C39B25 /* TTTAttributedLabel.framework */; };
 		D95515961EFA0B5F008AA429 /* TTTAttributedLabel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47731EFA03FC00C39B25 /* TTTAttributedLabel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D95515971EFA0B5F008AA429 /* UserVoice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47741EFA03FC00C39B25 /* UserVoice.framework */; };
-		D95515981EFA0B5F008AA429 /* UserVoice.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47741EFA03FC00C39B25 /* UserVoice.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D95515991EFA0B5F008AA429 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
 		D955159A1EFA0B5F008AA429 /* XLForm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D955159B1EFA0B5F008AA429 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
@@ -532,7 +530,6 @@
 		D9EC477E1EFA03FC00C39B25 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47711EFA03FC00C39B25 /* PureLayout.framework */; };
 		D9EC477F1EFA03FC00C39B25 /* SAMKeychain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47721EFA03FC00C39B25 /* SAMKeychain.framework */; };
 		D9EC47801EFA03FC00C39B25 /* TTTAttributedLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47731EFA03FC00C39B25 /* TTTAttributedLabel.framework */; };
-		D9EC47811EFA03FC00C39B25 /* UserVoice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47741EFA03FC00C39B25 /* UserVoice.framework */; };
 		D9EC47821EFA03FC00C39B25 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
 		D9EC47831EFA03FC00C39B25 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
 		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -608,7 +605,6 @@
 				D95515921EFA0B5F008AA429 /* PureLayout.framework in Embed Frameworks */,
 				D95515941EFA0B5F008AA429 /* SAMKeychain.framework in Embed Frameworks */,
 				D955158A1EFA0B5F008AA429 /* HTMLReader.framework in Embed Frameworks */,
-				D95515981EFA0B5F008AA429 /* UserVoice.framework in Embed Frameworks */,
 				D955159A1EFA0B5F008AA429 /* XLForm.framework in Embed Frameworks */,
 				D95515961EFA0B5F008AA429 /* TTTAttributedLabel.framework in Embed Frameworks */,
 				D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */,
@@ -1204,7 +1200,6 @@
 				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
 				D984F6D11EFC6D52008D0CF7 /* Kvitto.framework in Frameworks */,
-				D95515971EFA0B5F008AA429 /* UserVoice.framework in Frameworks */,
 				D95515851EFA0B5F008AA429 /* Alamofire.framework in Frameworks */,
 				D955157D1EFA0A9F008AA429 /* MBProgressHUD.framework in Frameworks */,
 				D955159B1EFA0B5F008AA429 /* ZXingObjC.framework in Frameworks */,
@@ -1251,7 +1246,6 @@
 				DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */,
 				D9EC477C1EFA03FC00C39B25 /* Mantle.framework in Frameworks */,
 				D9EC47791EFA03FC00C39B25 /* HTMLReader.framework in Frameworks */,
-				D9EC47811EFA03FC00C39B25 /* UserVoice.framework in Frameworks */,
 				D9EC477D1EFA03FC00C39B25 /* MBProgressHUD.framework in Frameworks */,
 				D9EC477E1EFA03FC00C39B25 /* PureLayout.framework in Frameworks */,
 				D9EC47831EFA03FC00C39B25 /* ZXingObjC.framework in Frameworks */,
@@ -3013,7 +3007,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/PureLayout.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SAMKeychain.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TTTAttributedLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/UserVoice.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
 			);

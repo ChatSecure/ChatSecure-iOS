@@ -128,7 +128,7 @@
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting, shareViewSetting]];
     
-    if ([OTRBranding userVoiceSite]) {
+    if ([OTRBranding githubURL]) {
         OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING() description:nil];
         feedbackViewSetting.imageName = @"18-envelope.png";
         [otherSettings addObject:feedbackViewSetting];

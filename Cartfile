@@ -7,8 +7,6 @@ github "soffes/SAMKeychain" ~> 1.5
 github "jdg/MBProgressHUD" ~> 1.0
 github "TTTAttributedLabel/TTTAttributedLabel" ~> 2.0
 github "PureLayout/PureLayout" ~> 3.0
-# github "uservoice/uservoice-ios-sdk" ~> 3.2.11
-github "ChatSecure/uservoice-ios-sdk" "3.2.11_xcode91"
 github "facebook/KVOController" ~> 1.2
 github "xmartlabs/XLForm" ~> 4.0.0
 github "mattt/FormatterKit" ~> 1.8

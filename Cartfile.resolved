@@ -1,6 +1,5 @@
 github "AFNetworking/AFNetworking" "3.1.0"
 github "ChatSecure/Mantle" "4c1a09cb0c0811956cd35262340e42b940971cbb"
-github "ChatSecure/uservoice-ios-sdk" "560154ddd2c5f0f7345b63517c6cc525ae09913c"
 github "PureLayout/PureLayout" "v3.0.2"
 github "TTTAttributedLabel/TTTAttributedLabel" "2.0.0"
 github "TheLevelUp/ZXingObjC" "3.2.2"

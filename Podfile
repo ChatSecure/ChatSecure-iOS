@@ -67,21 +67,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 
-  ### Moved to Carthage ###
-  # pod 'AFNetworking', '~> 3.1'
-  # pod 'ZXingObjC', '~> 3.0'
-  # pod "SAMKeychain", '~> 1.5'
-  # pod 'MBProgressHUD', '~> 1.0'
-  # pod 'TTTAttributedLabel', '~> 2.0'
-  # pod 'PureLayout', '~> 3.0'
-  # pod 'uservoice-iphone-sdk', '~> 3.2'
-  # pod 'KVOController', '~> 1.0'
-  # pod 'XLForm', '~> 3.3'
-  # pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
-  ### Moved back to CocoaPods due to Swift 3->4 issues ###
   pod 'Alamofire', '~> 4.4'
   pod 'Kvitto', '~> 1.0'
-
 
   target 'ChatSecureCore'
   target 'ChatSecureTests'

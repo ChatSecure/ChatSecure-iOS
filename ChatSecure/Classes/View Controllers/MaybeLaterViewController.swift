@@ -8,7 +8,6 @@
 
 import UIKit
 import OTRAssets
-import UserVoice
 import Appirater
 
 public class MaybeLaterViewController: UIViewController {
@@ -53,16 +52,7 @@ public class MaybeLaterViewController: UIViewController {
     }
     
     @IBAction func submitIdeasPressed(_ sender: Any) {
-        let alert = UIAlertController(title: SHOW_USERVOICE_STRING(), message: nil, preferredStyle: .actionSheet)
-        let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil);
-        let show = UIAlertAction(title: OK_STRING(), style: .default) { (action) in
-            let config = UVConfig(site: OTRBranding.userVoiceSite!)
-            UserVoice.presentInterface(forParentViewController: self, andConfig: config)
-        }
-        alert.addAction(cancel)
-        alert.addAction(show)
-        alert.setPopoverSource(sender)
-        present(alert, animated: true, completion: nil)
+        fileBugPressed(sender)
     }
     
     @IBAction func reviewButtonPressed(_ sender: Any) {

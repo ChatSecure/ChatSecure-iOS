@@ -72,7 +72,7 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 @property (class, readonly, nullable) NSURL* pushStagingAPIURL;
 
 /** UserVoice Site */
-@property (class, readonly, nullable) NSString* userVoiceSite;
+@property (class, readonly, nullable) NSString* userVoiceSite DEPRECATED_MSG_ATTRIBUTE("UserVoice is deprecated.");
 
 /** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
 @property (class, readonly) BOOL shouldShowPushWarning;

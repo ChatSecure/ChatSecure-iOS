@@ -32,8 +32,6 @@
 	<string>https://push-staging.chatsecure.org/api/v1/</string>
 	<key>TestflightSignupURL</key>
 	<string>https://goo.gl/forms/p8XAiaJFvodl7DLk2</string>
-	<key>UserVoiceSite</key>
-	<string>chatsecure.uservoice.com</string>
 	<key>ShouldShowPushWarning</key>
 	<true/>
 	<key>ShouldShowServerCell</key>

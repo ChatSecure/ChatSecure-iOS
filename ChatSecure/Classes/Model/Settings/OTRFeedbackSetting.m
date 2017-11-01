@@ -26,7 +26,7 @@
 
 - (void) showView
 {
-    [self.delegate presentUserVoiceViewForSetting:self];
+    [self.delegate presentFeedbackViewForSetting:self];
 }
 
 @end

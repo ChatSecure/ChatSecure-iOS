@@ -29,7 +29,6 @@
 #import "OTRQRCodeViewController.h"
 @import QuartzCore;
 #import "OTRConstants.h"
-@import UserVoice;
 #import "OTRAccountTableViewCell.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "OTRSecrets.h"
@@ -421,16 +420,16 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma mark OTRFeedbackSettingDelegate method
 
-- (void) presentUserVoiceViewForSetting:(OTRSetting *)setting {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+- (void) presentFeedbackViewForSetting:(OTRSetting *)setting {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SEND_FEEDBACK_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        UVConfig *config = [UVConfig configWithSite:[OTRBranding userVoiceSite]];
-        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+    UIAlertAction *showFeedbackAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSURL *url = [NSURL URLWithString:@"/issues" relativeToURL:OTRBranding.githubURL];
+        [UIApplication.sharedApplication openURL:url];
     }];
     
     [alertController addAction:cancelAlertAction];
-    [alertController addAction:showUserVoiceAlertAction];
+    [alertController addAction:showFeedbackAlertAction];
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
     
