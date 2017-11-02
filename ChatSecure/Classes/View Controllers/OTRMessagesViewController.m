@@ -1649,12 +1649,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
         OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
+        __block OTRXMPPBuddy *roomOccupantBuddy = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
             roomOccupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
+            if (roomOccupant != nil) {
+                roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+            }
         }];
         UIImage *avatarImage = nil;
         if (roomOccupant) {
-            avatarImage = [roomOccupant avatarImage];
+            if (roomOccupantBuddy != nil) {
+                avatarImage = [roomOccupantBuddy avatarImage];
+            }
+            if (!avatarImage) {
+                avatarImage = [roomOccupant avatarImage];
+            }
         } else {
             avatarImage = [OTRImages avatarImageWithUsername:[[XMPPJID jidWithString:roomMessage.senderJID] resource]];
         }

@@ -71,15 +71,6 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     @objc open var roomUniqueId:String?
     
     @objc open func avatarImage() -> UIImage {
-        if self.buddyUniqueId != nil {
-            var buddy:OTRXMPPBuddy?
-            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                buddy = self.buddy(with: transaction)
-            })
-            if let buddy = buddy {
-                return buddy.avatarImage
-            }
-        }
         return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
     }
     
