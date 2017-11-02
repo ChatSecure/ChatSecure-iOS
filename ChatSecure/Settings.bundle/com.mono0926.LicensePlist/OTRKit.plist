@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>Software License Agreement (LGPLv2.1+ / MPL 2.0)
+Copyright (c) 2014, Chris Ballinger &lt;chris@chatsecure.org&gt;. All rights reserved.
+
+# LGPLv2.1+
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+# MPL 2.0
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+###########################################################################
+ENCRYPTION NOTICE / APP DISTRIBUTION NOTES
+
+This software uses strong cryptography and may it fall under certain
+export/import and/or use restrictions in some other parts of the world.
+BEFORE using any encryption software, please check your country's laws,
+regulations and policies concerning the import, possession, or use,
+and re-export of encryption software, to see if this is permitted.
+See http://www.wassenaar.org/ for more information.
+
+This source package does not directly contain encryption software. Please see
+the libgcrypt and libotr license portions for links to the encryption-containing
+portions of this application. Distributions of this source package
+(and only this source package, without external dependencies) may not be
+considered encryption software depending on the regulations of your jurisdiction.
+
+Distribution of binary versions of this application may be subject to
+further export/import and/or use restrictions. (iOS developers: see the
+"My application uses a public domain library (openssh)..." question in the
+"World Wide Trade Compliance for the App Store" page on the Apple iTunes Connect
+FAQs[3] site. Also note the "I intend to distribute my app only in the United
+States and Canada..." question on that FAQ page.)
+
+    [3]: https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/wa/jumpTo?page=faqs
+
+###########################################################################
+Build scripts based on `build-libssl.sh` work in `OpenSSL-for-iPhone`,
+originally licensed under the Apache License 2.0:
+
+Copyright 2010 Felix Schulze. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+###########################################################################
+libgcrypt is not bundled in the source tree of this application, but is required
+to compile the library. NOTE: Binary forms of this application are subject
+to the license and must reproduce the copyright notices and disclaimers
+located in the full license (link below).
+
+libgcrypt is available under the LGPLv2.1+ License:
+
+ Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2006,
+           2007, 2008, 2009, 2011 Free Software Foundation, Inc.
+
+Full license available at:
+
+http://www.gnu.org/licenses/lgpl-2.1.txt
+
+###########################################################################
+libgpg-error is not bundled in the source tree of this application, but is required
+to compile the library. NOTE: Binary forms of this application are subject
+to the license and must reproduce the copyright notices and disclaimers
+located in the full license (link below).
+
+libgpg-error is available under the LGPLv2.1+ License:
+
+ Copyright 2003, 2004, 2005, 2006, 2007 g10 Code GmbH
+
+Full license available at:
+
+http://www.gnu.org/licenses/lgpl-2.1.txt
+
+###########################################################################
+libotr is not bundled in the source tree of this application, but is required
+to compile the library. NOTE: Binary forms of this application are subject
+to the license and must reproduce the copyright notices and disclaimers
+located in the full license (link below).
+
+libotr is available under the LGPLv2.1 License:
+
+ Copyright 2004, 2005, 2007, 2008 Ian Goldberg, Chris Alexander, Nikita Borisov &lt;otr@cypherpunks.ca&gt;
+
+Full license available at:
+
+http://www.gnu.org/licenses/lgpl-2.1.txt</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

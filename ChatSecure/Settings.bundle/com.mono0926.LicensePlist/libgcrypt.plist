@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>Libgcrypt - The GNU Crypto Library
+   ------------------------------------
+                         Version 1.7
+
+   Copyright (C) 1989,1991-2017 Free Software Foundation, Inc.
+   Copyright (C) 2012-2017 g10 Code GmbH
+   Copyright (C) 2013-2017 Jussi Kivilinna
+
+Libgcrypt is free software.  See the file AUTHORS for full copying
+notices, and LICENSES for notices about contributions that require
+these additional notices to be distributed.
+</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

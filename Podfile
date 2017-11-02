@@ -21,7 +21,6 @@ abstract_target 'ChatSecureCorePods' do
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'JTSImageViewController', '~> 1.4'
-  pod 'VTAcknowledgementsViewController', '~> 1.2'
   pod 'BButton', '~> 4.0'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'

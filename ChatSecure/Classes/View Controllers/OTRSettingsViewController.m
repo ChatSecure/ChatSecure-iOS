@@ -25,7 +25,6 @@
 #import "OTRBoolSetting.h"
 #import "OTRSettingTableViewCell.h"
 #import "OTRSettingDetailViewController.h"
-#import "OTRAboutViewController.h"
 #import "OTRQRCodeViewController.h"
 @import QuartzCore;
 #import "OTRConstants.h"
@@ -99,10 +98,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UINib *nib = [UINib nibWithNibName:[XMPPAccountCell cellIdentifier] bundle:bundle];
     [self.tableView registerNib:nib forCellReuseIdentifier:[XMPPAccountCell cellIdentifier]];
     
-    
-    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [infoButton addTarget:self action:@selector(showAboutScreen:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    [self setupVersionLabel];
     
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
@@ -114,6 +110,23 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }];
 }
 
+- (void) setupVersionLabel {
+    UIButton *versionButton = [[UIButton alloc] init];
+    NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleShortVersionString"];
+    NSString *buildNumber = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+    NSString *versionTitle = [NSString stringWithFormat:@"%@ %@ (%@)", VERSION_STRING(), bundleVersion, buildNumber];
+    [versionButton setTitle:versionTitle forState:UIControlStateNormal];
+    [versionButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateNormal];
+    [versionButton addTarget:self action:@selector(versionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [versionButton sizeToFit];
+    self.tableView.tableFooterView = versionButton;
+}
+
+- (void) versionButtonPressed:(id)sender {
+    // Licenses are in Settings bundle now
+    NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    [UIApplication.sharedApplication openURL:settingsURL];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -310,21 +323,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];
-}
-
--(void)showAboutScreen:(id)sender
-{
-    OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:aboutController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
-    }
-    else {
-       [self.navigationController pushViewController:aboutController animated:YES];
-    }
-    
 }
 
 - (void) addAccount:(id)sender {

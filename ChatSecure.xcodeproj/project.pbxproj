@@ -244,8 +244,6 @@
 		D93DDAF51BA79A2800CD8331 /* OTRGoolgeOAuthLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680891B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m */; };
 		D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */; };
 		D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BE425D1B320EE20017058C /* OTRLoginHandler.m */; };
-		D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106131A16D1A300C17BAE /* OTRAboutViewController.m */; };
-		D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */; };
 		D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106171A16D1A300C17BAE /* OTRBuddyViewController.m */; };
 		D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106191A16D1A300C17BAE /* OTRCertificateDomainViewController.m */; };
 		D93DDAFD1BA79A2900CD8331 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061B1A16D1A300C17BAE /* OTRCertificatesViewController.m */; };
@@ -380,8 +378,6 @@
 		D93DDBAB1BA79AAE00CD8331 /* OTRGoolgeOAuthLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 634680881B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 6346808B1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BE425C1B320EE20017058C /* OTRLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106121A16D1A300C17BAE /* OTRAboutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDBB11BA79AB500CD8331 /* OTRBuddyViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106161A16D1A300C17BAE /* OTRBuddyViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB21BA79AB600CD8331 /* OTRCertificateDomainViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061A1A16D1A300C17BAE /* OTRCertificatesViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -516,6 +512,7 @@
 		D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BEF8DF1DCE6E12009945D1 /* OTRXMPPManager_Private.h */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */ = {isa = PBXBuildFile; fileRef = D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */; };
+		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9E8277F1E28222F0071F40D /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9EC47681EFA03D800C39B25 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
@@ -799,10 +796,6 @@
 		633105FB1A16D1A300C17BAE /* OTRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUtilities.m; sourceTree = "<group>"; };
 		633105FC1A16D1A300C17BAE /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
 		633105FD1A16D1A300C17BAE /* OTRXMPPError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPError.m; sourceTree = "<group>"; };
-		633106121A16D1A300C17BAE /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
-		633106131A16D1A300C17BAE /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
-		633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAcknowledgementsViewController.h; sourceTree = "<group>"; };
-		633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAcknowledgementsViewController.m; sourceTree = "<group>"; };
 		633106161A16D1A300C17BAE /* OTRBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyViewController.h; sourceTree = "<group>"; };
 		633106171A16D1A300C17BAE /* OTRBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyViewController.m; sourceTree = "<group>"; };
 		633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificateDomainViewController.h; sourceTree = "<group>"; };
@@ -1160,6 +1153,7 @@
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
 		D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRYapMessageSendAction.swift; sourceTree = "<group>"; };
+		D9DEC3491FABC9F900BF1F7C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9E8277D1E2819F20071F40D /* strings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = strings.json; path = OTRAssets/Strings/strings.json; sourceTree = SOURCE_ROOT; };
 		D9EC47671EFA03D800C39B25 /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = Carthage/Build/iOS/AFNetworking.framework; sourceTree = "<group>"; };
 		D9EC476A1EFA03FC00C39B25 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
@@ -1291,6 +1285,7 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D9DEC3491FABC9F900BF1F7C /* Settings.bundle */,
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
 				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
@@ -1616,10 +1611,6 @@
 				D92AC2081DB023D8007BD3E7 /* UserProfileViewController.swift */,
 				638D2DFD1AFAD3AE00F3C50C /* Onboarding */,
 				633105FF1A16D1A300C17BAE /* Login View Controllers */,
-				633106121A16D1A300C17BAE /* OTRAboutViewController.h */,
-				633106131A16D1A300C17BAE /* OTRAboutViewController.m */,
-				633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */,
-				633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */,
 				633106161A16D1A300C17BAE /* OTRBuddyViewController.h */,
 				633106171A16D1A300C17BAE /* OTRBuddyViewController.m */,
 				633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */,
@@ -2305,10 +2296,8 @@
 				D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */,
 				D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */,
 				D91F9EFB1ED6301500AEA62C /* OTRDownloadMessage.h in Headers */,
-				D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */,
 				D9ABD71E1ED787EE00219A9C /* OTRHTMLItem.h in Headers */,
 				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
-				D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */,
 				D93DDB341BA79A7000CD8331 /* NSFileManager+ChatSecure.h in Headers */,
 				D93DDB321BA79A7000CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.h in Headers */,
 				D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */,
@@ -2593,6 +2582,7 @@
 			files = (
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
 				D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */,
+				D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */,
@@ -2703,7 +2693,6 @@
 				"${BUILT_PRODUCTS_DIR}/SignalProtocolC/SignalProtocolC.framework",
 				"${BUILT_PRODUCTS_DIR}/SignalProtocolObjC/SignalProtocolObjC.framework",
 				"${BUILT_PRODUCTS_DIR}/TUSafariActivity/TUSafariActivity.framework",
-				"${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/XMPPFramework/XMPPFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/YapDatabase/YapDatabase.framework",
 				"${BUILT_PRODUCTS_DIR}/YapTaskQueue/YapTaskQueue.framework",
@@ -2743,7 +2732,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SignalProtocolC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SignalProtocolObjC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TUSafariActivity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VTAcknowledgementsViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XMPPFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YapDatabase.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YapTaskQueue.framework",
@@ -2811,7 +2799,6 @@
 				"${BUILT_PRODUCTS_DIR}/SignalProtocolC/SignalProtocolC.framework",
 				"${BUILT_PRODUCTS_DIR}/SignalProtocolObjC/SignalProtocolObjC.framework",
 				"${BUILT_PRODUCTS_DIR}/TUSafariActivity/TUSafariActivity.framework",
-				"${BUILT_PRODUCTS_DIR}/VTAcknowledgementsViewController/VTAcknowledgementsViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/XMPPFramework/XMPPFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/YapDatabase/YapDatabase.framework",
 				"${BUILT_PRODUCTS_DIR}/YapTaskQueue/YapTaskQueue.framework",
@@ -2851,7 +2838,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SignalProtocolC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SignalProtocolObjC.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TUSafariActivity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VTAcknowledgementsViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XMPPFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YapDatabase.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YapTaskQueue.framework",
@@ -3224,10 +3210,8 @@
 				D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */,
 				D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */,
 				D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */,
-				D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */,
 				D91C866B1E4E7EEA008BD763 /* ServerCapabilityTableViewCell.swift in Sources */,
 				631C79931E56846700B30CB4 /* NSData+ChatSecure.swift in Sources */,
-				D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */,
 				D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */,
 				D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */,
 				D93DDAFD1BA79A2900CD8331 /* OTRCertificatesViewController.m in Sources */,

@@ -11,5 +11,6 @@ DerivedData
 
 Pods/
 Carthage/
+com.mono0926.LicensePlist.Output/
 
 Secrets.plist

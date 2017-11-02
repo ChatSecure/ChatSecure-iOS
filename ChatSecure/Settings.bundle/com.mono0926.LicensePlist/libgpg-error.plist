@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>Package: libgpg-error
+Maintainer: Werner Koch &lt;wk@gnupg.org&gt;
+Bug reports: bug-gnupg@gnupg.org
+Mailing list: gnupg-devel@gnupg.org
+Security related bug reports: security@gnupg.org
+License (library): LGPLv2.1+
+License (manual tools): GPLv2+ with exception
+
+Libgpg-error is free software.  See the files COPYING.LIB and COPYING
+for copying conditions.  License copyright years may be listed using
+range notation, e.g., 2000-2013, indicating that every year in the
+range, inclusive, is a copyrightable year that would otherwise be
+listed individually.
+</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>
