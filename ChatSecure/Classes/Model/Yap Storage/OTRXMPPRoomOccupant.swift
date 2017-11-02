@@ -8,6 +8,7 @@
 
 import Foundation
 import YapDatabase
+import Mantle
 
 @objc public enum RoomOccupantRole:Int {
     case none = 0
@@ -65,7 +66,8 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
 
     /**When given by the server we get the room participants reall JID*/
     @objc open var realJID:String?
-    
+
+    @objc open var buddyUniqueId:String?
     @objc open var roomUniqueId:String?
     
     @objc open func avatarImage() -> UIImage {
@@ -77,6 +79,13 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
         if let roomID = self.roomUniqueId {
             let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection, destinationKey: roomID, collection: OTRXMPPRoom.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
             return [relationship]
+        }
+        return nil
+    }
+
+    @objc open func buddy(with transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
+        if let buddyUniqueId = self.buddyUniqueId {
+            return OTRXMPPBuddy.fetchObject(withUniqueID: buddyUniqueId, transaction: transaction)
         }
         return nil
     }

@@ -14,6 +14,7 @@ import OTRAssets
 
 @objc public protocol OTRRoomOccupantsViewControllerDelegate {
     func didLeaveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
+    func didArchiveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
 }
 
 open class OTRRoomOccupantsViewController: UIViewController {
@@ -42,7 +43,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
     static let HeaderCellShare = "cellGroupShare"
     static let HeaderCellAddFriends = "cellGroupAddFriends"
     static let HeaderCellMute = "cellGroupMute"
-    static let HeaderCellUnmute = "cellGroupUnmute"
     static let HeaderCellMembers = "cellGroupMembers"
     static let FooterCellLeave = "cellGroupLeave"
 
@@ -82,7 +82,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
         var headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
             OTRRoomOccupantsViewController.HeaderCellMute,
-            OTRRoomOccupantsViewController.HeaderCellUnmute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
 
@@ -179,8 +178,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
         if let room = self.room {
             muted = room.isMuted
         }
-        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellMute, hidden: muted)
-        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellUnmute, hidden: !muted)
+        if let view = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellMute) as? UITableViewCell, let switchView = view.accessoryView as? UISwitch {
+            switchView.setOn(muted, animated: true)
+        }
     }
     
     open func createHeaderCell(type:String) -> UITableViewCell {
@@ -206,6 +206,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
             }
             cell?.selectionStyle = .none
             break
+        case OTRRoomOccupantsViewController.HeaderCellMute:
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
+            let muteswitch = UISwitch()
+            if let room = self.room {
+                muteswitch.setOn(room.isMuted, animated: false)
+            }
+            muteswitch.addTarget(self, action: #selector(self.didChangeMuteSwitch(_:)), for: .valueChanged)
+            cell?.accessoryView = muteswitch
+            cell?.isUserInteractionEnabled = true
+            cell?.selectionStyle = .none
+            break
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             break
@@ -219,19 +230,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func didSelectHeaderCell(type:String) {
         switch type {
-        case OTRRoomOccupantsViewController.HeaderCellMute, OTRRoomOccupantsViewController.HeaderCellUnmute:
-            if let room = self.room {
-                if room.isMuted {
-                    room.muteExpiration = nil
-                } else {
-                    room.muteExpiration = Date.distantFuture
-                }
-                OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
-                    room.save(with: transaction)
-                })
-                updateMuteUnmuteCell()
-            }
-            break
         case OTRRoomOccupantsViewController.HeaderCellAddFriends:
             addMoreFriends()
             break
@@ -251,6 +249,19 @@ open class OTRRoomOccupantsViewController: UIViewController {
             }
             break
         default: break
+        }
+    }
+    @objc func didChangeMuteSwitch(_ sender: UIControl!) {
+        if let room = self.room {
+            if room.isMuted {
+                room.muteExpiration = nil
+            } else {
+                room.muteExpiration = Date.distantFuture
+            }
+            OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+                room.save(with: transaction)
+            })
+            updateMuteUnmuteCell()
         }
     }
     
@@ -350,7 +361,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         var buddy:OTRXMPPBuddy? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                    buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)

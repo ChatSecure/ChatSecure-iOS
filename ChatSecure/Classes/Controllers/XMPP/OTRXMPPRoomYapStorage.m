@@ -54,14 +54,21 @@
         occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
     }
     
-    // Make sure we fill in the jids if we haven't got them already (note: we might well assign nil to them here, basically a no-op, but if we have them they will be set)
-    if (!occupant.jid) {
+    // Make sure we fill in the jids if we haven't got them already (note: we might well assign nil to them here, basically a no-op, but if we have them they will be set). If we have the realJID, we might have a new jid, so update that.
+    if (!occupant.jid || (occupant.realJID && jid)) {
         occupant.jid = jid;
     }
     if (!occupant.realJID) {
         occupant.realJID = realJID;
     }
     
+    // Fill in related buddy object if we have it
+    if (occupant.realJID) {
+        OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:occupant.realJID withAccountUniqueId:accountId transaction:transaction];
+        if (buddy) {
+            occupant.buddyUniqueId = buddy.uniqueId;
+        }
+    }
     return occupant;
 }
 
@@ -151,7 +158,7 @@
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
         databaseMessage.displayName = occupant.realJID;
         if (!databaseMessage.displayName) {
-            databaseMessage.displayName = [fromJID bare];
+            databaseMessage.displayName = [fromJID full];
         }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
