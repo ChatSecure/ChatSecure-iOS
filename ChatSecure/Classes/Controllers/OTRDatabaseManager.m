@@ -34,7 +34,6 @@ NSString *const OTRMessagesSecondaryIndex = @"OTRMessagesSecondaryIndex";
 NSString *const OTRYapDatabaseMessageIdSecondaryIndexColumnName = @"OTRYapDatabaseMessageIdSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName = @"OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName = @"OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName = @"OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatabaseUnreadMessageSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDatabaseSignalSessionSecondaryIndexColumnName";
 NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName";
@@ -192,7 +191,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [self.database registerExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName]];
         
         // Register Secondary Index
-        YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
+        YapDatabaseSecondaryIndex *secondaryIndex = [self setupSignalSecondaryIndexes];
         [self.database registerExtension:secondaryIndex withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameSecondaryIndexName]];
         YapDatabaseSecondaryIndex *messageIndex = [self setupMessageSecondaryIndexes];
         [self.database registerExtension:messageIndex withName:OTRMessagesSecondaryIndex];
@@ -257,8 +256,8 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
     [setup addColumn:OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
-    [setup addColumn:SecondaryIndexName.originId withType:YapDatabaseSecondaryIndexTypeText];
-    [setup addColumn:SecondaryIndexName.stanzaId withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:MessageSecondaryIndexName.originId withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:MessageSecondaryIndexName.stanzaId withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -275,37 +274,53 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
                 [dict setObject:message.threadId forKey:OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
             }
             if (message.originId.length) {
-                [dict setObject:message.originId forKey:SecondaryIndexName.originId];
+                [dict setObject:message.originId forKey:MessageSecondaryIndexName.originId];
             }
             if (message.stanzaId.length) {
-                [dict setObject:message.stanzaId forKey:SecondaryIndexName.stanzaId];
+                [dict setObject:message.stanzaId forKey:MessageSecondaryIndexName.stanzaId];
             }
         }
     }];
 
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"5"];
+    // These are actually the same collection
+    NSArray<NSString*> *collections = @[OTRBaseMessage.collection, OTRXMPPRoomMessage.collection];
+    YapWhitelistBlacklist *allowed = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithArray:collections]];
+    YapDatabaseSecondaryIndexOptions *options = [[YapDatabaseSecondaryIndexOptions alloc] init];
+    options.allowedCollections = allowed;
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"5" options:options];
     
     return secondaryIndex;
 }
 
+- (YapDatabaseSecondaryIndex *)setupRoomOccupantSecondaryIndexes {
+    YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
+    [setup addColumn:RoomOccupantSecondaryIndexName.jid withType:YapDatabaseSecondaryIndexTypeText];
 
-- (YapDatabaseSecondaryIndex *)setupSecondaryIndexes
+    YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
+            OTRXMPPRoomOccupant *roomOccupant = (OTRXMPPRoomOccupant *)object;
+            if ([roomOccupant.jid length]) {
+                [dict setObject:roomOccupant.jid forKey:RoomOccupantSecondaryIndexName.jid];
+            }
+        }
+    }];
+    NSArray<NSString*> *collections = @[OTRXMPPRoomOccupant.collection];
+    YapWhitelistBlacklist *allowed = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithArray:collections]];
+    YapDatabaseSecondaryIndexOptions *options = [[YapDatabaseSecondaryIndexOptions alloc] init];
+    options.allowedCollections = allowed;
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1" options:options];
+    return secondaryIndex;
+}
+
+- (YapDatabaseSecondaryIndex *)setupSignalSecondaryIndexes
 {
     YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
-    [setup addColumn:OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseSignalSessionSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
     [setup addColumn:OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
-        
-        if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
-            OTRXMPPRoomOccupant *roomOccupant = (OTRXMPPRoomOccupant *)object;
-            if ([roomOccupant.jid length]) {
-                [dict setObject:roomOccupant.jid forKey:OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName];
-            }
-        }
-        
+
         if ([object isKindOfClass:[OTRSignalSession class]]) {
             OTRSignalSession *session = (OTRSignalSession *)object;
             if ([session.name length]) {
@@ -326,6 +341,10 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         }
     }];
     
+    NSArray<NSString*> *collections = @[OTRSignalPreKey.collection,OTRSignalSession.collection];
+    YapWhitelistBlacklist *allowed = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithArray:collections]];
+    YapDatabaseSecondaryIndexOptions *options = [[YapDatabaseSecondaryIndexOptions alloc] init];
+    options.allowedCollections = allowed;
     YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"4"];
     
     return secondaryIndex;

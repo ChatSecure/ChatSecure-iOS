@@ -29,8 +29,8 @@ public extension YapDatabaseReadTransaction {
             parameters.append(value)
         }
         addQuery(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName, elementId)
-        addQuery(SecondaryIndexName.originId, originId)
-        addQuery(SecondaryIndexName.stanzaId, stanzaId)
+        addQuery(MessageSecondaryIndexName.originId, originId)
+        addQuery(MessageSecondaryIndexName.stanzaId, stanzaId)
         guard parameters.count > 0, queryString.characters.count > 0 else {
             return
         }
@@ -62,7 +62,7 @@ public extension YapDatabaseReadTransaction {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName) = ?"
+        let queryString = "Where \(RoomOccupantSecondaryIndexName.jid) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [jid])
         
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
