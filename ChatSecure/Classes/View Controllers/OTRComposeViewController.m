@@ -124,11 +124,7 @@
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
-    //[self.tableView autoPinToTopLayoutGuideOfViewController:self withInset:0.0];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-    self.tableViewBottomConstraint = [self.tableView autoPinToBottomLayoutGuideOfViewController:self withInset:0.0];
+    [self.tableView autoPinEdgesToSuperviewEdges];
     
     [self setupSearchController];
     
