@@ -15,7 +15,7 @@
 
 @interface OTRXMPPRoomManager : XMPPModule
 
-@property (nonatomic, strong, readonly)  NSArray * _Nullable conferenceServicesJID;
+@property (nonatomic, strong, readonly)  NSArray<NSString*> * _Nullable conferenceServicesJID;
 @property (nonatomic, strong) YapDatabaseConnection * _Nullable databaseConnection;
 
 /** All room creation and joining should go through this method. This ensures the delegates are setup properly and database is in sync */
