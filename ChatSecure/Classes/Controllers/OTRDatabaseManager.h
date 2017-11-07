@@ -17,7 +17,6 @@
 @class MessageQueueHandler;
 
 NS_ASSUME_NONNULL_BEGIN
-extern NSString *const OTRMessagesSecondaryIndex;
 extern NSString *const OTRYapDatabaseMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName;

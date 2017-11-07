@@ -96,7 +96,7 @@
 }
 
 - (NSUInteger)numberOfUnreadMessagesWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction {
-    YapDatabaseSecondaryIndexTransaction *indexTransaction = [transaction ext:OTRMessagesSecondaryIndex];
+    YapDatabaseSecondaryIndexTransaction *indexTransaction = [transaction ext:SecondaryIndexName.messages];
     if (!indexTransaction) {
         return 0;
     }

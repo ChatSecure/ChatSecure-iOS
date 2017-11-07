@@ -422,6 +422,7 @@
 		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */; };
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
+		D947C2FB1FB251410037DE84 /* SecondaryIndexes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */; };
 		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */; };
 		D94D5A0F1F98132300AC23BF /* XMPPMessage+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94D5A0E1F98132300AC23BF /* XMPPMessage+ChatSecure.swift */; };
@@ -1079,6 +1080,7 @@
 		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
+		D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryIndexes.swift; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
 		D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCache.m; sourceTree = "<group>"; };
 		D94D5A0E1F98132300AC23BF /* XMPPMessage+ChatSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XMPPMessage+ChatSecure.swift"; sourceTree = "<group>"; };
@@ -1512,6 +1514,7 @@
 		633105B81A16D1A300C17BAE /* Yap Storage */ = {
 			isa = PBXGroup;
 			children = (
+				D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */,
 				D9A1E6541F7309C100E42118 /* OTRDownloadMessage.swift */,
 				D91F9EF91ED6301500AEA62C /* OTRDownloadMessage.h */,
 				D91F9EFA1ED6301500AEA62C /* OTRDownloadMessage.m */,
@@ -3139,6 +3142,7 @@
 				D93DDAC91BA79A2600CD8331 /* OTRListSettingValue.m in Sources */,
 				6381F3601DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift in Sources */,
 				D93DDACA1BA79A2600CD8331 /* OTRSetting.m in Sources */,
+				D947C2FB1FB251410037DE84 /* SecondaryIndexes.swift in Sources */,
 				D93DDACB1BA79A2600CD8331 /* OTRSettingsGroup.m in Sources */,
 				D93DDACC1BA79A2600CD8331 /* OTRShareSetting.m in Sources */,
 				D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */,

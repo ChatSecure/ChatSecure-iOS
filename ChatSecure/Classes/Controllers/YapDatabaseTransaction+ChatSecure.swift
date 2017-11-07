@@ -13,7 +13,7 @@ public extension YapDatabaseReadTransaction {
     
     /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359
     @objc public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
@@ -44,7 +44,7 @@ public extension YapDatabaseReadTransaction {
     }
     
     @objc public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         let queryString = "Where \(OTRYapDatabaseSignalSessionSecondaryIndexColumnName) = ?"
@@ -58,7 +58,7 @@ public extension YapDatabaseReadTransaction {
     
     /** The jid here is the full jid not real jid or nickname */
     @objc public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
@@ -73,7 +73,7 @@ public extension YapDatabaseReadTransaction {
     }
     
     @objc public func numberOfUnreadMessages() -> UInt {
-        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
         
@@ -89,7 +89,7 @@ public extension YapDatabaseReadTransaction {
     }
     
     @objc public func allUnreadMessagesForThread(_ thread:OTRThreadOwner) -> [OTRMessageProtocol] {
-        guard let indexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let indexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return []
         }
         let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"

@@ -8,25 +8,12 @@
 
 import Foundation
 
-@objc public class MessageSecondaryIndexName: NSObject {
-    /// XEP-0359 origin-id
-    @objc public static let originId = "SecondaryIndexNameOriginId"
-    /// XEP-0359 stanza-id
-    @objc public static let stanzaId = "SecondaryIndexNameStanzaId"
-}
-
-@objc public class RoomOccupantSecondaryIndexName: NSObject {
-    /// jid
-    @objc public static let jid = "OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName"
-    
-}
 
 @objc public enum DatabaseExtensionName: Int {
     case groupOccupantsViewName
     case buddyDeleteActionViewName
     case relationshipExtensionName
     case actionManagerName
-    case secondaryIndexName
     case buddyFTSExtensionName
     case buddySearchResultsViewName
     case messageQueueBrokerViewName
@@ -37,7 +24,6 @@ import Foundation
             case .buddyDeleteActionViewName: return "BuddyDeleteActionViewName"
             case .relationshipExtensionName: return "OTRYapDatabaseRelationshipName"
             case .actionManagerName: return "OTRYapDatabaseActionManager"
-            case .secondaryIndexName: return "OTRYapDatabseMessageIdSecondaryIndexExtension"
             case .buddyFTSExtensionName: return "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
             case .buddySearchResultsViewName: return "DatabaseExtensionName.BuddySearchResultsView"
             case .messageQueueBrokerViewName: return "DatabaseExtensionName.MessageQueueBrokerViewName"
