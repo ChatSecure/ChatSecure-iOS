@@ -119,6 +119,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [versionButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateNormal];
     [versionButton addTarget:self action:@selector(versionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [versionButton sizeToFit];
+    CGRect frame = versionButton.frame;
+    frame.size.height = frame.size.height * 2;
+    versionButton.frame = frame;
     self.tableView.tableFooterView = versionButton;
 }
 

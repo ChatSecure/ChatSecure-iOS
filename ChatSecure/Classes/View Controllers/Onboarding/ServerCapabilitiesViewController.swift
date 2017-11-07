@@ -48,7 +48,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         check.xmpp?.xmppPushModule.disablePush(forServerJID: jid, node: nil, elementId: nil)
     }
     
-    func didRegisterUserNotificationSettings(_ notification: Notification) {
+    @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
         tableView.reloadData()
         if !PushController.canReceivePushNotifications() {
             if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
