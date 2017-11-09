@@ -94,6 +94,7 @@
         OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
         if (!messageBuddy) {
             // message from server
+            
             DDLogWarn(@"No buddy for message: %@", xmppMessage);
             return;
         }

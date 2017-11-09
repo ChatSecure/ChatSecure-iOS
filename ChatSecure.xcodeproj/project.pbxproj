@@ -1356,7 +1356,6 @@
 				D93718511EC267F800766D49 /* OTRAccountMigrator.h */,
 				D93718521EC267F800766D49 /* OTRAccountMigrator.m */,
 				D917CCDD1E553007003636B7 /* ServerCheck.swift */,
-				63CBD67F1C642B6B00AC6D1F /* YapExtensions */,
 				6370CCB81CF65A07005DA8D2 /* YapDatabase+ChatSecure.swift */,
 				63363FAD1CCAE29B00B0C720 /* OTRYapExtensions.swift */,
 				634364221CC192F1009E169F /* YapDatabaseConstants.swift */,
@@ -1929,13 +1928,6 @@
 				6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */,
 			);
 			name = "Signal-Storage";
-			sourceTree = "<group>";
-		};
-		63CBD67F1C642B6B00AC6D1F /* YapExtensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = YapExtensions;
 			sourceTree = "<group>";
 		};
 		63CBD68E1C642B8100AC6D1F /* YapActions */ = {

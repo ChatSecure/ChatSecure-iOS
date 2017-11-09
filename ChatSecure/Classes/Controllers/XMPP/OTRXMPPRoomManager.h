@@ -13,25 +13,39 @@
 @class OTRXMPPRoomMessage;
 @class OTRXMPPRoomOccupant;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPRoomManager : XMPPModule
 
-@property (nonatomic, strong, readonly)  NSArray<NSString*> * _Nullable conferenceServicesJID;
-@property (nonatomic, strong) YapDatabaseConnection * _Nullable databaseConnection;
+@property (nonatomic, strong, readonly, nullable)  NSArray<NSString*> *conferenceServicesJID;
+@property (nonatomic, strong, nullable) YapDatabaseConnection * databaseConnection;
 
-/** All room creation and joining should go through this method. This ensures the delegates are setup properly and database is in sync */
-- (nullable NSString *)joinRoom:(nonnull XMPPJID *)jid withNickname:(nonnull NSString *)name subject:(nullable NSString *)subject password:(nullable NSString*)password;
+/** All room joining should go through this method. This ensures the delegates are setup properly and database is in sync. Returns OTRThreadOwner.threadIdentifier */
+- (nullable NSString *)joinRoom:(XMPPJID *)jid
+                   withNickname:( NSString *)name
+                        subject:(nullable NSString *)subject
+                       password:(nullable NSString*)password;
 
-- (void)leaveRoom:(nonnull XMPPJID *)jid;
-- (nullable XMPPRoom*) roomForJID:(nonnull XMPPJID*)jid;
+- (void)leaveRoom:(XMPPJID *)jid;
+- (nullable XMPPRoom*) roomForJID:(XMPPJID*)jid;
 
-- (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
+/** Returns OTRThreadOwner.threadIdentifier. buddiesArray is array of OTRBuddy.uniqueId */
+- (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray
+                                         roomJID:(XMPPJID *)roomName
+                                        nickname:(NSString *)name
+                                         subject:(nullable NSString *)subject;
 
-- (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds toRoom:(nonnull XMPPRoom*)room;
-- (OTRXMPPRoomOccupant * _Nullable) roomOccupantForJID:(nullable NSString *)jid realJID:(nullable NSString *)realJID inRoom:(nonnull NSString *)roomJID;
+- (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds
+               toRoom:(XMPPRoom*)room;
+
+- (nullable OTRXMPPRoomOccupant *) roomOccupantForJID:(nullable NSString
+                                                       *)jid
+                                              realJID:(nullable NSString *)realJID
+                                               inRoom:( NSString *)roomJID;
 
 @end
 
 @interface XMPPRoom(RoomManager)
 /** Creates and sends XMPPMessage stanza from roomMessage */
-- (void) sendRoomMessage:(nonnull OTRXMPPRoomMessage *)roomMessage;
+- (void) sendRoomMessage:( OTRXMPPRoomMessage *)roomMessage;
 @end
+NS_ASSUME_NONNULL_END

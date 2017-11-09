@@ -148,12 +148,6 @@
     return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
-- (void)inviteUser:(XMPPJID *)user toRoom:(XMPPJID *)roomJID withMessage:(NSString *)message
-{
-    XMPPRoom *room = [self roomForJID:roomJID];
-    [room inviteUser:user withMessage:message];
-}
-
 - (OTRXMPPRoomOccupant * _Nullable) roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID inRoom:(NSString *)roomJID {
     XMPPRoom *room = [self roomForJID:[XMPPJID jidWithString:roomJID]];
     __block OTRXMPPRoomOccupant *occupant = nil;
@@ -171,19 +165,21 @@
     if (!buddyUniqueIds.count) {
         return;
     }
-    NSMutableArray<OTRXMPPBuddy*> *buddies = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
+    NSMutableArray<XMPPJID*> *buddyJIDs = [NSMutableArray arrayWithCapacity:buddyUniqueIds.count];
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         [buddyUniqueIds enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:obj transaction:transaction];
-            if (buddy) {
-                [buddies addObject:buddy];
+            XMPPJID *buddyJID = buddy.bareJID;
+            if (buddyJID) {
+                [buddyJIDs addObject:buddyJID];
             }
         }];
     }];
-    [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddy, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self inviteUser:buddy.bareJID toRoom:room.roomJID withMessage:nil];
+    // XMPPRoom.inviteUsers doesn't seem to work, so you have
+    // to send an individual invitation for each person.
+    [buddyJIDs enumerateObjectsUsingBlock:^(XMPPJID * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [room inviteUser:obj withMessage:nil];
     }];
-
 }
 
 #pragma - mark XMPPStreamDelegate Methods
@@ -375,19 +371,21 @@
         if ([self.roomsToConfigure containsObject:sender.roomJID.bare]) {
             [self.roomsToConfigure removeObject:sender.roomJID.bare];
             [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
-        }
-        
-        //Set Room Subject
-        NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
-        if (subject) {
-            [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
-            [sender changeRoomSubject:subject];
+            
+            //Set Room Subject
+            NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
+            if (subject) {
+                [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
+                [sender changeRoomSubject:subject];
+            }
         }
         
         //Invite buddies
         NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
-        [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
-        [self inviteBuddies:buddyUniqueIds toRoom:sender];
+        if (buddyUniqueIds) {
+            [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
+            [self inviteBuddies:buddyUniqueIds toRoom:sender];
+        }
         
         //Fetch member list
         [sender fetchMembersList];
@@ -433,22 +431,6 @@
         room = [self.rooms objectForKey:jid.bareJID];
     }];
     return room;
-}
-
-/** Executes block synchronously on moduleQueue */
-- (void) performBlock:(dispatch_block_t)block {
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_sync(moduleQueue, block);
-}
-
-/** Executes block asynchronously on moduleQueue */
-- (void) performBlockAsync:(dispatch_block_t)block {
-    if (dispatch_get_specific(moduleQueueTag))
-        block();
-    else
-        dispatch_async(moduleQueue, block);
 }
 
 #pragma - mark Class Methods

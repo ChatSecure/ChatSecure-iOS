@@ -126,7 +126,7 @@
         
         if ([self existsMessage:message from:fromJID stanzaId:stanzaId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
-            DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
+            DDLogVerbose(@"%@: %@ - Duplicate MUC message %@", THIS_FILE, THIS_METHOD, message);
             return;
         }
         databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];

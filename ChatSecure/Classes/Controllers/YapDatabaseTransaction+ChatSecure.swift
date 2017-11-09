@@ -31,7 +31,7 @@ public extension YapDatabaseReadTransaction {
         addQuery(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName, elementId)
         addQuery(MessageSecondaryIndexName.originId, originId)
         addQuery(MessageSecondaryIndexName.stanzaId, stanzaId)
-        guard parameters.count > 0, queryString.characters.count > 0 else {
+        guard parameters.count > 0, queryString.count > 0 else {
             return
         }
         let query = YapDatabaseQuery(string: queryString, parameters: parameters)
