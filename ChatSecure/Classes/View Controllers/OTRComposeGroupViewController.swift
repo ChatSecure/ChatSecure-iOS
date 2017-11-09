@@ -224,9 +224,9 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
-                            let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+                            let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                                buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
                             })
                             if let buddy = buddy {
                                 self.existingItems.insert(buddy.uniqueId)

@@ -28,9 +28,9 @@ public extension YapDatabaseReadTransaction {
             queryString += "\(stringStart) \(column) = ?"
             parameters.append(value)
         }
-        addQuery(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName, elementId)
-        addQuery(MessageSecondaryIndexName.originId, originId)
-        addQuery(MessageSecondaryIndexName.stanzaId, stanzaId)
+        addQuery(MessageIndexColumnName.remoteMessageId, elementId)
+        addQuery(MessageIndexColumnName.originId, originId)
+        addQuery(MessageIndexColumnName.stanzaId, stanzaId)
         guard parameters.count > 0, queryString.count > 0 else {
             return
         }
@@ -47,8 +47,8 @@ public extension YapDatabaseReadTransaction {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
-        let queryString = "Where \(OTRYapDatabaseSignalSessionSecondaryIndexColumnName) = ?"
-        let query = YapDatabaseQuery(string: queryString, parameters: ["\(accountKey)-\(signalAddressName)"])
+        let queryString = "Where \(SignalIndexColumnName.session) = ?"
+        let query = YapDatabaseQuery(string: queryString, parameters: [OTRSignalSession.sessionKey(accountKey: accountKey, name: signalAddressName)])
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
             if let session = self.object(forKey: key, inCollection: collection) as? OTRSignalSession {
                 block(session, stop)
@@ -62,7 +62,7 @@ public extension YapDatabaseReadTransaction {
             return
         }
         
-        let queryString = "Where \(RoomOccupantSecondaryIndexName.jid) = ?"
+        let queryString = "Where \(RoomOccupantIndexColumnName.jid) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [jid])
         
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
@@ -77,7 +77,7 @@ public extension YapDatabaseReadTransaction {
             return 0
         }
         
-        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let queryString = "Where \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
         
         var count:UInt = 0
@@ -92,7 +92,7 @@ public extension YapDatabaseReadTransaction {
         guard let indexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return []
         }
-        let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let queryString = "Where \(MessageIndexColumnName.threadId) == ? AND \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier])
         var result = [OTRMessageProtocol]()
         let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in

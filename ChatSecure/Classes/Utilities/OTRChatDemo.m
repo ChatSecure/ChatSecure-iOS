@@ -16,6 +16,7 @@
 #import "OTROMEMODevice.h"
 #import "OTRBuddyCache.h"
 #import "OTRPasswordGenerator.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 @implementation OTRChatDemo
@@ -43,13 +44,14 @@
         NSArray *avatarImageNames = @[@"avatar_fox",@"avatar_otter",@"avatar_badger"];
         
         [buddyNames enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL *stop) {
-            OTRXMPPBuddy * buddy = [OTRXMPPBuddy fetchBuddyForUsername:name accountName:accountName transaction:transaction];
+            NSString *firstName = [[name componentsSeparatedByString:@" "].firstObject lowercaseString];
+            NSString *jidString = [NSString stringWithFormat:@"%@@example.com", firstName];
+            XMPPJID *jid = [XMPPJID jidWithString:jidString];
+            OTRXMPPBuddy * buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 NSString *imageName = avatarImageNames[idx];
                 buddy.avatarData = UIImagePNGRepresentation([UIImage imageNamed:imageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil]);
-                NSString *firstName = [[name componentsSeparatedByString:@" "].firstObject lowercaseString];
-                NSString *jidString = [NSString stringWithFormat:@"%@@example.com", firstName];
                 buddy.displayName = name;
                 buddy.username = jidString;
                 buddy.accountUniqueId  = account.uniqueId;

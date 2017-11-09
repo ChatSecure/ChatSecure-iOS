@@ -447,7 +447,7 @@ import SignalProtocolObjC
             
             self.databaseConnection.asyncReadWrite({ (transaction) in
                 
-                guard let buddyUsernmae = relatedBuddyUsername, let buddy = OTRBuddy.fetch(withUsername: buddyUsernmae, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
+                guard let buddyUsernmae = relatedBuddyUsername, let jid = XMPPJID(string: buddyUsernmae), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
                 databaseMessage.text = messageString

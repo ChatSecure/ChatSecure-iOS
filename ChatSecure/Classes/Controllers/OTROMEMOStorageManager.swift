@@ -70,9 +70,10 @@ open class OTROMEMOStorageManager {
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
     open func getDevicesForBuddy(_ username:String, trusted:Bool?) -> [OTROMEMODevice] {
-        var result:[OTROMEMODevice]?
+        guard let jid = XMPPJID(string: username) else { return [] }
+        var result: [OTROMEMODevice] = []
         self.databaseConnection.read { (transaction) in
-            if let buddy = OTRBuddy.fetch(withUsername: username, withAccountUniqueId: self.accountKey, transaction: transaction) {
+            if let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) {
                 if let trust = trusted {
                     result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection, trusted: trust, transaction: transaction)
                 } else {
@@ -80,7 +81,7 @@ open class OTROMEMOStorageManager {
                 }
             }
         }
-        return result ?? [OTROMEMODevice]();
+        return result;
     }
     
     /**
@@ -156,7 +157,10 @@ open class OTROMEMOStorageManager {
     open func storeBuddyDevices(_ devices:[NSNumber], buddyUsername:String, completion:(()->Void)?) {
         self.databaseConnection.asyncReadWrite { (transaction) in
             // Fetch the buddy from the database.
-            var buddy = OTRBuddy.fetch(withUsername: buddyUsername, withAccountUniqueId: self.accountKey, transaction: transaction)
+            var buddy: OTRXMPPBuddy? = nil
+            if let jid = XMPPJID(string: buddyUsername) {
+                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction)
+            }
             // If this is teh first launch the buddy will not be in the buddy list becuase the roster comes in after device list from PEP.
             // So we create a buddy witht the minimial information we have in order to save the device list.
             if (buddy == nil) {

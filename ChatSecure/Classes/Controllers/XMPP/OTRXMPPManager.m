@@ -919,9 +919,11 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self changeLoginStatus:OTRLoginStatusSecured error:error];
 }
 
--(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
+-(nullable OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[[message from] bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
+    XMPPJID *from = message.from;
+    if (!from) { return nil; }
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:from accountUniqueId:self.account.uniqueId transaction:transaction];
     return buddy;
 }
 
@@ -1046,13 +1048,13 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     __block OTRXMPPBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
+        buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
     } completionQueue:self.workQueue completionBlock:^{
         if (!buddy) { return; }
         XMPPvCardTemp *vCard = [self.xmppvCardTempModule vCardTempForJID:jid shouldFetch:YES];
         if (!vCard) { return; }
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction] copy];
+            buddy = [buddy refetchWithTransaction:transaction];
             if (!buddy) { return; }
             buddy.vCardTemp = vCard;
             [buddy saveWithTransaction:transaction];

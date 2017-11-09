@@ -185,7 +185,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 {
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:fingerprint.username accountName:fingerprint.accountName transaction:transaction];
+        buddy = [self buddyForFingerprint:fingerprint transaction:transaction];
     }];
     [self.otrFingerprintCache setObject:@(fingerprint.trustLevel) forKey:[self cacheKeyForYapKey:buddy.uniqueId collection:[buddy.class collection] fingerprint:fingerprint.fingerprint]];
     
@@ -194,9 +194,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (BOOL)removeOTRFingerprint:(OTRFingerprint *)fingerprint error:( NSError * _Nullable *)error;
 {
-    __block OTRBuddy *buddy = nil;
+    __block OTRXMPPBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:fingerprint.username accountName:fingerprint.accountName transaction:transaction];
+        buddy = [self buddyForFingerprint:fingerprint transaction:transaction];
     }];
     
     if (!buddy) {
@@ -207,6 +207,29 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [self.otrFingerprintCache removeObjectForKey:cacheKey];
     
     return [self.otrKit deleteFingerprint:fingerprint error:error];
+}
+
+- (nullable OTRXMPPBuddy*) buddyForFingerprint:(OTRFingerprint*)fingerprint transaction:(YapDatabaseReadTransaction*)transaction {
+    return [self buddyForUsername:fingerprint.username accountName:fingerprint.accountName transaction:transaction];
+}
+
+- (nullable OTRXMPPBuddy*) buddyForUsername:(NSString*)username accountName:(NSString*)accountName transaction:(YapDatabaseReadTransaction*)transaction {
+    XMPPJID *jid = [XMPPJID jidWithString:username];
+    if (!jid) {
+        DDLogWarn(@"OTRKitDelegate: not a valid JID: %@ %@", username, accountName);
+        return nil;
+    }
+    OTRAccount *account = [OTRAccount allAccountsWithUsername:accountName transaction:transaction].firstObject;
+    if (!account) {
+        DDLogWarn(@"OTRKitDelegate: Account not found for %@ %@", username, accountName);
+        return nil;
+    }
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
+    if (!buddy) {
+        DDLogWarn(@"OTRKitDelegate: Buddy not found for %@ %@", username, accountName);
+        return nil;
+    }
+    return buddy;
 }
 
 
@@ -220,10 +243,10 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
+        buddy = [self buddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
+        if (!buddy) { return; }
         message.buddyUniqueId = buddy.uniqueId;
-        
         [[OTRProtocolManager sharedInstance] sendMessage:message];
     }];
 }
@@ -282,7 +305,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             outgoingMessage = [[OTROutgoingMessage alloc] init];
             outgoingMessage.text = encodedMessage;
-            OTRBuddy *buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
+            OTRBuddy *buddy = [self buddyForUsername:username accountName:accountName transaction:transaction];
             outgoingMessage.buddyUniqueId = buddy.uniqueId;
             
         } completionBlock:^{
@@ -338,7 +361,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 {
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
+        buddy = [self buddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
         if(!buddy) {
             // We couldn't find the budy. This is very strange and shouldn't happen.
@@ -356,7 +379,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
+        buddy = [self buddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
     if(!buddy || buddy.currentStatus == OTRThreadStatusOffline) {

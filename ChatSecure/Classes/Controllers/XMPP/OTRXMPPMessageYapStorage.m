@@ -33,9 +33,13 @@
 }
 
 
-- (OTRXMPPBuddy *)buddyForUsername:(NSString *)username stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+- (OTRXMPPBuddy *)buddyForJID:(XMPPJID *)jid stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
-    return [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
+    NSParameterAssert(jid);
+    NSParameterAssert(stream.tag);
+    NSParameterAssert(transaction);
+    if (!stream.tag || !jid || !transaction) { return nil; }
+    return [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:stream.tag transaction:transaction];
 }
 
 - (OTRBaseMessage *)baseMessageFromXMPPMessage:(XMPPMessage *)xmppMessage buddyId:(NSString *)buddyId class:(Class)class {
@@ -86,19 +90,24 @@
         }
         NSString *accountId = stream.tag;
         NSString *username = [[xmppMessage from] bare];
+        XMPPJID *fromJID = xmppMessage.from;
+        if (!fromJID) {
+            DDLogWarn(@"No from for message: %@", xmppMessage);
+            return;
+        }
         OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         if (!account) {
             DDLogWarn(@"No account for message: %@", xmppMessage);
             return;
         }
-        OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
+        OTRXMPPBuddy *messageBuddy = [self buddyForJID:fromJID stream:stream transaction:transaction];
         if (!messageBuddy) {
             // message from server
             
             DDLogWarn(@"No buddy for message: %@", xmppMessage);
             return;
         }
-        [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];
+        [self handleChatState:xmppMessage fromJID:fromJID stream:stream transaction:transaction];
         [self handleDeliverResponse:xmppMessage transaction:transaction];
         
         // If we receive a message from an online buddy that counts as them interacting with us
@@ -150,11 +159,11 @@
     }];
 }
 
-- (void)handleChatState:(XMPPMessage *)xmppMessage username:(NSString *)username stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+- (void)handleChatState:(XMPPMessage *)xmppMessage fromJID:(XMPPJID *)fromJID stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
     // Saves aren't needed when setting chatState or status because OTRBuddyCache is used internally
 
-    OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
+    OTRXMPPBuddy *messageBuddy = [self buddyForJID:fromJID stream:stream transaction:transaction];
     if (!messageBuddy) { return; }
     OTRChatState chatState = OTRChatStateUnknown;
     if([xmppMessage hasChatState])
@@ -204,17 +213,18 @@
     BOOL incoming = !isOutgoing;
     
     
-    NSString *username = nil;
+    XMPPJID *jid = nil;
     if (incoming) {
-        username = [[forwardedMessage from] bare];
+        jid = forwardedMessage.from;
     } else {
-        username = [[forwardedMessage to] bare];
+        jid = forwardedMessage.to;
     }
+    if (!jid) { return; }
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         NSString *accountId = stream.tag;
         OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:accountId transaction:transaction];
+        OTRXMPPBuddy *buddy = [self buddyForJID:jid stream:stream transaction:transaction];
         
         if (!buddy) {
             return;
@@ -224,7 +234,7 @@
         NSString *stanzaId = [forwardedMessage extractStanzaIdWithAccount:account];
 
         if (incoming) {
-            [self handleChatState:forwardedMessage username:username stream:stream transaction:transaction];
+            [self handleChatState:forwardedMessage fromJID:jid stream:stream transaction:transaction];
             [self handleDeliverResponse:forwardedMessage transaction:transaction];
         }
         

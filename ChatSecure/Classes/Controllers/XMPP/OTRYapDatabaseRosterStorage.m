@@ -15,12 +15,14 @@
 #import "OTRXMPPAccount.h"
 
 #import "OTRBuddyCache.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import OTRAssets;
 
 @interface OTRYapDatabaseRosterStorage ()
 
-@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *readConnection;
+@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *writeConnection;
 
 @end
 
@@ -42,7 +44,8 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 -(instancetype)init
 {
     if (self = [super init]) {
-        _databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        _readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection;
+        _writeConnection = OTRDatabaseManager.shared.readWriteDatabaseConnection;
     }
     return self;
 }
@@ -58,7 +61,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 - (nullable OTRXMPPBuddy *)fetchBuddyWithJID:(XMPPJID *)jid stream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
     NSString *accountUniqueId = [self accountUniqueIdForStream:stream];
-    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:accountUniqueId transaction:transaction];
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:accountUniqueId transaction:transaction];
     return buddy;
 }
 
@@ -100,10 +103,8 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
 {
     __block BOOL result = NO;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-        OTRBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
-        
+    [self.readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRBuddy *buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
         if (buddy) {
             result = YES;
         }
@@ -176,7 +177,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
         return;
     }
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newBuddy saveWithTransaction:transaction];
     }];
     
@@ -215,14 +216,14 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }
     
     __block OTRXMPPBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.readConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
     }];
     NSString *subscription = [item attributeStringValueForName:@"subscription"];
     if ([subscription isEqualToString:@"remove"])
     {
         if (buddy) {
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
             }];
         }
@@ -234,7 +235,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
     __block OTRXMPPBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.readConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [self fetchBuddyWithJID:[presence from] stream:stream transaction:transaction];
     }];
     BOOL newlyCreatedBuddy = NO;
@@ -288,7 +289,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     // If this contact is pending approval but you see their presence
     // then they're not pending anymore
     if (newStatus != OTRThreadStatusOffline && newBuddy.pendingApproval) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             OTRXMPPBuddy *buddy = [[OTRXMPPBuddy fetchObjectWithUniqueID:newBuddy.uniqueId transaction:transaction] copy];
             if (!buddy) { return; }
             buddy.pendingApproval = NO;
@@ -320,7 +321,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     
     // Save if it's a new buddy
     if (newlyCreatedBuddy) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [newBuddy saveWithTransaction:transaction];
         }];
     }
@@ -350,7 +351,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
 {
     __block NSMutableArray *jidArray = [NSMutableArray array];
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [transaction enumerateKeysAndObjectsInCollection:[OTRXMPPBuddy collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
             if ([object isKindOfClass:[OTRXMPPBuddy class]]) {
                 OTRXMPPBuddy *buddy = (OTRXMPPBuddy *)object;

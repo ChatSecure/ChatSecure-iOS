@@ -100,7 +100,7 @@
     if (!indexTransaction) {
         return 0;
     }
-    NSString *queryString = [NSString stringWithFormat:@"WHERE %@ == %@ AND %@ == ?", OTRYapDatabaseUnreadMessageSecondaryIndexColumnName, @(NO), OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName];
+    NSString *queryString = [NSString stringWithFormat:@"WHERE %@ == %@ AND %@ == ?", MessageIndexColumnName.isMessageRead, @(NO), MessageIndexColumnName.threadId];
     YapDatabaseQuery *query = [YapDatabaseQuery queryWithFormat:queryString, self.uniqueId];
     NSUInteger numRows = 0;
     BOOL success = [indexTransaction getNumberOfRows:&numRows matchingQuery:query];
@@ -302,33 +302,6 @@
 }
 
 #pragma - mark Class Methods
-
-+ (instancetype)fetchBuddyForUsername:(NSString *)username accountName:(NSString *)accountName transaction:(YapDatabaseReadTransaction *)transaction
-{
-    OTRAccount *account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];
-    return [self fetchBuddyWithUsername:username withAccountUniqueId:account.uniqueId transaction:transaction];
-}
-
-+ (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
-{
-    __block OTRBuddy *finalBuddy = nil;
-    
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        //Some how we're getting OTRXMPPPresensceSubscritionreuest
-        OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        // Checking buddy class is a hotfix for issue #472
-        if (buddy &&
-            [buddy isKindOfClass:[OTRBuddy class]] &&
-            [buddy.username.lowercaseString isEqualToString:username.lowercaseString]) {
-            *stop = YES;
-            finalBuddy = buddy;
-        }
-    }];
-
-    return finalBuddy;
-}
 
 #pragma mark Disable Mantle Storage of Dynamic Properties
 

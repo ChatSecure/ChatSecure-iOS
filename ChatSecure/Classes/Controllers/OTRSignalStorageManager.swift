@@ -118,7 +118,7 @@ open class OTRSignalStorageManager: NSObject {
             guard let secondaryIndexTransaction = transaction.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
                 return
             }
-            let query = YapDatabaseQuery.init(aggregateFunction: "MAX(\(OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName))", string: "WHERE \(OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters: ["\(self.accountKey)"])
+            let query = YapDatabaseQuery.init(aggregateFunction: "MAX(\(SignalIndexColumnName.preKeyId))", string: "WHERE \(SignalIndexColumnName.preKeyAccountKey) = ?", parameters: ["\(self.accountKey)"])
             if let result = secondaryIndexTransaction.performAggregateQuery(query) as? NSNumber {
                 maxId = result.uint32Value
             }
@@ -237,7 +237,7 @@ open class OTRSignalStorageManager: NSObject {
             parentKey = self.accountKey
             parentCollection = OTRAccount.collection
             
-        } else if let buddy = OTRBuddy.fetch(withUsername: signalAddress.name, withAccountUniqueId: self.accountKey, transaction: transaction) {
+        } else if let jid = XMPPJID(string: signalAddress.name), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) {
             parentKey = buddy.uniqueId
             parentCollection = OTRBuddy.collection
         }

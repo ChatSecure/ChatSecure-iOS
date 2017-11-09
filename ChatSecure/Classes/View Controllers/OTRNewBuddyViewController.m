@@ -200,7 +200,9 @@
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            buddy = [OTRXMPPBuddy fetchBuddyWithUsername:newBuddyAccountName withAccountUniqueId:self.account.uniqueId transaction:transaction];
+            XMPPJID *jid = [XMPPJID jidWithString:newBuddyAccountName];
+            if (!jid) { return; }
+            buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = newBuddyAccountName;
@@ -213,6 +215,7 @@
             buddy.displayName = newBuddyDisplayName;
             [buddy saveWithTransaction:transaction];
         }];
+        if (!buddy) { return; }
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol addBuddy:buddy];

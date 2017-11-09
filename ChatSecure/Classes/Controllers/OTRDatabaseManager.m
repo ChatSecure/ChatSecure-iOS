@@ -30,14 +30,6 @@
 #import "OTRSettingsManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-NSString *const OTRYapDatabaseMessageIdSecondaryIndexColumnName = @"OTRYapDatabaseMessageIdSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName = @"OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName = @"OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatabaseUnreadMessageSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDatabaseSignalSessionSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName";
-NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName";
-
 
 @interface OTRDatabaseManager ()
 
@@ -196,7 +188,8 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         [self.database registerExtension:messageIndex withName:SecondaryIndexName.messages];
         YapDatabaseSecondaryIndex *roomOccupantIndex = YapDatabaseSecondaryIndex.roomOccupantIndex;
         [self.database registerExtension:roomOccupantIndex withName:SecondaryIndexName.roomOccupants];
-        
+        YapDatabaseSecondaryIndex *buddyIndex = YapDatabaseSecondaryIndex.buddyIndex;
+        [self.database registerExtension:buddyIndex withName:SecondaryIndexName.buddy];
         
         // Register action manager
         self.actionManager = [[YapDatabaseActionManager alloc] init];

@@ -148,19 +148,6 @@
     return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
-- (OTRXMPPRoomOccupant * _Nullable) roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID inRoom:(NSString *)roomJID {
-    XMPPRoom *room = [self roomForJID:[XMPPJID jidWithString:roomJID]];
-    __block OTRXMPPRoomOccupant *occupant = nil;
-    if (room != nil && [room.xmppRoomStorage isKindOfClass:OTRXMPPRoomYapStorage.class]) {
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            NSString *roomJID = room.roomJID.bare;
-            NSString *accountId = room.xmppStream.tag;
-            occupant = [(OTRXMPPRoomYapStorage*)room.xmppRoomStorage roomOccupantForJID:jid realJID:realJID roomJID:roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
-        }];
-    }
-    return occupant;
-}
-
 - (void)inviteBuddies:(NSArray<NSString *> *)buddyUniqueIds toRoom:(XMPPRoom *)room {
     if (!buddyUniqueIds.count) {
         return;
@@ -319,7 +306,6 @@
         return;
     }
     __block OTRXMPPBuddy *buddy = nil;
-    NSString *fromJidString = [fromJID bare];
     XMPPStream *stream = self.xmppStream;
     NSString *accountUniqueId = stream.tag;
     __block NSString *nickname = stream.myJID.user;
@@ -328,7 +314,7 @@
         if (account) {
             nickname = account.displayName;
         }
-        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:fromJidString withAccountUniqueId:accountUniqueId transaction:transaction];
+        buddy = [OTRXMPPBuddy fetchBuddyWithJid:fromJID accountUniqueId:accountUniqueId transaction:transaction];
     }];
     // We were invited by someone not on our roster. Shady business!
     if (!buddy) {
@@ -340,26 +326,17 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
-- (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray *)items {
+- (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched members list: %@", items);
-    OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
-    
     NSString *accountId = room.xmppStream.tag;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-
         [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *jid = [item attributeStringValueForName:@"jid"];
-            if ([jid length]) {
-                // Make sure occupant object exists/is created
-                OTRXMPPRoomOccupant *occupant = [storage roomOccupantForJID:nil realJID:jid roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:NO];
-                if(!occupant) {
-                    occupant = [[OTRXMPPRoomOccupant alloc] init];
-                    occupant.jid = nil;
-                    occupant.realJID = jid;
-                    occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:room.roomJID.bare];
-                    [occupant saveWithTransaction:transaction];
-                }
-            }
+            NSString *jidString = [item attributeStringValueForName:@"jid"];
+            XMPPJID *jid = [XMPPJID jidWithString:jidString];
+            if (!jid) { return; }
+            // Make sure occupant object exists/is created
+            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:jid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
+            [occupant saveWithTransaction:transaction];
         }];
     }];
 }

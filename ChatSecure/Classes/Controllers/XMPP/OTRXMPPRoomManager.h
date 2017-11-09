@@ -37,11 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds
                toRoom:(XMPPRoom*)room;
 
-- (nullable OTRXMPPRoomOccupant *) roomOccupantForJID:(nullable NSString
-                                                       *)jid
-                                              realJID:(nullable NSString *)realJID
-                                               inRoom:( NSString *)roomJID;
-
 @end
 
 @interface XMPPRoom(RoomManager)
