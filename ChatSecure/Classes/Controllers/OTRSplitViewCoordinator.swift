@@ -22,7 +22,8 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate, let messagesVC = appDelegate.theme.messagesViewController() as? OTRMessagesViewController {
+        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
+            let messagesVC = appDelegate.messagesViewController
             messagesVC.setup(withBuddies: buddyKeys, accountId: accountKey, name:name)
             //setup 'back' button in nav bar
             let navigationController = UINavigationController(rootViewController: messagesVC)
