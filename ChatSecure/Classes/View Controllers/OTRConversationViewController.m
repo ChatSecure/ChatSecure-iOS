@@ -419,7 +419,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         // Create new buddy in database so it can be shown immediately in list
         __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            buddy = [OTRXMPPBuddy fetchBuddyWithUsername:request.jid withAccountUniqueId:account.uniqueId transaction:transaction];
+            buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = request.jid;

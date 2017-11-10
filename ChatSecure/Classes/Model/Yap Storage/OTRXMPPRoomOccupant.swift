@@ -9,6 +9,7 @@
 import Foundation
 import YapDatabase
 import Mantle
+import CocoaLumberjack
 
 @objc public enum RoomOccupantRole:Int {
     case none = 0
@@ -82,11 +83,81 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
         }
         return nil
     }
+    
+    // MARK: Helper Functions
 
     @objc open func buddy(with transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
         if let buddyUniqueId = self.buddyUniqueId {
             return OTRXMPPBuddy.fetchObject(withUniqueID: buddyUniqueId, transaction: transaction)
         }
         return nil
+    }
+    
+}
+
+public extension OTRXMPPRoomOccupant {
+    /**
+     * jid is the occupant's room JID
+     * roomJID is the JID of the room itself
+     * realJID is only available for non-anonymous rooms
+     * createIfNeeded=true will return a new unsaved object if it's not found
+     */
+    @objc public static func occupant(jid: XMPPJID,
+                               realJID: XMPPJID?,
+                               roomJID: XMPPJID,
+                               accountId: String,
+                               createIfNeeded: Bool,
+                               transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomOccupant? {
+        guard let indexTransaction = transaction.ext(SecondaryIndexName.roomOccupants) as? YapDatabaseSecondaryIndexTransaction else {
+            DDLogError("Error looking up OTRXMPPRoomOccupant via SecondaryIndex")
+            return nil
+        }
+        let roomUniqueId = OTRXMPPRoom.createUniqueId(accountId, jid: roomJID.bare)
+        var matchingOccupants: [OTRXMPPRoomOccupant] = []
+        
+        var parameters: [String] = [roomUniqueId]
+        var queryString = "Where \(RoomOccupantIndexColumnName.roomUniqueId) == ? AND ("
+        parameters.append(jid.full)
+        queryString.append("\(RoomOccupantIndexColumnName.jid) == ?")
+        if let realJID = realJID {
+            parameters.append(realJID.bare)
+            queryString.append("OR \(RoomOccupantIndexColumnName.realJID) == ?")
+        }
+        queryString.append(")")
+        
+        let query = YapDatabaseQuery(string: queryString, parameters: parameters)
+        let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
+            if let matchingOccupant = object as? OTRXMPPRoomOccupant {
+                matchingOccupants.append(matchingOccupant)
+            }
+        }
+        if !success {
+            DDLogError("Error looking up OTRXMPPRoomOccupant with query \(query)")
+            return nil
+        }
+        if matchingOccupants.count > 1 {
+            DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query \(query): \(matchingOccupants)")
+        }
+        var occupant: OTRXMPPRoomOccupant? = matchingOccupants.first
+        
+        if occupant == nil,
+            createIfNeeded {
+            occupant = OTRXMPPRoomOccupant()!
+            occupant?.jid = jid.full
+            occupant?.realJID = realJID?.bare
+            occupant?.roomUniqueId = roomUniqueId
+        }
+        
+        // While we're at it, match room occupant with a buddy on our roster if possible
+        // This should probably be moved elsewhere
+        if let occupant = occupant,
+            let realJID = occupant.realJID,
+            let jid = XMPPJID(string: realJID),
+            occupant.buddyUniqueId == nil,
+            let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) {
+            occupant.refetch(with: transaction)?.buddyUniqueId = buddy.uniqueId
+        }
+        
+        return occupant
     }
 }

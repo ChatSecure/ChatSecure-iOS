@@ -2214,7 +2214,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         //
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             OTRAccount *account = [self accountWithTransaction:transaction];
-            OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:forwardingJid.bare withAccountUniqueId:account.uniqueId transaction:transaction];
+            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:forwardingJid accountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = account.uniqueId;
@@ -2234,17 +2234,19 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
 {
-    __block OTRAccount *account = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
     }];
     OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     NSString *service = [xmppManager.roomManager.conferenceServicesJID firstObject];
-    if (service != nil) {
+    if (service.length > 0) {
         NSString *roomName = [NSUUID UUID].UUIDString;
         XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
         self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.displayName subject:name];
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
+    } else {
+        DDLogError(@"No conference server for account: %@", account.username);
     }
 }
 

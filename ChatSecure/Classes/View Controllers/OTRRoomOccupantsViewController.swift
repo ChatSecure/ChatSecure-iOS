@@ -61,8 +61,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
     @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
-            if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
-                self.ownOccupant = manager.roomOccupant(forJID:ownJid, realJID:ownJid, inRoom:roomJid)
+            if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
+                self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: true, transaction: transaction)
             }
         })
         self.fetchMembersList()
@@ -359,9 +359,9 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
-        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
@@ -373,8 +373,8 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = jid
-                buddy.displayName = roomOccupant.roomName ?? jid
+                buddy.username = jid.bare
+                buddy.displayName = roomOccupant.roomName ?? jid.bare
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
                     status = .offline

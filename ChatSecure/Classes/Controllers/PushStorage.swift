@@ -290,7 +290,8 @@ class PushStorage: NSObject, PushStorageProtocol {
     func buddy(_ username: String, accountName: String) -> OTRBuddy? {
         var buddy:OTRBuddy? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            buddy = OTRBuddy.fetch(forUsername: username, accountName: accountName, transaction: transaction)
+            guard let jid = XMPPJID(string: username), let account = OTRAccount.allAccounts(withUsername: accountName, transaction: transaction).first else { return }
+            buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account.uniqueId, transaction: transaction)
         }
         return buddy
     }

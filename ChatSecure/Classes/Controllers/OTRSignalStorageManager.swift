@@ -9,6 +9,97 @@
 import UIKit
 import SignalProtocolObjC
 import YapDatabase
+import XMPPFramework
+
+extension OMEMOPreKey {
+    static func preKeysFromSignal(_ preKeys: [SignalPreKey]) -> [OMEMOPreKey] {
+        var omemoPreKeys: [OMEMOPreKey] = []
+        preKeys.forEach { (signalPreKey) in
+            guard let pk = signalPreKey.keyPair?.publicKey else { return }
+            let omemoPreKey = OMEMOPreKey(preKeyId: signalPreKey.preKeyId, publicKey: pk)
+            omemoPreKeys.append(omemoPreKey)
+        }
+        return omemoPreKeys
+    }
+}
+
+extension OMEMOSignedPreKey {
+    convenience init(signedPreKey: OTRSignalSignedPreKey) throws {
+        let signalSignedPreKey = try SignalSignedPreKey(serializedData: signedPreKey.keyData)
+        guard let pk = signalSignedPreKey.keyPair?.publicKey else {
+            throw OMEMOBundleError.invalid
+        }
+        self.init(preKeyId: signedPreKey.keyId, publicKey: pk, signature: signalSignedPreKey.signature)
+        
+    }
+    convenience init(signedPreKey: SignalSignedPreKey) throws {
+        guard let publicKey = signedPreKey.keyPair?.publicKey else {
+            throw OMEMOBundleError.invalid
+        }
+        self.init(preKeyId: signedPreKey.preKeyId, publicKey: publicKey, signature: signedPreKey.signature)
+    }
+}
+
+extension OMEMOBundle {
+    
+    /// Returns copy of bundle with new preKeys
+    func copyBundle(newPreKeys: [OMEMOPreKey]) -> OMEMOBundle {
+        let bundle = OMEMOBundle(deviceId: deviceId, identityKey: identityKey, signedPreKey: signedPreKey, preKeys: newPreKeys)
+        return bundle
+    }
+    
+    /// Returns Signal bundle from a random PreKey
+    func signalBundle() throws -> SignalPreKeyBundle {
+        let index = Int(arc4random_uniform(UInt32(preKeys.count)))
+        let preKey = preKeys[index]
+        let preKeyBundle = try SignalPreKeyBundle(registrationId: 0, deviceId: deviceId, preKeyId: preKey.preKeyId, preKeyPublic: preKey.publicKey, signedPreKeyId: signedPreKey.preKeyId, signedPreKeyPublic: signedPreKey.publicKey, signature: signedPreKey.signature, identityKey: identityKey)
+        return preKeyBundle
+    }
+    
+    convenience init(deviceId: UInt32, identity: SignalIdentityKeyPair, signedPreKey: SignalSignedPreKey, preKeys: [SignalPreKey]) throws {
+
+        let omemoSignedPreKey = try OMEMOSignedPreKey(signedPreKey: signedPreKey)
+        let omemoPreKeys = OMEMOPreKey.preKeysFromSignal(preKeys)
+        
+        // Double check that this bundle is valid
+        if let preKey = preKeys.first,
+            let preKeyPublic = preKey.keyPair?.publicKey {
+            let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: deviceId, preKeyId: preKey.preKeyId, preKeyPublic: preKeyPublic, signedPreKeyId: omemoSignedPreKey.preKeyId, signedPreKeyPublic: omemoSignedPreKey.publicKey, signature: omemoSignedPreKey.signature, identityKey: identity.publicKey)
+        } else {
+            throw OMEMOBundleError.invalid
+        }
+        
+        self.init(deviceId: deviceId, identityKey: identity.publicKey, signedPreKey: omemoSignedPreKey, preKeys: omemoPreKeys)
+    }
+    
+    convenience init(identity: OTRAccountSignalIdentity, signedPreKey: OTRSignalSignedPreKey, preKeys: [OTRSignalPreKey]) throws {
+        let omemoSignedPreKey = try OMEMOSignedPreKey(signedPreKey: signedPreKey)
+        
+        var omemoPreKeys: [OMEMOPreKey] = []
+        preKeys.forEach { (preKey) in
+            guard let keyData = preKey.keyData, keyData.count > 0 else { return }
+            do {
+                let signalPreKey = try SignalPreKey(serializedData: keyData)
+                guard let pk = signalPreKey.keyPair?.publicKey else { return }
+                let omemoPreKey = OMEMOPreKey(preKeyId: preKey.keyId, publicKey: pk)
+                omemoPreKeys.append(omemoPreKey)
+            } catch let error {
+                DDLogError("Found invalid prekey: \(error)")
+            }
+        }
+        
+        // Double check that this bundle is valid
+        if let preKey = preKeys.first, let preKeyData = preKey.keyData,
+            let signalPreKey = try? SignalPreKey(serializedData: preKeyData),
+            let preKeyPublic = signalPreKey.keyPair?.publicKey {
+            let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: identity.registrationId, preKeyId: preKey.keyId, preKeyPublic: preKeyPublic, signedPreKeyId: omemoSignedPreKey.preKeyId, signedPreKeyPublic: omemoSignedPreKey.publicKey, signature: omemoSignedPreKey.signature, identityKey: identity.identityKeyPair.publicKey)
+        } else {
+            throw OMEMOBundleError.invalid
+        }
+        
+        self.init(deviceId: identity.registrationId, identityKey: identity.identityKeyPair.publicKey, signedPreKey: omemoSignedPreKey, preKeys: omemoPreKeys)
+    }
+}
 
 public protocol OTRSignalStorageManagerDelegate: class {
     /** Generate a new account key*/
@@ -93,7 +184,7 @@ open class OTRSignalStorageManager: NSObject {
         self.databaseConnection.readWrite { (transaction) in
             for pKey in preKeys {
                 if let data = pKey.serializedData() {
-                    success = self.storePreKey(data, preKeyId: pKey.preKeyId(), transaction: transaction)
+                    success = self.storePreKey(data, preKeyId: pKey.preKeyId, transaction: transaction)
                 } else {
                     success = false
                 }
@@ -115,10 +206,10 @@ open class OTRSignalStorageManager: NSObject {
     internal func currentMaxPreKeyId() ->  UInt32? {
         var maxId:UInt32?
         self.databaseConnection.read { (transaction) in
-            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+            guard let secondaryIndexTransaction = transaction.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
                 return
             }
-            let query = YapDatabaseQuery.init(aggregateFunction: "MAX(\(OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName))", string: "WHERE \(OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters: ["\(self.accountKey)"])
+            let query = YapDatabaseQuery.init(aggregateFunction: "MAX(\(SignalIndexColumnName.preKeyId))", string: "WHERE \(SignalIndexColumnName.preKeyAccountKey) = ?", parameters: ["\(self.accountKey)"])
             if let result = secondaryIndexTransaction.performAggregateQuery(query) as? NSNumber {
                 maxId = result.uint32Value
             }
@@ -136,7 +227,7 @@ open class OTRSignalStorageManager: NSObject {
     internal func fetchAllPreKeys(_ includeDeleted:Bool) -> [OTRSignalPreKey] {
         var preKeys = [OTRSignalPreKey]()
         self.databaseConnection.read { (transaction) in
-            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+            guard let secondaryIndexTransaction = transaction.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
                 return
             }
             
@@ -159,59 +250,27 @@ open class OTRSignalStorageManager: NSObject {
      
      - return: A complete outgoing bundle.
      */
-    open func fetchOurExistingBundle() throws -> OTROMEMOBundleOutgoing {
-        var simpleBundle:OTROMEMOBundle? = nil
+    open func fetchOurExistingBundle() throws -> OMEMOBundle {
+        var _signedPreKey: OTRSignalSignedPreKey? = nil
+        var _identity: OTRAccountSignalIdentity? = nil
+
         //Fetch and create the base bundle
         self.databaseConnection.read { (transaction) in
-            do {
-                guard let identityKeyPair = OTRAccountSignalIdentity.fetchObject(withUniqueID: self.accountKey, transaction: transaction),
-                    let signedPreKeyDataObject = OTRSignalSignedPreKey.fetchObject(withUniqueID: self.accountKey, transaction: transaction) else {
-                        return
-                }
-                let signedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
-                
-                let publicIdentityKey = identityKeyPair.identityKeyPair.publicKey
-                simpleBundle = OTROMEMOBundle(deviceId: identityKeyPair.registrationId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
-            } catch let error {
-                DDLogError("Could not create signed preKey for bundle: \(error)")
-            }
+            _identity = OTRAccountSignalIdentity.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
+            _signedPreKey = OTRSignalSignedPreKey.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
         }
         
-        guard let bundle = simpleBundle else  {
+        guard let signedPreKey = _signedPreKey,
+            let identity = _identity else  {
             throw OMEMOBundleError.notFound
         }
         
         //Gather pieces of outgoing bundle
         let preKeys = self.fetchAllPreKeys(false)
-        
-        var preKeyDict = [UInt32: Data]()
-        preKeys.forEach({ (preKey) in
-            guard let data = preKey.keyData else {
-                return
-            }
-            do {
-                let signalPreKey = try SignalPreKey(serializedData: data)
-                
-                preKeyDict.updateValue(signalPreKey.keyPair().publicKey, forKey: preKey.keyId)
-            } catch let error {
-                DDLogError("Found invalid prekey: \(error)")
-            }
-        })
-        
-        do {
-            if let preKey = preKeys.first, let preKeyData = preKey.keyData {
-                let signalPreKey = try SignalPreKey(serializedData: preKeyData)
-                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.keyId, preKeyPublic: signalPreKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
-            } else {
-                //DDLogError("Error fetching outgoing bundle: no prekeys")
-                throw OMEMOBundleError.invalid
-            }
-        } catch let error {
-            //DDLogError("Error fetching outgoing bundle: \(error)")
-            throw error
-        }
-        
-        return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict as [UInt32 : Data])
+     
+        let bundle = try OMEMOBundle(identity: identity, signedPreKey: signedPreKey, preKeys: preKeys)
+
+        return bundle
     }
     
     fileprivate func fetchDeviceForSignalAddress(_ signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OTROMEMODevice? {
@@ -237,7 +296,7 @@ open class OTRSignalStorageManager: NSObject {
             parentKey = self.accountKey
             parentCollection = OTRAccount.collection
             
-        } else if let buddy = OTRBuddy.fetch(withUsername: signalAddress.name, withAccountUniqueId: self.accountKey, transaction: transaction) {
+        } else if let jid = XMPPJID(string: signalAddress.name), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) {
             parentKey = buddy.uniqueId
             parentCollection = OTRBuddy.collection
         }

@@ -133,10 +133,10 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func numberOfUnreadMessages(with transaction: YapDatabaseReadTransaction) -> UInt {
-        guard let indexTransaction = transaction.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let indexTransaction = transaction.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
-        let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let queryString = "Where \(MessageIndexColumnName.threadId) == ? AND \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [self.uniqueId])
         var count:UInt = 0
         let success = indexTransaction.getNumberOfRows(&count, matching: query)

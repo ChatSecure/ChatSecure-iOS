@@ -17,15 +17,6 @@
 @class MessageQueueHandler;
 
 NS_ASSUME_NONNULL_BEGIN
-extern NSString *const OTRMessagesSecondaryIndex;
-extern NSString *const OTRYapDatabaseMessageIdSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName;
-extern NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName;
 
 @interface OTRDatabaseManager : NSObject
 

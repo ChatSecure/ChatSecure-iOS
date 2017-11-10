@@ -323,7 +323,7 @@
                 __block OTRXMPPBuddy *buddy = nil;
                 __block BOOL handled = NO;
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:jidString withAccountUniqueId:account.uniqueId transaction:transaction];
+                    buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
                     if (!buddy) {
                         buddy = [[OTRXMPPBuddy alloc] init];
                         buddy.username = jidString;

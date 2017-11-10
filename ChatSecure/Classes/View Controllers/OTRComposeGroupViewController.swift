@@ -82,25 +82,22 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     }
     
     @IBAction open func didPressDone(_ sender: Any) {
-        if selectedItems.count > 0 {
-            if let delegate = delegate {
-                var buddyIds:[String] = []
-                var generatedGroupName = ""
-                for buddy in selectedItems {
-                    buddyIds.append(buddy.uniqueId)
-                    if generatedGroupName.characters.count > 0 {
-                        generatedGroupName.append(", ")
-                    }
-                    generatedGroupName.append(buddy.displayName)
-                }
-                if generatedGroupName.characters.count > 30 {
-                    generatedGroupName = generatedGroupName.prefix(27).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
-                    generatedGroupName.append("...")
-                }
-                delegate.groupBuddiesSelected(self, buddyUniqueIds: buddyIds, groupName: generatedGroupName)
+        guard selectedItems.count > 0, let delegate = self.delegate else { return }
+        var buddyIds:[String] = []
+        var generatedGroupName = ""
+        for buddy in selectedItems {
+            buddyIds.append(buddy.uniqueId)
+            if generatedGroupName.count > 0 {
+                generatedGroupName.append(", ")
             }
-            dismiss(animated: true, completion: nil)
+            generatedGroupName.append(buddy.displayName)
         }
+        if generatedGroupName.count > 30 {
+            generatedGroupName = generatedGroupName.prefix(27).trimmingCharacters(in: CharacterSet(charactersIn: " ,"))
+            generatedGroupName.append("...")
+        }
+        delegate.groupBuddiesSelected(self, buddyUniqueIds: buddyIds, groupName: generatedGroupName)
+        dismiss(animated: true, completion: nil)
     }
 
     open func filterOnAccount(accountUniqueId:String?) {
@@ -227,9 +224,9 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
-                            let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+                            let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                                buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
                             })
                             if let buddy = buddy {
                                 self.existingItems.insert(buddy.uniqueId)
