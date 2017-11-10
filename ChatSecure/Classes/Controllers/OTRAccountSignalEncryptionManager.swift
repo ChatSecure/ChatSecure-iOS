@@ -58,7 +58,7 @@ extension OTRAccountSignalEncryptionManager {
             let data = signedPreKey.serializedData() else {
             return nil
         }
-        if self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId()) {
+        if self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId) {
             return signedPreKey
         }
         return nil
@@ -67,8 +67,8 @@ extension OTRAccountSignalEncryptionManager {
     /** 
      * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
      */
-    public func generateOutgoingBundle(_ preKeyCount:UInt) throws -> OTROMEMOBundleOutgoing {
-        let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
+    public func generateOutgoingBundle(_ preKeyCount:UInt) throws -> OMEMOBundle {
+        let identityKeyPair = self.storage.getIdentityKeyPair()
         let deviceId = self.registrationId
         
         // Fetch existing signed pre-key to prevent regeneration
@@ -82,52 +82,33 @@ extension OTRAccountSignalEncryptionManager {
             }
             do {
                 signalSignedPreKey = try SignalSignedPreKey(serializedData: signedPreKeyDataObject.keyData)
-            } catch {}
+            } catch {
+                DDLogError("Error parsing SignalSignedPreKey")
+            }
         }
         // If there is no existing one, generate a new one
         if signalSignedPreKey == nil {
             signalSignedPreKey = self.generateRandomSignedPreKey()
         }
-        
         guard let signedPreKey = signalSignedPreKey, let data = signedPreKey.serializedData() else {
             throw OMEMOBundleError.keyGeneration
         }
-        
         guard let preKeys = self.generatePreKeys(1, count: preKeyCount) else {
             throw OMEMOBundleError.keyGeneration
         }
-        
-        var preKeyDict = [UInt32:Data]()
-        for preKey in preKeys {
-            preKeyDict.updateValue(preKey.keyPair().publicKey, forKey: preKey.preKeyId())
-        }
-        
-        let bundle = OTROMEMOBundle(deviceId: deviceId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
-        
-        do {
-            if let preKey = preKeys.first {
-                let _ = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.deviceId, preKeyId: preKey.preKeyId(), preKeyPublic: preKey.keyPair().publicKey, signedPreKeyId: bundle.signedPreKeyId, signedPreKeyPublic: bundle.signedPublicPreKey, signature: bundle.signedPreKeySignature, identityKey: bundle.publicIdentityKey)
-            } else {
-                DDLogError("Error testing outgoing bundle")
-                throw OMEMOBundleError.invalid
-            }
-        } catch let error {
-            DDLogError("Error creating outgoing bundle: \(error)")
-            throw OMEMOBundleError.invalid
-        }
-        
-        _ = self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
-        return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
+        let bundle = try OMEMOBundle(deviceId: deviceId, identity: identityKeyPair, signedPreKey: signedPreKey, preKeys: preKeys)
+        _ = self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId)
+        return bundle
     }
     
     /**
      * This processes fetched OMEMO bundles. After you consume a bundle you can then create preKeyMessages to send to the contact.
      */
-    public func consumeIncomingBundle(_ name:String, bundle:OTROMEMOBundleIncoming) throws {
-        let deviceId = Int32(bundle.bundle.deviceId)
+    public func consumeIncomingBundle(_ name:String, bundle:OMEMOBundle) throws {
+        let deviceId = Int32(bundle.deviceId)
         let incomingAddress = SignalAddress(name: name.lowercased(), deviceId: deviceId)
         let sessionBuilder = SignalSessionBuilder(address: incomingAddress, context: self.signalContext)
-        let preKeyBundle = try SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature, identityKey: bundle.bundle.publicIdentityKey)
+        let preKeyBundle = try bundle.signalBundle()
         
         return try sessionBuilder.processPreKeyBundle(preKeyBundle)
     }

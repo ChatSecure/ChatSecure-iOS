@@ -64,7 +64,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(name)
         let account = TestXMPPAccount(username: "\(name)@fake.com", accountType: .jabber)!
         
-        let buddy = OTRBuddy()!
+        let buddy = OTRXMPPBuddy()!
         buddy.username = "\(buddyName)@fake.com"
         buddy.accountUniqueId = account.uniqueId
         

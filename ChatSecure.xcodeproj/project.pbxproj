@@ -51,8 +51,6 @@
 		635EF2021E276C410087BD72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCC831D1B5116008F903C /* OTRStringTests.swift */; };
 		635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
-		635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
-		6361B78A1D4C268900EDD9EC /* OTROMEMOBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */; };
 		63634CE91DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */; };
 		63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */; };
 		63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */; };
@@ -473,7 +471,6 @@
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		D99F178A1BAB946800604558 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F17891BAB946800604558 /* Branding.plist */; };
 		D99F178C1BAB947E00604558 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F178B1BAB947E00604558 /* Secrets.plist */; };
-		D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
 		D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
 		D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
@@ -514,6 +511,7 @@
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */ = {isa = PBXBuildFile; fileRef = D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
+		D9E088D61FB5210B00E03AE4 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9E8277F1E28222F0071F40D /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9EC47681EFA03D800C39B25 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
@@ -536,7 +534,6 @@
 		D9FD36061EFAFD3C00398CE4 /* PureLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47711EFA03FC00C39B25 /* PureLayout.framework */; };
 		D9FD36071EFAFD3C00398CE4 /* SAMKeychain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47721EFA03FC00C39B25 /* SAMKeychain.framework */; };
 		D9FD36081EFAFD3C00398CE4 /* TTTAttributedLabel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47731EFA03FC00C39B25 /* TTTAttributedLabel.framework */; };
-		D9FD36091EFAFD3C00398CE4 /* UserVoice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47741EFA03FC00C39B25 /* UserVoice.framework */; };
 		D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
 		D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
 		D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
@@ -898,7 +895,6 @@
 		635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOTestModule.swift; sourceTree = "<group>"; };
 		635E51AA1DA83AF0002B70AB /* OTRTestDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRTestDatabase.swift; sourceTree = "<group>"; };
 		635FCC831D1B5116008F903C /* OTRStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStringTests.swift; sourceTree = "<group>"; };
-		6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTROMEMOBundle.swift; path = "Signal-Storage/OTROMEMOBundle.swift"; sourceTree = "<group>"; };
 		63634CE81DA704AA00B0BAE8 /* OTROMEMOIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOIntegrationTest.swift; sourceTree = "<group>"; };
 		63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+ChatSecure.swift"; sourceTree = "<group>"; };
 		63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+ChatSecure.swift"; sourceTree = "<group>"; };
@@ -1215,7 +1211,6 @@
 				D9FD36061EFAFD3C00398CE4 /* PureLayout.framework in Frameworks */,
 				D9FD36071EFAFD3C00398CE4 /* SAMKeychain.framework in Frameworks */,
 				D9FD36081EFAFD3C00398CE4 /* TTTAttributedLabel.framework in Frameworks */,
-				D9FD36091EFAFD3C00398CE4 /* UserVoice.framework in Frameworks */,
 				D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */,
 				D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */,
 				D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */,
@@ -1925,7 +1920,6 @@
 				632AA7311D4819E000F65733 /* OTRSignalSignedPreKey.m */,
 				632AA7381D482A1A00F65733 /* OTRSignalSession.h */,
 				632AA7391D482A1A00F65733 /* OTRSignalSession.m */,
-				6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */,
 			);
 			name = "Signal-Storage";
 			sourceTree = "<group>";
@@ -2576,7 +2570,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
-				D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */,
 				D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
@@ -2594,7 +2587,6 @@
 			files = (
 				6323C7041E396D3D00D0FB42 /* portrait.jpg in Resources */,
 				636DE07E1E5E476200D8D868 /* portrait-orientation.jpg in Resources */,
-				635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */,
 				6323C7031E396D3D00D0FB42 /* landscape.jpg in Resources */,
 				6323C7051E396D3D00D0FB42 /* small.jpg in Resources */,
 				63DDD8BA1A9E9BD900C0A918 /* samples in Resources */,
@@ -2646,6 +2638,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9E088D61FB5210B00E03AE4 /* OTRResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2955,7 +2948,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/PureLayout.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SAMKeychain.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TTTAttributedLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/UserVoice.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework",
@@ -3070,7 +3062,6 @@
 				D93DDA841BA79A2400CD8331 /* OTRDatabaseManager.m in Sources */,
 				D93DDA851BA79A2400CD8331 /* OTRDatabaseView.m in Sources */,
 				D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */,
-				6361B78A1D4C268900EDD9EC /* OTROMEMOBundle.swift in Sources */,
 				D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */,
 				6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */,
 				D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */,
