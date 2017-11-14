@@ -171,43 +171,34 @@
 - (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
     NSString *accountId = room.xmppStream.tag;
     XMPPJID *presenceJID = [presence from];
-    NSArray *children = [presence children];
-    __block XMPPJID *buddyJID = nil;
-    __block NSString *buddyRole = nil;
-    __block NSString *buddyAffiliation = nil;
-    [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[element xmlns] containsString:XMPPMUCNamespace]) {
-            NSArray *items = [element children];
-            [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSString *jid = [item attributeStringValueForName:@"jid"];
-                if ([jid length]) {
-                    buddyJID = [XMPPJID jidWithString:jid];
-                    buddyRole = [item attributeStringValueForName:@"role"];
-                    buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
-                    *stop = YES;
-                }
-            }];
-            *stop = YES;
-        }
-    }];
+    
+    DDXMLElement *item = nil;
+    DDXMLElement *mucElement = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+    if (mucElement) {
+        item = [mucElement elementForName:@"item"];
+    }
+    if (!item) {
+        return; // Unexpected presence format
+    }
+
+    XMPPJID *buddyRealJID = nil;
+    NSString *buddyJIDString = [item attributeStringValueForName:@"jid"];
+    if (buddyJIDString) {
+        // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
+        buddyRealJID = [[XMPPJID jidWithString:buddyJIDString] bareJID];
+    }
+    NSString *buddyRole = [item attributeStringValueForName:@"role"];
+    NSString *buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
-        // Get the real JID, need to find occupant by EITHER room jid or real JID
-        XMPPJID *realJID = nil;
-        if (buddyJID) {
-            realJID = buddyJID;
-        } else {
-            // Not really sure what's going on here
-            realJID = [XMPPJID jidWithString:presenceJID.resource];
-        }
-        OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:presenceJID realJID:realJID roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:presenceJID realJID:buddyRealJID roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
             occupant.available = YES;
         }
-        
+        occupant.jid = [presenceJID full]; // Nicknames can change, so update
         occupant.roomName = [presenceJID resource];
         
         // Role

@@ -360,21 +360,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return account;
 }
 
-- (nullable OTRXMPPRoomOccupant *)occupantWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction forFullJid:(nonnull NSString*)fullJid inRoom:(nonnull NSString *)roomUniqueId {
-    
-    __block OTRXMPPRoomOccupant *occupant = nil;
-    
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:roomUniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRXMPPRoomOccupant *tempOccupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if([tempOccupant.jid isEqualToString:fullJid]) {
-            occupant = tempOccupant;
-            *stop = YES;
-        }
-    }];
-    return occupant;
-}
-
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection
 {
     self.currentIndexPath = nil;
@@ -1651,7 +1636,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
         __block OTRXMPPBuddy *roomOccupantBuddy = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            roomOccupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
+            roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
             if (roomOccupant != nil) {
                 roomOccupantBuddy = [roomOccupant buddyWith:transaction];
             }
@@ -1760,7 +1745,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
             OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
             [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                OTRXMPPRoomOccupant *occupant = [self occupantWithTransaction:transaction forFullJid:roomMessage.senderJID inRoom:roomMessage.roomUniqueId];
+                OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
                 if (occupant) {
                     OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
                     if (buddy) {
