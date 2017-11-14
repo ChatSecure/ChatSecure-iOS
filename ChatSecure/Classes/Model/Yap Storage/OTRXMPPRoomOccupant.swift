@@ -121,7 +121,7 @@ public extension OTRXMPPRoomOccupant {
         queryString.append("\(RoomOccupantIndexColumnName.jid) == ?")
         if let realJID = realJID {
             parameters.append(realJID.bare)
-            queryString.append("OR \(RoomOccupantIndexColumnName.realJID) == ?")
+            queryString.append(" OR \(RoomOccupantIndexColumnName.realJID) == ?")
         }
         queryString.append(")")
         
@@ -150,12 +150,13 @@ public extension OTRXMPPRoomOccupant {
         
         // While we're at it, match room occupant with a buddy on our roster if possible
         // This should probably be moved elsewhere
-        if let occupant = occupant,
-            let realJID = occupant.realJID,
+        if let existingOccupant = occupant,
+            let realJID = existingOccupant.realJID,
             let jid = XMPPJID(string: realJID),
-            occupant.buddyUniqueId == nil,
+            existingOccupant.buddyUniqueId == nil,
             let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) {
-            occupant.refetch(with: transaction)?.buddyUniqueId = buddy.uniqueId
+            occupant = existingOccupant.refetch(with: transaction)
+            occupant?.buddyUniqueId = buddy.uniqueId
         }
         
         return occupant
