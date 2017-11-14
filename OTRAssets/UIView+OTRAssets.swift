@@ -12,7 +12,7 @@ import UIKit
 public extension UIView {
     
     /// Helper for loading nibs from the OTRAssets bundle
-    public static func otr_viewFromNib() -> Self? {
+    @objc public static func otr_viewFromNib() -> Self? {
         guard let nibName = self.otr_nibName else {
             return nil
         }
