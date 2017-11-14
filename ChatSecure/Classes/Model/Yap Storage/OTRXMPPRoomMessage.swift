@@ -32,7 +32,6 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     @objc open var roomJID:String?
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     @objc open var senderJID:String?
-    @objc open var displayName:String?
     @objc open var state:RoomMessageState = .received
     @objc open var deliveredDate = Date.distantPast
     @objc open var messageText:String?
@@ -73,7 +72,6 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         newMessage.roomUniqueId = self.roomUniqueId
         newMessage.roomJID = self.roomJID
         newMessage.senderJID = self.senderJID
-        newMessage.displayName = self.displayName
         newMessage.messageSecurity = self.messageSecurity
         newMessage.state = .needsSending
         newMessage.xmppId = UUID().uuidString
@@ -176,7 +174,6 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
         download.roomUniqueId = parentMessage.threadId
         if let groupMessage = parentMessage as? OTRXMPPRoomMessage {
             download.senderJID = groupMessage.senderJID
-            download.displayName = groupMessage.displayName
             download.roomJID = groupMessage.roomJID
         }
         return download
@@ -317,7 +314,10 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func senderDisplayName() -> String! {
-        return self.displayName ?? ""
+        if let sender = self.senderJID, let jid = XMPPJID(string: sender), let resource = jid.resource {
+            return resource
+        }
+        return self.senderJID ?? ""
     }
     
     public func date() -> Date {

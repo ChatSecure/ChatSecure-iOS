@@ -114,13 +114,6 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        XMPPJID *roomJID = [XMPPJID jidWithString:databaseMessage.roomJID];
-        if (!roomJID) { return; }
-        OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:fromJID realJID:nil roomJID:roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
-        databaseMessage.displayName = occupant.realJID;
-        if (!databaseMessage.displayName) {
-            databaseMessage.displayName = [fromJID full];
-        }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
