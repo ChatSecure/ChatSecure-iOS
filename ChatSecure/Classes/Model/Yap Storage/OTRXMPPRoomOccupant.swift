@@ -139,6 +139,7 @@ public extension OTRXMPPRoomOccupant {
             DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query \(query): \(matchingOccupants)")
         }
         var occupant: OTRXMPPRoomOccupant? = matchingOccupants.first
+        var didCreate = false
         
         if occupant == nil,
             createIfNeeded {
@@ -146,6 +147,7 @@ public extension OTRXMPPRoomOccupant {
             occupant?.jid = jid.full
             occupant?.realJID = realJID?.bare
             occupant?.roomUniqueId = roomUniqueId
+            didCreate = true
         }
         
         // While we're at it, match room occupant with a buddy on our roster if possible
@@ -155,7 +157,9 @@ public extension OTRXMPPRoomOccupant {
             let jid = XMPPJID(string: realJID),
             existingOccupant.buddyUniqueId == nil,
             let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) {
-            occupant = existingOccupant.refetch(with: transaction)
+            if !didCreate {
+                occupant = existingOccupant.copy() as? OTRXMPPRoomOccupant
+            }
             occupant?.buddyUniqueId = buddy.uniqueId
         }
         
