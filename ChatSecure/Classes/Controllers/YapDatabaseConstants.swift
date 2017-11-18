@@ -41,6 +41,7 @@ import Foundation
     case messageActionEdgeName
     case buddyActionEdgeName
     case download // for OTRDownloadMessage -> OTRBaseMessage
+    case room
     
     public func name() -> String {
         switch self {
@@ -53,6 +54,7 @@ import Foundation
             case .messageActionEdgeName: return "MessageActionEdgeName"
             case .buddyActionEdgeName: return "BuddyActionEdgeName"
             case .download: return "download"
+            case .room: return "room"
         }
     }
 }

@@ -16,12 +16,13 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPRoomManager : XMPPModule
 
+@property (nonatomic, strong, readonly) XMPPBookmarksModule *bookmarksModule;
 @property (nonatomic, strong, readonly, nullable)  NSArray<NSString*> *conferenceServicesJID;
 @property (nonatomic, strong, nullable) YapDatabaseConnection * databaseConnection;
 
 /** All room joining should go through this method. This ensures the delegates are setup properly and database is in sync. Returns OTRThreadOwner.threadIdentifier */
 - (nullable NSString *)joinRoom:(XMPPJID *)jid
-                   withNickname:( NSString *)name
+                   withNickname:(nullable NSString *)name
                         subject:(nullable NSString *)subject
                        password:(nullable NSString*)password;
 
@@ -31,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns OTRThreadOwner.threadIdentifier. buddiesArray is array of OTRBuddy.uniqueId */
 - (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray
                                          roomJID:(XMPPJID *)roomName
-                                        nickname:(NSString *)name
+                                        nickname:(nullable NSString *)name
                                          subject:(nullable NSString *)subject;
 
 - (void)inviteBuddies:(nullable NSArray<NSString *>*)buddyUniqueIds
