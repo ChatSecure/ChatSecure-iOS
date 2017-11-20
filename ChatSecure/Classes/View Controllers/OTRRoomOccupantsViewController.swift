@@ -112,7 +112,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         
         self.tableView.tableHeaderView = self.tableHeaderView
         self.tableView.tableFooterView = self.tableFooterView
-        updateMuteUnmuteCell()
+        updateNotificationSwitchCell()
         
         if let room = self.room {
             let seed = room.avatarSeed
@@ -173,13 +173,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(self.navigationBarBackground, for: .default)
     }
     
-    private func updateMuteUnmuteCell() {
-        var muted = false
+    private func updateNotificationSwitchCell() {
+        var notificationsEnabled = true
         if let room = self.room {
-            muted = room.isMuted
+            notificationsEnabled = !room.isMuted
         }
         if let view = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellMute) as? UITableViewCell, let switchView = view.accessoryView as? UISwitch {
-            switchView.setOn(muted, animated: true)
+            switchView.setOn(notificationsEnabled, animated: true)
         }
     }
     
@@ -210,9 +210,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             let muteswitch = UISwitch()
             if let room = self.room {
-                muteswitch.setOn(room.isMuted, animated: false)
+                muteswitch.setOn(!room.isMuted, animated: false)
             }
-            muteswitch.addTarget(self, action: #selector(self.didChangeMuteSwitch(_:)), for: .valueChanged)
+            muteswitch.addTarget(self, action: #selector(self.didChangeNotificationSwitch(_:)), for: .valueChanged)
             cell?.accessoryView = muteswitch
             cell?.isUserInteractionEnabled = true
             cell?.selectionStyle = .none
@@ -251,7 +251,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         default: break
         }
     }
-    @objc func didChangeMuteSwitch(_ sender: UIControl!) {
+    @objc func didChangeNotificationSwitch(_ sender: UIControl!) {
         if let room = self.room {
             if room.isMuted {
                 room.muteExpiration = nil
@@ -261,7 +261,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
                 room.save(with: transaction)
             })
-            updateMuteUnmuteCell()
+            updateNotificationSwitchCell()
         }
     }
     
