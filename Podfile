@@ -6,6 +6,8 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
+      config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'
     end
   end
 end
@@ -13,6 +15,7 @@ end
 platform :ios, "9.0"
 
 use_frameworks!
+# inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -26,7 +29,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ARChromeActivity', '~> 1.0'
   pod 'QRCodeReaderViewController', '~> 4.0'
   # pod 'ParkedTextField', '~> 0.3.1'
-  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => '46df17a' # Swift 4
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => '43f1d3b' # Swift 4
 
 
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'

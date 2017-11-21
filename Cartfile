@@ -2,9 +2,8 @@ github "ChatSecure/Mantle" "2.1.0_headerfix"
 github "nolanw/HTMLReader" "1d0dda3"
 github "AFNetworking/AFNetworking" ~> 3.1
 github "TheLevelUp/ZXingObjC" ~> 3.2.2
-# github "ChatSecure/ZXingObjC" "xcode9-fix"
 github "soffes/SAMKeychain" ~> 1.5
-github "jdg/MBProgressHUD" ~> 1.0
+github "jdg/MBProgressHUD" ~> 1.1
 github "TTTAttributedLabel/TTTAttributedLabel" ~> 2.0
 github "PureLayout/PureLayout" ~> 3.0
 github "facebook/KVOController" ~> 1.2
