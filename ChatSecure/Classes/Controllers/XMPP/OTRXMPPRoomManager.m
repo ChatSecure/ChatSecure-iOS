@@ -41,6 +41,7 @@
         _tempRoomSubject = [[NSMutableDictionary alloc] init];
         _roomsToConfigure = [[NSMutableArray alloc] init];
         _rooms = [[NSMutableDictionary alloc] init];
+        _bookmarksModule = [[XMPPBookmarksModule alloc] initWithMode:XMPPBookmarksModePrivateXmlStorage dispatchQueue:nil];
     }
     return self;
 }
@@ -52,10 +53,19 @@
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
     
+    [self.bookmarksModule activate:self.xmppStream];
+    
     //Register view for sending message queue and occupants
     [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
     
     return result;
+}
+
+- (void) deactivate {
+    [self.mucModule removeDelegate:self];
+    [self.mucModule deactivate];
+    [self.bookmarksModule deactivate];
+    [super deactivate];
 }
 
 - (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name subject:(NSString *)subject password:(nullable NSString *)password
@@ -69,6 +79,7 @@
     XMPPRoom *room = [self roomForJID:jid];
     NSString* accountId = self.xmppStream.tag;
     NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:accountId jid:jid.bare];
+    __block NSString *nickname = name;
     
     if (!room) {
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
@@ -98,6 +109,11 @@
         room.roomPassword = password;
         
         [room saveWithTransaction:transaction];
+        
+        if (!nickname) {
+            OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+            nickname = account.bareJID.user;
+        }
     }];
     
     //Get history if any
@@ -113,7 +129,7 @@
         [historyElement addAttributeWithName:@"since" stringValue:dateTimeString];
     }
     
-    [room joinRoomUsingNickname:name history:historyElement password:password];
+    [room joinRoomUsingNickname:nickname history:historyElement password:password];
     return databaseRoomKey;
 }
 
@@ -137,7 +153,7 @@
     }];
 }
 
-- (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject
+- (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(NSString *)name subject:(nullable NSString *)subject
 {
     if (buddiesArray.count) {
         [self performBlockAsync:^{
@@ -145,6 +161,12 @@
         }];
     }
     [self.roomsToConfigure addObject:roomName.bare];
+    XMPPConferenceBookmark *bookmark = [[XMPPConferenceBookmark alloc] initWithJID:roomName bookmarkName:subject nick:name autoJoin:YES];
+    [self.bookmarksModule fetchAndPublishWithBookmarksToAdd:@[bookmark] bookmarksToRemove:nil completion:^(NSArray<id<XMPPBookmark>> * _Nullable newBookmarks, XMPPIQ * _Nullable responseIq) {
+        if (newBookmarks) {
+            DDLogInfo(@"Joined new room, added to merged bookmarks: %@", newBookmarks);
+        }
+    } completionQueue:nil];
     return [self joinRoom:roomName withNickname:name subject:subject password:nil];
 }
 
@@ -203,6 +225,12 @@
     [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:nickname subject:obj.subject password:obj.roomPassword];
     }];
+    
+    [self addRoomsToBookmarks:roomArray];
+    
+    [self.bookmarksModule fetchBookmarks:^(NSArray<id<XMPPBookmark>> * _Nullable bookmarks, XMPPIQ * _Nullable responseIq) {
+        
+    } completionQueue:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error

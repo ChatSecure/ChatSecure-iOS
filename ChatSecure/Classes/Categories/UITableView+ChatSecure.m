@@ -64,6 +64,7 @@
             OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
             XMPPJID *jid = [XMPPJID jidWithString:room.jid];
             [xmppManager.roomManager leaveRoom:jid];
+            [xmppManager.roomManager removeRoomsFromBookmarks:@[room]];
             
             //Delete database items
             [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

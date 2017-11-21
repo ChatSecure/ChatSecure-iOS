@@ -16,7 +16,19 @@ import YapDatabase.YapDatabaseRelationship
     @objc open var accountUniqueId:String?
     /** Your full JID for the room e.g. xmpp-development@conference.deusty.com/robbiehanson */
     @objc open var ownJID:String?
+    
+    /// JID of the room itself
     @objc open var jid:String?
+    
+    /// XMPPJID of the room itself
+    public var roomJID: XMPPJID? {
+        if let jid = jid {
+            return XMPPJID(string: jid)
+        } else {
+            return nil
+        }
+    }
+    
     @objc open var joined = false
     @objc open var messageText:String?
     @objc open var lastRoomMessageId:String?
@@ -161,5 +173,25 @@ extension OTRXMPPRoom {
             seed = user
         }
         return seed
+    }
+}
+
+
+public extension OTRXMPPRoom {
+    
+    @objc public var bookmark: XMPPConferenceBookmark? {
+        guard let jid = roomJID else { return nil }
+        let bookmark = XMPPConferenceBookmark(jid: jid, bookmarkName: self.subject, nick: nil, autoJoin: true)
+        return bookmark
+    }
+    
+}
+
+extension OTRXMPPRoom: YapDatabaseRelationshipNode {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+        guard let accountId = self.accountUniqueId else { return nil }
+        let edgeName = YapDatabaseConstants.edgeName(.room)
+        let edge = YapDatabaseRelationshipEdge(name: edgeName, destinationKey: accountId, collection: OTRXMPPAccount.collection, nodeDeleteRules: [YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted])
+        return [edge]
     }
 }
