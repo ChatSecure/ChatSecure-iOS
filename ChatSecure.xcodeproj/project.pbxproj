@@ -418,6 +418,7 @@
 		D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93E50671FC3E9B400E0E624 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */; };
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
 		D947C2FB1FB251410037DE84 /* SecondaryIndexes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */; };
@@ -511,7 +512,6 @@
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9DB2D141F37AEBE005D64E4 /* OTRYapMessageSendAction.swift in Headers */ = {isa = PBXBuildFile; fileRef = D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
-		D9E088D61FB5210B00E03AE4 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D9E8277E1E28222D0071F40D /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9E8277F1E28222F0071F40D /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9EC47681EFA03D800C39B25 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
@@ -2572,6 +2572,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93E50671FC3E9B400E0E624 /* OTRResources.bundle in Resources */,
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
 				D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
@@ -2641,7 +2642,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9E088D61FB5210B00E03AE4 /* OTRResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3459,7 +3459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
@@ -3511,7 +3511,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -3666,7 +3666,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3699,7 +3699,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3762,7 +3762,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRAssets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRAssets;
@@ -3791,7 +3791,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRAssets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRAssets;
