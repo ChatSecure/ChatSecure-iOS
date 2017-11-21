@@ -10,6 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import XMPPFramework;
 
 @interface OTRvCardYapDatabaseStorage ()
@@ -34,7 +35,8 @@
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
     OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-    return [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
+    
+    return [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
 }
 
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream;

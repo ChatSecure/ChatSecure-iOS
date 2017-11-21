@@ -24,7 +24,7 @@ import XMPPFramework
     var delegate:OTRXMPPMessageStatusModuleDelegate?
     var delegateQueue = DispatchQueue(label: "OTRXMPPMessageStatusModuleDelegate", attributes: [])
     
-    public init(databaseConnection:YapDatabaseConnection, delegate:OTRXMPPMessageStatusModuleDelegate?) {
+    @objc public init(databaseConnection:YapDatabaseConnection, delegate:OTRXMPPMessageStatusModuleDelegate?) {
         self.delegate = delegate
         self.databaseConnection = databaseConnection
         super.init(dispatchQueue: nil)

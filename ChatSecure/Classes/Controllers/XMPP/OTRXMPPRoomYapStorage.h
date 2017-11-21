@@ -14,13 +14,13 @@
 
 @class OTRXMPPRoomOccupant;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction alwaysReturnObject:(BOOL)alwaysReturnObject;
-
 - (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
 @end
+NS_ASSUME_NONNULL_END

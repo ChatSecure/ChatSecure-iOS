@@ -15,10 +15,10 @@ import YapDatabase
  */
 @objc open class OTRStreamManagementDelegate:NSObject, XMPPStreamManagementDelegate {
     
-    fileprivate(set) open var streamManagementEnabled = false
+    @objc fileprivate(set) open var streamManagementEnabled = false
     fileprivate let databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection) {
+    @objc public init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
     }
     

@@ -17,7 +17,7 @@ private extension String {
     //http://stackoverflow.com/a/34454633/805882
     func splitEvery(_ n: Int) -> [String] {
         var result: [String] = []
-        let chars = Array(characters)
+        let chars = Array(self)
         for index in stride(from: 0, to: chars.count, by: n) {
             result.append(String(chars[index..<min(index+n, chars.count)]))
         }
@@ -34,12 +34,12 @@ public extension NSData {
 
 public extension XLFormBaseCell {
     
-    public class func defaultRowDescriptorType() -> String {
+    @objc public class func defaultRowDescriptorType() -> String {
         let type = NSStringFromClass(self)
         return type
     }
     
-    public class func registerCellClass(_ forType: String) {
+    @objc public class func registerCellClass(_ forType: String) {
         let bundle = OTRAssets.resourcesBundle
         let path = bundle.bundlePath
         guard let bundleName = (path as NSString?)?.lastPathComponent else {

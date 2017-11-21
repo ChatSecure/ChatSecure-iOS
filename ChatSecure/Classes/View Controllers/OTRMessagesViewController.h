@@ -36,8 +36,6 @@
 
 @property (nonatomic, strong, nonnull, readonly) MessagesViewControllerState *state;
 
-- (void)setupWithBuddies:(nonnull NSArray<NSString *> *)buddies accountId:(nonnull NSString *)accountId name:(nullable NSString *)name;
-
 - (void)setThreadKey:(nullable NSString *)key collection:(nullable NSString *)collection;
 - (void)sendAudioFileURL:(nonnull NSURL *)url;
 - (void)sendImageFilePath:(nonnull NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
@@ -57,6 +55,11 @@
 /** Group chat support */
 - (nullable OTRXMPPRoom *)roomWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (BOOL) isGroupChat;
+
+
+/** Buddies is array of OTRBuddy.uniqueId */
+- (void)setupWithBuddies:(nonnull NSArray<NSString *> *)buddies accountId:(nonnull NSString *)accountId name:(nullable NSString *)name;
+
 
 /** This is called on every key stroke so be careful here. Used in subclasses*/
 - (void)isTyping;

@@ -227,6 +227,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.currentIndexPath = nil;
+    
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
@@ -1150,58 +1152,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.messageRangeExtended = YES;
     }
     [self.viewHandler.mappings setRangeOptions:options forGroup:self.threadKey];
-
+    
     self.loadingMessages = YES;
-
+    
     CGFloat distanceToBottom = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
-
-    void (^doReload)() = ^{
-        [self.collectionView reloadData];
-
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-            NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-            [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
-        }];
-
-        if (!reset) {
-            [self.collectionView.collectionViewLayout invalidateLayout];
-            [self.collectionView layoutSubviews];
-            self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
-        }
-
-        self.loadingMessages = NO;
-    };
-
-    if (reset) {
-        doReload();
+    
+    [self.collectionView reloadData];
+    
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
+        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+    }];
+    
+    if (!reset) {
+        [self.collectionView.collectionViewLayout invalidateLayout];
+        [self.collectionView layoutSubviews];
+        self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - distanceToBottom);
     }
-    else {
-        // JSQMessagesCollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSMutableArray<id<JSQMessageData>> *objects = [NSMutableArray arrayWithCapacity:kOTRMessagePageSize];
-            for (NSUInteger i = 0; i < kOTRMessagePageSize; i++) {
-                // Populating connection's cache in background, so when we call "reloadData" in the UI thread, the objects are returned much faster
-                id object = [self.viewHandler object:[NSIndexPath indexPathForRow:i inSection:0]];
-                if ([object conformsToProtocol:@protocol(JSQMessageData)]) {
-                    id<JSQMessageData> msg = object;
-                    [objects addObject:msg];
-                }
-            }
-            // Although it would be nice to pre-calculate in the background
-            // the Xcode 9 main thread checker complains about the block below
-//            [objects enumerateObjectsWithOptions:NSEnumerationConcurrent
-//                                      usingBlock:^(id <JSQMessageData> obj, NSUInteger idx, BOOL *stop) {
-//                                          // The result of the heaviest calculation will remain in the calculator's internal cache, so the
-//                                          // collectionView:layout:sizeForItemAtIndexPath: will work faster on the UI thread
-//                                          [layout.bubbleSizeCalculator messageBubbleSizeForMessageData:obj
-//                                                                                           atIndexPath:nil
-//                                                                                            withLayout:layout];
-//                                      }];
-            dispatch_async(dispatch_get_main_queue(), doReload);
-        });
-    }
+    
+    self.loadingMessages = NO;
 }
 
 - (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
@@ -1445,7 +1415,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
-    if(![text length]) {
+    if(!text.length) {
         return;
     }
     
@@ -1458,40 +1428,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     //   A side effect is that sent messages may not appear in the UI immediately
     [self finishSendingMessage];
     
-    if (![self isGroupChat]) {
-    //1. Create new message database object
-    __block OTROutgoingMessage *message = nil;
+    __block id<OTRMessageProtocol> message = nil;
     __block OTRXMPPManager *xmpp = nil;
-    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-        if (!buddy) { return; }
-        message = [OTROutgoingMessage messageToBuddy:buddy text:text transaction:transaction];
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        id<OTRThreadOwner> thread = [self threadObjectWithTransaction:transaction];
+        message = [thread outgoingMessageWithText:text transaction:transaction];
         xmpp = [self xmppManagerWithTransaction:transaction];
-    } completionBlock:^{
-        if (!message || !xmpp) { return; }
-        [xmpp enqueueMessage:message];
     }];
-    } else {
-        __weak __typeof__(self) weakSelf = self;
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            __typeof__(self) strongSelf = weakSelf;
-            
-            OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
-            databaseMessage.messageText = text;
-            databaseMessage.messageDate = [NSDate date];
-            databaseMessage.roomUniqueId = self.threadKey;
-            OTRXMPPRoom *room = (OTRXMPPRoom *)[strongSelf threadObjectWithTransaction:transaction];
-            databaseMessage.roomJID = room.jid;
-            databaseMessage.roomUniqueId = room.uniqueId;
-            databaseMessage.senderJID = room.ownJID;
-            databaseMessage.state = RoomMessageStateNeedsSending;
-            
-            [databaseMessage saveWithTransaction:transaction];
-            
-            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:databaseMessage date:databaseMessage.messageDate];
-            [sendingAction saveWithTransaction:transaction];
-        }];
-    }
+    if (!message || !xmpp) { return; }
+    [xmpp enqueueMessage:message];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -1689,13 +1634,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
         OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            [transaction enumerateRoomOccupantsWithJid:roomMessage.senderJID block:^(OTRXMPPRoomOccupant * _Nonnull occupant, BOOL * _Null_unspecified stop) {
-                roomOccupant = occupant;
-                *stop = YES;
-            }];
+        __block OTRXMPPBuddy *roomOccupantBuddy = nil;
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
+            roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+            if (roomOccupant != nil) {
+                roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+            }
         }];
-        UIImage *avatarImage = [roomOccupant avatarImage];
+        UIImage *avatarImage = nil;
+        if (roomOccupant) {
+            if (roomOccupantBuddy != nil) {
+                avatarImage = [roomOccupantBuddy avatarImage];
+            }
+            if (!avatarImage) {
+                avatarImage = [roomOccupant avatarImage];
+            }
+        } else {
+            avatarImage = [OTRImages avatarImageWithUsername:[[XMPPJID jidWithString:roomMessage.senderJID] resource]];
+        }
         if (avatarImage) {
             NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
             return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
@@ -1784,7 +1740,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
         id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-        NSString *displayName = [message senderDisplayName];
+        
+        __block NSString *displayName = nil;
+        if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
+            OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
+            [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                if (occupant) {
+                    OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
+                    if (buddy) {
+                        displayName = [buddy displayName];
+                    } else {
+                        displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                    }
+                }
+            }];
+        }
+        if (!displayName) {
+            displayName = [message senderDisplayName];
+        }
         return [[NSAttributedString alloc] initWithString:displayName];
     }
     
@@ -2077,21 +2051,24 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
                 }
             }
         }
-    } completion:nil];
-    
-    if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
-        //Inserted new item, probably at the end
-        //Get last message and test if isIncoming
-        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-        id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-        if ([lastMessage isMessageIncoming]) {
-            [self finishReceivingMessage];
+    } completion:^(BOOL finished){
+        if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+            //Inserted new item, probably at the end
+            //Get last message and test if isIncoming
+            NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
+            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            if ([lastMessage isMessageIncoming]) {
+                [self finishReceivingMessage];
+            } else {
+                // We can't use finishSendingMessage here because it might
+                // accidentally clear out unsent message text
+                [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+                [self scrollToBottomAnimated:YES];
+            }
         } else {
-            // We can't use finishSendingMessage here because it might
-            // accidentally clear out unsent message text
-            [self scrollToBottomAnimated:YES];
+            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
         }
-    }
+    }];
 }
 
 #pragma - mark UITextViewDelegateMethods
@@ -2120,6 +2097,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
+}
+
+- (void)viewWillLayoutSubviews {
+    self.currentIndexPath = nil;
+    [super viewWillLayoutSubviews];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -2217,7 +2199,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         //
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             OTRAccount *account = [self accountWithTransaction:transaction];
-            OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:forwardingJid.bare withAccountUniqueId:account.uniqueId transaction:transaction];
+            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:forwardingJid accountUniqueId:account.uniqueId transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = account.uniqueId;
@@ -2237,17 +2219,19 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
 {
-    __block OTRAccount *account = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
     }];
     OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     NSString *service = [xmppManager.roomManager.conferenceServicesJID firstObject];
-    if (service != nil) {
+    if (service.length > 0) {
         NSString *roomName = [NSUUID UUID].UUIDString;
         XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
         self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.displayName subject:name];
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
+    } else {
+        DDLogError(@"No conference server for account: %@", account.username);
     }
 }
 
@@ -2273,4 +2257,23 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     
 }
 
+- (void)didArchiveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {
+    __block OTRXMPPRoom *room = nil;
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        room = [self roomWithTransaction:transaction];
+    }];
+    if (room) {
+        [self setThreadKey:nil collection:nil];
+        [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            room.isArchived = YES;
+            [room saveWithTransaction:transaction];
+        }];
+    }
+    [self.navigationController popViewControllerAnimated:NO];
+    if ([[self.navigationController viewControllers] count] > 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self.navigationController.navigationController popViewControllerAnimated:YES];
+    }
+}
 @end

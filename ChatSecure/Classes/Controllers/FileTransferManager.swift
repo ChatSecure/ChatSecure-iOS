@@ -113,7 +113,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     let sessionManager: SessionManager
     private var servers: [HTTPServer] = []
     
-    public var canUploadFiles: Bool {
+    @objc public var canUploadFiles: Bool {
         return self.servers.first != nil
     }
     
@@ -122,7 +122,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         serverCapabilities.removeDelegate(self)
     }
     
-    public init(connection: YapDatabaseConnection,
+    @objc public init(connection: YapDatabaseConnection,
                 serverCapabilities: OTRServerCapabilities,
                 sessionConfiguration: URLSessionConfiguration) {
         self.serverCapabilities = serverCapabilities
@@ -141,7 +141,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     // MARK: - Public Methods
     
     /// This will fetch capabilities and setup XMPP transfer module if needed
-    public func refreshCapabilities() {
+    @objc public func refreshCapabilities() {
         guard let allCapabilities = serverCapabilities.allCapabilities else {
             serverCapabilities.fetchAllCapabilities()
             return
@@ -302,7 +302,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         }
     }
     
-    public func send(videoURL url: URL, thread: OTRThreadOwner) {
+    @objc public func send(videoURL url: URL, thread: OTRThreadOwner) {
         internalQueue.async {
             self.send(url: url, thread: thread, type: .video)
         }
@@ -334,7 +334,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             }
             mediaItem.parentObjectKey = message.messageKey
             mediaItem.parentObjectCollection = message.messageCollection
-            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier())
+            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier)
             self.connection.readWrite { transaction in
                 message.save(with: transaction)
                 mediaItem.save(with: transaction)
@@ -367,13 +367,13 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         }
     }
     
-    public func send(audioURL url: URL, thread: OTRThreadOwner) {
+    @objc public func send(audioURL url: URL, thread: OTRThreadOwner) {
         internalQueue.async {
             self.send(url: url, thread: thread, type: .audio)
         }
     }
     
-    public func send(image: UIImage, thread: OTRThreadOwner) {
+    @objc public func send(image: UIImage, thread: OTRThreadOwner) {
         internalQueue.async {
             guard let service = self.servers.first, service.maxSize > 0 else {
                 DDLogError("No HTTP upload service available!")
@@ -395,7 +395,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 DDLogError("Could not make JPEG out of image!")
                 return
             }
-            OTRMediaFileManager.shared.setData(ourImageData, for: imageItem, buddyUniqueId: thread.threadIdentifier(), completion: { (bytesWritten: Int, error: Error?) in
+            OTRMediaFileManager.shared.setData(ourImageData, for: imageItem, buddyUniqueId: thread.threadIdentifier, completion: { (bytesWritten: Int, error: Error?) in
                 self.connection.readWrite({ (transaction) in
                     imageItem.touchParentMessage(with: transaction)
                     if let error = error {
@@ -430,7 +430,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         } else if let room = thread as? OTRXMPPRoom {
             let message = OTRXMPPRoomMessage()!
             message.messageDate = Date()
-            message.roomUniqueId = room.threadIdentifier()
+            message.roomUniqueId = room.threadIdentifier
             message.roomJID = room.jid
             message.senderJID = room.ownJID
             message.state = .needsSending
@@ -440,7 +440,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         return nil
     }
     
-    public func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTRMessageProtocol) {
+    @objc public func send(mediaItem: OTRMediaItem, prefetchedData: Data?, message: OTRMessageProtocol) {
         var shouldEncrypt = false
         switch message.messageSecurity {
         case .OMEMO, .OTR:
@@ -510,9 +510,9 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
 extension FileTransferManager {
     
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
-    public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
+    @objc public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
         DispatchQueue.global(qos: .default).async {
-            if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
+            if message.messageMediaItemKey != nil || message.messageText?.count == 0 || message.downloadableURLs.count == 0 {
                 //DDLogVerbose("Download of message not needed \(message.messageKey)")
                 return
             }
@@ -521,7 +521,7 @@ extension FileTransferManager {
             if !force {
                 readConnection.read { (transaction) in
                     downloads = message.existingDownloads(with: transaction)
-                    if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier(), transaction: transaction) {
+                    if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier, transaction: transaction) {
                         disableAutomaticURLFetching = account.disableAutomaticURLFetching
                     }
                 }
@@ -533,8 +533,9 @@ extension FileTransferManager {
                 }
                 self.connection.readWrite({ (transaction) in
                     for download in downloads {
-                        if disableAutomaticURLFetching {
-                            let media = OTRMediaItem.incomingItem(withFilename: download.downloadableURL.absoluteString, mimeType: nil)
+                        if disableAutomaticURLFetching,
+                            let filename = download.downloadableURL?.absoluteString {
+                            let media = OTRMediaItem.incomingItem(withFilename: filename, mimeType: nil)
                             media.parentObjectKey = download.uniqueId
                             media.parentObjectCollection = download.messageCollection
                             media.save(with: transaction)
@@ -564,7 +565,10 @@ extension FileTransferManager {
             // DDLogWarn("Already downloaded media for this item")
             return
         }
-        let url = downloadMessage.downloadableURL
+        guard let url = downloadMessage.downloadableURL else {
+            DDLogWarn("Attempted to download message but couldn't parse a URL \(downloadMessage)")
+            return
+        }
         self.sessionManager.session.getTasksWithCompletionHandler { (tasks, _, _) in
             // Bail out if we've already got a task for this
             for task in tasks where task.originalRequest?.url == url {
@@ -700,9 +704,9 @@ extension FileTransferManager {
 
 extension OTRDownloadMessage {
     /// Turn aesgcm links into https links
-    var downloadableURL: URL {
-        var downloadableURL = url
-        if url.isAesGcm, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+    var downloadableURL: URL? {
+        guard var downloadableURL = url else { return nil }
+        if downloadableURL.isAesGcm, var components = URLComponents(url: downloadableURL, resolvingAgainstBaseURL: true) {
             components.scheme = URLScheme.https.rawValue
             if let rawURL = components.url {
                 downloadableURL = rawURL
@@ -824,7 +828,7 @@ public extension String {
         }
         var urls: [URL] = []
         var ranges: [NSRange] = []
-        let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.characters.count))
+        let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count))
         for match in matches where match.resultType == .link {
             if let url = match.url {
                 urls.append(url)
@@ -845,7 +849,7 @@ public extension String {
         let (_, ranges) = urlRanges
         guard ranges.count == 1,
             let range = ranges.first,
-            range.length == self.characters.count else {
+            range.length == self.count else {
             return false
         }
         return true

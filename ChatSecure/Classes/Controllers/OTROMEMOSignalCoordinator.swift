@@ -17,16 +17,16 @@ import SignalProtocolObjC
  */
 @objc open class OTROMEMOSignalCoordinator: NSObject {
 
-    public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
+    @objc public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
     
     open let signalEncryptionManager:OTRAccountSignalEncryptionManager
     open let omemoStorageManager:OTROMEMOStorageManager
-    open let accountYapKey:String
-    open let databaseConnection:YapDatabaseConnection
-    open weak var omemoModule:OMEMOModule?
-    open weak var omemoModuleQueue:DispatchQueue?
-    open var callbackQueue:DispatchQueue
-    open let workQueue:DispatchQueue
+    @objc open let accountYapKey:String
+    @objc open let databaseConnection:YapDatabaseConnection
+    @objc open weak var omemoModule:OMEMOModule?
+    @objc open weak var omemoModuleQueue:DispatchQueue?
+    @objc open var callbackQueue:DispatchQueue
+    @objc open let workQueue:DispatchQueue
     fileprivate var myJID:XMPPJID? {
         get {
             return omemoModule?.xmppStream?.myJID
@@ -447,7 +447,7 @@ import SignalProtocolObjC
             
             self.databaseConnection.asyncReadWrite({ (transaction) in
                 
-                guard let buddyUsernmae = relatedBuddyUsername, let buddy = OTRBuddy.fetch(withUsername: buddyUsernmae, withAccountUniqueId: self.accountYapKey, transaction: transaction) else {
+                guard let buddyUsernmae = relatedBuddyUsername, let jid = XMPPJID(string: buddyUsernmae), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
                 databaseMessage.text = messageString
@@ -558,16 +558,10 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
                 self?.callAndRemoveOutstandingBundleBlock(elementId!, success: false)
                 return
             }
-            //Create incoming bundle from OMEMOBundle
-            let innerBundle = OTROMEMOBundle(deviceId: bundle.deviceId, publicIdentityKey: bundle.identityKey, signedPublicPreKey: bundle.signedPreKey.publicKey, signedPreKeyId: bundle.signedPreKey.preKeyId, signedPreKeySignature: bundle.signedPreKey.signature)
-            //Select random pre key to use
             var result = false
-            let index = Int(arc4random_uniform(UInt32(bundle.preKeys.count)))
-            let preKey = bundle.preKeys[index]
-            let incomingBundle = OTROMEMOBundleIncoming(bundle: innerBundle, preKeyId: preKey.preKeyId, preKeyData: preKey.publicKey)
             //Consume the incoming bundle. This goes through signal and should hit the storage delegate. So we don't need to store ourselves here.
             do {
-                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare, bundle: incomingBundle)
+                try self?.signalEncryptionManager.consumeIncomingBundle(fromJID.bare, bundle: bundle)
                 result = true
             } catch let err {
                 DDLogWarn("Error consuming incoming bundle: \(err) \(responseIq.prettyXMLString())")
@@ -647,7 +641,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
 
     //Always returns most complete bundle with correct count of prekeys
     public func fetchMyBundle() -> OMEMOBundle? {
-        var _bundle: OTROMEMOBundleOutgoing? = nil
+        var _bundle: OMEMOBundle? = nil
         
         do {
             _bundle = try signalEncryptionManager.storage.fetchOurExistingBundle()
@@ -690,20 +684,14 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
                 start = UInt(maxId) + 1
             }
             
-            let newPreKeys = self.signalEncryptionManager.generatePreKeys(start, count: UInt(keysToGenerate))
-            newPreKeys?.forEach({ (preKey) in
-                preKeys.updateValue(preKey.keyPair().publicKey, forKey: preKey.preKeyId())
-            })
+            if let newPreKeys = self.signalEncryptionManager.generatePreKeys(start, count: UInt(keysToGenerate)) {
+                let omemoKeys = OMEMOPreKey.preKeysFromSignal(newPreKeys)
+                preKeys.append(contentsOf: omemoKeys)
+            }
         }
         
-        var preKeysArray = [OMEMOPreKey]()
-        preKeys.forEach { (id,data) in
-            let omemoPreKey = OMEMOPreKey(preKeyId: id, publicKey: data)
-            preKeysArray.append(omemoPreKey)
-        }
-        
-        let omemoSignedPreKey = OMEMOSignedPreKey(preKeyId: bundle.bundle.signedPreKeyId, publicKey: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature)
-        return OMEMOBundle(deviceId: bundle.bundle.deviceId, identityKey: bundle.bundle.publicIdentityKey, signedPreKey: omemoSignedPreKey, preKeys: preKeysArray)
+        let newBundle = bundle.copyBundle(newPreKeys: preKeys)
+        return newBundle
     }
 
     public func isSessionValid(_ jid: XMPPJID, deviceId: UInt32) -> Bool {

@@ -73,7 +73,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate var accountLoginNotificationObserver:NSObjectProtocol?
     fileprivate var messageStateDidChangeNotificationObserver:NSObjectProtocol?
     
-    public init(dbConnection:YapDatabaseConnection) {
+    @objc public init(dbConnection:YapDatabaseConnection) {
         self.databaseConnection = dbConnection
         self.operationQueue.maxConcurrentOperationCount = 1
         super.init()
@@ -561,7 +561,7 @@ extension MessageQueueHandler {
     }
     
     func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:OTRXMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
-        guard let text = message.text, text.characters.count > 0 else {
+        guard let text = message.text, text.count > 0 else {
             completion(true, 0.0)
             return
         }

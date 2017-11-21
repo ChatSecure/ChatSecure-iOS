@@ -26,8 +26,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)receivedDeliveryReceiptForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
 
-/** New outgoing message w/ preferred message security. Unsaved! */
-+ (instancetype) messageToBuddy:(OTRBuddy*)buddy text:(NSString*)text transaction:(YapDatabaseReadTransaction*)transaction;
-
 @end
 NS_ASSUME_NONNULL_END

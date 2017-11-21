@@ -10,10 +10,10 @@ import Foundation
 
 open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDelegate, OTRComposeViewControllerDelegate {
     
-    open weak var splitViewController:UISplitViewController? = nil
+    @objc open weak var splitViewController:UISplitViewController? = nil
     let databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection) {
+    @objc public init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
     }
     
@@ -22,7 +22,8 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate, let messagesVC = appDelegate.theme.messagesViewController() as? OTRMessagesViewController {
+        if let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate {
+            let messagesVC = appDelegate.messagesViewController
             messagesVC.setup(withBuddies: buddyKeys, accountId: accountKey, name:name)
             //setup 'back' button in nav bar
             let navigationController = UINavigationController(rootViewController: messagesVC)
@@ -42,7 +43,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         }
     }
     
-    open func enterConversationWithThread(_ threadOwner:OTRThreadOwner, sender:AnyObject?) {
+    @objc open func enterConversationWithThread(_ threadOwner:OTRThreadOwner, sender:AnyObject?) {
         guard let splitVC = self.splitViewController else {
             return
         }
@@ -54,11 +55,11 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
+        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
         
         //Set nav controller root view controller to mVC and then show detail with nav controller
         
-        mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
+        mVC.setThreadKey(threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
         
         //iPad check where there are two navigation controllers and we want the second one
         if splitVC.viewControllers.count > 1 && ((splitVC.viewControllers[1] as? UINavigationController)?.viewControllers.contains(mVC)) ?? false {
@@ -118,7 +119,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         self.splitViewController?.dismiss(animated: true, completion: nil)
     }
     
-    open func showConversationsViewController() {
+    @objc open func showConversationsViewController() {
         if self.splitViewController?.presentedViewController != nil {
             self.splitViewController?.dismiss(animated: true, completion: nil)
         }

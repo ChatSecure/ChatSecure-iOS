@@ -25,11 +25,9 @@
 #import "OTRBoolSetting.h"
 #import "OTRSettingTableViewCell.h"
 #import "OTRSettingDetailViewController.h"
-#import "OTRAboutViewController.h"
 #import "OTRQRCodeViewController.h"
 @import QuartzCore;
 #import "OTRConstants.h"
-@import UserVoice;
 #import "OTRAccountTableViewCell.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "OTRSecrets.h"
@@ -100,10 +98,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UINib *nib = [UINib nibWithNibName:[XMPPAccountCell cellIdentifier] bundle:bundle];
     [self.tableView registerNib:nib forCellReuseIdentifier:[XMPPAccountCell cellIdentifier]];
     
-    
-    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-    [infoButton addTarget:self action:@selector(showAboutScreen:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    [self setupVersionLabel];
     
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
@@ -115,6 +110,26 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }];
 }
 
+- (void) setupVersionLabel {
+    UIButton *versionButton = [[UIButton alloc] init];
+    NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleShortVersionString"];
+    NSString *buildNumber = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+    NSString *versionTitle = [NSString stringWithFormat:@"%@ %@ (%@)", VERSION_STRING(), bundleVersion, buildNumber];
+    [versionButton setTitle:versionTitle forState:UIControlStateNormal];
+    [versionButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateNormal];
+    [versionButton addTarget:self action:@selector(versionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [versionButton sizeToFit];
+    CGRect frame = versionButton.frame;
+    frame.size.height = frame.size.height * 2;
+    versionButton.frame = frame;
+    self.tableView.tableFooterView = versionButton;
+}
+
+- (void) versionButtonPressed:(id)sender {
+    // Licenses are in Settings bundle now
+    NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    [UIApplication.sharedApplication openURL:settingsURL];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -313,21 +328,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [self presentViewController:navigationController animated:YES completion:nil];
 }
 
--(void)showAboutScreen:(id)sender
-{
-    OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:aboutController];
-        navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.navigationController presentViewController:navController animated:YES completion:nil];
-    }
-    else {
-       [self.navigationController pushViewController:aboutController animated:YES];
-    }
-    
-}
-
 - (void) addAccount:(id)sender {
     UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
@@ -421,23 +421,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma mark OTRFeedbackSettingDelegate method
 
-- (void) presentUserVoiceViewForSetting:(OTRSetting *)setting {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING() message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        UVConfig *config = [UVConfig configWithSite:[OTRBranding userVoiceSite]];
-        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
-    }];
-    
-    [alertController addAction:cancelAlertAction];
-    [alertController addAction:showUserVoiceAlertAction];
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
-    
-    alertController.popoverPresentationController.sourceView = cell;
-    alertController.popoverPresentationController.sourceRect = cell.bounds;
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+- (void) presentFeedbackViewForSetting:(OTRSetting *)setting {
+    NSURL *githubURL = OTRBranding.githubURL;
+    if (!githubURL) { return; }
+    NSURL *githubIssues = [githubURL URLByAppendingPathComponent:@"issues"];
+    [UIApplication.sharedApplication openURL:githubIssues];
 }
 
 #pragma - mark YapDatabse Methods

@@ -27,8 +27,8 @@ class OTRSignalTest: XCTestCase {
         let ourDatabaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
         let otherDatbaseManager = OTRTestDatabaseManager.setupDatabaseWithName("\(#function)-other")
         
-        let ourAccount = TestXMPPAccount(username: "ourAccount@something.com", accountType: .jabber)!
-        let otherAccount = TestXMPPAccount(username: "otherAccount@something.com", accountType: .jabber)!
+        let ourAccount = TestXMPPAccount(username: "our.account@something.com", accountType: .jabber)!
+        let otherAccount = TestXMPPAccount(username: "other.account@something.com", accountType: .jabber)!
         
         let ourDatabaseConnection = ourDatabaseManager.newConnection()!
         let otherDatabaseConnection = otherDatbaseManager.newConnection()!
@@ -48,38 +48,35 @@ class OTRSignalTest: XCTestCase {
         otherDatabaseConnection.readWrite( { (transaction) in
             let refetch = otherAccount.refetch(with: transaction)
             XCTAssertNotNil(refetch)
-            let buddy = OTRBuddy()!
+            let buddy = OTRXMPPBuddy()!
             buddy.accountUniqueId = otherAccount.uniqueId
             buddy.username = ourAccount.username
             buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle.bundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
+            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
             device.save(with:transaction)
         })
         ourDatabaseConnection.readWrite ({ (transaction) in
             let refetch = ourAccount.refetch(with: transaction)
             XCTAssertNotNil(refetch)
-            let buddy = OTRBuddy()!
+            let buddy = OTRXMPPBuddy()!
             buddy.accountUniqueId = ourAccount.uniqueId
             buddy.username = otherAccount.username
             buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(value:otherEncryptionManager.registrationId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
+            let device = OTROMEMODevice(deviceId: NSNumber(value:otherEncryptionManager.registrationId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
             device.save(with:transaction)
         })
         
         XCTAssertNotNil(ourOutgoingBundle,"Created our bundle")
         //At this point int 'real' world we could post or outgoing bundle to OMEMO
         
-        //Convert our outgoing bundle to an incoming bundle
-        let preKeyInfo = ourOutgoingBundle.preKeys.first!
-        let incomingBundle = OTROMEMOBundleIncoming(bundle: ourOutgoingBundle.bundle, preKeyId: preKeyInfo.0, preKeyData: preKeyInfo.1)
         // 'Other' device is now able to send messages to 'Our' device
-        try! otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: incomingBundle)
+        try! otherEncryptionManager.consumeIncomingBundle(ourAccount.username, bundle: ourOutgoingBundle)
         
         let firstString = "Hi buddy"
         let data = firstString.data(using: String.Encoding.utf8)!
-        let encryptedData = try! otherEncryptionManager.encryptToAddress(data, name: ourAccount.username, deviceId: incomingBundle.bundle.deviceId)
+        let encryptedData = try! otherEncryptionManager.encryptToAddress(data, name: ourAccount.username, deviceId: ourOutgoingBundle.deviceId)
         XCTAssertNotNil(encryptedData, "Created encrypted data")
         print("\(encryptedData.data)")
         

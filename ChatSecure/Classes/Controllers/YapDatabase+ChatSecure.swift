@@ -11,7 +11,7 @@ import YapDatabase
 
 public extension YapDatabase {
     
-    func asyncRegisterView(_ grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseExtensionName, completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
+     @objc func asyncRegisterView(_ grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseExtensionName, completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
         
         if (self.registeredExtension(name.name()) != nil ) {
             let queue:DispatchQueue = completionQueue ?? DispatchQueue.main
@@ -29,7 +29,7 @@ public extension YapDatabase {
         self.asyncRegister(view, withName: name.name(), completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
-    public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
+    @objc public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
         
         let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection , key , object ) -> String! in
             guard let occupant = object as? OTRXMPPRoomOccupant else {

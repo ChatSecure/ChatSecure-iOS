@@ -12,8 +12,8 @@ import YapDatabase.YapDatabaseSecondaryIndex
 public extension YapDatabaseReadTransaction {
     
     /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359
-    public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+    @objc public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
@@ -28,10 +28,10 @@ public extension YapDatabaseReadTransaction {
             queryString += "\(stringStart) \(column) = ?"
             parameters.append(value)
         }
-        addQuery(OTRYapDatabaseRemoteMessageIdSecondaryIndexColumnName, elementId)
-        addQuery(SecondaryIndexName.originId, originId)
-        addQuery(SecondaryIndexName.stanzaId, stanzaId)
-        guard parameters.count > 0, queryString.characters.count > 0 else {
+        addQuery(MessageIndexColumnName.remoteMessageId, elementId)
+        addQuery(MessageIndexColumnName.originId, originId)
+        addQuery(MessageIndexColumnName.stanzaId, stanzaId)
+        guard parameters.count > 0, queryString.count > 0 else {
             return
         }
         let query = YapDatabaseQuery(string: queryString, parameters: parameters)
@@ -43,12 +43,12 @@ public extension YapDatabaseReadTransaction {
         }
     }
     
-    public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+    @objc public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
-        let queryString = "Where \(OTRYapDatabaseSignalSessionSecondaryIndexColumnName) = ?"
-        let query = YapDatabaseQuery(string: queryString, parameters: ["\(accountKey)-\(signalAddressName)"])
+        let queryString = "Where \(SignalIndexColumnName.session) = ?"
+        let query = YapDatabaseQuery(string: queryString, parameters: [OTRSignalSession.sessionKey(accountKey: accountKey, name: signalAddressName)])
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
             if let session = self.object(forKey: key, inCollection: collection) as? OTRSignalSession {
                 block(session, stop)
@@ -57,12 +57,12 @@ public extension YapDatabaseReadTransaction {
     }
     
     /** The jid here is the full jid not real jid or nickname */
-    public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.secondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+    @objc public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName) = ?"
+        let queryString = "Where \(RoomOccupantIndexColumnName.jid) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [jid])
         
         secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
@@ -72,12 +72,12 @@ public extension YapDatabaseReadTransaction {
         }
     }
     
-    public func numberOfUnreadMessages() -> UInt {
-        guard let secondaryIndexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+    @objc public func numberOfUnreadMessages() -> UInt {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
         
-        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
+        let queryString = "Where \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
         
         var count:UInt = 0
@@ -88,12 +88,12 @@ public extension YapDatabaseReadTransaction {
         return count
     }
     
-    public func allUnreadMessagesForThread(_ thread:OTRThreadOwner) -> [OTRMessageProtocol] {
-        guard let indexTransaction = self.ext(OTRMessagesSecondaryIndex) as? YapDatabaseSecondaryIndexTransaction else {
+    @objc public func allUnreadMessagesForThread(_ thread:OTRThreadOwner) -> [OTRMessageProtocol] {
+        guard let indexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return []
         }
-        let queryString = "Where \(OTRYapDatabaseMessageThreadIdSecondaryIndexColumnName) == ? AND \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) == 0"
-        let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier()])
+        let queryString = "Where \(MessageIndexColumnName.threadId) == ? AND \(MessageIndexColumnName.isMessageRead) == 0"
+        let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier])
         var result = [OTRMessageProtocol]()
         let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
             if let message = object as? OTRMessageProtocol {

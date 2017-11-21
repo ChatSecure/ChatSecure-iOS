@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>libidn-podspec
+
+The following MIT license only applies to the podspec and examples in this repo. libidn itself is LGPL (see below).
+
+Copyright (c) 2015 Chris Ballinger &lt;chrisballinger@gmail.com&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+===============================================
+
+Libidn COPYING -- Explanation of licensing conditions.
+Copyright (C) 2002-2015 Simon Josefsson
+See the end for copying conditions.
+
+The source code for the C library (libidn.a or libidn.so), the C#
+library (Libidn.dll) and the Java library (libidn-*.jar) are licensed
+under the terms of either the GNU General Public License version 2.0
+or later (see the file COPYINGv2) or the GNU Lesser General Public
+License version 3.0 or later (see the file COPYING.LESSERv3), or both
+in parallel as here.
+
+The author of the Java library has agreed to also distribute it under
+the Apache License Version 2.0 (see the file java/LICENSE-2.0).
+
+The manual is licensed under the GNU Free Documentation License,
+Version 1.3 or any later.
+
+The command line tool, self tests, examples, and other auxilliary
+files, are licensed under the GNU General Public License version 3.0
+or later.
+
+Other files are licensed as indicated in each file.
+
+There may be exceptions to these general rules, see each file for
+precise information.
+
+----------------------------------------------------------------------
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>FooterText</key>
+			<string>Off-the-Record Messaging library
+Copyright (C) 2004-2016  Ian Goldberg, David Goulet, Rob Smits,
+                         Chris Alexander, Willy Lew, Lisa Du,
+       Nikita Borisov
+       &lt;otr@cypherpunks.ca&gt;
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of version 2.1 of the GNU Lesser General
+Public License as published by the Free Software Foundation.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+There is a copy of the GNU Lesser General Public License in the
+COPYING.LIB file packaged with this library; if you cannot find it,
+write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth
+Floor, Boston, MA 02110-1301 USA
+</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+	</array>
+</dict>
+</plist>

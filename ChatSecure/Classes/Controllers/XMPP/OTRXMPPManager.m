@@ -523,29 +523,22 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
-        self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
-        [self goAway];
+        if (self.connectionStatus == OTRProtocolConnectionStatusConnecting || self.connectionStatus == OTRProtocolConnectionStatusConnected) {
+            self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
+            [self goAway];
+        }
         return;
     }
     
     [self goOffline];
     [self.xmppStream disconnectAfterSending];
-    
-    __weak typeof(self)weakSelf = self;
-    __block NSArray<OTRXMPPBuddy*> *buddiesArray = nil;
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
-    } completionQueue:dispatch_get_main_queue() completionBlock:^{
-        
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
-        {
-            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [OTRBaseMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
-            }];
-        }
-    }];
+
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+    {
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [OTRBaseMessage deleteAllMessagesForAccountId:self.account.uniqueId transaction:transaction];
+        }];
+    }
 }
 
 - (void)disconnect
@@ -605,33 +598,38 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 
 /** Enqueues a message to be sent by message queue */
-- (void) enqueueMessage:(OTROutgoingMessage*)message {
+- (void) enqueueMessage:(id<OTRMessageProtocol>)message {
     NSParameterAssert(message);
     if (!message) { return; }
     [self enqueueMessages:@[message]];
 }
 
 /** Enqueues an array of messages to be sent by message queue */
-- (void) enqueueMessages:(NSArray<OTROutgoingMessage*>*)messages {
+- (void) enqueueMessages:(NSArray<id<OTRMessageProtocol>>*)messages {
     NSParameterAssert(messages);
     if (!messages.count) {
         return;
     }
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [messages enumerateObjectsUsingBlock:^(OTROutgoingMessage * _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+        [messages enumerateObjectsUsingBlock:^(id<OTRMessageProtocol> _Nonnull message, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (message.isMessageIncoming) {
+                // We cannot send incoming messages
+                DDLogError(@"Cannot send incoming message: %@", message);
+                return;
+            }
             //2. Create send message task
-            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:nil];
+            OTRYapMessageSendAction *sendingAction = [OTRYapMessageSendAction sendActionForMessage:message date:message.messageDate];
             //3. save both to database
             [message saveWithTransaction:transaction];
             [sendingAction saveWithTransaction:transaction];
-            //Update buddy
-            OTRBuddy *buddy = [message buddyWithTransaction:transaction];
-            if (!buddy) {
+            //Update thread
+            id<OTRThreadOwner> thread = [message threadOwnerWithTransaction:transaction];
+            if (!thread) {
                 return;
             }
-            buddy.composingMessageString = nil;
-            buddy.lastMessageId = message.uniqueId;
-            [buddy saveWithTransaction:transaction];
+            thread.currentMessageText = nil;
+            thread.lastMessageIdentifier = message.uniqueId;
+            [thread saveWithTransaction:transaction];
         }];
     }];
 }
@@ -928,9 +926,11 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self changeLoginStatus:OTRLoginStatusSecured error:error];
 }
 
--(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
+-(nullable OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[[message from] bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
+    XMPPJID *from = message.from;
+    if (!from) { return nil; }
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:from accountUniqueId:self.account.uniqueId transaction:transaction];
     return buddy;
 }
 
@@ -1055,13 +1055,13 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     __block OTRXMPPBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
+        buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
     } completionQueue:self.workQueue completionBlock:^{
         if (!buddy) { return; }
         XMPPvCardTemp *vCard = [self.xmppvCardTempModule vCardTempForJID:jid shouldFetch:YES];
         if (!vCard) { return; }
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction] copy];
+            buddy = [buddy refetchWithTransaction:transaction];
             if (!buddy) { return; }
             buddy.vCardTemp = vCard;
             [buddy saveWithTransaction:transaction];

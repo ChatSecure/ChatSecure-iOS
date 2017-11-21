@@ -24,8 +24,8 @@ public extension NSString {
     ///
     /// - returns: Data represented by this hexadecimal string.
     
-    public func dataFromHex() -> Data? {
-        let characters = (self as String).characters
+    @objc public func dataFromHex() -> Data? {
+        let characters = (self as String)
         var data = Data(capacity: characters.count / 2)
         
         let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)

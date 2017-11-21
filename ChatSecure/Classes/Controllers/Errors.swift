@@ -10,7 +10,7 @@ import Foundation
 import OTRAssets
 
 public extension NSError {
-    class func XMPPXMLError(_ error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
+    @objc class func XMPPXMLError(_ error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
         return self.chatSecureError(error, userInfo: userInfo)
     }
     

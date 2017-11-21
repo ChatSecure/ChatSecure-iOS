@@ -36,12 +36,12 @@ public class OTRYapKeyCollectionHandler:NSObject {
     
     var storage = Dictionary<String, keyCollectionPair>()
     
-    public func observe(_ key:String, collection:String) {
+    @objc public func observe(_ key:String, collection:String) {
         let k = key + collection
         storage.updateValue(keyCollectionPair(key: key, collection: collection), forKey: k)
     }
     
-    public func stopObserving(_ key:String, collection:String) {
+    @objc public func stopObserving(_ key:String, collection:String) {
         let k = key + collection
         storage.removeValue(forKey: k)
     }
@@ -51,16 +51,16 @@ public class OTRYapKeyCollectionHandler:NSObject {
 public class OTRYapViewHandler: NSObject {
     
     var notificationToken:NSObjectProtocol? = nil
-    public var viewName:String? = nil
+    @objc public var viewName:String? = nil
     private var groups:ViewGroups? = nil
-    public weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
-    public let keyCollectionObserver = OTRYapKeyCollectionHandler()
+    @objc public weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
+    @objc public let keyCollectionObserver = OTRYapKeyCollectionHandler()
     
-    public var mappings:YapDatabaseViewMappings?
+    @objc public var mappings:YapDatabaseViewMappings?
     
-    public var databaseConnection:YapDatabaseConnection
+    @objc public var databaseConnection:YapDatabaseConnection
     
-    public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatabaseNotificationName.LongLivedTransactionChanges) {
+    @objc public init(databaseConnection:YapDatabaseConnection, databaseChangeNotificationName:String = DatabaseNotificationName.LongLivedTransactionChanges) {
         self.databaseConnection = databaseConnection
         super.init()
         self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: databaseChangeNotificationName), object: self.databaseConnection, queue: OperationQueue.main) {[weak self] (notification) -> Void in
@@ -74,7 +74,7 @@ public class OTRYapViewHandler: NSObject {
         }
     }
     
-    public func setup(_ view:String,groups:[String]) {
+    @objc public func setup(_ view:String,groups:[String]) {
         self.viewName = view
         let groupsArray = ViewGroups.array(groups)
         self.groups = groupsArray
@@ -82,7 +82,7 @@ public class OTRYapViewHandler: NSObject {
         self.setupMappings(view, groups: groupsArray);
     }
     
-    public func setup(_ view:String, groupBlock:@escaping YapDatabaseViewMappingGroupFilter, sortBlock:@escaping YapDatabaseViewMappingGroupSort) {
+    @objc public func setup(_ view:String, groupBlock:@escaping YapDatabaseViewMappingGroupFilter, sortBlock:@escaping YapDatabaseViewMappingGroupSort) {
         self.viewName = view
         let groups = ViewGroups.block(groupBlock,sortBlock)
         self.groups = groups
@@ -90,7 +90,7 @@ public class OTRYapViewHandler: NSObject {
         self.setupMappings(view, groups: groups)
     }
     
-    public func groupsArray() -> [String]? {
+    @objc public func groupsArray() -> [String]? {
         guard let groups = self.groups else {
             return nil
         }
@@ -119,7 +119,7 @@ public class OTRYapViewHandler: NSObject {
         }
     }
     
-    public func object(_ indexPath:IndexPath) -> AnyObject? {
+    @objc public func object(_ indexPath:IndexPath) -> AnyObject? {
         var object:AnyObject? = nil
         self.databaseConnection.read { (transaction) -> Void in
             guard let viewName = self.mappings?.view else {

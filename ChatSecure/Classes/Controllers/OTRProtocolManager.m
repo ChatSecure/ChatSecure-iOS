@@ -30,6 +30,7 @@
 #import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPushTLVHandler.h"
+#import <BBlock/NSObject+BBlock.h>
 @import YapDatabase;
 
 @import KVOController;
@@ -206,17 +207,40 @@
     }
 }
 
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly timeout:(NSTimeInterval)timeout completionBlock:(nullable void (^)())completionBlock
+{
     @synchronized (self) {
-        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-            [protocol disconnectSocketOnly:socketOnly];
-        }];
+        dispatch_group_t group = dispatch_group_create();
+        NSMutableDictionary<NSString*, NSObject<OTRProtocol>*> *observingManagersForTokens = [NSMutableDictionary new];
+        for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
+            if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
+                dispatch_group_enter(group);
+                NSString *token = [manager addObserverForKeyPath:NSStringFromSelector(@selector(connectionStatus))
+                                                         options:0
+                                                           block:^(NSString *keyPath, id<OTRProtocol> mgr, NSDictionary *change) {
+                                                               if (mgr.connectionStatus == OTRProtocolConnectionStatusDisconnected) {
+                                                                   dispatch_group_leave(group);
+                                                               }
+                                                           }];
+                observingManagersForTokens[token] = manager;
+                [manager disconnectSocketOnly:socketOnly];
+            }
+        }
+        if (timeout > 0) {
+            dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t) (timeout * NSEC_PER_SEC)));
+        }
+        for (NSString *token in observingManagersForTokens.allKeys) {
+            [observingManagersForTokens[token] removeObserverForToken:token];
+        }
+        if (completionBlock != nil) {
+            completionBlock();
+        }
     }
 }
 
 - (void)disconnectAllAccounts
 {
-    [self disconnectAllAccountsSocketOnly:NO];
+    [self disconnectAllAccountsSocketOnly:NO timeout:0 completionBlock:nil];
 }
 
 - (void)protocolDidChange:(NSDictionary *)change
@@ -299,7 +323,7 @@
                 __block OTRXMPPBuddy *buddy = nil;
                 __block BOOL handled = NO;
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:jidString withAccountUniqueId:account.uniqueId transaction:transaction];
+                    buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
                     if (!buddy) {
                         buddy = [[OTRXMPPBuddy alloc] init];
                         buddy.username = jidString;

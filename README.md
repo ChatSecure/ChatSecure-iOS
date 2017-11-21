@@ -49,11 +49,10 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 
 ## Build Instructions
 
-You'll need [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/Carthage/Carthage) installed for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
+You'll need [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/Carthage/Carthage) installed for most of our dependencies.
     
     $ brew install carthage
-    $ ### gem install cocoapods # Until CocoaPods is fixed use the bundle command below instead.
-    $ bundle install
+    $ gem install cocoapods
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
 
@@ -66,9 +65,8 @@ Now you'll need to build the dependencies.
     $ carthage bootstrap --platform ios # or carthage update --platform ios --cache-builds
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
-    $ ### pod install # Until CocoaPods is fixed use the bundle commands below instead.
-    $ bundle exec pod repo update
-    $ bundle exec pod install
+    $ pod repo update
+    $ pod install
     
 Next you'll need to create your own version of environment-specific data. Make a copy of `Secrets-template.plist` as `Secrets.plist`:
 
@@ -145,7 +143,7 @@ terms of a separate license:
 * [HockeySDK](https://github.com/bitstadium/HockeySDK-iOS) - crash reporting framework
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
-For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile).
+For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile) and [Cartfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Cartfile). To regenerate the acknowledgements in Settings.app use [LicensePlist](https://github.com/mono0926/LicensePlist) `license-plist --add-version-numbers` and copy the output to `Settings.bundle`.
 
 ## Acknowledgements
 

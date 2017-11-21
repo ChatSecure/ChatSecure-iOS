@@ -14,11 +14,12 @@ import OTRAssets
 
 @objc public protocol OTRRoomOccupantsViewControllerDelegate {
     func didLeaveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
+    func didArchiveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
 }
 
 open class OTRRoomOccupantsViewController: UIViewController {
  
-    public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
+    @objc public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
 
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
@@ -42,14 +43,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
     static let HeaderCellShare = "cellGroupShare"
     static let HeaderCellAddFriends = "cellGroupAddFriends"
     static let HeaderCellMute = "cellGroupMute"
-    static let HeaderCellUnmute = "cellGroupUnmute"
     static let HeaderCellMembers = "cellGroupMembers"
     static let FooterCellLeave = "cellGroupLeave"
 
     open var tableHeaderView:OTRVerticalStackView?
     open var tableFooterView:OTRVerticalStackView?
     
-    public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
+    @objc public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
         setupViewHandler(databaseConnection: databaseConnection, roomKey: roomKey)
     }
@@ -58,11 +58,11 @@ open class OTRRoomOccupantsViewController: UIViewController {
         super.init(coder: aDecoder)
     }
 
-    public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
+    @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
-            if let room = self.room, let manager = self.xmppRoomManager(), let roomJid = room.jid, let ownJid = room.ownJID {
-                self.ownOccupant = manager.roomOccupant(forJID:ownJid, realJID:ownJid, inRoom:roomJid)
+            if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
+                self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: true, transaction: transaction)
             }
         })
         self.fetchMembersList()
@@ -82,7 +82,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
         var headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
             OTRRoomOccupantsViewController.HeaderCellMute,
-            OTRRoomOccupantsViewController.HeaderCellUnmute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
 
@@ -113,7 +112,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         
         self.tableView.tableHeaderView = self.tableHeaderView
         self.tableView.tableFooterView = self.tableFooterView
-        updateMuteUnmuteCell()
+        updateNotificationSwitchCell()
         
         if let room = self.room {
             let seed = room.avatarSeed
@@ -174,13 +173,14 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(self.navigationBarBackground, for: .default)
     }
     
-    private func updateMuteUnmuteCell() {
-        var muted = false
+    private func updateNotificationSwitchCell() {
+        var notificationsEnabled = true
         if let room = self.room {
-            muted = room.isMuted
+            notificationsEnabled = !room.isMuted
         }
-        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellMute, hidden: muted)
-        self.tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellUnmute, hidden: !muted)
+        if let view = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellMute) as? UITableViewCell, let switchView = view.accessoryView as? UISwitch {
+            switchView.setOn(notificationsEnabled, animated: true)
+        }
     }
     
     open func createHeaderCell(type:String) -> UITableViewCell {
@@ -206,6 +206,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
             }
             cell?.selectionStyle = .none
             break
+        case OTRRoomOccupantsViewController.HeaderCellMute:
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
+            let muteswitch = UISwitch()
+            if let room = self.room {
+                muteswitch.setOn(!room.isMuted, animated: false)
+            }
+            muteswitch.addTarget(self, action: #selector(self.didChangeNotificationSwitch(_:)), for: .valueChanged)
+            cell?.accessoryView = muteswitch
+            cell?.isUserInteractionEnabled = true
+            cell?.selectionStyle = .none
+            break
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             break
@@ -219,19 +230,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func didSelectHeaderCell(type:String) {
         switch type {
-        case OTRRoomOccupantsViewController.HeaderCellMute, OTRRoomOccupantsViewController.HeaderCellUnmute:
-            if let room = self.room {
-                if room.isMuted {
-                    room.muteExpiration = nil
-                } else {
-                    room.muteExpiration = Date.distantFuture
-                }
-                OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
-                    room.save(with: transaction)
-                })
-                updateMuteUnmuteCell()
-            }
-            break
         case OTRRoomOccupantsViewController.HeaderCellAddFriends:
             addMoreFriends()
             break
@@ -253,8 +251,21 @@ open class OTRRoomOccupantsViewController: UIViewController {
         default: break
         }
     }
+    @objc func didChangeNotificationSwitch(_ sender: UIControl!) {
+        if let room = self.room {
+            if room.isMuted {
+                room.muteExpiration = nil
+            } else {
+                room.muteExpiration = Date.distantFuture
+            }
+            OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+                room.save(with: transaction)
+            })
+            updateNotificationSwitchCell()
+        }
+    }
     
-    func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
+    @objc func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
         let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
             if let newSubject = alert.textFields?.first?.text {
@@ -348,9 +359,9 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
-        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jid = roomOccupant.realJID ?? roomOccupant.jid, let account = room.accountUniqueId {
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                    buddy = OTRXMPPBuddy.fetch(withUsername: jid, withAccountUniqueId: account, transaction: transaction)
+                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
@@ -362,8 +373,8 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = jid
-                buddy.displayName = roomOccupant.roomName ?? jid
+                buddy.username = jid.bare
+                buddy.displayName = roomOccupant.roomName ?? jid.bare
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
                     status = .offline

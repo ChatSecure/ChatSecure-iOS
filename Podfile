@@ -6,13 +6,16 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
+      config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'
     end
   end
 end
 
-platform :ios, "8.0"
+platform :ios, "9.0"
 
 use_frameworks!
+# inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -21,12 +24,14 @@ abstract_target 'ChatSecureCorePods' do
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'JTSImageViewController', '~> 1.4'
-  pod 'VTAcknowledgementsViewController', '~> 1.2'
   pod 'BButton', '~> 4.0'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
   pod 'QRCodeReaderViewController', '~> 4.0'
-  pod 'ParkedTextField', '~> 0.3.1'
+  # pod 'ParkedTextField', '~> 0.3.1'
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => '43f1d3b' # Swift 4
+
+
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
   # Debugging
@@ -46,7 +51,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'GCDWebServer', '~> 3.4'
   # pod 'GCDWebServer/CocoaLumberjack', :git => 'https://github.com/ChatSecure/GCDWebServer.git', :branch => 'kdbertel-CocoaLumberjack3'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
-  pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
+  pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
 
   # Google Auth
@@ -58,27 +63,14 @@ abstract_target 'ChatSecureCorePods' do
   # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/yapstudios/YapDatabase.git', :commit => 'd632658'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'yap3'
+  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
 
   # Crypto
   pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 
-  ### Moved to Carthage ###
-  # pod 'AFNetworking', '~> 3.1'
-  # pod 'ZXingObjC', '~> 3.0'
-  # pod "SAMKeychain", '~> 1.5'
-  # pod 'MBProgressHUD', '~> 1.0'
-  # pod 'TTTAttributedLabel', '~> 2.0'
-  # pod 'PureLayout', '~> 3.0'
-  # pod 'uservoice-iphone-sdk', '~> 3.2'
-  # pod 'KVOController', '~> 1.0'
-  # pod 'XLForm', '~> 3.3'
-  # pod 'FormatterKit/TimeIntervalFormatter', '~> 1.8.2'
-  ### Moved back to CocoaPods due to Swift 3->4 issues ###
   pod 'Alamofire', '~> 4.4'
   pod 'Kvitto', '~> 1.0'
-
 
   target 'ChatSecureCore'
   target 'ChatSecureTests'

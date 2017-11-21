@@ -15,19 +15,19 @@ import YapDatabase
 
 @objc open class OTRAccountDatabaseCount: NSObject
 {
-    open var databaseConnection:YapDatabaseConnection {
+    @objc open var databaseConnection:YapDatabaseConnection {
         return self.viewHandler.databaseConnection
     }
     
-    open var numberOfAccounts:UInt {
+    @objc open var numberOfAccounts:UInt {
         return self.viewHandler.mappings?.numberOfItemsInAllGroups() ?? 0
     }
     
-    open weak var delegate:OTRAccountDatabaseCountDelegate?
+    @objc open weak var delegate:OTRAccountDatabaseCountDelegate?
     
     fileprivate let viewHandler:OTRYapViewHandler
     
-    public init(databaseConnection:YapDatabaseConnection, delegate:OTRAccountDatabaseCountDelegate?) {
+    @objc public init(databaseConnection:YapDatabaseConnection, delegate:OTRAccountDatabaseCountDelegate?) {
         self.viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
         
         self.delegate = delegate

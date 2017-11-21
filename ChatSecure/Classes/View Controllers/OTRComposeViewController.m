@@ -124,11 +124,7 @@
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
-    //[self.tableView autoPinToTopLayoutGuideOfViewController:self withInset:0.0];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
-    self.tableViewBottomConstraint = [self.tableView autoPinToBottomLayoutGuideOfViewController:self withInset:0.0];
+    [self.tableView autoPinEdgesToSuperviewEdges];
     
     [self setupSearchController];
     
@@ -294,15 +290,20 @@
 
 /** Intended to be called if selecting one buddy or after a group chat is created*/
 - (void)completeSelectingBuddies:(NSSet <NSString *>*)buddies groupName:(nullable NSString*)groupName {
-    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
-        //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
-        __block NSString *accountId = nil;
-        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            NSString *buddyKey  = [buddies anyObject];
-            accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
-        }];
-        [self.delegate controller:self didSelectBuddies:[buddies allObjects] accountId:accountId name:groupName];
+    if (![self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
+        return;
     }
+    //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
+    __block NSString *accountId = nil;
+    [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        NSString *buddyKey  = [buddies anyObject];
+        accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+    }];
+    if (!accountId) {
+        DDLogError(@"completeSelectingBuddies error: No account found!");
+        return;
+    }
+    [self.delegate controller:self didSelectBuddies:[buddies allObjects] accountId:accountId name:groupName];
 }
 
 - (void) groupButtonPressed:(id)sender {

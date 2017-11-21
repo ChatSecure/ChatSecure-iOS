@@ -31,40 +31,6 @@
     return self;
 }
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid realJID:(NSString *)realJID roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction alwaysReturnObject:(BOOL)alwaysReturnObject
-{
-    __block OTRXMPPRoomOccupant *occupant = nil;
-        
-    OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
-    //Enumerate of room eges to occupants
-    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:databaseRoom.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        
-        OTRXMPPRoomOccupant *tempOccupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if((realJID != nil && [tempOccupant.realJID isEqualToString:realJID]) || (jid != nil && [tempOccupant.jid isEqualToString:jid])) {
-            occupant = tempOccupant;
-            *stop = YES;
-        }
-    }];
-    
-    if(!occupant && alwaysReturnObject) {
-        occupant = [[OTRXMPPRoomOccupant alloc] init];
-        occupant.jid = jid;
-        occupant.realJID = realJID;
-        occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
-    }
-    
-    // Make sure we fill in the jids if we haven't got them already (note: we might well assign nil to them here, basically a no-op, but if we have them they will be set)
-    if (!occupant.jid) {
-        occupant.jid = jid;
-    }
-    if (!occupant.realJID) {
-        occupant.realJID = realJID;
-    }
-    
-    return occupant;
-}
-
 - (OTRXMPPRoom *)fetchRoomWithXMPPRoomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction {
     return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:accountId jid:roomJID] transaction:transaction];
 }
@@ -119,7 +85,7 @@
         
         if ([self existsMessage:message from:fromJID stanzaId:stanzaId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
-            DDLogVerbose(@"%@: %@ - Duplicate MUC message", THIS_FILE, THIS_METHOD);
+            DDLogVerbose(@"%@: %@ - Duplicate MUC message %@", THIS_FILE, THIS_METHOD, message);
             return;
         }
         databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
@@ -148,11 +114,6 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID realJID:nil roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
-        databaseMessage.displayName = occupant.realJID;
-        if (!databaseMessage.displayName) {
-            databaseMessage.displayName = [fromJID bare];
-        }
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
         NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
@@ -203,44 +164,34 @@
 - (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
     NSString *accountId = room.xmppStream.tag;
     XMPPJID *presenceJID = [presence from];
-    NSArray *children = [presence children];
-    __block XMPPJID *buddyJID = nil;
-    __block NSString *buddyRole = nil;
-    __block NSString *buddyAffiliation = nil;
-    [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[element xmlns] containsString:XMPPMUCNamespace]) {
-            NSArray *items = [element children];
-            [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
-                NSString *jid = [item attributeStringValueForName:@"jid"];
-                if ([jid length]) {
-                    buddyJID = [XMPPJID jidWithString:jid];
-                    buddyRole = [item attributeStringValueForName:@"role"];
-                    buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
-                    *stop = YES;
-                }
-            }];
-            *stop = YES;
-        }
-    }];
+    
+    DDXMLElement *item = nil;
+    DDXMLElement *mucElement = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+    if (mucElement) {
+        item = [mucElement elementForName:@"item"];
+    }
+    if (!item) {
+        return; // Unexpected presence format
+    }
+
+    XMPPJID *buddyRealJID = nil;
+    NSString *buddyJIDString = [item attributeStringValueForName:@"jid"];
+    if (buddyJIDString) {
+        // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
+        buddyRealJID = [[XMPPJID jidWithString:buddyJIDString] bareJID];
+    }
+    NSString *buddyRole = [item attributeStringValueForName:@"role"];
+    NSString *buddyAffiliation = [item attributeStringValueForName:@"affiliation"];
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
-        // Get the real JID, need to find occupant by EITHER room jid or real JID
-        NSString *realJID = nil;
-        if (buddyJID) {
-            realJID = buddyJID.bare;
-        } else {
-            // Not really sure what's going on here
-            realJID = [presenceJID resource];
-        }
-        
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] realJID:realJID roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction alwaysReturnObject:YES];
+        OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:presenceJID realJID:buddyRealJID roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO; 
         } else {
             occupant.available = YES;
         }
-        
+        occupant.jid = [presenceJID full]; // Nicknames can change, so update
         occupant.roomName = [presenceJID resource];
         
         // Role

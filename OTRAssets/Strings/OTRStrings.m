@@ -22,6 +22,10 @@ NSString* ADD_EXISTING_STRING() { return [OTRLanguageManager translatedString:@"
 NSString* ADD_STRING() { return [OTRLanguageManager translatedString:@"Add"]; }
 /** "Advanced", String to describe advanced set of settings */
 NSString* ADVANCED_STRING() { return [OTRLanguageManager translatedString:@"Advanced"]; }
+/** "Restore iTunes backups to new devices", Description for allowing DB passphrase backup */
+NSString* ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING() { return [OTRLanguageManager translatedString:@"Restore iTunes backups to new devices"]; }
+/** "Allow Device Migration", Title for allowing DB passphrase backup */
+NSString* ALLOW_DB_PASSPHRASE_BACKUP_TITLE_STRING() { return [OTRLanguageManager translatedString:@"Allow Device Migration"]; }
 /** "Archive", Verb. action for archiving an old conversation */
 NSString* ARCHIVE_ACTION_STRING() { return [OTRLanguageManager translatedString:@"Archive"]; }
 /** "Archive", Noun. segmented control value for displaying archived conversations */

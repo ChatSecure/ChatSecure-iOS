@@ -8,19 +8,12 @@
 
 import Foundation
 
-public class SecondaryIndexName: NSObject {
-    /// XEP-0359 origin-id
-    public static let originId = "SecondaryIndexNameOriginId"
-    /// XEP-0359 stanza-id
-    public static let stanzaId = "SecondaryIndexNameStanzaId"
-}
 
 @objc public enum DatabaseExtensionName: Int {
     case groupOccupantsViewName
     case buddyDeleteActionViewName
     case relationshipExtensionName
     case actionManagerName
-    case secondaryIndexName
     case buddyFTSExtensionName
     case buddySearchResultsViewName
     case messageQueueBrokerViewName
@@ -31,7 +24,6 @@ public class SecondaryIndexName: NSObject {
             case .buddyDeleteActionViewName: return "BuddyDeleteActionViewName"
             case .relationshipExtensionName: return "OTRYapDatabaseRelationshipName"
             case .actionManagerName: return "OTRYapDatabaseActionManager"
-            case .secondaryIndexName: return "OTRYapDatabseMessageIdSecondaryIndexExtension"
             case .buddyFTSExtensionName: return "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
             case .buddySearchResultsViewName: return "DatabaseExtensionName.BuddySearchResultsView"
             case .messageQueueBrokerViewName: return "DatabaseExtensionName.MessageQueueBrokerViewName"
@@ -49,6 +41,7 @@ public class SecondaryIndexName: NSObject {
     case messageActionEdgeName
     case buddyActionEdgeName
     case download // for OTRDownloadMessage -> OTRBaseMessage
+    case room
     
     public func name() -> String {
         switch self {
@@ -61,17 +54,18 @@ public class SecondaryIndexName: NSObject {
             case .messageActionEdgeName: return "MessageActionEdgeName"
             case .buddyActionEdgeName: return "BuddyActionEdgeName"
             case .download: return "download"
+            case .room: return "room"
         }
     }
 }
 
-public class DatabaseNotificationName:NSObject {
-    public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
+@objc public class DatabaseNotificationName:NSObject {
+    @objc public static let LongLivedTransactionChanges = "DatabaseNotificationName.LongLivedTransactionChanges"
 }
 
-open class DatabaseNotificationKey:NSObject {
-    open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
-    open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
+@objc open class DatabaseNotificationKey:NSObject {
+    @objc open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
+    @objc open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
 }
 
 @objc public enum BuddyFTSColumnName:Int {
@@ -89,15 +83,15 @@ open class DatabaseNotificationKey:NSObject {
 /// This is for briding to obj-c. Looking for a better way of using swift enums and stirngs.
 @objc open class YapDatabaseConstants: NSObject {
 
-    open class func edgeName(_ edgeName:RelationshipEdgeName) -> String {
+    @objc open class func edgeName(_ edgeName:RelationshipEdgeName) -> String {
         return edgeName.name()
     }
     
-    open class func extensionName(_ extensionName:DatabaseExtensionName) -> String {
+    @objc open class func extensionName(_ extensionName:DatabaseExtensionName) -> String {
         return extensionName.name()
     }
     
-    open class func buddyFTSColumnName(_ columnName:BuddyFTSColumnName) -> String {
+    @objc open class func buddyFTSColumnName(_ columnName:BuddyFTSColumnName) -> String {
         return columnName.name()
     }
     
