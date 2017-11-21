@@ -512,7 +512,7 @@ extension FileTransferManager {
     /** creates downloadmessages and then downloads if needed. parent message should already be saved! @warn Do not call from within an existing db transaction! */
     @objc public func createAndDownloadItemsIfNeeded(message: OTRMessageProtocol, readConnection: YapDatabaseConnection, force: Bool) {
         DispatchQueue.global(qos: .default).async {
-            if message.messageMediaItemKey != nil || message.messageText?.characters.count == 0 || message.downloadableURLs.count == 0 {
+            if message.messageMediaItemKey != nil || message.messageText?.count == 0 || message.downloadableURLs.count == 0 {
                 //DDLogVerbose("Download of message not needed \(message.messageKey)")
                 return
             }
@@ -828,7 +828,7 @@ public extension String {
         }
         var urls: [URL] = []
         var ranges: [NSRange] = []
-        let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.characters.count))
+        let matches = detector.matches(in: self, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count))
         for match in matches where match.resultType == .link {
             if let url = match.url {
                 urls.append(url)
@@ -849,7 +849,7 @@ public extension String {
         let (_, ranges) = urlRanges
         guard ranges.count == 1,
             let range = ranges.first,
-            range.length == self.characters.count else {
+            range.length == self.count else {
             return false
         }
         return true

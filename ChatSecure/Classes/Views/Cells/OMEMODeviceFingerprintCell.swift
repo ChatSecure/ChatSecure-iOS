@@ -17,7 +17,7 @@ private extension String {
     //http://stackoverflow.com/a/34454633/805882
     func splitEvery(_ n: Int) -> [String] {
         var result: [String] = []
-        let chars = Array(characters)
+        let chars = Array(self)
         for index in stride(from: 0, to: chars.count, by: n) {
             result.append(String(chars[index..<min(index+n, chars.count)]))
         }

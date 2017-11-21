@@ -446,7 +446,7 @@ open class UserProfileViewController: XLFormViewController {
             fingerprint = (otrFingerprint.fingerprint as NSData).humanReadableFingerprint()
             username = otrFingerprint.username
         }
-        if fingerprint.characters.count == 0 || username.characters.count == 0 || cryptoType.characters.count == 0 {
+        if fingerprint.count == 0 || username.count == 0 || cryptoType.count == 0 {
             return
         }
         let stringToShare = "\(username): \(cryptoType) \(fingerprint)"
