@@ -114,8 +114,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         
         // Exit if OTRSessionSecurity is not set to use OTR
-        if (buddy.preferredSecurity != OTRSessionSecurityOTR &&
-            buddy.preferredSecurity != OTRSessionSecurityBestAvailable) {
+        if (buddy.preferredSecurity != OTRSessionSecurityOTR) {
             return;
         }
         
