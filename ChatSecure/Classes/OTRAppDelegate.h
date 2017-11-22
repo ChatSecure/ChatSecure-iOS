@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) showConversationViewController;
 
 /** The yap key for the active on-screen OTRThreadOwner. This should be moved */
-@property (class, nonatomic, readonly, nullable) NSString *activeThreadYapKey;
+@property (nonatomic, readonly, nullable) NSString *activeThreadYapKey;
 @property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
 #pragma mark Theming

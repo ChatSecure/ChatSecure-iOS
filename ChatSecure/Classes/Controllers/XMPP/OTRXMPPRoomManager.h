@@ -16,9 +16,15 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPRoomManager : XMPPModule
 
+@property (nonatomic, strong, readonly) XMPPCapabilities *capabilities;
 @property (nonatomic, strong, readonly) XMPPBookmarksModule *bookmarksModule;
 @property (nonatomic, strong, readonly, nullable)  NSArray<NSString*> *conferenceServicesJID;
-@property (nonatomic, strong, nullable) YapDatabaseConnection * databaseConnection;
+@property (nonatomic, strong, readonly) YapDatabaseConnection * databaseConnection;
+
+- (instancetype) init NS_UNAVAILABLE;
+- (instancetype) initWithDatabaseConnection:(YapDatabaseConnection*)databaseConnection
+                               capabilities:(XMPPCapabilities*)capabilities
+                              dispatchQueue:(nullable dispatch_queue_t)dispatchQueue;
 
 /** All room joining should go through this method. This ensures the delegates are setup properly and database is in sync. Returns OTRThreadOwner.threadIdentifier */
 - (nullable NSString *)joinRoom:(XMPPJID *)jid

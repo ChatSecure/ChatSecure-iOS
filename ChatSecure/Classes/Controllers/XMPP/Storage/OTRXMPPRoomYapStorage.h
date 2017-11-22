@@ -17,9 +17,8 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-
-- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
+- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection
+                              capabilities:(XMPPCapabilities*)capabilities;
 
 - (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
 @end

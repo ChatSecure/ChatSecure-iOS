@@ -28,9 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
 
 @property (nonatomic, strong, readonly) XMPPStreamManagement *streamManagement;
-@property (nonatomic, strong, readonly) XMPPMessageCarbons *messageCarbons;
-@property (nonatomic, strong, readonly) OTRXMPPMessageYapStorage *messageStorage;
 
+@property (nonatomic, strong, readonly) MessageStorage *messageStorage;
 @property (nonatomic, strong, readonly) OTRXMPPBuddyManager* xmppBuddyManager;
 @property (nonatomic, strong, readonly) OMEMOModule *omemoModule;
 @property (nonatomic, strong, nullable) OTRXMPPChangePasswordManager *changePasswordManager;

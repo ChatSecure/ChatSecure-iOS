@@ -17,16 +17,20 @@
 
 @interface OTRXMPPRoomYapStorage ()
 
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 @property (nonatomic) dispatch_queue_t parentQueue;
+@property (nonatomic, strong, readonly) XMPPCapabilities *capabilities;
 
 @end
 
 @implementation OTRXMPPRoomYapStorage
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection
+                              capabilities:(nonnull XMPPCapabilities *)capabilities
 {
     if (self = [self init]){
-        self.databaseConnection = databaseConnection;
+        _databaseConnection = databaseConnection;
+        _capabilities = capabilities;
     }
     return self;
 }
@@ -78,7 +82,7 @@
         [OTRXMPPRoomMessage handleDeliveryReceiptRequestWithMessage:message xmppStream:room.xmppStream];
         
         // Extract XEP-0359 stanza-id
-        NSString *stanzaId = [message extractStanzaIdWithAccount:account];
+        NSString *stanzaId = [message extractStanzaIdWithAccount:account capabilities:self.capabilities];
         NSString *originId = message.originId;
         databaseMessage.originId = originId;
         databaseMessage.stanzaId = stanzaId;

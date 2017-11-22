@@ -45,7 +45,7 @@ public extension OTRXMPPRoomManager {
             return
         }
         var rooms: [OTRXMPPRoom] = []
-        self.databaseConnection?.asyncReadWrite({ (transaction) in
+        self.databaseConnection.asyncReadWrite({ (transaction) in
             incomingRooms.forEach({ (room) in
                 // Don't overwrite existing rooms with incoming rooms
                 if let existingRoom = OTRXMPPRoom.fetchObject(withUniqueID: room.uniqueId, transaction: transaction) {

@@ -34,8 +34,12 @@
 
 @implementation OTRXMPPRoomManager
 
-- (instancetype)init {
-    if (self = [super init]) {
+-  (instancetype) initWithDatabaseConnection:(YapDatabaseConnection*)databaseConnection
+                                capabilities:(XMPPCapabilities*)capabilities
+                               dispatchQueue:(nullable dispatch_queue_t)dispatchQueue {
+    if (self = [super initWithDispatchQueue:dispatchQueue]) {
+        _databaseConnection = databaseConnection;
+        _capabilities = capabilities;
         _mucModule = [[XMPPMUC alloc] init];
         _inviteDictionary = [[NSMutableDictionary alloc] init];
         _tempRoomSubject = [[NSMutableDictionary alloc] init];
@@ -82,7 +86,7 @@
     __block NSString *nickname = name;
     
     if (!room) {
-        OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
+        OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection capabilities:self.capabilities];
         room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
         [self setRoom:room forJID:room.roomJID];
         [room activate:self.xmppStream];

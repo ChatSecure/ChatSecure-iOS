@@ -10,11 +10,10 @@ import Foundation
 
 public extension XMPPMessage {
     /// Safely extracts XEP-0359 stanza-id
-    @objc public func extractStanzaId(account: OTRXMPPAccount) -> String? {
+    @objc public func extractStanzaId(account: OTRXMPPAccount, capabilities: XMPPCapabilities) -> String? {
         let stanzaIds = self.stanzaIds
         guard stanzaIds.count > 0,
-        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager,
-        xmpp.xmppCapabilities.hasValidStanzaId(self) else {
+        capabilities.hasValidStanzaId(self) else {
             return nil
         }
         var byJID: XMPPJID? = nil

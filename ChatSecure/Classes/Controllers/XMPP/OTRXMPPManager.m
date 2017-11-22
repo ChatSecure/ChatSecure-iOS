@@ -242,19 +242,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:sessionConfiguration];
     
     // Message storage
-    _messageStorage = [[OTRXMPPMessageYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
+    _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection capabilities:self.xmppCapabilities dispatchQueue:nil];
     [self.messageStorage activate:self.xmppStream];
-    
-    // Message Carbons
-    _messageCarbons = [[XMPPMessageCarbons alloc] init];
-    [self.messageCarbons addDelegate:self.messageStorage delegateQueue:self.messageStorage.moduleDelegateQueue];
-    [self.messageCarbons activate:self.xmppStream];
-    
-    // Message archiving
-    _xmppMAM = [[XMPPMessageArchiveManagement alloc] init];
-    [self.xmppMAM addDelegate:self.messageStorage delegateQueue:self.messageStorage.moduleDelegateQueue];
-    [self.xmppMAM activate:self.xmppStream];
-    
     
     //Stream Management
     _streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:self.databaseConnection];
@@ -269,8 +258,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.streamManagement activate:self.xmppStream];
     
     //MUC
-    _roomManager = [[OTRXMPPRoomManager alloc] init];
-    self.roomManager.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    _roomManager = [[OTRXMPPRoomManager alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection capabilities:self.xmppCapabilities dispatchQueue:nil];
     [self.roomManager activate:self.xmppStream];
     
     //Buddy Manager (for deleting)
@@ -316,7 +304,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [_xmppvCardAvatarModule deactivate];
     [_xmppCapabilities      deactivate];
     [_streamManagement      deactivate];
-    [_messageCarbons        deactivate];
     [_messageStorage        deactivate];
     [_certificatePinningModule deactivate];
     [_deliveryReceipts deactivate];
@@ -894,7 +881,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
     
     // Testing MAM
-    [self.xmppMAM retrieveMessageArchiveWithFields:nil withResultSet:nil];
+    [self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error

@@ -147,7 +147,7 @@
         
         // Extract XEP-0359 stanza-id
         NSString *originId = xmppMessage.originId;
-        NSString *stanzaId = [xmppMessage extractStanzaIdWithAccount:account];
+        NSString *stanzaId = @"";// [xmppMessage extractStanzaIdWithAccount:account capabilities:self.capabilities];
         message.originId = originId;
         message.stanzaId = stanzaId;
         
@@ -241,7 +241,7 @@
         }
         // Extract XEP-0359 stanza-id
         NSString *originId = forwardedMessage.originId;
-        NSString *stanzaId = [forwardedMessage extractStanzaIdWithAccount:account];
+        NSString *stanzaId = @"";// [forwardedMessage extractStanzaIdWithAccount:account];
 
         if (incoming) {
             [self handleChatState:forwardedMessage fromJID:jid stream:stream transaction:transaction];
