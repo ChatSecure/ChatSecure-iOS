@@ -309,6 +309,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     _buddyAvatarImage = nil;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    // After the transition is done, we need to reset the size caches and relayout
+    // Do this using the technique in https://stackoverflow.com/questions/26943808/ios-how-to-run-a-function-after-device-has-rotated-swift
+    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [self.messageSizeCache removeAllObjects];
+        [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+    }];
+}
+
 #pragma - mark Setters & getters
 
 - (OTRAttachmentPicker *)attachmentPicker
