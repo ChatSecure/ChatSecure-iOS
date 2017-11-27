@@ -329,7 +329,29 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 
 - (id)yapDatabaseRelationshipEdgeDeleted:(YapDatabaseRelationshipEdge *)edge withReason:(YDB_NotifyReason)reason
 {
-    //TODO:Delete File because the parent OTRMessage was deleted
+    //#865 Delete File because the parent OTRMessage was deleted
+    __block id<OTRThreadOwner> thread = nil;
+    __block id<OTRMessageProtocol> message = nil;
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        message = [self parentMessageWithTransaction:transaction];
+        thread = [message threadOwnerWithTransaction:transaction];
+    }];
+    if (!message || !thread) {
+        DDLogError(@"Missing parent message or thread for media message!");
+        return nil;
+    }
+    
+    NSString *buddyUniqueId = [thread threadIdentifier];
+    if (!buddyUniqueId) {
+        return nil;
+    }
+    
+    [[OTRMediaFileManager sharedInstance] deleteDataForItem:self buddyUniqueId:buddyUniqueId completion:^(BOOL success, NSError *error) {
+        if (error) {
+            DDLogError(@"ERROR in deleting data for media item");
+        }
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    
     return nil;
 }
 
