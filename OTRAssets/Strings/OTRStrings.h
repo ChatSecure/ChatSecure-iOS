@@ -18,6 +18,8 @@ FOUNDATION_EXPORT NSString* ACTIVE_STRING();
 FOUNDATION_EXPORT NSString* ADD_BUDDY_STRING();
 /** "Add Existing Account", Label for button to create account by logging into an existing account */
 FOUNDATION_EXPORT NSString* ADD_EXISTING_STRING();
+/** "Is %@ your friend? Add him/her to auto-download pictures in the future.", Shown in chat view to prompt user to add friend for auto-download of group media messages. */
+FOUNDATION_EXPORT NSString* ADD_FRIEND_TO_AUTO_DOWNLOAD();
 /** "Add", Button title to add someone as a buddy */
 FOUNDATION_EXPORT NSString* ADD_STRING();
 /** "Advanced", String to describe advanced set of settings */

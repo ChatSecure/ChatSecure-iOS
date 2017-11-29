@@ -523,6 +523,14 @@ extension FileTransferManager {
                     downloads = message.existingDownloads(with: transaction)
                     if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier, transaction: transaction) {
                         disableAutomaticURLFetching = account.disableAutomaticURLFetching
+                        if !disableAutomaticURLFetching, let room = thread as? OTRXMPPRoom, let message = message as? OTRXMPPRoomMessage {
+                            // For room messages, default to safe mode
+                            disableAutomaticURLFetching = true
+                            if let senderJidString = message.senderJID, let senderJID = XMPPJID(string: senderJidString), let roomJID = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJID, realJID: senderJID, roomJID: roomJID, accountId: thread.threadAccountIdentifier, createIfNeeded: false, transaction: transaction), occupant.buddy(with: transaction) != nil {
+                                // We have a buddy, i.e. we are friends with the sender.
+                                disableAutomaticURLFetching = false
+                            }
+                        }
                     }
                 }
             }
