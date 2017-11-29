@@ -18,6 +18,8 @@ NSString* ACTIVE_STRING() { return [OTRLanguageManager translatedString:@"Active
 NSString* ADD_BUDDY_STRING() { return [OTRLanguageManager translatedString:@"Add Buddy"]; }
 /** "Add Existing Account", Label for button to create account by logging into an existing account */
 NSString* ADD_EXISTING_STRING() { return [OTRLanguageManager translatedString:@"Add Existing Account"]; }
+/** "Is %@ your friend? Add him/her to auto-download pictures in the future.", Shown in chat view to prompt user to add friend for auto-download of group media messages. */
+NSString* ADD_FRIEND_TO_AUTO_DOWNLOAD() { return [OTRLanguageManager translatedString:@"Is %@ your friend? Add him/her to auto-download pictures in the future."]; }
 /** "Add", Button title to add someone as a buddy */
 NSString* ADD_STRING() { return [OTRLanguageManager translatedString:@"Add"]; }
 /** "Advanced", String to describe advanced set of settings */
