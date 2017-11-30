@@ -26,6 +26,10 @@ public enum CapabilityCode: String {
     case XEP0363 = "XEP-0363"
     /// XEP-0352: Client State Indication https://xmpp.org/extensions/xep-0352.html
     case XEP0352 = "XEP-0352"
+    /// XEP-0359: Unique and Stable Stanza IDs https://xmpp.org/extensions/xep-0359.html
+    case XEP0359 = "XEP-0359"
+    /// XEP-0313: Message Archive Management https://xmpp.org/extensions/xep-0313.html
+    case XEP0313 = "XEP-0313"
 }
 
 @objc(OTRServerCapabilityInfo)
@@ -77,6 +81,18 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
             subtitle: "\(CapabilityCode.XEP0352.rawValue): Helps reduce network usage when running in the background.",
             xmlns: "urn:xmpp:csi",
             url: NSURL(string: "https://xmpp.org/extensions/xep-0352.html")!)
+        caps[.XEP0359] = ServerCapabilityInfo(
+            code: .XEP0359,
+            title: "Unique and Stable Stanza IDs",
+            subtitle: "\(CapabilityCode.XEP0359.rawValue): Improves message deduplication accuracy.",
+            xmlns: "urn:xmpp:sid",
+            url: NSURL(string: "https://xmpp.org/extensions/xep-0359.html")!)
+        caps[.XEP0313] = ServerCapabilityInfo(
+            code: .XEP0313,
+            title: "Message Archive Management",
+            subtitle: "\(CapabilityCode.XEP0313.rawValue): History synchronization across your devices.",
+            xmlns: "urn:xmpp:mam",
+            url: NSURL(string: "https://xmpp.org/extensions/xep-0313.html")!)
         return caps
     }
     
