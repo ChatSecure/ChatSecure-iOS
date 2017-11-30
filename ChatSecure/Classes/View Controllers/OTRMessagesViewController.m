@@ -1643,6 +1643,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return nil;
     }
     
+    if (!message.isMessageIncoming) {
+        return [self accountAvatarImage];
+    }
+    
     NSError *messageError = [message messageError];
     if ((messageError && !messageError.isAutomaticDownloadError) ||
         ![self isMessageTrusted:message]) {
@@ -1667,8 +1671,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if (!avatarImage) {
                 avatarImage = [roomOccupant avatarImage];
             }
-        } else {
+        } else if (roomMessage.senderJID) {
             avatarImage = [OTRImages avatarImageWithUsername:[[XMPPJID jidWithString:roomMessage.senderJID] resource]];
+        } else {
+            return nil;
         }
         if (avatarImage) {
             NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
