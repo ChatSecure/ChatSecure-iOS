@@ -27,6 +27,8 @@ import SignalProtocolObjC
     @objc open weak var omemoModuleQueue:DispatchQueue?
     @objc open var callbackQueue:DispatchQueue
     @objc open let workQueue:DispatchQueue
+    @objc open let messageStorage: MessageStorage
+    
     fileprivate var myJID:XMPPJID? {
         get {
             return omemoModule?.xmppStream?.myJID
@@ -40,7 +42,8 @@ import SignalProtocolObjC
      - parameter accountYapKey: The accounts unique yap key
      - parameter databaseConnection: A yap database connection on which all operations will be completed on
  `  */
-    @objc public required init(accountYapKey:String,  databaseConnection:YapDatabaseConnection) throws {
+    @objc public required init(accountYapKey:String,  databaseConnection:YapDatabaseConnection,
+                               messageStorage: MessageStorage) throws {
         try self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection, databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
@@ -48,6 +51,7 @@ import SignalProtocolObjC
         self.outstandingXMPPStanzaResponseBlocks = [:]
         self.callbackQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-callback", attributes: [])
         self.workQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-work", attributes: [])
+        self.messageStorage = messageStorage
     }
     
     /**
@@ -355,38 +359,40 @@ import SignalProtocolObjC
         }
     }
     
-    open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
+    open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, forJID: XMPPJID, payload: Data?, delayed: Date?, forwarded: Bool, isIncoming: Bool, message: XMPPMessage) {
         let aesGcmBlockLength = 16
-        guard let encryptedPayload = payload, encryptedPayload.count > 0 else {
+        guard let encryptedPayload = payload, encryptedPayload.count > 0, let myJID = self.myJID else {
             return
         }
-        
+        var addressJID = forJID.bareJID
+        if !isIncoming {
+            addressJID = myJID.bareJID
+        }
         let rid = self.signalEncryptionManager.registrationId
         
         //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
         var unencryptedKeyData: Data?
-        for key in keyData {
-            if key.deviceId == rid {
-                let keyData = key.data
-                do {
-                    unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: fromJID.bare, deviceId: senderDeviceId)
-                    // have successfully decripted the AES key. We should break and use it to decrypt the payload
-                    break
-                } catch let error {
-                    DDLogError("Error decrypting: \(error)")
-                    let nsError = error as NSError
-                    if nsError.domain == SignalErrorDomain, nsError.code == SignalError.duplicateMessage.rawValue {
-                        // duplicate messages are benign and can be ignored
-                        return
-                    }
-                    let buddyAddress = SignalAddress(name: fromJID.bare, deviceId: Int32(senderDeviceId))
-                    if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
-                        // Session is corrupted
-                        let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
-                        DDLogError("Session exists and is possibly corrupted. Deleting...")
-                    }
+        for key in keyData where key.deviceId == rid {
+            let keyData = key.data
+            do {
+                unencryptedKeyData = try self.signalEncryptionManager.decryptFromAddress(keyData, name: addressJID.bare, deviceId: senderDeviceId)
+                // have successfully decripted the AES key. We should break and use it to decrypt the payload
+                break
+            } catch let error {
+                DDLogError("Error decrypting OMEMO message for \(addressJID): \(error) \(message)")
+                let nsError = error as NSError
+                if nsError.domain == SignalErrorDomain, nsError.code == SignalError.duplicateMessage.rawValue {
+                    // duplicate messages are benign and can be ignored
+                    DDLogInfo("Ignoring duplicate OMEMO message: \(message)")
                     return
                 }
+                let buddyAddress = SignalAddress(name: addressJID.bare, deviceId: Int32(senderDeviceId))
+                if self.signalEncryptionManager.storage.sessionRecordExists(for: buddyAddress) {
+                    // Session is corrupted
+                    let _ = self.signalEncryptionManager.storage.deleteSessionRecord(for: buddyAddress)
+                    DDLogError("Session exists and is possibly corrupted. Deleting...")
+                }
+                return
             }
         }
         
@@ -418,52 +424,25 @@ import SignalProtocolObjC
         }
         
         do {
-            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag) else {
+            guard let messageBody = try OTRSignalEncryptionHelper.decryptData(encryptedBody, key: aesKey, iv: iv, authTag: tag),
+            let messageString = String(data: messageBody, encoding: String.Encoding.utf8),
+            messageString.count > 0 else {
                 return
             }
-            let messageString = String(data: messageBody, encoding: String.Encoding.utf8)
-            var databaseMessage:OTRBaseMessage = OTRIncomingMessage()
-            guard let ourJID = self.myJID else {
-                return
-            }
-            var relatedBuddyUsername: String? = fromJID.bare
-            var innerMessage = message
-            if message.isTrustedMessageCarbon(forMyJID: ourJID),
-                let forwarded = message.messageCarbonForwarded {
-                //This came from another of our devices this is really going to be an outgoing message
-                innerMessage = forwarded
-                if (message.isReceivedMessageCarbon) {
-                    relatedBuddyUsername = innerMessage.from?.bare
-                } else {
-                    relatedBuddyUsername = innerMessage.to?.bare
-                    let outgoingMessage = OTROutgoingMessage()!
-                    outgoingMessage.dateSent = Date()
-                    databaseMessage = outgoingMessage
-                }
-            }
             
-            var xmpp: OTRXMPPManager? = nil
-            var account: OTRAccount? = nil
-            
-            self.databaseConnection.asyncReadWrite({ (transaction) in
-                
-                guard let buddyUsernmae = relatedBuddyUsername, let jid = XMPPJID(string: buddyUsernmae), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountYapKey, transaction: transaction) else {
+            let preSave: MessageStorage.PreSave = { message, transaction in
+                guard let buddy = OTRXMPPBuddy.fetchBuddy(jid: forJID, accountUniqueId: self.accountYapKey, transaction: transaction) else {
                     return
                 }
-                databaseMessage.text = messageString
-                databaseMessage.buddyUniqueId = buddy.uniqueId
-                
+
                 let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
                 let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection)
-                databaseMessage.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection)
-                if let id = innerMessage.elementID {
-                    databaseMessage.messageId = id
-                }
+                message.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection)
                 
-                databaseMessage.save(with: transaction)
+                message.save(with: transaction)
                 
                 // Should we be using the date of the xmpp message?
-                buddy.lastMessageId = databaseMessage.uniqueId
+                buddy.lastMessageId = message.uniqueId
                 buddy.save(with: transaction)
                 
                 //Update device last received message
@@ -472,34 +451,17 @@ import SignalProtocolObjC
                 }
                 let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: Date())
                 newDevice.save(with: transaction)
-                
-                // Send delivery receipt
-                account = OTRAccount.fetchObject(withUniqueID: buddy.accountUniqueId, transaction: transaction)
-                if let account = account {
-                    xmpp = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager
-                } else {
-                    return
-                }
-                
-                if let incomingMessage = databaseMessage as? OTRIncomingMessage {
-                    xmpp?.sendDeliveryReceipt(for: incomingMessage)
-                }
-                
-                }, completionQueue: DispatchQueue.main,
-                   completionBlock: {
-                    guard let _ = databaseMessage.text else {
-                        return
-                    }
-                    
-                    xmpp?.fileTransferManager.createAndDownloadItemsIfNeeded(message: databaseMessage, readConnection: OTRDatabaseManager.shared.readOnlyDatabaseConnection ?? self.databaseConnection, force: false)
-                    UIApplication.shared.showLocalNotification(databaseMessage)
-            })
-            // Display local notification
+            }
             
-        } catch {
+            if forwarded {
+                self.messageStorage.handleForwardedMessage(message, forJID: forJID, body: messageString, accountId: self.accountYapKey, delayed: delayed, isIncoming: isIncoming, preSave: preSave)
+            } else {
+                self.messageStorage.handleDirectMessage(message, body: messageString, accountId: self.accountYapKey, preSave: preSave)
+            }
+        } catch let error {
+            DDLogError("Message decryption error: \(error)")
             return
         }
-
     }
 }
 
@@ -595,7 +557,11 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, receivedKeyData keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, from fromJID: XMPPJID, payload: Data?, message: XMPPMessage) {
-        self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, fromJID: fromJID, payload: payload, message: message)
+        self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, forJID: fromJID, payload: payload, delayed: nil, forwarded: false, isIncoming: true, message: message)
+    }
+    
+    public func omemo(_ omemo: OMEMOModule, receivedForwardedKeyData keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, for forJID: XMPPJID, payload: Data?, isIncoming: Bool, delayed: Date?, forwardedMessage: XMPPMessage, originalMessage: XMPPMessage) {
+        self.processKeyData(keyData, iv: iv, senderDeviceId: senderDeviceId, forJID: forJID, payload: payload, delayed: delayed, forwarded: true, isIncoming: isIncoming, message: forwardedMessage)
     }
 }
 

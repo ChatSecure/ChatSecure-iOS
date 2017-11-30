@@ -24,7 +24,5 @@ NS_ASSUME_NONNULL_BEGIN
 /** Mark message as deliverd via XEP-0184.*/
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 
-+ (void)receivedDeliveryReceiptForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
-
 @end
 NS_ASSUME_NONNULL_END

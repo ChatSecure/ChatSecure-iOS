@@ -17,7 +17,7 @@ import OTRAssets
  */
 public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDelegate {
     
-    @objc public weak var xmpp: OTRXMPPManager?
+    @objc public weak var xmpp: XMPPManager?
     @objc public let push: PushController
     
     @objc public var result = ServerCheckResult()
@@ -31,7 +31,7 @@ public class ServerCheck: NSObject, OTRServerCapabilitiesDelegate, XMPPPushDeleg
     }
     
     
-    @objc public init(xmpp: OTRXMPPManager, push: PushController) {
+    @objc public init(xmpp: XMPPManager, push: PushController) {
         self.push = push
         self.xmpp = xmpp
         super.init()

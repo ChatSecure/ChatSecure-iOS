@@ -35,7 +35,7 @@ open class UserProfileViewController: XLFormViewController {
             return nil
         }
         
-        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: acct) as? OTRXMPPManager else {
+        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: acct) as? XMPPManager else {
             return nil
         }
         return xmpp.omemoSignalCoordinator
@@ -300,7 +300,7 @@ open class UserProfileViewController: XLFormViewController {
         yourProfileRow.value = account
         yourProfileSection.addFormRow(yourProfileRow)
         
-        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
             return form
         }
         guard let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() else {

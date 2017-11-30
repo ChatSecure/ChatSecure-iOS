@@ -129,15 +129,15 @@
         
         [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];
-    } completionBlock:^{
+        
         if(databaseMessage) {
             OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
-            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage force:NO transaction:transaction];
             // If delayedDeliveryDate is set we are retrieving history. Don't show
             // notifications in that case. Also, don't show notifications for archived
             // rooms.
             if (!message.delayedDeliveryDate && !databaseRoom.isArchived) {
-                [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+                [[UIApplication sharedApplication] showLocalNotification:databaseMessage transaction:transaction];
             }
         }
     }];

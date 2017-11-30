@@ -345,9 +345,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
             xmpp = (OTRXMPPManager*) [[OTRProtocolManager sharedInstance] protocolForAccount:account];
             [xmpp sendDeliveryReceiptForMessage:originalMessage];
-        } completionBlock:^{
-            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:originalMessage readConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection force:NO];
-            [[UIApplication sharedApplication] showLocalNotification:originalMessage];
+            
+            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:originalMessage force:NO transaction:transaction];
+            [[UIApplication sharedApplication] showLocalNotification:originalMessage transaction:transaction];
         }];
     }
     

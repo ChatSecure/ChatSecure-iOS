@@ -242,7 +242,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:sessionConfiguration];
     
     // Message storage
-    _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection capabilities:self.xmppCapabilities dispatchQueue:nil];
+    _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection capabilities:self.xmppCapabilities fileTransfer:self.fileTransferManager dispatchQueue:nil];
     [self.messageStorage activate:self.xmppStream];
     
     //Stream Management
@@ -274,7 +274,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     //OMEMO
     if ([[OTRAppDelegate appDelegate].theme enableOMEMO]) {
-        self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection error:nil];
+        self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection messageStorage:self.messageStorage error:nil];
         _omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator xmlNamespace:OMEMOModuleNamespaceConversationsLegacy];
         [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.workQueue];
         [self.omemoModule activate:self.xmppStream];
@@ -880,8 +880,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
     
-    // Testing MAM
-    [self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
+    // [self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error

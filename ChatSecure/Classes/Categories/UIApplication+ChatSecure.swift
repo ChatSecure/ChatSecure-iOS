@@ -40,15 +40,13 @@ public extension UIApplication {
         }
     }
     
-    @objc public func showLocalNotification(_ message:OTRMessageProtocol) {
+    @objc public func showLocalNotification(_ message:OTRMessageProtocol, transaction: YapDatabaseReadTransaction) {
         var thread:OTRThreadOwner? = nil
         var unreadCount:UInt = 0
         var mediaItem: OTRMediaItem? = nil
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read({ (transaction) -> Void in
-            unreadCount = transaction.numberOfUnreadMessages()
-            thread = message.threadOwner(with: transaction)
-            mediaItem = OTRMediaItem.init(forMessage: message, transaction: transaction)
-        })
+        unreadCount = transaction.numberOfUnreadMessages()
+        thread = message.threadOwner(with: transaction)
+        mediaItem = OTRMediaItem.init(forMessage: message, transaction: transaction)
         guard let threadOwner = thread else {
             return
         }

@@ -202,15 +202,15 @@ public extension OTRXMPPBuddy {
         if matchingBuddies.count > 1 {
             DDLogWarn("WARN: More than one OTRXMPPBuddy matching query \(query) \(jid) \(accountUniqueId): \(matchingBuddies.count)")
         }
-        #if DEBUG
-            if matchingBuddies.count == 0 {
-                DDLogWarn("WARN: No OTRXMPPBuddy matching query \(jid) \(accountUniqueId)")
-                let buddy = slowLookup(jid: jid, accountUniqueId: accountUniqueId, transaction: transaction)
-                if buddy != nil {
-                    DDLogWarn("WARN: Found buddy using O(n) lookup that wasn't found in secondary index: \(jid) \(accountUniqueId)")
-                }
-            }
-        #endif
+//        #if DEBUG
+//            if matchingBuddies.count == 0 {
+//                DDLogWarn("WARN: No OTRXMPPBuddy matching query \(jid) \(accountUniqueId)")
+//                let buddy = slowLookup(jid: jid, accountUniqueId: accountUniqueId, transaction: transaction)
+//                if buddy != nil {
+//                    DDLogWarn("WARN: Found buddy using O(n) lookup that wasn't found in secondary index: \(jid) \(accountUniqueId)")
+//                }
+//            }
+//        #endif
         return matchingBuddies.first
     }
 }

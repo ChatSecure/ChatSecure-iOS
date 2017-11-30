@@ -211,7 +211,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate func sendDirectMessage(_ message: OTROutgoingMessage,
                                        buddy: OTRXMPPBuddy,
                                        account: OTRAccount,
-                                       accountProtocol: OTRXMPPManager,
+                                       accountProtocol: XMPPManager,
                                        messageSendingAction:OTRYapMessageSendAction,
                                        completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
         switch message.messageSecurity {
@@ -237,7 +237,7 @@ public class MessageQueueHandler:NSObject {
     fileprivate func sendGroupMessage(_ message: OTRXMPPRoomMessage,
                                       thread: OTRThreadOwner,
                                       account: OTRAccount,
-                                      accountProtocol: OTRXMPPManager,
+                                      accountProtocol: XMPPManager,
                                       messageSendingAction:OTRYapMessageSendAction,
                                       completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
         let roomManager = accountProtocol.roomManager
@@ -288,7 +288,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }
@@ -342,7 +342,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }
@@ -377,7 +377,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? OTRXMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }
@@ -560,7 +560,7 @@ extension MessageQueueHandler {
         }
     }
     
-    func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:OTRXMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
+    func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:XMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
         guard let text = message.text, text.count > 0 else {
             completion(true, 0.0)
             return

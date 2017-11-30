@@ -157,25 +157,13 @@ open class OTROMEMOStorageManager {
     open func storeBuddyDevices(_ devices:[NSNumber], buddyUsername:String, completion:(()->Void)?) {
         self.databaseConnection.asyncReadWrite { (transaction) in
             // Fetch the buddy from the database.
-            var buddy: OTRXMPPBuddy? = nil
-            if let jid = XMPPJID(string: buddyUsername) {
-                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction)
+            guard let jid = XMPPJID(string: buddyUsername), let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) else {
+                // If this is teh first launch the buddy will not be in the buddy list becuase the roster comes in after device list from PEP.
+                DDLogWarn("Could not find buddy to store devices \(buddyUsername)")
+                return
             }
-            // If this is teh first launch the buddy will not be in the buddy list becuase the roster comes in after device list from PEP.
-            // So we create a buddy witht the minimial information we have in order to save the device list.
-            if (buddy == nil) {
-                buddy = OTRXMPPBuddy()
-                buddy?.username = buddyUsername
-                buddy?.accountUniqueId = self.accountKey
-                buddy?.save(with: transaction)
-            }
-            if let bud = buddy {
-                self.storeDevices(devices, parentYapKey: bud.uniqueId, parentYapCollection: type(of: bud).collection, transaction: transaction)
-                if let completion = completion {
-                    completion()
-                }
-            }
-            
+            self.storeDevices(devices, parentYapKey: buddy.uniqueId, parentYapCollection: buddy.threadCollection, transaction: transaction)
+            completion?()
         }
     }
 }

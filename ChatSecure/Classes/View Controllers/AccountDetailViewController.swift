@@ -46,9 +46,9 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     var detailCells: [DetailCellInfo] = []
     let DetailCellIdentifier = "DetailCellIdentifier"
     
-    let xmpp: OTRXMPPManager
+    let xmpp: XMPPManager
     
-    @objc public init(account: OTRXMPPAccount, xmpp: OTRXMPPManager, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
+    @objc public init(account: OTRXMPPAccount, xmpp: XMPPManager, longLivedReadConnection: YapDatabaseConnection, writeConnection: YapDatabaseConnection) {
         self.account = account
         self.longLivedReadConnection = longLivedReadConnection
         self.writeConnection = writeConnection
@@ -143,7 +143,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
         let delete = UIAlertAction(title: DELETE_ACCOUNT_BUTTON_STRING(), style: .destructive) { (action) in
             let protocols = OTRProtocolManager.sharedInstance()
-            if let xmpp = protocols.protocol(for: account) as? OTRXMPPManager,
+            if let xmpp = protocols.protocol(for: account) as? XMPPManager,
                 xmpp.connectionStatus != .disconnected {
                 xmpp.disconnect()
             }
@@ -165,7 +165,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
         let logout = UIAlertAction(title: LOGOUT_STRING(), style: .destructive) { (action) in
             let protocols = OTRProtocolManager.sharedInstance()
-            if let xmpp = protocols.protocol(for: account) as? OTRXMPPManager,
+            if let xmpp = protocols.protocol(for: account) as? XMPPManager,
                 xmpp.connectionStatus != .disconnected {
                 xmpp.disconnect()
             }

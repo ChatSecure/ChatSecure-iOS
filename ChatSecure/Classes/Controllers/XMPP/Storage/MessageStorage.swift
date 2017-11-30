@@ -10,7 +10,11 @@ import Foundation
 import XMPPFramework
 import CocoaLumberjack
 
+
 @objc public class MessageStorage: XMPPModule {
+    /// This gets called before a message is saved, if additional processing needs to be done elsewhere
+    public typealias PreSave = (_ message: OTRBaseMessage, _ transaction: YapDatabaseReadWriteTransaction) -> Void
+
     // MARK: Properties
     private let connection: YapDatabaseConnection
     
@@ -18,6 +22,7 @@ import CocoaLumberjack
     @objc public let capabilities: XMPPCapabilities
     @objc public let carbons: XMPPMessageCarbons
     @objc public let archiving: XMPPMessageArchiveManagement
+    @objc public let fileTransfer: FileTransferManager
 
     // MARK: Init
     deinit {
@@ -28,11 +33,13 @@ import CocoaLumberjack
     /// Capabilities must be activated elsewhere
     @objc public init(connection: YapDatabaseConnection,
                       capabilities: XMPPCapabilities,
+                      fileTransfer: FileTransferManager,
                       dispatchQueue: DispatchQueue? = nil) {
         self.connection = connection
         self.capabilities = capabilities
         self.carbons = XMPPMessageCarbons(dispatchQueue: dispatchQueue)
         self.archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        self.fileTransfer = fileTransfer
         super.init(dispatchQueue: dispatchQueue)
         self.carbons.addDelegate(self, delegateQueue: self.moduleQueue)
         self.archiving.addDelegate(self, delegateQueue: self.moduleQueue)
@@ -64,14 +71,38 @@ import CocoaLumberjack
         OTRBuddyCache.shared.setChatState(chatState, for: buddy)
     }
     
-    /// Marks a previously sent outgoing message as delivered
+    /// Marks a previously sent outgoing message as delivered.
     private func handleDeliveryResponse(message: XMPPMessage, transaction: YapDatabaseReadWriteTransaction) {
         guard message.hasReceiptResponse,
             !message.isErrorMessage,
             let responseId = message.receiptResponseID else {
                 return
         }
-        OTROutgoingMessage.receivedDeliveryReceipt(forMessageId: responseId, transaction: transaction)
+        var _deliveredMessage: OTROutgoingMessage? = nil
+        transaction.enumerateMessages(elementId: responseId, originId: responseId, stanzaId: nil) { (message, stop) in
+            if let message = message as? OTROutgoingMessage {
+                _deliveredMessage = message
+                stop.pointee = true
+            }
+        }
+        if _deliveredMessage == nil {
+            DDLogVerbose("Outgoing message not found for receipt: \(message)")
+            // This can happen with MAM + OMEMO where the decryption
+            // for the OMEMO message makes it come in after the receipt
+            // To solve this, we need to make a placeholder message...
+            
+            // TODO.......
+        }
+        guard let deliveredMessage = _deliveredMessage,
+            deliveredMessage.isDelivered == false,
+            deliveredMessage.dateDelivered == nil else {
+            return
+        }
+        if let deliveredMessage = deliveredMessage.copyAsSelf() {
+            deliveredMessage.isDelivered = true
+            deliveredMessage.dateDelivered = Date()
+            deliveredMessage.save(with: transaction)
+        }        
     }
     
     /// It is a violation of the XMPP spec to discard messages with duplicate stanza elementIds. We must use XEP-0359 stanza-id only.
@@ -87,65 +118,75 @@ import CocoaLumberjack
     }
     
     /// Handles both MAM and Carbons
-    private func handleForwardedMessage(_ xmppMessage: XMPPMessage,
+    public func handleForwardedMessage(_ xmppMessage: XMPPMessage,
+                                        forJID: XMPPJID,
+                                        body: String?,
                                         accountId: String,
                                         delayed: Date?,
-                                        isIncoming: Bool) {
-        guard xmppMessage.isMessageWithBody,
-            !xmppMessage.isErrorMessage,
-            let messageBody = xmppMessage.body,
-            OTRKit.stringStarts(withOTRPrefix: messageBody) else {
+                                        isIncoming: Bool,
+                                        preSave: PreSave? = nil ) {
+        guard !xmppMessage.isErrorMessage else {
             DDLogWarn("Discarding forwarded message: \(xmppMessage)")
             return
         }
-        
-        //Sent Message Carbons are sent by our account to another
-        //So from is our JID and to is buddy
-        var _jid: XMPPJID? = nil
-        if isIncoming {
-            _jid = xmppMessage.from
-        } else {
-            _jid = xmppMessage.to
-        }
-        guard let jid = _jid else {
+        // Ignore OTR text
+        if let messageBody = xmppMessage.body, messageBody.isOtrText {
             return
         }
-        
+
         connection.asyncReadWrite { (transaction) in
             guard let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction),
-                let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) else {
+                let buddy = OTRXMPPBuddy.fetchBuddy(jid: forJID, accountUniqueId: accountId, transaction: transaction) else {
                     return
             }
-            var message: OTRBaseMessage? = nil
+            var _message: OTRBaseMessage? = nil
+            
             if isIncoming {
-                self.handleChatState(message: xmppMessage, buddy: buddy)
                 self.handleDeliveryResponse(message: xmppMessage, transaction: transaction)
-                message = OTRIncomingMessage(xmppMessage: xmppMessage, account: account, buddy: buddy, capabilities: self.capabilities)
+                self.handleChatState(message: xmppMessage, buddy: buddy)
+                _message = OTRIncomingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
             } else {
-                message = OTROutgoingMessage(xmppMessage: xmppMessage, account: account, buddy: buddy, capabilities: self.capabilities)
+                let outgoing = OTROutgoingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
+                outgoing.dateSent = delayed ?? Date()
+                _message = outgoing
             }
-            guard let stanzaId = message?.stanzaId,
-                !self.isDuplicate(xmppMessage: xmppMessage, stanzaId: stanzaId, buddyUniqueId: buddy.uniqueId, transaction: transaction) else {
-                    DDLogWarn("Duplicate forwarded message received: \(xmppMessage)")
-                    return
+            guard let message = _message else {
+                DDLogWarn("Discarding empty message: \(xmppMessage)")
+                return
             }
+            
+            // Bail out if we receive duplicate messages identified by XEP-0359
+            if let stanzaId = message.stanzaId,
+            self.isDuplicate(xmppMessage: xmppMessage, stanzaId: stanzaId, buddyUniqueId: buddy.uniqueId, transaction: transaction) {
+                DDLogWarn("Duplicate forwarded message received: \(xmppMessage)")
+                return
+            }
+            
             if let delayed = delayed {
-                message?.date = delayed
+                message.date = delayed
             }
-            message?.save(with: transaction)
+            preSave?(message, transaction)
+            message.save(with: transaction)
+            if let incoming = message as? OTRIncomingMessage {
+                self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
+            }
         }
     }
     
     /// Inserts direct message into database
-    private func handleDirectMessage(_ message: XMPPMessage, accountId: String) {
-        connection.asyncReadWrite { (transaction) in
+    public func handleDirectMessage(_ message: XMPPMessage,
+                                    body: String?,
+                                    accountId: String,
+                                    preSave: PreSave? = nil) {
+        var incomingMessage: OTRIncomingMessage? = nil
+        connection.asyncReadWrite({ (transaction) in
             guard let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction),
                 let fromJID = message.from,
                 let buddy = OTRXMPPBuddy.fetchBuddy(jid: fromJID, accountUniqueId: accountId, transaction: transaction)
                 else {
                     return
             }
-            
+
             // Update ChatState
             self.handleChatState(message: message, buddy: buddy)
             
@@ -180,20 +221,37 @@ import CocoaLumberjack
                 return
             }
             
-            let incoming = OTRIncomingMessage(xmppMessage: message, account: account, buddy: buddy, capabilities: self.capabilities)
+            incomingMessage = OTRIncomingMessage(xmppMessage: message, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
             
             // Check for duplicates
-            if let stanzaId = incoming.stanzaId,
+            if let stanzaId = incomingMessage?.stanzaId,
                 self.isDuplicate(xmppMessage: message, stanzaId: stanzaId, buddyUniqueId: buddy.uniqueId, transaction: transaction) {
                 DDLogWarn("Duplicate message received: \(message)")
                 return
             }
-            
-            // TODO: Replace this so we aren't passing everything through OTRKit
-            if let text = incoming.text {
-                OTRProtocolManager.shared.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
+            guard let incoming = incomingMessage, let text = incoming.text, text.count > 0 else {
+                // discard empty message text
+                return
             }
+            
+            if text.isOtrText {
+                OTRProtocolManager.shared.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
+            } else {
+                preSave?(incoming, transaction)
+                incoming.save(with: transaction)
+                self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
+            }
+        })
+    }
+    
+    private func finishHandlingIncomingMessage(_ message: OTRIncomingMessage, account: OTRXMPPAccount, transaction: YapDatabaseReadWriteTransaction) {
+        guard let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
+            return
         }
+        xmpp.sendDeliveryReceipt(for: message)
+        
+        self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
+        UIApplication.shared.showLocalNotification(message, transaction: transaction)
     }
 }
 
@@ -210,36 +268,59 @@ extension MessageStorage: XMPPStreamDelegate {
             !message.isMessageCarbon,
             // We handle MAM elsewhere as well
             message.mamResult == nil,
+            // OMEMO messages cannot be processed here
+            !message.omemo_hasEncryptedElement(.conversationsLegacy),
             let accountId = sender.accountId else {
             return
         }
         
-        handleDirectMessage(message, accountId: accountId)
+        handleDirectMessage(message, body: nil, accountId: accountId)
     }
 }
 
 extension MessageStorage: XMPPMessageCarbonsDelegate {
 
     public func xmppMessageCarbons(_ xmppMessageCarbons: XMPPMessageCarbons, didReceive message: XMPPMessage, outgoing isOutgoing: Bool) {
-        guard let accountId = xmppMessageCarbons.xmppStream?.accountId else {
+        guard let accountId = xmppMessageCarbons.xmppStream?.accountId,
+        !message.omemo_hasEncryptedElement(.conversationsLegacy) else {
             return
         }
-        handleForwardedMessage(message, accountId: accountId, delayed: nil, isIncoming: !isOutgoing)
+        var _forJID: XMPPJID? = nil
+        if !isOutgoing {
+            _forJID = message.from
+        } else {
+            _forJID = message.to
+        }
+        guard let forJID = _forJID else { return }
+        handleForwardedMessage(message, forJID: forJID, body: nil, accountId: accountId, delayed: nil, isIncoming: !isOutgoing)
     }
 }
 
 extension MessageStorage: XMPPMessageArchiveManagementDelegate {
+    public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFailToReceiveMessages error: XMPPIQ) {
+        DDLogError("Failed to receive messages \(error)")
+    }
+    
     public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didReceiveMAMMessage message: XMPPMessage) {
         guard let accountId = xmppMessageArchiveManagement.xmppStream?.accountId,
             let myJID = xmppMessageArchiveManagement.xmppStream?.myJID,
             let result = message.mamResult,
             let forwarded = result.forwardedMessage,
-            let delayed = result.forwardedStanzaDelayedDeliveryDate,
-            let from = forwarded.from else {
+            let from = forwarded.from,
+            !forwarded.omemo_hasEncryptedElement(.conversationsLegacy) else {
+                DDLogVerbose("Discarding incoming MAM message \(message)")
                 return
         }
+        let delayed = result.forwardedStanzaDelayedDeliveryDate
         let isIncoming = !from.isEqual(to: myJID, options: .bare)
-        handleForwardedMessage(forwarded, accountId: accountId, delayed: delayed, isIncoming: isIncoming)
+        var _forJID: XMPPJID? = nil
+        if isIncoming {
+            _forJID = forwarded.from
+        } else {
+            _forJID = forwarded.to
+        }
+        guard let forJID = _forJID else { return }
+        handleForwardedMessage(forwarded, forJID: forJID, body: nil, accountId: accountId, delayed: delayed, isIncoming: isIncoming)
     }
 }
 
@@ -274,10 +355,21 @@ extension OTRChatState {
     }
 }
 
+extension String {
+    /// https://otr.cypherpunks.ca/Protocol-v3-4.0.0.html
+    static let OTRWhitespaceStart = String(bytes: [0x20,0x09,0x20,0x20,0x09,0x09,0x09,0x09,0x20,0x09,0x20,0x09,0x20,0x09,0x20,0x20], encoding: .utf8)!
+    
+    /// for separately handling OTR messages
+    var isOtrText: Bool {
+        return self.contains("?OTR") || self.contains(String.OTRWhitespaceStart)
+    }
+}
+
 extension OTRBaseMessage {
-    convenience init(xmppMessage: XMPPMessage, account: OTRXMPPAccount, buddy: OTRXMPPBuddy, capabilities: XMPPCapabilities) {
+    /// You can override message body, for example if this is an encrypted message
+    convenience init(xmppMessage: XMPPMessage, body: String?, account: OTRXMPPAccount, buddy: OTRXMPPBuddy, capabilities: XMPPCapabilities) {
         self.init()
-        self.messageText = xmppMessage.body
+        self.messageText = body ?? xmppMessage.body
         self.buddyUniqueId = buddy.uniqueId
         if let delayed = xmppMessage.delayedDeliveryDate {
             self.messageDate = delayed
@@ -302,3 +394,11 @@ extension OTRBaseMessage {
         }
     }
 }
+
+extension NSCopying {
+    /// Creates a deep copy of the object
+    func copyAsSelf() -> Self? {
+        return self.copy() as? Self
+    }
+}
+

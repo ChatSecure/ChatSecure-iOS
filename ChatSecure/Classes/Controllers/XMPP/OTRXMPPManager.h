@@ -33,9 +33,10 @@
 
 @class OTRXMPPAccount;
 @class OTROMEMOSignalCoordinator;
-@class XMPPPushModule, ServerCheck, FileTransferManager;
+@class XMPPPushModule, ServerCheck, FileTransferManager, MessageStorage;
 
 NS_ASSUME_NONNULL_BEGIN
+NS_SWIFT_NAME(XMPPManager)
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, XMPPStreamDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
@@ -48,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
 @property (nonatomic, strong, readonly) ServerCheck *serverCheck;
 @property (nonatomic, strong, readonly) FileTransferManager *fileTransferManager;
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly) MessageStorage *messageStorage;
+
 
 /** Useful for showing error messages related to connection, like SSL certs. Only safe for access from main queue. */
 @property (nonatomic, readonly, nullable) NSError *lastConnectionError;

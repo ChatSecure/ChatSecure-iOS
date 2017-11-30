@@ -303,10 +303,10 @@ extension OTRRoomOccupantsViewController {
     
     /** Do not call this within a yap transaction! */
     fileprivate func xmppRoom() -> XMPPRoom? {
-        var xmpp: OTRXMPPManager? = nil
+        var xmpp: XMPPManager? = nil
         self.readConnection?.read { transaction in
             if let account = self.room?.account(with: transaction) {
-                xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager
+                xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager
             }
         }
         guard let room = self.room,
@@ -318,10 +318,10 @@ extension OTRRoomOccupantsViewController {
     }
     
     fileprivate func xmppRoomManager() -> OTRXMPPRoomManager? {
-        var xmpp: OTRXMPPManager? = nil
+        var xmpp: XMPPManager? = nil
         self.readConnection?.read { transaction in
             if let account = self.room?.account(with: transaction) {
-                xmpp = OTRProtocolManager.shared.protocol(for: account) as? OTRXMPPManager
+                xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager
             }
         }
         return xmpp?.roomManager

@@ -8,7 +8,6 @@
 
 #import "OTRXMPPManager.h"
 #import "OTRCertificatePinning.h"
-#import "OTRXMPPMessageYapStorage.h"
 #import "OTRXMPPBuddyManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRYapDatabaseRosterStorage.h"
@@ -29,12 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) XMPPStreamManagement *streamManagement;
 
-@property (nonatomic, strong, readonly) MessageStorage *messageStorage;
 @property (nonatomic, strong, readonly) OTRXMPPBuddyManager* xmppBuddyManager;
 @property (nonatomic, strong, readonly) OMEMOModule *omemoModule;
 @property (nonatomic, strong, nullable) OTRXMPPChangePasswordManager *changePasswordManager;
 
-@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong, readonly) XMPPMessageDeliveryReceipts *deliveryReceipts;
 @property (nonatomic, strong, readonly) OTRXMPPMessageStatusModule *messageStatusModule;
 @property (nonatomic, strong, readonly) OTRStreamManagementDelegate *streamManagementDelegate;

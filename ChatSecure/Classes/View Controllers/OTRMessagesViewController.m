@@ -223,6 +223,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self scrollToBottomAnimated:animated];
     });
     self.loadingMessages = NO;
+    [self fetchMessageHistory];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -310,6 +311,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 #pragma - mark Setters & getters
+
+- (void) fetchMessageHistory {
+    [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        id<OTRThreadOwner> thread = [self threadObjectWithTransaction:transaction];
+        OTRXMPPManager *xmpp = [self xmppManagerWithTransaction:transaction];
+        [xmpp fetchHistoryForThread:thread transaction:transaction];
+    }];
+}
 
 - (OTRAttachmentPicker *)attachmentPicker
 {
@@ -490,8 +499,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             buddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
             account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
         }];
-        
-        
         
         //Update UI now
         if (buddy.chatState == OTRChatStateComposing || buddy.chatState == OTRChatStatePaused) {
