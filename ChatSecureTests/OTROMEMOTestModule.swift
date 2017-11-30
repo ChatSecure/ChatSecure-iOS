@@ -79,6 +79,8 @@ extension OTROMEMOTestModule: OTROMEMOTestModuleProtocol {
     
     func receiveKeyData(_ keyData: [OMEMOKeyData], iv: Data, fromJID: XMPPJID, senderDeviceId:UInt32, payload: Data?, elementId: String?) {
         let dummyMessage = XMPPMessage(type: "chat", elementID: "1234")
+        dummyMessage.addAttribute(withName: "from", stringValue: fromJID.full)
+        dummyMessage.addAttribute(withName: "to", stringValue: username())
         self.thisUser.signalOMEMOCoordinator.omemo(self, receivedKeyData: keyData, iv: iv, senderDeviceId: senderDeviceId, from: fromJID, payload: payload, message: dummyMessage)
     }
     

@@ -9,6 +9,17 @@
 import XCTest
 @testable import ChatSecureCore
 
+extension OTROMEMOSignalCoordinator {
+    convenience init(accountYapKey: String, databaseConnection: YapDatabaseConnection) throws {
+        let capsStorage = XMPPCapabilitiesCoreDataStorage(inMemoryStore: ())!
+        let serverCaps = OTRServerCapabilities()
+        let caps = XMPPCapabilities(capabilitiesStorage: capsStorage)
+        let file = FileTransferManager(connection: databaseConnection, serverCapabilities: serverCaps, sessionConfiguration: URLSessionConfiguration.ephemeral)
+        let messageStorage = MessageStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file)
+        try self.init(accountYapKey: accountYapKey, databaseConnection: databaseConnection, messageStorage: messageStorage)
+    }
+}
+
 class OTROmemoStorageTest: XCTestCase {
     
     var databaseManager:OTRDatabaseManager!
@@ -45,6 +56,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.databaseManager.setDatabasePassphrase("help", remember: false, error: nil)
         self.databaseManager.setupDatabase(withName: name, withMediaStorage: false)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection!)
+        
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!, delegate: nil)
         self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         
