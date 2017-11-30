@@ -330,7 +330,6 @@ extension OTRRoomOccupantsViewController {
     fileprivate func fetchMembersList() {
         guard let xmppRoom = xmppRoom() else { return }
         xmppRoom.fetchMembersList()
-        xmppRoom.fetchModeratorsList()
     }
 }
 
@@ -360,18 +359,13 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
-        var accountObject:OTRXMPPAccount? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
                 buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
-                accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
             })
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
                 if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
-                    if let accountObject = accountObject {
-                        cell.avatarImageView.image = accountObject.avatarImage()
-                    }
                     cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
                 }
             } else if let roomJid = room.jid {
