@@ -1182,8 +1182,5 @@
     }, "GROUP_INFO_YOU": {
         "comment": "This will be shown after your own JID in the group profile view",
         "string": "you"
-    }, "ADD_FRIEND_TO_AUTO_DOWNLOAD": {
-        "comment": "Shown in chat view to prompt user to add friend for auto-download of group media messages.",
-        "string": "Is %@ your friend? Add him/her to auto-download pictures in the future."
     }
 }

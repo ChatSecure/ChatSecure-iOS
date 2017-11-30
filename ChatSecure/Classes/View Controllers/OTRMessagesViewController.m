@@ -69,7 +69,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol, OTRRoomOccupantsViewControllerDelegate> {
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol, OTRRoomOccupantsViewControllerDelegate> {
     JSQMessagesAvatarImage *_warningAvatarImage;
     JSQMessagesAvatarImage *_accountAvatarImage;
     JSQMessagesAvatarImage *_buddyAvatarImage;
@@ -101,9 +101,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 @property (nonatomic, strong) id currentMessage;
 @property (nonatomic, strong) NSCache *messageSizeCache;
-
-@property (nonatomic) BOOL automaticURLFetchingDisabled;
-@property (nonatomic, strong) OTRMessagesUnknownSenderCell *prototypeCellUnknownSender;
 
 @end
 
@@ -178,11 +175,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     ///Custom Layout to account for no bubble cells
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
     layout.sizeDelegate = self;
-    layout.supplementaryViewDelegate = self;
     self.collectionView.collectionViewLayout = layout;
-    UINib *nib = [UINib nibWithNibName:@"OTRMessageUnknownSenderCell" bundle:OTRAssets.resourcesBundle];
-    [self.collectionView registerNib:nib forSupplementaryViewOfKind:[OTRMessagesUnknownSenderCell reuseIdentifier] withReuseIdentifier:[OTRMessagesUnknownSenderCell reuseIdentifier]];
-    
+
     ///"Loading Earlier" header view
     [self.collectionView registerNib:[UINib nibWithNibName:@"OTRMessagesLoadingView" bundle:OTRAssets.resourcesBundle]
           forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
@@ -387,7 +381,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.threadCollection = collection;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         self.senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
-        self.automaticURLFetchingDisabled = [[self accountWithTransaction:transaction] disableAutomaticURLFetching];
     }];
     
     // Clear out old state (don't just alloc a new object, we have KVOs attached to this!)
@@ -2294,45 +2287,4 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.navigationController.navigationController popViewControllerAnimated:YES];
     }
 }
-
-#pragma - mark OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol
-
-- (nullable NSArray *)supplementaryViewsForCellAtIndexPath:(NSIndexPath *)indexPath {
-    id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    if ([self isGroupChat] && [message isKindOfClass:[OTRGroupDownloadMessage class]]) {
-        OTRGroupDownloadMessage *roomMessage = (OTRGroupDownloadMessage *)message;
-        // A message that is not automatically downloaded, even though auto download not disabled, means that this is group download message from someone who is not our friend.
-        if ([roomMessage.messageError isAutomaticDownloadError] && !self.automaticURLFetchingDisabled && [roomMessage.media isKindOfClass:[OTRImageItem class]]) {
-            if (!_prototypeCellUnknownSender) {
-                UINib *nib = [UINib nibWithNibName:@"OTRMessageUnknownSenderCell" bundle:OTRAssets.resourcesBundle];
-                _prototypeCellUnknownSender = (OTRMessagesUnknownSenderCell *)[nib instantiateWithOwner:self options:nil][0];
-            }
-            [self populateUnknownSenderCell:_prototypeCellUnknownSender withMessage:message];
-            [_prototypeCellUnknownSender setNeedsLayout];
-            [_prototypeCellUnknownSender layoutIfNeeded];
-            _prototypeCellUnknownSender.frame = CGRectMake(0, 0, self.collectionView.bounds.size.width, _prototypeCellUnknownSender.frame.size.height);
-            int height = [_prototypeCellUnknownSender systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
-            
-            OTRMessagesCollectionSupplementaryViewInfo *info = [[OTRMessagesCollectionSupplementaryViewInfo alloc] initWithKind:[OTRMessagesUnknownSenderCell reuseIdentifier] height:height];
-            return [NSArray arrayWithObject:info];
-        }
-    }
-    return nil;
-}
-
-- (void)populateUnknownSenderCell:(OTRMessagesUnknownSenderCell *)cell withMessage:(id<OTRMessageProtocol,JSQMessageData>)message {
-    cell.titleLabel.text = [NSString stringWithFormat:ADD_FRIEND_TO_AUTO_DOWNLOAD(), message.senderDisplayName];
-}
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    if ([OTRMessagesUnknownSenderCell.reuseIdentifier isEqualToString:kind]) {
-        id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-        OTRMessagesUnknownSenderCell *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:kind forIndexPath:indexPath];
-        [self populateUnknownSenderCell:cell withMessage:message];
-        return cell;
-    }
-    // We should never get there, but if we do, don't return nil
-    return [[UICollectionReusableView alloc] initWithFrame:CGRectZero];
-}
-
 @end
