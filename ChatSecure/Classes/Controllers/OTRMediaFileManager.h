@@ -30,6 +30,12 @@ extern NSString *const kOTRRootMediaDirectory;
      completion:(void (^)(NSInteger bytesWritten, NSError * _Nullable error))completion
 completionQueue:(nullable dispatch_queue_t)completionQueue;
 
+//#865
+- (void)deleteDataForItem:(OTRMediaItem *)mediaItem
+            buddyUniqueId:(NSString *)buddyUniqueId
+               completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+          completionQueue:(nullable dispatch_queue_t)completionQueue;
+
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
                   buddyUniqueId:(NSString *)buddyUniqueId
                           error:(NSError* __autoreleasing *)error;

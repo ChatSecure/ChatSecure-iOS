@@ -128,6 +128,50 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
     }];
 }
 
+//#865
+- (void)deleteDataForItem:(OTRMediaItem *)mediaItem
+            buddyUniqueId:(NSString *)buddyUniqueId
+               completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+          completionQueue:(nullable dispatch_queue_t)completionQueue {
+    if (!completionQueue) {
+        completionQueue = dispatch_get_main_queue();
+    }
+    [self performAsyncWrite:^{
+        NSString *path = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
+        if (![path length]) {
+            NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
+            if (completion) {
+                dispatch_async(completionQueue, ^{
+                    completion(NO, error);
+                });
+            }
+            return;
+        }
+        
+        BOOL fileExists = [self.ioCipher fileExistsAtPath:path isDirectory:NULL];
+        
+        if (fileExists) {
+            NSError *error = nil;
+            [self.ioCipher removeItemAtPath:path error:&error];
+            if (error) {
+                NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:151 userInfo:@{NSLocalizedDescriptionKey:@"Unable to remove existing file"}];
+                if (completion) {
+                    dispatch_async(completionQueue, ^{
+                        completion(NO, error);
+                    });
+                }
+                return;
+            }
+        }
+        
+        if (completion) {
+            dispatch_async(completionQueue, ^{
+                completion(YES, nil);
+            });
+        }
+    }];
+}
+
 /* Internal. If "length" is set, only return the length of the data, otherwise the data ifself */
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
                   buddyUniqueId:(NSString *)buddyUniqueId

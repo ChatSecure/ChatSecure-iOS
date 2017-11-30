@@ -199,28 +199,10 @@
         occupant.roomName = [presenceJID resource];
         
         // Role
-        if ([buddyRole isEqualToString:@"moderator"]) {
-            occupant.role = RoomOccupantRoleModerator;
-        } else if ([buddyRole isEqualToString:@"participant"]) {
-            occupant.role = RoomOccupantRoleParticipant;
-        } else if ([buddyRole isEqualToString:@"visitor"]) {
-            occupant.role = RoomOccupantRoleVisitor;
-        } else {
-            occupant.role = RoomOccupantRoleNone;
-        }
+        occupant.role = [RoomOccupantRoleHelper roleWithString:buddyRole];
 
         // Affiliation
-        if ([buddyAffiliation isEqualToString:@"owner"]) {
-            occupant.affiliation = RoomOccupantAffiliationOwner;
-        } else if ([buddyAffiliation isEqualToString:@"admin"]) {
-            occupant.affiliation = RoomOccupantAffiliationAdmin;
-        } else if ([buddyAffiliation isEqualToString:@"member"]) {
-            occupant.affiliation = RoomOccupantAffiliationMember;
-        } else if ([buddyAffiliation isEqualToString:@"outcast"]) {
-            occupant.affiliation = RoomOccupantAffiliationOutcast;
-        } else {
-            occupant.affiliation = RoomOccupantAffiliationNone;
-        }
+        occupant.affiliation = [RoomOccupantAffiliationHelper affiliationWithString:buddyAffiliation];
         [occupant saveWithTransaction:transaction];
     }];
 }
