@@ -32,22 +32,6 @@ import CocoaLumberjack
     }
 }
 
-// Helper class to create from string, callable from obj-c
-@objc public class RoomOccupantRoleHelper: NSObject {
-    @objc public static func role(withString role:String) -> RoomOccupantRole {
-        switch role {
-        case "moderator":
-            return RoomOccupantRole.moderator
-        case "participant":
-            return RoomOccupantRole.participant
-        case "visitor":
-            return RoomOccupantRole.visitor
-        default:
-            return RoomOccupantRole.none
-        }
-    }
-}
-
 @objc public enum RoomOccupantAffiliation:Int {
     case none = 0
     case outcast = 1
@@ -59,24 +43,6 @@ import CocoaLumberjack
         switch self {
         case .owner: return true
         default: return false
-        }
-    }
-}
-
-// Helper class to create from string, callable from obj-c
-@objc public class RoomOccupantAffiliationHelper: NSObject {
-    @objc public static func affiliation(withString affiliation:String) -> RoomOccupantAffiliation {
-        switch affiliation {
-        case "owner":
-            return RoomOccupantAffiliation.owner
-        case "admin":
-            return RoomOccupantAffiliation.admin
-        case "member":
-            return RoomOccupantAffiliation.member
-        case "outcast":
-            return RoomOccupantAffiliation.outcast
-        default:
-            return RoomOccupantAffiliation.none
         }
     }
 }

@@ -84,11 +84,6 @@
     NSString* accountId = self.xmppStream.tag;
     NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:accountId jid:jid.bare];
     __block NSString *nickname = name;
-
-    // Already joined? Can happen if we have auto-join bookmarks.
-    if (room && room.isJoined) {
-        return databaseRoomKey;
-    }
     
     if (!room) {
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection capabilities:self.capabilities];
@@ -365,84 +360,45 @@
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched members list: %@", items);
-    [self xmppRoom:room addOccupantItems:items];
-}
-
-- (void)xmppRoom:(XMPPRoom *)room didFetchModeratorsList:(NSArray *)items {
-    DDLogInfo(@"Fetched moderators list: %@", items);
-    [self xmppRoom:room addOccupantItems:items];
-}
-
-- (void) xmppRoom:(XMPPRoom *)room addOccupantItems:(NSArray<NSXMLElement*> *)items {
     NSString *accountId = room.xmppStream.tag;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *jidString = [item attributeStringValueForName:@"jid"];
             XMPPJID *jid = [XMPPJID jidWithString:jidString];
-            NSString *affiliation = [item attributeStringValueForName:@"affiliation"];
-            
-            // jid and affiliation MUST be included
-            if (!jid || !affiliation) { return; }
-            
+            if (!jid) { return; }
             // Make sure occupant object exists/is created
             OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:jid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
-            occupant.affiliation = [RoomOccupantAffiliationHelper affiliationWithString:affiliation];
-            
-            // Role MAY be included, so get that if it's there
-            NSString *role = [item attributeStringValueForName:@"role"];
-            if (role) {
-                occupant.role = [RoomOccupantRoleHelper roleWithString:role];
-            }
-            
             [occupant saveWithTransaction:transaction];
         }];
     }];
 }
 
-- (void)xmppRoomDidCreate:(XMPPRoom *)sender {
-    [self.roomsToConfigure removeObject:sender.roomJID.bare];
-    [sender fetchConfigurationForm];
-}
-
-- (void)xmppRoom:(XMPPRoom *)sender didFetchConfigurationForm:(DDXMLElement *)configForm {
-    [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
-}
-
-- (void)xmppRoom:(XMPPRoom *)sender didConfigure:(XMPPIQ *)iqResult {
-    //Set Room Subject
-    NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
-    if (subject) {
-        [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
-        [sender changeRoomSubject:subject];
-    }
-    
-    //Invite buddies
-    NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
-    if (buddyUniqueIds) {
-        [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
-        [self inviteBuddies:buddyUniqueIds toRoom:sender];
-    }
-
-    // Fetch member list. Ideally this would be done after the invites above have been sent to the network, but the messages pass all kinds of async delegates before they are actually sent, so unfortunately we can't wait for that.
-    [self performBlockAsync:^{
-            [sender fetchMembersList];
-            [sender fetchModeratorsList];
-    }];
-}
-
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
-    // Older prosody servers have a bug where they consider all room as already
-    // existing, so the status 201 is never sent.
-    if ([self.roomsToConfigure containsObject:sender.roomJID.bare]) {
-        [self xmppRoomDidCreate:sender];
-    } else {
-        // Fetch member list
-        [self performBlockAsync:^{
-            [sender fetchMembersList];
-            [sender fetchModeratorsList];
-        }];
-    }
+    [self performBlockAsync:^{
+        //Configure room if we are the creator
+        if ([self.roomsToConfigure containsObject:sender.roomJID.bare]) {
+            [self.roomsToConfigure removeObject:sender.roomJID.bare];
+            [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
+            
+            //Set Room Subject
+            NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
+            if (subject) {
+                [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
+                [sender changeRoomSubject:subject];
+            }
+        }
+        
+        //Invite buddies
+        NSArray<NSString*> *buddyUniqueIds = [self.inviteDictionary objectForKey:sender.roomJID.bare];
+        if (buddyUniqueIds) {
+            [self.inviteDictionary removeObjectForKey:sender.roomJID.bare];
+            [self inviteBuddies:buddyUniqueIds toRoom:sender];
+        }
+        
+        //Fetch member list
+        [sender fetchMembersList];
+    }];
 }
 
 - (void)xmppRoomDidLeave:(XMPPRoom *)sender {
