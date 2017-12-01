@@ -9,6 +9,24 @@
 import Foundation
 import XMPPFramework
 
+public extension XMPPStream {
+    /// Stream tags should be the OTRXMPPAccount uniqueId
+    public var accountId: String? {
+        return tag as? String
+    }
+}
+
+public extension XMPPModule {
+    public func account(with transaction: YapDatabaseReadTransaction) -> OTRXMPPAccount? {
+        guard let accountId = xmppStream?.accountId,
+            let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction) else {
+                return nil
+        }
+        return account
+    }
+}
+
+
 public extension XMPPMessageArchiveManagement {
     @objc public func fetchHistory(archiveJID: XMPPJID? = nil, userJID: XMPPJID? = nil, since: Date? = nil) {
         var fields: [XMLElement] = []
@@ -26,24 +44,27 @@ public extension XMPPMessageArchiveManagement {
         }
         retrieveMessageArchive(at: archiveJID ?? xmppStream?.myJID?.bareJID, withFields: fields, with: nil)
     }
-}
-
-/// Formerly known in Obj-C as OTRXMPPManager
-public extension XMPPManager {
-    
     
     /** Fetches history for a thread after the most recent message */
     @objc public func fetchHistoryForThread(_ thread: OTRThreadOwner, transaction: YapDatabaseReadTransaction) {
         var archiveJID: XMPPJID? = nil
         var userJID: XMPPJID? = nil
         if let buddy = thread as? OTRXMPPBuddy,
-            let buddyJID = buddy.bareJID {
+            let buddyJID = buddy.bareJID,
+            let account = account(with: transaction) {
             archiveJID = account.bareJID
             userJID = buddyJID
         } else if let room = thread as? OTRXMPPRoom {
             archiveJID = room.roomJID
         }
         let lastMessageDate = thread.lastMessage(with: transaction)?.messageDate
-        messageStorage.archiving.fetchHistory(archiveJID: archiveJID, userJID: userJID, since: lastMessageDate)
+        fetchHistory(archiveJID: archiveJID, userJID: userJID, since: lastMessageDate)
     }
+}
+
+/// Formerly known in Obj-C as OTRXMPPManager
+public extension XMPPManager {
+    
+    
+
 }

@@ -193,21 +193,15 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	// 
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
-    
-    _serverCapabilities = [[OTRServerCapabilities alloc] init];
-    [self.serverCapabilities activate:self.xmppStream];
+
     
     // Add push registration module
     _xmppPushModule = [[XMPPPushModule alloc] init];
     [self.xmppPushModule activate:self.xmppStream];
     [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
     
-    _xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
-    _xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
-    
-    self.xmppCapabilities.autoFetchHashedCapabilities = YES;
-    self.xmppCapabilities.autoFetchNonHashedCapabilities = YES;
-    self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
+    _serverCheck = [[ServerCheck alloc] initWithPush:OTRProtocolManager.shared.pushController pushModule:self.xmppPushModule dispatchQueue:nil];
+    [self.serverCheck activate:self.xmppStream];
     
 	// Activate xmpp modules
     
@@ -215,7 +209,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	[self.xmppRoster            activate:self.xmppStream];
 	[self.xmppvCardTempModule   activate:self.xmppStream];
 	[self.xmppvCardAvatarModule activate:self.xmppStream];
-	[self.xmppCapabilities      activate:self.xmppStream];
     
     _stanzaIdModule = [[XMPPStanzaIdModule alloc] init];
     [self.stanzaIdModule activate:self.xmppStream];
@@ -224,7 +217,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
 	[self.xmppStream addDelegate:self delegateQueue:self.workQueue];
 	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
-    [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
+    [self.serverCheck.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
     // File Transfer
@@ -239,10 +232,10 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
                                     };
         sessionConfiguration.connectionProxyDictionary = proxyDict;
     }
-    _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCapabilities sessionConfiguration:sessionConfiguration];
+    _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCheck.serverCapabilities sessionConfiguration:sessionConfiguration];
     
     // Message storage
-    _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection capabilities:self.xmppCapabilities fileTransfer:self.fileTransferManager dispatchQueue:nil];
+    _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection capabilities:self.serverCheck.xmppCapabilities fileTransfer:self.fileTransferManager dispatchQueue:nil];
     [self.messageStorage activate:self.xmppStream];
     
     //Stream Management
@@ -258,7 +251,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.streamManagement activate:self.xmppStream];
     
     //MUC
-    _roomManager = [[OTRXMPPRoomManager alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection capabilities:self.xmppCapabilities dispatchQueue:nil];
+    _roomManager = [[OTRXMPPRoomManager alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection capabilities:self.serverCheck.xmppCapabilities dispatchQueue:nil];
     [self.roomManager activate:self.xmppStream];
     
     //Buddy Manager (for deleting)
@@ -284,7 +277,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buddyPendingApprovalStateChanged:) name:OTRBuddyPendingApprovalDidChangeNotification object:self.xmppRosterStorage];
     
-    _serverCheck = [[ServerCheck alloc] initWithXmpp:self push:[OTRProtocolManager sharedInstance].pushController];
 }
 
 - (void)teardownStream
@@ -293,7 +285,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
     [_xmppStream removeDelegate:self];
     [_xmppRoster removeDelegate:self];
-    [_xmppCapabilities removeDelegate:self];
     [_xmppvCardTempModule removeDelegate:self];
     [_xmppPushModule removeDelegate:self];
 
@@ -302,7 +293,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [_xmppRoster            deactivate];
     [_xmppvCardTempModule   deactivate];
     [_xmppvCardAvatarModule deactivate];
-    [_xmppCapabilities      deactivate];
     [_streamManagement      deactivate];
     [_messageStorage        deactivate];
     [_certificatePinningModule deactivate];
@@ -312,7 +302,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [_xmppBuddyManager deactivate];
     [_messageStatusModule deactivate];
     [_omemoModule deactivate];
-    [_serverCapabilities deactivate];
+    [_serverCheck deactivate];
     _serverCheck = nil;
     _fileTransferManager = nil;
 
@@ -390,7 +380,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 /** XEP-0352 Client State Indication */
 - (void) updateClientState:(XMPPClientState)clientState {
-    NSXMLElement *csiFeature = [self.serverCapabilities.streamFeatures elementForName:@"csi" xmlns:@"urn:xmpp:csi:0"];
+    NSXMLElement *csiFeature = [self.serverCheck.serverCapabilities.streamFeatures elementForName:@"csi" xmlns:@"urn:xmpp:csi:0"];
     if (!csiFeature) {
         return;
     }
@@ -876,20 +866,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
     [self goOnline];
-    
-    
-    
-    // Fetch latest vCard from server so we can update nickname
-    //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
-    
-    //NSDate *lastInteraction = OTRProtocolManager.shared.lastInteractionDate;
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        OTRXMPPAccount *account = [self.account refetchWithTransaction:transaction];
-        [self.messageStorage.archiving fetchHistoryWithArchiveJID:nil userJID:nil since:account.lastHistoryFetchDate];
-    }];
-    //[self.messageStorage.archiving fetchHistoryWithArchiveJID:nil userJID:nil since:lastInteraction];
-    
-    //[self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -904,7 +880,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
-	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, iq);
+	//DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, iq);
 	return NO;
 }
 
@@ -932,12 +908,12 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage
 {
-	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, xmppMessage);
+	//DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, xmppMessage);
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@\n%@", THIS_FILE, THIS_METHOD, presence.prettyXMLString);
+	//DDLogVerbose(@"%@: %@\n%@", THIS_FILE, THIS_METHOD, presence.prettyXMLString);
     
     
 }

@@ -45,7 +45,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
             let jid = XMPPJID(user: nil, domain: pubsubEndpoint, resource: nil) else {
             return
         }
-        check.xmpp?.xmppPushModule.disablePush(forServerJID: jid, node: nil, elementId: nil)
+        check.pushModule.disablePush(forServerJID: jid, node: nil, elementId: nil)
     }
     
     @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
@@ -148,7 +148,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
                 self?.unregisterForXMPPPush(sender)
                 self?.check.push.reset(completion: {
                     self?.check.refresh()
-                    self?.check.xmpp?.xmppPushModule.refresh()
+                    self?.check.pushModule.refresh()
                     }, callbackQueue: DispatchQueue.main)
             })
         }

@@ -42,10 +42,8 @@ NS_SWIFT_NAME(XMPPManager)
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
 
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
-@property (nonatomic, strong, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, strong, readonly) OTRXMPPRoomManager *roomManager;
 @property (nonatomic, strong, nullable) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
-@property (nonatomic, strong, readonly) OTRServerCapabilities *serverCapabilities;
 @property (nonatomic, strong, readonly) XMPPPushModule *xmppPushModule;
 @property (nonatomic, strong, readonly) ServerCheck *serverCheck;
 @property (nonatomic, strong, readonly) FileTransferManager *fileTransferManager;

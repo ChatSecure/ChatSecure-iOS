@@ -19,10 +19,10 @@ import CocoaLumberjack
     private let connection: YapDatabaseConnection
     
     /// Capabilities must be activated elsewhere
-    @objc public let capabilities: XMPPCapabilities
-    @objc public let carbons: XMPPMessageCarbons
-    @objc public let archiving: XMPPMessageArchiveManagement
-    @objc public let fileTransfer: FileTransferManager
+    private let capabilities: XMPPCapabilities
+    private let carbons: XMPPMessageCarbons
+    private let archiving: XMPPMessageArchiveManagement
+    private let fileTransfer: FileTransferManager
 
     // MARK: Init
     deinit {
@@ -262,7 +262,20 @@ import CocoaLumberjack
 
 // MARK: - Extensions
 
+extension MessageStorage: XMPPCapabilitiesDelegate {
+    public func xmppCapabilities(_ sender: XMPPCapabilities, didDiscoverCapabilities caps: XMLElement, for jid: XMPPJID) {
+        
+    }
+}
+
 extension MessageStorage: XMPPStreamDelegate {
+    public func xmppStreamDidAuthenticate(_ sender: XMPPStream) {
+        connection.asyncRead { (transaction) in
+            guard let account = self.account(with: transaction) else { return }
+            self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: account.lastHistoryFetchDate)
+        }
+    }
+    
     public func xmppStream(_ sender: XMPPStream, didReceive message: XMPPMessage) {
         // We don't handle incoming group chat messages here
         // Check out OTRXMPPRoomYapStorage instead
@@ -342,12 +355,6 @@ extension MessageStorage: XMPPMessageArchiveManagementDelegate {
 
 // MARK: - Private Extensions
 
-extension XMPPStream {
-    /// Stream tags should be the OTRXMPPAccount uniqueId
-    var accountId: String? {
-        return tag as? String
-    }
-}
 
 extension OTRChatState {
     static func chatState(from fromState: XMPPMessage.ChatState?) -> OTRChatState {
