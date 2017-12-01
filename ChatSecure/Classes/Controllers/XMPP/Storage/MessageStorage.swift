@@ -39,6 +39,7 @@ import CocoaLumberjack
         self.capabilities = capabilities
         self.carbons = XMPPMessageCarbons(dispatchQueue: dispatchQueue)
         self.archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        self.archiving.resultAutomaticPagingPageSize = NSNotFound
         self.fileTransfer = fileTransfer
         super.init(dispatchQueue: dispatchQueue)
         self.carbons.addDelegate(self, delegateQueue: self.moduleQueue)
@@ -106,9 +107,15 @@ import CocoaLumberjack
     }
     
     /// It is a violation of the XMPP spec to discard messages with duplicate stanza elementIds. We must use XEP-0359 stanza-id only.
-    private func isDuplicate(xmppMessage: XMPPMessage, stanzaId: String, buddyUniqueId: String, transaction: YapDatabaseReadTransaction) -> Bool {
+    private func isDuplicate(message: OTRBaseMessage, transaction: YapDatabaseReadTransaction) -> Bool {
         var result = false
-        transaction.enumerateMessages(elementId: nil, originId: nil, stanzaId: stanzaId) { (message, stop) in
+        let buddyUniqueId = message.buddyUniqueId
+        let oid = message.originId
+        let sid = message.stanzaId
+        if oid == nil, sid == nil {
+            return false
+        }
+        transaction.enumerateMessages(elementId: nil, originId: oid, stanzaId: sid) { (message, stop) in
             if message.threadId == buddyUniqueId {
                 result = true
                 stop.pointee = true
@@ -156,8 +163,7 @@ import CocoaLumberjack
             }
             
             // Bail out if we receive duplicate messages identified by XEP-0359
-            if let stanzaId = message.stanzaId,
-            self.isDuplicate(xmppMessage: xmppMessage, stanzaId: stanzaId, buddyUniqueId: buddy.uniqueId, transaction: transaction) {
+            if self.isDuplicate(message: message, transaction: transaction) {
                 DDLogWarn("Duplicate forwarded message received: \(xmppMessage)")
                 return
             }
@@ -178,7 +184,7 @@ import CocoaLumberjack
                                     body: String?,
                                     accountId: String,
                                     preSave: PreSave? = nil) {
-        var incomingMessage: OTRIncomingMessage? = nil
+        //var incomingMessage: OTRIncomingMessage? = nil
         connection.asyncReadWrite({ (transaction) in
             guard let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction),
                 let fromJID = message.from,
@@ -221,15 +227,14 @@ import CocoaLumberjack
                 return
             }
             
-            incomingMessage = OTRIncomingMessage(xmppMessage: message, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
+            let incoming = OTRIncomingMessage(xmppMessage: message, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
             
             // Check for duplicates
-            if let stanzaId = incomingMessage?.stanzaId,
-                self.isDuplicate(xmppMessage: message, stanzaId: stanzaId, buddyUniqueId: buddy.uniqueId, transaction: transaction) {
+            if self.isDuplicate(message: incoming, transaction: transaction) {
                 DDLogWarn("Duplicate message received: \(message)")
                 return
             }
-            guard let incoming = incomingMessage, let text = incoming.text, text.count > 0 else {
+            guard let text = incoming.text, text.count > 0 else {
                 // discard empty message text
                 return
             }
@@ -297,6 +302,17 @@ extension MessageStorage: XMPPMessageCarbonsDelegate {
 }
 
 extension MessageStorage: XMPPMessageArchiveManagementDelegate {
+    public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFinishReceivingMessagesWith resultSet: XMPPResultSet) {
+        connection.asyncReadWrite { (transaction) in
+            guard let accountId = xmppMessageArchiveManagement.xmppStream?.accountId,
+                let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction)?.copyAsSelf() else {
+                    return
+            }
+            account.lastHistoryFetchDate = Date()
+            account.save(with: transaction)
+        }
+    }
+    
     public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFailToReceiveMessages error: XMPPIQ) {
         DDLogError("Failed to receive messages \(error)")
     }

@@ -9,8 +9,8 @@
 import Foundation
 import XMPPFramework
 
-extension XMPPMessageArchiveManagement {
-    public func fetchHistory(archiveJID: XMPPJID? = nil, userJID: XMPPJID? = nil, since: Date? = nil) {
+public extension XMPPMessageArchiveManagement {
+    @objc public func fetchHistory(archiveJID: XMPPJID? = nil, userJID: XMPPJID? = nil, since: Date? = nil) {
         var fields: [XMLElement] = []
         
         if let userJID = userJID {
@@ -24,7 +24,7 @@ extension XMPPMessageArchiveManagement {
             let start = XMPPMessageArchiveManagement.field(withVar: "start", type: nil, andValue: xmppDateString)
             fields.append(start)
         }
-        retrieveMessageArchive(at: archiveJID, withFields: fields, with: nil)
+        retrieveMessageArchive(at: archiveJID ?? xmppStream?.myJID?.bareJID, withFields: fields, with: nil)
     }
 }
 

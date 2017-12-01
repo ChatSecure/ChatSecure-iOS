@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSString *pushPubsubEndpoint;
 @property (nonatomic, strong, nullable) NSString *pushPubsubNode;
 
+/** For usage with MAM */
+@property (nonatomic, strong, nullable) NSDate *lastHistoryFetchDate;
+
 + (uint16_t)defaultPort;
 + (NSString *)newResource;
 

@@ -877,10 +877,19 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     [self goOnline];
     
+    
+    
     // Fetch latest vCard from server so we can update nickname
     //[self.xmppvCardTempModule fetchvCardTempForJID:self.JID ignoreStorage:YES];
     
-    // [self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
+    //NSDate *lastInteraction = OTRProtocolManager.shared.lastInteractionDate;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPAccount *account = [self.account refetchWithTransaction:transaction];
+        [self.messageStorage.archiving fetchHistoryWithArchiveJID:nil userJID:nil since:account.lastHistoryFetchDate];
+    }];
+    //[self.messageStorage.archiving fetchHistoryWithArchiveJID:nil userJID:nil since:lastInteraction];
+    
+    //[self.messageStorage.archiving retrieveMessageArchiveWithFields:nil withResultSet:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
