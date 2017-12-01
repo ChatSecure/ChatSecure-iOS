@@ -2331,8 +2331,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self populateUnknownSenderCell:cell withMessage:message];
         return cell;
     }
-    // We should never get there, but if we do, don't return nil
-    return [[UICollectionReusableView alloc] initWithFrame:CGRectZero];
+    return [super collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
 }
 
 @end
