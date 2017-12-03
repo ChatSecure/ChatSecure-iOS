@@ -13,10 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 //Extension Strings
+/** Returns only Buddy threads with messages, not MUCs. Depends on OTRConversationDatabaseViewExtensionName */
+extern NSString *OTRBuddyFilteredConversationsName;
 /** Can filter on inbox vs archive. Depends on OTRConversationDatabaseViewExtensionName */
-extern NSString *OTRFilteredConversationsName;
+extern NSString *OTRArchiveFilteredConversationsName;
 /** Can filter on inbox vs archive. Depends on OTRAllBuddiesDatabaseViewExtensionName */
-extern NSString *OTRFilteredBuddiesName;
+extern NSString *OTRArchiveFilteredBuddiesName;
 
 extern NSString *OTRConversationDatabaseViewExtensionName;
 /** Right now only filters messages without a length */
@@ -43,8 +45,8 @@ extern NSString *OTRPushTokenGroup;
 
 
 + (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database;
-+ (BOOL)registerFilteredConversationsViewWithDatabase:(YapDatabase *)database;
-
++ (BOOL)registerArchiveFilteredConversationsViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerBuddyFilteredConversationsViewWithDatabase:(YapDatabase *)database;
 
 + (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database;
 

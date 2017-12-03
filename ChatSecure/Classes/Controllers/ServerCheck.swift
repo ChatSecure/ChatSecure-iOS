@@ -30,14 +30,16 @@ public class ServerCheck: XMPPModule {
         NotificationCenter.default.removeObserver(self)
     }
     
-    
+    /// pushModule should be activated elsewhere
     @objc public init(push: PushController,
                       pushModule: XMPPPushModule,
                       dispatchQueue: DispatchQueue? = nil) {
         self.push = push
-        self.serverCapabilities = OTRServerCapabilities(dispatchQueue: dispatchQueue)
         let capsStorage = XMPPCapabilitiesCoreDataStorage(inMemoryStore: ())!
-        self.xmppCapabilities = XMPPCapabilities(capabilitiesStorage: capsStorage, dispatchQueue: dispatchQueue)
+        let capabilities = XMPPCapabilities(capabilitiesStorage: capsStorage, dispatchQueue: dispatchQueue)
+        self.xmppCapabilities = capabilities
+        self.serverCapabilities = OTRServerCapabilities(capabilities: capabilities, dispatchQueue: dispatchQueue)
+
         self.pushModule = pushModule
         super.init(dispatchQueue: dispatchQueue)
         
@@ -56,9 +58,8 @@ public class ServerCheck: XMPPModule {
     
     @discardableResult override public func activate(_ xmppStream: XMPPStream) -> Bool {
         guard super.activate(xmppStream),
-            serverCapabilities.activate(xmppStream),
-            pushModule.activate(xmppStream),
-            xmppCapabilities.activate(xmppStream)
+            xmppCapabilities.activate(xmppStream),
+            serverCapabilities.activate(xmppStream)
             else {
                 return false
         }
@@ -67,7 +68,6 @@ public class ServerCheck: XMPPModule {
     
     public override func deactivate() {
         serverCapabilities.deactivate()
-        pushModule.deactivate()
         xmppCapabilities.deactivate()
         super.deactivate()
     }
@@ -124,7 +124,9 @@ public class ServerCheck: XMPPModule {
     }
     
     private func postUpdateNotification() {
-        NotificationCenter.default.post(name: type(of: self).UpdateNotificationName, object: self)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: type(of: self).UpdateNotificationName, object: self)
+        }
     }
     
     private func refreshPush() {
@@ -142,17 +144,19 @@ public class ServerCheck: XMPPModule {
     
 }
 
+// MARK: - OTRServerCapabilitiesDelegate
+
 extension ServerCheck: OTRServerCapabilitiesDelegate {
-    // MARK: - OTRServerCapabilitiesDelegate
     
     @objc public func serverCapabilities(_ sender: OTRServerCapabilities, didDiscoverCapabilities capabilities: [XMPPJID : XMLElement]) {
-        checkReady()
+        refreshCapabilities()
     }
     
 }
 
+// MARK: - XMPPPushDelegate
+
 extension ServerCheck: XMPPPushDelegate {
-    // MARK: - XMPPPushDelegate
     
     public func pushModule(_ module: XMPPPushModule, didRegisterWithResponseIq responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
         checkReady()

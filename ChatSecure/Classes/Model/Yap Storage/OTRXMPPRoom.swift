@@ -136,7 +136,6 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func lastMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
-        
         guard let viewTransaction = transaction.ext(OTRFilteredChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
             return nil
         }

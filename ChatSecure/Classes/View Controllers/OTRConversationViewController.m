@@ -100,7 +100,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     self.conversationListViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.conversationListViewHandler.delegate = self;
-    [self.conversationListViewHandler setup:OTRFilteredConversationsName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
+    [self.conversationListViewHandler setup:OTRArchiveFilteredConversationsName groups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]];
     
     [self.tableView reloadData];
     [self updateInboxArchiveItems:self.navigationItem.titleView];
@@ -275,7 +275,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredConversationsName];
+        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRArchiveFilteredConversationsName];
         YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
             if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
                 id<OTRThreadOwner> threadOwner = object;

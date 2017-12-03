@@ -131,7 +131,7 @@
     //////// View Handlers /////////
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
-    [self.viewHandler setup:OTRFilteredBuddiesName groups:@[OTRBuddyGroup]];
+    [self.viewHandler setup:OTRArchiveFilteredBuddiesName groups:@[OTRBuddyGroup]];
     
     self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.searchViewHandler.delegate = self;
@@ -185,7 +185,7 @@
 
 - (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRFilteredBuddiesName];
+        YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRArchiveFilteredBuddiesName];
         YapDatabaseViewFiltering *filtering = [self getFilteringBlock:showArchived];
         [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
     }];

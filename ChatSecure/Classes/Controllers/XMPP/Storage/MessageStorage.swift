@@ -174,7 +174,14 @@ import CocoaLumberjack
             preSave?(message, transaction)
             message.save(with: transaction)
             if let incoming = message as? OTRIncomingMessage {
-                self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
+                // We only want to send receipts and show notifications for "real time" messages
+                // undelivered messages still go through the "handleDirectMessage" path,
+                // so MAM messages have been delivered to another device
+                if delayed == nil {
+                    self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
+                } else {
+                    self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
+                }
             }
         }
     }
@@ -272,7 +279,13 @@ extension MessageStorage: XMPPStreamDelegate {
     public func xmppStreamDidAuthenticate(_ sender: XMPPStream) {
         connection.asyncRead { (transaction) in
             guard let account = self.account(with: transaction) else { return }
-            self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: account.lastHistoryFetchDate)
+            let lastFetch = account.lastHistoryFetchDate ?? Date.distantPast
+            if let lastMessage = account.lastMessage(with: transaction),
+            lastMessage.messageDate > lastFetch {
+                self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: lastMessage.messageDate)
+            } else {
+                self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: account.lastHistoryFetchDate)
+            }
         }
     }
     

@@ -48,7 +48,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if let connection = OTRDatabaseManager.shared.longLivedReadOnlyConnection {
             self.viewHandler = OTRYapViewHandler(databaseConnection: connection, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
             self.viewHandler?.delegate = self
-            self.viewHandler?.setup(OTRFilteredBuddiesName, groups:[OTRBuddyGroup])
+            self.viewHandler?.setup(OTRArchiveFilteredBuddiesName, groups:[OTRBuddyGroup])
         }
         didUpdateCollectionView()
         self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: OTRBuddyInfoCheckableCell.reuseIdentifier())
@@ -103,7 +103,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     open func filterOnAccount(accountUniqueId:String?) {
         // Setup filtering to only show default account!
         OTRDatabaseManager.shared.readWriteDatabaseConnection?.readWrite({ (transaction) in
-            if let fvt = transaction.ext(OTRFilteredBuddiesName) as? YapDatabaseFilteredViewTransaction {
+            if let fvt = transaction.ext(OTRArchiveFilteredBuddiesName) as? YapDatabaseFilteredViewTransaction {
                 let filtering = YapDatabaseViewFiltering.withObjectBlock { (transaction, group, collection, key, object) -> Bool in
                     if let accountId = accountUniqueId, let buddy = object as? OTRXMPPBuddy {
                         let ret = (buddy.accountUniqueId.caseInsensitiveCompare(accountId) == .orderedSame)

@@ -1634,14 +1634,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return nil;
     }
     
-    if (!message.isMessageIncoming) {
-        return [self accountAvatarImage];
-    }
-    
     NSError *messageError = [message messageError];
     if ((messageError && !messageError.isAutomaticDownloadError) ||
         ![self isMessageTrusted:message]) {
         return [self warningAvatarImage];
+    }
+    
+    if (!message.isMessageIncoming) {
+        return [self accountAvatarImage];
     }
     
     if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
@@ -1673,6 +1673,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
+    /// For 1:1 buddy
     if ([message isMessageIncoming]) {
         return [self buddyAvatarImage];
     }

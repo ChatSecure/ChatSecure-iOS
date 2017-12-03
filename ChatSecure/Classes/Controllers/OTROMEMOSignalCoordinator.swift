@@ -189,7 +189,7 @@ import SignalProtocolObjC
      - parameter messageId: The preffered XMPP element Id to be used.
      - parameter completion: The completion block is called after all the necessary omemo preperation has completed and sendKeyData:iv:toJID:payload:elementId: is invoked
      */
-    open func encryptAndSendMessage(_ message: OTROutgoingMessage, buddyYapKey:String, messageId:String?, completion:@escaping (Bool,NSError?) -> Void) {
+    open func encryptAndSendMessage(_ message: OTROutgoingMessage, buddyYapKey:String, messageId:String?, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
         // Gather bundles for buddy and account here
         let group = DispatchGroup()
         
@@ -281,7 +281,7 @@ import SignalProtocolObjC
                     })
                     return
                 }
-            } catch let err as NSError {
+            } catch let err {
                 //This should only happen if we had an error encrypting the payload
                 strongSelf.callbackQueue.async(execute: {
                     completion(false,err)

@@ -20,6 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface OTRServerCapabilities : XMPPModule
 
+@property (nonatomic, strong, readonly) XMPPCapabilities *capabilities;
+
+- (instancetype) init NS_UNAVAILABLE;
+- (instancetype) initWithDispatchQueue:(nullable dispatch_queue_t)queue NS_UNAVAILABLE;
+- (instancetype) initWithCapabilities:(XMPPCapabilities*)capabilities dispatchQueue:(nullable dispatch_queue_t)dispatchQueue NS_DESIGNATED_INITIALIZER;
+
 #pragma mark Properties
 
 /** Default is YES. discoverServices will be invoked after xmppStreamDidAuthenticate: */

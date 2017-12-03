@@ -22,8 +22,6 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 @property (nonatomic, strong, readonly) XMPPIDTracker *tracker;
 /** Only access this from within the moduleQueue */
 @property (nonatomic, readwrite) BOOL hasRequestedServices;
-/** Only access this from within the moduleQueue */
-@property (nonatomic, strong, readonly) NSMutableSet <XMPPCapabilities*> *capabilitiesModules;
 /** This contains all JIDs that need to be fetched. */
 @property (nonatomic, strong, readonly) NSMutableSet <XMPPJID*> *allJIDs;
 @end
@@ -33,8 +31,9 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 @synthesize discoveredServices = _discoveredServices;
 @synthesize allCapabilities = _allCapabilities;
 
-- (instancetype) initWithDispatchQueue:(dispatch_queue_t)queue {
-    if (self = [super initWithDispatchQueue:queue]) {
+- (instancetype) initWithCapabilities:(XMPPCapabilities *)capabilities dispatchQueue:(dispatch_queue_t)dispatchQueue {
+    if (self = [super initWithDispatchQueue:dispatchQueue]) {
+        _capabilities = capabilities;
         _autoDiscoverServices = YES;
         _allJIDs = [NSMutableSet set];
         _hasRequestedServices = NO;
@@ -50,15 +49,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     if ([super activate:aXmppStream])
     {
         [self performBlock:^{
-            _capabilitiesModules = [NSMutableSet set];
-            [xmppStream autoAddDelegate:self delegateQueue:moduleQueue toModulesOfClass:[XMPPCapabilities class]];
+            [self.capabilities addDelegate:self delegateQueue:moduleQueue];
             _tracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:moduleQueue];
-            
-            [xmppStream enumerateModulesWithBlock:^(XMPPModule *module, NSUInteger idx, BOOL *stop) {
-                if ([module isKindOfClass:[XMPPCapabilities class]]) {
-                    [self.capabilitiesModules addObject:(XMPPCapabilities*)module];
-                }
-            }];
         }];
         return YES;
     }
@@ -70,8 +62,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     [self performBlock:^{
         [_tracker removeAllIDs];
         _tracker = nil;
-        [xmppStream removeAutoDelegate:self delegateQueue:moduleQueue fromModulesOfClass:[XMPPCapabilities class]];
-        _capabilitiesModules = nil;
+        [self.capabilities removeDelegate:self];
         self.discoveredServices = nil;
     }];
     [super deactivate];
@@ -225,27 +216,6 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     }];
 }
 
-- (void)xmppStream:(XMPPStream *)sender didRegisterModule:(id)module
-{
-    if (![module isKindOfClass:[XMPPCapabilities class]]) {
-        return;
-    }
-    [self performBlockAsync:^{
-        [self.capabilitiesModules addObject:(XMPPCapabilities*)module];
-    }];
-
-}
-
-- (void)xmppStream:(XMPPStream *)sender willUnregisterModule:(id)module
-{
-    if (![module isKindOfClass:[XMPPCapabilities class]]) {
-        return;
-    }
-    [self performBlockAsync:^{
-        [self.capabilitiesModules removeObject:(XMPPCapabilities*)module];
-    }];
-}
-
 - (BOOL)xmppStream:(XMPPStream *)stream didReceiveIQ:(XMPPIQ *)iq
 {
     NSString *type = [iq type];
@@ -327,30 +297,27 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
  *
  * This code depends on pending upstream XMPPFramework changes
  **/
-//- (void)xmppCapabilities:(XMPPCapabilities *)sender fetchFailedForJID:(XMPPJID *)jid {
-//    XMPPLogInfo(@"OTRServerCapabilities: Fetch failed for jid %@", [jid full]);
-//    return;
-//    [self performBlockAsync:^{
-//        NSSet<XMPPJID*>* jids = self.allJIDs;
-//        if (!jids.count) {
-//            return;
-//        }
-//        // Check if this is something we care about
-//        if (![jids containsObject:jid]) {
-//            return;
-//        }
-//        // Skip caps we've already fetched
-//        NSXMLElement *existingCaps = [self.allCapabilities objectForKey:jid];
-//        if (existingCaps) {
-//            return;
-//        }
-//        // This seems to be needed because fetching your own capabilities has been failing on the first try, but works on second try.
-//        // TODO: limit number of retries
-//        [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull obj, BOOL * _Nonnull stop) {
-//            [obj fetchCapabilitiesForJID:jid];
-//        }];
-//    }];
-//}
+- (void)xmppCapabilities:(XMPPCapabilities *)sender fetchFailedForJID:(XMPPJID *)jid {
+    XMPPLogInfo(@"OTRServerCapabilities: Fetch failed for jid %@", [jid full]);
+    [self performBlockAsync:^{
+        NSSet<XMPPJID*>* jids = self.allJIDs;
+        if (!jids.count) {
+            return;
+        }
+        // Check if this is something we care about
+        if (![jids containsObject:jid]) {
+            return;
+        }
+        // Skip caps we've already fetched
+        NSXMLElement *existingCaps = [self.allCapabilities objectForKey:jid];
+        if (existingCaps) {
+            return;
+        }
+        // This seems to be needed because fetching your own capabilities has been failing on the first try, but works on second try.
+        // TODO: limit number of retries
+        [self.capabilities fetchCapabilitiesForJID:jid];
+    }];
+}
 
 - (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
     [self performBlockAsync:^{
@@ -413,19 +380,17 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         if (existingCaps) {
             return;
         }
-        [self.capabilitiesModules enumerateObjectsUsingBlock:^(XMPPCapabilities * _Nonnull capsModule, BOOL * _Nonnull stop) {
-            id <XMPPCapabilitiesStorage> storage = capsModule.xmppCapabilitiesStorage;
-            BOOL fetched = [storage areCapabilitiesKnownForJID:jid xmppStream:xmppStream];
-            if (fetched) {
-                NSXMLElement *capabilities = [storage capabilitiesForJID:jid xmppStream:xmppStream];
-                if (capabilities) {
-                    [newCaps setObject:capabilities forKey:jid];
-                    *stop = YES;
-                }
-            } else {
-                [capsModule fetchCapabilitiesForJID:jid];
+        id <XMPPCapabilitiesStorage> storage = self.capabilities.xmppCapabilitiesStorage;
+        BOOL fetched = [storage areCapabilitiesKnownForJID:jid xmppStream:xmppStream];
+        if (fetched) {
+            NSXMLElement *capabilities = [storage capabilitiesForJID:jid xmppStream:xmppStream];
+            if (capabilities) {
+                [newCaps setObject:capabilities forKey:jid];
+                *stop = YES;
             }
-        }];
+        } else {
+            [self.capabilities fetchCapabilitiesForJID:jid];
+        }
     }];
     self.allCapabilities = newCaps;
     [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];

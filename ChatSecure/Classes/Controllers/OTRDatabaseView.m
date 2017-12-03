@@ -17,13 +17,14 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-NSString *OTRFilteredConversationsName = @"OTRFilteredConversationsName";
+NSString *OTRArchiveFilteredConversationsName = @"OTRFilteredConversationsName";
+NSString *OTRBuddyFilteredConversationsName = @"OTRBuddyFilteredConversationsName";
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
 NSString *OTRFilteredChatDatabaseViewExtensionName = @"OTRFilteredChatDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
-NSString *OTRFilteredBuddiesName = @"OTRFilteredBuddiesName";
+NSString *OTRArchiveFilteredBuddiesName = @"OTRFilteredBuddiesName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
 
@@ -40,8 +41,8 @@ NSString *OTRPushAccountGroup = @"Account";
 
 @implementation OTRDatabaseView
 
-+ (BOOL)registerFilteredConversationsViewWithDatabase:(YapDatabase *)database {
-    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredConversationsName];
++ (BOOL)registerArchiveFilteredConversationsViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRArchiveFilteredConversationsName];
     if (filteredView) {
         return YES;
     }
@@ -61,9 +62,36 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }];
     filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRConversationDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
-    return [database registerExtension:filteredView withName:OTRFilteredConversationsName];
+    return [database registerExtension:filteredView withName:OTRArchiveFilteredConversationsName];
 }
 
++ (BOOL)registerBuddyFilteredConversationsViewWithDatabase:(YapDatabase *)database {
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRBuddyFilteredConversationsName];
+    if (filteredView) {
+        return YES;
+    }
+    YapDatabaseView *conversationView = [database registeredExtension:OTRConversationDatabaseViewExtensionName];
+    if (!conversationView) {
+        return NO;
+    }
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = YES;
+    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection], nil];
+    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
+    YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
+        id<OTRThreadOwner> thread = (id<OTRThreadOwner>)object;
+        if (![thread conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            return NO;
+        }
+        id<OTRMessageProtocol> lastMessage = [thread lastMessageWithTransaction:transaction];
+        if (!lastMessage) {
+            return NO;
+        }
+        return YES;
+    }];
+    filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRConversationDatabaseViewExtensionName filtering:filtering versionTag:@"1" options:options];
+    return [database registerExtension:filteredView withName:OTRBuddyFilteredConversationsName];
+}
 + (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database
 {
     YapDatabaseView *conversationView = [database registeredExtension:OTRConversationDatabaseViewExtensionName];
@@ -109,11 +137,19 @@ NSString *OTRPushAccountGroup = @"Account";
                 // indicating that we want to force to the top
                 NSDate *date1 = [message1 messageDate];
                 if (!date1) {
-                    date1 = [NSDate date];
+                    if (thread1.lastMessageIdentifier && thread1.lastMessageIdentifier.length == 0) {
+                        date1 = [NSDate date];
+                    } else {
+                        date1 = [NSDate distantPast];
+                    }
                 }
                 NSDate *date2 = [message2 messageDate];
                 if (!date2) {
-                    date2 = [NSDate date];
+                    if (thread2.lastMessageIdentifier && thread2.lastMessageIdentifier.length == 0) {
+                        date2 = [NSDate date];
+                    } else {
+                        date2 = [NSDate distantPast];
+                    }
                 }
                 
                 return [date2 compare:date1];
@@ -135,15 +171,18 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"7"
+                                                                   versionTag:@"8"
                                                                       options:options];
     
     BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
-    return result && [self registerFilteredConversationsViewWithDatabase:database];
+    if (result)  {
+        result = [self registerArchiveFilteredConversationsViewWithDatabase:database];
+    }
+    if (result) {
+        result = [self registerBuddyFilteredConversationsViewWithDatabase:database];
+    }
+    return result;
 }
-
-
-
 
 + (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database
 {
@@ -346,7 +385,7 @@ NSString *OTRPushAccountGroup = @"Account";
 }
 
 + (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database {
-    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRFilteredBuddiesName];
+    YapDatabaseFilteredView *filteredView = [database registeredExtension:OTRArchiveFilteredBuddiesName];
     if (filteredView) {
         return YES;
     }
@@ -366,7 +405,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }];
     filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRAllBuddiesDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
-    return [database registerExtension:filteredView withName:OTRFilteredBuddiesName];
+    return [database registerExtension:filteredView withName:OTRArchiveFilteredBuddiesName];
 }
 
 + (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database
