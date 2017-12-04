@@ -17,6 +17,8 @@ import CocoaLumberjack
 
     // MARK: Properties
     private let connection: YapDatabaseConnection
+    /// Only access this within moduleQueue
+    private var mamCatchupInProgress: Bool = false
     
     /// Capabilities must be activated elsewhere
     private let capabilities: XMPPCapabilities
@@ -65,6 +67,24 @@ import CocoaLumberjack
     }
     
     // MARK: Private
+    
+    /// only if the new date is newer than the old date it will save
+    private func updateLastFetch(account: OTRXMPPAccount, date: Date, transaction: YapDatabaseReadWriteTransaction) {
+        // Don't update fetch date from realtime messages if we're currently fetching
+        var fetching = false
+        performBlock {
+            fetching = self.mamCatchupInProgress
+        }
+        if fetching {
+            return
+        }
+        if let lastFetch = account.lastHistoryFetchDate,
+            date > lastFetch,
+            let account = account.copyAsSelf() {
+            account.lastHistoryFetchDate = date
+            account.save(with: transaction)
+        }
+    }
     
     /// Updates chat state for buddy
     private func handleChatState(message: XMPPMessage, buddy: OTRXMPPBuddy) {
@@ -189,6 +209,10 @@ import CocoaLumberjack
                     self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
                 }
             }
+            // let's count carbon messages as realtime
+            if delayed == nil {
+                self.updateLastFetch(account: account, date: Date(), transaction: transaction)
+            }
         }
     }
     
@@ -259,6 +283,7 @@ import CocoaLumberjack
                 incoming.save(with: transaction)
                 self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
             }
+            self.updateLastFetch(account: account, date: incoming.messageDate, transaction: transaction)
         })
     }
     
@@ -283,15 +308,23 @@ extension MessageStorage: XMPPCapabilitiesDelegate {
 
 extension MessageStorage: XMPPStreamDelegate {
     public func xmppStreamDidAuthenticate(_ sender: XMPPStream) {
+        mamCatchupInProgress = false
         connection.asyncRead { (transaction) in
             guard let account = self.account(with: transaction) else { return }
-            let lastFetch = account.lastHistoryFetchDate ?? Date.distantPast
-            if let lastMessage = account.lastMessage(with: transaction),
-            lastMessage.messageDate > lastFetch {
-                self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: lastMessage.messageDate)
-            } else {
-                self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: account.lastHistoryFetchDate)
+            // if we've never fetched MAM before, try to fetch the last week
+            // otherwise fetch since the last time we fetched
+            var dateToFetch = account.lastHistoryFetchDate
+            if dateToFetch == nil {
+                let currentDate = Date()
+                var dateComponents = DateComponents()
+                dateComponents.day = -7
+                let lastWeek = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+                dateToFetch = lastWeek
             }
+            self.performBlock {
+                self.mamCatchupInProgress = true
+            }
+            self.archiving.fetchHistory(archiveJID: nil, userJID: nil, since: dateToFetch)
         }
     }
     
@@ -333,6 +366,7 @@ extension MessageStorage: XMPPMessageCarbonsDelegate {
 
 extension MessageStorage: XMPPMessageArchiveManagementDelegate {
     public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFinishReceivingMessagesWith resultSet: XMPPResultSet) {
+        mamCatchupInProgress = false
         connection.asyncReadWrite { (transaction) in
             guard let accountId = xmppMessageArchiveManagement.xmppStream?.accountId,
                 let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction)?.copyAsSelf() else {
