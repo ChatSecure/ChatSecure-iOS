@@ -109,6 +109,8 @@
 		63FCB1371DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FCB1361DA3224A00A801F2 /* OTRSignalEncryptionHelper.swift */; };
 		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
 		8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */; };
+		9212364E1FCD779D009F97F0 /* OTRMessageUnknownSenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */; };
+		921236501FCD77B7009F97F0 /* OTRMessageUnknownSenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */; };
 		9236F56B1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */; };
 		924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
 		924F67C71EA55C6F00528FB6 /* MigrationInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */; };
@@ -1020,6 +1022,8 @@
 		7A62FCE8FEC1E7C9644F8C38 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
 		8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OTRMessagesLoadingView.xib; sourceTree = "<group>"; };
 		9118152C0A7B287ABD07FF70 /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
+		9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRMessageUnknownSenderCell.swift; sourceTree = "<group>"; };
+		9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRMessageUnknownSenderCell.xib; sourceTree = "<group>"; };
 		9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRGroupAvatarGenerator.swift; sourceTree = "<group>"; };
 		924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigrationInfoHeaderView.xib; path = Interface/MigrationInfoHeaderView.xib; sourceTree = "<group>"; };
 		924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationInfoHeaderView.swift; sourceTree = "<group>"; };
@@ -1742,6 +1746,8 @@
 				D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */,
 				92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */,
 				92CC68F21F43054E0006CDF8 /* OTRComposeGroupBuddyCell.xib */,
+				9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */,
+				9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2649,6 +2655,7 @@
 				D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */,
 				924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */,
 				8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */,
+				921236501FCD77B7009F97F0 /* OTRMessageUnknownSenderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3081,6 +3088,7 @@
 				D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */,
 				D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */,
 				6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */,
+				9212364E1FCD779D009F97F0 /* OTRMessageUnknownSenderCell.swift in Sources */,
 				D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */,
 				63DC417B1BB3767100D42857 /* Errors.swift in Sources */,
 				D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */,
