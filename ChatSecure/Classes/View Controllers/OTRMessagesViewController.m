@@ -1663,7 +1663,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 avatarImage = [roomOccupant avatarImage];
             }
         } else if (roomMessage.senderJID) {
-            avatarImage = [OTRImages avatarImageWithUsername:[[XMPPJID jidWithString:roomMessage.senderJID] resource]];
+            XMPPJID *jid = [XMPPJID jidWithString:roomMessage.senderJID];
+            NSString *resource = jid.resource;
+            if (resource.length > 0) {
+                avatarImage = [OTRImages avatarImageWithUsername:resource];
+            } else {
+                // this message probably came from the room itself
+                return nil;
+            }
         } else {
             return nil;
         }
