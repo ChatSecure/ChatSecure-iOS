@@ -12,8 +12,8 @@ import XCTest
 extension OTROMEMOSignalCoordinator {
     convenience init(accountYapKey: String, databaseConnection: YapDatabaseConnection) throws {
         let capsStorage = XMPPCapabilitiesCoreDataStorage(inMemoryStore: ())!
-        let serverCaps = OTRServerCapabilities()
         let caps = XMPPCapabilities(capabilitiesStorage: capsStorage)
+        let serverCaps = OTRServerCapabilities(capabilities: caps, dispatchQueue: nil)
         let file = FileTransferManager(connection: databaseConnection, serverCapabilities: serverCaps, sessionConfiguration: URLSessionConfiguration.ephemeral)
         let messageStorage = MessageStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file)
         try self.init(accountYapKey: accountYapKey, databaseConnection: databaseConnection, messageStorage: messageStorage)
