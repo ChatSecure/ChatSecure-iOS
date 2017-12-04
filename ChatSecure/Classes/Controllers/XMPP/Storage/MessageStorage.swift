@@ -151,7 +151,12 @@ import CocoaLumberjack
             if isIncoming {
                 self.handleDeliveryResponse(message: xmppMessage, transaction: transaction)
                 self.handleChatState(message: xmppMessage, buddy: buddy)
-                _message = OTRIncomingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
+                let incomingMessage = OTRIncomingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
+                // mark message as read if this is a MAM catchup
+                if delayed != nil {
+                    incomingMessage.read = true
+                }
+                _message = incomingMessage
             } else {
                 let outgoing = OTROutgoingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
                 outgoing.dateSent = delayed ?? Date()
