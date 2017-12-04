@@ -132,7 +132,8 @@ import CocoaLumberjack
                                         delayed: Date?,
                                         isIncoming: Bool,
                                         preSave: PreSave? = nil ) {
-        guard !xmppMessage.isErrorMessage else {
+        guard !xmppMessage.isErrorMessage,
+            !xmppMessage.containsGroupChatElements else {
             DDLogWarn("Discarding forwarded message: \(xmppMessage)")
             return
         }
@@ -297,9 +298,7 @@ extension MessageStorage: XMPPStreamDelegate {
     public func xmppStream(_ sender: XMPPStream, didReceive message: XMPPMessage) {
         // We don't handle incoming group chat messages here
         // Check out OTRXMPPRoomYapStorage instead
-        guard message.messageType != .groupchat,
-            message.element(forName: "x", xmlns: XMPPMUCUserNamespace) == nil,
-            message.element(forName: "x", xmlns: XMPPConferenceXmlns) == nil,
+        guard !message.containsGroupChatElements,
             // We handle carbons elsewhere via XMPPMessageCarbonsDelegate
             !message.isMessageCarbon,
             // We handle MAM elsewhere as well
@@ -373,6 +372,18 @@ extension MessageStorage: XMPPMessageArchiveManagementDelegate {
 
 // MARK: - Private Extensions
 
+extension XMPPMessage {
+    /// We don't want any group chat stuff ending up in here, including invites
+    var containsGroupChatElements: Bool {
+        let message = self
+        guard message.messageType != .groupchat,
+        message.element(forName: "x", xmlns: XMPPMUCUserNamespace) == nil,
+            message.element(forName: "x", xmlns: XMPPConferenceXmlns) == nil else {
+                return true
+        }
+        return false
+    }
+}
 
 extension OTRChatState {
     static func chatState(from fromState: XMPPMessage.ChatState?) -> OTRChatState {
