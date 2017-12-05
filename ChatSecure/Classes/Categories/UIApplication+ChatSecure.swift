@@ -72,41 +72,47 @@ public extension UIApplication {
     }
     
     @objc public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
-        var name = SOMEONE_STRING()
-        if let threadName = thread?.threadName {
-            name = threadName
+        DispatchQueue.main.async {
+            var name = SOMEONE_STRING()
+            if let threadName = thread?.threadName {
+                name = threadName
+            }
+            
+            let chatString = WANTS_TO_CHAT_STRING()
+            let text = "\(name) \(chatString)"
+            let unreadCount = self.applicationIconBadgeNumber + 1
+            self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
         }
-        
-        let chatString = WANTS_TO_CHAT_STRING()
-        let text = "\(name) \(chatString)"
-        let unreadCount = self.applicationIconBadgeNumber + 1
-        self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
     @objc public func showLocalNotificationForSubscriptionRequestFrom(_ jid:String?) {
-        var name = SOMEONE_STRING()
-        if let jidName = jid {
-            name = jidName
+        DispatchQueue.main.async {
+            var name = SOMEONE_STRING()
+            if let jidName = jid {
+                name = jidName
+            }
+            
+            let chatString = WANTS_TO_CHAT_STRING()
+            let text = "\(name) \(chatString)"
+            let unreadCount = self.applicationIconBadgeNumber + 1
+            self.showLocalNotificationWith(identifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
         }
-        
-        let chatString = WANTS_TO_CHAT_STRING()
-        let text = "\(name) \(chatString)"
-        let unreadCount = self.applicationIconBadgeNumber + 1
-        self.showLocalNotificationWith(identifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
     }
     
     @objc public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
-        var name = SOMEONE_STRING()
-        if let buddyName = (thread as? OTRBuddy)?.displayName {
-            name = buddyName
-        } else if let threadName = thread?.threadName {
-            name = threadName
+        DispatchQueue.main.async {
+            var name = SOMEONE_STRING()
+            if let buddyName = (thread as? OTRBuddy)?.displayName {
+                name = buddyName
+            } else if let threadName = thread?.threadName {
+                name = threadName
+            }
+            
+            let message = String(format: BUDDY_APPROVED_STRING(), name)
+            
+            let unreadCount = self.applicationIconBadgeNumber + 1
+            self.showLocalNotificationFor(thread, text: message, unreadCount: unreadCount)
         }
-        
-        let message = String(format: BUDDY_APPROVED_STRING(), name)
-        
-        let unreadCount = self.applicationIconBadgeNumber + 1
-        self.showLocalNotificationFor(thread, text: message, unreadCount: unreadCount)
     }
     
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
