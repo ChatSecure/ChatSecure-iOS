@@ -260,30 +260,10 @@
 
 - (NSString *)activeThreadYapKey
 {
-    __block NSString *threadOwnerYapKey = nil;
-    NSArray <UIViewController *>*viewControllers = [self.splitViewCoordinator.splitViewController viewControllers];
-    [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray <UIViewController *>*result = nil;
-        if ([obj isKindOfClass:[UINavigationController class] ]) {
-            result = [((UINavigationController *)obj) otr_baseViewContorllers];
-        } else {
-            result = @[obj];
-        }
-        
-        [result enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if([obj isKindOfClass:[OTRMessagesViewController class]] && [obj otr_isVisible])
-            {
-                OTRMessagesViewController *messagesViewController = (OTRMessagesViewController *)obj;
-                threadOwnerYapKey = messagesViewController.threadKey;
-                
-                *stop = YES;
-            }
-        }];
-        
-        if (threadOwnerYapKey) {
-            *stop = YES;
-        }
-    }];
+    NSString *threadOwnerYapKey = nil;
+    if (self.messagesViewController && [self.messagesViewController otr_isVisible]) {
+        threadOwnerYapKey = self.messagesViewController.threadKey;
+    }
     return threadOwnerYapKey;
 }
 
