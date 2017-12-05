@@ -133,13 +133,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:welcomeNavController animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
-    } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
-        EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
-        pushVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        if (pushVC) {
-            [self presentViewController:pushVC animated:YES completion:nil];
-        }
-        self.hasPresentedOnboarding = YES;
     }
     
     OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
