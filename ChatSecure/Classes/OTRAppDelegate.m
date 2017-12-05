@@ -83,7 +83,6 @@
 
 @implementation OTRAppDelegate
 @synthesize window = _window;
-@dynamic activeThreadYapKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -256,15 +255,6 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
-}
-
-- (NSString *)activeThreadYapKey
-{
-    NSString *threadOwnerYapKey = nil;
-    if (self.messagesViewController && [self.messagesViewController otr_isVisible]) {
-        threadOwnerYapKey = self.messagesViewController.threadKey;
-    }
-    return threadOwnerYapKey;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -517,11 +507,13 @@
 #pragma mark UNUserNotificationCenterDelegate methods (iOS 10+)
 
 - (void) userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    if ([notification.request.content.threadIdentifier isEqualToString:[self activeThreadYapKey]]) {
-        completionHandler(UNNotificationPresentationOptionNone);
-    } else {
-        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
-    }
+    [OTRAppDelegate visibleThread:^(YapCollectionKey * _Nullable ck) {
+        if ([ck.key isEqualToString:notification.request.content.threadIdentifier]) {
+            completionHandler(UNNotificationPresentationOptionNone);
+        } else {
+            completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
+        }
+    } completionQueue:nil];
 }
 
 - (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {

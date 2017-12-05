@@ -530,6 +530,7 @@
 		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9F3B1AF1FD48DDA00DFC5DA /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F3B1AE1FD48DDA00DFC5DA /* Account.swift */; };
 		D9F8C3C21FBFD2CA00D4B857 /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */; };
+		D9FBDDC91FD74A93006F1C6C /* OTRAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */; };
 		D9FD36011EFAFD3C00398CE4 /* FormatterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476B1EFA03FC00C39B25 /* FormatterKit.framework */; };
 		D9FD36021EFAFD3C00398CE4 /* HTMLReader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476C1EFA03FC00C39B25 /* HTMLReader.framework */; };
 		D9FD36031EFAFD3C00398CE4 /* KVOController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476E1EFA03FC00C39B25 /* KVOController.framework */; };
@@ -1177,6 +1178,7 @@
 		D9EEEDD11D27388600B8BC54 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRvCard.h; path = "Yap Storage/OTRvCard.h"; sourceTree = "<group>"; };
 		D9F3B1AE1FD48DDA00DFC5DA /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
+		D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRAppDelegate.swift; sourceTree = "<group>"; };
 		DE32B878BAC9A236855EAF6E /* Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1307,6 +1309,7 @@
 		633105001A16D1A300C17BAE /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */,
 				633105E51A16D1A300C17BAE /* OTRAppDelegate.h */,
 				633105E61A16D1A300C17BAE /* OTRAppDelegate.m */,
 				633105011A16D1A300C17BAE /* Categories */,
@@ -3187,6 +3190,7 @@
 				632AA72B1D480BFF00F65733 /* OTRSignalSenderKey.m in Sources */,
 				632AA72F1D4819BD00F65733 /* OTRSignalPreKey.m in Sources */,
 				D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
+				D9FBDDC91FD74A93006F1C6C /* OTRAppDelegate.swift in Sources */,
 				D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */,
 				D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */,
 				D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */,

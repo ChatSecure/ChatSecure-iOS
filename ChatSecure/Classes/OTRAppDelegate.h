@@ -35,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 /** Only used from Database Unlock view. */
 - (void) showConversationViewController;
 
-/** The yap key for the active on-screen OTRThreadOwner. This should be moved */
-@property (nonatomic, readonly, nullable) NSString *activeThreadYapKey;
 @property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
 #pragma mark Theming

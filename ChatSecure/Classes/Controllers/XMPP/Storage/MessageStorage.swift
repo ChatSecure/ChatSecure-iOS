@@ -295,6 +295,9 @@ import CocoaLumberjack
         
         self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
         UIApplication.shared.showLocalNotification(message, transaction: transaction)
+        
+        /// mark as read if on screen
+        MessageStorage.markAsReadIfVisible(message: message)
     }
 }
 
@@ -469,15 +472,6 @@ extension OTRBaseMessage {
         // Extract XEP-0359 stanza-id
         self.originId = xmppMessage.originId
         self.stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: capabilities)
-        
-        if let incoming = self as? OTRIncomingMessage {
-            // Mark if read if it's on the screen
-            // TODO: make this not dependent on global main thread variable
-            if let yapKey = OTRAppDelegate.appDelegate.activeThreadYapKey,
-                yapKey == incoming.threadId {
-                incoming.read = true
-            }
-        }
     }
 }
 
@@ -485,6 +479,33 @@ extension NSCopying {
     /// Creates a deep copy of the object
     func copyAsSelf() -> Self? {
         return self.copy() as? Self
+    }
+}
+
+public extension MessageStorage {
+    @objc public static func markAsReadIfVisible(message: OTRMessageProtocol) {
+        guard message.isMessageRead == false,
+            let connection = OTRDatabaseManager.shared.readWriteDatabaseConnection else {
+            return
+        }
+        OTRAppDelegate.visibleThread({ (ck) in
+            guard let key = ck?.key,
+            let collection = ck?.collection,
+            key == message.threadId,
+            collection == message.threadCollection else {
+                    return
+            }
+            connection.asyncReadWrite({ (transaction) in
+                if message.isMessageRead == false, let message = message.copyAsSelf() {
+                    if let incoming = message as? OTRIncomingMessage {
+                        incoming.read = true
+                    } else if let roomMessage = message as? OTRXMPPRoomMessage {
+                        roomMessage.read = true
+                    }
+                    message.save(with: transaction)
+                }
+            })
+        })
     }
 }
 

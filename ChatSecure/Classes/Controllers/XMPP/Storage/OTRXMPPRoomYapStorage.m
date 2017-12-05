@@ -76,6 +76,7 @@
     __block OTRXMPPRoomMessage *databaseMessage = nil;
     __block OTRXMPPRoom *databaseRoom = nil;
     __block OTRXMPPAccount *account = nil;
+    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         // Sends a response receipt when receiving a delivery receipt request
@@ -84,8 +85,6 @@
         // Extract XEP-0359 stanza-id
         NSString *stanzaId = [message extractStanzaIdWithAccount:account capabilities:self.capabilities];
         NSString *originId = message.originId;
-        databaseMessage.originId = originId;
-        databaseMessage.stanzaId = stanzaId;
         
         if ([self existsMessage:message from:fromJID stanzaId:stanzaId transaction:transaction]) {
             // This message already exists and shouldn't be inserted
@@ -120,26 +119,23 @@
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
         
         databaseRoom.lastRoomMessageId = [databaseMessage uniqueId];
-        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
-        if([activeThreadYapKey isEqualToString:databaseMessage.threadId]) {
-            databaseMessage.read = YES;
-        } else {
-            databaseMessage.read = NO;
-        }
+        databaseMessage.originId = originId;
+        databaseMessage.stanzaId = stanzaId;
+        databaseMessage.read = NO;
+
         
         [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];
         
-        if(databaseMessage) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
-            [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage force:NO transaction:transaction];
-            // If delayedDeliveryDate is set we are retrieving history. Don't show
-            // notifications in that case. Also, don't show notifications for archived
-            // rooms.
-            if (!message.delayedDeliveryDate && !databaseRoom.isArchived) {
-                [[UIApplication sharedApplication] showLocalNotification:databaseMessage transaction:transaction];
-            }
+        OTRXMPPManager *xmpp = (OTRXMPPManager*)[OTRProtocolManager.shared protocolForAccount:account];
+        [xmpp.fileTransferManager createAndDownloadItemsIfNeededWithMessage:databaseMessage force:NO transaction:transaction];
+        // If delayedDeliveryDate is set we are retrieving history. Don't show
+        // notifications in that case. Also, don't show notifications for archived
+        // rooms.
+        if (!message.delayedDeliveryDate && !databaseRoom.isArchived) {
+            [[UIApplication sharedApplication] showLocalNotification:databaseMessage transaction:transaction];
         }
+        [MessageStorage markAsReadIfVisibleWithMessage:databaseMessage];
     }];
 }
 

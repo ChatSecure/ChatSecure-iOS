@@ -140,7 +140,7 @@
         }
 
         OTRIncomingMessage *message = [self incomingMessageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
-        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] activeThreadYapKey];
+        NSString *activeThreadYapKey = [[OTRAppDelegate appDelegate] r];
         if([activeThreadYapKey isEqualToString:message.threadId]) {
             message.read = YES;
         }
