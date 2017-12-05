@@ -459,8 +459,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }];
     }
     
-    [self sendPresenceProbe];
-    [self fetchOMEMODeviceList];
+    if (![self isGroupChat]) {
+        [self sendPresenceProbe];
+        [self fetchOMEMODeviceList];
+    }
 }
 
                            
@@ -922,7 +924,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         account = [self accountWithTransaction:transaction];
         buddy = [self buddyWithTransaction:transaction];
     }];
-    if (!account || !buddy) {
+    if (!account || !buddy || ([buddy isKindOfClass:[OTRXMPPBuddy class]] && [(OTRXMPPBuddy *)buddy pendingApproval])) {
         return;
     }
     id manager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
