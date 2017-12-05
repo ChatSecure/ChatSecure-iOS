@@ -137,6 +137,9 @@
 
 - (NSString *)dateString:(NSDate *)messageDate
 {
+    if (!messageDate) {
+        return @"";
+    }
     NSTimeInterval timeInterval = fabs([messageDate timeIntervalSinceNow]);
     NSString * dateString = nil;
     if (timeInterval < 60){
