@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import YapDatabase.YapDatabaseSecondaryIndex
+import YapDatabase
+import CocoaLumberjack
 
 public extension YapDatabaseReadTransaction {
     
@@ -88,6 +89,8 @@ public extension YapDatabaseReadTransaction {
         return count
     }
     
+    
+    
     @objc public func allUnreadMessagesForThread(_ thread:OTRThreadOwner) -> [OTRMessageProtocol] {
         guard let indexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return []
@@ -102,15 +105,28 @@ public extension YapDatabaseReadTransaction {
         }
         
         if (!success) {
-            NSLog("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
+            DDLogError("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
         }
         
         return result
     }
 }
 
-public extension YapDatabaseReadWriteTransaction {
+public extension YapDatabaseReadTransaction {
     
-    
+    @objc public func enumerateUnreadMessages(_ block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
+            return
+        }
+        let queryString = "Where \(MessageIndexColumnName.isMessageRead) == 0"
+        let query = YapDatabaseQuery(string: queryString, parameters: [])
+        secondaryIndexTransaction.enumerateKeysAndObjects(matching: query) { (key, collection, object, stop) in
+            if let message = object as? OTRMessageProtocol {
+                block(message, stop)
+            } else {
+                DDLogError("Non-message object in messages index \(object)")
+            }
+        }
+    }
     
 }

@@ -277,7 +277,17 @@
         unread = [transaction numberOfUnreadMessages];
     } completionBlock:^{
         application.applicationIconBadgeNumber = unread;
+//#if DEBUG
+//        // Temporary hack to fix corrupted development database
+//        if (unread > 0) {
+//            [self fixUnreadMessageCount:^(NSUInteger count) {
+//                application.applicationIconBadgeNumber = count;
+//            }];
+//        }
+//#endif
     }];
+    
+
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
         DDLogInfo(@"Background task expired, disconnecting all accounts. Remaining: %f", application.backgroundTimeRemaining);
