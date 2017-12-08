@@ -80,8 +80,6 @@
 		63BA43DF1D418F14007FAF7F /* OTRAccountSignalIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BA43DD1D418F14007FAF7F /* OTRAccountSignalIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63BA43E01D418F14007FAF7F /* OTRAccountSignalIdentity.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BA43DE1D418F14007FAF7F /* OTRAccountSignalIdentity.m */; };
 		63BAB26D1C863C60005185F3 /* PushMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BAB26C1C863C60005185F3 /* PushMessage.swift */; };
-		63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */; };
 		63BB66B41BC5D5F00004A619 /* OTRXMPPRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66B31BC5D5F00004A619 /* OTRXMPPRoom.swift */; };
 		63C0C4431BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4421BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift */; };
 		63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */; };
@@ -421,6 +419,7 @@
 		D93E50671FC3E9B400E0E624 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */; };
 		D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */; };
+		D945D6FD1FDA08DD00C7502C /* RoomStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D945D6FC1FDA08DD00C7502C /* RoomStorage.swift */; };
 		D947C2FB1FB251410037DE84 /* SecondaryIndexes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */; };
 		D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */ = {isa = PBXBuildFile; fileRef = D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */; };
@@ -1083,6 +1082,7 @@
 		D93718521EC267F800766D49 /* OTRAccountMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrator.m; sourceTree = "<group>"; };
 		D943AA401E6A0BA3007F3564 /* XMPPAccountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMPPAccountCell.swift; sourceTree = "<group>"; };
 		D943AA411E6A0BA3007F3564 /* XMPPAccountCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPAccountCell.xib; sourceTree = "<group>"; };
+		D945D6FC1FDA08DD00C7502C /* RoomStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomStorage.swift; sourceTree = "<group>"; };
 		D947C2FA1FB251410037DE84 /* SecondaryIndexes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryIndexes.swift; sourceTree = "<group>"; };
 		D94ACBA21DFA206500B8C0F5 /* OTRBuddyCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCache.h; sourceTree = "<group>"; };
 		D94ACBA31DFA206500B8C0F5 /* OTRBuddyCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCache.m; sourceTree = "<group>"; };
@@ -2055,6 +2055,7 @@
 			isa = PBXGroup;
 			children = (
 				D97097A11FC4DB3D008ED04B /* MessageStorage.swift */,
+				D945D6FC1FDA08DD00C7502C /* RoomStorage.swift */,
 				637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.h */,
 				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
@@ -2204,7 +2205,6 @@
 				D93DDBBF1BA79AC700CD8331 /* OTRMessagesHoldTalkViewController.h in Headers */,
 				D93DDBC11BA79ACA00CD8331 /* OTRQRCodeViewController.h in Headers */,
 				6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */,
-				63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */,
 				D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */,
 				639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */,
 				D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */,
@@ -3120,7 +3120,6 @@
 				6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */,
 				63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */,
 				634364231CC192F1009E169F /* YapDatabaseConstants.swift in Sources */,
-				63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */,
 				63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */,
 				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,
 				D93DDABA1BA79A2500CD8331 /* OTRActivityItemProvider.m in Sources */,
@@ -3280,6 +3279,7 @@
 				D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */,
 				63C0C4431BE010B00086B529 /* YapDatabaseTransaction+ChatSecure.swift in Sources */,
 				D93DDB1E1BA79A2C00CD8331 /* OTRPauseView.m in Sources */,
+				D945D6FD1FDA08DD00C7502C /* RoomStorage.swift in Sources */,
 				D93DDB1F1BA79A2C00CD8331 /* OTRColorFadingDotView.m in Sources */,
 				D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */,
 				D93DDB211BA79A2C00CD8331 /* OTRLockButton.m in Sources */,

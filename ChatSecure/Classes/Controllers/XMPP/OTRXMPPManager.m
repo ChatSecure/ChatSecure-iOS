@@ -251,8 +251,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.streamManagement activate:self.xmppStream];
     
     //MUC
-    _roomManager = [[OTRXMPPRoomManager alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection capabilities:self.serverCheck.xmppCapabilities dispatchQueue:nil];
-    [self.roomManager activate:self.xmppStream];
+    _roomManager = self.messageStorage.roomManager;
     
     //Buddy Manager (for deleting)
     _xmppBuddyManager = [[OTRXMPPBuddyManager alloc] init];
@@ -299,7 +298,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [_certificatePinningModule deactivate];
     [_deliveryReceipts deactivate];
     [_streamManagement deactivate];
-    [_roomManager deactivate];
     [_xmppBuddyManager deactivate];
     [_messageStatusModule deactivate];
     [_omemoModule deactivate];

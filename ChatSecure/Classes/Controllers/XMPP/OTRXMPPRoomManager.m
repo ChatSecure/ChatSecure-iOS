@@ -9,7 +9,6 @@
 #import "OTRXMPPRoomManager.h"
 @import XMPPFramework;
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRXMPPRoomYapStorage.h"
 #import "OTRBuddy.h"
 @import YapDatabase;
 #import "OTRLog.h"
@@ -35,11 +34,13 @@
 @implementation OTRXMPPRoomManager
 
 -  (instancetype) initWithDatabaseConnection:(YapDatabaseConnection*)databaseConnection
-                                capabilities:(XMPPCapabilities*)capabilities
+                                roomStorage:(RoomStorage*)roomStorage
+                                   archiving:(XMPPMessageArchiveManagement*)archiving
                                dispatchQueue:(nullable dispatch_queue_t)dispatchQueue {
     if (self = [super initWithDispatchQueue:dispatchQueue]) {
         _databaseConnection = databaseConnection;
-        _capabilities = capabilities;
+        _roomStorage = roomStorage;
+        _archiving = archiving;
         _mucModule = [[XMPPMUC alloc] init];
         _inviteDictionary = [[NSMutableDictionary alloc] init];
         _tempRoomSubject = [[NSMutableDictionary alloc] init];
@@ -91,14 +92,14 @@
     }
     
     if (!room) {
-        OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection capabilities:self.capabilities];
-        room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
+        room = [[XMPPRoom alloc] initWithRoomStorage:self.roomStorage jid:jid];
         [self setRoom:room forJID:room.roomJID];
         [room activate:self.xmppStream];
         [room addDelegate:self delegateQueue:moduleQueue];
     }
     
     /** Create room database object */
+    __block id<OTRMessageProtocol> lastMessage = nil;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoom *room = [[OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction] copy];
         if(!room) {
@@ -123,12 +124,11 @@
             OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:accountId transaction:transaction];
             nickname = account.bareJID.user;
         }
+        lastMessage = [room lastMessageWithTransaction:transaction];
     }];
     
     //Get history if any
     NSXMLElement *historyElement = nil;
-    OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
-    id<OTRMessageProtocol> lastMessage = [storage lastMessageInRoom:room accountKey:accountId];
     NSDate *lastMessageDate = [lastMessage messageDate];
     if (lastMessageDate) {
         //Use since as our history marker if we have a last message
@@ -442,6 +442,7 @@
             [sender fetchMembersList];
             [sender fetchModeratorsList];
         }];
+        [self fetchHistoryFor:sender];
     }
 }
 

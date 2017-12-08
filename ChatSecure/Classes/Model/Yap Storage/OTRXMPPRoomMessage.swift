@@ -51,6 +51,20 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     }
 }
 
+public extension OTRXMPPRoomMessage {
+    public convenience init(message: XMPPMessage, room: OTRXMPPRoom) {
+        self.init()
+        xmppId = message.elementID
+        messageText = message.body
+        messageDate = message.delayedDeliveryDate ?? Date()
+        senderJID = message.from?.full
+        roomJID = room.jid
+        state = .received
+        roomUniqueId = room.uniqueId
+        read = false
+    }
+}
+
 extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
     //MARK: YapRelationshipNode
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {

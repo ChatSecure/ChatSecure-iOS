@@ -21,9 +21,11 @@ import CocoaLumberjack
     private var mamCatchupInProgress: Bool = false
     
     /// Capabilities must be activated elsewhere
-    private let capabilities: XMPPCapabilities
+    @objc public let capabilities: XMPPCapabilities
+    @objc public let archiving: XMPPMessageArchiveManagement
+    @objc public let roomStorage: RoomStorage
+    @objc public let roomManager: OTRXMPPRoomManager
     private let carbons: XMPPMessageCarbons
-    private let archiving: XMPPMessageArchiveManagement
     private let fileTransfer: FileTransferManager
 
     // MARK: Init
@@ -40,9 +42,13 @@ import CocoaLumberjack
         self.connection = connection
         self.capabilities = capabilities
         self.carbons = XMPPMessageCarbons(dispatchQueue: dispatchQueue)
-        self.archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        let archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        self.archiving = archiving
         self.archiving.resultAutomaticPagingPageSize = NSNotFound
         self.fileTransfer = fileTransfer
+        let roomStorage = RoomStorage(connection: connection, capabilities: capabilities, fileTransfer: fileTransfer)
+        self.roomStorage = roomStorage
+        self.roomManager = OTRXMPPRoomManager(databaseConnection: connection, roomStorage: roomStorage, archiving: archiving, dispatchQueue: dispatchQueue)
         super.init(dispatchQueue: dispatchQueue)
         self.carbons.addDelegate(self, delegateQueue: self.moduleQueue)
         self.archiving.addDelegate(self, delegateQueue: self.moduleQueue)
@@ -53,7 +59,8 @@ import CocoaLumberjack
     @discardableResult override public func activate(_ xmppStream: XMPPStream) -> Bool {
         guard super.activate(xmppStream),
             carbons.activate(xmppStream),
-            archiving.activate(xmppStream)
+            archiving.activate(xmppStream),
+            roomManager.activate(xmppStream)
             else {
             return false
         }
@@ -63,6 +70,7 @@ import CocoaLumberjack
     public override func deactivate() {
         carbons.deactivate()
         archiving.deactivate()
+        roomManager.deactivate()
         super.deactivate()
     }
     
@@ -152,9 +160,17 @@ import CocoaLumberjack
                                         delayed: Date?,
                                         isIncoming: Bool,
                                         preSave: PreSave? = nil ) {
-        guard !xmppMessage.isErrorMessage,
-            !xmppMessage.containsGroupChatElements else {
-            DDLogWarn("Discarding forwarded message: \(xmppMessage)")
+        guard !xmppMessage.isErrorMessage else {
+            DDLogWarn("Discarding forwarded error message: \(xmppMessage)")
+            return
+        }
+        // Inject MAM messages into group chat storage
+        if xmppMessage.containsGroupChatElements {
+            DDLogVerbose("Injecting forwarded MAM message into room: \(xmppMessage)")
+            if let roomJID = xmppMessage.from?.bareJID,
+                let room = roomManager.room(for: roomJID) {
+                roomStorage.handleIncomingMessage(xmppMessage, room: room)
+            }
             return
         }
         // Ignore OTR text
