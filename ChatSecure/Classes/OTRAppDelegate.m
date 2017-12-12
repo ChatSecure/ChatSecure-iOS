@@ -191,7 +191,7 @@
     // People are reporting deadlocks again...
     // Let's turn this back on for a little while.
 #if DEBUG
-    crash.monitoring = KSCrashMonitorTypeDebuggerSafe;
+    crash.monitoring = KSCrashMonitorTypeNone;
 #else
     //crash.monitoring = KSCrashMonitorTypeAll;
     //crash.deadlockWatchdogInterval = 20;
