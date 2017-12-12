@@ -173,9 +173,9 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
 
 public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     
-    private var parentMessageKey: String?
-    private var parentMessageCollection: String?
-    private var downloadURL: URL?
+    @objc private var parentMessageKey: String?
+    @objc private var parentMessageCollection: String?
+    @objc private var downloadURL: URL?
     
     public static func download(withParentMessage parentMessage: OTRMessageProtocol, url: URL) -> OTRDownloadMessage {
         let download = OTRGroupDownloadMessage()!
@@ -198,7 +198,12 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     }
     
     public var url: URL? {
-        return self.downloadURL
+        if let url = self.downloadURL {
+            return url
+        } else if let urlString = self.messageText {
+            return URL(string: urlString)
+        }
+        return nil
     }
     
     public func parentMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
