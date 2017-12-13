@@ -52,11 +52,17 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
 }
 
 public extension OTRXMPPRoomMessage {
-    public convenience init(message: XMPPMessage, room: OTRXMPPRoom) {
+    public convenience init(message: XMPPMessage, delayed: Date?, room: OTRXMPPRoom) {
         self.init()
         xmppId = message.elementID
         messageText = message.body
-        messageDate = message.delayedDeliveryDate ?? Date()
+        if let date = delayed {
+            messageDate = date
+        } else if let date = message.delayedDeliveryDate {
+            messageDate = date
+        } else {
+            messageDate = Date()
+        }
         senderJID = message.from?.full
         roomJID = room.jid
         state = .received

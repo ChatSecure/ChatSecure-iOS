@@ -24,26 +24,33 @@ import YapDatabase
     }
     
     private func messageExists(xmppMessage: XMPPMessage,
+                               delayed: Date?,
                                stanzaId: String?,
+                               originId: String?,
                                transaction: YapDatabaseReadTransaction) -> Bool {
-        guard xmppMessage.delayedDeliveryDate == nil else {
+        guard xmppMessage.wasDelayed == true || delayed != nil else {
             // When the xmpp server sends us a room message, it will always timestamp delayed messages.
             // For example, when retrieving the discussion history, all messages will include the original timestamp.
             // If a message doesn't include such timestamp, then we know we're getting it in "real time".
             return false
         }
+        // Only use elementId as a fallback if originId and stanzaId are missing
+        var elementId: String? = nil
+        if originId == nil, stanzaId == nil {
+            elementId = xmppMessage.elementID
+        }
         var result = false
-        transaction.enumerateMessages(elementId: xmppMessage.elementID, originId: nil, stanzaId: stanzaId) { (message, stop) in
+        transaction.enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
             if let roomMessage = message as? OTRXMPPRoomMessage,
                 roomMessage.roomJID == xmppMessage.from?.bare  {
-                stop.pointee = true
                 result = true
+                stop.pointee = true
             }
         }
         return result
     }
     
-    private func insertIncoming(_ xmppMessage: XMPPMessage, into xmppRoom: XMPPRoom) {
+    public func insertIncoming(_ xmppMessage: XMPPMessage, delayed: Date?, into xmppRoom: XMPPRoom) {
         connection.asyncReadWrite { (transaction) in
             guard let account = xmppRoom.account(with: transaction),
             let xmppStream = xmppRoom.xmppStream else {
@@ -55,7 +62,7 @@ import YapDatabase
             let stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: self.capabilities)
             let originId = xmppMessage.originId
             
-            if self.messageExists(xmppMessage: xmppMessage, stanzaId: stanzaId, transaction: transaction) {
+            if self.messageExists(xmppMessage: xmppMessage, delayed: delayed, stanzaId: stanzaId, originId: originId, transaction: transaction) {
                 DDLogVerbose("Discarding duplicate MUC message: \(xmppMessage)")
                 return
             }
@@ -78,7 +85,7 @@ import YapDatabase
                 return
             }
             
-            let message = OTRXMPPRoomMessage(message: xmppMessage, room: room)
+            let message = OTRXMPPRoomMessage(message: xmppMessage, delayed: delayed, room: room)
             message.originId = originId
             message.stanzaId = stanzaId
             
@@ -152,7 +159,7 @@ extension RoomStorage: XMPPRoomStorage {
             DDLogVerbose("Discarding duplicate outgoing MUC message \(message)")
             return
         }
-        insertIncoming(message, into: room)
+        insertIncoming(message, delayed: message.delayedDeliveryDate, into: room)
     }
     
     public func handleOutgoingMessage(_ message: XMPPMessage, room: XMPPRoom) {

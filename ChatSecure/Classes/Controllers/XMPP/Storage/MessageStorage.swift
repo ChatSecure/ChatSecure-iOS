@@ -169,7 +169,7 @@ import CocoaLumberjack
             DDLogVerbose("Injecting forwarded MAM message into room: \(xmppMessage)")
             if let roomJID = xmppMessage.from?.bareJID,
                 let room = roomManager.room(for: roomJID) {
-                roomStorage.handleIncomingMessage(xmppMessage, room: room)
+                roomStorage.insertIncoming(xmppMessage, delayed: delayed, into: room)
             }
             return
         }
