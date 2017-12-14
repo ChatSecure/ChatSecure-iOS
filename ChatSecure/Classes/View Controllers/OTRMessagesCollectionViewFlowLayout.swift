@@ -139,6 +139,13 @@ import JSQMessagesViewController
                 viewOffset += view.height
             }
         }
-        return super.layoutAttributesForSupplementaryView(ofKind: elementKind, at: indexPath)
+        let ret = super.layoutAttributesForSupplementaryView(ofKind: elementKind, at: indexPath)
+        if ret == nil {
+            // Must return something, so make this invisible!
+            let attrs = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: elementKind, with: indexPath)
+            attrs.frame = CGRect.zero
+            return attrs
+        }
+        return ret
     }
 }
