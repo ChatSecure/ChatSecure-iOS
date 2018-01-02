@@ -42,7 +42,7 @@ import YapDatabase
         var result = false
         transaction.enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
             if let roomMessage = message as? OTRXMPPRoomMessage,
-                roomMessage.roomJID == xmppMessage.from?.bare  {
+                roomMessage.senderJID == xmppMessage.from?.full {
                 result = true
                 stop.pointee = true
             }
