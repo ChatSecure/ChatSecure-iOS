@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.5.1)
+  - Alamofire (4.6.0)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
@@ -41,49 +41,49 @@ PODS:
   - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
   - KissXML (5.2.0)
-  - KSCrash (1.15.12):
-    - KSCrash/Installations (= 1.15.12)
-  - KSCrash/Installations (1.15.12):
+  - KSCrash (1.15.16):
+    - KSCrash/Installations (= 1.15.16)
+  - KSCrash/Installations (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting
-  - KSCrash/Recording (1.15.12):
-    - KSCrash/Recording/Tools (= 1.15.12)
-  - KSCrash/Recording/Tools (1.15.12)
-  - KSCrash/Reporting (1.15.12):
+  - KSCrash/Recording (1.15.16):
+    - KSCrash/Recording/Tools (= 1.15.16)
+  - KSCrash/Recording/Tools (1.15.16)
+  - KSCrash/Reporting (1.15.16):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.12)
-    - KSCrash/Reporting/MessageUI (= 1.15.12)
-    - KSCrash/Reporting/Sinks (= 1.15.12)
-    - KSCrash/Reporting/Tools (= 1.15.12)
-  - KSCrash/Reporting/Filters (1.15.12):
+    - KSCrash/Reporting/Filters (= 1.15.16)
+    - KSCrash/Reporting/MessageUI (= 1.15.16)
+    - KSCrash/Reporting/Sinks (= 1.15.16)
+    - KSCrash/Reporting/Tools (= 1.15.16)
+  - KSCrash/Reporting/Filters (1.15.16):
     - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.12)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.12)
-    - KSCrash/Reporting/Filters/Base (= 1.15.12)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.12)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.12)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.12)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.12)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.12)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.12)
-  - KSCrash/Reporting/Filters/Alert (1.15.12):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.12):
+    - KSCrash/Reporting/Filters/Alert (= 1.15.16)
+    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.16)
+    - KSCrash/Reporting/Filters/Base (= 1.15.16)
+    - KSCrash/Reporting/Filters/Basic (= 1.15.16)
+    - KSCrash/Reporting/Filters/GZip (= 1.15.16)
+    - KSCrash/Reporting/Filters/JSON (= 1.15.16)
+    - KSCrash/Reporting/Filters/Sets (= 1.15.16)
+    - KSCrash/Reporting/Filters/Stringify (= 1.15.16)
+    - KSCrash/Reporting/Filters/Tools (= 1.15.16)
+  - KSCrash/Reporting/Filters/Alert (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.12):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.12):
+  - KSCrash/Reporting/Filters/AppleFmt (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.12):
+  - KSCrash/Reporting/Filters/Base (1.15.16):
+    - KSCrash/Recording
+  - KSCrash/Reporting/Filters/Basic (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.12):
+  - KSCrash/Reporting/Filters/GZip (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.12):
+  - KSCrash/Reporting/Filters/JSON (1.15.16):
+    - KSCrash/Recording
+    - KSCrash/Reporting/Filters/Base
+  - KSCrash/Reporting/Filters/Sets (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/AppleFmt
     - KSCrash/Reporting/Filters/Base
@@ -91,18 +91,18 @@ PODS:
     - KSCrash/Reporting/Filters/GZip
     - KSCrash/Reporting/Filters/JSON
     - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.12):
+  - KSCrash/Reporting/Filters/Stringify (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.12):
+  - KSCrash/Reporting/Filters/Tools (1.15.16):
     - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.12):
+  - KSCrash/Reporting/MessageUI (1.15.16):
     - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.12):
+  - KSCrash/Reporting/Sinks (1.15.16):
     - KSCrash/Recording
     - KSCrash/Reporting/Filters
     - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.12):
+  - KSCrash/Reporting/Tools (1.15.16):
     - KSCrash/Recording
   - Kvitto (1.0.2):
     - DTFoundation/DTASN1 (~> 1.7.9)
@@ -133,14 +133,14 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
   - QRCodeReaderViewController (4.0.2)
-  - Reveal-SDK (11)
+  - Reveal-SDK (13)
   - SignalProtocolC (2.3.1)
   - SignalProtocolObjC (1.0.0):
     - SignalProtocolC (~> 2.3.1)
-  - SQLCipher (3.4.1):
-    - SQLCipher/standard (= 3.4.1)
-  - SQLCipher/common (3.4.1)
-  - SQLCipher/standard (3.4.1):
+  - SQLCipher (3.4.2):
+    - SQLCipher/standard (= 3.4.2)
+  - SQLCipher/common (3.4.2)
+  - SQLCipher/standard (3.4.2):
     - SQLCipher/common
   - TUSafariActivity (1.0.4)
   - XMPPFramework/default (4.0):
@@ -293,7 +293,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
-  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
@@ -310,7 +310,7 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
-  KSCrash: 931b6caeebfbfe0d316007fcd209f6cb9889c624
+  KSCrash: e4cda5c8612c5f9478defcf43418f24870d313f4
   Kvitto: 4c2ec1058187f89c5fe2463701acbf9c4324e229
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -321,10 +321,10 @@ SPEC CHECKSUMS:
   ParkedTextField: bdefebdaec306fddefbceead1a7081500169606f
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
-  Reveal-SDK: 7fa13d04bb55db61ff2342a990cf731d5159361d
+  Reveal-SDK: ccc2b0f8014965ea448b7534a7c2c8da232b75e8
   SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
   SignalProtocolObjC: f5f0c7dcbedf21490b7ec190b6dc5103910acb75
-  SQLCipher: 43d12c0eb9c57fb438749618fc3ce0065509a559
+  SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XMPPFramework: 36b1a94ab8fb4292b6cad64ddfa8b452e58d6523
   YapDatabase: 299a32de9d350d37a9ac5b0532609d87d5d2a5de
