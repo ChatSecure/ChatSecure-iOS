@@ -250,7 +250,7 @@ public class MessageQueueHandler:NSObject {
             return
         }
         self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-        room.send(message)
+        room.sendRoomMessage(message)
         databaseConnection.readWrite { transaction in
             if let sentMessage = message.refetch(with: transaction) {
                 sentMessage.state = .pendingSent

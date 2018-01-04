@@ -49,8 +49,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface XMPPRoom(RoomManager)
-/** Creates and sends XMPPMessage stanza from roomMessage */
-- (void) sendRoomMessage:( OTRXMPPRoomMessage *)roomMessage;
-@end
 NS_ASSUME_NONNULL_END

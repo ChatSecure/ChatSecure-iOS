@@ -65,7 +65,11 @@ public extension OTRXMPPRoomMessage {
         }
         senderJID = message.from?.full
         roomJID = room.jid
-        state = .received
+        if room.ownJID == message.from?.full {
+            state = .sent
+        } else {
+            state = .received
+        }
         roomUniqueId = room.uniqueId
         read = false
     }
@@ -415,7 +419,35 @@ public extension OTRXMPPRoomMessage {
         let response = message.generateReceiptResponse else {
             return
         }
+        // Don't send receipts for messages that you've sent
+        if message.mucUserJID == xmppStream.myJID?.bareJID {
+            return
+        }
         xmppStream.send(response)
     }
 
+}
+
+public extension XMPPRoom {
+    @objc public func sendRoomMessage(_ message: OTRXMPPRoomMessage) {
+        let elementId = message.xmppId ?? message.uniqueId
+        let body = XMLElement(name: "body", stringValue: message.messageText)
+        let xmppMessage = XMPPMessage(messageType: nil, to: nil, elementID: elementId, child: body)
+        xmppMessage.addReceiptRequest()
+        xmppMessage.addOriginId(message.originId)
+        send(xmppMessage)
+    }
+}
+
+public extension XMPPMessage {
+    /// Gets the non-anonymous user JID from MUC message
+    /// <x xmlns="http://jabber.org/protocol/muc#user"><item jid="user@example.com" affiliation="member" role="participant"/></x>
+    public var mucUserJID: XMPPJID? {
+        let x = element(forName: "x", xmlns: "http://jabber.org/protocol/muc#user")
+        let item = x?.element(forName: "item")
+        guard let jidString = item?.attributeStringValue(forName: "jid") else {
+            return nil
+        }
+        return XMPPJID(string: jidString)
+    }
 }

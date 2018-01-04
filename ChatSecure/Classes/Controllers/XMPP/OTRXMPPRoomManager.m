@@ -536,18 +536,3 @@
 
 @end
 
-@implementation XMPPRoom(RoomManager)
-- (void) sendRoomMessage:(OTRXMPPRoomMessage *)roomMessage {
-    NSParameterAssert(roomMessage);
-    if (!roomMessage) { return; }
-    NSString *elementId = roomMessage.xmppId;
-    if (!elementId.length) {
-        elementId = roomMessage.uniqueId;
-    }
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:roomMessage.text];
-    // type=groupchat and to=room.full are set inside XMPPRoom.sendMessage
-    XMPPMessage *message = [XMPPMessage messageWithType:nil elementID:roomMessage.xmppId child:body];
-    [message addReceiptRequest];
-    [self sendMessage:message];
-}
-@end

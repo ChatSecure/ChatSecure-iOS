@@ -23,28 +23,30 @@ import YapDatabase
         self.fileTransfer = fileTransfer
     }
     
-    private func messageExists(xmppMessage: XMPPMessage,
+    private func existingMessage(xmppMessage: XMPPMessage,
                                delayed: Date?,
                                stanzaId: String?,
                                originId: String?,
-                               transaction: YapDatabaseReadTransaction) -> Bool {
+                               transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomMessage? {
         guard xmppMessage.wasDelayed == true || delayed != nil else {
             // When the xmpp server sends us a room message, it will always timestamp delayed messages.
             // For example, when retrieving the discussion history, all messages will include the original timestamp.
             // If a message doesn't include such timestamp, then we know we're getting it in "real time".
-            return false
+            return nil
         }
         // Only use elementId as a fallback if originId and stanzaId are missing
         var elementId: String? = nil
         if originId == nil, stanzaId == nil {
             elementId = xmppMessage.elementID
         }
-        var result = false
+        var result: OTRXMPPRoomMessage? = nil
         transaction.enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
             if let roomMessage = message as? OTRXMPPRoomMessage,
                 roomMessage.senderJID == xmppMessage.from?.full {
-                result = true
+                result = roomMessage
                 stop.pointee = true
+            } else {
+                DDLogWarn("Found matching MUC message but intended for different recipient \(message) \(xmppMessage)")
             }
         }
         return result
@@ -62,8 +64,8 @@ import YapDatabase
             let stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: self.capabilities)
             let originId = xmppMessage.originId
             
-            if self.messageExists(xmppMessage: xmppMessage, delayed: delayed, stanzaId: stanzaId, originId: originId, transaction: transaction) {
-                DDLogVerbose("Discarding duplicate MUC message: \(xmppMessage)")
+            if let duplicate = self.existingMessage(xmppMessage: xmppMessage, delayed: delayed, stanzaId: stanzaId, originId: originId, transaction: transaction) {
+                DDLogVerbose("Discarding duplicate MUC message: \(duplicate) \(xmppMessage)")
                 return
             }
             
@@ -95,11 +97,7 @@ import YapDatabase
             
             self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
             
-            // If delayedDeliveryDate is set we are retrieving history. Don't show
-            // notifications in that case. Also, don't show notifications for archived
-            // rooms.
-            if xmppMessage.delayedDeliveryDate == nil,
-                room.isArchived == false {
+            if room.isArchived == false {
                 UIApplication.shared.showLocalNotification(message, transaction: transaction)
             }
             MessageStorage.markAsReadIfVisible(message: message)
@@ -120,7 +118,7 @@ extension RoomStorage: XMPPRoomStorage {
             let mucElement = presence.element(forName: "x", xmlns: XMPPMUCUserNamespace),
             let item = mucElement.element(forName: "item")
             else {
-            DDLogWarn("Discarding MUC presence \(presence)")
+            // DDLogWarn("Discarding MUC presence \(presence)")
             return
         }
         connection.asyncReadWrite { (transaction) in
@@ -156,14 +154,14 @@ extension RoomStorage: XMPPRoomStorage {
         }
         if myRoomJID.isEqual(to: messageJID),
            !message.wasDelayed {
-            DDLogVerbose("Discarding duplicate outgoing MUC message \(message)")
+            // DDLogVerbose("Discarding duplicate outgoing MUC message \(message)")
             return
         }
         insertIncoming(message, delayed: message.delayedDeliveryDate, into: room)
     }
     
     public func handleOutgoingMessage(_ message: XMPPMessage, room: XMPPRoom) {
-        DDLogVerbose("Handle outgoing group message \(message) \(room)")
+        // DDLogVerbose("Handle outgoing group message \(message) \(room)")
     }
     
     public func handleDidLeave(_ xmppRoom: XMPPRoom) {

@@ -963,7 +963,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppvCardTempModule:(XMPPvCardTempModule *)vCardTempModule
         didReceivevCardTemp:(XMPPvCardTemp *)vCardTemp
                      forJID:(XMPPJID *)jid {
-    DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, vCardTemp, jid);
+    // DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, vCardTemp, jid);
     
     // update my vCard to local nickname setting
     // currently this will clobber whatever you have on the server
@@ -991,7 +991,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppvCardTempModule:(XMPPvCardTempModule *)vCardTempModule
    failedToFetchvCardForJID:(XMPPJID *)jid
                       error:(NSXMLElement*)error {
-    DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, jid, error);
+    // DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, jid, error);
     
     // update my vCard to local nickname setting
     if ([self.xmppStream.myJID isEqualToJID:jid options:XMPPJIDCompareBare] &&
@@ -1003,11 +1003,11 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 }
 
 - (void)xmppvCardTempModuleDidUpdateMyvCard:(XMPPvCardTempModule *)vCardTempModule {
-    DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule);
+    //DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule);
 }
 
 - (void)xmppvCardTempModule:(XMPPvCardTempModule *)vCardTempModule failedToUpdateMyvCard:(NSXMLElement *)error {
-    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
+    //DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
 }
 
 

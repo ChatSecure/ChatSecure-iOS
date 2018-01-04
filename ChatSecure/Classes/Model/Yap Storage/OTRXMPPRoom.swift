@@ -69,6 +69,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         message.roomUniqueId = self.uniqueId
         message.senderJID = self.ownJID
         message.state = .needsSending
+        message.originId = message.uniqueId
         return message
     }
     
