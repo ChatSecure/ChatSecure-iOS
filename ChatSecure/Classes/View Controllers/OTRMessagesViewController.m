@@ -288,6 +288,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 
     self.loadingMessages = YES;
+    [self.messageSizeCache removeAllObjects];
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
 }
 
