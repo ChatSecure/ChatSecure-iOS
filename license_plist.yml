@@ -59,7 +59,7 @@ manual:
       these additional notices to be distributed.
   - source: https://www.openssl.org
     name: OpenSSL
-    version: 1.0.2l
+    version: 1.0.2n
     body: |
       LICENSE ISSUES
         ==============
@@ -265,7 +265,7 @@ manual:
          OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   - source: https://dist.torproject.org
     name: Tor
-    version: 0.3.0.12
+    version: 0.3.0.13
     body: |
       This file contains the license for Tor,
               a free software project to provide anonymity on the Internet.

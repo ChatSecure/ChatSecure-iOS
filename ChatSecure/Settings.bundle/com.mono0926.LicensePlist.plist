@@ -272,7 +272,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/OpenSSL</string>
 			<key>Title</key>
-			<string>OpenSSL (1.0.2l)</string>
+			<string>OpenSSL (1.0.2n)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -360,7 +360,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Tor</string>
 			<key>Title</key>
-			<string>Tor (0.3.0.12)</string>
+			<string>Tor (0.3.0.13)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
