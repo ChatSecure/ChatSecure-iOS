@@ -423,6 +423,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = @"";
     }
     
+    // Reset scroll position
+    [self.collectionView setContentOffset:CGPointZero animated:NO];
     [self.collectionView reloadData];
     
     // Profile Info Button
