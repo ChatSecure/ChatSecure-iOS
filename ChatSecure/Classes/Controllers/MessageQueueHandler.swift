@@ -257,7 +257,6 @@ public class MessageQueueHandler:NSObject {
                 sentMessage.save(with: transaction)
             }
         }
-        completion(true, 0.0)
     }
     
     fileprivate func sendMessage(_ messageSendingAction:OTRYapMessageSendAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
@@ -412,15 +411,15 @@ public class MessageQueueHandler:NSObject {
     }
     
     fileprivate func didConnectAccount(_ accountKey:String, accountCollection:String) {
-        
         guard let actionSet = self.popWaitingAccount(accountKey) else {
             return
         }
-        
-        for actionInfo in actionSet {
+        if let actionInfo = actionSet.first {
             self.operationQueue.addOperation { [weak self] in
                 guard let strongSelf = self else { return }
-                strongSelf.handleNextItem(actionInfo.action, completion: actionInfo.completion)
+                DispatchQueue.global().async {
+                    strongSelf.handleNextItem(actionInfo.action, completion: actionInfo.completion)
+                }
             }
         }
     }
@@ -482,18 +481,23 @@ public class MessageQueueHandler:NSObject {
 extension MessageQueueHandler: OTRXMPPMessageStatusModuleDelegate {
     
     public func didSendMessage(_ messageKey: String, messageCollection: String) {
-        
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
         }
         
         //Update date sent
-        self.databaseConnection.asyncReadWrite { (transaction) in
-            guard let object = transaction.object(forKey: messageKey, inCollection: messageCollection) as? NSCopying, let message = object.copy() as? OTROutgoingMessage else {
+        self.databaseConnection.readWrite { (transaction) in
+            guard let object = transaction.object(forKey: messageKey, inCollection: messageCollection) as? NSCopying else {
                 return
             }
-            message.dateSent = Date()
-            message.save(with: transaction)
+            let copy = object.copy()
+            if let message = copy as? OTROutgoingMessage {
+                message.dateSent = Date()
+                message.save(with: transaction)
+            } else if let message = copy as? OTRXMPPRoomMessage {
+                message.state = .sent
+                message.save(with: transaction)
+            }
         }
         
         messageInfo.completion(true, 0.0)
