@@ -11,6 +11,39 @@ import MWFeedParser
 import UserNotifications
 import OTRAssets
 
+public enum NotificationType {
+    case subscriptionRequest
+    case connectionError
+    case chatMessage
+}
+
+extension NotificationType: RawRepresentable {
+    public init?(rawValue: String) {
+        if rawValue == kOTRNotificationTypeSubscriptionRequest {
+            self = .subscriptionRequest
+        } else if rawValue == kOTRNotificationTypeChatMessage {
+            self = .chatMessage
+        } else if rawValue == kOTRNotificationTypeConnectionError {
+            self = .connectionError
+        } else {
+            return nil
+        }
+    }
+    
+    public var rawValue: String {
+        switch self {
+        case .subscriptionRequest:
+            return kOTRNotificationTypeSubscriptionRequest
+        case .connectionError:
+            return kOTRNotificationTypeConnectionError
+        case .chatMessage:
+            return kOTRNotificationTypeChatMessage
+        }
+    }
+    
+    public typealias RawValue = String
+}
+
 public extension UIApplication {
     
     /// Removes all but one foreground notifications for typing and message events sent from APNS
@@ -122,7 +155,9 @@ public extension UIApplication {
             var userInfo:[AnyHashable:Any]? = nil
             if let t = thread {
                 identifier = t.threadIdentifier
-                userInfo = [kOTRNotificationThreadKey:t.threadIdentifier, kOTRNotificationThreadCollection:t.threadCollection]
+                userInfo = [kOTRNotificationThreadKey:t.threadIdentifier,
+                            kOTRNotificationThreadCollection:t.threadCollection,
+                            kOTRNotificationType: kOTRNotificationTypeChatMessage]
             }
             self.showLocalNotificationWith(identifier: identifier, body: text, badge: unreadCount, userInfo: userInfo, recurring: false)
         }
@@ -226,5 +261,51 @@ public extension UIApplication {
             }
         }
         return found
+    }
+    
+    /// show a notification when there is an issue connecting, for instance expired certificate
+    @objc public func showConnectionErrorNotification(xmpp: XMPPManager, error: NSError) {
+        let username = xmpp.account.username
+        var body = "\(CONNECTION_ERROR_STRING()) \(username)."
+        
+        if error.domain == GCDAsyncSocketErrorDomain,
+            let code = GCDAsyncSocketError(rawValue: error.code) {
+            
+            switch code {
+            case .noError,
+                 .connectTimeoutError,
+                 .readTimeoutError,
+                 .writeTimeoutError,
+                 .readMaxedOutError,
+                 .closedError:
+                return
+            case .badConfigError, .badParamError:
+                body = body + " \(error.localizedDescription)."
+            case .otherError:
+                // this is probably a SSL error
+                body = body + " \(CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING())"
+            }
+        } else if error.domain == "kCFStreamErrorDomainSSL" {
+            body = body + " \(CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING())"
+            if let sslString = OTRXMPPError.errorString(withSSLStatus: OSStatus(error.code)) {
+                body = body + " \"\(sslString)\""
+            }
+        } else {
+            // unrecognized error domain... ignoring
+            return
+        }
+        
+        let accountKey = xmpp.account.uniqueId
+        let badge = UIApplication.shared.applicationIconBadgeNumber + 1
+        
+        let userInfo = [kOTRNotificationType: kOTRNotificationTypeConnectionError,
+                        kOTRNotificationAccountKey: accountKey]
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [accountKey])
+        } else {
+            // Fallback on earlier versions
+        }
+        showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
     }
 }

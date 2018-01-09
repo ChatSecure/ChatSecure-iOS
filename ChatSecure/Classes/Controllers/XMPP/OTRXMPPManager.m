@@ -1458,6 +1458,10 @@ managedBuddyObjectID
         [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self userInfo:userInfo];
         //Only user initiated on the first time any subsequent attempts will not be from user
         strongSelf.userInitiatedConnection = NO;
+        
+        if (error) {
+            [UIApplication.sharedApplication showConnectionErrorNotificationWithXmpp:self error:error];
+        }
     });
 }
 

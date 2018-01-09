@@ -17,6 +17,8 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         self.databaseConnection = databaseConnection
     }
     
+    
+    
     open func enterConversationWithBuddies(_ buddyKeys:[String], accountKey:String, name:String?) {
         guard let splitVC = self.splitViewController else {
             return
@@ -123,6 +125,20 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         if self.splitViewController?.presentedViewController != nil {
             self.splitViewController?.dismiss(animated: true, completion: nil)
         }
+    }
+    
+    @objc open func showAccountDetails(account: OTRXMPPAccount, completion: (()->Void)?) {
+        guard splitViewController?.presentedViewController == nil,
+        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager,
+        let longLivedReadConnection = OTRDatabaseManager.shared.longLivedReadOnlyConnection,
+        let writeConnection =  OTRDatabaseManager.shared.readWriteDatabaseConnection else {
+            return
+        }
+        
+        let detailVC = OTRAppDelegate.appDelegate.theme.accountDetailViewController(for: account, xmpp: xmpp, longLivedRead: longLivedReadConnection, write: writeConnection)
+        let nav = UINavigationController(rootViewController: detailVC)
+        nav.modalPresentationStyle = .formSheet
+        splitViewController?.present(nav, animated: true, completion: completion)
     }
 }
 

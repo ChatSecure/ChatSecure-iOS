@@ -82,6 +82,10 @@ NSString* CONNECTED_STRING() { return [OTRLanguageManager translatedString:@"Con
 NSString* CONNECTING_STRING() { return [OTRLanguageManager translatedString:@"Connecting"]; }
 /** "Connecting to Tor", Message shown when connecting to the Tor network */
 NSString* CONNECTING_TO_TOR_STRING() { return [OTRLanguageManager translatedString:@"Connecting to Tor"]; }
+/** "Please re-verify the server's certificate.", alert title for connection errors */
+NSString* CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING() { return [OTRLanguageManager translatedString:@"Please re-verify the server's certificate."]; }
+/** "There was an error connecting to account", alert title for connection errors */
+NSString* CONNECTION_ERROR_STRING() { return [OTRLanguageManager translatedString:@"There was an error connecting to account"]; }
 /** "Connect", String for button to connect connect */
 NSString* CONNECT_STRING() { return [OTRLanguageManager translatedString:@"Connect"]; }
 /** "Copy Link", Copy link URL to clipboard as in copy and paste */

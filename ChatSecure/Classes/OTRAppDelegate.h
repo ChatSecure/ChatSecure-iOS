@@ -26,11 +26,14 @@
 #import "OTRMessagesViewController.h"
 #import "OTRConversationViewController.h"
 
+@class OTRSplitViewCoordinator;
+
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong, readonly) OTRConversationViewController *conversationViewController;
 @property (nonatomic, strong, readonly) OTRMessagesViewController *messagesViewController;
+@property (nonatomic, strong, readonly) OTRSplitViewCoordinator *splitViewCoordinator;
 
 /** Only used from Database Unlock view. */
 - (void) showConversationViewController;
