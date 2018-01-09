@@ -76,11 +76,15 @@ NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphrase
 NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
 
 //Noticications
+NSString *const kOTRNotificationAccountKey = @"kOTRNotificationAccountKey";
 NSString *const kOTRNotificationThreadKey = @"kOTRNotificationThreadKey";
 NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadCollection";
 NSString *const kOTRNotificationType = @"kOTRNotificationType";
 NSString *const kOTRNotificationTypeNone = @"kOTRNotificationTypeNone";
 NSString *const kOTRNotificationTypeSubscriptionRequest = @"kOTRNotificationTypeSubscriptionRequest";
+NSString *const kOTRNotificationTypeConnectionError = @"kOTRNotificationTypeConnectionError";
+NSString *const kOTRNotificationTypeChatMessage = @"kOTRNotificationTypeChatMessage";
+
 
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";

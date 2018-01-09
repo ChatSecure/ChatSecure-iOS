@@ -8,6 +8,9 @@
 
 import Foundation
 import YapDatabase
+import UserNotifications
+
+
 
 public extension OTRAppDelegate {
     /// Returns key/collection of visible thread, or nil if not visible or unset
@@ -68,5 +71,110 @@ public extension OTRAppDelegate {
                 completion?(unread)
             })
         })
+    }
+    
+    @objc public func enterThread(key: String, collection: String) {
+        var thread: OTRThreadOwner?
+        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+            thread = transaction.object(forKey: key, inCollection: collection) as? OTRThreadOwner
+        })
+        if let thread = thread {
+            self.splitViewCoordinator.enterConversationWithThread(thread, sender: self)
+        }
+    }
+    
+    
+}
+
+// MARK: - UNUserNotificationCenterDelegate
+
+@available(iOS 10.0, *)
+extension OTRAppDelegate: UNUserNotificationCenterDelegate {
+    
+    private func extractNotificationType(notification: UNNotification) -> NotificationType? {
+        let userInfo = notification.request.content.userInfo
+        if let rawNotificationType = userInfo[kOTRNotificationType] as? String {
+            return NotificationType(rawValue: rawNotificationType)
+        } else {
+            return nil
+        }
+    }
+
+    private func extractThreadInformation(notification: UNNotification) -> (key: String, collection: String)? {
+        let userInfo = notification.request.content.userInfo
+        if let threadKey = userInfo[kOTRNotificationThreadKey] as? String,
+            let threadCollection = userInfo[kOTRNotificationThreadCollection] as? String {
+            return (threadKey, threadCollection)
+        }
+        return nil
+    }
+    
+    private func extractAccountInformation(notification: UNNotification) -> OTRXMPPAccount? {
+        let userInfo = notification.request.content.userInfo
+        guard let accountKey = userInfo[kOTRNotificationAccountKey] as? String else {
+            return nil
+        }
+        var account: OTRXMPPAccount?
+        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+            account = OTRXMPPAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
+        })
+        return account
+    }
+    
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        guard let notificationType = extractNotificationType(notification: response.notification) else {
+            completionHandler()
+            return
+        }
+        
+        switch notificationType {
+        case .subscriptionRequest:
+            splitViewCoordinator.showConversationsViewController()
+        case .connectionError:
+            // Show reconnection dialog for account
+            if let account = extractAccountInformation(notification: response.notification) {
+                splitViewCoordinator.showAccountDetails(account: account, completion: {
+                    OTRProtocolManager.shared.loginAccount(account)
+                })
+            }
+            break
+        case .chatMessage:
+            if let threadInfo = extractThreadInformation(notification: response.notification) {
+                enterThread(key: threadInfo.key, collection: threadInfo.collection)
+            }
+        }
+        completionHandler()
+    }
+    
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        guard let notificationType = extractNotificationType(notification: notification) else {
+            // unknown notification type, so let's show one just in case?
+            completionHandler([.badge, .sound, .alert])
+            return
+        }
+        
+        switch notificationType {
+        case .subscriptionRequest:
+            completionHandler([.badge, .sound, .alert])
+        case .connectionError:
+            // suppress notification when you're on the account details screen
+            if let nav = splitViewCoordinator.splitViewController?.presentedViewController as? UINavigationController,
+                nav.viewControllers.first is AccountDetailViewController {
+                completionHandler([])
+            } else {
+                completionHandler([.badge, .sound, .alert])
+            }
+        case .chatMessage:
+            // Show chat notification while user is using the app, if they aren't already looking at it
+            if let (key, _) = extractThreadInformation(notification: notification) {
+                OTRAppDelegate.visibleThread({ (ck) in
+                    if key == ck?.key {
+                        completionHandler([])
+                    } else {
+                        completionHandler([.badge, .sound, .alert])
+                    }
+                })
+            }
+        }
     }
 }

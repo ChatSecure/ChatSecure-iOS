@@ -70,9 +70,8 @@
 
 #import "OTRChatDemo.h"
 
-@interface OTRAppDelegate () <UNUserNotificationCenterDelegate>
+@interface OTRAppDelegate ()
 
-@property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @property (nonatomic, strong) NSTimer *fetchTimer;
@@ -230,7 +229,7 @@
 {
     
     YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
-    self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
+    _splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
     self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
@@ -452,8 +451,7 @@
             [OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint buddyAddedCallback:^ (OTRBuddy *buddy) {
                 OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
                 if (xmppBuddy != nil) {
-                    NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:xmppBuddy.threadIdentifier, kOTRNotificationThreadKey, xmppBuddy.threadCollection, kOTRNotificationThreadCollection, nil];
-                    [self enterThreadWithUserInfo:userInfo];
+                    [self enterThreadWithKey:xmppBuddy.threadIdentifier collection:xmppBuddy.threadCollection];
                 }
             }];
             return YES;
@@ -467,21 +465,6 @@
 - (void) showSubscriptionRequestForBuddy:(NSDictionary*)userInfo {
     // This is probably in response to a user requesting subscriptions from us
     [self.splitViewCoordinator showConversationsViewController];
-}
-
-- (void) enterThreadWithUserInfo:(NSDictionary*)userInfo {
-    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
-    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
-    NSParameterAssert(threadKey);
-    NSParameterAssert(threadCollection);
-    if (!threadKey || !threadCollection) { return; }
-    __block id <OTRThreadOwner> thread = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
-    }];
-    if (thread) {
-        [self.splitViewCoordinator enterConversationWithThread:thread sender:self];
-    }
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
@@ -512,31 +495,6 @@
     } else {
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
-}
-
-#pragma mark UNUserNotificationCenterDelegate methods (iOS 10+)
-
-- (void) userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    [OTRAppDelegate visibleThread:^(YapCollectionKey * _Nullable ck) {
-        if ([ck.key isEqualToString:notification.request.content.threadIdentifier]) {
-            completionHandler(UNNotificationPresentationOptionNone);
-        } else {
-            completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
-        }
-    } completionQueue:nil];
-}
-
-- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if ([userInfo[kOTRNotificationType] isEqualToString:kOTRNotificationTypeNone]) {
-        // Nothing
-    } else if ([userInfo[kOTRNotificationType] isEqualToString:kOTRNotificationTypeSubscriptionRequest]) {
-        // This is a subscription request
-        [self showSubscriptionRequestForBuddy:userInfo];
-    } else {
-        [self enterThreadWithUserInfo:userInfo];
-    }
-    completionHandler();
 }
 
 #pragma - mark Class Methods
