@@ -288,6 +288,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 
     self.loadingMessages = YES;
+    [self.messageSizeCache removeAllObjects];
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
 }
 
@@ -421,6 +423,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = @"";
     }
     
+    // Reset scroll position
+    [self.collectionView setContentOffset:CGPointZero animated:NO];
     [self.collectionView reloadData];
     
     // Profile Info Button
