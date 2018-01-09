@@ -302,10 +302,17 @@ public extension UIApplication {
                         kOTRNotificationAccountKey: accountKey]
         
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [accountKey])
+            UNUserNotificationCenter.current().getDeliveredNotifications(completionHandler: { (notifications) in
+                // if we are already showing a notification, let's not spam the user too much with more of them
+                for notification in notifications {
+                    if notification.request.identifier == accountKey {
+                        return
+                    }
+                }
+                self.showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
+            })
         } else {
-            // Fallback on earlier versions
+            showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
         }
-        showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
     }
 }
