@@ -425,6 +425,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     // Reset scroll position
     [self.collectionView setContentOffset:CGPointZero animated:NO];
+    
+    // Reload collection view
+    [self.messageSizeCache removeAllObjects];
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
     
     // Profile Info Button
