@@ -24,7 +24,7 @@
     
     // Bail out if it's a subscription request
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
-        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
+        [(OTRXMPPBuddy*)thread askingForApproval]) {
         return nil;
     }
 
