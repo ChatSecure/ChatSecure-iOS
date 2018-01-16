@@ -92,7 +92,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 
 - (NSString *)threadName
 {
-    NSString *threadName = [[super threadName] stringByAppendingString:[NSString stringWithFormat:@" %ld ", (long)self.subscription]];
+    NSString *threadName = [super threadName];
     if (self.pendingApproval) {
         threadName = [NSString stringWithFormat:@"%@ - %@", threadName, PENDING_APPROVAL_STRING()];
     }
