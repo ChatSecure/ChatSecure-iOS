@@ -2162,7 +2162,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
         self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
         [self.view bringSubviewToFront:self.jidForwardingHeaderView];
-        self.topContentAdditionalInset = height;
+        self.additionalContentInset = UIEdgeInsetsMake(height, 0, 0, 0);
     }
 }
 
@@ -2188,7 +2188,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (showHeader) {
         [self showJIDForwardingHeaderWithNewJID:forwardingJid];
     } else if (!showHeader && self.jidForwardingHeaderView != nil) {
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
         [self.jidForwardingHeaderView removeFromSuperview];
         self.jidForwardingHeaderView = nil;
     }
@@ -2214,14 +2214,14 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)didPressMigratedIgnore {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
     }
 }
 
 - (IBAction)didPressMigratedSwitch {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
     }
     
     __block OTRXMPPBuddy *buddy = nil;
