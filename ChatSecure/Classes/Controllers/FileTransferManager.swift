@@ -599,6 +599,15 @@ extension FileTransferManager {
     private func setError(_ error: Error, onMessage downloadMessage: OTRDownloadMessage) {
         self.connection.readWrite { transaction in
             if let message = downloadMessage.refetch(with: transaction) {
+                
+                // If we have no media item, add one so we can retry
+                if message.messageMediaItemKey == nil, let filename = message.downloadableURL?.absoluteString {
+                    let media = OTRMediaItem.incomingItem(withFilename: filename, mimeType: nil)
+                    media.parentObjectKey = message.uniqueId
+                    media.parentObjectCollection = message.messageCollection
+                    media.save(with: transaction)
+                    message.messageMediaItemKey = media.uniqueId
+                }
                 message.messageError = error
                 message.save(with: transaction)
             }
