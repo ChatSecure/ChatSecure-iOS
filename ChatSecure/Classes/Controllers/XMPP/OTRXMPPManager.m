@@ -559,9 +559,11 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     XMPPJID *jid = buddy.bareJID;
     if (!jid) { return; }
     
-    // We can't probe presence if we are still pending approval, so resend the request.
-    if (buddy.pendingApproval) {
-        [self.xmppRoster subscribePresenceToUser:jid];
+    if (![buddy subscribedTo]) {
+        if (buddy.pendingApproval) {
+            // We can't probe presence if we are still pending approval, so resend the request.
+            [self.xmppRoster subscribePresenceToUser:jid];
+        }
         return;
     }
     
@@ -1010,6 +1012,39 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     //DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
 }
 
+- (void)parseSubscriptionFromRosterItem:(NSXMLElement *)item {
+    NSString *jidStr = [item attributeStringValueForName:@"jid"];
+    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    
+    NSString *subscription = [item attributeStringValueForName:@"subscription"];
+    NSString *ask = [item attributeStringValueForName:@"ask"];
+    
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
+        if ([subscription isEqualToString:@"remove"])
+        {
+            if (buddy) {
+                [buddy removeWithTransaction:transaction];
+            }
+        } else {
+            if (!buddy) {
+                // Create temporary, untrusted, buddy
+                buddy = [[OTRXMPPBuddy alloc] init];
+                buddy.accountUniqueId = self.account.uniqueId;
+                buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+                buddy.displayName = [jid user];
+                buddy.username = [jid bare];
+            }
+            buddy.subscription = [SubscriptionAttributeBridge subscriptionWithString:subscription];
+            [buddy setPendingApproval:[ask isEqualToString:@"subscribe"]];
+            if ([buddy subscribedFrom]) {
+                [buddy setAskingForApproval:NO];
+            }
+            [buddy saveWithTransaction:transaction];
+        }
+    }];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
@@ -1018,6 +1053,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppRoster:(XMPPRoster *)sender didReceiveRosterItem:(NSXMLElement *)item {
     DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, item);
 
+    [self parseSubscriptionFromRosterItem:item];
+    
     // Because XMPP sucks, there's no way to know if a vCard has changed without fetching all of them again
     // To preserve user mobile data, just fetch each vCard once, only if it's never been fetched
     // Otherwise you'll only receive vCard updates if someone updates their avatar
@@ -1046,16 +1083,20 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	NSString *jidStrBare = [presence fromStr];
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPPresenceSubscriptionRequest *request = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidStrBare accontUniqueId:self.account.uniqueId transaction:transaction];
-        if (!request) {
-            request = [[OTRXMPPPresenceSubscriptionRequest alloc] init];
+        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:[[presence from] bareJID] accountUniqueId:self.account.uniqueId transaction:transaction];
+        if (!buddy) {
+            // Create temporary, untrusted, buddy
+            buddy = [[OTRXMPPBuddy alloc] init];
+            buddy.accountUniqueId = self.account.uniqueId;
+            buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+            buddy.displayName = [[presence from] user];
+            buddy.username = jidStrBare;
+        }
+        if (!buddy.askingForApproval) {
+            [buddy setAskingForApproval:YES];
+            [buddy saveWithTransaction:transaction];
             [[UIApplication sharedApplication] showLocalNotificationForSubscriptionRequestFrom:jidStrBare];
         }
-        
-        request.jid = jidStrBare;
-        request.accountUniqueId = self.account.uniqueId;
-        
-        [request saveWithTransaction:transaction];
     }];
 }
 
