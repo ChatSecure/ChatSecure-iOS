@@ -8,6 +8,7 @@
 
 #import "OTRXMPPBuddy.h"
 #import "OTRBuddyCache.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import XMPPFramework;
 @import OTRAssets;
 
@@ -19,11 +20,38 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 @synthesize photoHash = _photoHash;
 @dynamic waitingForvCardTempFetch;
 
+- (id)decodeValueForKey:(NSString *)key withCoder:(NSCoder *)coder modelVersion:(NSUInteger)modelVersion {
+    if (modelVersion == 0) {
+        // Migrate from version 0 of model, where we had "hasIncomingSubscriptionRequest" and "pendingApproval" flags.
+        if ([key isEqualToString:@"subscription"]) {
+            SubscriptionAttribute subscription = SubscriptionAttributeNone;
+            return [NSNumber numberWithInt:subscription];
+        } else if ([key isEqualToString:@"pending"]) {
+            SubscriptionPendingAttribute pending = SubscriptionPendingAttributePendingNone;
+            BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
+            BOOL pendingApproval = [[coder decodeObjectForKey:@"pendingApproval"] boolValue];
+            if (hasIncomingSubscriptionRequest) {
+                pending = [SubscriptionPendingAttributeBridge setPendingIn:pending pending:YES];
+            }
+            pending = [SubscriptionPendingAttributeBridge setPendingOut:pending pending:pendingApproval];
+            return [NSNumber numberWithInt:pending];
+        } else if ([key isEqualToString:@"trustLevel"]) {
+            OTRXMPPBuddyTrustLevel trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+            
+            BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
+            if (hasIncomingSubscriptionRequest == NO) {
+                trustLevel = OTRXMPPBuddyTrustLevelTrusted;
+            }
+            return [NSNumber numberWithInt:trustLevel];
+        }
+    }
+    return [super decodeValueForKey:key withCoder:coder modelVersion:modelVersion];
+}
+
 - (id)init
 {
     if (self = [super init]) {
-        self.pendingApproval = NO;
-        self.hasIncomingSubscriptionRequest = NO;
+        self.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
     }
     return self;
 }
@@ -64,7 +92,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 
 - (NSString *)threadName
 {
-    NSString *threadName = [super threadName];
+    NSString *threadName = [[super threadName] stringByAppendingString:[NSString stringWithFormat:@" %ld ", (long)self.subscription]];
     if (self.pendingApproval) {
         threadName = [NSString stringWithFormat:@"%@ - %@", threadName, PENDING_APPROVAL_STRING()];
     }
@@ -75,7 +103,35 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
     return [XMPPJID jidWithString:self.username];
 }
 
+- (BOOL) subscribedTo {
+    return [SubscriptionAttributeBridge isSubscribedTo:self.subscription];
+}
+
+- (BOOL) subscribedFrom {
+    return [SubscriptionAttributeBridge isSubscribedFrom:self.subscription];
+}
+
+- (BOOL) pendingApproval {
+    return [SubscriptionPendingAttributeBridge isPendingOut:self.pending];
+}
+
+- (void) setPendingApproval:(BOOL)pending {
+    self.pending = [SubscriptionPendingAttributeBridge setPendingOut:self.pending pending:pending];
+}
+
+- (BOOL) askingForApproval {
+    return [SubscriptionPendingAttributeBridge isPendingIn:self.pending];
+}
+
+- (void) setAskingForApproval:(BOOL)asking {
+    self.pending = [SubscriptionPendingAttributeBridge setPendingIn:self.pending pending:asking];
+}
+
 #pragma - mark Class Methods
+
++ (NSUInteger)modelVersion {
+    return 1;
+}
 
 + (NSString *)collection
 {
