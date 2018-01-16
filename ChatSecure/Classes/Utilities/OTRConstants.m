@@ -82,6 +82,7 @@ NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadColle
 NSString *const kOTRNotificationType = @"kOTRNotificationType";
 NSString *const kOTRNotificationTypeNone = @"kOTRNotificationTypeNone";
 NSString *const kOTRNotificationTypeSubscriptionRequest = @"kOTRNotificationTypeSubscriptionRequest";
+NSString *const kOTRNotificationTypeApprovedBuddy = @"kOTRNotificationTypeApprovedBuddy";
 NSString *const kOTRNotificationTypeConnectionError = @"kOTRNotificationTypeConnectionError";
 NSString *const kOTRNotificationTypeChatMessage = @"kOTRNotificationTypeChatMessage";
 

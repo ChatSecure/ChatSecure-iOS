@@ -73,6 +73,7 @@ extern NSString *const kOTRNotificationThreadCollection;
 extern NSString *const kOTRNotificationType;
 extern NSString *const kOTRNotificationTypeNone;
 extern NSString *const kOTRNotificationTypeSubscriptionRequest;
+extern NSString *const kOTRNotificationTypeApprovedBuddy;
 extern NSString *const kOTRNotificationTypeConnectionError;
 extern NSString *const kOTRNotificationTypeChatMessage;
 extern NSString *const OTRUserNotificationsChanged;

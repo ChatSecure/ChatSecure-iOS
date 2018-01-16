@@ -13,6 +13,7 @@ import OTRAssets
 
 public enum NotificationType {
     case subscriptionRequest
+    case approvedBuddy
     case connectionError
     case chatMessage
 }
@@ -21,6 +22,8 @@ extension NotificationType: RawRepresentable {
     public init?(rawValue: String) {
         if rawValue == kOTRNotificationTypeSubscriptionRequest {
             self = .subscriptionRequest
+        } else if rawValue == kOTRNotificationTypeApprovedBuddy {
+            self = .approvedBuddy
         } else if rawValue == kOTRNotificationTypeChatMessage {
             self = .chatMessage
         } else if rawValue == kOTRNotificationTypeConnectionError {
@@ -34,6 +37,8 @@ extension NotificationType: RawRepresentable {
         switch self {
         case .subscriptionRequest:
             return kOTRNotificationTypeSubscriptionRequest
+        case .approvedBuddy:
+            return kOTRNotificationTypeApprovedBuddy
         case .connectionError:
             return kOTRNotificationTypeConnectionError
         case .chatMessage:
@@ -133,18 +138,22 @@ public extension UIApplication {
     }
     
     @objc public func showLocalNotificationForApprovedBuddy(_ thread:OTRThreadOwner?) {
+        guard let thread = thread, !thread.isMuted else { return } // No notifications for muted
         DispatchQueue.main.async {
             var name = SOMEONE_STRING()
             if let buddyName = (thread as? OTRBuddy)?.displayName {
                 name = buddyName
-            } else if let threadName = thread?.threadName {
-                name = threadName
+            } else if !thread.threadName.isEmpty {
+                name = thread.threadName
             }
             
             let message = String(format: BUDDY_APPROVED_STRING(), name)
-            
             let unreadCount = self.applicationIconBadgeNumber + 1
-            self.showLocalNotificationFor(thread, text: message, unreadCount: unreadCount)
+            let identifier = thread.threadIdentifier
+            let userInfo:[AnyHashable:Any] = [kOTRNotificationThreadKey:identifier,
+                                              kOTRNotificationThreadCollection:thread.threadCollection,
+                                              kOTRNotificationType: kOTRNotificationTypeApprovedBuddy]
+            self.showLocalNotificationWith(identifier: identifier, body: message, badge: unreadCount, userInfo: userInfo, recurring: false)
         }
     }
     
