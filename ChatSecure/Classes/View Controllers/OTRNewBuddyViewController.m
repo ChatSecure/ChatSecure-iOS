@@ -173,6 +173,7 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.returnKeyType == UIReturnKeyDone ) {
+        [textField resignFirstResponder];
         [self doneButtonPressed:textField];
     }
     else{
@@ -208,6 +209,7 @@
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
                 buddy.pendingApproval = YES;
+                buddy.trustLevel = OTRXMPPBuddyTrustLevelTrusted;
                 // hack to show buddy in conversations view
                 buddy.lastMessageId = @"";
             }
