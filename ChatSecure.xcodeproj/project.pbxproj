@@ -118,6 +118,7 @@
 		9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */; };
 		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
 		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
+		925DCE2A2007EEFC00703045 /* SubscriptionAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925DCE292007EEFB00703045 /* SubscriptionAttribute.swift */; };
 		9265091A1F4CB45B003FCAD3 /* OTRVerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
 		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
@@ -1033,6 +1034,7 @@
 		9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRRoomOccupants.storyboard; path = Interface/OTRRoomOccupants.storyboard; sourceTree = "<group>"; };
 		9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ios-icon-font.ttf"; sourceTree = "<group>"; };
 		9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
+		925DCE292007EEFB00703045 /* SubscriptionAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionAttribute.swift; sourceTree = "<group>"; };
 		926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRVerticalStackView.swift; sourceTree = "<group>"; };
 		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
 		92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRComposeGroup.storyboard; path = Interface/OTRComposeGroup.storyboard; sourceTree = "<group>"; };
@@ -1601,6 +1603,7 @@
 				633105FC1A16D1A300C17BAE /* OTRXMPPError.h */,
 				633105FD1A16D1A300C17BAE /* OTRXMPPError.m */,
 				924F68601EA8A00D00528FB6 /* OTRServerDeprecation.swift */,
+				925DCE292007EEFB00703045 /* SubscriptionAttribute.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -3148,6 +3151,7 @@
 				D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */,
 				D93DDAC71BA79A2600CD8331 /* OTRLanguageSetting.m in Sources */,
 				D93DDAC81BA79A2600CD8331 /* OTRListSetting.m in Sources */,
+				925DCE2A2007EEFC00703045 /* SubscriptionAttribute.swift in Sources */,
 				63AB1A071C0D116A005FA351 /* OTRSplitViewCoordinator.swift in Sources */,
 				D93DDAC91BA79A2600CD8331 /* OTRListSettingValue.m in Sources */,
 				6381F3601DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift in Sources */,
