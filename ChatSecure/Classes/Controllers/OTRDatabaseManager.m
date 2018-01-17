@@ -130,7 +130,13 @@
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                            serializer:nil
-                                         deserializer:nil
+                                         deserializer:^ id (NSString *collection, NSString *key, NSData *data){
+                                             if ([collection isEqualToString:@"OTRXMPPPresenceSubscriptionRequest"]) {
+                                                 return nil;
+                                             }
+                                             return YapDatabase.defaultDeserializer(collection, key, data);
+                                         }
+                     
                                               options:options];
     // Stop trying to setup up the database. Something went wrong. Most likely the password is incorrect.
     if (self.database == nil) {
@@ -147,7 +153,6 @@
     self.readWriteDatabaseConnection = [self.database newConnection];
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
 
-    
     _longLivedReadOnlyConnection = [self.database newConnection];
     self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
     
