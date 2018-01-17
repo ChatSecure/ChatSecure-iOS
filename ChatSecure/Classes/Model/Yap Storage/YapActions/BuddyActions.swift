@@ -54,13 +54,13 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
                     return
                 }
                 
-                guard let proto = OTRProtocolManager.sharedInstance().protocol(for: acct) else {
+                guard let proto = OTRProtocolManager.sharedInstance().protocol(for: acct) as? XMPPManager else {
                     connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)
                     })
                     return
                 }
-                if proto.connectionStatus == .connected {
+                if proto.loginStatus == .authenticated {
                     proto.removeBuddies([buddy])
                     connection.readWrite({ (transaction) -> Void in
                         transaction.removeObject(forKey: key, inCollection: collection)

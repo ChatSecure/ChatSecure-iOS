@@ -46,7 +46,6 @@
 #import "OTRAccount.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
-#import "OTRNotificationController.h"
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
 #import "OTRXMPPRoomManager.h"
@@ -60,17 +59,10 @@
 #import "OTRTorManager.h"
 @import OTRAssets;
 
-NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
-NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
 
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
-NSString *const OTRXMPPLoginStatusNotificationName = @"OTRXMPPLoginStatusNotificationName";
-
-NSString *const OTRXMPPOldLoginStatusKey = @"OTRXMPPOldLoginStatusKey";
-NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
-NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 /** For XEP-0352 CSI Client State Indication */
 typedef NS_ENUM(NSInteger, XMPPClientState) {
@@ -85,7 +77,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     if (self = [super init]) {
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
         _workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
-        self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
         _buddyTimers = [NSMutableDictionary dictionary];
         _databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
@@ -405,20 +396,12 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 {
     self.isRegisteringNewAccount = NO;
     [self authenticateWithStream:stream];
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPRegisterSucceededNotificationName object:self];
-}
-- (void)failedToRegisterNewAccount:(NSError *)error
-{
-    if (error) {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:OTRXMPPRegisterFailedNotificationName object:self userInfo:@{kOTRNotificationErrorKey:error}];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:OTRXMPPRegisterFailedNotificationName object:self];
-    }
 }
 
+- (void)failedToRegisterNewAccount:(NSError *)error
+{
+    DDLogError(@"Failed to register new account: %@", error);
+}
 
 - (void)authenticateWithStream:(XMPPStream *)stream {
     NSError * error = nil;
@@ -446,7 +429,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (BOOL)startConnection
 {
-    self.connectionStatus = OTRProtocolConnectionStatusConnecting;
+    [self setLoginStatus:OTRLoginStatusConnecting];
     
     XMPPJID *jid = [XMPPJID jidWithString:self.account.username resource:self.account.resource];
     
@@ -499,8 +482,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void) disconnectSocketOnly:(BOOL)socketOnly {
     DDLogVerbose(@"%@: %@ %d", THIS_FILE, THIS_METHOD, socketOnly);
     if (socketOnly) {
-        if (self.connectionStatus == OTRProtocolConnectionStatusConnecting || self.connectionStatus == OTRProtocolConnectionStatusConnected) {
-            self.connectionStatus = OTRProtocolConnectionStatusDisconnecting;
+        if (self.loginStatus == OTRLoginStatusAuthenticated) {
+            self.loginStatus = OTRLoginStatusDisconnecting;
             [self goAway];
         }
         return;
@@ -782,7 +765,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self changeLoginStatus:OTRLoginStatusConnected error:nil];
+    self.loginStatus = OTRLoginStatusConnected;
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -793,14 +776,14 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
     settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
     
-    [self changeLoginStatus:OTRLoginStatusSecuring error:nil];
+    self.loginStatus = OTRLoginStatusSecuring;
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    [self changeLoginStatus:OTRLoginStatusSecured error:nil];
+    self.loginStatus = OTRLoginStatusSecured;
 }
 
 - (void)xmppStreamDidConnect:(XMPPStream *)sender
@@ -814,22 +797,21 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         [self authenticateWithStream:sender];
     }
     
-    [self changeLoginStatus:OTRLoginStatusAuthenticating error:nil];
+    self.loginStatus = OTRLoginStatusAuthenticating;
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
     DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
     
-    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
+    self.loginStatus = OTRLoginStatusDisconnected;
     
-    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
-    
-    if (self.loginStatus == OTRLoginStatusDisconnected)
+    if (error)
     {
-        DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        
+        DDLogError(@"Disconnected from server %@ with error: %@", self.account.bareJID.domain, error);
         [self failedToConnect:error];
+    } else {
+        DDLogError(@"Disconnected from server %@.", self.account.bareJID.domain);
     }
     
     //Reset buddy info to offline
@@ -851,7 +833,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:0];
     }
     
-    self.connectionStatus = OTRProtocolConnectionStatusConnected;
+    self.loginStatus = OTRLoginStatusAuthenticated;
     NSString *accountKey = self.account.uniqueId;
     NSString *accountCollection = [[self.account class] collection];
     NSDictionary *userInfo = nil;
@@ -862,19 +844,15 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
      postNotificationName:kOTRProtocolLoginSuccess
      object:self userInfo:userInfo];
     
-    [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
-    
     [self goOnline];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
     NSError *err = [OTRXMPPError errorForXMLElement:error];
     [self failedToConnect:err];
-    
-    [self changeLoginStatus:OTRLoginStatusSecured error:err];
+    [self disconnect];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -892,8 +870,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     self.isRegisteringNewAccount = NO;
     NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
     [self failedToRegisterNewAccount:error];
-    
-    [self changeLoginStatus:OTRLoginStatusSecured error:error];
+    [self disconnect];
 }
 
 -(nullable OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
@@ -952,9 +929,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 }
 
 - (void)finishDisconnectingIfNeeded {
-    if (self.connectionStatus == OTRProtocolConnectionStatusDisconnecting) {
+    if (self.loginStatus == OTRLoginStatusDisconnecting) {
         [self.xmppStream disconnect];
-        self.connectionStatus =  OTRProtocolConnectionStatusDisconnected;
     }
 }
 
@@ -1242,9 +1218,6 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
         return;
     }
     [self startConnection];
-    if (self.userInitiatedConnection) {
-        [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
-    }
 }
 
 -(void)connect
@@ -1445,19 +1418,11 @@ managedBuddyObjectID
 
 - (void)failedToConnect:(NSError *)error
 {
-    __weak typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        strongSelf->_lastConnectionError = error;
+        self->_lastConnectionError = error;
         
-        NSMutableDictionary *userInfo = [@{kOTRProtocolLoginUserInitiated : @(self.userInitiatedConnection)} mutableCopy];
-        if (error) {
-            [userInfo setObject:error forKey:kOTRNotificationErrorKey];
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self userInfo:userInfo];
         //Only user initiated on the first time any subsequent attempts will not be from user
-        strongSelf.userInitiatedConnection = NO;
+        self.userInitiatedConnection = NO;
         
         if (error) {
             [UIApplication.sharedApplication showConnectionErrorNotificationWithXmpp:self error:error];
@@ -1483,24 +1448,7 @@ managedBuddyObjectID
         [self failedToConnect:error];
     });
     
-    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
-}
-
-- (void)changeLoginStatus:(OTRLoginStatus)status error:(NSError *)error
-{
-    OTRLoginStatus oldStatus = self.loginStatus;
-    OTRLoginStatus newStatus = status;
-    self.loginStatus = status;
-    
-    NSMutableDictionary *userInfo = [@{OTRXMPPOldLoginStatusKey: @(oldStatus), OTRXMPPNewLoginStatusKey: @(newStatus)} mutableCopy];
-    
-    if (error) {
-        userInfo[OTRXMPPLoginErrorKey] = error;
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPLoginStatusNotificationName object:self userInfo:userInfo];
-    });
+    self.loginStatus = OTRLoginStatusDisconnected;
 }
 
 // Delivery receipts

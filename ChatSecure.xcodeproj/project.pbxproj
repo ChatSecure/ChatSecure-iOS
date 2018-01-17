@@ -173,7 +173,6 @@
 		D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105231A16D1A300C17BAE /* OTRProtocolManager.m */; };
 		D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */; };
 		D93DDA8B1BA79A2400CD8331 /* OTRTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105311A16D1A300C17BAE /* OTRTorManager.m */; };
-		D93DDA8C1BA79A2400CD8331 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		D93DDA8D1BA79A2400CD8331 /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
 		D93DDA8E1BA79A2400CD8331 /* OTRAudioPlaybackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */; };
 		D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
@@ -305,7 +304,6 @@
 		D93DDB3D1BA79A7100CD8331 /* OTRProtocolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105221A16D1A300C17BAE /* OTRProtocolManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB3E1BA79A7100CD8331 /* OTRSettingsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB3F1BA79A7100CD8331 /* OTRTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105301A16D1A300C17BAE /* OTRTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D184841A2D3F2400334CD8 /* OTRNotificationController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB411BA79A7100CD8331 /* OTRAudioSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB421BA79A7100CD8331 /* OTRAudioPlaybackController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB431BA79A7200CD8331 /* OTRMediaFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -972,8 +970,6 @@
 		63D150F91D8A0C9C006FB2E2 /* OTROMEMODevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTROMEMODevice.h; path = "OMEMO-Storage/OTROMEMODevice.h"; sourceTree = "<group>"; };
 		63D150FA1D8A0C9C006FB2E2 /* OTROMEMODevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTROMEMODevice.m; path = "OMEMO-Storage/OTROMEMODevice.m"; sourceTree = "<group>"; };
 		63D150FD1D8B5637006FB2E2 /* OTROMEMOStorageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOStorageManager.swift; sourceTree = "<group>"; };
-		63D184841A2D3F2400334CD8 /* OTRNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationController.h; sourceTree = "<group>"; };
-		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
 		63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaItem.h; sourceTree = "<group>"; };
 		63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaItem.m; sourceTree = "<group>"; };
 		63D639E11D12124F002B4175 /* OTRStreamManagementDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStreamManagementDelegate.swift; sourceTree = "<group>"; };
@@ -1389,8 +1385,6 @@
 				6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */,
 				633105301A16D1A300C17BAE /* OTRTorManager.h */,
 				633105311A16D1A300C17BAE /* OTRTorManager.m */,
-				63D184841A2D3F2400334CD8 /* OTRNotificationController.h */,
-				63D184851A2D3F2400334CD8 /* OTRNotificationController.m */,
 				633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */,
 				633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */,
 				63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */,
@@ -2259,7 +2253,6 @@
 				D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */,
 				D93DDB871BA79A8A00CD8331 /* OTROAuthXMPPAccount.h in Headers */,
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
-				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
 				D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
@@ -3096,7 +3089,6 @@
 				63DC417B1BB3767100D42857 /* Errors.swift in Sources */,
 				D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */,
 				D93DDA8B1BA79A2400CD8331 /* OTRTorManager.m in Sources */,
-				D93DDA8C1BA79A2400CD8331 /* OTRNotificationController.m in Sources */,
 				63E353B81BB9D83B005C54C3 /* OTRPushTLVHandler.m in Sources */,
 				D93DDA8D1BA79A2400CD8331 /* OTRAudioSessionManager.m in Sources */,
 				D93DDA8E1BA79A2400CD8331 /* OTRAudioPlaybackController.m in Sources */,

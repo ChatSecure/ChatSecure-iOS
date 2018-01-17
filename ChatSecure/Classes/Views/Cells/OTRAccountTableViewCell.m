@@ -38,16 +38,14 @@
     self.imageView.image = [account accountImage];
 }
 
-- (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus {
-    if (connectionStatus == OTRProtocolConnectionStatusConnected) {
+- (void)setConnectedText:(OTRLoginStatus)connectionStatus {
+    if (connectionStatus == OTRLoginStatusAuthenticated) {
         self.detailTextLabel.text = CONNECTED_STRING();
     }
-    else if (connectionStatus == OTRProtocolConnectionStatusConnecting)
-    {
-        self.detailTextLabel.text = CONNECTING_STRING();
-    }
-    else {
+    else if (connectionStatus == OTRLoginStatusDisconnected) {
         self.detailTextLabel.text = nil;
+    } else {
+        self.detailTextLabel.text = CONNECTING_STRING();
     }
 }
 

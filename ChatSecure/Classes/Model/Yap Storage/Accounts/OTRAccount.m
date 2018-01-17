@@ -132,8 +132,8 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 - (UIColor *)avatarBorderColor {
     if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:self]) {
-        id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self];
-        if ([protocol connectionStatus] == OTRProtocolConnectionStatusConnected) {
+        OTRXMPPManager *xmpp = [OTRProtocolManager.shared xmppManagerForAccount:self];
+        if (xmpp.loginStatus == OTRLoginStatusAuthenticated) {
             return [OTRColors colorWithStatus:OTRThreadStatusAvailable];
         }
     }

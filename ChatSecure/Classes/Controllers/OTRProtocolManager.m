@@ -119,7 +119,7 @@
     @synchronized (self) {
         [self.protocolManagers setObject:protocol forKey:account.uniqueId];
     }
-    [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
+    [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(loginStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
 }
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account
@@ -157,15 +157,22 @@
     return protocol;
 }
 
+- (nullable OTRXMPPManager*)xmppManagerForAccount:(OTRAccount *)account {
+    OTRXMPPManager *xmpp = (OTRXMPPManager*)[self protocolForAccount:account];
+    NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
+    if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
+        DDLogError(@"Wrong protocol class for account %@", account);
+        return nil;
+    }
+    return xmpp;
+}
+
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated
 {
     NSParameterAssert(account);
     if (!account) { return; }
     id <OTRProtocol> protocol = [self protocolForAccount:account];
-    if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
-        //DDLogWarn(@"Account already connected %@", account);
-    }
-    
+
     if([account isKindOfClass:[OTROAuthXMPPAccount class]])
     {
         [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
@@ -213,12 +220,19 @@
         dispatch_group_t group = dispatch_group_create();
         NSMutableDictionary<NSString*, NSObject<OTRProtocol>*> *observingManagersForTokens = [NSMutableDictionary new];
         for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
-            if (manager.connectionStatus != OTRProtocolConnectionStatusDisconnected) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)manager;
+            NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
+            if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
+                DDLogError(@"Wrong protocol class for manager %@", manager);
+                continue;
+            }
+            
+            if (xmpp.loginStatus != OTRLoginStatusDisconnected) {
                 dispatch_group_enter(group);
-                NSString *token = [manager addObserverForKeyPath:NSStringFromSelector(@selector(connectionStatus))
+                NSString *token = [xmpp addObserverForKeyPath:NSStringFromSelector(@selector(loginStatus))
                                                          options:0
-                                                           block:^(NSString *keyPath, id<OTRProtocol> mgr, NSDictionary *change) {
-                                                               if (mgr.connectionStatus == OTRProtocolConnectionStatusDisconnected) {
+                                                           block:^(NSString *keyPath, OTRXMPPManager *mgr, NSDictionary *change) {
+                                                               if (mgr.loginStatus == OTRLoginStatusDisconnected) {
                                                                    dispatch_group_leave(group);
                                                                }
                                                            }];
@@ -249,9 +263,15 @@
     __block NSUInteger connecting = 0;
     @synchronized (self) {
         [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id<OTRProtocol>  _Nonnull obj, BOOL * _Nonnull stop) {
-            if ([obj connectionStatus] == OTRProtocolConnectionStatusConnected) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)obj;
+            NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
+            if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
+                DDLogError(@"Wrong protocol class for account %@", obj);
+                return;
+            }
+            if (xmpp.loginStatus == OTRLoginStatusAuthenticated) {
                 connected++;
-            } else if ([obj connectionStatus] == OTRProtocolConnectionStatusConnecting) {
+            } else if (xmpp.loginStatus == OTRLoginStatusConnecting) {
                 connecting++;
             }
         }];
@@ -267,8 +287,14 @@
     @synchronized (self) {
         protocol = [self.protocolManagers objectForKey:account.uniqueId];
     }
-    if (protocol) {
-        connected = [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
+    OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
+    NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
+    if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
+        DDLogError(@"Wrong protocol class %@", protocol);
+        return NO;
+    }
+    if (xmpp) {
+        connected = xmpp.loginStatus == OTRLoginStatusAuthenticated;
     }
     return connected;
 }

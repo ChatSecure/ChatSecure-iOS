@@ -45,6 +45,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     let writeConnection: YapDatabaseConnection
     var detailCells: [DetailCellInfo] = []
     let DetailCellIdentifier = "DetailCellIdentifier"
+    private var loginStatusObserver: NSKeyValueObservation? = nil
     
     let xmpp: XMPPManager
     
@@ -103,7 +104,11 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(loginStatusChanged(_:)), name: NSNotification.Name(rawValue: OTRXMPPLoginStatusNotificationName), object: nil)
+        self.loginStatusObserver = xmpp.observe(\.loginStatus) { [unowned self] object, observedChange in
+            DispatchQueue.main.async {
+                self.loginStatusChanged()
+            }
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: xmpp.serverCheck)
         tableView.reloadData()
     }
@@ -120,7 +125,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         tableView.reloadData()
     }
     
-    @objc func loginStatusChanged(_ notification: Notification) {
+    private func loginStatusChanged() {
         tableView.reloadData()
         // Show certificate warnings
         if let lastError = xmpp.lastConnectionError,
@@ -144,7 +149,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let delete = UIAlertAction(title: DELETE_ACCOUNT_BUTTON_STRING(), style: .destructive) { (action) in
             let protocols = OTRProtocolManager.sharedInstance()
             if let xmpp = protocols.protocol(for: account) as? XMPPManager,
-                xmpp.connectionStatus != .disconnected {
+                xmpp.loginStatus != .disconnected {
                 xmpp.disconnect()
             }
             protocols.removeProtocol(for: account)
@@ -166,7 +171,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let logout = UIAlertAction(title: LOGOUT_STRING(), style: .destructive) { (action) in
             let protocols = OTRProtocolManager.sharedInstance()
             if let xmpp = protocols.protocol(for: account) as? XMPPManager,
-                xmpp.connectionStatus != .disconnected {
+                xmpp.loginStatus != .disconnected {
                 xmpp.disconnect()
             }
         }
@@ -321,26 +326,28 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     func loginLogoutCell(account: OTRXMPPAccount, tableView: UITableView, indexPath: IndexPath) -> SingleButtonTableViewCell {
         let cell = singleButtonCell(account: account, tableView: tableView, indexPath: indexPath)
         
-        switch xmpp.connectionStatus {
-        case .connecting:
+        switch xmpp.loginStatus {
+        case .connecting,
+             .connected,
+             .securing,
+             .secured,
+             .authenticating:
             cell.button.setTitle("\(CONNECTING_STRING())...", for: .normal)
-            cell.button.isEnabled = false
-        case .disconnecting,
-             .disconnected:
+            cell.buttonAction = { [weak self] (cell, sender) in
+                self?.xmpp.disconnect()
+            }
+        case .disconnected:
             cell.button.setTitle(LOGIN_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
                 guard let strongSelf = self else { return }
                 strongSelf.attemptLogin(sender)
             }
-            break
-        case .connected:
+        case .authenticated:
             cell.button.setTitle(LOGOUT_STRING(), for: .normal)
             cell.buttonAction = { [weak self] (cell, sender) in
-                guard let strongSelf = self else { return }
-                strongSelf.showLogoutDialog(account: strongSelf.account, sender: sender)
+                self?.xmpp.disconnect()
             }
             cell.button.setTitleColor(UIColor.red, for: .normal)
-            break
         }
         return cell
     }

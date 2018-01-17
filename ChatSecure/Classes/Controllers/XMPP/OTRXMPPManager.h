@@ -50,7 +50,7 @@ NS_SWIFT_NAME(XMPPManager)
 @property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong, readonly) MessageStorage *messageStorage;
 
-
+@property (atomic, readonly) OTRLoginStatus loginStatus;
 /** Useful for showing error messages related to connection, like SSL certs. Only safe for access from main queue. */
 @property (nonatomic, readonly, nullable) NSError *lastConnectionError;
 
@@ -101,22 +101,5 @@ NS_SWIFT_NAME(XMPPManager)
 
 @end
 
-
-/**
- This notification is sent every time there is a change in the login status and if it goes 'backwards' there
- should be an error or a user initiated disconnect.
- 
- @{
- OTRXMPPOldLoginStatusKey : @(OTRLoginStatus)
- OTRXMPPNewLoginStatusKey : @(OTRLoginStatus)
- OTRXMPPLoginErrorKey     : NSError*
- }
- */
-extern NSString *const OTRXMPPLoginStatusNotificationName;
-extern NSString *const OTRXMPPOldLoginStatusKey;
-extern NSString *const OTRXMPPNewLoginStatusKey;
-extern NSString *const OTRXMPPLoginErrorKey;
-extern NSString *const OTRXMPPRegisterSucceededNotificationName;
-extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 NS_ASSUME_NONNULL_END

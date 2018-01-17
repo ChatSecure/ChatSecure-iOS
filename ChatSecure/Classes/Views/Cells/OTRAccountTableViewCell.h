@@ -16,7 +16,7 @@
 @property (nonatomic, strong) UIButton *shareButton;
 @property (nonatomic, strong) OTRAccount *account;
 
-- (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus;
+- (void)setConnectedText:(OTRLoginStatus)connectionStatus;
 
 + (NSString*) cellIdentifier;
 
