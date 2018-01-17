@@ -37,7 +37,6 @@
 @import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 
 @interface OTRProtocolManager ()
 @property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
@@ -330,13 +329,9 @@
                         buddy.accountUniqueId = account.uniqueId;
                     }
                     [buddy saveWithTransaction:transaction];
-                    
-                    // Check if we already have a subscription request from this user
-                    OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:account.uniqueId transaction:transaction];
-                    if (presenceRequest != nil) {
+                    if ([buddy askingForApproval]) {
                         // We have an incoming subscription request, just answer that!
                         [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-                        [presenceRequest removeWithTransaction:transaction];
                         handled = YES;
                     }
                 }];

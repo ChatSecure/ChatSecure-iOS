@@ -200,7 +200,6 @@
         [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
-        [OTRDatabaseView registerAllSubscriptionRequestsViewWithDatabase:self.database];
         
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];

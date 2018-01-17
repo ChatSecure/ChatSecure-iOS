@@ -221,7 +221,6 @@
 		D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */; };
 		D93DDADC1BA79A2700CD8331 /* OTRBaseMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CF1A16D1A300C17BAE /* OTRBaseMessage.m */; };
 		D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */; };
-		D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */; };
 		D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */; };
 		D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */; };
 		D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
@@ -353,7 +352,6 @@
 		D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB911BA79A9200CD8331 /* OTRBaseMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CE1A16D1A300C17BAE /* OTRBaseMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -774,8 +772,6 @@
 		633105CF1A16D1A300C17BAE /* OTRBaseMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseMessage.m; sourceTree = "<group>"; };
 		633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddy.h; sourceTree = "<group>"; };
 		633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBuddy.m; sourceTree = "<group>"; };
-		633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
-		633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapDatabaseObject.h; sourceTree = "<group>"; };
 		633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapDatabaseObject.m; sourceTree = "<group>"; };
 		633105E51A16D1A300C17BAE /* OTRAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppDelegate.h; sourceTree = "<group>"; };
@@ -1544,8 +1540,6 @@
 				637ABBC21DD5232800B18DD2 /* OTRMessageEncryptionInfo.m */,
 				633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */,
 				633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */,
-				633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */,
-				633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */,
 				633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */,
 				633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */,
 				63D14F341C0FC6A90029F36B /* OTRThreadOwner.h */,
@@ -2226,7 +2220,6 @@
 				D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */,
 				D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */,
 				D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */,
-				D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */,
 				D93DDB481BA79A7200CD8331 /* OTRXMPPBuddyTimers.h in Headers */,
 				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,
@@ -3192,7 +3185,6 @@
 				D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */,
 				632AA72B1D480BFF00F65733 /* OTRSignalSenderKey.m in Sources */,
 				632AA72F1D4819BD00F65733 /* OTRSignalPreKey.m in Sources */,
-				D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D9FBDDC91FD74A93006F1C6C /* OTRAppDelegate.swift in Sources */,
 				D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */,
 				D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */,

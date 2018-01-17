@@ -33,7 +33,6 @@ import Foundation
 
 @objc public enum RelationshipEdgeName: Int {
     case buddyAccountEdgeName
-    case subscriptionRequestAccountEdgeName
     case messageBuddyEdgeName
     case messageMediaEdgeName
     case omemoDeviceEdgeName
@@ -46,7 +45,6 @@ import Foundation
     public func name() -> String {
         switch self {
             case .buddyAccountEdgeName: return "account"
-            case .subscriptionRequestAccountEdgeName: return "OTRXMPPPresenceSubscriptionRequestEdges.account"
             case .messageBuddyEdgeName: return "buddy"
             case .messageMediaEdgeName: return "media"
             case .omemoDeviceEdgeName: return "OmemoDeviceEdgeName"

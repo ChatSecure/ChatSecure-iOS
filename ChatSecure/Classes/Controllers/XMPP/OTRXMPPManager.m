@@ -44,7 +44,6 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
 #import "OTRNotificationController.h"
 #import "OTRStreamManagementYapStorage.h"
@@ -1028,7 +1027,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
             }
         } else {
             if (!buddy) {
-                // Create temporary, untrusted, buddy
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = self.account.uniqueId;
                 buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
@@ -1085,7 +1083,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:[[presence from] bareJID] accountUniqueId:self.account.uniqueId transaction:transaction];
         if (!buddy) {
-            // Create temporary, untrusted, buddy
             buddy = [[OTRXMPPBuddy alloc] init];
             buddy.accountUniqueId = self.account.uniqueId;
             buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
