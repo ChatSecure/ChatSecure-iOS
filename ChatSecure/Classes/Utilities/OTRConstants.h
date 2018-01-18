@@ -24,13 +24,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const kOTRProtocolLoginSuccess;
-extern NSString *const kOTRProtocolLoginFail;
-extern NSString *const kOTRProtocolLoginFailErrorKey;
-extern NSString *const kOTRProtocolLoginFailSSLStatusKey;
-extern NSString *const kOTRProtocolLoginFailHostnameKey;
-extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
-extern NSString *const kOTRNotificationErrorKey;
-extern NSString *const kOTRProtocolLoginUserInitiated;
 
 extern NSString *const kOTRProtocolTypeXMPP;
 extern NSString *const kOTRProtocolTypeAIM;
@@ -58,7 +51,6 @@ extern NSString *const kOTRAppVersionKey;
 
 extern NSString *const OTRArchiverKey;
 
-extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 
 extern NSString *const OTRYapDatabasePassphraseAccountName;

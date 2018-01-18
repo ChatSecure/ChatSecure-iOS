@@ -23,13 +23,6 @@
 
 NSString *const kOTRIgnoreDonationDateKey = @"kOTRIgnoreDonationDateKey";
 NSString *const kOTRProtocolLoginSuccess                   = @"LoginSuccessNotification";
-NSString *const kOTRProtocolLoginFail                      = @"LoginFailedNotification";
-NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFailErrorKey";
-NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLoginFailSSLStatusKey";
-NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
-NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
-NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
-NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLoginUserInitiated";
 
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
@@ -68,7 +61,6 @@ NSString *const OTRPushAccountDeviceChanged = @"OTRPushAccountDeviceChanged";
 NSString *const OTRPushAccountTokensChanged = @"OTRPushAccountTokensChanged";
 
 
-NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";
 NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRemoteNotificationRegistration";
 
 NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphraseAccountName";

@@ -14,7 +14,7 @@ public extension OTRXMPPAccount {
         guard let jid = bareJID else { return false }
         if OTRServerDeprecation.isDeprecated(server: jid.domain) {
             if !autologin, let xmpp = OTRProtocolManager.shared.protocol(for: self) as? XMPPManager,
-                xmpp.connectionStatus == .disconnected {
+                xmpp.loginStatus == .disconnected {
                 return false // May have migrated
             }
             return !self.isArchived

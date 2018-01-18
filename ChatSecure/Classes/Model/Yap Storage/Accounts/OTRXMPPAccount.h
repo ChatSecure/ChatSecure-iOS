@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPAccount : OTRAccount <OTRvCard>
 
-@property (nonatomic, strong) NSString *domain;
+@property (nonatomic, strong, nullable) NSString *domain;
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) uint16_t port;
 

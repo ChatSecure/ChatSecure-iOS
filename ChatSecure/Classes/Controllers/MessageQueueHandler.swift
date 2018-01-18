@@ -300,7 +300,7 @@ public class MessageQueueHandler:NSObject {
         //Some way to store a message dictionary with the key and block
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus == .connected) {
+        if (accountProtocol.loginStatus == .authenticated) {
             if let groupMessage = message as? OTRXMPPRoomMessage {
                 sendGroupMessage(groupMessage, thread: thread, account: account, accountProtocol: accountProtocol, messageSendingAction: messageSendingAction, completion: completion)
             } else if let directMessage = message as? OTROutgoingMessage, let buddy = thread as? OTRXMPPBuddy {
@@ -347,7 +347,7 @@ public class MessageQueueHandler:NSObject {
         }
 
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus == .connected) {
+        if (accountProtocol.loginStatus == .authenticated) {
             // Add the buddy to our roster
             if let jid = XMPPJID(string: buddy.username) {
                 accountProtocol.xmppRoster.addUser(jid, withNickname:buddy.displayName)
@@ -382,7 +382,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if accountProtocol.connectionStatus == .connected,
+        if accountProtocol.loginStatus == .authenticated,
             let jidStr = removeBuddyAction.buddyJid {
             // Add the buddy to our roster
             if let jid = XMPPJID(string: jidStr) {

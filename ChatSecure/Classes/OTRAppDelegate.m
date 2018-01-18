@@ -52,7 +52,6 @@
 #import "OTROutgoingMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
-#import "OTRNotificationController.h"
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
@@ -149,9 +148,6 @@
     
     [self.window makeKeyAndVisible];
     [TransactionObserver.shared startObserving];
-    
-    OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
-    [notificationController start];
     
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
         [PushController registerForPushNotifications];
@@ -483,7 +479,6 @@
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 

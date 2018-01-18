@@ -19,15 +19,13 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRTorManager.h"
 #import "OTRLog.h"
+@import KVOController;
 
 @interface OTRXMPPLoginHandler()
 @end
 
 @implementation OTRXMPPLoginHandler
 
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
 - (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
 {
@@ -200,7 +198,7 @@
     [[OTRProtocolManager sharedInstance] removeProtocolForAccount:account];
     _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
+    [self.KVOController observe:self.xmppManager keyPath:NSStringFromSelector(@selector(loginStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(connectionStatusDidChange:)];
 }
 
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account progress:(void (^)(NSInteger progress, NSString *summaryString))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
@@ -240,25 +238,24 @@
     [self.xmppManager connectUserInitiated:YES];
 }
 
-- (void)receivedNotification:(NSNotification *)notification
+- (void)connectionStatusDidChange:(NSDictionary *)change
 {
-    OTRLoginStatus newStatus = [notification.userInfo[OTRXMPPNewLoginStatusKey] integerValue];
-    NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];
-    OTRAccount *account = self.xmppManager.account;
-
-    if (newStatus == OTRLoginStatusAuthenticated) {
-        // Only call completion once
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        if (self.completion) {
-            self.completion(account,nil);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSError *error = self.xmppManager.lastConnectionError;
+        OTRAccount *account = self.xmppManager.account;
+        OTRLoginStatus status = self.xmppManager.loginStatus;
+        
+        if (status == OTRLoginStatusAuthenticated) {
+            if (self.completion) {
+                self.completion(account,nil);
+            }
         }
-    }
-    else if (error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        if (self.completion) {
-            self.completion(account,error);
+        else if (error) {
+            if (self.completion) {
+                self.completion(account,error);
+            }
         }
-    }
+    });
 }
 
 @end

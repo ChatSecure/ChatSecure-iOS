@@ -27,7 +27,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount, OTRBuddy, OTROutgoingMessage, PushController;
+@class OTRAccount, OTRXMPPAccount, OTRBuddy, OTROutgoingMessage, PushController, OTRXMPPManager;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
 - (nullable id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
+- (nullable OTRXMPPManager*)xmppManagerForAccount:(OTRAccount *)account;
 - (void)removeProtocolForAccount:(OTRAccount *)account;
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account;
 
