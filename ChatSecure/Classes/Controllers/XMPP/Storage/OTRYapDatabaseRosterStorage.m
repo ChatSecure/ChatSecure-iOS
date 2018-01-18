@@ -25,19 +25,6 @@
 
 @end
 
-/**
- The possible values for a subscription value
- 
- https://xmpp.org/rfcs/rfc6121.html#roster-syntax-items-subscription
- */
-typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
-    OTRSubscriptionAttributeUnknown,
-    OTRSubscriptionAttributeNone,
-    OTRSubscriptionAttributeTo,
-    OTRSubscriptionAttributeFrom,
-    OTRSubscriptionAttributeBoth
-};
-
 @implementation OTRYapDatabaseRosterStorage
 
 -(instancetype)init
