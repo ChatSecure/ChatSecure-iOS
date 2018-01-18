@@ -37,6 +37,7 @@
 @import OTRAssets;
 #import "OTRLog.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 
 @interface OTRProtocolManager ()
 @property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
@@ -333,6 +334,13 @@
                         // We have an incoming subscription request, just answer that!
                         [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
                         handled = YES;
+                        
+                        // Cleanup of old code. We no longer use the OTRXMPPPresenceSubscriptionRequest class,
+                        // so if we have an old entry for this JID, just delete it
+                        OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:account.uniqueId transaction:transaction];
+                        if (presenceRequest != nil) {
+                            [presenceRequest removeWithTransaction:transaction];
+                        }
                     }
                 }];
                 if (!handled) {

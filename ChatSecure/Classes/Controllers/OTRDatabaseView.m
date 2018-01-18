@@ -170,7 +170,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"8"
+                                                                   versionTag:@"9"
                                                                       options:options];
     
     BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
@@ -382,7 +382,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseAutoView *view = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"8"
+                                                           versionTag:@"9"
                                                               options:options];
     
     return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName] && [self registerFilteredBuddiesViewWithDatabase:database];
@@ -401,14 +401,6 @@ NSString *OTRPushAccountGroup = @"Account";
     options.isPersistent = NO;
     BOOL showArchived = NO;
     YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
-        if ([object isKindOfClass:[OTRXMPPBuddy class]]) {
-            OTRXMPPBuddy *buddy = (OTRXMPPBuddy*)object;
-            // TODO - use trust level for this
-            if (buddy.askingForApproval) {
-                // Don't show these temporary buddies in main view
-                return NO;
-            }
-        }
         if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
             id<OTRThreadOwner> threadOwner = object;
             BOOL isArchived = threadOwner.isArchived;

@@ -121,6 +121,8 @@
 		9265091A1F4CB45B003FCAD3 /* OTRVerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
 		929FCF6B2010AA4D004736AF /* BuddySubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */; };
+		92BE6C7E2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */; };
+		92BE6C7F2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */; };
 		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
 		92CC68C11F42F11E0006CDF8 /* OTRComposeGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC68C01F42F11D0006CDF8 /* OTRComposeGroupViewController.swift */; };
 		92CC68F11F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */; };
@@ -1033,6 +1035,8 @@
 		926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRVerticalStackView.swift; sourceTree = "<group>"; };
 		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
 		929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuddySubscriptions.swift; sourceTree = "<group>"; };
+		92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
+		92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
 		92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRComposeGroup.storyboard; path = Interface/OTRComposeGroup.storyboard; sourceTree = "<group>"; };
 		92CC68C01F42F11D0006CDF8 /* OTRComposeGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRComposeGroupViewController.swift; sourceTree = "<group>"; };
 		92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRComposeGroupBuddyCell.swift; sourceTree = "<group>"; };
@@ -1548,6 +1552,8 @@
 				6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */,
 				6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */,
 				63BAB26C1C863C60005185F3 /* PushMessage.swift */,
+				92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */,
+				92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */,
 			);
 			path = "Yap Storage";
 			sourceTree = "<group>";
@@ -2255,6 +2261,7 @@
 				D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */,
 				D93DDB871BA79A8A00CD8331 /* OTROAuthXMPPAccount.h in Headers */,
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
+				92BE6C7F2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
 				D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
@@ -3178,6 +3185,7 @@
 				D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */,
 				D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */,
 				63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */,
+				92BE6C7E2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */,
 				D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */,
 				D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */,
