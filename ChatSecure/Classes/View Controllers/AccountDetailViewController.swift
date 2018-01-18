@@ -104,9 +104,9 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.loginStatusObserver = xmpp.observe(\.loginStatus) { [unowned self] object, observedChange in
+        self.loginStatusObserver = xmpp.observe(\.loginStatus) { [weak self] object, observedChange in
             DispatchQueue.main.async {
-                self.loginStatusChanged()
+                self?.loginStatusChanged()
             }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: xmpp.serverCheck)
