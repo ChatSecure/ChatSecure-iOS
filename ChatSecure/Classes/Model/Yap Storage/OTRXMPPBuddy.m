@@ -36,11 +36,11 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
             pending = [SubscriptionPendingAttributeBridge setPendingOut:pending pending:pendingApproval];
             return [NSNumber numberWithInt:pending];
         } else if ([key isEqualToString:@"trustLevel"]) {
-            OTRXMPPBuddyTrustLevel trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+            BuddyTrustLevel trustLevel = BuddyTrustLevelUntrusted;
             
             BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
             if (hasIncomingSubscriptionRequest == NO) {
-                trustLevel = OTRXMPPBuddyTrustLevelTrusted;
+                trustLevel = BuddyTrustLevelRoster;
             }
             return [NSNumber numberWithInt:trustLevel];
         }
@@ -51,7 +51,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 - (id)init
 {
     if (self = [super init]) {
-        self.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+        self.trustLevel = BuddyTrustLevelUntrusted;
     }
     return self;
 }

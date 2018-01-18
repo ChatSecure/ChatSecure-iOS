@@ -28,9 +28,11 @@ typedef NS_ENUM(NSInteger, SubscriptionPendingAttribute) {
     SubscriptionPendingAttributePendingOutIn
 };
 
-typedef NS_ENUM(NSInteger, OTRXMPPBuddyTrustLevel) {
-    OTRXMPPBuddyTrustLevelUntrusted = 0,
-    OTRXMPPBuddyTrustLevelTrusted
+typedef NS_ENUM(NSInteger, BuddyTrustLevel) {
+    /** default trust level */
+    BuddyTrustLevelUntrusted = 0,
+    /** this buddy is on the user's roster */
+    BuddyTrustLevelRoster
 };
 
 @interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
@@ -38,7 +40,7 @@ typedef NS_ENUM(NSInteger, OTRXMPPBuddyTrustLevel) {
 /** Returns the bare JID derived from the self.username property */
 @property (nonatomic, strong, readonly, nullable) XMPPJID *bareJID;
 
-@property (nonatomic) OTRXMPPBuddyTrustLevel trustLevel;
+@property (nonatomic) BuddyTrustLevel trustLevel;
 @property (nonatomic) SubscriptionAttribute subscription;
 @property (nonatomic) SubscriptionPendingAttribute pending;
 

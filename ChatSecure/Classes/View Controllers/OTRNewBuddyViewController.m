@@ -209,7 +209,7 @@
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
                 buddy.pendingApproval = YES;
-                buddy.trustLevel = OTRXMPPBuddyTrustLevelTrusted;
+                buddy.trustLevel = BuddyTrustLevelRoster;
                 // hack to show buddy in conversations view
                 buddy.lastMessageId = @"";
             }

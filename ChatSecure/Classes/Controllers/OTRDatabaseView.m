@@ -313,9 +313,6 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRXMPPBuddy class]] && ((OTRXMPPBuddy *)object).askingForApproval) {
-            return OTRAllPresenceSubscriptionRequestGroup;
-        }
         if ([object isKindOfClass:[OTRBuddy class]]) {
             
             //Checking to see if the buddy username is equal to the account username in order to remove 'self' buddy
@@ -331,6 +328,11 @@ NSString *OTRPushAccountGroup = @"Account";
                 return nil;
             }
             if (![account.username isEqualToString:buddy.username]) {
+                
+                // Filter out buddies that are not really on our roster
+                if ([buddy isKindOfClass:[OTRXMPPBuddy class]] && ((OTRXMPPBuddy*)buddy).trustLevel != BuddyTrustLevelRoster) {
+                    return nil;
+                }
                 return OTRBuddyGroup;
             }
         }

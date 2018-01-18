@@ -395,7 +395,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [buddy setAskingForApproval:NO];
     if (approved) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            buddy.trustLevel = OTRXMPPBuddyTrustLevelTrusted;
+            buddy.trustLevel = BuddyTrustLevelRoster;
             [buddy saveWithTransaction:transaction];
         }];
         // TODO - use the queue for this!

@@ -1029,7 +1029,10 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.accountUniqueId = self.account.uniqueId;
-                buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+                
+                // We can be called with buddies that are not really on our roster, i.e.
+                // they are in state none + pendingIn, so default to BuddyTrustLevelUntrusted and set to BuddyTrustLevelRoster only when we are subscribed to them.
+                buddy.trustLevel = BuddyTrustLevelUntrusted;
                 buddy.displayName = [jid user];
                 buddy.username = [jid bare];
             }
@@ -1037,6 +1040,9 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
             [buddy setPendingApproval:[ask isEqualToString:@"subscribe"]];
             if ([buddy subscribedFrom]) {
                 [buddy setAskingForApproval:NO];
+            }
+            if ([buddy subscribedTo]) {
+                buddy.trustLevel = BuddyTrustLevelRoster;
             }
             [buddy saveWithTransaction:transaction];
         }
@@ -1085,7 +1091,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         if (!buddy) {
             buddy = [[OTRXMPPBuddy alloc] init];
             buddy.accountUniqueId = self.account.uniqueId;
-            buddy.trustLevel = OTRXMPPBuddyTrustLevelUntrusted;
+            buddy.trustLevel = BuddyTrustLevelUntrusted;
             buddy.displayName = [[presence from] user];
             buddy.username = jidStrBare;
         }
