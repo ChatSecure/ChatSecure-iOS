@@ -1,23 +1,44 @@
 //
-//  OTRSubscription.swift
+//  OTRXMPPBuddy.swift
 //  ChatSecureCore
 //
-//  Created by N-Pex on 2018-01-11.
+//  Created by N-Pex on 2018-01-18.
 //  Copyright © 2018 Chris Ballinger. All rights reserved.
 //
 
-/**
- The possible values for a subscription value
- https://xmpp.org/rfcs/rfc6121.html#roster-syntax-items-subscription
- We separate them into two enums, subscription and pending
- */
+public extension OTRXMPPBuddy {
+    @objc public var subscribedTo: Bool {
+        get {
+            return self.subscription.isSubscribedTo()
+        }
+    }
 
-@objc public enum SubscriptionPendingAttribute: Int {
-    case pendingNone
-    case pendingIn
-    case pendingOut
-    case pendingOutIn
+    @objc public var subscribedFrom: Bool {
+        get {
+            return self.subscription.isSubscribedFrom()
+        }
+    }
     
+    @objc public var pendingApproval: Bool {
+        get {
+            return self.pending.isPendingOut()
+        }
+        set(pending) {
+            self.pending.setPendingOut(pending: pending)
+        }
+    }
+
+    @objc public var askingForApproval: Bool {
+        get {
+            return self.pending.isPendingIn()
+        }
+        set(asking) {
+            self.pending.setPendingIn(pending: asking)
+        }
+    }
+}
+
+extension SubscriptionPendingAttribute {
     public func isPendingIn() -> Bool {
         switch self {
         case .pendingIn, .pendingOutIn: return true
@@ -65,12 +86,7 @@
     }
 }
 
-@objc public enum SubscriptionAttribute: Int, RawRepresentable {
-    case none
-    case to
-    case from
-    case both
-    
+extension SubscriptionAttribute: RawRepresentable {
     public typealias RawValue = String
     
     public init?(rawValue: RawValue) {
@@ -134,14 +150,4 @@
     @objc public static func subscription(withString subscription:String) -> SubscriptionAttribute {
         return SubscriptionAttribute(rawValue: subscription) ?? .none
     }
-    
-    @objc public static func isSubscribedTo(_ attribute:SubscriptionAttribute) -> Bool {
-        return attribute.isSubscribedTo()
-    }
-
-    @objc public static func isSubscribedFrom(_ attribute:SubscriptionAttribute) -> Bool {
-        return attribute.isSubscribedFrom()
-    }
-
 }
-

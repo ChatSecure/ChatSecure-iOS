@@ -11,11 +11,22 @@
 
 @import XMPPFramework;
 
-typedef SWIFT_ENUM(NSInteger, SubscriptionAttribute);
-typedef SWIFT_ENUM(NSInteger, SubscriptionPendingAttribute);
-
 /** Contains userInfo with buddy object in "buddy" key */
 extern NSString * _Nonnull const OTRBuddyPendingApprovalDidChangeNotification;
+
+typedef NS_ENUM(NSInteger, SubscriptionAttribute) {
+    SubscriptionAttributeNone = 0,
+    SubscriptionAttributeTo,
+    SubscriptionAttributeFrom,
+    SubscriptionAttributeBoth
+};
+
+typedef NS_ENUM(NSInteger, SubscriptionPendingAttribute) {
+    SubscriptionPendingAttributePendingNone = 0,
+    SubscriptionPendingAttributePendingIn,
+    SubscriptionPendingAttributePendingOut,
+    SubscriptionPendingAttributePendingOutIn
+};
 
 typedef NS_ENUM(NSInteger, OTRXMPPBuddyTrustLevel) {
     OTRXMPPBuddyTrustLevelUntrusted = 0,
@@ -27,15 +38,8 @@ typedef NS_ENUM(NSInteger, OTRXMPPBuddyTrustLevel) {
 /** Returns the bare JID derived from the self.username property */
 @property (nonatomic, strong, readonly, nullable) XMPPJID *bareJID;
 
-@property (nonatomic) enum OTRXMPPBuddyTrustLevel trustLevel;
+@property (nonatomic) OTRXMPPBuddyTrustLevel trustLevel;
 @property (nonatomic) SubscriptionAttribute subscription;
 @property (nonatomic) SubscriptionPendingAttribute pending;
-
-- (BOOL) subscribedTo;
-- (BOOL) subscribedFrom;
-- (BOOL) pendingApproval;
-- (void) setPendingApproval:(BOOL)pending;
-- (BOOL) askingForApproval;
-- (void) setAskingForApproval:(BOOL)asking;
 
 @end

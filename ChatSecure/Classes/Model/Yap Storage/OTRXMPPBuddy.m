@@ -103,30 +103,6 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
     return [XMPPJID jidWithString:self.username];
 }
 
-- (BOOL) subscribedTo {
-    return [SubscriptionAttributeBridge isSubscribedTo:self.subscription];
-}
-
-- (BOOL) subscribedFrom {
-    return [SubscriptionAttributeBridge isSubscribedFrom:self.subscription];
-}
-
-- (BOOL) pendingApproval {
-    return [SubscriptionPendingAttributeBridge isPendingOut:self.pending];
-}
-
-- (void) setPendingApproval:(BOOL)pending {
-    self.pending = [SubscriptionPendingAttributeBridge setPendingOut:self.pending pending:pending];
-}
-
-- (BOOL) askingForApproval {
-    return [SubscriptionPendingAttributeBridge isPendingIn:self.pending];
-}
-
-- (void) setAskingForApproval:(BOOL)asking {
-    self.pending = [SubscriptionPendingAttributeBridge setPendingIn:self.pending pending:asking];
-}
-
 #pragma - mark Class Methods
 
 + (NSUInteger)modelVersion {
