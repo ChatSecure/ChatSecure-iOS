@@ -292,6 +292,8 @@ NSString* NEW_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"N
 NSString* NEW_STRING() { return [OTRLanguageManager translatedString:@"New"]; }
 /** "Next", Label for button to go to next step */
 NSString* NEXT_STRING() { return [OTRLanguageManager translatedString:@"Next"]; }
+/** "Notifications", Label for notifications switch */
+NSString* NOTIFICATIONS_STRING() { return [OTRLanguageManager translatedString:@"Notifications"]; }
 /** "We could not find any trusted devices for this account.", Error message for not finding any devices */
 NSString* NO_DEVICES_ACCOUNT_ERROR_STRING() { return [OTRLanguageManager translatedString:@"We could not find any trusted devices for this account."]; }
 /** "We could not find any trusted devices for this contact.", Error message for not finding any devices */

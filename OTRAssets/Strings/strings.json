@@ -427,6 +427,10 @@
         "comment": "Label for button to go to next step",
         "string": "Next"
     },
+    "NOTIFICATIONS_STRING": {
+        "comment": "Label for notifications switch",
+        "string": "Notifications"
+    },
     "OFFLINE_STRING": {
         "comment": "Label in buddy list for users that are offline",
         "string": "Offline"

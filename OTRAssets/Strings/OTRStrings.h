@@ -292,6 +292,8 @@ FOUNDATION_EXPORT NSString* NEW_MESSAGE_STRING();
 FOUNDATION_EXPORT NSString* NEW_STRING();
 /** "Next", Label for button to go to next step */
 FOUNDATION_EXPORT NSString* NEXT_STRING();
+/** "Notifications", Label for notifications switch */
+FOUNDATION_EXPORT NSString* NOTIFICATIONS_STRING();
 /** "We could not find any trusted devices for this account.", Error message for not finding any devices */
 FOUNDATION_EXPORT NSString* NO_DEVICES_ACCOUNT_ERROR_STRING();
 /** "We could not find any trusted devices for this contact.", Error message for not finding any devices */
