@@ -104,11 +104,11 @@ PODS:
     - KSCrash/Reporting/Tools
   - KSCrash/Reporting/Tools (1.15.16):
     - KSCrash/Recording
-  - Kvitto (1.0.2):
-    - DTFoundation/DTASN1 (~> 1.7.9)
-    - Kvitto/Core (= 1.0.2)
-  - Kvitto/Core (1.0.2):
-    - DTFoundation/DTASN1 (~> 1.7.9)
+  - Kvitto (1.0.3):
+    - DTFoundation/DTASN1 (~> 1.7.13)
+    - Kvitto/Core (= 1.0.3)
+  - Kvitto/Core (1.0.3):
+    - DTFoundation/DTASN1 (~> 1.7.13)
   - libidn (1.33)
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
@@ -298,38 +298,38 @@ SPEC CHECKSUMS:
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
+  ChatSecure-Push-iOS: 7e4452fd4ba0a68002c099d637a2e08230482d31
   CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
   CocoaLumberjack: e033a5d8513357af2dd456eb66e202c325c30627
-  CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
+  CPAProxy: 99fdb9becacc7f48fbd80ca42fba77376fd6488f
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: 05f40d662527bf1f71dc878da1c585ba67547e74
-  IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
-  JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
+  IOCipher: 3b86ccd68b08ee73b3de80c24a10de130269698c
+  JSQMessagesViewController: bc44afc60cca8c9e0fb127243d57551013e1f319
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
   KSCrash: e4cda5c8612c5f9478defcf43418f24870d313f4
-  Kvitto: 4c2ec1058187f89c5fe2463701acbf9c4324e229
+  Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
+  OTRKit: 09654319755f20648e2a3a6f71a85c7974da5147
   ParkedTextField: bdefebdaec306fddefbceead1a7081500169606f
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Reveal-SDK: ccc2b0f8014965ea448b7534a7c2c8da232b75e8
   SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
-  SignalProtocolObjC: f5f0c7dcbedf21490b7ec190b6dc5103910acb75
+  SignalProtocolObjC: cddb256f5d3015dd507e59f7175fa6c9154f8dc6
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  XMPPFramework: 967df10e4dc4ba4ca5e04505fd2b2d2fd562d917
+  XMPPFramework: 0e1a2db1a9a2b05ea354b5b418f797462885f9d9
   YapDatabase: 299a32de9d350d37a9ac5b0532609d87d5d2a5de
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
 PODFILE CHECKSUM: 4cab58c63ce8ca19880cc2ae465886c0747edd10
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0
