@@ -247,7 +247,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             [accountsArray addObject:account];
         }
     }];
-    if (accountsArray.count > 0) {
+    if (accountsArray.count > 1) {
         DDLogWarn(@"More than one account matching username! %@ %@", username, accountsArray);
     }
     return accountsArray;
