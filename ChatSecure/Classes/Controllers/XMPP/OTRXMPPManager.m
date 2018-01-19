@@ -57,6 +57,7 @@
 #import "XMPPPushModule.h"
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -1035,13 +1036,15 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
                 buddy.trustLevel = BuddyTrustLevelUntrusted;
                 buddy.displayName = [jid user];
                 buddy.username = [jid bare];
+            } else {
+                buddy = [buddy copy];
             }
             buddy.subscription = [SubscriptionAttributeBridge subscriptionWithString:subscription];
             [buddy setPendingApproval:[ask isEqualToString:@"subscribe"]];
             if ([buddy subscribedFrom]) {
                 [buddy setAskingForApproval:NO];
             }
-            if ([buddy subscribedTo]) {
+            if ([buddy subscribedTo] || [buddy subscribedFrom]) {
                 buddy.trustLevel = BuddyTrustLevelRoster;
             }
             [buddy saveWithTransaction:transaction];
@@ -1367,11 +1370,8 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     NSParameterAssert(buddies != nil);
     if (!buddies.count) { return; }
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [obj saveWithTransaction:transaction];
-            OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
-            addBuddyAction.buddyKey = obj.uniqueId;
-            [addBuddyAction saveWithTransaction:transaction];
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddyInformation, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self addBuddy:buddyInformation.bareJID displayName:nil transaction:transaction];
         }];
     }];
 }
@@ -1381,6 +1381,56 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     NSParameterAssert(newBuddy != nil);
     if (!newBuddy) { return; }
     [self addBuddies:@[newBuddy]];
+}
+
+- (OTRXMPPBuddy *)addBuddy:(XMPPJID *)jid displayName:(NSString *)displayName {
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        buddy = [self addBuddy:jid displayName:displayName transaction:transaction];
+    }];
+    return buddy;
+}
+
+- (OTRXMPPBuddy *)addBuddy:(XMPPJID *)jid displayName:(NSString *)displayName transaction:(YapDatabaseReadWriteTransaction *)transaction{
+    
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
+    if (!buddy) {
+        buddy = [[OTRXMPPBuddy alloc] init];
+        buddy.username = [jid bare];
+        buddy.accountUniqueId = self.account.uniqueId;
+    } else {
+        buddy = [buddy copy];
+    }
+    
+    // Update display name
+    if (displayName && [displayName length] > 0) {
+        buddy.displayName = displayName;
+    }
+    
+    buddy.trustLevel = BuddyTrustLevelRoster;
+    if ([buddy askingForApproval]) {
+        // We have an incoming subscription request, just answer that!
+        // TODO - use queue for this as well!
+        [buddy setAskingForApproval:NO];
+        [buddy saveWithTransaction:transaction];
+        
+        [self.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+        
+        // Cleanup of old code. We no longer use the OTRXMPPPresenceSubscriptionRequest class,
+        // so if we have an old entry for this JID, just delete it
+        OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:[jid bare] accontUniqueId:self.account.uniqueId transaction:transaction];
+        if (presenceRequest != nil) {
+            [presenceRequest removeWithTransaction:transaction];
+        }
+    } else {
+        [buddy setPendingApproval:YES];
+        [buddy saveWithTransaction:transaction];
+        
+        OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
+        addBuddyAction.buddyKey = buddy.uniqueId;
+        [addBuddyAction saveWithTransaction:transaction];
+    }
+    return buddy;
 }
 
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy

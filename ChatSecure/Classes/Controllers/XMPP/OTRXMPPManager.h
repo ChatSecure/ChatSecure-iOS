@@ -99,6 +99,9 @@ NS_SWIFT_NAME(XMPPManager)
 /** Enqueues an array of messages to be sent by message queue */
 - (void) enqueueMessages:(NSArray<id<OTRMessageProtocol>>*)messages;
 
+/** Add new buddy using JID (or return existing). If we have an incoming subscription request, answer that. Always add buddy to roster. */
+ - (OTRXMPPBuddy *)addBuddy:(XMPPJID *)jid displayName:(nullable NSString *)displayName;
+
 @end
 
 

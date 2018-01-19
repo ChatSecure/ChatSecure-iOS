@@ -319,33 +319,9 @@
             }
             UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                
-                __block OTRXMPPBuddy *buddy = nil;
-                __block BOOL handled = NO;
-                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
-                    if (!buddy) {
-                        buddy = [[OTRXMPPBuddy alloc] init];
-                        buddy.username = jidString;
-                        buddy.accountUniqueId = account.uniqueId;
-                    }
-                    [buddy saveWithTransaction:transaction];
-                    if ([buddy askingForApproval]) {
-                        // We have an incoming subscription request, just answer that!
-                        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-                        handled = YES;
-                        
-                        // Cleanup of old code. We no longer use the OTRXMPPPresenceSubscriptionRequest class,
-                        // so if we have an old entry for this JID, just delete it
-                        OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:account.uniqueId transaction:transaction];
-                        if (presenceRequest != nil) {
-                            [presenceRequest removeWithTransaction:transaction];
-                        }
-                    }
-                }];
-                if (!handled) {
-                    [manager addBuddy:buddy];
-                }
+
+                OTRXMPPBuddy *buddy = [manager addBuddy:jid displayName:nil];
+
                 /* TODO OTR fingerprint verificaction
                  if (otrFingerprint) {
                  // We are missing a method to add fingerprint to trust store

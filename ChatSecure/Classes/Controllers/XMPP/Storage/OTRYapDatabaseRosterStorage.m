@@ -205,6 +205,13 @@
     [OTRBuddyCache.shared setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
     if ([presence.type isEqualToString:@"subscribed"]) {
+
+        [newBuddy setPendingApproval:NO];
+        [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [newBuddy saveWithTransaction:transaction];
+        }];
+        
+        // Send acknowledgement
         XMPPJID *jid = newBuddy.bareJID;
         XMPPPresence *presence = [XMPPPresence presenceWithType:@"subscribe" to:jid];
         [stream sendElement:presence];
@@ -213,6 +220,16 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": newBuddy}];
         });
+    } else if ([presence.type isEqualToString:@"unsubscribed"]) {
+        [newBuddy setPendingApproval:NO];
+        [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [newBuddy saveWithTransaction:transaction];
+        }];
+        
+        // Send acknowledgement
+        XMPPJID *jid = newBuddy.bareJID;
+        XMPPPresence *presence = [XMPPPresence presenceWithType:@"unsubscribe" to:jid];
+        [stream sendElement:presence];
     }
     
     // Update Last Seen

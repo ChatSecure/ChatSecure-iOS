@@ -199,28 +199,12 @@
     if ([self checkFields]) {
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        __block OTRXMPPBuddy *buddy = nil;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            XMPPJID *jid = [XMPPJID jidWithString:newBuddyAccountName];
-            if (!jid) { return; }
-            buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
-            if (!buddy) {
-                buddy = [[OTRXMPPBuddy alloc] init];
-                buddy.username = newBuddyAccountName;
-                buddy.accountUniqueId = self.account.uniqueId;
-                buddy.pendingApproval = YES;
-                buddy.trustLevel = BuddyTrustLevelRoster;
-                // hack to show buddy in conversations view
-                buddy.lastMessageId = @"";
-            }
-            
-            buddy.displayName = newBuddyDisplayName;
-            [buddy saveWithTransaction:transaction];
-        }];
-        if (!buddy) { return; }
         
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol addBuddy:buddy];
+        XMPPJID *jid = [XMPPJID jidWithString:newBuddyAccountName];
+        if (!jid) { return; }
+        
+        OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        OTRXMPPBuddy *buddy = [manager addBuddy:jid displayName:newBuddyDisplayName];
 
         if (self.delegate != nil && [self.delegate respondsToSelector:@selector(controller:didAddBuddy:)]) {
             [self.delegate controller:self didAddBuddy:buddy];

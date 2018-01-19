@@ -330,8 +330,11 @@ NSString *OTRPushAccountGroup = @"Account";
             if (![account.username isEqualToString:buddy.username]) {
                 
                 // Filter out buddies that are not really on our roster
-                if ([buddy isKindOfClass:[OTRXMPPBuddy class]] && ((OTRXMPPBuddy*)buddy).trustLevel != BuddyTrustLevelRoster) {
-                    return nil;
+                if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+                    OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
+                    if (xmppBuddy.trustLevel != BuddyTrustLevelRoster && !xmppBuddy.pendingApproval) {
+                        return nil;
+                    }
                 }
                 return OTRBuddyGroup;
             }
