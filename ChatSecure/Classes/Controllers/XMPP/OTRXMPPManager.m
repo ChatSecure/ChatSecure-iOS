@@ -401,6 +401,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)failedToRegisterNewAccount:(NSError *)error
 {
     DDLogError(@"Failed to register new account: %@", error);
+    [self failedToConnect:error];
 }
 
 - (void)authenticateWithStream:(XMPPStream *)stream {
