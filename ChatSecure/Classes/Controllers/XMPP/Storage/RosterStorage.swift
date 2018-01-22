@@ -15,6 +15,12 @@ extension OTRYapDatabaseRosterStorage: XMPPRosterDelegate {
         guard let jidStr = item.attributeStringValue(forName: "jid"), let jid = XMPPJID(string: jidStr), let subscription = item.attributeStringValue(forName: "subscription"), let accountId = sender.accountId, let stream = sender.xmppStream
             else { return }
         
+        if(jidStr == stream.myJID?.bare)
+        {
+            // ignore self buddy
+            return;
+        }
+        
         let ask = item.attributeStringValue(forName: "ask")
 
         self.connection.asyncReadWrite { (transaction) in
@@ -45,6 +51,12 @@ extension OTRYapDatabaseRosterStorage: XMPPRosterDelegate {
                 if buddy.subscribedTo || buddy.subscribedFrom {
                     buddy.trustLevel = .roster
                 }
+                
+                // Update name
+                if let name = item.attributeStringValue(forName: "name"), name.count > 0 {
+                    buddy.displayName = name
+                }
+                
                 buddy.save(with: transaction)
             }
         }

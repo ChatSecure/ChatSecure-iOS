@@ -43,31 +43,6 @@
     return buddy;
 }
 
-/** Compares two buddy objects to see if there are changes worth saving */
-- (BOOL) shouldSaveUpdatedBuddy:(nonnull OTRXMPPBuddy*)buddy oldBuddy:(nullable OTRXMPPBuddy*)oldBuddy {
-    NSParameterAssert(buddy);
-    if (!buddy) { return NO; }
-    if (!oldBuddy) { return YES; }
-    NSAssert(buddy.uniqueId == oldBuddy.uniqueId, @"Comparing two different buddies! Noooooooo.");
-    if (buddy.uniqueId != oldBuddy.uniqueId) {
-        // I guess we should still save if the uniqueId is different
-        return YES;
-    }
-    if (![buddy.displayName isEqualToString:oldBuddy.displayName]) {
-        return YES;
-    }
-    if (buddy.subscription != oldBuddy.subscription) {
-        return YES;
-    }
-    if (buddy.pending != oldBuddy.pending) {
-        return YES;
-    }
-    if (buddy.trustLevel != oldBuddy.trustLevel) {
-        return YES;
-    }
-    return NO;
-}
-
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
 {
     __block BOOL result = NO;
@@ -78,31 +53,6 @@
         }
     }];
     return result;
-}
-
-/** Buddy can be nil, which indicates a new buddy should be saved. */
-- (void)updateBuddy:(nullable OTRXMPPBuddy *)buddy withItem:(nonnull NSXMLElement *)item stream:(XMPPStream*)stream
-{
-    if (!item) { return; }
-    if (!buddy) {
-        return;
-    }
-    OTRXMPPBuddy *newBuddy = [buddy copy];
-    
-    NSString *name = [item attributeStringValueForName:@"name"];
-    if (name.length) {
-        newBuddy.displayName = name;
-    }
-    
-    // Save if there were changes
-    BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy];
-    if (!shouldSave) {
-        return;
-    }
-    
-    [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [newBuddy saveWithTransaction:transaction];
-    }];
 }
 
 #pragma - mark XMPPRosterStorage Methods
@@ -121,33 +71,7 @@
     DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 }
 
-- (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
-{
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
-    NSString *jidStr = [item attributeStringValueForName:@"jid"];
-    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-    
-    if([[jid bare] isEqualToString:[[stream myJID] bare]])
-    {
-        // ignore self buddy
-        return;
-    }
-    
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
-    }];
-    NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if ([subscription isEqualToString:@"remove"])
-    {
-        if (buddy) {
-            [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-            }];
-        }
-    } else {
-        [self updateBuddy:buddy withItem:item stream:stream];
-    }
+- (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream {
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
