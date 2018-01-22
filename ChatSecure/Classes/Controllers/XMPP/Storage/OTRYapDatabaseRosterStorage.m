@@ -8,7 +8,6 @@
 
 #import "OTRYapDatabaseRosterStorage.h"
 
-@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
@@ -18,12 +17,6 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import OTRAssets;
-
-@interface OTRYapDatabaseRosterStorage ()
-
-@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *connection;
-
-@end
 
 @implementation OTRYapDatabaseRosterStorage
 

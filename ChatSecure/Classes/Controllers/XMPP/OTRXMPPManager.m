@@ -216,7 +216,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	// Add ourself as a delegate to anything we may be interested in
     
 	[self.xmppStream addDelegate:self delegateQueue:self.workQueue];
-	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
+    [self.xmppRoster addDelegate:self.xmppRosterStorage delegateQueue:self.workQueue];
+    [self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.serverCheck.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
@@ -1012,47 +1013,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     //DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
 }
 
-- (void)parseSubscriptionFromRosterItem:(NSXMLElement *)item {
-    NSString *jidStr = [item attributeStringValueForName:@"jid"];
-    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-    
-    NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    NSString *ask = [item attributeStringValueForName:@"ask"];
-    
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
-        if ([subscription isEqualToString:@"remove"])
-        {
-            if (buddy) {
-                [buddy removeWithTransaction:transaction];
-            }
-        } else {
-            if (!buddy) {
-                buddy = [[OTRXMPPBuddy alloc] init];
-                buddy.accountUniqueId = self.account.uniqueId;
-                
-                // We can be called with buddies that are not really on our roster, i.e.
-                // they are in state none + pendingIn, so default to BuddyTrustLevelUntrusted and set to BuddyTrustLevelRoster only when we are subscribed to them.
-                buddy.trustLevel = BuddyTrustLevelUntrusted;
-                buddy.displayName = [jid user];
-                buddy.username = [jid bare];
-            } else {
-                buddy = [buddy copy];
-            }
-            buddy.subscription = [SubscriptionAttributeBridge subscriptionWithString:subscription];
-            [buddy setPendingApproval:[ask isEqualToString:@"subscribe"]];
-            if ([buddy subscribedFrom]) {
-                [buddy setAskingForApproval:NO];
-            }
-            if ([buddy subscribedTo] || [buddy subscribedFrom]) {
-                buddy.trustLevel = BuddyTrustLevelRoster;
-            }
-            [buddy saveWithTransaction:transaction];
-        }
-    }];
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1060,15 +1020,13 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppRoster:(XMPPRoster *)sender didReceiveRosterItem:(NSXMLElement *)item {
     DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, item);
 
-    [self parseSubscriptionFromRosterItem:item];
-    
     // Because XMPP sucks, there's no way to know if a vCard has changed without fetching all of them again
     // To preserve user mobile data, just fetch each vCard once, only if it's never been fetched
     // Otherwise you'll only receive vCard updates if someone updates their avatar
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     __block OTRXMPPBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
     } completionQueue:self.workQueue completionBlock:^{
         if (!buddy) { return; }
