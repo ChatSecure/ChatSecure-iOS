@@ -57,7 +57,6 @@
 #import "XMPPPushModule.h"
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -1371,15 +1370,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
         // TODO - use queue for this as well!
         [buddy setAskingForApproval:NO];
         [buddy saveWithTransaction:transaction];
-        
         [self.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-        
-        // Cleanup of old code. We no longer use the OTRXMPPPresenceSubscriptionRequest class,
-        // so if we have an old entry for this JID, just delete it
-        OTRXMPPPresenceSubscriptionRequest *presenceRequest = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:[jid bare] accontUniqueId:self.account.uniqueId transaction:transaction];
-        if (presenceRequest != nil) {
-            [presenceRequest removeWithTransaction:transaction];
-        }
     } else {
         [buddy setPendingApproval:YES];
         [buddy saveWithTransaction:transaction];

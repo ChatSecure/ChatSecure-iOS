@@ -28,6 +28,7 @@
 
 #import "OTRSignalSession.h"
 #import "OTRSettingsManager.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
@@ -229,6 +230,10 @@
     
     
     if (self.database != nil) {
+        // Remove old unused objects
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
         return YES;
     }
     else {
