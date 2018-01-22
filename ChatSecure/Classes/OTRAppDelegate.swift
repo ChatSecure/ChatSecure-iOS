@@ -138,7 +138,7 @@ extension OTRAppDelegate: UNUserNotificationCenterDelegate {
                 })
             }
             break
-        case .chatMessage:
+        case .chatMessage, .approvedBuddy:
             if let threadInfo = extractThreadInformation(notification: response.notification) {
                 enterThread(key: threadInfo.key, collection: threadInfo.collection)
             }
@@ -155,6 +155,8 @@ extension OTRAppDelegate: UNUserNotificationCenterDelegate {
         
         switch notificationType {
         case .subscriptionRequest:
+            completionHandler([.badge, .sound, .alert])
+        case .approvedBuddy:
             completionHandler([.badge, .sound, .alert])
         case .connectionError:
             // suppress notification when you're on the account details screen

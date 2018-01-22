@@ -120,6 +120,10 @@
 		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
 		9265091A1F4CB45B003FCAD3 /* OTRVerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
+		929FCF6B2010AA4D004736AF /* BuddySubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */; };
+		92BE6C7E2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */; };
+		92BE6C7F2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */; };
+		92BE6C852014DBB400A79C8B /* RosterStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BE6C842014DBB400A79C8B /* RosterStorage.swift */; };
 		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
 		92CC68C11F42F11E0006CDF8 /* OTRComposeGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC68C01F42F11D0006CDF8 /* OTRComposeGroupViewController.swift */; };
 		92CC68F11F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */; };
@@ -219,7 +223,6 @@
 		D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */; };
 		D93DDADC1BA79A2700CD8331 /* OTRBaseMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CF1A16D1A300C17BAE /* OTRBaseMessage.m */; };
 		D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */; };
-		D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */; };
 		D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */; };
 		D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */; };
 		D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
@@ -313,7 +316,7 @@
 		D93DDB481BA79A7200CD8331 /* OTRXMPPBuddyTimers.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105351A16D1A300C17BAE /* OTRXMPPBuddyTimers.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB701BA79A7E00CD8331 /* OTRDomainCellInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058F1A16D1A300C17BAE /* OTRDomainCellInfo.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -350,7 +353,6 @@
 		D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB911BA79A9200CD8331 /* OTRBaseMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CE1A16D1A300C17BAE /* OTRBaseMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -771,8 +773,6 @@
 		633105CF1A16D1A300C17BAE /* OTRBaseMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseMessage.m; sourceTree = "<group>"; };
 		633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddy.h; sourceTree = "<group>"; };
 		633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBuddy.m; sourceTree = "<group>"; };
-		633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
-		633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapDatabaseObject.h; sourceTree = "<group>"; };
 		633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapDatabaseObject.m; sourceTree = "<group>"; };
 		633105E51A16D1A300C17BAE /* OTRAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppDelegate.h; sourceTree = "<group>"; };
@@ -1031,6 +1031,10 @@
 		9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
 		926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRVerticalStackView.swift; sourceTree = "<group>"; };
 		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
+		929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuddySubscriptions.swift; sourceTree = "<group>"; };
+		92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
+		92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
+		92BE6C842014DBB400A79C8B /* RosterStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RosterStorage.swift; sourceTree = "<group>"; };
 		92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRComposeGroup.storyboard; path = Interface/OTRComposeGroup.storyboard; sourceTree = "<group>"; };
 		92CC68C01F42F11D0006CDF8 /* OTRComposeGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRComposeGroupViewController.swift; sourceTree = "<group>"; };
 		92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRComposeGroupBuddyCell.swift; sourceTree = "<group>"; };
@@ -1536,8 +1540,7 @@
 				637ABBC21DD5232800B18DD2 /* OTRMessageEncryptionInfo.m */,
 				633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */,
 				633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */,
-				633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */,
-				633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */,
+				929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */,
 				633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */,
 				633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */,
 				63D14F341C0FC6A90029F36B /* OTRThreadOwner.h */,
@@ -1545,6 +1548,8 @@
 				6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */,
 				6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */,
 				63BAB26C1C863C60005185F3 /* PushMessage.swift */,
+				92BE6C7D2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h */,
+				92BE6C7C2010E33F00A79C8B /* OTRXMPPPresenceSubscriptionRequest.m */,
 			);
 			path = "Yap Storage";
 			sourceTree = "<group>";
@@ -2050,6 +2055,7 @@
 			children = (
 				D97097A11FC4DB3D008ED04B /* MessageStorage.swift */,
 				D945D6FC1FDA08DD00C7502C /* RoomStorage.swift */,
+				92BE6C842014DBB400A79C8B /* RosterStorage.swift */,
 				637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.h */,
 				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
@@ -2217,7 +2223,6 @@
 				D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */,
 				D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */,
 				D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */,
-				D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */,
 				D93DDB481BA79A7200CD8331 /* OTRXMPPBuddyTimers.h in Headers */,
 				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,
@@ -2253,6 +2258,7 @@
 				D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */,
 				D93DDB871BA79A8A00CD8331 /* OTROAuthXMPPAccount.h in Headers */,
 				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
+				92BE6C7F2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
 				D9B7C5CF1EC3C9F2008D99E6 /* OTRAccountMigrator.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
@@ -3160,6 +3166,7 @@
 				63CBD6901C642B9E00AC6D1F /* BuddyActions.swift in Sources */,
 				D9ABD72C1ED7886100219A9C /* OTRTextItem.m in Sources */,
 				92CC68F11F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift in Sources */,
+				929FCF6B2010AA4D004736AF /* BuddySubscriptions.swift in Sources */,
 				D93DDAD41BA79A2600CD8331 /* OTRXMPPTorAccount.m in Sources */,
 				D93DDAD51BA79A2700CD8331 /* OTRMediaItem.m in Sources */,
 				D93DDAD61BA79A2700CD8331 /* OTRImageItem.m in Sources */,
@@ -3173,6 +3180,7 @@
 				D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */,
 				D98B8E331E4CF90400A713E1 /* OTRServerCapabilities.m in Sources */,
 				63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */,
+				92BE6C7E2010E34000A79C8B /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D98B8E351E4D3DB600A713E1 /* ServerCapabilitiesViewController.swift in Sources */,
 				D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */,
 				D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */,
@@ -3180,8 +3188,8 @@
 				D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */,
 				632AA72B1D480BFF00F65733 /* OTRSignalSenderKey.m in Sources */,
 				632AA72F1D4819BD00F65733 /* OTRSignalPreKey.m in Sources */,
-				D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D9FBDDC91FD74A93006F1C6C /* OTRAppDelegate.swift in Sources */,
+				92BE6C852014DBB400A79C8B /* RosterStorage.swift in Sources */,
 				D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */,
 				D94ACBA51DFA206500B8C0F5 /* OTRBuddyCache.m in Sources */,
 				D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */,

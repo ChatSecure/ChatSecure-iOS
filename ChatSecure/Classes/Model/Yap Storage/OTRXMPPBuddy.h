@@ -14,14 +14,34 @@
 /** Contains userInfo with buddy object in "buddy" key */
 extern NSString * _Nonnull const OTRBuddyPendingApprovalDidChangeNotification;
 
+typedef NS_ENUM(NSInteger, SubscriptionAttribute) {
+    SubscriptionAttributeNone = 0,
+    SubscriptionAttributeTo,
+    SubscriptionAttributeFrom,
+    SubscriptionAttributeBoth
+};
+
+typedef NS_ENUM(NSInteger, SubscriptionPendingAttribute) {
+    SubscriptionPendingAttributePendingNone = 0,
+    SubscriptionPendingAttributePendingIn,
+    SubscriptionPendingAttributePendingOut,
+    SubscriptionPendingAttributePendingOutIn
+};
+
+typedef NS_ENUM(NSInteger, BuddyTrustLevel) {
+    /** default trust level */
+    BuddyTrustLevelUntrusted = 0,
+    /** this buddy is on the user's roster */
+    BuddyTrustLevelRoster
+};
+
 @interface OTRXMPPBuddy : OTRBuddy <OTRvCard>
 
 /** Returns the bare JID derived from the self.username property */
 @property (nonatomic, strong, readonly, nullable) XMPPJID *bareJID;
 
-/** This is for outgoing subscription requests */
-@property (nonatomic) BOOL pendingApproval;
-/** Incoming subscription requests mean this object is a stub/placeholder */
-@property (nonatomic) BOOL hasIncomingSubscriptionRequest;
+@property (nonatomic) BuddyTrustLevel trustLevel;
+@property (nonatomic) SubscriptionAttribute subscription;
+@property (nonatomic) SubscriptionPendingAttribute pending;
 
 @end

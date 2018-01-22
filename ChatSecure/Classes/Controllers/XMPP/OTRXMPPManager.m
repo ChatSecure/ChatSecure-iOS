@@ -44,7 +44,6 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
@@ -207,7 +206,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	// Add ourself as a delegate to anything we may be interested in
     
 	[self.xmppStream addDelegate:self delegateQueue:self.workQueue];
-	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
+    [self.xmppRoster addDelegate:self.xmppRosterStorage delegateQueue:self.workQueue];
+    [self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.serverCheck.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     [self.xmppvCardTempModule addDelegate:self delegateQueue:self.workQueue];
     
@@ -542,9 +542,11 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     XMPPJID *jid = buddy.bareJID;
     if (!jid) { return; }
     
-    // We can't probe presence if we are still pending approval, so resend the request.
-    if (buddy.pendingApproval) {
-        [self.xmppRoster subscribePresenceToUser:jid];
+    if (![buddy subscribedTo]) {
+        if (buddy.pendingApproval) {
+            // We can't probe presence if we are still pending approval, so resend the request.
+            [self.xmppRoster subscribePresenceToUser:jid];
+        }
         return;
     }
     
@@ -986,7 +988,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     //DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1000,7 +1001,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     __block OTRXMPPBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
     } completionQueue:self.workQueue completionBlock:^{
         if (!buddy) { return; }
@@ -1022,16 +1023,19 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	NSString *jidStrBare = [presence fromStr];
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPPresenceSubscriptionRequest *request = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidStrBare accontUniqueId:self.account.uniqueId transaction:transaction];
-        if (!request) {
-            request = [[OTRXMPPPresenceSubscriptionRequest alloc] init];
+        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:[[presence from] bareJID] accountUniqueId:self.account.uniqueId transaction:transaction];
+        if (!buddy) {
+            buddy = [[OTRXMPPBuddy alloc] init];
+            buddy.accountUniqueId = self.account.uniqueId;
+            buddy.trustLevel = BuddyTrustLevelUntrusted;
+            buddy.displayName = [[presence from] user];
+            buddy.username = jidStrBare;
+        }
+        if (!buddy.askingForApproval) {
+            [buddy setAskingForApproval:YES];
+            [buddy saveWithTransaction:transaction];
             [[UIApplication sharedApplication] showLocalNotificationForSubscriptionRequestFrom:jidStrBare];
         }
-        
-        request.jid = jidStrBare;
-        request.accountUniqueId = self.account.uniqueId;
-        
-        [request saveWithTransaction:transaction];
     }];
 }
 
@@ -1296,11 +1300,8 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     NSParameterAssert(buddies != nil);
     if (!buddies.count) { return; }
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [obj saveWithTransaction:transaction];
-            OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
-            addBuddyAction.buddyKey = obj.uniqueId;
-            [addBuddyAction saveWithTransaction:transaction];
+        [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddyInformation, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self addToRosterWithJID:buddyInformation.bareJID displayName:nil transaction:transaction];
         }];
     }];
 }
@@ -1310,6 +1311,48 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     NSParameterAssert(newBuddy != nil);
     if (!newBuddy) { return; }
     [self addBuddies:@[newBuddy]];
+}
+
+- (OTRXMPPBuddy *)addToRosterWithJID:(XMPPJID *)jid displayName:(NSString *)displayName {
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        buddy = [self addToRosterWithJID:jid displayName:displayName transaction:transaction];
+    }];
+    return buddy;
+}
+
+- (OTRXMPPBuddy *)addToRosterWithJID:(XMPPJID *)jid displayName:(NSString *)displayName transaction:(YapDatabaseReadWriteTransaction *)transaction{
+    
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
+    if (!buddy) {
+        buddy = [[OTRXMPPBuddy alloc] init];
+        buddy.username = [jid bare];
+        buddy.accountUniqueId = self.account.uniqueId;
+    } else {
+        buddy = [buddy copy];
+    }
+    
+    // Update display name
+    if (displayName && [displayName length] > 0) {
+        buddy.displayName = displayName;
+    }
+    
+    buddy.trustLevel = BuddyTrustLevelRoster;
+    if ([buddy askingForApproval]) {
+        // We have an incoming subscription request, just answer that!
+        // TODO - use queue for this as well!
+        [buddy setAskingForApproval:NO];
+        [buddy saveWithTransaction:transaction];
+        [self.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+    } else {
+        [buddy setPendingApproval:YES];
+        [buddy saveWithTransaction:transaction];
+        
+        OTRYapAddBuddyAction *addBuddyAction = [[OTRYapAddBuddyAction alloc] init];
+        addBuddyAction.buddyKey = buddy.uniqueId;
+        [addBuddyAction saveWithTransaction:transaction];
+    }
+    return buddy;
 }
 
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy

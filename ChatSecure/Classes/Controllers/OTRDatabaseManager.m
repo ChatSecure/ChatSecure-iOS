@@ -28,6 +28,7 @@
 
 #import "OTRSignalSession.h"
 #import "OTRSettingsManager.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
@@ -147,7 +148,6 @@
     self.readWriteDatabaseConnection = [self.database newConnection];
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
 
-    
     _longLivedReadOnlyConnection = [self.database newConnection];
     self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
     
@@ -200,7 +200,6 @@
         [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
-        [OTRDatabaseView registerAllSubscriptionRequestsViewWithDatabase:self.database];
         
         
         NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
@@ -231,6 +230,10 @@
     
     
     if (self.database != nil) {
+        // Remove old unused objects
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
         return YES;
     }
     else {

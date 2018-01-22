@@ -8,6 +8,7 @@
 
 #import "OTRXMPPBuddy.h"
 #import "OTRBuddyCache.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import XMPPFramework;
 @import OTRAssets;
 
@@ -19,11 +20,38 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 @synthesize photoHash = _photoHash;
 @dynamic waitingForvCardTempFetch;
 
+- (id)decodeValueForKey:(NSString *)key withCoder:(NSCoder *)coder modelVersion:(NSUInteger)modelVersion {
+    if (modelVersion == 0) {
+        // Migrate from version 0 of model, where we had "hasIncomingSubscriptionRequest" and "pendingApproval" flags.
+        if ([key isEqualToString:@"subscription"]) {
+            SubscriptionAttribute subscription = SubscriptionAttributeNone;
+            return [NSNumber numberWithInt:subscription];
+        } else if ([key isEqualToString:@"pending"]) {
+            SubscriptionPendingAttribute pending = SubscriptionPendingAttributePendingNone;
+            BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
+            BOOL pendingApproval = [[coder decodeObjectForKey:@"pendingApproval"] boolValue];
+            if (hasIncomingSubscriptionRequest) {
+                pending = [SubscriptionPendingAttributeBridge setPendingIn:pending pending:YES];
+            }
+            pending = [SubscriptionPendingAttributeBridge setPendingOut:pending pending:pendingApproval];
+            return [NSNumber numberWithInt:pending];
+        } else if ([key isEqualToString:@"trustLevel"]) {
+            BuddyTrustLevel trustLevel = BuddyTrustLevelUntrusted;
+            
+            BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
+            if (hasIncomingSubscriptionRequest == NO) {
+                trustLevel = BuddyTrustLevelRoster;
+            }
+            return [NSNumber numberWithInt:trustLevel];
+        }
+    }
+    return [super decodeValueForKey:key withCoder:coder modelVersion:modelVersion];
+}
+
 - (id)init
 {
     if (self = [super init]) {
-        self.pendingApproval = NO;
-        self.hasIncomingSubscriptionRequest = NO;
+        self.trustLevel = BuddyTrustLevelUntrusted;
     }
     return self;
 }
@@ -76,6 +104,10 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 }
 
 #pragma - mark Class Methods
+
++ (NSUInteger)modelVersion {
+    return 1;
+}
 
 + (NSString *)collection
 {

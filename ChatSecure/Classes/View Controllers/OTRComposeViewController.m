@@ -142,7 +142,7 @@
         return [group1 compare:group2];
     }];
     
-    
+    [self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated

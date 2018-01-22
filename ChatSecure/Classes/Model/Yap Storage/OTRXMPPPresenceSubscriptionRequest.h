@@ -5,6 +5,8 @@
 //  Created by David Chiles on 3/28/14.
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
+//  Deprecated January 2018 in favor of the subscription and pending flags
+//  on OTRXMPPBuddy.
 
 #import "OTRYapDatabaseObject.h"
 
