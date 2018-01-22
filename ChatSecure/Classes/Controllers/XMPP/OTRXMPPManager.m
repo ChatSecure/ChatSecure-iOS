@@ -1329,7 +1329,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     if (!buddies.count) { return; }
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddyInformation, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self addBuddy:buddyInformation.bareJID displayName:nil transaction:transaction];
+            [self addToRosterWithJID:buddyInformation.bareJID displayName:nil transaction:transaction];
         }];
     }];
 }
@@ -1341,15 +1341,15 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     [self addBuddies:@[newBuddy]];
 }
 
-- (OTRXMPPBuddy *)addBuddy:(XMPPJID *)jid displayName:(NSString *)displayName {
+- (OTRXMPPBuddy *)addToRosterWithJID:(XMPPJID *)jid displayName:(NSString *)displayName {
     __block OTRXMPPBuddy *buddy = nil;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        buddy = [self addBuddy:jid displayName:displayName transaction:transaction];
+        buddy = [self addToRosterWithJID:jid displayName:displayName transaction:transaction];
     }];
     return buddy;
 }
 
-- (OTRXMPPBuddy *)addBuddy:(XMPPJID *)jid displayName:(NSString *)displayName transaction:(YapDatabaseReadWriteTransaction *)transaction{
+- (OTRXMPPBuddy *)addToRosterWithJID:(XMPPJID *)jid displayName:(NSString *)displayName transaction:(YapDatabaseReadWriteTransaction *)transaction{
     
     OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:self.account.uniqueId transaction:transaction];
     if (!buddy) {

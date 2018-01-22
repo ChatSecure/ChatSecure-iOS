@@ -320,7 +320,7 @@
             UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
 
-                OTRXMPPBuddy *buddy = [manager addBuddy:jid displayName:nil];
+                OTRXMPPBuddy *buddy = [manager addToRosterWithJID:jid displayName:nil];
 
                 /* TODO OTR fingerprint verificaction
                  if (otrFingerprint) {

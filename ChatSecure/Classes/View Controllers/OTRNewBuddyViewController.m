@@ -204,7 +204,7 @@
         if (!jid) { return; }
         
         OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        OTRXMPPBuddy *buddy = [manager addBuddy:jid displayName:newBuddyDisplayName];
+        OTRXMPPBuddy *buddy = [manager addToRosterWithJID:jid displayName:newBuddyDisplayName];
 
         if (self.delegate != nil && [self.delegate respondsToSelector:@selector(controller:didAddBuddy:)]) {
             [self.delegate controller:self didAddBuddy:buddy];
