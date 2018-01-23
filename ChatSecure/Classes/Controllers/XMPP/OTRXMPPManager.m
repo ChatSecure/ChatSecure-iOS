@@ -190,7 +190,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self.xmppPushModule activate:self.xmppStream];
     [self.xmppPushModule addDelegate:self delegateQueue:self.workQueue];
     
-    _serverCheck = [[ServerCheck alloc] initWithPush:OTRProtocolManager.shared.pushController pushModule:self.xmppPushModule dispatchQueue:nil];
+    _serverCheck = [[ServerCheck alloc] initWithPush:OTRProtocolManager.pushController pushModule:self.xmppPushModule dispatchQueue:nil];
     [self.serverCheck activate:self.xmppStream];
     
 	// Activate xmpp modules
@@ -264,8 +264,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         [self.omemoModule activate:self.xmppStream];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:[OTRProtocolManager sharedInstance].pushController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:[OTRProtocolManager sharedInstance].pushController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountDeviceChanged object:OTRProtocolManager.pushController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushAccountChanged:) name:OTRPushAccountTokensChanged object:OTRProtocolManager.pushController];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buddyPendingApprovalStateChanged:) name:OTRBuddyPendingApprovalDidChangeNotification object:self.xmppRosterStorage];
     
 }
@@ -326,14 +326,15 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     if (self.account.accountType == OTRAccountTypeXMPPTor) {
         return;
     }
-    XMPPPresence *presence = [XMPPPresence presence];
-    NSXMLElement *show = [NSXMLElement elementWithName:@"show" stringValue:@"away"];
-    [presence addChild:show];
-    NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
-    [self addIdleDate:idleDate toPresence:presence];
-    [self.xmppStream sendElement:presence];
-    
-    [self updateClientState:XMPPClientStateInactive];
+    [OTRAppDelegate getLastInteractionDate:^(NSDate * _Nullable date) {
+        XMPPPresence *presence = [XMPPPresence presence];
+        NSXMLElement *show = [NSXMLElement elementWithName:@"show" stringValue:@"away"];
+        [presence addChild:show];
+        NSDate *idleDate = date;
+        [self addIdleDate:idleDate toPresence:presence];
+        [self.xmppStream sendElement:presence];
+        [self updateClientState:XMPPClientStateInactive];
+    } completionQueue:self.workQueue];
 }
 
 - (void)goActive {
@@ -358,12 +359,13 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (void)goOffline
 {
-	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
-    NSDate *idleDate = [OTRProtocolManager sharedInstance].lastInteractionDate;
-    [self addIdleDate:idleDate toPresence:presence]; // I don't think this does anything
-	[self.xmppStream sendElement:presence];
-    
-    [self updateClientState:XMPPClientStateInactive];
+    [OTRAppDelegate getLastInteractionDate:^(NSDate * _Nullable date) {
+        XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
+        NSDate *idleDate = date;
+        [self addIdleDate:idleDate toPresence:presence]; // I don't think this does anything
+        [self.xmppStream sendElement:presence];
+        [self updateClientState:XMPPClientStateInactive];
+    } completionQueue:self.workQueue];
 }
 
 
@@ -1101,13 +1103,13 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     if (self.account.accountType == OTRAccountTypeXMPPTor) {
         return;
     }
-    BOOL hasPushAccount = [[OTRProtocolManager sharedInstance].pushController.pushStorage hasPushAccount];
+    BOOL hasPushAccount = [OTRProtocolManager.pushController.pushStorage hasPushAccount];
     if (!hasPushAccount) {
         return;
     }
-    [[OTRProtocolManager sharedInstance].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
+    [OTRProtocolManager.pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
         if (endpoint) {
-            [[OTRProtocolManager sharedInstance].pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
+            [OTRProtocolManager.pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
                 if (token) {
                     [self enablePushWithToken:token endpoint:endpoint];
                 } else if (error) {
@@ -1135,7 +1137,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint];
     NSString *tokenString = token.pushToken.tokenString;
     if (tokenString.length > 0) {
-        NSString *pushEndpointURLString = [[OTRProtocolManager sharedInstance].pushController getMessagesEndpoint].absoluteString;
+        NSString *pushEndpointURLString = [OTRProtocolManager.pushController getMessagesEndpoint].absoluteString;
         NSMutableDictionary *options = [NSMutableDictionary dictionary];
         [options setObject:tokenString forKey:@"token"];
         if (pushEndpointURLString) {

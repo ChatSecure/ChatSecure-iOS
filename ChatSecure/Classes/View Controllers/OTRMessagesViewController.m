@@ -538,7 +538,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             __typeof__(self) strongSelf = weakSelf;
-            __block BOOL canKnock = [[[OTRProtocolManager sharedInstance].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
+            __block BOOL canKnock = [[OTRProtocolManager.pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (canKnock != strongSelf.state.canKnock) {
                     strongSelf.state.canKnock = canKnock;
@@ -552,7 +552,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
         // Auto-inititate OTR when contact comes online
         if (!previousState && self.state.isThreadOnline) {
-            [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
+            [OTRProtocolManager.encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
         }
     } else if ([collection isEqualToString:[OTRXMPPRoom collection]]) {
         __block OTRXMPPRoom *room = nil;
@@ -851,7 +851,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
         NSData *otrFingerprintData = baseMessage.messageSecurityInfo.otrFingerprint;
         if ([otrFingerprintData length]) {
-            trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
+            trusted = [[OTRProtocolManager.encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
         }
     } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
         NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
@@ -989,7 +989,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
                 DDLogError(@"updateEncryptionState error: missing parameters");
             } else {
-                OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+                OTRKitMessageState messageState = [OTRProtocolManager.encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
                 if (messageState == OTRKitMessageStateEncrypted &&
                     buddy.status != OTRThreadStatusOffline) {
                     // If other side supports OTR, assume OTRDATA is possible

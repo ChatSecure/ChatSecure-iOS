@@ -79,6 +79,6 @@ class OTRYapViewTest: XCTestCase {
                 viewChangeExpectation.fulfill()
             }
         viewHandler.delegate = delegate
-        self.waitForExpectations(timeout: 300, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
 }

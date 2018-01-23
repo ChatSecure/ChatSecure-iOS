@@ -273,7 +273,7 @@ import CocoaLumberjack
                         errorText.contains("OTR Error")
                     {
                         // automatically renegotiate a new session when there's an error
-                        OTRProtocolManager.shared.encryptionManager.otrKit.initiateEncryption(withUsername: fromJID.bare, accountName: account.username, protocol: account.protocolTypeString())
+                        OTRProtocolManager.encryptionManager.otrKit.initiateEncryption(withUsername: fromJID.bare, accountName: account.username, protocol: account.protocolTypeString())
                         
                     }
                 }
@@ -293,7 +293,7 @@ import CocoaLumberjack
             }
             
             if text.isOtrText {
-                OTRProtocolManager.shared.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
+                OTRProtocolManager.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
             } else {
                 preSave?(incoming, transaction)
                 incoming.save(with: transaction)

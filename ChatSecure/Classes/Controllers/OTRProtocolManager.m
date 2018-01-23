@@ -46,7 +46,6 @@
 @end
 
 @implementation OTRProtocolManager
-@synthesize lastInteractionDate = _lastInteractionDate;
 
 -(instancetype)init
 {
@@ -57,25 +56,6 @@
         
         _numberOfConnectedProtocols = 0;
         _numberOfConnectingProtocols = 0;
-        _encryptionManager = [[OTREncryptionManager alloc] init];
-        
-#if DEBUG
-        NSURL *pushAPIEndpoint = [OTRBranding pushStagingAPIURL];
-        if (!pushAPIEndpoint) {
-            // This should only happen within test environment
-            pushAPIEndpoint = [NSURL new];
-        }
-#else
-        NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
-#endif
-        
-        // Casting here because it's easier than figuring out the
-        // non-modular include spaghetti mess
-        id<OTRPushTLVHandlerProtocol> tlvHandler = (id<OTRPushTLVHandlerProtocol>)self.encryptionManager.pushTLVHandler;
-        if (pushAPIEndpoint != nil) {
-            _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
-            self.encryptionManager.pushTLVHandler.delegate = self.pushController;
-        }
     }
     return self;
 }
@@ -94,23 +74,6 @@
     [self.KVOController unobserve:protocol];
     @synchronized (self) {
         [self.protocolManagers removeObjectForKey:account.uniqueId];
-    }
-}
-
-- (NSDate*) lastInteractionDate {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        return [NSDate date];
-    }
-    @synchronized (self) {
-        return _lastInteractionDate;
-    }
-}
-
-- (void)setLastInteractionDate:(NSDate *)lastInteractionDate {
-    NSParameterAssert(lastInteractionDate != nil);
-    if (!lastInteractionDate) { return; }
-    @synchronized (self) {
-        _lastInteractionDate = lastInteractionDate;
     }
 }
 
