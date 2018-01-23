@@ -157,6 +157,15 @@
                                                object:nil];
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    // Resize UISearchBar manually - it doesn't do it on its own on device turn.
+    self.searchController.searchBar.frame = CGRectMake(0, 0, size.width, size.height);
+    [self.searchController.searchBar sizeToFit];
+
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
 - (void)inboxArchiveControlValueChanged:(id)sender {
     if (![sender isKindOfClass:[UISegmentedControl class]]) {
         return;
