@@ -197,8 +197,9 @@
         [self.database registerExtension:self.actionManager withName:actionManagerName];
         
         [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
-        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
+        // Order is important - the conversation database view uses the lastMessageWithTransaction: method which in turn uses the OTRFilteredChatDatabaseViewExtensionName view registered above.
+        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
         
         
@@ -214,6 +215,11 @@
         YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
         NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
         [self.database registerExtension:searchResultsView withName:viewName];
+        
+        // Remove old unused objects
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
     };
     
 #if DEBUG
@@ -230,10 +236,6 @@
     
     
     if (self.database != nil) {
-        // Remove old unused objects
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
-        }];
         return YES;
     }
     else {
