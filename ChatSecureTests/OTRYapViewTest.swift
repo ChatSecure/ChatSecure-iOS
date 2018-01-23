@@ -37,30 +37,36 @@ extension ViewHandlerTestDelegate: OTRYapViewHandlerDelegateProtocol {
 
 class OTRYapViewTest: XCTestCase {
     
+    var databaseManager: OTRDatabaseManager?
+    
     override func setUp() {
         super.setUp()
         
-        
-        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        if let databaseDirectory = databaseManager?.databaseDirectory {
+            FileManager.default.clearDirectory(databaseDirectory)
         }
+    }
         
-        override func tearDown() {
+    override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        databaseManager = nil
         super.tearDown()
-        }
+    }
         
-        func testViewHandlerUpdate() {
-            let setupExpecation = self.expectation(description: "Setup Mappings")
-            let viewChangeExpectation = self.expectation(description: "Insert buddy")
-        
-        let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
+    func testViewHandlerUpdate() {
+        let setupExpecation = self.expectation(description: "Setup Mappings")
+        let viewChangeExpectation = self.expectation(description: "Insert buddy")
+    
+        let databaseManager = OTRDatabaseManager()
+        self.databaseManager = databaseManager
+        databaseManager.setupTestDatabase(name: #function)
         let viewHandler = OTRYapViewHandler(databaseConnection: databaseManager.longLivedReadOnlyConnection!, databaseChangeNotificationName: DatabaseNotificationName.LongLivedTransactionChanges)
         //For this test we'll look at the buddy view
         viewHandler.setup(OTRAllBuddiesDatabaseViewExtensionName, groups: [OTRBuddyGroup])
         let delegate = ViewHandlerTestDelegate(didSetup: {
             setupExpecation.fulfill()
             //Once our view handler is ready we need to make a change to the database that will be reflected in the view.
-            databaseManager.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+            self.databaseManager?.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
                 guard let account = OTRXMPPAccount(username: "account@test.com", accountType: .jabber) else {
                     XCTFail()
                     return
@@ -68,6 +74,7 @@ class OTRYapViewTest: XCTestCase {
                 let buddy = OTRXMPPBuddy()!
                 buddy.username = "test@test.com"
                 buddy.accountUniqueId = account.uniqueId
+                buddy.trustLevel = .roster
                 account.save(with: transaction)
                 buddy.save(with: transaction)
                 
