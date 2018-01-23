@@ -222,9 +222,6 @@
 
 // Make sure bar stays at the top
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
-    if ([bar isKindOfClass:UISearchBar.class]) {
-        return UIBarPositionTopAttached;
-    }
     return UIBarPositionTop;
 }
 
