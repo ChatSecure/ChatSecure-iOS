@@ -214,6 +214,11 @@
         YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
         NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
         [self.database registerExtension:searchResultsView withName:viewName];
+        
+        // Remove old unused objects
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
     };
     
 #if DEBUG
@@ -230,10 +235,6 @@
     
     
     if (self.database != nil) {
-        // Remove old unused objects
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
-        }];
         return YES;
     }
     else {
