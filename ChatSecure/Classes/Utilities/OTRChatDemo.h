@@ -11,5 +11,6 @@
 @interface OTRChatDemo : NSObject
 
 + (void)loadDemoChatInDatabase;
++ (void)loadPerformanceTestChatsInDatabase;
 
 @end
