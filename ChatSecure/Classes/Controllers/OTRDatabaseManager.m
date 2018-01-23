@@ -197,8 +197,9 @@
         [self.database registerExtension:self.actionManager withName:actionManagerName];
         
         [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
-        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
+        // Order is important - the conversation database view uses the lastMessageWithTransaction: method which in turn uses the OTRFilteredChatDatabaseViewExtensionName view registered above.
+        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
         
         
