@@ -363,17 +363,16 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         var accountObject:OTRXMPPAccount? = nil
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
             readConnection?.read({ (transaction) in
-                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
+                buddy = roomOccupant.buddy(with: transaction)
                 accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
             })
+            var isYou = false
+            if let myJidString = room.ownJID, let accountJid = accountObject?.bareJID?.bare, roomOccupant.jid == myJidString || roomOccupant.realJID == accountJid {
+                isYou = true
+            }
+
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
-                if let occupantJid = roomOccupant.jid, let ownJid = ownOccupant?.jid, occupantJid.compare(ownJid) == .orderedSame {
-                    if let accountObject = accountObject {
-                        cell.avatarImageView.image = accountObject.avatarImage()
-                    }
-                    cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
-                }
             } else if let roomJid = room.jid {
                 // Create temporary buddy
                 // Do not save here or it will auto-trust random people
@@ -387,6 +386,13 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 }
                 OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
                 cell.setThread(buddy, account: nil)
+            }
+            
+            if isYou {
+                if let accountObject = accountObject {
+                    cell.avatarImageView.image = accountObject.avatarImage()
+                }
+                cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
             }
             
             if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
