@@ -468,6 +468,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }];
     }
     
+    // We also add a listener for serverCheck updates, needed for group chats. Otherwise, if you start the app and directly enter a group chat, the media buttons will remain disabled, since in updateEncryptionState we set canSendMedia according to server capabilities, which may not have been fetched yet. This listener ensures that canSendMedia is updated correctly.
     if (self.serverCheckUpdateNotificationObject == nil) {
         self.serverCheckUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:ServerCheck.UpdateNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
