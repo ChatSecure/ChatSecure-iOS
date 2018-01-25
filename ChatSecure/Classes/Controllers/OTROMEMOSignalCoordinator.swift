@@ -219,13 +219,18 @@ import SignalProtocolObjC
             }
             do {
                 //Create the encrypted payload
-                let payload = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData)
-                
+                guard let gcmData = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData) else {
+                    DDLogError("OMEMO Encryption error: Could not perform AES-GCM operation")
+                    return
+                }
                 
                 // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
                 let encryptClosure:(OTROMEMODevice) -> (OMEMOKeyData?) = { device in
                     do {
-                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: keyData as Data)
+                        // new OMEMO format puts auth tag inside omemo session
+                        // see https://github.com/siacs/Conversations/commit/f0c3b31a42ac6269a0ca299f2fa470586f6120be#diff-e9eacf512943e1ab4c1fbc21394b4450R170
+                        let payload = keyData + gcmData.authTag
+                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: payload)
                     } catch {
                         return nil
                     }
@@ -263,13 +268,9 @@ import SignalProtocolObjC
                 
                 //Make sure we have encrypted the symetric key to someone
                 if (keyDataArray.count > 0) {
-                    guard let payloadData = payload?.data, let authTag = payload?.authTag else {
-                        return
-                    }
-                    let finalPayload = NSMutableData()
-                    finalPayload.append(payloadData)
-                    finalPayload.append(authTag)
-                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: buddyJid, payload: finalPayload as Data, elementId: messageId)
+                    // new OMEMO format puts auth tag inside omemo session
+                    let finalPayload = gcmData.data
+                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: buddyJid, payload: finalPayload, elementId: messageId)
                     strongSelf.callbackQueue.async(execute: {
                         completion(true,nil)
                     })
