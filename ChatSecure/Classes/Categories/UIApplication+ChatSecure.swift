@@ -273,8 +273,8 @@ public extension UIApplication {
     }
     
     /// show a notification when there is an issue connecting, for instance expired certificate
-    @objc public func showConnectionErrorNotification(xmpp: XMPPManager, error: NSError) {
-        let username = xmpp.account.username
+    @objc public func showConnectionErrorNotification(account: OTRXMPPAccount, error: NSError) {
+        let username = account.username
         var body = "\(CONNECTION_ERROR_STRING()) \(username)."
         
         if error.domain == GCDAsyncSocketErrorDomain,
@@ -296,7 +296,17 @@ public extension UIApplication {
             }
         } else if error.domain == "kCFStreamErrorDomainSSL" {
             body = body + " \(CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING())"
-            if let sslString = OTRXMPPError.errorString(withSSLStatus: OSStatus(error.code)) {
+            let osStatus = OSStatus(error.code)
+            
+            // Ignore a few SSL error codes that might be more annoying than useful
+            //                errSSLClosedGraceful         = -9805,    /* connection closed gracefully */
+            //                errSSLClosedAbort             = -9806,    /* connection closed via error */
+            let codesToIgnore = [errSSLClosedAbort, errSSLClosedGraceful]
+            if codesToIgnore.contains(osStatus) {
+                return
+            }
+            
+            if let sslString = OTRXMPPError.errorString(withSSLStatus: osStatus) {
                 body = body + " \"\(sslString)\""
             }
         } else {
@@ -304,7 +314,7 @@ public extension UIApplication {
             return
         }
         
-        let accountKey = xmpp.account.uniqueId
+        let accountKey = account.uniqueId
         let badge = UIApplication.shared.applicationIconBadgeNumber + 1
         
         let userInfo = [kOTRNotificationType: kOTRNotificationTypeConnectionError,
@@ -312,6 +322,7 @@ public extension UIApplication {
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getDeliveredNotifications(completionHandler: { (notifications) in
+                // FIXME: this deduplication code doesn't seem to work
                 // if we are already showing a notification, let's not spam the user too much with more of them
                 for notification in notifications {
                     if notification.request.identifier == accountKey {

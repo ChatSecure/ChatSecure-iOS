@@ -1471,7 +1471,7 @@ managedBuddyObjectID
         self.userInitiatedConnection = NO;
         
         if (error) {
-            [UIApplication.sharedApplication showConnectionErrorNotificationWithXmpp:self error:error];
+            [UIApplication.sharedApplication showConnectionErrorNotificationWithAccount:self.account error:error];
         }
     });
 }
