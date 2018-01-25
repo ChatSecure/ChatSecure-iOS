@@ -71,10 +71,16 @@ class PushStorage: NSObject, PushStorageProtocol {
         self.databaseConnection = databaseConnection
     }
     
+    func thisDevicePushAccount(transaction: YapDatabaseReadTransaction) -> Account? {
+        var account:Account? = nil
+        account = transaction.object(forKey: PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection()) as? Account
+        return account
+    }
+    
     func thisDevicePushAccount() -> Account? {
         var account:Account? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            account = transaction.object(forKey: PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection()) as? Account
+            account = self.thisDevicePushAccount(transaction: transaction)
         }
         return account
     }

@@ -117,21 +117,26 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         DDLogWarn(@"Database isn't setup yet! Skipping onboarding...");
         return;
     }
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
         }
+    } completionBlock:^{
+        [self continueOnboarding:hasAccounts];
     }];
-    
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+}
 
+- (void) continueOnboarding:(BOOL)hasAccounts {
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+    
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:welcomeNavController animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
+        return;
     }
     
     OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
@@ -151,7 +156,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 long days = [components day];
                 notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
             }
-
+            
             [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
         }
     } else {

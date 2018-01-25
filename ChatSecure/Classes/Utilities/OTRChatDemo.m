@@ -112,4 +112,65 @@
     return mutableArray;
 }
 
++ (void)loadPerformanceTestChatsInDatabase {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction removeAllObjectsInAllCollections];
+        
+        NSString *accountName = @"Account #1";
+        OTRXMPPAccount *account = [[OTRXMPPAccount alloc] initWithUsername:accountName accountType:OTRAccountTypeJabber];
+        [account saveWithTransaction:transaction];
+        
+        for (int buddyIndex = 0; buddyIndex < 100; buddyIndex++) {
+            NSString *name = [NSString stringWithFormat:@"Buddy #%d", buddyIndex + 1];
+            NSString *firstName = [NSString stringWithFormat:@"buddy%d", buddyIndex + 1];
+            NSString *jidString = [NSString stringWithFormat:@"%@@example.com", firstName];
+            XMPPJID *jid = [XMPPJID jidWithString:jidString];
+            OTRXMPPBuddy * buddy = [[OTRXMPPBuddy alloc] init];
+            buddy.displayName = name;
+            buddy.username = jidString;
+            buddy.accountUniqueId  = account.uniqueId;
+            buddy.trustLevel = BuddyTrustLevelRoster;
+            [OTRBuddyCache.shared setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
+            buddy.preferredSecurity = OTRSessionSecurityOMEMO;
+            NSData *fingerprintData = [OTRPasswordGenerator randomDataWithLength:32];
+            OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
+            [device saveWithTransaction:transaction];
+            
+            [OTRBuddyCache.shared setThreadStatus:(NSInteger)OTRThreadStatusAvailable forBuddy:buddy resource:nil];
+            
+            [buddy saveWithTransaction:transaction];
+            
+            for (int text = 0; text < 100; text++) {
+                OTRBaseMessage *message = nil;
+                
+                if (text % 2) {
+                    message = [[OTRIncomingMessage alloc] init];
+                    ((OTRIncomingMessage *)message).read = YES;
+                }
+                else {
+                    OTROutgoingMessage *outgoingMessage = [[OTROutgoingMessage alloc] init];
+                    outgoingMessage.delivered = YES;
+                    outgoingMessage.dateSent = [NSDate date];
+                    message = outgoingMessage;
+                }
+                
+                message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOMEMODevice:@"" collection:@""];
+                
+                message.text = [NSString stringWithFormat:@"Message #%d", text];
+                message.buddyUniqueId = buddy.uniqueId;
+                NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+                [dateComponents setMinute:(-1*text)];
+                message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
+                
+                buddy.lastMessageId = message.uniqueId;
+                
+                [message saveWithTransaction:transaction];
+            }
+            [buddy saveWithTransaction:transaction];
+        }
+    }];
+
+}
+
 @end

@@ -35,12 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, readonly) NSUInteger numberOfConnectedProtocols;
 @property (atomic, readonly) NSUInteger numberOfConnectingProtocols;
 
-/** The last time user interacted with the application in the foreground */
-@property (atomic, strong, readwrite) NSDate *lastInteractionDate;
-
-@property (nonatomic, strong, readonly) OTREncryptionManager *encryptionManager;
-@property (nonatomic, strong, readonly) PushController *pushController;
-
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
 - (nullable id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
 - (nullable OTRXMPPManager*)xmppManagerForAccount:(OTRAccount *)account;

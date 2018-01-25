@@ -543,7 +543,7 @@ extension MessageQueueHandler {
             return
         }
         //We're connected now we need to check encryption requirements
-        let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
+        let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let otrKitSend = {
             self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection, messageSecurity:message.messageSecurity, completion: completion)
             otrKit.encodeMessage(text, tlvs: nil, username:buddyUsername , accountName: accountUsername, protocol: accountProtocolStrintg, tag: message)

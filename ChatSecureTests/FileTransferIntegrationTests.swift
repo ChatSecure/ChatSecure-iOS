@@ -12,7 +12,7 @@ import CocoaLumberjack
 
 class FileTransferIntegrationTests: XCTestCase {
     
-    var databaseManager: OTRDatabaseManager!
+    var databaseManager: OTRDatabaseManager?
     var connection: YapDatabaseConnection!
     let account = OTRXMPPAccount(username: "test@test.com", accountType: .jabber)!
     let buddy = OTRXMPPBuddy()!
@@ -21,10 +21,13 @@ class FileTransferIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
         DDLog.add(DDTTYLogger.sharedInstance)
-        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        if let databaseDirectory = databaseManager?.databaseDirectory {
+            FileManager.default.clearDirectory(databaseDirectory)
+        }
         let uuid = UUID().uuidString
-        self.databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(uuid)
-        self.connection = self.databaseManager.database!.newConnection()
+        self.databaseManager = OTRDatabaseManager()
+        self.databaseManager?.setupTestDatabase(name: uuid)
+        self.connection = self.databaseManager?.database!.newConnection()
         
         buddy.accountUniqueId = account.uniqueId
         room.accountUniqueId = account.uniqueId

@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage;
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName
+                    directory:(nullable NSString*)directory
+                  withMediaStorage:(BOOL)withMediaStorage;
 
 - (nullable YapDatabaseConnection *)newConnection;
 
@@ -49,11 +52,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSString *)databasePassphrase;
 
+/** Checks for database at default path */
 + (BOOL)existsYapDatabase;
 
-+ (NSString *)yapDatabaseDirectory;
-+ (NSString *)yapDatabasePathWithName:(NSString *_Nullable)name;
-
+/** directory containing sqlite and WAL files. Will be nil until setupDatabaseWithName: is called.  */
+@property (nonatomic, strong, readonly, nullable) NSString *databaseDirectory;
++ (NSString *)defaultYapDatabaseDirectory;
++ (NSString *)defaultYapDatabasePathWithName:(NSString *_Nullable)name;
 
 + (instancetype)sharedInstance;
 @property (class, nonatomic, readonly) OTRDatabaseManager *shared;

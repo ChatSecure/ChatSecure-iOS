@@ -339,7 +339,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     if (fingerprintTypes.count > 0) {
         // We only support OTR fingerprints at the moment
         if ([fingerprintTypes containsObject:@(OTRFingerprintTypeOTR)]) {
-            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(OTRFingerprint * _Nullable fingerprint, NSError * _Nullable error) {
+            [OTRProtocolManager.encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(OTRFingerprint * _Nullable fingerprint, NSError * _Nullable error) {
                 
                 if (fingerprint) {
                     NSString *key = [[self class] fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];

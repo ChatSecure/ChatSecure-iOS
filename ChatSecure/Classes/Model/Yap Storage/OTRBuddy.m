@@ -176,7 +176,7 @@
     
     // Check if we have fingerprints for this buddy. This is the best proxy we have for detecting if we have had an otr session in the past.
     // If we had a session in the past then we should use that otherwise.
-    NSArray<OTRFingerprint *> *allFingerprints = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit fingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString];
+    NSArray<OTRFingerprint *> *allFingerprints = [OTRProtocolManager.encryptionManager.otrKit fingerprintsForUsername:self.username accountName:account.username protocol:account.protocolTypeString];
     if ([allFingerprints count]) {
         return OTRMessageTransportSecurityOTR;
     } else {

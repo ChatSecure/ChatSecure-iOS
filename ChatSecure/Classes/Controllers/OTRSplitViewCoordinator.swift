@@ -57,7 +57,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
             return
         }
         
-        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
+        OTRProtocolManager.encryptionManager.maybeRefreshOTRSession(forBuddyKey: threadOwner.threadIdentifier, collection: threadOwner.threadCollection)
         
         //Set nav controller root view controller to mVC and then show detail with nav controller
         

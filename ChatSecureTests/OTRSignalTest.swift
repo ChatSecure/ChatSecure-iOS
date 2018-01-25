@@ -14,6 +14,9 @@ class OTRSignalTest: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        // to prevent tests from failing we still need to setup singleton
+        // OTRDatabaseManager.shared.setupTestDatabase(name: "tmp")
     }
     
     
@@ -24,8 +27,10 @@ class OTRSignalTest: XCTestCase {
     }
     
     func testSetupSignal() {
-        let ourDatabaseManager = OTRTestDatabaseManager.setupDatabaseWithName(#function)
-        let otherDatbaseManager = OTRTestDatabaseManager.setupDatabaseWithName("\(#function)-other")
+        let ourDatabaseManager = OTRDatabaseManager()
+        ourDatabaseManager.setupTestDatabase(name: #function)
+        let otherDatbaseManager = OTRDatabaseManager()
+        otherDatbaseManager.setupTestDatabase(name: "\(#function)-other")
         
         let ourAccount = TestXMPPAccount(username: "our.account@something.com", accountType: .jabber)!
         let otherAccount = TestXMPPAccount(username: "other.account@something.com", accountType: .jabber)!

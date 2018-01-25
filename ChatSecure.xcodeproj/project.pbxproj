@@ -528,6 +528,7 @@
 		D9EC47831EFA03FC00C39B25 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
 		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9F3B1AF1FD48DDA00DFC5DA /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F3B1AE1FD48DDA00DFC5DA /* Account.swift */; };
+		D9F5EC4A2016E94800010966 /* OTRProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5EC492016E94800010966 /* OTRProtocolManager.swift */; };
 		D9F8C3C21FBFD2CA00D4B857 /* RoomManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */; };
 		D9FBDDC91FD74A93006F1C6C /* OTRAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */; };
 		D9FD36011EFAFD3C00398CE4 /* FormatterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC476B1EFA03FC00C39B25 /* FormatterKit.framework */; };
@@ -1177,6 +1178,7 @@
 		D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZXingObjC.framework; path = Carthage/Build/iOS/ZXingObjC.framework; sourceTree = "<group>"; };
 		D9EEEDD11D27388600B8BC54 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRvCard.h; path = "Yap Storage/OTRvCard.h"; sourceTree = "<group>"; };
 		D9F3B1AE1FD48DDA00DFC5DA /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		D9F5EC492016E94800010966 /* OTRProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRProtocolManager.swift; sourceTree = "<group>"; };
 		D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRAppDelegate.swift; sourceTree = "<group>"; };
 		DE32B878BAC9A236855EAF6E /* Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1360,6 +1362,7 @@
 		6331050E1A16D1A300C17BAE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9F5EC492016E94800010966 /* OTRProtocolManager.swift */,
 				D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */,
 				D93718511EC267F800766D49 /* OTRAccountMigrator.h */,
 				D93718521EC267F800766D49 /* OTRAccountMigrator.m */,
@@ -3117,6 +3120,7 @@
 				638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */,
 				6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */,
 				63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */,
+				D9F5EC4A2016E94800010966 /* OTRProtocolManager.swift in Sources */,
 				634364231CC192F1009E169F /* YapDatabaseConstants.swift in Sources */,
 				63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */,
 				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,

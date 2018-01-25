@@ -69,18 +69,23 @@
 }
 
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage {
+    return [self setupDatabaseWithName:databaseName directory:nil withMediaStorage:withMediaStorage];
+}
+
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName
+                    directory:(nullable NSString*)directory
+             withMediaStorage:(BOOL)withMediaStorage {
     BOOL success = NO;
-    if ([self setupYapDatabaseWithName:databaseName] )
+    if ([self setupYapDatabaseWithName:databaseName directory:directory] )
     {
         success = YES;
     }
     if (success && withMediaStorage) success = [self setupSecureMediaStorage];
     
-    NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
     //Enumerate all files in yap database directory and exclude from backup
-    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:databaseDirectory];
+    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:self.databaseDirectory];
     //fix file protection on existing files
-     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:databaseDirectory];
+     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:self.databaseDirectory];
     return success;
 }
 
@@ -96,7 +101,7 @@
 - (BOOL)setupSecureMediaStorage
 {
     NSString *password = [self databasePassphrase];
-    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
+    NSString *path = self.databaseDirectory;
     path = [path stringByAppendingPathComponent:@"ChatSecure-media.sqlite"];
     BOOL success = [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
     
@@ -109,7 +114,7 @@
     return success;
 }
 
-- (BOOL)setupYapDatabaseWithName:(NSString *)name
+- (BOOL)setupYapDatabaseWithName:(NSString *)name directory:(nullable NSString*)directory
 {
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
     options.corruptAction = YapDatabaseCorruptAction_Fail;
@@ -121,13 +126,15 @@
         }
         return keyData;
     };
-    
-    NSString *databaseDirectory = [[self class] yapDatabaseDirectory];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:databaseDirectory]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    _databaseDirectory = [directory copy];
+    if (!_databaseDirectory) {
+        _databaseDirectory = [[self class] defaultYapDatabaseDirectory];
     }
-    NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self.databaseDirectory]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:self.databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *databasePath = [self.databaseDirectory stringByAppendingPathComponent:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                            serializer:nil
@@ -197,8 +204,9 @@
         [self.database registerExtension:self.actionManager withName:actionManagerName];
         
         [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
-        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
+        // Order is important - the conversation database view uses the lastMessageWithTransaction: method which in turn uses the OTRFilteredChatDatabaseViewExtensionName view registered above.
+        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
         [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
         
         
@@ -214,6 +222,11 @@
         YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
         NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
         [self.database registerExtension:searchResultsView withName:viewName];
+        
+        // Remove old unused objects
+        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
     };
     
 #if DEBUG
@@ -230,10 +243,6 @@
     
     
     if (self.database != nil) {
-        // Remove old unused objects
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
-        }];
         return YES;
     }
     else {
@@ -268,22 +277,21 @@
     }
 }
 
-+ (NSString *)yapDatabaseDirectory {
++ (NSString *)defaultYapDatabaseDirectory {
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
     return directory;
 }
 
-+ (NSString *)yapDatabasePathWithName:(NSString *)name
++ (NSString *)defaultYapDatabasePathWithName:(NSString *)name
 {
-    
-    return [[self yapDatabaseDirectory] stringByAppendingPathComponent:name];
+    return [[self defaultYapDatabaseDirectory] stringByAppendingPathComponent:name];
 }
 
 + (BOOL)existsYapDatabase
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self yapDatabasePathWithName:OTRYapDatabaseName]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self defaultYapDatabasePathWithName:OTRYapDatabaseName]];
 }
 
 - (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error

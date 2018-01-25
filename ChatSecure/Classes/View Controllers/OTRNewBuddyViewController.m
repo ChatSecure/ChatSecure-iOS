@@ -276,7 +276,7 @@
         NSData *fprintData = [fingerprint dataFromHex];
         if (fprintData) {
             OTRFingerprint *otrFingerprint = [[OTRFingerprint alloc] initWithUsername:username accountName:self.account.username protocol:self.account.protocolTypeString fingerprint:fprintData trustLevel:OTRTrustLevelTrustedUser];
-            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit saveFingerprint:otrFingerprint];
+            [OTRProtocolManager.encryptionManager.otrKit saveFingerprint:otrFingerprint];
         }
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:Unrecognized_Invite_Format() message:nil preferredStyle:UIAlertControllerStyleAlert];

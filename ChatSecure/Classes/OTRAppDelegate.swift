@@ -10,9 +10,38 @@ import Foundation
 import YapDatabase
 import UserNotifications
 
+public extension OTRAppDelegate {
+    /// gets the last user interaction date, or current date if app is activate
+    @objc public static func getLastInteractionDate(_ block: @escaping (_ lastInteractionDate: Date?)->(), completionQueue: DispatchQueue? = nil) {
+        DispatchQueue.main.async {
+            var date: Date? = nil
+            if UIApplication.shared.applicationState == .active {
+                date = Date()
+            } else {
+                date = self.lastInteractionDate
+            }
+            if let completionQueue = completionQueue {
+                completionQueue.async {
+                    block(date)
+                }
+            } else {
+                block(date)
+            }
+        }
+    }
+    
+    @objc public static func setLastInteractionDate(_ date: Date) {
+        DispatchQueue.main.async {
+            self.lastInteractionDate = date
+        }
+    }
 
+    /// @warn only access this from main queue
+    private static var lastInteractionDate: Date? = nil
+}
 
 public extension OTRAppDelegate {
+    
     /// Returns key/collection of visible thread, or nil if not visible or unset
     @objc public static func visibleThread(_ block: @escaping (_ thread: YapCollectionKey?)->(), completionQueue: DispatchQueue? = nil) {
         DispatchQueue.main.async {
