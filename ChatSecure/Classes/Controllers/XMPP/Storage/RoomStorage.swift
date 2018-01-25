@@ -91,6 +91,10 @@ import YapDatabase
             message.originId = originId
             message.stanzaId = stanzaId
             
+            if let sender = message.senderJID, let senderJid = XMPPJID(string: sender), let roomJid = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJid, realJID: nil, roomJID: roomJid, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction) {
+                message.buddyUniqueId = occupant.buddyUniqueId
+            }
+            
             room.lastRoomMessageId = message.uniqueId
             room.save(with: transaction)
             message.save(with: transaction)
@@ -139,6 +143,9 @@ extension RoomStorage: XMPPRoomStorage {
                 occupant.available = true
             }
             occupant.jid = presenceJID.full
+            if buddyJID != nil {
+                occupant.realJID = buddyJID?.bare
+            }
             occupant.roomName = presenceJID.resource
             occupant.role = RoomOccupantRole(stringValue: role)
             occupant.affiliation = RoomOccupantAffiliation(stringValue: affiliation)
