@@ -43,6 +43,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     @objc open var roomUniqueId:String?
     @objc open var originId:String?
     @objc open var stanzaId:String?
+    @objc open var buddyUniqueId:String?
     
     open override var hash: Int {
         get {

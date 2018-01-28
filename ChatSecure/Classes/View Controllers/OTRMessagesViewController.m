@@ -84,6 +84,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 @property (nonatomic, weak) id pendingApprovalDidChangeNotificationObject;
 @property (nonatomic, weak) id deviceListUpdateNotificationObject;
+@property (nonatomic, weak) id serverCheckUpdateNotificationObject;
 
 
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
@@ -463,6 +464,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
             if (notificationJid != nil && [notificationJid.bare isEqualToString:buddyUser]) {
                 [strongSelf updateEncryptionState];
+            }
+        }];
+    }
+    
+    // We also add a listener for serverCheck updates, needed for group chats. Otherwise, if you start the app and directly enter a group chat, the media buttons will remain disabled, since in updateEncryptionState we set canSendMedia according to server capabilities, which may not have been fetched yet. This listener ensures that canSendMedia is updated correctly.
+    if (self.serverCheckUpdateNotificationObject == nil) {
+        self.serverCheckUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:ServerCheck.UpdateNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if ([self isGroupChat]) {
+                __block OTRXMPPManager *xmpp = nil;
+                [strongSelf.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                    xmpp = [strongSelf xmppManagerWithTransaction:transaction];
+                } completionBlock:^{
+                    if (note.object == xmpp.serverCheck) {
+                        [strongSelf updateEncryptionState];
+                    }
+                }];
             }
         }];
     }
@@ -1666,20 +1684,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
         __block OTRXMPPBuddy *roomOccupantBuddy = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
-            if (roomOccupant != nil) {
-                roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+            if (roomMessage.buddyUniqueId) {
+                roomOccupantBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
+            }
+            if (!roomOccupantBuddy) {
+                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                if (roomOccupant != nil) {
+                    roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+                }
             }
         }];
         UIImage *avatarImage = nil;
-        if (roomOccupant) {
-            if (roomOccupantBuddy != nil) {
-                avatarImage = [roomOccupantBuddy avatarImage];
-            }
-            if (!avatarImage) {
-                avatarImage = [roomOccupant avatarImage];
-            }
-        } else if (roomMessage.senderJID) {
+        if (roomOccupantBuddy != nil) {
+            avatarImage = [roomOccupantBuddy avatarImage];
+        }
+        if (!avatarImage && roomOccupant) {
+            avatarImage = [roomOccupant avatarImage];
+        }
+        if (!avatarImage && roomMessage.senderJID) {
             XMPPJID *jid = [XMPPJID jidWithString:roomMessage.senderJID];
             NSString *resource = jid.resource;
             if (resource.length > 0) {
@@ -1688,13 +1710,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 // this message probably came from the room itself
                 return nil;
             }
-        } else {
-            return nil;
         }
         if (avatarImage) {
             NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
             return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
         }
+        return nil;
     }
     
     /// For 1:1 buddy
@@ -1785,13 +1806,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
             OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
             [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
-                if (occupant) {
-                    OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
-                    if (buddy) {
-                        displayName = [buddy displayName];
-                    } else {
-                        displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                if (roomMessage.buddyUniqueId) {
+                    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
+                    displayName = [buddy displayName];
+                }
+                if (!displayName) {
+                    OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                    if (occupant) {
+                        OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
+                        if (buddy) {
+                            displayName = [buddy displayName];
+                        } else {
+                            displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                        }
                     }
                 }
             }];
