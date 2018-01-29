@@ -36,6 +36,10 @@ import YapDatabase.YapDatabaseRelationship
     @objc open var lastRoomMessageId:String?
     @objc open var subject:String?
     @objc open var roomPassword:String?
+
+    // A transient property, keeps track of if we have done an initial MAM history fetch after room has been joined.
+    @objc open var hasFetchedHistory = false
+    
     override open var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
@@ -56,6 +60,13 @@ import YapDatabase.YapDatabaseRelationship
             return nil
         }
         return OTRXMPPRoom.fetchObject(withUniqueID: roomYapKey, transaction: transaction)
+    }
+    
+    @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
+        if key == #keyPath(hasFetchedHistory) {
+            return MTLPropertyStorageTransitory
+        }
+        return super.storageBehaviorForProperty(withKey: key)
     }
 }
 

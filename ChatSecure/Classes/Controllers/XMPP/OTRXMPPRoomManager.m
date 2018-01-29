@@ -364,6 +364,20 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
+// After we have gotten the initial room subject we are ready for live messages. Go ahead and fetch MAM history now.
+- (void)xmppRoomDidChangeSubject:(XMPPRoom *)sender {
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:[sender.roomJID bare]];
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+        if (room) {
+            if (!room.hasFetchedHistory) {
+                room.hasFetchedHistory = YES;
+                [self fetchHistoryFor:sender];
+            }
+        }
+    }];
+}
+
 - (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched members list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
@@ -456,7 +470,6 @@
             [sender fetchAdminsList];
             [sender fetchOwnersList];
             [sender fetchModeratorsList];
-            [self fetchHistoryFor:sender];
         }];
     }
 }
