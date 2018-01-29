@@ -132,8 +132,8 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 - (UIColor *)avatarBorderColor {
     if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:self]) {
-        id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self];
-        if ([protocol connectionStatus] == OTRProtocolConnectionStatusConnected) {
+        OTRXMPPManager *xmpp = [OTRProtocolManager.shared xmppManagerForAccount:self];
+        if (xmpp.loginStatus == OTRLoginStatusAuthenticated) {
             return [OTRColors colorWithStatus:OTRThreadStatusAvailable];
         }
     }
@@ -247,7 +247,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             [accountsArray addObject:account];
         }
     }];
-    if (accountsArray.count > 0) {
+    if (accountsArray.count > 1) {
         DDLogWarn(@"More than one account matching username! %@ %@", username, accountsArray);
     }
     return accountsArray;
@@ -339,7 +339,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     if (fingerprintTypes.count > 0) {
         // We only support OTR fingerprints at the moment
         if ([fingerprintTypes containsObject:@(OTRFingerprintTypeOTR)]) {
-            [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(OTRFingerprint * _Nullable fingerprint, NSError * _Nullable error) {
+            [OTRProtocolManager.encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(OTRFingerprint * _Nullable fingerprint, NSError * _Nullable error) {
                 
                 if (fingerprint) {
                     NSString *key = [[self class] fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];

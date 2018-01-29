@@ -8,7 +8,6 @@
 
 #import "OTRYapDatabaseRosterStorage.h"
 
-@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
@@ -18,25 +17,6 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import OTRAssets;
-
-@interface OTRYapDatabaseRosterStorage ()
-
-@property (nonatomic, strong, readonly, nonnull) YapDatabaseConnection *connection;
-
-@end
-
-/**
- The possible values for a subscription value
- 
- https://xmpp.org/rfcs/rfc6121.html#roster-syntax-items-subscription
- */
-typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
-    OTRSubscriptionAttributeUnknown,
-    OTRSubscriptionAttributeNone,
-    OTRSubscriptionAttributeTo,
-    OTRSubscriptionAttributeFrom,
-    OTRSubscriptionAttributeBoth
-};
 
 @implementation OTRYapDatabaseRosterStorage
 
@@ -63,50 +43,6 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     return buddy;
 }
 
-/** When created, it is still unsaved and must be manually saved within a yap transaction. */
-- (nullable OTRXMPPBuddy *)fetchOrCreateBuddyWithJID:(XMPPJID *)jid stream:(XMPPStream *)stream {
-    if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
-        DDLogWarn(@"Adding self to roster: %@", jid);
-    }
-    NSString *accountUniqueId = [self accountUniqueIdForStream:stream];
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
-    }];
-    if (!buddy) {
-        buddy = [[OTRXMPPBuddy alloc] init];
-    }
-    buddy.username = [jid bare];
-    buddy.accountUniqueId = accountUniqueId;
-    return buddy;
-}
-
-- (nullable OTRXMPPBuddy*) fetchOrCreateBuddyFromRosterItem:(NSXMLElement *)rosterItem stream:(XMPPStream *)stream {
-    NSString *jidStr = [rosterItem attributeStringValueForName:@"jid"];
-    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-    return [self fetchOrCreateBuddyWithJID:jid stream:stream];
-}
-
-
-/** Compares two buddy objects to see if there are changes worth saving */
-- (BOOL) shouldSaveUpdatedBuddy:(nonnull OTRXMPPBuddy*)buddy oldBuddy:(nullable OTRXMPPBuddy*)oldBuddy {
-    NSParameterAssert(buddy);
-    if (!buddy) { return NO; }
-    if (!oldBuddy) { return YES; }
-    NSAssert(buddy.uniqueId == oldBuddy.uniqueId, @"Comparing two different buddies! Noooooooo.");
-    if (buddy.uniqueId != oldBuddy.uniqueId) {
-        // I guess we should still save if the uniqueId is different
-        return YES;
-    }
-    if (![buddy.displayName isEqualToString:oldBuddy.displayName]) {
-        return YES;
-    }
-    if (buddy.pendingApproval != oldBuddy.pendingApproval) {
-        return YES;
-    }
-    return NO;
-}
-
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
 {
     __block BOOL result = NO;
@@ -117,81 +53,6 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
         }
     }];
     return result;
-}
-
-- (OTRSubscriptionAttribute)subscriptionAttribute:(NSXMLElement *)item {
-    NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if (subscription ==nil || [subscription isEqualToString:@"none"]) {
-        return OTRSubscriptionAttributeNone;
-    } else if ([subscription isEqualToString:@"to"]) {
-        return OTRSubscriptionAttributeTo;
-    } else if ([subscription isEqualToString:@"from"]) {
-        return OTRSubscriptionAttributeFrom;
-    }else if ([subscription isEqualToString:@"both"]) {
-        return OTRSubscriptionAttributeBoth;
-    }
-    
-    return OTRSubscriptionAttributeUnknown;
-}
-
--(BOOL)isPendingApproval:(NSXMLElement *)item
-{
-    NSString *ask = [item attributeStringValueForName:@"ask"];
-    if ([ask isEqualToString:@"subscribe"]) {
-        return YES;
-    }
-    
-    OTRSubscriptionAttribute subscriptionAttribute = [self subscriptionAttribute:item];
-    
-    // If you are subscribed to or are mutually subscribed then you are not pending approval.
-    if (subscriptionAttribute == OTRSubscriptionAttributeTo || subscriptionAttribute == OTRSubscriptionAttributeBoth) {
-        return NO;
-    }
-    return YES;
-}
-
-/** Buddy can be nil, which indicates a new buddy should be saved. */
-- (void)updateBuddy:(nullable OTRXMPPBuddy *)buddy withItem:(nonnull NSXMLElement *)item stream:(XMPPStream*)stream
-{
-    if (!item) { return; }
-    BOOL newlyCreatedBuddy = NO;
-    if (!buddy) {
-        buddy = [self fetchOrCreateBuddyFromRosterItem:item stream:stream];
-        if (!buddy) {
-            return;
-        }
-        newlyCreatedBuddy = YES;
-    }
-    // Fixing a potential migration issue from ages past. Maybe can be removed?
-    if (![buddy isKindOfClass:[OTRXMPPBuddy class]]) {
-        OTRXMPPBuddy *xmppBuddy = [[OTRXMPPBuddy alloc] init];
-        [xmppBuddy mergeValuesForKeysFromModel:buddy];
-        buddy = xmppBuddy;
-        newlyCreatedBuddy = YES;
-    }
-    OTRXMPPBuddy *newBuddy = [buddy copy];
-    
-    
-    NSString *name = [item attributeStringValueForName:@"name"];
-    if (name.length) {
-        newBuddy.displayName = name;
-    }
-    newBuddy.pendingApproval = [self isPendingApproval:item];
-    
-    // Save if there were changes, or it's a new buddy
-    BOOL shouldSave = [self shouldSaveUpdatedBuddy:newBuddy oldBuddy:buddy] || newlyCreatedBuddy;
-    if (!shouldSave) {
-        return;
-    }
-    
-    [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [newBuddy saveWithTransaction:transaction];
-    }];
-    
-    if (buddy.pendingApproval && !newBuddy.pendingApproval) {
-        // Buddy has approved us
-        [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": newBuddy}];
-    }
 }
 
 #pragma - mark XMPPRosterStorage Methods
@@ -210,33 +71,7 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 }
 
-- (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
-{
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
-    NSString *jidStr = [item attributeStringValueForName:@"jid"];
-    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-    
-    if([[jid bare] isEqualToString:[[stream myJID] bare]])
-    {
-        // ignore self buddy
-        return;
-    }
-    
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
-    }];
-    NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if ([subscription isEqualToString:@"remove"])
-    {
-        if (buddy) {
-            [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction removeObjectForKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-            }];
-        }
-    } else {
-        [self updateBuddy:buddy withItem:item stream:stream];
-    }
+- (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream {
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
@@ -245,13 +80,8 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     [self.connection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [self fetchBuddyWithJID:[presence from] stream:stream transaction:transaction];
     }];
-    BOOL newlyCreatedBuddy = NO;
     if (!buddy) {
-        buddy = [self fetchOrCreateBuddyWithJID:[presence from] stream:stream];
-        if (!buddy) {
-            return;
-        }
-        newlyCreatedBuddy = YES;
+        return;
     }
     OTRXMPPBuddy *newBuddy = [buddy copy];
     
@@ -282,7 +112,6 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
             default :
                 break;
         }
-        
         if ([[presence status] length]) {
             [OTRBuddyCache.shared setStatusMessage:[presence status] forBuddy:newBuddy];
         }
@@ -292,19 +121,33 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }
     [OTRBuddyCache.shared setThreadStatus:newStatus forBuddy:newBuddy resource:resource];
     
-    
-    // If this contact is pending approval but you see their presence
-    // then they're not pending anymore
-    if (newStatus != OTRThreadStatusOffline && newBuddy.pendingApproval) {
-        [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            OTRXMPPBuddy *buddy = [[OTRXMPPBuddy fetchObjectWithUniqueID:newBuddy.uniqueId transaction:transaction] copy];
-            if (!buddy) { return; }
-            buddy.pendingApproval = NO;
-            [buddy saveWithTransaction:transaction];
-            [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": buddy}];
-        }];
-    }
+    if ([presence.type isEqualToString:@"subscribed"]) {
 
+        [newBuddy setPendingApproval:NO];
+        [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [newBuddy saveWithTransaction:transaction];
+        }];
+        
+        // Send acknowledgement
+        XMPPJID *jid = newBuddy.bareJID;
+        XMPPPresence *presence = [XMPPPresence presenceWithType:@"subscribe" to:jid];
+        [stream sendElement:presence];
+        [stream resendMyPresence];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:OTRBuddyPendingApprovalDidChangeNotification object:self userInfo:@{@"buddy": newBuddy}];
+        });
+    } else if ([presence.type isEqualToString:@"unsubscribed"]) {
+        [newBuddy setPendingApproval:NO];
+        [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [newBuddy saveWithTransaction:transaction];
+        }];
+        
+        // Send acknowledgement
+        XMPPJID *jid = newBuddy.bareJID;
+        XMPPPresence *presence = [XMPPPresence presenceWithType:@"unsubscribe" to:jid];
+        [stream sendElement:presence];
+    }
     
     // Update Last Seen
     NSDate *lastSeen = nil;
@@ -324,13 +167,6 @@ typedef NS_ENUM(NSInteger, OTRSubscriptionAttribute) {
     }
     if (lastSeen) {
         [OTRBuddyCache.shared setLastSeenDate:lastSeen forBuddy:newBuddy];
-    }
-    
-    // Save if it's a new buddy
-    if (newlyCreatedBuddy) {
-        [self.connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [newBuddy saveWithTransaction:transaction];
-        }];
     }
 }
 

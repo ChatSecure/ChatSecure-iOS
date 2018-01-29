@@ -30,6 +30,10 @@ import CocoaLumberjack
         default: return false
         }
     }
+    
+    public init(stringValue: String) {
+        self = RoomOccupantRoleHelper.role(withString: stringValue)
+    }
 }
 
 // Helper class to create from string, callable from obj-c
@@ -60,6 +64,10 @@ import CocoaLumberjack
         case .owner: return true
         default: return false
         }
+    }
+    
+    public init(stringValue: String) {
+        self = RoomOccupantAffiliationHelper.affiliation(withString: stringValue)
     }
 }
 
@@ -130,6 +138,8 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
 }
 
 public extension OTRXMPPRoomOccupant {
+    
+    
     /**
      * jid is the occupant's room JID
      * roomJID is the JID of the room itself

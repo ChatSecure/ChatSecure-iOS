@@ -52,7 +52,6 @@
 #import "OTROutgoingMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
-#import "OTRNotificationController.h"
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
@@ -70,9 +69,8 @@
 
 #import "OTRChatDemo.h"
 
-@interface OTRAppDelegate () <UNUserNotificationCenterDelegate>
+@interface OTRAppDelegate ()
 
-@property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @property (nonatomic, strong) NSTimer *fetchTimer;
@@ -151,9 +149,6 @@
     [self.window makeKeyAndVisible];
     [TransactionObserver.shared startObserving];
     
-    OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
-    [notificationController start];
-    
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
         [PushController registerForPushNotifications];
     }
@@ -191,7 +186,7 @@
     // People are reporting deadlocks again...
     // Let's turn this back on for a little while.
 #if DEBUG
-    crash.monitoring = KSCrashMonitorTypeDebuggerSafe;
+    crash.monitoring = KSCrashMonitorTypeNone;
 #else
     //crash.monitoring = KSCrashMonitorTypeAll;
     //crash.deadlockWatchdogInterval = 20;
@@ -230,7 +225,7 @@
 {
     
     YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
-    self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
+    _splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
     self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
@@ -259,7 +254,8 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [OTRProtocolManager sharedInstance].lastInteractionDate = [NSDate date];
+    [OTRAppDelegate setLastInteractionDate:NSDate.date];
+    
     /*
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -316,7 +312,9 @@
 /** Doesn't stop autoLogin if previous crash when it's a background launch */
 - (void)autoLoginFromBackground:(BOOL)fromBackground
 {
-    [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
+    });
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -326,7 +324,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [OTRProtocolManager sharedInstance].lastInteractionDate = [NSDate date];
+    [OTRAppDelegate setLastInteractionDate:NSDate.date];
     [self autoLoginFromBackground:NO];
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
@@ -403,7 +401,7 @@
 {
     [self application:application performFetchWithCompletionHandler:completionHandler];
     
-    [[OTRProtocolManager sharedInstance].pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+    [OTRProtocolManager.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
         // Only show notification if buddy lookup succeeds
         if (buddy) {
             [application showLocalNotificationForKnockFrom:buddy];
@@ -452,8 +450,7 @@
             [OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint buddyAddedCallback:^ (OTRBuddy *buddy) {
                 OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
                 if (xmppBuddy != nil) {
-                    NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:xmppBuddy.threadIdentifier, kOTRNotificationThreadKey, xmppBuddy.threadCollection, kOTRNotificationThreadCollection, nil];
-                    [self enterThreadWithUserInfo:userInfo];
+                    [self enterThreadWithKey:xmppBuddy.threadIdentifier collection:xmppBuddy.threadCollection];
                 }
             }];
             return YES;
@@ -469,21 +466,6 @@
     [self.splitViewCoordinator showConversationsViewController];
 }
 
-- (void) enterThreadWithUserInfo:(NSDictionary*)userInfo {
-    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
-    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
-    NSParameterAssert(threadKey);
-    NSParameterAssert(threadCollection);
-    if (!threadKey || !threadCollection) { return; }
-    __block id <OTRThreadOwner> thread = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
-    }];
-    if (thread) {
-        [self.splitViewCoordinator enterConversationWithThread:thread sender:self];
-    }
-}
-
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRUserNotificationsChanged object:self userInfo:@{@"settings": notificationSettings}];
@@ -496,11 +478,10 @@
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
 {
-    [[OTRProtocolManager sharedInstance].pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    [OTRProtocolManager.pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
@@ -512,31 +493,6 @@
     } else {
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
-}
-
-#pragma mark UNUserNotificationCenterDelegate methods (iOS 10+)
-
-- (void) userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    [OTRAppDelegate visibleThread:^(YapCollectionKey * _Nullable ck) {
-        if ([ck.key isEqualToString:notification.request.content.threadIdentifier]) {
-            completionHandler(UNNotificationPresentationOptionNone);
-        } else {
-            completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
-        }
-    } completionQueue:nil];
-}
-
-- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if ([userInfo[kOTRNotificationType] isEqualToString:kOTRNotificationTypeNone]) {
-        // Nothing
-    } else if ([userInfo[kOTRNotificationType] isEqualToString:kOTRNotificationTypeSubscriptionRequest]) {
-        // This is a subscription request
-        [self showSubscriptionRequestForBuddy:userInfo];
-    } else {
-        [self enterThreadWithUserInfo:userInfo];
-    }
-    completionHandler();
 }
 
 #pragma - mark Class Methods

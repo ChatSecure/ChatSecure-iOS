@@ -11,6 +11,8 @@ import YapDatabase.YapDatabaseRelationship
 
 @objc open class OTRXMPPRoom: OTRYapDatabaseObject {
     
+    @objc open var lastHistoryFetch: Date?
+    
     @objc open var isArchived = false
     @objc open var muteExpiration:Date?
     @objc open var accountUniqueId:String?
@@ -48,6 +50,13 @@ import YapDatabase.YapDatabaseRelationship
     @objc open class func createUniqueId(_ accountId:String, jid:String) -> String {
         return accountId + jid
     }
+    
+    @objc open class func fetch(xmppRoom: XMPPRoom, transaction: YapDatabaseReadTransaction) -> OTRXMPPRoom? {
+        guard let roomYapKey = xmppRoom.roomYapKey else {
+            return nil
+        }
+        return OTRXMPPRoom.fetchObject(withUniqueID: roomYapKey, transaction: transaction)
+    }
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
@@ -60,6 +69,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         message.roomUniqueId = self.uniqueId
         message.senderJID = self.ownJID
         message.state = .needsSending
+        message.originId = message.uniqueId
         return message
     }
     
@@ -192,5 +202,16 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
         let edgeName = YapDatabaseConstants.edgeName(.room)
         let edge = YapDatabaseRelationshipEdge(name: edgeName, destinationKey: accountId, collection: OTRXMPPAccount.collection, nodeDeleteRules: [YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted])
         return [edge]
+    }
+}
+
+public extension XMPPRoom {
+    
+    /// yapKey for OTRXMPPRoom
+    public var roomYapKey: String? {
+        guard let accountId = self.accountId else {
+            return nil
+        }
+        return accountId + roomJID.bare
     }
 }

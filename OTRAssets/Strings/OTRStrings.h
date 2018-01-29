@@ -82,6 +82,10 @@ FOUNDATION_EXPORT NSString* CONNECTED_STRING();
 FOUNDATION_EXPORT NSString* CONNECTING_STRING();
 /** "Connecting to Tor", Message shown when connecting to the Tor network */
 FOUNDATION_EXPORT NSString* CONNECTING_TO_TOR_STRING();
+/** "Please re-verify the server's certificate.", alert title for connection errors */
+FOUNDATION_EXPORT NSString* CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING();
+/** "There was an error connecting to account", alert title for connection errors */
+FOUNDATION_EXPORT NSString* CONNECTION_ERROR_STRING();
 /** "Connect", String for button to connect connect */
 FOUNDATION_EXPORT NSString* CONNECT_STRING();
 /** "Copy Link", Copy link URL to clipboard as in copy and paste */
@@ -288,6 +292,8 @@ FOUNDATION_EXPORT NSString* NEW_MESSAGE_STRING();
 FOUNDATION_EXPORT NSString* NEW_STRING();
 /** "Next", Label for button to go to next step */
 FOUNDATION_EXPORT NSString* NEXT_STRING();
+/** "Notifications", Label for notifications switch */
+FOUNDATION_EXPORT NSString* NOTIFICATIONS_STRING();
 /** "We could not find any trusted devices for this account.", Error message for not finding any devices */
 FOUNDATION_EXPORT NSString* NO_DEVICES_ACCOUNT_ERROR_STRING();
 /** "We could not find any trusted devices for this contact.", Error message for not finding any devices */

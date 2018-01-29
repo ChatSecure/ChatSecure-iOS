@@ -61,7 +61,5 @@ extern NSString *OTRPushTokenGroup;
 + (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database;
 + (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database;
-
 @end
 NS_ASSUME_NONNULL_END

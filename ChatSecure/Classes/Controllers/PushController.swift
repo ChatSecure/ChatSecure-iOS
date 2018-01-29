@@ -79,13 +79,23 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     let timeBufffer:TimeInterval = 60*60*24
     var pubsubEndpoint: NSString?
     
-    @objc public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
+    @objc public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection? = nil, tlvHandler:OTRPushTLVHandlerProtocol? = nil) {
+        let databaseConnection = databaseConnection ?? OTRDatabaseManager.shared.readWriteDatabaseConnection!
+
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
         self.storage = PushStorage(databaseConnection: databaseConnection)
         super.init()
-        self.apiClient.account = self.storage.thisDevicePushAccount()
-        self.otrListener = PushOTRListener(storage: self.storage, pushController: self, tlvHandler: tlvHandler)
-        self.storage.removeAllOurExpiredUnusedTokens(self.timeBufffer, completion: nil)
+        // We need to make sure we aren't doing a blocking read on a read/write connection
+        // because this causes long pauses on app launch
+        let readConnection = OTRDatabaseManager.shared.database?.newConnection()
+        var account: Account? = nil;
+        readConnection?.asyncRead({ (transaction) in
+            account = self.storage.thisDevicePushAccount()
+        }, completionBlock: {
+            self.apiClient.account = account
+            self.otrListener = PushOTRListener(storage: self.storage, pushController: self, tlvHandler: tlvHandler)
+            self.storage.removeAllOurExpiredUnusedTokens(self.timeBufffer, completion: nil)
+        })
     }
     
     /// This will delete all your push data and disable push
@@ -603,12 +613,9 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
             pubsubEndpoint = endpoint
             group.leave()
         }
-        var queue = DispatchQueue.main
-        if let custom = callbackQueue {
-            queue = custom
-        }
-        let device = storage.thisDevice()
-        group.notify(queue: queue, execute: {
+        let queue = callbackQueue ?? DispatchQueue.main
+        group.notify(queue: DispatchQueue.global(qos: .default)) {
+            let device = self.storage.thisDevice()
             let newPushInfo = PushInfo(
                 pushAPIURL: self.apiClient.baseUrl,
                 hasPushAccount: self.storage.hasPushAccount(),
@@ -617,8 +624,10 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
                 pushPermitted: pushPermitted,
                 pubsubEndpoint: pubsubEndpoint,
                 device: device)
-            completion(newPushInfo)
-        })
+            queue.async {
+                completion(newPushInfo)
+            }
+        }
     }
     
     @objc open static func registerForPushNotifications() {

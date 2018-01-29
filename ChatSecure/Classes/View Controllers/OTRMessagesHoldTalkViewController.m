@@ -433,7 +433,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         
         //Actually send off knock
         __weak __typeof__(self) weakSelf = self;
-        [[OTRProtocolManager sharedInstance].pushController sendKnock:self.threadKey completion:^(BOOL success, NSError * _Nullable error) {
+        [OTRProtocolManager.pushController sendKnock:self.threadKey completion:^(BOOL success, NSError * _Nullable error) {
             
             //If there was an error sending off knock then mark the message with it
             if(error != nil) {

@@ -40,12 +40,12 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 
 ### Desktop
 
-* [CoyIM](https://coy.im) (Cross-platform)
+* [dino](https://github.com/dino/dino) (Linux, macOS, Windows) **Supports OMEMO**
 
 ### Mobile
 
 * [Conversations](https://github.com/siacs/Conversations) (Android) **Supports OMEMO**
-* [Zom](https://zom.im/) (Android, iOS)
+* [Zom](https://zom.im/) (Android, iOS) **Supports OMEMO**
 
 ## Build Instructions
 
@@ -143,7 +143,16 @@ terms of a separate license:
 * [HockeySDK](https://github.com/bitstadium/HockeySDK-iOS) - crash reporting framework
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
-For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile) and [Cartfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Cartfile). To regenerate the acknowledgements in Settings.app use [LicensePlist](https://github.com/mono0926/LicensePlist) `license-plist --add-version-numbers` and copy the output to `Settings.bundle`.
+For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile) and [Cartfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Cartfile).
+
+#### Regenerating Acknowledgements
+
+To regenerate the acknowledgements in Settings.app use [LicensePlist](https://github.com/mono0926/LicensePlist) and copy the output to `Settings.bundle`.
+
+```
+$ brew install mono0926/license-plist/license-plist
+$ license-plist --add-version-numbers --output-path ChatSecure/Settings.bundle --suppress-opening-directory
+```
 
 ## Acknowledgements
 

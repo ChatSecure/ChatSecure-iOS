@@ -100,7 +100,7 @@ open class UserProfileViewController: XLFormViewController {
         })
         
         otrFingerprintsToSave.forEach { (fingerprint) in
-            OTRProtocolManager.sharedInstance().encryptionManager.save(fingerprint)
+            OTRProtocolManager.encryptionManager.save(fingerprint)
         }
         if let completion = self.completionBlock {
             completion()
@@ -144,7 +144,7 @@ open class UserProfileViewController: XLFormViewController {
                     break
                 case let fingerprint as OTRFingerprint:
                     do {
-                        try OTRProtocolManager.sharedInstance().encryptionManager.otrKit.delete(fingerprint)
+                        try OTRProtocolManager.encryptionManager.otrKit.delete(fingerprint)
                     } catch {
                         
                     }
@@ -257,7 +257,7 @@ open class UserProfileViewController: XLFormViewController {
                 buddy.save(with: transaction)
                 // Cancel OTR session if plaintext or omemo only
                 if (preferredSecurity == .plaintextOnly || preferredSecurity == .OMEMO) {
-                    OTRProtocolManager.sharedInstance().encryptionManager.otrKit.disableEncryption(withUsername: buddy.username, accountName: account.username, protocol: account.protocolTypeString())
+                    OTRProtocolManager.encryptionManager.otrKit.disableEncryption(withUsername: buddy.username, accountName: account.username, protocol: account.protocolTypeString())
                 }
             })
             currentRow = nil
@@ -336,7 +336,7 @@ open class UserProfileViewController: XLFormViewController {
             }
         }
         
-        let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
+        let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let allFingerprints = otrKit.allFingerprints()
         let myFingerprint = otrKit.fingerprint(forAccountName: account.username, protocol: account.protocolTypeString())
         let addFingerprintsToSection: ([OTRFingerprint], XLFormSectionDescriptor) -> Void = { fingerprints, section in

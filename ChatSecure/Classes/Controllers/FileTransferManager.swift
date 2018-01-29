@@ -521,10 +521,10 @@ extension FileTransferManager {
             downloads = message.existingDownloads(with: transaction)
             if let thread = message.threadOwner(with: transaction), let account = OTRAccount.fetchObject(withUniqueID: thread.threadAccountIdentifier, transaction: transaction) {
                 disableAutomaticURLFetching = account.disableAutomaticURLFetching
-                if !disableAutomaticURLFetching, let room = thread as? OTRXMPPRoom, let message = message as? OTRXMPPRoomMessage {
+                if !disableAutomaticURLFetching, let message = message as? OTRXMPPRoomMessage {
                     // For room messages, default to safe mode
                     disableAutomaticURLFetching = true
-                    if let senderJidString = message.senderJID, let senderJID = XMPPJID(string: senderJidString), let roomJID = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJID, realJID: senderJID, roomJID: roomJID, accountId: thread.threadAccountIdentifier, createIfNeeded: false, transaction: transaction), occupant.buddy(with: transaction) != nil {
+                    if let senderBuddy = message.buddyUniqueId, let buddy = OTRXMPPBuddy.fetchObject(withUniqueID: senderBuddy, transaction: transaction), buddy.trustLevel == .roster {
                         // We have a buddy, i.e. we are friends with the sender.
                         disableAutomaticURLFetching = false
                     }
@@ -599,6 +599,15 @@ extension FileTransferManager {
     private func setError(_ error: Error, onMessage downloadMessage: OTRDownloadMessage) {
         self.connection.readWrite { transaction in
             if let message = downloadMessage.refetch(with: transaction) {
+                
+                // If we have no media item, add one so we can retry
+                if message.messageMediaItemKey == nil, let filename = message.downloadableURL?.absoluteString {
+                    let media = OTRMediaItem.incomingItem(withFilename: filename, mimeType: nil)
+                    media.parentObjectKey = message.uniqueId
+                    media.parentObjectCollection = message.messageCollection
+                    media.save(with: transaction)
+                    message.messageMediaItemKey = media.uniqueId
+                }
                 message.messageError = error
                 message.save(with: transaction)
             }

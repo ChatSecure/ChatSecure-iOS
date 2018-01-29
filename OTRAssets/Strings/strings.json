@@ -1,4 +1,12 @@
 {
+    "CONNECTION_ERROR_STRING": {
+        "comment": "alert title for connection errors",
+        "string": "There was an error connecting to account"
+    },
+    "CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING": {
+        "comment": "alert title for connection errors",
+        "string": "Please re-verify the server's certificate."
+    },
     "ABOUT_STRING": {
         "comment": "Title for the about page",
         "string": "About"
@@ -418,6 +426,10 @@
     "NEXT_STRING": {
         "comment": "Label for button to go to next step",
         "string": "Next"
+    },
+    "NOTIFICATIONS_STRING": {
+        "comment": "Label for notifications switch",
+        "string": "Notifications"
     },
     "OFFLINE_STRING": {
         "comment": "Label in buddy list for users that are offline",

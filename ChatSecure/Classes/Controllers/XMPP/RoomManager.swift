@@ -29,10 +29,6 @@ public extension OTRXMPPRoomManager {
         return room
     }
     
-    private var accountId: String? {
-        return xmppStream?.tag as? String
-    }
-    
     private func handleIncomingBookmarks(_ bookmarks: [XMPPBookmark]) {
         var incomingRooms: [OTRXMPPRoom] = []
         
@@ -93,6 +89,25 @@ public extension OTRXMPPRoomManager {
                 DDLogWarn("Failed to remove bookmarks \(bookmarks)")
             }
         })
+    }
+    
+    @objc public func fetchHistory(for xmppRoom: XMPPRoom) {
+        self.databaseConnection.asyncRead { (transaction) in
+            guard let room = OTRXMPPRoom.fetch(xmppRoom: xmppRoom, transaction: transaction) else {
+                    return
+            }
+            // if we've never fetched MAM before, try to fetch the last week
+            // otherwise fetch since the last time we fetched
+            var dateToFetch = room.lastHistoryFetch
+            if dateToFetch == nil {
+                let currentDate = Date()
+                var dateComponents = DateComponents()
+                dateComponents.day = -7
+                let lastWeek = Calendar.current.date(byAdding: dateComponents, to: currentDate)
+                dateToFetch = lastWeek
+            }
+            self.archiving.fetchHistory(archiveJID: xmppRoom.roomJID, userJID: nil, since: dateToFetch)
+        }
     }
 }
 

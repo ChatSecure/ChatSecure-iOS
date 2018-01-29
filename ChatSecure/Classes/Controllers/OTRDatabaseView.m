@@ -14,7 +14,6 @@
 #import "OTRIncomingMessage.h"
 #import "OTRLog.h"
 #import "OTROutgoingMessage.h"
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *OTRArchiveFilteredConversationsName = @"OTRFilteredConversationsName";
@@ -101,6 +100,9 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            if ([object isKindOfClass:[OTRXMPPBuddy class]] && ((OTRXMPPBuddy *)object).askingForApproval) {
+                return OTRAllPresenceSubscriptionRequestGroup;
+            }
             if ([object isKindOfClass:[OTRBuddy class]])
             {
                 OTRBuddy *buddy = (OTRBuddy *)object;
@@ -118,9 +120,6 @@ NSString *OTRPushAccountGroup = @"Account";
             } else {
                 return OTRConversationGroup;
             }
-        }
-        if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
-            return OTRAllPresenceSubscriptionRequestGroup;
         }
         return nil; // exclude from view
     }];
@@ -155,10 +154,10 @@ NSString *OTRPushAccountGroup = @"Account";
                 return [date2 compare:date1];
             }
         } else if ([group isEqualToString:OTRAllPresenceSubscriptionRequestGroup]) {
-            if ([object1 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]] && [object2 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
-                OTRXMPPPresenceSubscriptionRequest *request1 = object1;
-                OTRXMPPPresenceSubscriptionRequest *request2 = object2;
-                return [request2.date compare:request1.date];
+            if ([object1 isKindOfClass:[OTRXMPPBuddy class]] && [object2 isKindOfClass:[OTRXMPPBuddy class]]) {
+                OTRXMPPBuddy *request1 = object1;
+                OTRXMPPBuddy *request2 = object2;
+                return [request2.displayName compare:request1.displayName];
             }
         }
         return NSOrderedSame;
@@ -166,12 +165,12 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], [OTRXMPPPresenceSubscriptionRequest collection], nil];
+    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], nil];
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
     
     YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"8"
+                                                                   versionTag:@"9"
                                                                       options:options];
     
     BOOL result = [database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
@@ -329,6 +328,14 @@ NSString *OTRPushAccountGroup = @"Account";
                 return nil;
             }
             if (![account.username isEqualToString:buddy.username]) {
+                
+                // Filter out buddies that are not really on our roster
+                if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+                    OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
+                    if (xmppBuddy.trustLevel != BuddyTrustLevelRoster && !xmppBuddy.pendingApproval) {
+                        return nil;
+                    }
+                }
                 return OTRBuddyGroup;
             }
         }
@@ -378,7 +385,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseAutoView *view = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"8"
+                                                           versionTag:@"9"
                                                               options:options];
     
     return [database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName] && [self registerFilteredBuddiesViewWithDatabase:database];
@@ -406,45 +413,6 @@ NSString *OTRPushAccountGroup = @"Account";
     }];
     filteredView = [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRAllBuddiesDatabaseViewExtensionName filtering:filtering versionTag:[NSUUID UUID].UUIDString options:options];
     return [database registerExtension:filteredView withName:OTRArchiveFilteredBuddiesName];
-}
-
-+ (BOOL)registerAllSubscriptionRequestsViewWithDatabase:(YapDatabase *)database
-{
-    if ([database registeredExtension:OTRAllSubscriptionRequestsViewExtensionName]) {
-        return YES;
-    }
-    
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key) {
-        if ([collection isEqualToString:[OTRXMPPPresenceSubscriptionRequest collection]])
-        {
-            return OTRAllPresenceSubscriptionRequestGroup;
-        }
-        
-        return nil;
-    }];
-    
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
-        
-        OTRXMPPPresenceSubscriptionRequest *request1 = (OTRXMPPPresenceSubscriptionRequest *)object1;
-        OTRXMPPPresenceSubscriptionRequest *request2 = (OTRXMPPPresenceSubscriptionRequest *)object2;
-        
-        if (request1 && request2) {
-            return [request1.date compare:request2.date];
-        }
-        
-        return NSOrderedSame;
-    }];
-    
-    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
-    options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRXMPPPresenceSubscriptionRequest collection]]];
-    
-    YapDatabaseAutoView *databaseView = [[YapDatabaseAutoView alloc] initWithGrouping:viewGrouping
-                                                                      sorting:viewSorting
-                                                                   versionTag:@"1"
-                                                                      options:options];
-    
-    return [database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
 }
 
 @end

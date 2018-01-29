@@ -27,7 +27,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount, OTRBuddy, OTROutgoingMessage, PushController;
+@class OTRAccount, OTRXMPPAccount, OTRBuddy, OTROutgoingMessage, PushController, OTRXMPPManager;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRProtocolManager : NSObject
@@ -35,14 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, readonly) NSUInteger numberOfConnectedProtocols;
 @property (atomic, readonly) NSUInteger numberOfConnectingProtocols;
 
-/** The last time user interacted with the application in the foreground */
-@property (atomic, strong, readwrite) NSDate *lastInteractionDate;
-
-@property (nonatomic, strong, readonly) OTREncryptionManager *encryptionManager;
-@property (nonatomic, strong, readonly) PushController *pushController;
-
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
 - (nullable id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
+- (nullable OTRXMPPManager*)xmppManagerForAccount:(OTRAccount *)account;
 - (void)removeProtocolForAccount:(OTRAccount *)account;
 - (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account;
 

@@ -13,7 +13,7 @@ import CocoaLumberjack
 
 @objc public class MessageStorage: XMPPModule {
     /// This gets called before a message is saved, if additional processing needs to be done elsewhere
-    public typealias PreSave = (_ message: OTRBaseMessage, _ transaction: YapDatabaseReadWriteTransaction) -> Void
+    public typealias PreSave = (_ message: OTRMessageProtocol, _ transaction: YapDatabaseReadWriteTransaction) -> Void
 
     // MARK: Properties
     private let connection: YapDatabaseConnection
@@ -21,9 +21,11 @@ import CocoaLumberjack
     private var mamCatchupInProgress: Bool = false
     
     /// Capabilities must be activated elsewhere
-    private let capabilities: XMPPCapabilities
+    @objc public let capabilities: XMPPCapabilities
+    @objc public let archiving: XMPPMessageArchiveManagement
+    @objc public let roomStorage: RoomStorage
+    @objc public let roomManager: OTRXMPPRoomManager
     private let carbons: XMPPMessageCarbons
-    private let archiving: XMPPMessageArchiveManagement
     private let fileTransfer: FileTransferManager
 
     // MARK: Init
@@ -40,9 +42,13 @@ import CocoaLumberjack
         self.connection = connection
         self.capabilities = capabilities
         self.carbons = XMPPMessageCarbons(dispatchQueue: dispatchQueue)
-        self.archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        let archiving = XMPPMessageArchiveManagement(dispatchQueue: dispatchQueue)
+        self.archiving = archiving
         self.archiving.resultAutomaticPagingPageSize = NSNotFound
         self.fileTransfer = fileTransfer
+        let roomStorage = RoomStorage(connection: connection, capabilities: capabilities, fileTransfer: fileTransfer)
+        self.roomStorage = roomStorage
+        self.roomManager = OTRXMPPRoomManager(databaseConnection: connection, roomStorage: roomStorage, archiving: archiving, dispatchQueue: dispatchQueue)
         super.init(dispatchQueue: dispatchQueue)
         self.carbons.addDelegate(self, delegateQueue: self.moduleQueue)
         self.archiving.addDelegate(self, delegateQueue: self.moduleQueue)
@@ -53,7 +59,8 @@ import CocoaLumberjack
     @discardableResult override public func activate(_ xmppStream: XMPPStream) -> Bool {
         guard super.activate(xmppStream),
             carbons.activate(xmppStream),
-            archiving.activate(xmppStream)
+            archiving.activate(xmppStream),
+            roomManager.activate(xmppStream)
             else {
             return false
         }
@@ -63,6 +70,7 @@ import CocoaLumberjack
     public override func deactivate() {
         carbons.deactivate()
         archiving.deactivate()
+        roomManager.deactivate()
         super.deactivate()
     }
     
@@ -152,9 +160,17 @@ import CocoaLumberjack
                                         delayed: Date?,
                                         isIncoming: Bool,
                                         preSave: PreSave? = nil ) {
-        guard !xmppMessage.isErrorMessage,
-            !xmppMessage.containsGroupChatElements else {
-            DDLogWarn("Discarding forwarded message: \(xmppMessage)")
+        guard !xmppMessage.isErrorMessage else {
+            DDLogWarn("Discarding forwarded error message: \(xmppMessage)")
+            return
+        }
+        // Inject MAM messages into group chat storage
+        if xmppMessage.containsGroupChatElements {
+            DDLogVerbose("Injecting forwarded MAM message into room: \(xmppMessage)")
+            if let roomJID = xmppMessage.from?.bareJID,
+                let room = roomManager.room(for: roomJID) {
+                roomStorage.insertIncoming(xmppMessage, body: body, delayed: delayed, into: room)
+            }
             return
         }
         // Ignore OTR text
@@ -257,7 +273,7 @@ import CocoaLumberjack
                         errorText.contains("OTR Error")
                     {
                         // automatically renegotiate a new session when there's an error
-                        OTRProtocolManager.shared.encryptionManager.otrKit.initiateEncryption(withUsername: fromJID.bare, accountName: account.username, protocol: account.protocolTypeString())
+                        OTRProtocolManager.encryptionManager.otrKit.initiateEncryption(withUsername: fromJID.bare, accountName: account.username, protocol: account.protocolTypeString())
                         
                     }
                 }
@@ -277,7 +293,7 @@ import CocoaLumberjack
             }
             
             if text.isOtrText {
-                OTRProtocolManager.shared.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
+                OTRProtocolManager.encryptionManager.otrKit.decodeMessage(text, username: buddy.username, accountName: account.username, protocol: kOTRProtocolTypeXMPP, tag: incoming)
             } else {
                 preSave?(incoming, transaction)
                 incoming.save(with: transaction)

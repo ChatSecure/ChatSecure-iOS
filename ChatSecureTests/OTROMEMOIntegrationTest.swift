@@ -9,11 +9,21 @@
 import XCTest
 import ChatSecureCore
 
-struct TestUser {
+class TestUser {
     var account:OTRXMPPAccount
     var buddy:OTRBuddy
     var databaseManager:OTRDatabaseManager
     var signalOMEMOCoordinator:OTROMEMOSignalCoordinator
+    
+    init(account: OTRXMPPAccount,
+         buddy: OTRBuddy,
+         databaseManager:OTRDatabaseManager,
+         signalOMEMOCoordinator:OTROMEMOSignalCoordinator) {
+        self.account = account
+        self.buddy = buddy
+        self.databaseManager = databaseManager
+        self.signalOMEMOCoordinator = signalOMEMOCoordinator
+    }
 }
 
 class OTROMEMOIntegrationTest: XCTestCase {
@@ -28,7 +38,14 @@ class OTROMEMOIntegrationTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        // to prevent tests from failing we still need to setup singleton
+        OTRDatabaseManager.shared.setupTestDatabase(name: "tmp")
+        
+        [aliceUser, bobUser].forEach { (user) in
+            if let databaseDirectory = user?.databaseManager.databaseDirectory {
+                FileManager.default.clearDirectory(databaseDirectory)
+            }
+        }
     }
     
     /** Create two user accounts and save each other as buddies */
@@ -61,7 +78,8 @@ class OTROMEMOIntegrationTest: XCTestCase {
      3. An OTROMEMOSignalCoordinator to do all the signal functionality.
      */
     func setupUserWithName(_ name:String, buddyName:String) -> TestUser {
-        let databaseManager = OTRTestDatabaseManager.setupDatabaseWithName(name)
+        let databaseManager = OTRDatabaseManager()
+        databaseManager.setupTestDatabase(name: name)
         let account = TestXMPPAccount(username: "\(name)@fake.com", accountType: .jabber)!
         
         let buddy = OTRXMPPBuddy()!

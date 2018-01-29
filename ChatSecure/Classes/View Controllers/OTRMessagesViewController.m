@@ -84,6 +84,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 @property (nonatomic, weak) id pendingApprovalDidChangeNotificationObject;
 @property (nonatomic, weak) id deviceListUpdateNotificationObject;
+@property (nonatomic, weak) id serverCheckUpdateNotificationObject;
 
 
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
@@ -288,6 +289,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 
     self.loadingMessages = YES;
+    [self.messageSizeCache removeAllObjects];
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
 }
 
@@ -421,6 +424,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.senderId = @"";
     }
     
+    // Reset scroll position
+    [self.collectionView setContentOffset:CGPointZero animated:NO];
+    
+    // Reload collection view
+    [self.messageSizeCache removeAllObjects];
+    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     [self.collectionView reloadData];
     
     // Profile Info Button
@@ -455,6 +464,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
             if (notificationJid != nil && [notificationJid.bare isEqualToString:buddyUser]) {
                 [strongSelf updateEncryptionState];
+            }
+        }];
+    }
+    
+    // We also add a listener for serverCheck updates, needed for group chats. Otherwise, if you start the app and directly enter a group chat, the media buttons will remain disabled, since in updateEncryptionState we set canSendMedia according to server capabilities, which may not have been fetched yet. This listener ensures that canSendMedia is updated correctly.
+    if (self.serverCheckUpdateNotificationObject == nil) {
+        self.serverCheckUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:ServerCheck.UpdateNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if ([self isGroupChat]) {
+                __block OTRXMPPManager *xmpp = nil;
+                [strongSelf.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                    xmpp = [strongSelf xmppManagerWithTransaction:transaction];
+                } completionBlock:^{
+                    if (note.object == xmpp.serverCheck) {
+                        [strongSelf updateEncryptionState];
+                    }
+                }];
             }
         }];
     }
@@ -530,7 +556,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             __typeof__(self) strongSelf = weakSelf;
-            __block BOOL canKnock = [[[OTRProtocolManager sharedInstance].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
+            __block BOOL canKnock = [[OTRProtocolManager.pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (canKnock != strongSelf.state.canKnock) {
                     strongSelf.state.canKnock = canKnock;
@@ -544,7 +570,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
         // Auto-inititate OTR when contact comes online
         if (!previousState && self.state.isThreadOnline) {
-            [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
+            [OTRProtocolManager.encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
         }
     } else if ([collection isEqualToString:[OTRXMPPRoom collection]]) {
         __block OTRXMPPRoom *room = nil;
@@ -843,7 +869,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOTR) {
         NSData *otrFingerprintData = baseMessage.messageSecurityInfo.otrFingerprint;
         if ([otrFingerprintData length]) {
-            trusted = [[[OTRProtocolManager sharedInstance].encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
+            trusted = [[OTRProtocolManager.encryptionManager otrFingerprintForKey:self.threadKey collection:self.threadCollection fingerprint:otrFingerprintData] isTrusted];
         }
     } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
         NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
@@ -981,7 +1007,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if (!buddy || !account || !xmpp || (messageSecurity == OTRMessageTransportSecurityInvalid)) {
                 DDLogError(@"updateEncryptionState error: missing parameters");
             } else {
-                OTRKitMessageState messageState = [[OTRProtocolManager sharedInstance].encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+                OTRKitMessageState messageState = [OTRProtocolManager.encryptionManager.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
                 if (messageState == OTRKitMessageStateEncrypted &&
                     buddy.status != OTRThreadStatusOffline) {
                     // If other side supports OTR, assume OTRDATA is possible
@@ -1658,20 +1684,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __block OTRXMPPRoomOccupant *roomOccupant = nil;
         __block OTRXMPPBuddy *roomOccupantBuddy = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-            roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
-            if (roomOccupant != nil) {
-                roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+            if (roomMessage.buddyUniqueId) {
+                roomOccupantBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
+            }
+            if (!roomOccupantBuddy) {
+                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                if (roomOccupant != nil) {
+                    roomOccupantBuddy = [roomOccupant buddyWith:transaction];
+                }
             }
         }];
         UIImage *avatarImage = nil;
-        if (roomOccupant) {
-            if (roomOccupantBuddy != nil) {
-                avatarImage = [roomOccupantBuddy avatarImage];
-            }
-            if (!avatarImage) {
-                avatarImage = [roomOccupant avatarImage];
-            }
-        } else if (roomMessage.senderJID) {
+        if (roomOccupantBuddy != nil) {
+            avatarImage = [roomOccupantBuddy avatarImage];
+        }
+        if (!avatarImage && roomOccupant) {
+            avatarImage = [roomOccupant avatarImage];
+        }
+        if (!avatarImage && roomMessage.senderJID) {
             XMPPJID *jid = [XMPPJID jidWithString:roomMessage.senderJID];
             NSString *resource = jid.resource;
             if (resource.length > 0) {
@@ -1680,13 +1710,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 // this message probably came from the room itself
                 return nil;
             }
-        } else {
-            return nil;
         }
         if (avatarImage) {
             NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
             return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
         }
+        return nil;
     }
     
     /// For 1:1 buddy
@@ -1777,13 +1806,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
             OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
             [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
-                if (occupant) {
-                    OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
-                    if (buddy) {
-                        displayName = [buddy displayName];
-                    } else {
-                        displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                if (roomMessage.buddyUniqueId) {
+                    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
+                    displayName = [buddy displayName];
+                }
+                if (!displayName) {
+                    OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                    if (occupant) {
+                        OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
+                        if (buddy) {
+                            displayName = [buddy displayName];
+                        } else {
+                            displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                        }
                     }
                 }
             }];
@@ -2158,7 +2193,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
         self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
         [self.view bringSubviewToFront:self.jidForwardingHeaderView];
-        self.topContentAdditionalInset = height;
+        self.additionalContentInset = UIEdgeInsetsMake(height, 0, 0, 0);
     }
 }
 
@@ -2184,7 +2219,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     if (showHeader) {
         [self showJIDForwardingHeaderWithNewJID:forwardingJid];
     } else if (!showHeader && self.jidForwardingHeaderView != nil) {
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
         [self.jidForwardingHeaderView removeFromSuperview];
         self.jidForwardingHeaderView = nil;
     }
@@ -2210,14 +2245,14 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)didPressMigratedIgnore {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
     }
 }
 
 - (IBAction)didPressMigratedSwitch {
     if (self.jidForwardingHeaderView != nil) {
         self.jidForwardingHeaderView.hidden = YES;
-        self.topContentAdditionalInset = 0;
+        self.additionalContentInset = UIEdgeInsetsZero;
     }
     
     __block OTRXMPPBuddy *buddy = nil;

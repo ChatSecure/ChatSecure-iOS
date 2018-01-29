@@ -43,11 +43,38 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     @objc open var roomUniqueId:String?
     @objc open var originId:String?
     @objc open var stanzaId:String?
+    @objc open var buddyUniqueId:String?
+    /// this will either be plaintext or OMEMO
+    @objc open var messageSecurityInfo: OTRMessageEncryptionInfo? = nil
     
     open override var hash: Int {
         get {
             return super.hash
         }
+    }
+}
+
+public extension OTRXMPPRoomMessage {
+    public convenience init(message: XMPPMessage, delayed: Date?, room: OTRXMPPRoom) {
+        self.init()
+        xmppId = message.elementID
+        messageText = message.body
+        if let date = delayed {
+            messageDate = date
+        } else if let date = message.delayedDeliveryDate {
+            messageDate = date
+        } else {
+            messageDate = Date()
+        }
+        senderJID = message.from?.full
+        roomJID = room.jid
+        if room.ownJID == message.from?.full {
+            state = .sent
+        } else {
+            state = .received
+        }
+        roomUniqueId = room.uniqueId
+        read = false
     }
 }
 
@@ -64,6 +91,13 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public func buddy(with transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
+        guard let uid = self.buddyUniqueId else {
+            return nil
+        }
+        return OTRXMPPBuddy.fetchObject(withUniqueID: uid, transaction: transaction)
+    }
+    
     public func duplicateMessage() -> OTRMessageProtocol {
         let newMessage = OTRXMPPRoomMessage()!
         newMessage.messageText = self.messageText
@@ -140,10 +174,10 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     
     public var messageSecurity: OTRMessageTransportSecurity {
         get {
-            return .plaintext;
+            return self.messageSecurityInfo?.messageSecurity ?? .plaintext;
         }
         set {
-            // currently only plaintext is supported
+            self.messageSecurityInfo = OTRMessageEncryptionInfo(messageSecurity: newValue)
         }
     }
     
@@ -159,9 +193,9 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
 
 public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     
-    private var parentMessageKey: String?
-    private var parentMessageCollection: String?
-    private var downloadURL: URL?
+    @objc private var parentMessageKey: String?
+    @objc private var parentMessageCollection: String?
+    @objc private var downloadURL: URL?
     
     public static func download(withParentMessage parentMessage: OTRMessageProtocol, url: URL) -> OTRDownloadMessage {
         let download = OTRGroupDownloadMessage()!
@@ -184,7 +218,12 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     }
     
     public var url: URL? {
-        return self.downloadURL
+        if let url = self.downloadURL {
+            return url
+        } else if let urlString = self.messageText {
+            return URL(string: urlString)
+        }
+        return nil
     }
     
     public func parentMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
@@ -390,7 +429,35 @@ public extension OTRXMPPRoomMessage {
         let response = message.generateReceiptResponse else {
             return
         }
+        // Don't send receipts for messages that you've sent
+        if message.mucUserJID == xmppStream.myJID?.bareJID {
+            return
+        }
         xmppStream.send(response)
     }
 
+}
+
+public extension XMPPRoom {
+    @objc public func sendRoomMessage(_ message: OTRXMPPRoomMessage) {
+        let elementId = message.xmppId ?? message.uniqueId
+        let body = XMLElement(name: "body", stringValue: message.messageText)
+        let xmppMessage = XMPPMessage(messageType: nil, to: nil, elementID: elementId, child: body)
+        xmppMessage.addReceiptRequest()
+        xmppMessage.addOriginId(message.originId)
+        send(xmppMessage)
+    }
+}
+
+public extension XMPPMessage {
+    /// Gets the non-anonymous user JID from MUC message
+    /// <x xmlns="http://jabber.org/protocol/muc#user"><item jid="user@example.com" affiliation="member" role="participant"/></x>
+    public var mucUserJID: XMPPJID? {
+        let x = element(forName: "x", xmlns: "http://jabber.org/protocol/muc#user")
+        let item = x?.element(forName: "item")
+        guard let jidString = item?.attributeStringValue(forName: "jid") else {
+            return nil
+        }
+        return XMPPJID(string: jidString)
+    }
 }

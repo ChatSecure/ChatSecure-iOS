@@ -142,7 +142,7 @@
         return [group1 compare:group2];
     }];
     
-    
+    [self.tableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -155,6 +155,15 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    // Resize UISearchBar manually - it doesn't do it on its own on device turn.
+    self.searchController.searchBar.frame = CGRectMake(0, 0, size.width, size.height);
+    [self.searchController.searchBar sizeToFit];
+
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 - (void)inboxArchiveControlValueChanged:(id)sender {
@@ -222,9 +231,6 @@
 
 // Make sure bar stays at the top
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
-    if ([bar isKindOfClass:UISearchBar.class]) {
-        return UIBarPositionTopAttached;
-    }
     return UIBarPositionTop;
 }
 

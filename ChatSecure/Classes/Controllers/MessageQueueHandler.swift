@@ -250,14 +250,13 @@ public class MessageQueueHandler:NSObject {
             return
         }
         self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-        room.send(message)
+        room.sendRoomMessage(message)
         databaseConnection.readWrite { transaction in
             if let sentMessage = message.refetch(with: transaction) {
                 sentMessage.state = .pendingSent
                 sentMessage.save(with: transaction)
             }
         }
-        completion(true, 0.0)
     }
     
     fileprivate func sendMessage(_ messageSendingAction:OTRYapMessageSendAction, completion:@escaping (_ success: Bool, _ retryTimeout: TimeInterval) -> Void) {
@@ -301,7 +300,7 @@ public class MessageQueueHandler:NSObject {
         //Some way to store a message dictionary with the key and block
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus == .connected) {
+        if (accountProtocol.loginStatus == .authenticated) {
             if let groupMessage = message as? OTRXMPPRoomMessage {
                 sendGroupMessage(groupMessage, thread: thread, account: account, accountProtocol: accountProtocol, messageSendingAction: messageSendingAction, completion: completion)
             } else if let directMessage = message as? OTROutgoingMessage, let buddy = thread as? OTRXMPPBuddy {
@@ -348,7 +347,7 @@ public class MessageQueueHandler:NSObject {
         }
 
         //Ensure protocol is connected or if not and autologin then connnect
-        if (accountProtocol.connectionStatus == .connected) {
+        if (accountProtocol.loginStatus == .authenticated) {
             // Add the buddy to our roster
             if let jid = XMPPJID(string: buddy.username) {
                 accountProtocol.xmppRoster.addUser(jid, withNickname:buddy.displayName)
@@ -383,7 +382,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Ensure protocol is connected or if not and autologin then connnect
-        if accountProtocol.connectionStatus == .connected,
+        if accountProtocol.loginStatus == .authenticated,
             let jidStr = removeBuddyAction.buddyJid {
             // Add the buddy to our roster
             if let jid = XMPPJID(string: jidStr) {
@@ -412,15 +411,15 @@ public class MessageQueueHandler:NSObject {
     }
     
     fileprivate func didConnectAccount(_ accountKey:String, accountCollection:String) {
-        
         guard let actionSet = self.popWaitingAccount(accountKey) else {
             return
         }
-        
-        for actionInfo in actionSet {
+        if let actionInfo = actionSet.first {
             self.operationQueue.addOperation { [weak self] in
                 guard let strongSelf = self else { return }
-                strongSelf.handleNextItem(actionInfo.action, completion: actionInfo.completion)
+                DispatchQueue.global().async {
+                    strongSelf.handleNextItem(actionInfo.action, completion: actionInfo.completion)
+                }
             }
         }
     }
@@ -482,18 +481,23 @@ public class MessageQueueHandler:NSObject {
 extension MessageQueueHandler: OTRXMPPMessageStatusModuleDelegate {
     
     public func didSendMessage(_ messageKey: String, messageCollection: String) {
-        
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
         }
         
         //Update date sent
-        self.databaseConnection.asyncReadWrite { (transaction) in
-            guard let object = transaction.object(forKey: messageKey, inCollection: messageCollection) as? NSCopying, let message = object.copy() as? OTROutgoingMessage else {
+        self.databaseConnection.readWrite { (transaction) in
+            guard let object = transaction.object(forKey: messageKey, inCollection: messageCollection) as? NSCopying else {
                 return
             }
-            message.dateSent = Date()
-            message.save(with: transaction)
+            let copy = object.copy()
+            if let message = copy as? OTROutgoingMessage {
+                message.dateSent = Date()
+                message.save(with: transaction)
+            } else if let message = copy as? OTRXMPPRoomMessage {
+                message.state = .sent
+                message.save(with: transaction)
+            }
         }
         
         messageInfo.completion(true, 0.0)
@@ -539,7 +543,7 @@ extension MessageQueueHandler {
             return
         }
         //We're connected now we need to check encryption requirements
-        let otrKit = OTRProtocolManager.sharedInstance().encryptionManager.otrKit
+        let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let otrKitSend = {
             self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection, messageSecurity:message.messageSecurity, completion: completion)
             otrKit.encodeMessage(text, tlvs: nil, username:buddyUsername , accountName: accountUsername, protocol: accountProtocolStrintg, tag: message)

@@ -24,13 +24,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const kOTRProtocolLoginSuccess;
-extern NSString *const kOTRProtocolLoginFail;
-extern NSString *const kOTRProtocolLoginFailErrorKey;
-extern NSString *const kOTRProtocolLoginFailSSLStatusKey;
-extern NSString *const kOTRProtocolLoginFailHostnameKey;
-extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
-extern NSString *const kOTRNotificationErrorKey;
-extern NSString *const kOTRProtocolLoginUserInitiated;
 
 extern NSString *const kOTRProtocolTypeXMPP;
 extern NSString *const kOTRProtocolTypeAIM;
@@ -58,18 +51,23 @@ extern NSString *const kOTRAppVersionKey;
 
 extern NSString *const OTRArchiverKey;
 
-extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 
 extern NSString *const OTRYapDatabasePassphraseAccountName;
 extern NSString *const OTRYapDatabaseName;
 
 //Notifications
+
+/// Used to lookup account for connection errors
+extern NSString *const kOTRNotificationAccountKey;
 extern NSString *const kOTRNotificationThreadKey;
 extern NSString *const kOTRNotificationThreadCollection;
 extern NSString *const kOTRNotificationType;
 extern NSString *const kOTRNotificationTypeNone;
 extern NSString *const kOTRNotificationTypeSubscriptionRequest;
+extern NSString *const kOTRNotificationTypeApprovedBuddy;
+extern NSString *const kOTRNotificationTypeConnectionError;
+extern NSString *const kOTRNotificationTypeChatMessage;
 extern NSString *const OTRUserNotificationsChanged;
 /** This is fired when you have a change to a device on a push account */
 extern NSString *const OTRPushAccountDeviceChanged;

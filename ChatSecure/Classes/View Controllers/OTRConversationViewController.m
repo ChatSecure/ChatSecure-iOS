@@ -35,7 +35,6 @@
 
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
-#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRBuddyApprovalCell.h"
 #import "OTRStrings.h"
 #import "OTRvCard.h"
@@ -118,21 +117,26 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         DDLogWarn(@"Database isn't setup yet! Skipping onboarding...");
         return;
     }
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [OTRDatabaseManager.shared.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
         }
+    } completionBlock:^{
+        [self continueOnboarding:hasAccounts];
     }];
-    
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+}
 
+- (void) continueOnboarding:(BOOL)hasAccounts {
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+    
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         welcomeNavController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:welcomeNavController animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
+        return;
     }
     
     OTRXMPPAccount *needsMigration = [self checkIfNeedsMigration];
@@ -152,7 +156,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 long days = [components day];
                 notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
             }
-
+            
             [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
         }
     } else {
@@ -315,21 +319,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
 {
     id object = [self objectAtIndexPath:indexPath];
-    
-    id <OTRThreadOwner> thread = nil;
-    
-    // Create a fake buddy for subscription requests
-    if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
-        OTRXMPPPresenceSubscriptionRequest *request = object;
-        OTRXMPPBuddy *buddy = [[OTRXMPPBuddy alloc] init];
-        buddy.hasIncomingSubscriptionRequest = YES;
-        buddy.displayName = request.displayName;
-        buddy.username = request.jid;
-        thread = buddy;
-    } else {
-        thread = object;
-    }
-    
+    id <OTRThreadOwner> thread = object;
     return thread;
 }
 
@@ -401,43 +391,30 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 //    
 //}
 
-- (void) handleSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest*)request approved:(BOOL)approved {
-    __block OTRXMPPAccount *account = nil;
+- (void) handleSubscriptionRequest:(OTRXMPPBuddy*)buddy approved:(BOOL)approved {
+    __block OTRAccount *account = nil;
     [self.conversationListViewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [request accountWithTransaction:transaction];
+        account = [buddy accountWithTransaction:transaction];
     }];
     OTRXMPPManager *manager = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-    XMPPJID *jid = [XMPPJID jidWithString:request.jid];
+    [buddy setAskingForApproval:NO];
     if (approved) {
-        // Create new buddy in database so it can be shown immediately in list
-        __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            buddy = [OTRXMPPBuddy fetchBuddyWithJid:jid accountUniqueId:account.uniqueId transaction:transaction];
-            if (!buddy) {
-                buddy = [[OTRXMPPBuddy alloc] init];
-                buddy.username = request.jid;
-                buddy.accountUniqueId = account.uniqueId;
-                // hack to show buddy in conversations view
-                buddy.lastMessageId = @"";
-            }
-            buddy.displayName = request.jid;
-            buddy.pendingApproval = YES;
+            buddy.trustLevel = BuddyTrustLevelRoster;
             [buddy saveWithTransaction:transaction];
         }];
-        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [request removeWithTransaction:transaction];
-            if (buddy != nil && [self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.delegate conversationViewController:self didSelectThread:buddy];
-                });
-            }
-        }];
+        // TODO - use the queue for this!
+        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:buddy.bareJID andAddToRoster:YES];
+        if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate conversationViewController:self didSelectThread:buddy];
+            });
+        }
     } else {
-        [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [request removeWithTransaction:transaction];
+            [buddy removeWithTransaction:transaction];
         }];
+        [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:buddy.bareJID];
     }
 }
 
@@ -446,15 +423,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     OTRBuddyImageCell *cell = nil;
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
-        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
+        [(OTRXMPPBuddy*)thread askingForApproval]) {
         OTRBuddyApprovalCell *approvalCell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyApprovalCell reuseIdentifier] forIndexPath:indexPath];
         [approvalCell setActionBlock:^(OTRBuddyApprovalCell *cell, BOOL approved) {
-            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-            id object = [self objectAtIndexPath:indexPath];
-            if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
-                OTRXMPPPresenceSubscriptionRequest *request = object;
-                [self handleSubscriptionRequest:request approved:approved];
-            }
+            [self handleSubscriptionRequest:(OTRXMPPBuddy*)thread approved:approved];
         }];
         cell = approvalCell;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -497,7 +469,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     // Bail out if it's a subscription request
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
-        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
+        [(OTRXMPPBuddy*)thread askingForApproval]) {
         return;
     }
 

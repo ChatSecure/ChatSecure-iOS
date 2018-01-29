@@ -52,7 +52,7 @@
             return;
         }
         OTRXMPPManager *xmpp = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-        [self.KVOController observe:xmpp keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(connectionStatusDidChange:)];
+        [self.KVOController observe:xmpp keyPath:NSStringFromSelector(@selector(loginStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(connectionStatusDidChange:)];
         [OTRProtocolManager.shared loginAccount:self.oldAccount];
     }];
 }

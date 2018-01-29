@@ -22,7 +22,7 @@ extension OTROMEMOSignalCoordinator {
 
 class OTROmemoStorageTest: XCTestCase {
     
-    var databaseManager:OTRDatabaseManager!
+    var databaseManager:OTRDatabaseManager?
     var omemoStorage:OTROMEMOStorageManager!
     var signalStorage:OTRSignalStorageManager!
     var signalCoordinator:OTROMEMOSignalCoordinator!
@@ -34,7 +34,9 @@ class OTROmemoStorageTest: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        FileManager.default.clearDirectory(OTRTestDatabaseManager.yapDatabaseDirectory())
+        if let databaseDirectory = databaseManager?.databaseDirectory {
+            FileManager.default.clearDirectory(databaseDirectory)
+        }
     }
     
     override func tearDown() {
@@ -52,9 +54,9 @@ class OTROmemoStorageTest: XCTestCase {
         self.accountCollection = OTRXMPPAccount.collection
         
         
-        self.databaseManager = OTRTestDatabaseManager()
-        self.databaseManager.setDatabasePassphrase("help", remember: false, error: nil)
-        self.databaseManager.setupDatabase(withName: name, withMediaStorage: false)
+        let databaseManager = OTRDatabaseManager()
+        self.databaseManager = databaseManager
+        self.databaseManager?.setupTestDatabase(name: name)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection!)
         
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!, delegate: nil)

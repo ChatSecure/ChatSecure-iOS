@@ -9,16 +9,13 @@
 import UIKit
 @testable import ChatSecureCore
 
-class OTRTestDatabaseManager:OTRDatabaseManager {
-    override class func yapDatabaseDirectory() -> String {
-        return NSTemporaryDirectory()
-    }
-    
-    class func setupDatabaseWithName(_ name:String) -> OTRDatabaseManager {
-        let datatabseManager = OTRTestDatabaseManager()
-        datatabseManager.setDatabasePassphrase("password", remember: false, error: nil)
-        datatabseManager.setupDatabase(withName: name, withMediaStorage: false)
-        return datatabseManager
+extension OTRDatabaseManager {
+    func setupTestDatabase(name: String) {
+        setDatabasePassphrase("password", remember: false, error: nil)
+        let uuid = UUID().uuidString
+        let tmpDir = NSTemporaryDirectory() as NSString
+        let databaseDir = tmpDir.appendingPathComponent(uuid)
+        setupDatabase(withName: name, directory: databaseDir, withMediaStorage: false)
     }
 }
 

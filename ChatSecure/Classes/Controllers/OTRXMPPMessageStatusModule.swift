@@ -42,7 +42,7 @@ import XMPPFramework
     
     //Mark: XMPPStream delegate functions
     open func xmppStream(_ sender: XMPPStream, didSend message: XMPPMessage) {
-        guard message.isChatMessage,
+        guard message.isChatMessage || message.isGroupChatMessage,
             let messageId = message.attributeStringValue(forName: "id") else {
             return
         }
@@ -52,7 +52,7 @@ import XMPPFramework
     }
     
     open func xmppStream(_ sender: XMPPStream, didFailToSend message: XMPPMessage, error: Error) {
-        guard message.isChatMessage,
+        guard message.isChatMessage || message.isGroupChatMessage,
             let messageId = message.attributeStringValue(forName: "id") else {
             return
         }

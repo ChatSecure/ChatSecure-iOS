@@ -38,7 +38,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'Reveal-SDK', :configurations => ['Debug']
 
   # Utility
-  pod 'CocoaLumberjack/Swift', '~> 3.3.0'
+  pod 'CocoaLumberjack/Swift', '~> 3.4.0'
   # pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :commit => 'acc32864538c5d75b41a4bfa364b1431cf89954d' # Fixes compile error on Xcode 9
   pod 'MWFeedParser', '~> 1.0'
   pod 'Navajo', '~> 0.0'

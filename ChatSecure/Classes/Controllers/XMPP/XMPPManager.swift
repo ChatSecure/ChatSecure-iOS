@@ -17,8 +17,13 @@ public extension XMPPStream {
 }
 
 public extension XMPPModule {
+    /// yapKey for OTRAccount
+    public var accountId: String? {
+        return xmppStream?.accountId
+    }
+    
     public func account(with transaction: YapDatabaseReadTransaction) -> OTRXMPPAccount? {
-        guard let accountId = xmppStream?.accountId,
+        guard let accountId = self.accountId,
             let account = OTRXMPPAccount.fetchObject(withUniqueID: accountId, transaction: transaction) else {
                 return nil
         }
