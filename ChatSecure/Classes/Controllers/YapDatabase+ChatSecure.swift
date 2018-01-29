@@ -58,11 +58,11 @@ public extension YapDatabase {
                 }
             }
             
-            guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.roomName ?? (object1 as? OTRXMPPRoomOccupant)?.realJID ?? (object1 as? OTRXMPPRoomOccupant)?.jid else {
+            guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.roomName ?? (object1 as? OTRXMPPRoomOccupant)?.realJID ?? (object1 as? OTRXMPPRoomOccupant)?.jids?.first else {
                 return .orderedSame
             }
             
-            guard let name2 = (object2 as? OTRXMPPRoomOccupant)?.roomName ?? (object2 as? OTRXMPPRoomOccupant)?.realJID ?? (object2 as? OTRXMPPRoomOccupant)?.jid else {
+            guard let name2 = (object2 as? OTRXMPPRoomOccupant)?.roomName ?? (object2 as? OTRXMPPRoomOccupant)?.realJID ?? (object2 as? OTRXMPPRoomOccupant)?.jids?.first else {
                 return .orderedSame
             }
             

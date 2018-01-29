@@ -1688,7 +1688,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 roomOccupantBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
             }
             if (!roomOccupantBuddy) {
-                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:nil roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
                 if (roomOccupant != nil) {
                     roomOccupantBuddy = [roomOccupant buddyWith:transaction];
                 }
@@ -1816,8 +1816,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
                         OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
                         if (buddy) {
                             displayName = [buddy displayName];
+                        } else if (occupant.roomName) {
+                            displayName = occupant.roomName;
                         } else {
-                            displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                            if (occupant.jids && occupant.jids.count > 0) {
+                                displayName = [[XMPPJID jidWithString:occupant.jids[0]] resource];
+                            }
                         }
                     }
                 }

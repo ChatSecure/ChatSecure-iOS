@@ -65,7 +65,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
             if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
-                self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: true, transaction: transaction)
+                self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction)
             }
         })
         self.fetchMembersList()
@@ -330,6 +330,8 @@ extension OTRRoomOccupantsViewController {
     fileprivate func fetchMembersList() {
         guard let xmppRoom = xmppRoom() else { return }
         xmppRoom.fetchMembersList()
+        xmppRoom.fetchAdminsList()
+        xmppRoom.fetchOwnersList()
         xmppRoom.fetchModeratorsList()
     }
 }
@@ -361,13 +363,13 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         var accountObject:OTRXMPPAccount? = nil
-        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
+        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let account = room.accountUniqueId {
             readConnection?.read({ (transaction) in
                 buddy = roomOccupant.buddy(with: transaction)
                 accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
             })
             var isYou = false
-            if let myJidString = room.ownJID, let accountJid = accountObject?.bareJID?.bare, roomOccupant.jid == myJidString || roomOccupant.realJID == accountJid {
+            if let accountJid = accountObject?.bareJID?.bare, roomOccupant.realJID == accountJid {
                 isYou = true
             }
 
@@ -378,8 +380,8 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = jid.bare
-                buddy.displayName = roomOccupant.roomName ?? jid.bare
+                buddy.username = roomOccupant.jids?.first ?? roomOccupant.realJID ?? ""
+                buddy.displayName = roomOccupant.roomName ?? buddy.username
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
                     status = .offline

@@ -93,10 +93,12 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     
     @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
-    @objc open var available = false
+    @objc open var available:Bool {
+        return (jids?.count ?? 0) > 0
+    }
     
-    /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
-    @objc open var jid:String?
+    /** This is all JIDs of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
+    @objc open var jids:[String]?
     
     /** This is the name your known as in the room. Seems to be username without domain */
     @objc open var roomName:String?
@@ -114,7 +116,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     @objc open var roomUniqueId:String?
     
     @objc open func avatarImage() -> UIImage {
-        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jid, username: self.realJID)
+        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jids?.first, username: self.realJID)
     }
     
     //MARK: YapDatabaseRelationshipNode Methods
@@ -133,6 +135,19 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
             return OTRXMPPBuddy.fetchObject(withUniqueID: buddyUniqueId, transaction: transaction)
         }
         return nil
+    }
+    
+    open override func decodeValue(forKey key: String!, with coder: NSCoder!, modelVersion: UInt) -> Any! {
+        if modelVersion == 0, key == "jids" {
+            if let jid = coder.decodeObject(forKey: "jid") as? String {
+                return [jid]
+            }
+        }
+        return super.decodeValue(forKey: key, with: coder, modelVersion: modelVersion)
+    }
+    
+    open class override func modelVersion() -> UInt {
+        return 1
     }
     
 }
@@ -161,8 +176,9 @@ public extension OTRXMPPRoomOccupant {
         
         var parameters: [String] = [roomUniqueId]
         var queryString = "Where \(RoomOccupantIndexColumnName.roomUniqueId) == ? AND ("
-        parameters.append(jid.full)
-        queryString.append("\(RoomOccupantIndexColumnName.jid) == ?")
+        // We build the secondary index with appended \0 to avoid matching wrong jids, so add a matching \0s here.
+        parameters.append("%\t\(jid.full)\t%")
+        queryString.append("\(RoomOccupantIndexColumnName.jids) LIKE ?")
         if let realJID = realJID {
             parameters.append(realJID.bare)
             queryString.append(" OR \(RoomOccupantIndexColumnName.realJID) == ?")
@@ -188,12 +204,15 @@ public extension OTRXMPPRoomOccupant {
         if occupant == nil,
             createIfNeeded {
             occupant = OTRXMPPRoomOccupant()!
-            occupant?.jid = jid.full
-            occupant?.realJID = realJID?.bare
             occupant?.roomUniqueId = roomUniqueId
             didCreate = true
         }
         
+        // Set realJID?
+        if let occupant = occupant, let realJID = realJID, occupant.realJID == nil {
+            occupant.realJID = realJID.bare
+        }
+
         // While we're at it, match room occupant with a buddy on our roster if possible
         // This should probably be moved elsewhere
         if let existingOccupant = occupant,
@@ -206,7 +225,28 @@ public extension OTRXMPPRoomOccupant {
             }
             occupant?.buddyUniqueId = buddy.uniqueId
         }
-        
         return occupant
+    }
+}
+
+// Extension for adding/removing jids from the jids array
+public extension OTRXMPPRoomOccupant {
+    @objc public func addJid(_ jid:String) {
+        if jid != realJID {
+            if jids == nil {
+                jids = [jid]
+            } else if let jids = jids, !jids.contains(jid) {
+                self.jids?.append(jid)
+            }
+        }
+    }
+    
+    @objc public func removeJid(_ jid:String) {
+        if let index = jids?.index(of: jid) {
+            jids?.remove(at: index)
+            if jids?.count == 0 {
+                jids = nil
+            }
+        }
     }
 }

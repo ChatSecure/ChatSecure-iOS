@@ -219,14 +219,13 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     open func setExistingRoomOccupants(viewHandler:OTRYapViewHandler?, room:OTRXMPPRoom?) {
         self.waitingForExcludedItems = true
         DispatchQueue.global().async {
-            if let room = room, let viewHandler = viewHandler, let mappings = viewHandler.mappings {
+            if let viewHandler = viewHandler, let mappings = viewHandler.mappings {
                 for section in 0..<mappings.numberOfSections() {
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
-                        if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant,
-                            let jidString = roomOccupant.realJID ?? roomOccupant.jid, let jid = XMPPJID(string: jidString), let account = room.accountUniqueId {
+                        if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant {
                             OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
-                                buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account, transaction: transaction)
+                                buddy = roomOccupant.buddy(with: transaction)
                             })
                             if let buddy = buddy {
                                 self.existingItems.insert(buddy.uniqueId)

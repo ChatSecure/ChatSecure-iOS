@@ -158,6 +158,7 @@
         
         OTRXMPPRoomOccupant *occupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         occupant.role = RoomOccupantRoleNone;
+        occupant.jids = nil;
         [occupant saveWithTransaction:transaction];
     }];
 }
@@ -368,6 +369,16 @@
     [self xmppRoom:room addOccupantItems:items];
 }
 
+- (void) xmppRoom:(XMPPRoom *)room didFetchAdminsList:(NSArray<NSXMLElement*> *)items {
+    DDLogInfo(@"Fetched admins list: %@", items);
+    [self xmppRoom:room addOccupantItems:items];
+}
+
+- (void) xmppRoom:(XMPPRoom *)room didFetchOwnersList:(NSArray<NSXMLElement*> *)items {
+    DDLogInfo(@"Fetched owners list: %@", items);
+    [self xmppRoom:room addOccupantItems:items];
+}
+
 - (void)xmppRoom:(XMPPRoom *)room didFetchModeratorsList:(NSArray *)items {
     DDLogInfo(@"Fetched moderators list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
@@ -426,6 +437,8 @@
     // Fetch member list. Ideally this would be done after the invites above have been sent to the network, but the messages pass all kinds of async delegates before they are actually sent, so unfortunately we can't wait for that.
     [self performBlockAsync:^{
             [sender fetchMembersList];
+            [sender fetchAdminsList];
+            [sender fetchOwnersList];
             [sender fetchModeratorsList];
     }];
 }
@@ -440,9 +453,11 @@
         // Fetch member list
         [self performBlockAsync:^{
             [sender fetchMembersList];
+            [sender fetchAdminsList];
+            [sender fetchOwnersList];
             [sender fetchModeratorsList];
+            [self fetchHistoryFor:sender];
         }];
-        [self fetchHistoryFor:sender];
     }
 }
 
