@@ -363,6 +363,7 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
         //TODO: pretty animations
         self.tableView?.reloadData()
         self.updateUIBasedOnOwnRole()
+        self.view.setNeedsLayout()
     }
 }
 
