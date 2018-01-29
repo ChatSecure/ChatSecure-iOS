@@ -399,7 +399,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 // Do not save here or it will auto-trust random people
                 let uniqueId = roomJid + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = roomOccupant.jids?.first ?? roomOccupant.realJID ?? ""
+                buddy.username = roomOccupant.realJID ?? roomOccupant.jids?.first ?? ""
                 buddy.displayName = roomOccupant.roomName ?? buddy.username
                 var status: OTRThreadStatus = .available
                 if !roomOccupant.available {
