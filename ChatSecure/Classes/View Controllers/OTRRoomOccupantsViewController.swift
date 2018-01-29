@@ -31,7 +31,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
     open var viewHandler:OTRYapViewHandler?
     open var room:OTRXMPPRoom?
-    open var ownOccupant:OTRXMPPRoomOccupant?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
     /// for reads only
@@ -64,9 +63,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
     @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         databaseConnection.read({ (transaction) in
             self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
-            if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
-                self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction)
-            }
         })
         self.fetchMembersList()
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
@@ -82,16 +78,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
         tableHeaderView = OTRVerticalStackView()
         tableFooterView = OTRVerticalStackView()
         
-        var headerCells = [
+        let headerCells = [
             OTRRoomOccupantsViewController.HeaderCellGroupName,
+            OTRRoomOccupantsViewController.HeaderCellAddFriends,
             OTRRoomOccupantsViewController.HeaderCellMute,
             OTRRoomOccupantsViewController.HeaderCellMembers
         ]
-
-        // Add friends depends on the role
-        if let ownOccupant = self.ownOccupant, ownOccupant.role.canInviteOthers() {
-            headerCells.insert(OTRRoomOccupantsViewController.HeaderCellAddFriends, at: 1)
-        }
         
         let footerCells = [
             OTRRoomOccupantsViewController.FooterCellLeave
@@ -127,6 +119,43 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+        
+        self.updateUIBasedOnOwnRole()
+    }
+    
+    func updateUIBasedOnOwnRole() {
+        var canInviteOthers = false
+        var canModifySubject = false
+        
+        if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr), let connection = self.connection {
+                connection.read({ (transaction) in
+                    if let ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction) {
+                        canInviteOthers = ownOccupant.role.canInviteOthers()
+                        canModifySubject = ownOccupant.role.canModifySubject()
+                    }
+            })
+        }
+        
+        tableHeaderView?.setView(OTRRoomOccupantsViewController.HeaderCellAddFriends, hidden: !canInviteOthers)
+        
+        if let subjectCell = tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellGroupName) as? UITableViewCell {
+            if !canModifySubject {
+                subjectCell.accessoryView = nil
+                subjectCell.isUserInteractionEnabled = false
+            } else {
+                let font:UIFont? = UIFont(name: "Material Icons", size: 24)
+                let button = UIButton(type: UIButtonType.custom)
+                if font != nil {
+                    button.titleLabel?.font = font
+                    button.setTitle("", for: UIControlState())
+                }
+                button.setTitleColor(UIColor.black, for: UIControlState())
+                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                subjectCell.accessoryView = button
+                subjectCell.isUserInteractionEnabled = true
+            }
+        }
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -188,18 +217,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
             if let room = self.room {
                 cell?.textLabel?.text = room.subject
                 cell?.detailTextLabel?.text = "" // Do we have creation date?
-            }
-            
-            let font:UIFont? = UIFont(name: "Material Icons", size: 24)
-            let button = UIButton(type: UIButtonType.custom)
-            if font != nil, let ownOccupant = self.ownOccupant, ownOccupant.role.canModifySubject() {
-                button.titleLabel?.font = font
-                button.setTitle("", for: UIControlState())
-                button.setTitleColor(UIColor.black, for: UIControlState())
-                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
-                cell?.accessoryView = button
-                cell?.isUserInteractionEnabled = true
             }
             cell?.selectionStyle = .none
             break
@@ -345,6 +362,7 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
         //TODO: pretty animations
         self.tableView?.reloadData()
+        self.updateUIBasedOnOwnRole()
     }
 }
 
