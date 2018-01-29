@@ -13,7 +13,7 @@ import CocoaLumberjack
 
 @objc public class MessageStorage: XMPPModule {
     /// This gets called before a message is saved, if additional processing needs to be done elsewhere
-    public typealias PreSave = (_ message: OTRBaseMessage, _ transaction: YapDatabaseReadWriteTransaction) -> Void
+    public typealias PreSave = (_ message: OTRMessageProtocol, _ transaction: YapDatabaseReadWriteTransaction) -> Void
 
     // MARK: Properties
     private let connection: YapDatabaseConnection
@@ -169,7 +169,7 @@ import CocoaLumberjack
             DDLogVerbose("Injecting forwarded MAM message into room: \(xmppMessage)")
             if let roomJID = xmppMessage.from?.bareJID,
                 let room = roomManager.room(for: roomJID) {
-                roomStorage.insertIncoming(xmppMessage, delayed: delayed, into: room)
+                roomStorage.insertIncoming(xmppMessage, body: body, delayed: delayed, into: room)
             }
             return
         }

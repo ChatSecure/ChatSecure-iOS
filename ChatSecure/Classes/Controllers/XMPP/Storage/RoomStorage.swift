@@ -52,7 +52,18 @@ import YapDatabase
         return result
     }
     
-    public func insertIncoming(_ xmppMessage: XMPPMessage, delayed: Date?, into xmppRoom: XMPPRoom) {
+    /// body param is optional and is for overriding the xmppMessage's body
+    public func insertIncoming(_ xmppMessage: XMPPMessage,
+                               body: String?,
+                               delayed: Date?,
+                               into xmppRoom: XMPPRoom,
+                               preSave: MessageStorage.PreSave? = nil) {
+        if xmppMessage.isUsingExplicitEncryption(namespace: .omemo),
+            body == nil {
+            DDLogWarn("Group OMEMO message received but couldn't decrypt body")
+            return
+        }
+        
         connection.asyncReadWrite { (transaction) in
             guard let account = xmppRoom.account(with: transaction),
             let xmppStream = xmppRoom.xmppStream else {
@@ -88,6 +99,10 @@ import YapDatabase
             }
             
             let message = OTRXMPPRoomMessage(message: xmppMessage, delayed: delayed, room: room)
+            // override body if this was an encrypted message
+            if let body = body {
+                message.messageText = body
+            }
             message.originId = originId
             message.stanzaId = stanzaId
             
@@ -97,6 +112,7 @@ import YapDatabase
             
             room.lastRoomMessageId = message.uniqueId
             room.save(with: transaction)
+            preSave?(message, transaction)
             message.save(with: transaction)
             
             self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
@@ -111,6 +127,7 @@ import YapDatabase
 }
 
 
+// MARK: - XMPPRoomStorage
 extension RoomStorage: XMPPRoomStorage {
     public func configure(withParent aParent: XMPPRoom, queue: DispatchQueue) -> Bool {
         return true
@@ -164,7 +181,7 @@ extension RoomStorage: XMPPRoomStorage {
             // DDLogVerbose("Discarding duplicate outgoing MUC message \(message)")
             return
         }
-        insertIncoming(message, delayed: message.delayedDeliveryDate, into: room)
+        insertIncoming(message, body: nil, delayed: message.delayedDeliveryDate, into: room)
     }
     
     public func handleOutgoingMessage(_ message: XMPPMessage, room: XMPPRoom) {
@@ -193,4 +210,38 @@ extension RoomStorage: XMPPRoomStorage {
     }
     
     
+}
+
+// MARK: - XEP-0380: Explicit Message Encryption
+// TODO: Move me somewhere else
+/// XEP-0380: Explicit Message Encryption
+/// https://xmpp.org/extensions/xep-0380.html
+public extension XMPPMessage {
+    /// XEP-0380: Explicit Message Encryption
+    static let emeXmlns = "urn:xmpp:eme:0"
+    
+    enum EncryptionNamespace: String {
+        case otr = "urn:xmpp:otr:0"
+        case omemo = "eu.siacs.conversations.axolotl"
+        case pgp = "urn:xmpp:openpgp:0"
+    }
+    
+    struct ExplicitEncryption {
+        var namespace: EncryptionNamespace
+        var name: String?
+    }
+    
+    public func isUsingExplicitEncryption(namespace: EncryptionNamespace) -> Bool {
+        return explicitMessageEncryption?.namespace == namespace
+    }
+    
+    public var explicitMessageEncryption: ExplicitEncryption? {
+        guard let element = element(forName: "encryption", xmlns: XMPPMessage.emeXmlns),
+        let namespaceString = element.attributeStringValue(forName: "namespace"),
+            let namespace = EncryptionNamespace(rawValue: namespaceString) else {
+            return nil
+        }
+        let name = element.attributeStringValue(forName: "name")
+        return ExplicitEncryption(namespace: namespace, name: name)
+    }
 }

@@ -44,6 +44,8 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     @objc open var originId:String?
     @objc open var stanzaId:String?
     @objc open var buddyUniqueId:String?
+    /// this will either be plaintext or OMEMO
+    @objc open var messageSecurityInfo: OTRMessageEncryptionInfo? = nil
     
     open override var hash: Int {
         get {
@@ -89,6 +91,13 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
 }
 
 extension OTRXMPPRoomMessage:OTRMessageProtocol {
+    public func buddy(with transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
+        guard let uid = self.buddyUniqueId else {
+            return nil
+        }
+        return OTRXMPPBuddy.fetchObject(withUniqueID: uid, transaction: transaction)
+    }
+    
     public func duplicateMessage() -> OTRMessageProtocol {
         let newMessage = OTRXMPPRoomMessage()!
         newMessage.messageText = self.messageText
@@ -165,10 +174,10 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     
     public var messageSecurity: OTRMessageTransportSecurity {
         get {
-            return .plaintext;
+            return self.messageSecurityInfo?.messageSecurity ?? .plaintext;
         }
         set {
-            // currently only plaintext is supported
+            self.messageSecurityInfo = OTRMessageEncryptionInfo(messageSecurity: newValue)
         }
     }
     

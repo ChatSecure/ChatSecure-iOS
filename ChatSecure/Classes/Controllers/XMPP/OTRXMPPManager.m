@@ -257,7 +257,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     //OMEMO
     if ([[OTRAppDelegate appDelegate].theme enableOMEMO]) {
-        self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection messageStorage:self.messageStorage error:nil];
+        self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection messageStorage:self.messageStorage roomManager:self.roomManager error:nil];
         _omemoModule = [[OMEMOModule alloc] initWithOMEMOStorage:self.omemoSignalCoordinator xmlNamespace:OMEMOModuleNamespaceConversationsLegacy];
         [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:self.workQueue];
         [self.serverCheck.xmppCapabilities addDelegate:self.omemoModule delegateQueue:self.workQueue];

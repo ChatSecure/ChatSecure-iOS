@@ -9,7 +9,7 @@
 #import "OTRYapDatabaseObject.h"
 #import "OTRMessageEncryptionInfo.h"
 @import YapDatabase;
-@class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
+@class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem, OTRXMPPBuddy;
 @protocol OTRThreadOwner;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readwrite, nullable) NSString *messageMediaItemKey;
 @property (nonatomic, readwrite, nullable) NSError *messageError;
 @property (nonatomic, readwrite) OTRMessageTransportSecurity messageSecurity;
+@property (nonatomic, readwrite, nullable) OTRMessageEncryptionInfo *messageSecurityInfo;
+
 /** Only applies to incoming messages */
 @property (nonatomic, readonly) BOOL isMessageRead;
 @property (nonatomic, readwrite) NSDate *messageDate;
@@ -52,7 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** XEP-0359: stanza-id */
 @property (nonatomic, strong, nullable) NSString *stanzaId;
 
+/** This is an OTRXMPPRoom for a MUC message, and an OTRXMPPBuddy for direct message */
 - (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+/** This is always an OTRXMPPBuddy associated with the message */
+- (nullable OTRXMPPBuddy*)buddyWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+
 /**
  This creates a duplicate message. The only properties that are coppied over are
  - text

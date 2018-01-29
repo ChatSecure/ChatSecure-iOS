@@ -28,7 +28,12 @@ import SignalProtocolObjC
     @objc open var callbackQueue:DispatchQueue
     @objc open let workQueue:DispatchQueue
     @objc open let messageStorage: MessageStorage
+    @objc open let roomManager: OTRXMPPRoomManager
     
+    private var roomStorage: RoomStorage {
+        return roomManager.roomStorage
+    }
+
     fileprivate var myJID:XMPPJID? {
         get {
             return omemoModule?.xmppStream?.myJID
@@ -42,8 +47,10 @@ import SignalProtocolObjC
      - parameter accountYapKey: The accounts unique yap key
      - parameter databaseConnection: A yap database connection on which all operations will be completed on
  `  */
-    @objc public required init(accountYapKey:String,  databaseConnection:YapDatabaseConnection,
-                               messageStorage: MessageStorage) throws {
+    @objc public required init(accountYapKey:String,
+                               databaseConnection:YapDatabaseConnection,
+                               messageStorage: MessageStorage,
+                               roomManager: OTRXMPPRoomManager) throws {
         try self.signalEncryptionManager = OTRAccountSignalEncryptionManager(accountKey: accountYapKey,databaseConnection: databaseConnection)
         self.omemoStorageManager = OTROMEMOStorageManager(accountKey: accountYapKey, accountCollection: OTRAccount.collection, databaseConnection: databaseConnection)
         self.accountYapKey = accountYapKey
@@ -52,6 +59,7 @@ import SignalProtocolObjC
         self.callbackQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-callback", attributes: [])
         self.workQueue = DispatchQueue(label: "OTROMEMOSignalCoordinator-work", attributes: [])
         self.messageStorage = messageStorage
+        self.roomManager = roomManager
     }
     
     /**
@@ -360,15 +368,64 @@ import SignalProtocolObjC
         }
     }
     
+    /// transforms incoming group message into JID matching a 1:1 Buddy
+    private func extractAddressFromGroupMessage(_ message: XMPPMessage) -> XMPPJID? {
+        if let fromJID = message.from,
+        let nickname = fromJID.resource {
+            let roomJID = fromJID.bareJID
+            // This formula is defined in XMPPRoom.roomYapKey
+            let accountId = accountYapKey
+            let roomYapKey = accountId + roomJID.bare
+            var _room: OTRXMPPRoom? = nil
+            var _occupant: OTRXMPPRoomOccupant? = nil
+            var _buddy: OTRXMPPBuddy? = nil
+            self.databaseConnection.read({ (transaction) in
+                _room = OTRXMPPRoom.fetchObject(withUniqueID: roomYapKey, transaction: transaction)
+                _occupant = OTRXMPPRoomOccupant.occupant(jid: fromJID, realJID: nil, roomJID: roomJID, accountId: accountId, createIfNeeded: false, transaction: transaction)
+                _buddy = _occupant?.buddy(with: transaction)
+            })
+            // we've found the existing 1:1 buddy!
+            if let buddy = _buddy {
+                return buddy.bareJID
+            } else {
+                return nil
+            }
+        }
+        return nil
+    }
+    
     open func processKeyData(_ keyData: [OMEMOKeyData], iv: Data, senderDeviceId: UInt32, forJID: XMPPJID, payload: Data?, delayed: Date?, forwarded: Bool, isIncoming: Bool, message: XMPPMessage) {
+        var isIncoming = isIncoming
         let aesGcmBlockLength = 16
         guard let encryptedPayload = payload, encryptedPayload.count > 0, let myJID = self.myJID else {
             return
         }
-        var addressJID = forJID.bareJID
-        if !isIncoming {
-            addressJID = myJID.bareJID
+        var _addressJID: XMPPJID? = nil
+        // handle incoming group chat messages slightly differently
+        if message.isGroupChatMessage {
+            if let groupAddressJID = extractAddressFromGroupMessage(message) {
+                _addressJID = groupAddressJID
+                if groupAddressJID.isEqual(to: myJID, options: .bare) {
+                    isIncoming = false
+                } else {
+                    isIncoming = true
+                }
+            } else {
+                DDLogWarn("Found Incoming OMEMO group message, but corresponding Buddy could not be found!")
+                return
+            }
+        } else {
+            if !isIncoming {
+                _addressJID = myJID.bareJID
+            } else {
+                _addressJID = forJID.bareJID
+            }
+            
         }
+        guard let addressJID = _addressJID else {
+            return
+        }
+
         let rid = self.signalEncryptionManager.registrationId
         
         //Could have multiple matching device id. This is extremely rare but possible that the sender has another device that collides with our device id.
@@ -432,7 +489,7 @@ import SignalProtocolObjC
             }
             
             let preSave: MessageStorage.PreSave = { message, transaction in
-                guard let buddy = OTRXMPPBuddy.fetchBuddy(jid: forJID, accountUniqueId: self.accountYapKey, transaction: transaction) else {
+                guard let buddy = message.buddy(with: transaction) else {
                     return
                 }
 
@@ -442,23 +499,32 @@ import SignalProtocolObjC
                 
                 message.save(with: transaction)
                 
-                // Should we be using the date of the xmpp message?
-                buddy.lastMessageId = message.uniqueId
-                buddy.save(with: transaction)
+                if let threadOwner = message.threadOwner(with: transaction)?.copyAsSelf() {
+                    threadOwner.lastMessageIdentifier = message.uniqueId
+                    threadOwner.save(with: transaction)
+                }
                 
                 //Update device last received message
-                guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction) else {
+                guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction)?.copyAsSelf() else {
                     return
                 }
-                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: device.publicIdentityKeyData, lastSeenDate: Date())
-                newDevice.save(with: transaction)
+                device.lastSeenDate = Date()
+                device.save(with: transaction)
             }
             
-            if forwarded {
-                self.messageStorage.handleForwardedMessage(message, forJID: forJID, body: messageString, accountId: self.accountYapKey, delayed: delayed, isIncoming: isIncoming, preSave: preSave)
+            if message.isGroupChatMessage {
+                if let roomJID = message.from?.bareJID,
+                    let room = self.roomManager.room(for: roomJID) {
+                    self.roomManager.roomStorage.insertIncoming(message, body: messageString, delayed: delayed, into: room, preSave: preSave)
+                }
             } else {
-                self.messageStorage.handleDirectMessage(message, body: messageString, accountId: self.accountYapKey, preSave: preSave)
+                if forwarded {
+                    self.messageStorage.handleForwardedMessage(message, forJID: forJID, body: messageString, accountId: self.accountYapKey, delayed: delayed, isIncoming: isIncoming, preSave: preSave)
+                } else {
+                    self.messageStorage.handleDirectMessage(message, body: messageString, accountId: self.accountYapKey, preSave: preSave)
+                }
             }
+            
         } catch let error {
             DDLogError("Message decryption error: \(error)")
             return
