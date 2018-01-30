@@ -155,13 +155,25 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+
+    [super viewWillAppear:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self adjustSearchBarSize];
+
+    [super viewDidAppear:YES];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     // Resize UISearchBar manually - it doesn't do it on its own on device turn.
-    self.searchController.searchBar.frame = CGRectMake(0, 0, size.width, size.height);
-    [self.searchController.searchBar sizeToFit];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self adjustSearchBarSize];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self adjustSearchBarSize];
+    }];
 
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
@@ -221,8 +233,7 @@
     self.searchController.delegate = self;
     
     self.definesPresentationContext = YES;
-    
-    [self.searchController.searchBar sizeToFit];
+
     //self.searchController.searchBar.placeholder = SEARCH_STRING;
     self.searchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
     self.searchController.searchBar.delegate = self;
@@ -682,6 +693,14 @@
     [self.tableView reloadData];
 }
 
+- (void)didDismissSearchController:(UISearchController *)searchController
+{
+    // Needs to be done, when device was rotated and search bar had focus.
+    // The search bar will be in the wrong size now, otherwise.
+    [self adjustSearchBarSize];
+}
+
+
 #pragma - mark OTRComposeGroupViewControllerDelegate
 
 - (void)groupBuddiesSelected:(OTRComposeGroupViewController *)composeViewController buddyUniqueIds:(NSArray<NSString *> *)buddyUniqueIds groupName:(NSString *)groupName {
@@ -690,5 +709,18 @@
 
 - (void)groupSelectionCancelled:(OTRComposeGroupViewController *)composeViewController {
 }
+
+#pragma mark internal methods
+
+/**
+ * Resize our UISearchBar, so it fills its superview, exactly.
+ */
+- (void)adjustSearchBarSize {
+    UISearchBar *searchBar = self.searchController.searchBar;
+    CGRect frame = searchBar.superview.bounds;
+
+    searchBar.frame = frame;
+}
+
 
 @end
