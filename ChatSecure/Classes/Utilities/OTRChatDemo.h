@@ -12,5 +12,6 @@
 
 + (void)loadDemoChatInDatabase;
 + (void)loadPerformanceTestChatsInDatabase;
-
++ (void)addDummyMessagesForExistingAccount:(NSString*)accountJid toFromBuddy:(NSString*)buddyJid count:(int)count;
+    
 @end

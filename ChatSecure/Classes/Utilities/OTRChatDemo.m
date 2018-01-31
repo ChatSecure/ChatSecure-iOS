@@ -173,4 +173,43 @@
 
 }
 
++ (void)addDummyMessagesForExistingAccount:(NSString*)accountJid toFromBuddy:(NSString*)buddyJid count:(int)count {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        OTRXMPPAccount *account = (OTRXMPPAccount *)[[OTRXMPPAccount allAccountsWithUsername:accountJid transaction:transaction] firstObject];
+        if (!account) {return;}
+        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithJid:[XMPPJID jidWithString:buddyJid] accountUniqueId:account.uniqueId transaction:transaction];
+        if (!buddy) {return;}
+
+        for (int text = 0; text < count; text++) {
+            OTRBaseMessage *message = nil;
+            
+            if (text % 2) {
+                message = [[OTRIncomingMessage alloc] init];
+                ((OTRIncomingMessage *)message).read = YES;
+            }
+            else {
+                OTROutgoingMessage *outgoingMessage = [[OTROutgoingMessage alloc] init];
+                outgoingMessage.delivered = YES;
+                outgoingMessage.dateSent = [NSDate date];
+                message = outgoingMessage;
+            }
+            
+            message.messageSecurityInfo = [[OTRMessageEncryptionInfo alloc] initWithOMEMODevice:@"" collection:@""];
+            
+            message.text = [NSString stringWithFormat:@"Message #%d", text];
+            message.buddyUniqueId = buddy.uniqueId;
+            NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+            [dateComponents setMinute:(-1*text)];
+            message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
+            
+            buddy.lastMessageId = message.uniqueId;
+            
+            [message saveWithTransaction:transaction];
+        }
+        [buddy saveWithTransaction:transaction];
+    }];
+}
+
+
 @end
