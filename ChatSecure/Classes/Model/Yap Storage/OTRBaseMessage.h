@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId incoming:(BOOL)incoming transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 + (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
-- (nullable OTRBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
+- (nullable OTRXMPPBuddy*) buddyWithTransaction:(nonnull YapDatabaseReadTransaction*)transaction;
 
 @end
 NS_ASSUME_NONNULL_END

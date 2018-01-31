@@ -76,7 +76,7 @@ class OTROmemoStorageTest: XCTestCase {
      */
     func storeInitialDevices() {
         self.omemoStorage.storeOurDevices(self.initialDevices)
-        let firstStoredDevices = omemoStorage.getDevicesForOurAccount(nil)
+        let firstStoredDevices = omemoStorage.getDevicesForOurAccount(trustedOnly: false)
         XCTAssertEqual(firstStoredDevices.count, self.initialDevices.count)
         firstStoredDevices.forEach { (device) in
             XCTAssert(device.trustLevel == .trustedTofu)
@@ -98,7 +98,7 @@ class OTROmemoStorageTest: XCTestCase {
         //Now simulate getting a new set of devices where one was removed and two were added.
         
         omemoStorage.storeOurDevices(self.secondDeviceNumbers)
-        let secondStoredDevices = omemoStorage.getDevicesForOurAccount(nil)
+        let secondStoredDevices = omemoStorage.getDevicesForOurAccount(trustedOnly: false)
         XCTAssertEqual(secondStoredDevices.count, 5)
         secondStoredDevices.forEach { (device) in
             
@@ -142,7 +142,7 @@ class OTROmemoStorageTest: XCTestCase {
         
         let thirdDeviceNumbers = [NSNumber]()
         omemoStorage.storeOurDevices(thirdDeviceNumbers)
-        let thirdStoredDevices = omemoStorage.getDevicesForParentYapKey(accountKey, yapCollection: accountCollection, trusted:true)
+        let thirdStoredDevices = omemoStorage.getDevicesForParentYapKey(accountKey, yapCollection: accountCollection, trustedOnly:true)
         XCTAssertEqual(thirdStoredDevices.count, 0)
     }
     

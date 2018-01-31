@@ -973,8 +973,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if ([self isGroupChat]) {
         __block OTRXMPPManager *xmpp = nil;
+        __block OTRMessageTransportSecurity messageSecurity = OTRMessageTransportSecurityInvalid;
         [self.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             xmpp = [self xmppManagerWithTransaction:transaction];
+            OTRXMPPRoom *room = [self roomWithTransaction:transaction];
+            messageSecurity = [room preferredTransportSecurityWithTransaction:transaction];
         } completionBlock:^{
             BOOL canSendMedia = NO;
             // Check for XEP-0363 HTTP upload
@@ -983,7 +986,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 canSendMedia = YES;
             }
             self.state.canSendMedia = canSendMedia;
-            self.state.messageSecurity = OTRMessageTransportSecurityPlaintext;
+            self.state.messageSecurity = messageSecurity;
             [self didUpdateState];
         }];
     } else {

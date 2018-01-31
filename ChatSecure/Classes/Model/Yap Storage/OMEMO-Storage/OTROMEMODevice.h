@@ -64,9 +64,10 @@ NS_ASSUME_NONNULL_BEGIN
                                            collection:(NSString *)collection
                                           transaction:(YapDatabaseReadTransaction *)transaction;
 
+/** trustedOnly=true returns only trusted devices, otherwise it returns all devices */
 + (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key
                                            collection:(NSString *)collection
-                                              trusted:(BOOL)trusted
+                                          trustedOnly:(BOOL)trustedOnly
                                           transaction:(YapDatabaseReadTransaction *)transaction;
 
 + (NSString *)yapKeyWithDeviceId:(NSNumber *)deviceId

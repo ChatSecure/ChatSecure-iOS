@@ -41,16 +41,12 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      **/
-    open func getDevicesForParentYapKey(_ yapKey:String, yapCollection:String, trusted:Bool?) -> [OTROMEMODevice] {
-        var result:[OTROMEMODevice]?
+    open func getDevicesForParentYapKey(_ yapKey:String, yapCollection:String, trustedOnly:Bool) -> [OTROMEMODevice] {
+        var result:[OTROMEMODevice] = []
         self.databaseConnection.read { (transaction) in
-            if let trust = trusted {
-                result = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, trusted: trust, transaction: transaction)
-            } else {
-                result = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, transaction: transaction)
-            }
+            result = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, trustedOnly: trustedOnly, transaction: transaction)
         }
-        return result ?? [OTROMEMODevice]();
+        return result
     }
     
     /**
@@ -58,8 +54,8 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    open func getDevicesForOurAccount(_ trusted:Bool?) -> [OTROMEMODevice] {
-        return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection, trusted: trusted)
+    open func getDevicesForOurAccount(trustedOnly:Bool) -> [OTROMEMODevice] {
+        return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection, trustedOnly: trustedOnly)
     }
     
     /**
@@ -69,19 +65,15 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    open func getDevicesForBuddy(_ username:String, trusted:Bool?) -> [OTROMEMODevice] {
+    open func getDevicesForBuddy(_ username:String, trustedOnly:Bool) -> [OTROMEMODevice] {
         guard let jid = XMPPJID(string: username) else { return [] }
         var result: [OTROMEMODevice] = []
         self.databaseConnection.read { (transaction) in
             if let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) {
-                if let trust = trusted {
-                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection, trusted: trust, transaction: transaction)
-                } else {
-                    result = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: OTRBuddy.collection, transaction: transaction)
-                }
+                result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRXMPPBuddy.collection, trustedOnly: trustedOnly)
             }
         }
-        return result;
+        return result
     }
     
     /**

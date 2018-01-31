@@ -396,6 +396,29 @@ extension OTRXMPPRoomMessage:JSQMessageData {
 }
 
 public extension OTRXMPPRoomMessage {
+    
+    public func room(_ transaction: YapDatabaseReadTransaction) -> OTRXMPPRoom? {
+        return threadOwner(with: transaction) as? OTRXMPPRoom
+    }
+    
+    /// Getting all buddies for a room message to faciliate OMEMO group encryption
+    public func allBuddyKeysForOutgoingMessage(_ transaction: YapDatabaseReadTransaction) -> [String] {
+        guard let roomId = roomUniqueId else {
+            return []
+        }
+        
+        let buddyKeys = OTRXMPPRoom.allOccupantKeys(roomUniqueId: roomId, transaction: transaction).flatMap {
+            OTRXMPPRoomOccupant.fetchObject(withUniqueID: $0, transaction: transaction)
+            }.flatMap {
+            $0.buddyUniqueId
+        }
+        
+        return buddyKeys
+    }
+}
+
+// MARK: Delivery receipts
+public extension OTRXMPPRoomMessage {
     /// Marks our sent messages as delivered when we receive a matching receipt
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
         guard message.isGroupChatMessage,

@@ -125,7 +125,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         let message = OTROutgoingMessage()!
         message.text = messageText
         message.buddyUniqueId = self.bobUser!.buddy.uniqueId
-        self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(message, buddyYapKey: self.bobUser!.buddy.uniqueId, messageId: "message1") { (success, error) in
+        self.bobUser!.signalOMEMOCoordinator.encryptAndSendMessage(message) { (success, error) in
             
             XCTAssertTrue(success,"Able to send message")
             XCTAssertNil(error,"Error Sending \(String(describing: error))")

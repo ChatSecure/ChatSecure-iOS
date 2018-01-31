@@ -46,6 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** New outgoing message. Unsaved! */
 - (id<OTRMessageProtocol>)outgoingMessageWithText:(NSString*)text transaction:(YapDatabaseReadTransaction*)transaction;
+
+/** Translates the preferredSecurity value first if set, otherwise bestTransportSecurityWithTransaction: */
+- (OTRMessageTransportSecurity)preferredTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+/** Returns the best OTRMessageTransportSecurity that this buddy is capable */
+- (OTRMessageTransportSecurity)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+
 @end
 NS_ASSUME_NONNULL_END
 

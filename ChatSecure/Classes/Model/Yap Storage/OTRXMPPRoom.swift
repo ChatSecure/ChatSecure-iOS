@@ -9,6 +9,13 @@
 import UIKit
 import YapDatabase.YapDatabaseRelationship
 
+@objc public enum RoomSecurity: Int {
+    /// will choose omemo if _any_ occupants have available keys
+    case best = 0
+    case plaintext = 1
+    case omemo = 2
+}
+
 @objc open class OTRXMPPRoom: OTRYapDatabaseObject {
     
     @objc open var lastHistoryFetch: Date?
@@ -21,6 +28,8 @@ import YapDatabase.YapDatabaseRelationship
     
     /// JID of the room itself
     @objc open var jid:String?
+    
+    @objc open var preferredSecurity: RoomSecurity = .best
     
     /// XMPPJID of the room itself
     public var roomJID: XMPPJID? {
@@ -60,6 +69,35 @@ import YapDatabase.YapDatabaseRelationship
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    public func preferredTransportSecurity(with transaction: YapDatabaseReadTransaction) -> OTRMessageTransportSecurity {
+        var transportSecurity = OTRMessageTransportSecurity.invalid
+        switch preferredSecurity {
+        case .best:
+            transportSecurity = bestTransportSecurity(with: transaction)
+        case .plaintext:
+            transportSecurity = .plaintext
+        case .omemo:
+            transportSecurity = .OMEMO
+        }
+        return transportSecurity
+    }
+    
+    // if we have keys for _any_ of the room occupants, we can do omemo
+    // TODO: should we only do omemo if we have keys for _all_ occupants?
+    public func bestTransportSecurity(with transaction: YapDatabaseReadTransaction) -> OTRMessageTransportSecurity {
+        let occupants = allOccupants(transaction)
+        let buddyKeys = occupants.flatMap { $0.buddyUniqueId }
+        var devices: [OTROMEMODevice] = []
+        buddyKeys.forEach { (buddyKey) in
+            let buddyDevices = OTROMEMODevice.allDevices(forParentKey: buddyKey, collection: OTRXMPPBuddy.collection, transaction: transaction)
+            devices.append(contentsOf: buddyDevices)
+        }
+        if devices.count > 0 {
+            return .OMEMO
+        }
+        return .plaintext
+    }
+    
     /** New outgoing message. Unsaved! */
     public func outgoingMessage(withText text: String, transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol {
         let message = OTRXMPPRoomMessage()!
@@ -70,6 +108,8 @@ extension OTRXMPPRoom:OTRThreadOwner {
         message.senderJID = self.ownJID
         message.state = .needsSending
         message.originId = message.uniqueId
+        let preferredSecurity = self.preferredTransportSecurity(with: transaction)
+        message.messageSecurity = preferredSecurity
         return message
     }
     
@@ -197,6 +237,28 @@ public extension OTRXMPPRoom {
 }
 
 extension OTRXMPPRoom: YapDatabaseRelationshipNode {
+    
+    /// return the OTRXMPPRoomOccupant.uniqueId for all room occupants
+    public static func allOccupantKeys(roomUniqueId: String, transaction: YapDatabaseReadTransaction) -> [String] {
+        var occupants: [String] = []
+        guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.relationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
+            return []
+        }
+        relationshipTransaction.enumerateEdges(withName: OTRXMPPRoomOccupant.roomEdgeName, destinationKey: roomUniqueId, collection: OTRXMPPRoom.collection) { (edge, stop) in
+            let sourceKey = edge.sourceKey
+            assert(edge.sourceCollection == OTRXMPPRoomOccupant.collection, "Wrong collection!")
+            occupants.append(sourceKey)
+        }
+        return occupants
+    }
+    
+    public func allOccupants(_ transaction: YapDatabaseReadTransaction) -> [OTRXMPPRoomOccupant] {
+        let occupants = OTRXMPPRoom.allOccupantKeys(roomUniqueId: self.uniqueId, transaction: transaction).flatMap {
+            OTRXMPPRoomOccupant.fetchObject(withUniqueID: $0, transaction: transaction)
+        }
+        return occupants
+    }
+    
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         guard let accountId = self.accountUniqueId else { return nil }
         let edgeName = YapDatabaseConstants.edgeName(.room)

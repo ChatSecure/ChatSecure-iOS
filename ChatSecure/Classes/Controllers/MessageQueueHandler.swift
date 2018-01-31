@@ -250,9 +250,18 @@ public class MessageQueueHandler:NSObject {
             return
         }
         self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-        room.sendRoomMessage(message)
+        switch message.messageSecurity {
+        case .invalid, .plaintextWithOTR, .OTR:
+            assertionFailure("Invalid group message security. This should never happen.")
+            DDLogError("Invalid group message security. This should never happen.")
+            return
+        case .plaintext:
+            room.sendRoomMessage(message)
+        case .OMEMO:
+            sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
+        }
         databaseConnection.readWrite { transaction in
-            if let sentMessage = message.refetch(with: transaction) {
+            if let sentMessage = message.refetch(with: transaction)?.copyAsSelf() {
                 sentMessage.state = .pendingSent
                 sentMessage.save(with: transaction)
             }
@@ -564,18 +573,17 @@ extension MessageQueueHandler {
         }
     }
     
-    func sendOMEMOMessage(message:OTROutgoingMessage, accountProtocol:XMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
-        guard let text = message.text, text.count > 0 else {
+    func sendOMEMOMessage(message:OTRMessageProtocol, accountProtocol:XMPPManager,completion:@escaping MessageQueueHandlerCompletion) {
+        guard let text = message.messageText, text.count > 0 else {
             completion(true, 0.0)
             return
         }
-        
         guard let signalCoordinator = accountProtocol.omemoSignalCoordinator else {
             self.databaseConnection.asyncReadWrite({ (transaction) in
-                guard let message = OTROutgoingMessage.fetchObject(withUniqueID: message.uniqueId, transaction: transaction)?.copy() as? OTROutgoingMessage else {
+                guard let message = message.refetch(with: transaction)?.copyAsSelf() else {
                     return
                 }
-                message.error = NSError.chatSecureError(EncryptionError.omemoNotSuported, userInfo: nil)
+                message.messageError = NSError.chatSecureError(EncryptionError.omemoNotSuported, userInfo: nil)
                 message.save(with: transaction)
             })
             completion(true, 0.0)
@@ -583,25 +591,18 @@ extension MessageQueueHandler {
         }
         self.waitingForMessage(message.uniqueId, messageCollection: OTROutgoingMessage.collection, messageSecurity:message.messageSecurity, completion: completion)
         
-        
-        
-        signalCoordinator.encryptAndSendMessage(message, buddyYapKey: message.buddyUniqueId, messageId: message.messageId, completion: { [weak self] (success, error) in
-            guard let strongSelf = self else {
-                return
-            }
-            
+        signalCoordinator.encryptAndSendMessage(message, completion: { (success, error) in
             if (success == false) {
                 //Something went wrong getting ready to send the message
                 //Save error object to message
-                strongSelf.databaseConnection.readWrite({ (transaction) in
-                    guard let message = message.refetch(with: transaction) else {
+                self.databaseConnection.readWrite({ (transaction) in
+                    guard let message = message.refetch(with: transaction)?.copyAsSelf() else {
                         return
                     }
-                    message.error = error
+                    message.messageError = error
                     message.save(with: transaction)
                 })
-                
-                if let messageInfo = strongSelf.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection) {
+                if let messageInfo = self.popWaitingMessage(message.uniqueId, messageCollection: type(of: message).collection) {
                     //Even though we were not succesfull in sending a message. The action needs to be removed from the queue so the next message can be handled.
                     messageInfo.completion(true, 0.0)
                 }

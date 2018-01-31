@@ -101,7 +101,7 @@ import SignalProtocolObjC
      - parameter completion: The completion closure called on callbackQueue. If it successfully was able to fetch all the bundles or if it wasn't necessary. If there were no devices for this buddy it will also return flase
      */
     open func prepareSession(_ yapKey:String, yapCollection:String, completion:@escaping (Bool) -> Void) {
-        var devices:[OTROMEMODevice]? = nil
+        var devices:[OTROMEMODevice] = []
         var user:String? = nil
         
         //Get all the devices ID's for this buddy as well as their username for use with signal and XMPPFramework.
@@ -110,7 +110,7 @@ import SignalProtocolObjC
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
-        guard let devs = devices, let username = user, let jid = XMPPJID(string:username) else {
+        guard let username = user, let jid = XMPPJID(string:username) else {
             self.callbackQueue.async(execute: {
                 completion(false)
             })
@@ -125,7 +125,7 @@ import SignalProtocolObjC
             
             let group = DispatchGroup()
             //For each device Check if we have a session. If not then we need to fetch it from their XMPP server.
-            for device in devs where device.deviceId.uint32Value != self?.signalEncryptionManager.registrationId {
+            for device in devices where device.deviceId.uint32Value != self?.signalEncryptionManager.registrationId {
                 if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.int32Value) || device.publicIdentityKeyData == nil {
                     //No session for this buddy and device combo. We need to fetch the bundle.
                     //No public idenitty key data. We don't have enough information (for the user and UI) to encrypt this message.
@@ -197,7 +197,7 @@ import SignalProtocolObjC
      - parameter messageId: The preffered XMPP element Id to be used.
      - parameter completion: The completion block is called after all the necessary omemo preperation has completed and sendKeyData:iv:toJID:payload:elementId: is invoked
      */
-    open func encryptAndSendMessage(_ message: OTROutgoingMessage, buddyYapKey:String, messageId:String?, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
+    open func encryptAndSendMessage(_ message: OTRMessageProtocol, completion:@escaping (_ success: Bool, _ error: Error?) -> Void) {
         // Gather bundles for buddy and account here
         let group = DispatchGroup()
         
@@ -205,24 +205,47 @@ import SignalProtocolObjC
             group.leave()
         }
         
+        // destinationJID is either the XMPPRoom JID or OTRXMPPBuddy JID
+        var _destinationJID: XMPPJID?
+        var buddyKeys: [String] = []
+        if let roomMessage = message as? OTRXMPPRoomMessage {
+            databaseConnection.read({ (transaction) in
+                buddyKeys = roomMessage.allBuddyKeysForOutgoingMessage(transaction)
+                _destinationJID = roomMessage.room(transaction)?.roomJID
+            })
+        } else if let directMessage = message as? OTROutgoingMessage {
+            buddyKeys = [message.threadId]
+            databaseConnection.read({ (transaction) in
+                _destinationJID = directMessage.buddy(with: transaction)?.bareJID
+            })
+        }
+        guard buddyKeys.count > 0, let destinationJID = _destinationJID else {
+            completion(false, NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil))
+            return
+        }
+        buddyKeys.forEach { (key) in
+            group.enter()
+            self.prepareSessionForBuddy(key, completion: prepareCompletion)
+        }
         group.enter()
-        group.enter()
-        self.prepareSessionForBuddy(buddyYapKey, completion: prepareCompletion)
         self.prepareSessionWithOurDevices(prepareCompletion)
         //Even if something went wrong fetching bundles we should push ahead. We may have sessions that can be used.
         
-        group.notify(queue: self.workQueue) { [weak self] in
-            guard let strongSelf = self else {
+        group.notify(queue: self.workQueue) {
+            //Strong self work here
+            var buddies: [OTRXMPPBuddy] = []
+            self.databaseConnection.read { (transaction) in
+                buddies = buddyKeys.flatMap({ key in
+                    OTRXMPPBuddy.fetchObject(withUniqueID: key, transaction: transaction)
+                })
+            }
+            guard buddies.count > 0 else {
+                completion(false, NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil))
                 return
             }
-            //Strong self work here
-            var bud:OTRBuddy? = nil
-            strongSelf.databaseConnection.read { (transaction) in
-                bud = OTRBuddy.fetchObject(withUniqueID: buddyYapKey, transaction: transaction)
-            }
             
-            guard let messageBody = message.text,
-                let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) , let buddy = bud, let buddyJid = XMPPJID(string: buddy.username) else {
+            guard let messageBody = message.messageText,
+                let ivData = OTRSignalEncryptionHelper.generateIV(), let keyData = OTRSignalEncryptionHelper.generateSymmetricKey(), let messageBodyData = messageBody.data(using: String.Encoding.utf8) else {
                 return
             }
             do {
@@ -238,7 +261,7 @@ import SignalProtocolObjC
                         // new OMEMO format puts auth tag inside omemo session
                         // see https://github.com/siacs/Conversations/commit/f0c3b31a42ac6269a0ca299f2fa470586f6120be#diff-e9eacf512943e1ab4c1fbc21394b4450R170
                         let payload = keyData + gcmData.authTag
-                        return try strongSelf.encryptPayloadWithSignalForDevice(device, payload: payload)
+                        return try self.encryptPayloadWithSignalForDevice(device, payload: payload)
                     } catch {
                         return nil
                     }
@@ -250,11 +273,13 @@ import SignalProtocolObjC
                  3. encrypt to those devices.
                  4. Remove optional values
                 */
-                let buddyKeyDataArray = strongSelf.omemoStorageManager.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: type(of: buddy).collection, trusted: true).map(encryptClosure).flatMap{ $0 }
+                let buddyKeyDataArray = buddyKeys.flatMap({ key in
+                    self.omemoStorageManager.getDevicesForParentYapKey(key, yapCollection: OTRXMPPBuddy.collection, trustedOnly: true).map(encryptClosure).flatMap{ $0 }
+                })
                 
                 // Stop here if we were not able to encrypt to any of the buddies
                 if (buddyKeyDataArray.count == 0) {
-                    strongSelf.callbackQueue.async(execute: {
+                    self.callbackQueue.async(execute: {
                         let error = NSError.chatSecureError(OTROMEMOError.noDevicesForBuddy, userInfo: nil)
                         completion(false,error)
                     })
@@ -267,8 +292,8 @@ import SignalProtocolObjC
                  3. encrypt to those devices.
                  4. Remove optional values
                  */
-                let ourDevicesKeyData = strongSelf.omemoStorageManager.getDevicesForOurAccount(true).filter({ (device) -> Bool in
-                    return device.deviceId.uint32Value != strongSelf.signalEncryptionManager.registrationId
+                let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount(trustedOnly: true).filter({ (device) -> Bool in
+                    return device.deviceId.uint32Value != self.signalEncryptionManager.registrationId
                 }).map(encryptClosure).flatMap{ $0 }
                 
                 // Combine teh two arrays for all key data
@@ -278,13 +303,22 @@ import SignalProtocolObjC
                 if (keyDataArray.count > 0) {
                     // new OMEMO format puts auth tag inside omemo session
                     let finalPayload = gcmData.data
-                    strongSelf.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: buddyJid, payload: finalPayload, elementId: messageId)
-                    strongSelf.callbackQueue.async(execute: {
+                    
+                    if message is OTRXMPPRoomMessage,
+                        let groupMessage = self.omemoModule?.message(forKeyData: keyDataArray, iv: ivData, to: destinationJID, payload: finalPayload, elementId: message.remoteMessageId)
+                        {
+                        groupMessage.addAttribute(withName: "type", stringValue: "groupchat")
+                        self.omemoModule?.xmppStream?.send(groupMessage)
+                    } else if message is OTROutgoingMessage {
+                        self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: destinationJID, payload: finalPayload, elementId: message.remoteMessageId)
+                    }
+                    
+                    self.callbackQueue.async(execute: {
                         completion(true,nil)
                     })
                     return
                 } else {
-                    strongSelf.callbackQueue.async(execute: {
+                    self.callbackQueue.async(execute: {
                         let error = NSError.chatSecureError(OTROMEMOError.noDevices, userInfo: nil)
                         completion(false,error)
                     })
@@ -292,7 +326,7 @@ import SignalProtocolObjC
                 }
             } catch let err {
                 //This should only happen if we had an error encrypting the payload
-                strongSelf.callbackQueue.async(execute: {
+                self.callbackQueue.async(execute: {
                     completion(false,err)
                 })
                 return
@@ -660,10 +694,9 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     public func fetchDeviceIds(for jid: XMPPJID) -> [NSNumber] {
         var devices:[OTROMEMODevice]?
         if self.isOurJID(jid) {
-            devices = self.omemoStorageManager.getDevicesForOurAccount(nil)
-            
+            devices = self.omemoStorageManager.getDevicesForOurAccount(trustedOnly: false)
         } else {
-            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare, trusted:nil)
+            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare, trustedOnly:false)
         }
         //Convert from devices array to NSNumber array.
         return (devices?.map({ (device) -> NSNumber in
