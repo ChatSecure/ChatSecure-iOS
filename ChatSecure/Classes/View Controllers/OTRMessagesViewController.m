@@ -886,11 +886,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (BOOL) isGroupChat {
-    __block OTRXMPPRoom *room = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        room = [self roomWithTransaction:transaction];
-    }];
-    return (room != nil);
+    return [self.threadCollection isEqualToString:OTRXMPPRoom.collection];
 }
 
 #pragma - mark Profile Button Methods
@@ -1203,11 +1199,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self.collectionView reloadData];
     
+    __block NSUInteger shownCount;
+    __block NSUInteger totalCount;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+        shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+        totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
     }];
+    [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
     
     if (!reset) {
         [self.collectionView.collectionViewLayout invalidateLayout];
