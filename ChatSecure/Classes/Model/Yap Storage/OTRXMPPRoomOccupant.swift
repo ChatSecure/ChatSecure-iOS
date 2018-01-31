@@ -94,11 +94,11 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
     @objc open var available:Bool {
-        return (jids?.count ?? 0) > 0
+        return (_jids?.count ?? 0) > 0
     }
     
     /** This is all JIDs of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
-    @objc open var jids:[String]?
+    @objc private var _jids: [String]?
     
     /** This is the name your known as in the room. Seems to be username without domain */
     @objc open var roomName:String?
@@ -116,7 +116,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     @objc open var roomUniqueId:String?
     
     @objc open func avatarImage() -> UIImage {
-        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? jids?.first, username: self.realJID)
+        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? _jids?.first, username: self.realJID)
     }
     
     //MARK: YapDatabaseRelationshipNode Methods
@@ -231,22 +231,32 @@ public extension OTRXMPPRoomOccupant {
 
 // Extension for adding/removing jids from the jids array
 public extension OTRXMPPRoomOccupant {
-    @objc public func addJid(_ jid:String) {
-        if jid != realJID {
-            if jids == nil {
-                jids = [jid]
-            } else if let jids = jids, !jids.contains(jid) {
-                self.jids?.append(jid)
+
+    @objc public var jids: Set<XMPPJID> {
+        get {
+            let validJids = _jids?.flatMap({ (jidStr) -> XMPPJID? in
+                XMPPJID(string: jidStr)
+            })
+            return Set(validJids ?? [])
+        }
+        set {
+            _jids = newValue.map { (jid) -> String in
+                jid.full
             }
         }
     }
     
-    @objc public func removeJid(_ jid:String) {
-        if let index = jids?.index(of: jid) {
-            jids?.remove(at: index)
-            if jids?.count == 0 {
-                jids = nil
-            }
+    @objc public func addJid(_ jid:XMPPJID) {
+        if jid.bare != realJID {
+            var jidSet = self.jids
+            jidSet.insert(jid)
+            self.jids = jidSet
         }
+    }
+    
+    @objc public func removeJid(_ jid:XMPPJID) {
+        var jidSet = self.jids
+        jidSet.remove(jid)
+        self.jids = jidSet
     }
 }

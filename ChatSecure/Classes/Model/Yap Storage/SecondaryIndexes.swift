@@ -127,9 +127,11 @@ public extension YapDatabaseSecondaryIndex {
             guard let occupant = object as? OTRXMPPRoomOccupant else {
                 return
             }
-            if let jids = occupant.jids, jids.count > 0 {
+            if occupant.jids.count > 0 {
                 // Concatenate all jids with a null character \t so we can use a LIKE %\tjid\t construct to look them up without risking partial matches with other jids!
-                dict[RoomOccupantIndexColumnName.jids] = "\t".appending(jids.joined(separator: "\t")).appending("\t")
+                dict[RoomOccupantIndexColumnName.jids] = "\t".appending(occupant.jids.flatMap { (jid) -> String in
+                        jid.full
+                    }.joined(separator: "\t")).appending("\t")
             }
             if let realJID = occupant.realJID, realJID.count > 0 {
                 dict[RoomOccupantIndexColumnName.realJID] = realJID

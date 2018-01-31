@@ -1818,7 +1818,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             displayName = occupant.roomName;
                         } else {
                             if (occupant.jids && occupant.jids.count > 0) {
-                                displayName = [[XMPPJID jidWithString:occupant.jids[0]] resource];
+                                displayName = [[occupant.jids anyObject] resource];
                             }
                         }
                     }

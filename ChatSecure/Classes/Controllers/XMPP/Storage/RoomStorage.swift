@@ -148,9 +148,9 @@ extension RoomStorage: XMPPRoomStorage {
             let role = item.attributeStringValue(forName: "role") ?? ""
             let affiliation = item.attributeStringValue(forName: "affiliation") ?? ""
             if presence.presenceType == .unavailable {
-                occupant.removeJid(presenceJID.full)
+                occupant.removeJid(presenceJID)
             } else {
-                occupant.addJid(presenceJID.full)
+                occupant.addJid(presenceJID)
             }
             occupant.roomName = presenceJID.resource
             occupant.role = RoomOccupantRole(stringValue: role)
