@@ -16,7 +16,10 @@ extension OTROMEMOSignalCoordinator {
         let serverCaps = OTRServerCapabilities(capabilities: caps, dispatchQueue: nil)
         let file = FileTransferManager(connection: databaseConnection, serverCapabilities: serverCaps, sessionConfiguration: URLSessionConfiguration.ephemeral)
         let messageStorage = MessageStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file)
-        try self.init(accountYapKey: accountYapKey, databaseConnection: databaseConnection, messageStorage: messageStorage)
+        let roomStorage = RoomStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file)
+        let mam = XMPPMessageArchiveManagement()
+        let roomManager = OTRXMPPRoomManager(databaseConnection: databaseConnection, roomStorage: roomStorage, archiving: mam, dispatchQueue: nil)
+        try self.init(accountYapKey: accountYapKey, databaseConnection: databaseConnection, messageStorage: messageStorage, roomManager: roomManager)
     }
 }
 
