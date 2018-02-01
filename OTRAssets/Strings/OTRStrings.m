@@ -160,6 +160,8 @@ NSString* ENTER_GROUP_NAME_STRING() { return [OTRLanguageManager translatedStrin
 NSString* ERROR_CREATING_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Error Creating Account"]; }
 /** "Error", Title of error message pop-up box */
 NSString* ERROR_STRING() { return [OTRLanguageManager translatedString:@"Error"]; }
+/** "Experimental", Section for experimental settings */
+NSString* EXPERIMENTAL_STRING() { return [OTRLanguageManager translatedString:@"Experimental"]; }
 /** "Extended Away", Default message when a user status is set to extended away */
 NSString* EXTENDED_AWAY_STRING() { return [OTRLanguageManager translatedString:@"Extended Away"]; }
 /** "Enable", enable permission */
@@ -236,6 +238,8 @@ NSString* LOGIN_STRING() { return [OTRLanguageManager translatedString:@"Log In"
 NSString* LOGOUT_STRING() { return [OTRLanguageManager translatedString:@"Log Out"]; }
 /** "Manage ChatSecure Push account", Title for button to manage ChatSecure Push account */
 NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Manage ChatSecure Push account"]; }
+/** "Manage Debug Logs", Manage the device logs */
+NSString* MANAGE_DEBUG_LOGS_STRING() { return [OTRLanguageManager translatedString:@"Manage Debug Logs"]; }
 /** "Manage My Keys", Button to manage your OTR and OMEMO keys */
 NSString* MANAGE_MY_KEYS() { return [OTRLanguageManager translatedString:@"Manage My Keys"]; }
 /** "Maybe Later", button to do something later */
@@ -308,6 +312,10 @@ NSString* OFFLINE_STRING() { return [OTRLanguageManager translatedString:@"Offli
 NSString* OK_STRING() { return [OTRLanguageManager translatedString:@"OK"]; }
 /** "Old", For an old settings value */
 NSString* OLD_STRING() { return [OTRLanguageManager translatedString:@"Old"]; }
+/** "Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
+NSString* OMEMO_GROUP_ENCRYPTION_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis."]; }
+/** "OMEMO Group Encryption", For an old settings value */
+NSString* OMEMO_GROUP_ENCRYPTION_STRING() { return [OTRLanguageManager translatedString:@"OMEMO Group Encryption"]; }
 /** "You're ready to use", String used when onboarding works */
 NSString* ONBOARDING_SUCCESS_STRING() { return [OTRLanguageManager translatedString:@"You're ready to use"]; }
 /** "Open in Chrome", Label to open link in the chrome web browser */

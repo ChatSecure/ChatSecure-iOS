@@ -255,6 +255,10 @@
         "comment": "Default message when a user status is set to extended away",
         "string": "Extended Away"
     },
+    "EXPERIMENTAL_STRING": {
+        "comment": "Section for experimental settings",
+        "string": "Experimental"
+    },
     "INBOX_STRING": {
         "comment": "segmented control value for active conversations",
         "string": "Inbox"
@@ -334,6 +338,10 @@
     "LOGOUT_STRING": {
         "comment": "log out from account",
         "string": "Log Out"
+    },
+    "MANAGE_DEBUG_LOGS_STRING": {
+        "comment": "Manage the device logs",
+        "string": "Manage Debug Logs"
     },
     "MANAGE_MY_KEYS": {
         "comment": "Button to manage your OTR and OMEMO keys",
@@ -442,6 +450,18 @@
     "OLD_STRING": {
         "comment": "For an old settings value",
         "string": "Old"
+    },
+    "OMEMO_GROUP_ENCRYPTION_STRING": {
+        "comment": "toggling switch for showing OMEMO group encryption",
+        "string": "Allow OMEMO Group Encryption"
+    },
+    "OMEMO_GROUP_ENCRYPTION_DETAIL_STRING": {
+        "comment": "toggling switch detail for showing OMEMO group encryption",
+        "string": "Note: this does not automatically enable group encryption. It must also be manually enabled on a per-group basis."
+    },
+    "OMEMO_GROUP_ENCRYPTION_STRING": {
+        "comment": "For an old settings value",
+        "string": "OMEMO Group Encryption"
     },
     "OPEN_IN_SAFARI": {
         "comment": "Label to open link in the Safari web browser",

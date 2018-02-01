@@ -89,5 +89,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, will show the Tor UI during account creation. Does not affect accounts already created. */
 @property (class, readonly) BOOL torEnabled;
 
+/** If enabled, will show UI for enabling OMEMO group encryption. */
+@property (class, readonly) BOOL allowGroupOMEMO;
+
 @end
 NS_ASSUME_NONNULL_END

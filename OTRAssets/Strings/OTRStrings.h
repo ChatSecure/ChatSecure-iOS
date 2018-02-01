@@ -160,6 +160,8 @@ FOUNDATION_EXPORT NSString* ENTER_GROUP_NAME_STRING();
 FOUNDATION_EXPORT NSString* ERROR_CREATING_ACCOUNT_STRING();
 /** "Error", Title of error message pop-up box */
 FOUNDATION_EXPORT NSString* ERROR_STRING();
+/** "Experimental", Section for experimental settings */
+FOUNDATION_EXPORT NSString* EXPERIMENTAL_STRING();
 /** "Extended Away", Default message when a user status is set to extended away */
 FOUNDATION_EXPORT NSString* EXTENDED_AWAY_STRING();
 /** "Enable", enable permission */
@@ -236,6 +238,8 @@ FOUNDATION_EXPORT NSString* LOGIN_STRING();
 FOUNDATION_EXPORT NSString* LOGOUT_STRING();
 /** "Manage ChatSecure Push account", Title for button to manage ChatSecure Push account */
 FOUNDATION_EXPORT NSString* MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING();
+/** "Manage Debug Logs", Manage the device logs */
+FOUNDATION_EXPORT NSString* MANAGE_DEBUG_LOGS_STRING();
 /** "Manage My Keys", Button to manage your OTR and OMEMO keys */
 FOUNDATION_EXPORT NSString* MANAGE_MY_KEYS();
 /** "Maybe Later", button to do something later */
@@ -308,6 +312,10 @@ FOUNDATION_EXPORT NSString* OFFLINE_STRING();
 FOUNDATION_EXPORT NSString* OK_STRING();
 /** "Old", For an old settings value */
 FOUNDATION_EXPORT NSString* OLD_STRING();
+/** "Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
+FOUNDATION_EXPORT NSString* OMEMO_GROUP_ENCRYPTION_DETAIL_STRING();
+/** "OMEMO Group Encryption", For an old settings value */
+FOUNDATION_EXPORT NSString* OMEMO_GROUP_ENCRYPTION_STRING();
 /** "You're ready to use", String used when onboarding works */
 FOUNDATION_EXPORT NSString* ONBOARDING_SUCCESS_STRING();
 /** "Open in Chrome", Label to open link in the chrome web browser */

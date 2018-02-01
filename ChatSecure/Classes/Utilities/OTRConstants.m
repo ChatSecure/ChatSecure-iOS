@@ -81,6 +81,7 @@ NSString *const kOTRNotificationTypeChatMessage = @"kOTRNotificationTypeChatMess
 
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";
+NSString *const kOTRShowOMEMOGroupEncryptionKey = @"kOTRShowOMEMOGroupEncryptionKey";
 
 //Chatview
 CGFloat const kOTRSentDateFontSize            = 13;

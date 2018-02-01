@@ -26,6 +26,6 @@
 
 @interface OTRSettingTableViewCell : UITableViewCell
 
-@property (nonatomic, retain) OTRSetting *otrSetting;
+@property (nonatomic, strong) OTRSetting *otrSetting;
 
 @end

@@ -54,6 +54,8 @@
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
+static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
+
 @interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate, OTRYapViewHandlerDelegateProtocol,OTRSettingDelegate,OTRDonateSettingDelegate, UIPopoverPresentationControllerDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
@@ -217,11 +219,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         }
         return cell;
     }
-    static NSString *cellIdentifier = @"Cell";
-    OTRSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    OTRSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSettingsCellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[OTRSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+		cell = [[OTRSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kSettingsCellIdentifier];
 	}
     OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
     setting.delegate = self;
@@ -261,7 +262,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             return [XMPPAccountCell cellHeight];
         }
     }
-    return 50.0;
+    return UITableViewAutomaticDimension;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

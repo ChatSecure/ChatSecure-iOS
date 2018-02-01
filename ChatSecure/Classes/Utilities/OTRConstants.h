@@ -82,7 +82,8 @@ extern NSString *const OTRUserNotificationsUNTextInputReply;
 extern NSString *const kOTRDeletedFacebookKey;
 extern NSString *const kOTRPushEnabledKey;
 extern NSString *const kOTRIgnoreDonationDateKey;
-
+/** Shows OMEMO Group Encryption toggle on group chat screen */
+extern NSString *const kOTRShowOMEMOGroupEncryptionKey;
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;

@@ -134,14 +134,31 @@
         [otherSettings addObject:feedbackViewSetting];
     }
 
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING() settings:otherSettings];
+    
+    OTRSettingsGroup *advancedGroup = [[OTRSettingsGroup alloc] initWithTitle:ADVANCED_STRING()];
+    
+    if (OTRBranding.allowGroupOMEMO) {
+        OTRBoolSetting *omemoGroupKeySetting = [[OTRBoolSetting alloc] initWithTitle:OMEMO_GROUP_ENCRYPTION_STRING()
+                                                                         description:OMEMO_GROUP_ENCRYPTION_DETAIL_STRING()
+                                                                         settingsKey:kOTRShowOMEMOGroupEncryptionKey];
+        [advancedGroup addSetting:omemoGroupKeySetting];
+    }
+    
 #ifdef DEBUG
-    OTRViewSetting *logsSetting = [[OTRViewSetting alloc] initWithTitle:@"View Logs"
+    OTRViewSetting *logsSetting = [[OTRViewSetting alloc] initWithTitle:MANAGE_DEBUG_LOGS_STRING()
                                                             description:nil
                                                     viewControllerClass:[OTRLogListViewController class]];
-    [otherSettings addObject:logsSetting];
+    logsSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [advancedGroup addSetting:logsSetting];
 #endif
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING() settings:otherSettings];
+    
     [settingsGroups addObject:otherGroup];
+    
+    if (advancedGroup.settings.count > 0) {
+        [settingsGroups addObject:advancedGroup];
+    }
+    
     _settingsDictionary = newSettingsDictionary;
     _settingsGroups = settingsGroups;
 }

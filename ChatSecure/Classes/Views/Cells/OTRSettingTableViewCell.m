@@ -30,6 +30,12 @@
 @implementation OTRSettingTableViewCell
 @synthesize otrSetting;
 
+- (instancetype) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.detailTextLabel.numberOfLines = 0;
+    }
+    return self;
+}
 
 - (void) setOtrSetting:(OTRSetting *)setting {
     self.textLabel.text = setting.title;

@@ -42,5 +42,7 @@
 	<true/>
 	<key>TorEnabled</key>
 	<true/>
+	<key>AllowGroupOMEMO</key>
+	<true/>
 </dict>
 </plist>

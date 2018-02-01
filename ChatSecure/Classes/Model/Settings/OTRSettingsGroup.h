@@ -23,11 +23,21 @@
 
 @import Foundation;
 
+@class OTRSetting;
+
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRSettingsGroup : NSObject
 
-@property (nonatomic, retain, readonly) NSArray *settings;
-@property (nonatomic, retain, readonly) NSString *title;
+@property (nonatomic, readonly) NSArray<OTRSetting*> *settings;
+@property (nonatomic, readonly) NSString *title;
 
-- (id) initWithTitle:(NSString*)newTitle settings:(NSArray*)newSettings;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype) initWithTitle:(NSString*)title;
+- (instancetype) initWithTitle:(NSString*)title settings:(nullable NSArray<OTRSetting*>*)settings NS_DESIGNATED_INITIALIZER;
+
+- (void) addSetting:(OTRSetting*)setting;
 
 @end
+NS_ASSUME_NONNULL_END
