@@ -103,6 +103,10 @@ import YapDatabase
             }
             if message.buddyUniqueId == nil, let senderJidString = message.senderJID, let senderJid = XMPPJID(string: senderJidString), let roomJid = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJid, realJID: senderJid, roomJID: roomJid, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction), let buddy = occupant.buddy(with: transaction) {
                 message.buddyUniqueId = buddy.uniqueId
+                // Is this from us?
+                if let accountJid = account.bareJID, let realJid = occupant.realJID, realJid.isEqual(accountJid) {
+                    message.state = .sent
+                }
             }
             
             room.lastRoomMessageId = message.uniqueId
