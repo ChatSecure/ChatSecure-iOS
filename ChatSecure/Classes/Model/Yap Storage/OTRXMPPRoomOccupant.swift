@@ -138,7 +138,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     }
     
     open override func decodeValue(forKey key: String!, with coder: NSCoder!, modelVersion: UInt) -> Any! {
-        if modelVersion == 0, key == "jids" {
+        if modelVersion == 0, key == "_jids" {
             if let jid = coder.decodeObject(forKey: "jid") as? String {
                 return [jid]
             }
@@ -150,6 +150,12 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
         return 1
     }
     
+    @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
+        if key == #keyPath(available) || key == #keyPath(jids) {
+            return MTLPropertyStorageNone
+        }
+        return super.storageBehaviorForProperty(withKey: key)
+    }
 }
 
 public extension OTRXMPPRoomOccupant {
