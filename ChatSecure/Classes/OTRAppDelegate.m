@@ -345,14 +345,20 @@
     }
     
     [UIApplication.sharedApplication removeExtraForegroundNotifications];
-    
+    [self resetFetchTimerWithResult:UIBackgroundFetchResultNewData];
+}
+
+/**
+ If we have a fetch timer set, call the completion callback and invalidate the timer
+ */
+- (void)resetFetchTimerWithResult:(UIBackgroundFetchResult)result {
     if (self.fetchTimer) {
         if (self.fetchTimer.isValid) {
             NSDictionary *userInfo = self.fetchTimer.userInfo;
             void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
             // We should probbaly return accurate fetch results
             if (completion) {
-                completion(UIBackgroundFetchResultNewData);
+                completion(result);
             }
             [self.fetchTimer invalidate];
         }
@@ -376,9 +382,17 @@
 }
 
 -(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [self autoLoginFromBackground:YES];
+    // If we have an old fetch happening, call completion on that
+    [self resetFetchTimerWithResult:UIBackgroundFetchResultNoData];
     
-    self.fetchTimer = [NSTimer scheduledTimerWithTimeInterval:28.5 target:self selector:@selector(fetchTimerUpdate:) userInfo:@{@"completion": completionHandler} repeats:NO];
+    if(application.applicationState == UIApplicationStateBackground) {
+        [self autoLoginFromBackground:YES];
+
+        self.fetchTimer = [NSTimer scheduledTimerWithTimeInterval:28.5 target:self selector:@selector(fetchTimerUpdate:) userInfo:@{@"completion": completionHandler} repeats:NO];
+    } else {
+        // Must call completion handler
+        completionHandler(UIBackgroundFetchResultNoData);
+    }
 }
 
 - (void) fetchTimerUpdate:(NSTimer*)timer {
