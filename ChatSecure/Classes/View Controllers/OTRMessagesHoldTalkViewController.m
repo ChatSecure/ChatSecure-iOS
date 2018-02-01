@@ -219,8 +219,10 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)didUpdateState
 {
+    BOOL showKnockButton = NO;
     if (self.state.canKnock && !self.state.isThreadOnline && !self.state.hasText) {
         //Show Knock Button
+        showKnockButton = YES;
         self.inputToolbar.contentView.rightBarButtonItem = self.knockButton;
         self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
@@ -240,13 +242,15 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         
         if (!self.state.hasText) {
             //No text then show microphone
-            if ([self.hold2TalkButton superview]) {
-                self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
-            } else {
-                self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+            if (!showKnockButton) {
+                if ([self.hold2TalkButton superview]) {
+                    self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
+                } else {
+                    self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+                }
+                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
+                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
             }
-            self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         } else {
             //Default Send button
             [self setupDefaultSendButton];
