@@ -30,15 +30,30 @@ import YapDatabase.YapDatabaseRelationship
             return nil
         }
     }
-    
-    @objc open var joined = false
+
     @objc open var messageText:String?
     @objc open var lastRoomMessageId:String?
     @objc open var subject:String?
     @objc open var roomPassword:String?
 
-    // A transient property, keeps track of if we have done an initial MAM history fetch after room has been joined.
-    @objc open var hasFetchedHistory = false
+    // Transient properties stored in OTRBuddyCache
+    @objc open var joined:Bool {
+        get {
+            return OTRBuddyCache.shared.joined(for: self)
+        }
+        set (value) {
+            OTRBuddyCache.shared.setJoined(value, for: self)
+        }
+    }
+    
+    @objc open var hasFetchedHistory:Bool {
+        get {
+            return OTRBuddyCache.shared.hasFetchedHistory(for: self)
+        }
+        set (value) {
+            OTRBuddyCache.shared.setHasFetchedHistory(value, for: self)
+        }
+    }
     
     override open var uniqueId:String {
         get {
@@ -63,8 +78,8 @@ import YapDatabase.YapDatabaseRelationship
     }
     
     @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
-        if key == #keyPath(hasFetchedHistory) {
-            return MTLPropertyStorageTransitory
+        if key == #keyPath(hasFetchedHistory) || key == #keyPath(joined) {
+            return MTLPropertyStorageNone
         }
         return super.storageBehaviorForProperty(withKey: key)
     }

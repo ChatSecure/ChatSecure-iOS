@@ -9,6 +9,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
 #import "OTRConstants.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 @import XMPPFramework;
@@ -106,6 +107,20 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 
 - (nullable XMPPJID*) bareJID {
     return [XMPPJID jidWithString:self.username];
+}
+
+- (NSArray *)allRoomsWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    NSMutableArray *allRooms = [NSMutableArray array];
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameRoom];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        if (room) {
+            [allRooms addObject:room];
+        }
+    }];
+    return allRooms;
 }
 
 @end

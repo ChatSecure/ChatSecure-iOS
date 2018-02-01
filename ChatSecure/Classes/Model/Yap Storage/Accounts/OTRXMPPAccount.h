@@ -9,7 +9,7 @@
 #import "OTRAccount.h"
 #import "OTRvCard.h"
 
-@class XMPPJID, XMPPStream, XMPPvCardTemp;
+@class XMPPJID, XMPPStream, XMPPvCardTemp, OTRXMPPRoom;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPAccount : OTRAccount <OTRvCard>
@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)newResource;
 
 + (nullable instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
+
+/** Return all chat rooms for this account */
+- (NSArray <__kindof OTRXMPPRoom *>*)allRoomsWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 /** Returns the bare JID derived from the self.username property */
 @property (nonatomic, strong, readonly, nullable) XMPPJID *bareJID;

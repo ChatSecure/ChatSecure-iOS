@@ -11,15 +11,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class OTRXMPPRoom;
+
 /** Thread safe getters and setters for ephemeral in-memory storage of some buddy properties */
 @interface OTRBuddyCache : NSObject
 
 @property (class, nonatomic, readonly) OTRBuddyCache *shared;
 
 /** 
- Clears everything for a buddy
+ Clears everything for given buddies
  */
 - (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies;
+
+/**
+ Clears everything for given rooms
+ */
+- (void) purgeAllPropertiesForRooms:(NSArray <OTRXMPPRoom*>*)rooms;
+
 
 - (void) setChatState:(OTRChatState)chatState forBuddy:(OTRBuddy*)buddy;
 - (OTRChatState) chatStateForBuddy:(OTRBuddy*)buddy;
@@ -42,6 +50,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSDate*) lastSeenDateForBuddy:(OTRBuddy*)buddy;
 - (void) setLastSeenDate:(nullable NSDate*)date forBuddy:(OTRBuddy*)buddy;
+
+/**
+ Room status
+ */
+- (void) setJoined:(BOOL)joined forRoom:(OTRXMPPRoom*)room;
+- (BOOL) joinedForRoom:(OTRXMPPRoom*)room;
+
+/**
+ Flag that indicates if we have fetched initial history for the room upon joining
+ */
+- (void) setHasFetchedHistory:(BOOL)hasFetchedHistory forRoom:(OTRXMPPRoom*)room;
+- (BOOL) hasFetchedHistoryForRoom:(OTRXMPPRoom*)room;
 
 @end
 NS_ASSUME_NONNULL_END

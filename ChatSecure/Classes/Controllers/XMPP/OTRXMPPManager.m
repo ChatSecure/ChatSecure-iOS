@@ -821,13 +821,16 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     //Reset buddy info to offline
     __block NSArray<OTRXMPPBuddy*> *allBuddies = nil;
+    __block NSArray<OTRXMPPRoom*> *allRooms = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         allBuddies = [self.account allBuddiesWithTransaction:transaction];
+        allRooms = [self.account allRoomsWithTransaction:transaction];
     } completionBlock:^{
         // We don't need to save in here because we're using OTRBuddyCache in memory storage
         if (!self.streamManagementDelegate.streamManagementEnabled) {
             [OTRBuddyCache.shared purgeAllPropertiesForBuddies:allBuddies];
         }
+        [OTRBuddyCache.shared purgeAllPropertiesForRooms:allRooms];
     }];
 }
 
