@@ -96,6 +96,9 @@ import YapDatabase.YapDatabaseRelationship
 
 extension OTRXMPPRoom:OTRThreadOwner {
     public func preferredTransportSecurity(with transaction: YapDatabaseReadTransaction) -> OTRMessageTransportSecurity {
+        if !OTRSettingsManager.allowGroupOMEMO {
+            return .plaintext
+        }
         var transportSecurity = OTRMessageTransportSecurity.invalid
         switch preferredSecurity {
         case .best:
