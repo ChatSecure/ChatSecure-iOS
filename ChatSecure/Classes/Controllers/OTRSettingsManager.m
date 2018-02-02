@@ -222,4 +222,8 @@
     return [self.settingsDictionary objectForKey:key];
 }
 
++ (BOOL) allowGroupOMEMO {
+    return OTRBranding.allowGroupOMEMO && [self boolForOTRSettingKey:kOTRShowOMEMOGroupEncryptionKey];
+}
+
 @end

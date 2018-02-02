@@ -312,7 +312,7 @@ FOUNDATION_EXPORT NSString* OFFLINE_STRING();
 FOUNDATION_EXPORT NSString* OK_STRING();
 /** "Old", For an old settings value */
 FOUNDATION_EXPORT NSString* OLD_STRING();
-/** "Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
+/** "Note: this does not automatically enable group encryption. It must also be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
 FOUNDATION_EXPORT NSString* OMEMO_GROUP_ENCRYPTION_DETAIL_STRING();
 /** "OMEMO Group Encryption", For an old settings value */
 FOUNDATION_EXPORT NSString* OMEMO_GROUP_ENCRYPTION_STRING();

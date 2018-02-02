@@ -312,8 +312,8 @@ NSString* OFFLINE_STRING() { return [OTRLanguageManager translatedString:@"Offli
 NSString* OK_STRING() { return [OTRLanguageManager translatedString:@"OK"]; }
 /** "Old", For an old settings value */
 NSString* OLD_STRING() { return [OTRLanguageManager translatedString:@"Old"]; }
-/** "Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
-NSString* OMEMO_GROUP_ENCRYPTION_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"Note: this does not automatically enable group encryption. It must be manually enabled on a per-group basis."]; }
+/** "Note: this does not automatically enable group encryption. It must also be manually enabled on a per-group basis.", toggling switch detail for showing OMEMO group encryption */
+NSString* OMEMO_GROUP_ENCRYPTION_DETAIL_STRING() { return [OTRLanguageManager translatedString:@"Note: this does not automatically enable group encryption. It must also be manually enabled on a per-group basis."]; }
 /** "OMEMO Group Encryption", For an old settings value */
 NSString* OMEMO_GROUP_ENCRYPTION_STRING() { return [OTRLanguageManager translatedString:@"OMEMO Group Encryption"]; }
 /** "You're ready to use", String used when onboarding works */

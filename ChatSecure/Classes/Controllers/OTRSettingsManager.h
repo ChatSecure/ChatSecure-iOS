@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Recalculates current setting list */
 - (void) populateSettings;
 
+/** If enabled, will show UI for enabling OMEMO group encryption. */
+@property (nonatomic, class, readonly) BOOL allowGroupOMEMO;
 
 @end
 NS_ASSUME_NONNULL_END

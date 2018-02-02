@@ -17,6 +17,17 @@ import OTRAssets
     func didArchiveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
 }
 
+private class CellIdentifier {
+    static let Generic = "Cell"
+    static let HeaderCellGroupName = "cellGroupName"
+    static let HeaderCellShare = "cellGroupShare"
+    static let HeaderCellAddFriends = "cellGroupAddFriends"
+    static let HeaderCellMute = "cellGroupMute"
+    static let HeaderCellMembers = "cellGroupMembers"
+    static let HeaderCellGroupOMEMO = "cellGroupOMEMO"
+    static let FooterCellLeave = "cellGroupLeave"
+}
+
 open class OTRRoomOccupantsViewController: UIViewController {
  
     @objc public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
@@ -30,7 +41,21 @@ open class OTRRoomOccupantsViewController: UIViewController {
     var topBounceView:UIView?
 
     open var viewHandler:OTRYapViewHandler?
-    open var room:OTRXMPPRoom?
+    
+    open var roomUniqueId: String?
+    
+    /// opens implicit db transaction
+    open var room:OTRXMPPRoom? {
+        guard let roomUniqueId = self.roomUniqueId else {
+            return nil
+        }
+        var _room: OTRXMPPRoom?
+        readConnection?.read({ (transaction) in
+            _room = OTRXMPPRoom.fetchObject(withUniqueID: roomUniqueId, transaction: transaction)
+        })
+        return _room
+    }
+    
     open var ownOccupant:OTRXMPPRoomOccupant?
     open var headerRows:[String] = []
     open var footerRows:[String] = []
@@ -40,14 +65,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     private let connection = OTRDatabaseManager.shared.readWriteDatabaseConnection
     open var crownImage:UIImage?
     
-    static let CellIdentifier = "Cell"
-    
-    static let HeaderCellGroupName = "cellGroupName"
-    static let HeaderCellShare = "cellGroupShare"
-    static let HeaderCellAddFriends = "cellGroupAddFriends"
-    static let HeaderCellMute = "cellGroupMute"
-    static let HeaderCellMembers = "cellGroupMembers"
-    static let FooterCellLeave = "cellGroupLeave"
+
 
     open var tableHeaderView:OTRVerticalStackView?
     open var tableFooterView:OTRVerticalStackView?
@@ -62,9 +80,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
 
     @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
+        self.roomUniqueId = roomKey
+        guard let room = self.room else {
+            return
+        }
         databaseConnection.read({ (transaction) in
-            self.room = OTRXMPPRoom.fetchObject(withUniqueID: roomKey, transaction: transaction)
-            if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
+            if let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr) {
                 self.ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: true, transaction: transaction)
             }
         })
@@ -83,18 +104,22 @@ open class OTRRoomOccupantsViewController: UIViewController {
         tableFooterView = OTRVerticalStackView()
         
         var headerCells = [
-            OTRRoomOccupantsViewController.HeaderCellGroupName,
-            OTRRoomOccupantsViewController.HeaderCellMute,
-            OTRRoomOccupantsViewController.HeaderCellMembers
+            CellIdentifier.HeaderCellGroupName,
+            CellIdentifier.HeaderCellMute,
+            CellIdentifier.HeaderCellMembers
         ]
 
         // Add friends depends on the role
         if let ownOccupant = self.ownOccupant, ownOccupant.role.canInviteOthers() {
-            headerCells.insert(OTRRoomOccupantsViewController.HeaderCellAddFriends, at: 1)
+            headerCells.insert(CellIdentifier.HeaderCellAddFriends, at: 1)
+        }
+        
+        if OTRSettingsManager.allowGroupOMEMO {
+            headerCells.insert(CellIdentifier.HeaderCellGroupOMEMO, at: 1)
         }
         
         let footerCells = [
-            OTRRoomOccupantsViewController.FooterCellLeave
+            CellIdentifier.FooterCellLeave
         ]
 
         for name in headerCells {
@@ -126,7 +151,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: OTRRoomOccupantsViewController.CellIdentifier)
+        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: CellIdentifier.Generic)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -180,10 +205,30 @@ open class OTRRoomOccupantsViewController: UIViewController {
         notificationsSwitch.setOn(notificationsEnabled, animated: true)
     }
     
+    private func refreshOMEMOGroupSwitch(_ omemoSwitch: UISwitch, room: OTRXMPPRoom) {
+        var bestAvailable: OTRMessageTransportSecurity = .invalid
+        var preference: RoomSecurity = .best
+        readConnection?.read({ (transaction) in
+            bestAvailable = room.bestTransportSecurity(with: transaction)
+            preference = room.preferredSecurity
+        })
+        if bestAvailable == .OMEMO {
+            omemoSwitch.isEnabled = true
+            if preference == .plaintext {
+                omemoSwitch.isOn = false
+            } else {
+                omemoSwitch.isOn = true
+            }
+        } else {
+            omemoSwitch.isEnabled = false
+            omemoSwitch.isOn = false
+        }
+    }
+    
     open func createHeaderCell(type:String) -> UITableViewCell {
         var cell:UITableViewCell?
         switch type {
-        case OTRRoomOccupantsViewController.HeaderCellGroupName:
+        case CellIdentifier.HeaderCellGroupName:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             if let room = self.room {
                 cell?.textLabel?.text = room.subject
@@ -203,7 +248,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
             }
             cell?.selectionStyle = .none
             break
-        case OTRRoomOccupantsViewController.HeaderCellMute:
+        case CellIdentifier.HeaderCellMute:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             let muteswitch = UISwitch()
             if let room = self.room {
@@ -213,6 +258,24 @@ open class OTRRoomOccupantsViewController: UIViewController {
             cell?.accessoryView = muteswitch
             cell?.isUserInteractionEnabled = true
             cell?.selectionStyle = .none
+            break
+        case CellIdentifier.HeaderCellGroupOMEMO:
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
+            if cell == nil {
+                cell = UITableViewCell(style: .subtitle, reuseIdentifier: type)
+            }
+            cell?.textLabel?.text = "OMEMO"
+            cell?.isUserInteractionEnabled = true
+            cell?.selectionStyle = .none
+            let omemoSwitch = UISwitch()
+            cell?.accessoryView = omemoSwitch
+            omemoSwitch.addTarget(self, action: #selector(self.didChangeGroupOMEMOSwitch(_:)), for: .valueChanged)
+            if let room = self.room {
+                refreshOMEMOGroupSwitch(omemoSwitch, room: room)
+            } else {
+                omemoSwitch.isOn = false
+                omemoSwitch.isEnabled = false
+            }
             break
         default:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
@@ -227,7 +290,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func didSelectHeaderCell(type:String) {
         switch type {
-        case OTRRoomOccupantsViewController.HeaderCellAddFriends:
+        case CellIdentifier.HeaderCellAddFriends:
             addMoreFriends()
             break
         default: break
@@ -236,8 +299,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open func didSelectFooterCell(type:String) {
         switch type {
-        case OTRRoomOccupantsViewController.FooterCellLeave:
-            if let room = self.room, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let xmppRoomManager = self.xmppRoomManager() {
+        case CellIdentifier.FooterCellLeave:
+            if let room = self.room, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let xmppRoomManager = self.xmppRoomManager(for: room) {
                 //Leave room
                 xmppRoomManager.leaveRoom(roomJid)
                 if let delegate = self.delegate {
@@ -258,21 +321,37 @@ open class OTRRoomOccupantsViewController: UIViewController {
         } else {
             room.muteExpiration = nil
         }
-        self.room = room
-        connection?.asyncReadWrite({ (transaction) in
+        connection?.readWrite({ (transaction) in
             room.save(with: transaction)
         })
         refreshNotificationSwitch(notificationSwitch, room: room)
+    }
+    
+    @objc func didChangeGroupOMEMOSwitch(_ sender: UISwitch) {
+        guard let room = self.room?.copyAsSelf() else {
+            return
+        }
+        var preference = RoomSecurity.best
+        if sender.isOn {
+            preference = RoomSecurity.omemo
+        } else {
+            preference = RoomSecurity.plaintext
+        }
+        room.preferredSecurity = preference
+        connection?.readWrite({ (transaction) in
+            room.save(with: transaction)
+        })
+        refreshOMEMOGroupSwitch(sender, room: room)
     }
     
     @objc func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
         let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
             if let newSubject = alert.textFields?.first?.text {
-                if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: OTRRoomOccupantsViewController.HeaderCellGroupName) as? UITableViewCell {
+                if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: CellIdentifier.HeaderCellGroupName) as? UITableViewCell {
                     cell.textLabel?.text = newSubject
                 }
-                if let xmppRoom = self.xmppRoom() {
+                if let room = self.room, let xmppRoom = self.xmppRoom(for: room) {
                     xmppRoom.changeSubject(newSubject)
                 }
             }
@@ -302,25 +381,18 @@ open class OTRRoomOccupantsViewController: UIViewController {
 extension OTRRoomOccupantsViewController {
     
     /** Do not call this within a yap transaction! */
-    fileprivate func xmppRoom() -> XMPPRoom? {
-        var xmpp: XMPPManager? = nil
-        self.readConnection?.read { transaction in
-            if let account = self.room?.account(with: transaction) {
-                xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager
-            }
-        }
-        guard let room = self.room,
-            let jid = room.jid,
-            let roomJid = XMPPJID(string: jid),
-            let xmppRoom = xmpp?.roomManager.room(for: roomJid)
+    fileprivate func xmppRoom(for room: OTRXMPPRoom) -> XMPPRoom? {
+        guard let roomManager = xmppRoomManager(for: room),
+            let roomJid = room.roomJID,
+            let xmppRoom = roomManager.room(for: roomJid)
             else { return nil }
         return xmppRoom
     }
     
-    fileprivate func xmppRoomManager() -> OTRXMPPRoomManager? {
+    fileprivate func xmppRoomManager(for room: OTRXMPPRoom) -> OTRXMPPRoomManager? {
         var xmpp: XMPPManager? = nil
         self.readConnection?.read { transaction in
-            if let account = self.room?.account(with: transaction) {
+            if let account = room.account(with: transaction) {
                 xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager
             }
         }
@@ -328,7 +400,10 @@ extension OTRRoomOccupantsViewController {
     }
     
     fileprivate func fetchMembersList() {
-        guard let xmppRoom = xmppRoom() else { return }
+        guard let room = self.room,
+            let xmppRoom = xmppRoom(for: room) else {
+            return
+        }
         xmppRoom.fetchMembersList()
         xmppRoom.fetchModeratorsList()
     }
@@ -357,7 +432,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: OTRRoomOccupantsViewController.CellIdentifier, for: indexPath) as! OTRBuddyInfoCheckableCell
+        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.Generic, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         var accountObject:OTRXMPPAccount? = nil
@@ -436,7 +511,9 @@ extension OTRRoomOccupantsViewController: OTRComposeGroupViewControllerDelegate 
     
     public func groupBuddiesSelected(_ composeViewController: OTRComposeGroupViewController, buddyUniqueIds: [String], groupName: String) {
         // Add them to the room
-        if let xmppRoom = self.xmppRoom(), let xmppRoomManager = self.xmppRoomManager() {
+        if let room = self.room,
+            let xmppRoom = self.xmppRoom(for: room),
+            let xmppRoomManager = self.xmppRoomManager(for: room) {
             xmppRoomManager.inviteBuddies(buddyUniqueIds, to: xmppRoom)
         }
         self.navigationController?.popToViewController(self, animated: true)
