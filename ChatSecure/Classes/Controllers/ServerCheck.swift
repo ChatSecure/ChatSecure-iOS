@@ -75,7 +75,7 @@ public class ServerCheck: XMPPModule {
     // MARK: Public API
     
     @objc public func getCombinedPushStatus() -> ServerCheckPushStatus {
-        if let xmpp = xmppStream, xmpp.state != .STATE_XMPP_CONNECTED {
+        if let xmpp = xmppStream, xmpp.state != .STATE_XMPP_CONNECTED || !xmpp.isAuthenticated {
             return .unknown
         }
         return result.getCombinedPushStatus()
