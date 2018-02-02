@@ -886,11 +886,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (BOOL) isGroupChat {
-    __block OTRXMPPRoom *room = nil;
-    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        room = [self roomWithTransaction:transaction];
-    }];
-    return (room != nil);
+    return [self.threadCollection isEqualToString:OTRXMPPRoom.collection];
 }
 
 #pragma - mark Profile Button Methods
@@ -1206,11 +1202,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self.collectionView reloadData];
     
+    __block NSUInteger shownCount;
+    __block NSUInteger totalCount;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *_Nonnull transaction) {
-        NSUInteger shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
-        NSUInteger totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
-        [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
+        shownCount = [self.viewHandler.mappings numberOfItemsInGroup:self.threadKey];
+        totalCount = [[transaction ext:OTRFilteredChatDatabaseViewExtensionName] numberOfItemsInGroup:self.threadKey];
     }];
+    [self setShowLoadEarlierMessagesHeader:shownCount < totalCount];
     
     if (!reset) {
         [self.collectionView.collectionViewLayout invalidateLayout];
@@ -1691,7 +1689,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 roomOccupantBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:roomMessage.buddyUniqueId transaction:transaction];
             }
             if (!roomOccupantBuddy) {
-                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:[XMPPJID jidWithString:roomMessage.senderJID] roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
+                roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:nil roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:[self accountWithTransaction:transaction].uniqueId createIfNeeded:NO transaction:transaction];
                 if (roomOccupant != nil) {
                     roomOccupantBuddy = [roomOccupant buddyWith:transaction];
                 }
@@ -1819,8 +1817,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
                         OTRXMPPBuddy *buddy = [occupant buddyWith:transaction];
                         if (buddy) {
                             displayName = [buddy displayName];
+                        } else if (occupant.roomName) {
+                            displayName = occupant.roomName;
                         } else {
-                            displayName = [[XMPPJID jidWithString:occupant.jid] resource];
+                            if (occupant.jids && occupant.jids.count > 0) {
+                                displayName = [[occupant.jids anyObject] resource];
+                            }
                         }
                     }
                 }

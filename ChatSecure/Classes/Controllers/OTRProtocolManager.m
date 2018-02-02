@@ -108,13 +108,13 @@
     if (!account.uniqueId) { return nil; }
     id <OTRProtocol> protocol = nil;
     @synchronized (self) {
-         protocol = [self.protocolManagers objectForKey:account.uniqueId];
-    }
-    if(!protocol)
-    {
-        protocol = [[[account protocolClass] alloc] initWithAccount:account];
-        if (protocol && account.uniqueId) {
-            [self addProtocol:protocol forAccount:account];
+        protocol = [self.protocolManagers objectForKey:account.uniqueId];
+        if(!protocol)
+        {
+            protocol = [[[account protocolClass] alloc] initWithAccount:account];
+            if (protocol && account.uniqueId) {
+                [self addProtocol:protocol forAccount:account];
+            }
         }
     }
     return protocol;

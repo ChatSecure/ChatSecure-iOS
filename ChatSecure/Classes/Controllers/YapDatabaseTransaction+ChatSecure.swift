@@ -58,20 +58,20 @@ public extension YapDatabaseReadTransaction {
     }
     
     /** The jid here is the full jid not real jid or nickname */
-    @objc public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
-            return
-        }
-        
-        let queryString = "Where \(RoomOccupantIndexColumnName.jid) = ?"
-        let query = YapDatabaseQuery(string: queryString, parameters: [jid])
-        
-        secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
-            if let occupant = self.object(forKey: key, inCollection: collection) as? OTRXMPPRoomOccupant {
-                block(occupant, stop)
-            }
-        }
-    }
+//    @objc public func enumerateRoomOccupants(jid:String, block:@escaping (_ occupant:OTRXMPPRoomOccupant, _ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+//        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
+//            return
+//        }
+//
+//        let queryString = "Where \(RoomOccupantIndexColumnName.jid) = ?"
+//        let query = YapDatabaseQuery(string: queryString, parameters: [jid])
+//
+//        secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
+//            if let occupant = self.object(forKey: key, inCollection: collection) as? OTRXMPPRoomOccupant {
+//                block(occupant, stop)
+//            }
+//        }
+//    }
     
     @objc public func numberOfUnreadMessages() -> UInt {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {

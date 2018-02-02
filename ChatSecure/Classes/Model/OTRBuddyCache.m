@@ -8,6 +8,7 @@
 
 #import "OTRBuddyCache.h"
 #import "OTRDatabaseManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRBuddyCache() {
     void *IsOnInternalQueueKey;
@@ -18,6 +19,8 @@
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDictionary<NSString*, NSNumber*>*> *threadStatuses;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *waitingForvCardTempFetch;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDate*> *lastSeenDates;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *roomJoinedFlags;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *roomHasFetchedHistoryFlags;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t queue;
 
@@ -47,6 +50,8 @@
         _threadStatuses = [NSMutableDictionary dictionary];
         _waitingForvCardTempFetch = [NSMutableDictionary dictionary];
         _lastSeenDates = [NSMutableDictionary dictionary];
+        _roomJoinedFlags = [NSMutableDictionary dictionary];
+        _roomHasFetchedHistoryFlags = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -220,7 +225,43 @@
     }];
 }
 
-/** Clears everything for a buddy */
+- (void)setJoined:(BOOL)joined forRoom:(OTRXMPPRoom *)room {
+    NSParameterAssert(room.uniqueId);
+    if (!room.uniqueId) { return; }
+    [self performAsyncWrite:^{
+        [self.roomJoinedFlags setObject:@(joined) forKey:room.uniqueId];
+    }];
+}
+
+- (BOOL)joinedForRoom:(OTRXMPPRoom *)room {
+    NSParameterAssert(room.uniqueId);
+    if (!room.uniqueId) { return NO; }
+    __block BOOL joined = NO;
+    [self performSyncRead:^{
+        joined = [self.roomJoinedFlags objectForKey:room.uniqueId].boolValue;
+    }];
+    return joined;
+}
+
+- (void)setHasFetchedHistory:(BOOL)hasFetchedHistory forRoom:(OTRXMPPRoom *)room {
+    NSParameterAssert(room.uniqueId);
+    if (!room.uniqueId) { return; }
+    [self performAsyncWrite:^{
+        [self.roomHasFetchedHistoryFlags setObject:@(hasFetchedHistory) forKey:room.uniqueId];
+    }];
+}
+
+- (BOOL)hasFetchedHistoryForRoom:(OTRXMPPRoom *)room {
+    NSParameterAssert(room.uniqueId);
+    if (!room.uniqueId) { return NO; }
+    __block BOOL hasFetchedHistory = NO;
+    [self performSyncRead:^{
+        hasFetchedHistory = [self.roomHasFetchedHistoryFlags objectForKey:room.uniqueId].boolValue;
+    }];
+    return hasFetchedHistory;
+}
+
+/** Clears everything for given buddies */
 - (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies {
     
     if([buddies count] == 0) {
@@ -246,6 +287,20 @@
     }];
 }
 
+/** Clears everything for given rooms */
+- (void) purgeAllPropertiesForRooms:(NSArray <OTRXMPPRoom*>*)rooms {
+    
+    if([rooms count] == 0) {
+        return;
+    }
+    
+    [self performAsyncWrite:^{
+        [rooms enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull room, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.roomJoinedFlags removeObjectForKey:room.uniqueId];
+            [self.roomHasFetchedHistoryFlags removeObjectForKey:room.uniqueId];
+        }];
+    }];
+}
 
 #pragma mark Utility
 

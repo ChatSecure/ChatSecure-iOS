@@ -105,9 +105,23 @@ import YapDatabase
             }
             message.originId = originId
             message.stanzaId = stanzaId
-            
-            if let sender = message.senderJID, let senderJid = XMPPJID(string: sender), let roomJid = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJid, realJID: nil, roomJID: roomJid, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction) {
-                message.buddyUniqueId = occupant.buddyUniqueId
+
+            // Try to find buddy of sender. We might get an muc#user item element from where we can pull the real jid of the sender, else we try by message.senderJID.
+            if let x = xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace), let item = x.element(forName: "item"), let jidString = item.attribute(forName: "jid")?.stringValue, let jid = XMPPJID(string: jidString) {
+                if let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account.uniqueId, transaction: transaction) {
+                    message.buddyUniqueId = buddy.uniqueId
+                }
+                // Is this from us?
+                if let accountJid = account.bareJID, jid.bareJID.isEqual(to: accountJid) {
+                    message.state = .sent
+                }
+            }
+            if message.buddyUniqueId == nil, let senderJidString = message.senderJID, let senderJid = XMPPJID(string: senderJidString), let roomJid = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJid, realJID: senderJid, roomJID: roomJid, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction), let buddy = occupant.buddy(with: transaction) {
+                message.buddyUniqueId = buddy.uniqueId
+                // Is this from us?
+                if let accountJid = account.bareJID, let realJid = occupant.realJID, realJid.isEqual(accountJid) {
+                    message.state = .sent
+                }
             }
             
             room.lastRoomMessageId = message.uniqueId
@@ -146,7 +160,7 @@ extension RoomStorage: XMPPRoomStorage {
             // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
             var buddyJID: XMPPJID? = nil
             if let buddyJidString = item.attributeStringValue(forName: "jid") {
-                buddyJID = XMPPJID(string: buddyJidString)
+                buddyJID = XMPPJID(string: buddyJidString)?.bareJID
             }
             guard let occupant = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: buddyJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
                 DDLogWarn("Could not create room occupant")
@@ -155,13 +169,9 @@ extension RoomStorage: XMPPRoomStorage {
             let role = item.attributeStringValue(forName: "role") ?? ""
             let affiliation = item.attributeStringValue(forName: "affiliation") ?? ""
             if presence.presenceType == .unavailable {
-                occupant.available = false
+                occupant.removeJid(presenceJID)
             } else {
-                occupant.available = true
-            }
-            occupant.jid = presenceJID.full
-            if buddyJID != nil {
-                occupant.realJID = buddyJID?.bare
+                occupant.addJid(presenceJID)
             }
             occupant.roomName = presenceJID.resource
             occupant.role = RoomOccupantRole(stringValue: role)

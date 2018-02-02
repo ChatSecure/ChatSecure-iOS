@@ -46,19 +46,31 @@ import JSQMessagesViewController
         return CGSize(width: 1, height: 0)
     }
     
-    override open func prepare() {
-        super.prepare()
-        self.supplementaryViews.removeAll()
-        if let delegate = self.supplementaryViewDelegate {
-            for section in 0..<self.collectionView.numberOfSections {
-                for item in 0..<self.collectionView.numberOfItems(inSection: section) {
-                    if let views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section)) {
-                        let index = cacheIndexFor(item: item, section: section)
+    override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        if context.invalidateEverything || context.invalidateDataSourceCounts {
+            self.supplementaryViews.removeAll()
+            if let delegate = self.supplementaryViewDelegate {
+                for section in 0..<self.collectionView.numberOfSections {
+                    for item in 0..<self.collectionView.numberOfItems(inSection: section) {
+                        if let views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section)) {
+                            let index = cacheIndexFor(item: item, section: section)
+                            supplementaryViews[index] = views
+                        }
+                    }
+                }
+            }
+        } else {
+            for indexPath in context.invalidatedItemIndexPaths ?? [] {
+                let index = cacheIndexFor(item: indexPath.item, section: indexPath.section)
+                self.supplementaryViews[index] = nil
+                if let delegate = self.supplementaryViewDelegate {
+                    if let views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: indexPath.item, section: indexPath.section)) {
                         supplementaryViews[index] = views
                     }
                 }
             }
         }
+        super.invalidateLayout(with: context)
     }
     
     open override var collectionViewContentSize: CGSize {
