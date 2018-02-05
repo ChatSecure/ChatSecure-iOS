@@ -188,6 +188,10 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
             XMPPLogError(@"OTRServerCapabilities: fetchAllCapabilities error - not connected. %@", self);
             return;
         }
+        if (![xmppStream isAuthenticated]) {
+            XMPPLogError(@"OTRServerCapabilities: fetchAllCapabilities error - not authenticated. %@", self);
+            return;
+        }
         [self discoverServices];
         [self fetchCapabilitiesForJIDs:self.allJIDs];
     }];
