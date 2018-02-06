@@ -11,6 +11,12 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRXMPPRoomRuntimeProperties
+- (instancetype)init {
+    if (self = [super init]) {
+        _onlineJids = [NSMutableArray array];
+    }
+    return self;
+}
 @end
 
 @interface OTRBuddyCache() {
@@ -241,6 +247,27 @@
     }];
     return properties;
 }
+
+- (void)setJid:(NSString *)jid online:(BOOL)online inRoom:(OTRXMPPRoom *)room {
+    OTRXMPPRoomRuntimeProperties *properties = [self runtimePropertiesForRoom:room];
+    if (properties) {
+        if (online) {
+            if (![properties.onlineJids containsObject:jid]) {
+                [properties.onlineJids addObject:jid];
+            }
+        } else {
+            if ([properties.onlineJids containsObject:jid]) {
+                [properties.onlineJids removeObject:jid];
+            }
+        }
+    }
+}
+
+- (BOOL)jidOnline:(NSString *)jid inRoom:(OTRXMPPRoom *)room {
+    OTRXMPPRoomRuntimeProperties *properties = [self runtimePropertiesForRoom:room];
+    return (properties && [properties.onlineJids containsObject:jid]);
+}
+
 
 /** Clears everything for given buddies */
 - (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies {

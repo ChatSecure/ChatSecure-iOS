@@ -12,6 +12,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class OTRXMPPRoom;
+typedef SWIFT_ENUM(NSInteger, RoomOccupantRole);
+@class OTRXMPPRoomOccupant;
 
 @interface OTRXMPPRoomRuntimeProperties : NSObject
 @property (nonatomic) BOOL joined;
@@ -19,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL hasFetchedOwners;
 @property (nonatomic) BOOL hasFetchedAdmins;
 @property (nonatomic) BOOL hasFetchedMembers;
+@property (nonatomic, strong) NSMutableArray *onlineJids;
 @end
 
 /** Thread safe getters and setters for ephemeral in-memory storage of some buddy properties */
@@ -63,6 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
  Cached room properties
  */
 - (nullable OTRXMPPRoomRuntimeProperties *) runtimePropertiesForRoom:(OTRXMPPRoom*)room;
+
+- (void) setJid:(nonnull NSString*)jid online:(BOOL)online inRoom:(nonnull OTRXMPPRoom*)room;
+- (BOOL) jidOnline:(NSString*)jid inRoom:(nonnull OTRXMPPRoom*)room;
 
 @end
 NS_ASSUME_NONNULL_END

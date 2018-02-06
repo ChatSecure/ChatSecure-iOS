@@ -159,7 +159,6 @@
         
         OTRXMPPRoomOccupant *occupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         occupant.role = RoomOccupantRoleNone;
-        occupant.jids = nil;
         [occupant saveWithTransaction:transaction];
     }];
 }
@@ -439,14 +438,21 @@
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *jidString = [item attributeStringValueForName:@"jid"];
-            XMPPJID *jid = [XMPPJID jidWithString:jidString];
+            XMPPJID *realJid = [XMPPJID jidWithString:jidString];
             NSString *affiliation = [item attributeStringValueForName:@"affiliation"];
             
             // jid and affiliation MUST be included
-            if (!jid || !affiliation) { return; }
-            
+            if (!realJid || !affiliation) { return; }
+
+            // Nickname MAY be included
+            XMPPJID *jid = nil;
+            NSString *nick = [item attributeStringValueForName:@"nick"];
+            if (nick) {
+                jid = [room.roomJID jidWithNewResource:nick];
+            }
+
             // Make sure occupant object exists/is created
-            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:jid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
+            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:realJid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
             occupant.affiliation = [RoomOccupantAffiliationHelper affiliationWithString:affiliation];
             
             // Role MAY be included, so get that if it's there
