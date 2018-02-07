@@ -498,6 +498,8 @@ NSString* UNTRUSTED_DEVICE_SENT_STRING() { return [OTRLanguageManager translated
 NSString* UNTRUSTED_DEVICE_STRING() { return [OTRLanguageManager translatedString:@"Untrusted Device"]; }
 /** "Username", Label text for username field on login screen */
 NSString* USERNAME_STRING() { return [OTRLanguageManager translatedString:@"Username"]; }
+/** "Canceled", Describes a state entered by user cancelation */
+NSString* USER_CANCELED_STRING() { return [OTRLanguageManager translatedString:@"Canceled"]; }
 /** "Camera", Label for button to take a photo from camera */
 NSString* USE_CAMERA_STRING() { return [OTRLanguageManager translatedString:@"Camera"]; }
 /** "Unrecognized Invite Format", shown when invite QR code doesnt work */

@@ -70,7 +70,9 @@ extension UIImage {
     }
 }
 
-public enum FileTransferError: CustomNSError {
+
+
+public enum FileTransferError: LocalizedError, CustomNSError {
     case unknown
     case noServers
     case serverError
@@ -80,8 +82,17 @@ public enum FileTransferError: CustomNSError {
     case keyGenerationError
     case cryptoError
     case automaticDownloadsDisabled
+    case userCanceled
     
-    public var localizedDescription: String {
+    public var errorUserInfo: [String : Any] {
+        if let errorDescription = self.errorDescription {
+            return [NSLocalizedDescriptionKey: errorDescription];
+        }
+        return [:]
+    }
+    
+    // localizedDescription
+    public var errorDescription: String? {
         switch self {
         case .unknown:
             return UNKNOWN_ERROR_STRING()
@@ -99,6 +110,8 @@ public enum FileTransferError: CustomNSError {
             return errSSLCryptoString()
         case .automaticDownloadsDisabled:
             return AUTOMATIC_DOWNLOADS_DISABLED_STRING()
+        case .userCanceled:
+            return USER_CANCELED_STRING()
         }
     }
 }
@@ -139,6 +152,21 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     }
     
     // MARK: - Public Methods
+    
+    // Resume downloads, i.e. look for media items that are partially downloaded and retry getting them. TODO - use ranges
+    @objc public func resumeDownloads() {
+        connection.asyncRead { (transaction) in
+            transaction.enumerateKeysAndObjects(inCollection: OTRMediaItem.collection, using: { (key, object, stop) -> Void in
+                if let mediaItem = object as? OTRMediaItem, mediaItem.transferProgress < 1 {
+                    if let downloadMessage = mediaItem.parentObject(with: transaction) as? OTRDownloadMessage, downloadMessage.messageError == nil {
+                        self.internalQueue.async {
+                            self.downloadMedia(downloadMessage)
+                        }
+                    }
+                }
+            })
+        }
+    }
     
     /// This will fetch capabilities and setup XMPP transfer module if needed
     @objc public func refreshCapabilities() {
@@ -289,7 +317,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                             DDLogError("Upload error: \(error)")
                         }
                     }.uploadProgress(queue: self.internalQueue) { progress in
-                        DDLogVerbose("Download progress \(progress.fractionCompleted)")
+                        DDLogVerbose("Upload progress \(progress.fractionCompleted)")
                         self.connection.asyncReadWrite { transaction in
                             if let media = media.refetch(with: transaction) {
                                 media.transferProgress = Float(progress.fractionCompleted)
@@ -568,6 +596,10 @@ extension FileTransferManager {
             // DDLogWarn("Already downloaded media for this item")
             return
         }
+        downloadMedia(downloadMessage)
+    }
+    
+    private func downloadMedia(_ downloadMessage: OTRDownloadMessage) {
         guard let url = downloadMessage.downloadableURL else {
             DDLogWarn("Attempted to download message but couldn't parse a URL \(downloadMessage)")
             return
@@ -609,6 +641,12 @@ extension FileTransferManager {
                     media.save(with: transaction)
                     message.messageMediaItemKey = media.uniqueId
                 }
+                
+                // If user canceled, keep that error
+                if let error = (message.messageError as NSError?), error.isUserCanceledError {
+                    return
+                }
+                        
                 message.messageError = error
                 message.save(with: transaction)
             }
@@ -626,6 +664,7 @@ extension FileTransferManager {
             mediaItem?.parentObjectCollection = downloadMessage.messageCollection
             mediaItem?.save(with: transaction)
             downloadMessage.messageMediaItemKey = mediaItem?.uniqueId
+            downloadMessage.messageError = nil
             downloadMessage.save(with: transaction)
         }
         guard let media = mediaItem else {
@@ -709,6 +748,28 @@ extension FileTransferManager {
                 UIApplication.shared.showLocalNotification(downloadMessage, transaction: transaction)
             })
         }, completionQueue: nil)
+    }
+    
+    @objc public func cancelDownload(mediaItem: OTRMediaItem) {
+        self.internalQueue.async {
+            var downloadMessage:OTRDownloadMessage? = nil
+            self.connection.read { transaction in
+                downloadMessage = mediaItem.parentMessage(with: transaction) as? OTRDownloadMessage
+            }
+            if let downloadMessage = downloadMessage {
+                self.setError(FileTransferError.userCanceled, onMessage: downloadMessage)
+                if let url = downloadMessage.downloadableURL {
+                    self.sessionManager.session.getTasksWithCompletionHandler { (tasks, _, _) in
+                        // Bail out if we've already got a task for this
+                        for task in tasks where task.originalRequest?.url == url {
+                            DDLogWarn("Stopping download task: \(task)")
+                            task.cancel()
+                            break
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

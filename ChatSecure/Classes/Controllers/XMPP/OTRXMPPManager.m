@@ -853,6 +853,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
      object:self userInfo:userInfo];
     
     [self goOnline];
+    
+    [self.fileTransferManager resumeDownloads];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
