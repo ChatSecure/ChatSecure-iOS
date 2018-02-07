@@ -188,6 +188,12 @@ import CocoaLumberjack
             if isIncoming {
                 self.handleDeliveryResponse(message: xmppMessage, transaction: transaction)
                 self.handleChatState(message: xmppMessage, buddy: buddy)
+                
+                // If this is a receipt, we are done
+                if xmppMessage.hasReceiptResponse {
+                    return
+                }
+                
                 let incomingMessage = OTRIncomingMessage(xmppMessage: xmppMessage, body: body, account: account, buddy: buddy, capabilities: self.capabilities)
                 // mark message as read if this is a MAM catchup
                 if delayed != nil {
@@ -219,11 +225,7 @@ import CocoaLumberjack
                 // We only want to send receipts and show notifications for "real time" messages
                 // undelivered messages still go through the "handleDirectMessage" path,
                 // so MAM messages have been delivered to another device
-                if delayed == nil {
-                    self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
-                } else {
-                    self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
-                }
+                self.finishHandlingIncomingMessage(incoming, account: account, showNotification:(delayed == nil), transaction: transaction)
             }
             // let's count carbon messages as realtime
             if delayed == nil {
@@ -297,20 +299,22 @@ import CocoaLumberjack
             } else {
                 preSave?(incoming, transaction)
                 incoming.save(with: transaction)
-                self.finishHandlingIncomingMessage(incoming, account: account, transaction: transaction)
+                self.finishHandlingIncomingMessage(incoming, account: account, showNotification:true, transaction: transaction)
             }
             self.updateLastFetch(account: account, date: incoming.messageDate, transaction: transaction)
         })
     }
     
-    private func finishHandlingIncomingMessage(_ message: OTRIncomingMessage, account: OTRXMPPAccount, transaction: YapDatabaseReadWriteTransaction) {
+    private func finishHandlingIncomingMessage(_ message: OTRIncomingMessage, account: OTRXMPPAccount, showNotification:Bool, transaction: YapDatabaseReadWriteTransaction) {
         guard let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
             return
         }
         xmpp.sendDeliveryReceipt(for: message)
         
         self.fileTransfer.createAndDownloadItemsIfNeeded(message: message, force: false, transaction: transaction)
-        UIApplication.shared.showLocalNotification(message, transaction: transaction)
+        if showNotification {
+            UIApplication.shared.showLocalNotification(message, transaction: transaction)
+        }
         
         /// mark as read if on screen
         MessageStorage.markAsReadIfVisible(message: message)
