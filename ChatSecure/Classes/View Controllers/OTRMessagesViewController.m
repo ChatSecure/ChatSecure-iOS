@@ -769,6 +769,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [actions addObject:resendAction];
     }
     
+    // If we are currently downloading, allow us to cancel
+    if([[message messageMediaItemKey] length] > 0 && [message conformsToProtocol:@protocol(OTRDownloadMessage)] && message.messageError == nil) {
+        //id<OTRDownloadMessage> downloadMessage = (id<OTRDownloadMessage>)message;
+        __block OTRMediaItem *mediaItem = nil;
+        __block OTRXMPPManager *xmpp = nil;
+        //Get the media item
+        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
+            xmpp = [self xmppManagerWithTransaction:transaction];
+        }];
+        if (mediaItem && mediaItem.isIncoming && mediaItem.transferProgress < 1/* && xmpp != nil && [xmpp.fileTransferManager downloading:downloadMessage]*/) {
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [xmpp.fileTransferManager cancelDownloadWithMediaItem:mediaItem];
+            }];
+            [actions addObject:cancelAction];
+        }
+    }
+    
     if (![message isKindOfClass:[OTRXMPPRoomMessage class]]) {
         [actions addObject:[self viewProfileAction]];
     }
@@ -803,7 +821,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         alertMessage = [NSString stringWithFormat:RESEND_DESCRIPTION_STRING(),sendingType];
     }
     
-    if (error) {
+    if (error && !error.isUserCanceledError) {
         NSUInteger otrFingerprintError = 32872;
         title = ERROR_STRING();
         alertMessage = error.localizedDescription;
@@ -1671,7 +1689,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     NSError *messageError = [message messageError];
-    if ((messageError && !messageError.isAutomaticDownloadError) ||
+    if ((messageError && !messageError.isAutomaticDownloadError && !messageError.isUserCanceledError) ||
         ![self isMessageTrusted:message]) {
         return [self warningAvatarImage];
     }
@@ -1930,7 +1948,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
             if (message.messageError) {
-                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING()];
+                if (!message.messageError.isUserCanceledError) {
+                    progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING()];
+                }
             } else {
                 progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING(),percentProgress];
             }
