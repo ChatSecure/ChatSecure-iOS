@@ -49,7 +49,12 @@
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRBuddy *buddy = [self fetchBuddyWithJID:jid stream:stream transaction:transaction];
         if (buddy) {
-            result = YES;
+            if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+                OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy*)buddy;
+                result = (xmppBuddy.trustLevel == BuddyTrustLevelRoster);
+            } else {
+                result = YES;
+            }
         }
     }];
     return result;
