@@ -72,6 +72,11 @@ import YapDatabase
             // TODO unify this with the non-MUC receipt logic
             OTRXMPPRoomMessage.handleDeliveryReceiptRequest(message: xmppMessage, xmppStream: xmppStream)
             
+            // If this is a receipt, we are done
+            if xmppMessage.hasReceiptResponse {
+                return
+            }
+            
             let stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: self.capabilities)
             let originId = xmppMessage.originId
             
@@ -91,8 +96,7 @@ import YapDatabase
                 DDLogError("Could not find or create room for \(xmppRoom)")
                 return
             }
-            if room.joined,
-                xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace) != nil,
+            if xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace) != nil,
                 xmppMessage.element(forName: "x", xmlns: XMPPConferenceXmlns) != nil {
                 DDLogWarn("Received invitation to current room: \(room)")
                 return

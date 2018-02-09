@@ -428,13 +428,14 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             message.messageSecurityInfo = OTRMessageEncryptionInfo(messageSecurity: security)
             return message
         } else if let room = thread as? OTRXMPPRoom {
-            let message = OTRXMPPRoomMessage()!
-            message.messageDate = Date()
-            message.roomUniqueId = room.threadIdentifier
-            message.roomJID = room.jid
-            message.senderJID = room.ownJID
-            message.state = .needsSending
-            message.mediaItemId = mediaItem.uniqueId
+            var message:OTRXMPPRoomMessage? = nil
+            self.connection.read({ (transaction) in
+                message = room.outgoingMessage(withText: "", transaction: transaction) as? OTRXMPPRoomMessage
+            })
+            if let message = message {
+                message.messageText = nil
+                message.mediaItemId = mediaItem.uniqueId
+            }
             return message
         }
         return nil
