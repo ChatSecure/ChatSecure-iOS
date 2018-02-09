@@ -109,6 +109,7 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         newMessage.messageSecurity = self.messageSecurity
         newMessage.state = .needsSending
         newMessage.xmppId = UUID().uuidString
+        newMessage.originId = newMessage.xmppId
         return newMessage
     }
     
@@ -467,7 +468,8 @@ public extension XMPPRoom {
         let body = XMLElement(name: "body", stringValue: message.messageText)
         let xmppMessage = XMPPMessage(messageType: nil, to: nil, elementID: elementId, child: body)
         xmppMessage.addReceiptRequest()
-        xmppMessage.addOriginId(message.originId)
+        let originId = message.originId ?? message.xmppId ?? message.uniqueId
+        xmppMessage.addOriginId(originId)
         send(xmppMessage)
     }
 }

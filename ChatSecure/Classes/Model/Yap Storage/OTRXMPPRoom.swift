@@ -136,7 +136,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         message.roomUniqueId = self.uniqueId
         message.senderJID = self.ownJID
         message.state = .needsSending
-        message.originId = message.uniqueId
+        message.originId = message.xmppId ?? message.uniqueId
         let preferredSecurity = self.preferredTransportSecurity(with: transaction)
         message.messageSecurity = preferredSecurity
         return message
