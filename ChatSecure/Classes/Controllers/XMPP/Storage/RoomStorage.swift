@@ -91,8 +91,7 @@ import YapDatabase
                 DDLogError("Could not find or create room for \(xmppRoom)")
                 return
             }
-            if room.joined,
-                xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace) != nil,
+            if xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace) != nil,
                 xmppMessage.element(forName: "x", xmlns: XMPPConferenceXmlns) != nil {
                 DDLogWarn("Received invitation to current room: \(room)")
                 return
