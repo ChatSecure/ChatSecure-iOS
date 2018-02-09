@@ -158,7 +158,6 @@
         
         OTRXMPPRoomOccupant *occupant = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         occupant.role = RoomOccupantRoleNone;
-        occupant.jids = nil;
         [occupant saveWithTransaction:transaction];
     }];
 }

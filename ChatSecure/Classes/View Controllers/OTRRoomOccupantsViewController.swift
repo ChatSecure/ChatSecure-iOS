@@ -80,7 +80,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
     @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         self.roomUniqueId = roomKey
-        guard let room = self.room else {
+        guard let _ = self.room else {
             return
         }
         self.fetchMembersList()

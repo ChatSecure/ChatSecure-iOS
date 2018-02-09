@@ -68,7 +68,9 @@ public extension OTRXMPPRoomMessage {
         }
         senderJID = message.from?.full
         roomJID = room.jid
-        if room.ownJID == message.from?.full {
+        // compare with lowercase-only because sometimes
+        // we get both lowercase and uppercase nicknames?
+        if room.ownJID?.lowercased() == message.from?.full.lowercased() {
             state = .sent
         } else {
             state = .received

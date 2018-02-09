@@ -173,11 +173,11 @@ public extension OTRXMPPRoomOccupant {
                                accountId: String,
                                createIfNeeded: Bool,
                                transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomOccupant? {
+        let roomUniqueId = OTRXMPPRoom.createUniqueId(accountId, jid: roomJID.bare)
         guard let indexTransaction = transaction.ext(SecondaryIndexName.roomOccupants) as? YapDatabaseSecondaryIndexTransaction else {
-            DDLogError("Error looking up OTRXMPPRoomOccupant via SecondaryIndex")
+            DDLogError("Error looking up OTRXMPPRoomOccupant via SecondaryIndex") 
             return nil
         }
-        let roomUniqueId = OTRXMPPRoom.createUniqueId(accountId, jid: roomJID.bare)
         var matchingOccupants: [OTRXMPPRoomOccupant] = []
         
         var parameters: [String] = [roomUniqueId]
@@ -204,32 +204,40 @@ public extension OTRXMPPRoomOccupant {
         if matchingOccupants.count > 1 {
             DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query \(query): \(matchingOccupants)")
         }
-        var occupant: OTRXMPPRoomOccupant? = matchingOccupants.first
-        var didCreate = false
+        var _occupant: OTRXMPPRoomOccupant? = matchingOccupants.first
         
-        if occupant == nil,
-            createIfNeeded {
-            occupant = OTRXMPPRoomOccupant()!
-            occupant?.roomUniqueId = roomUniqueId
-            didCreate = true
+        if _occupant == nil {
+            if createIfNeeded {
+                _occupant = OTRXMPPRoomOccupant()!
+                _occupant?.roomUniqueId = roomUniqueId
+            } else {
+                return nil
+            }
+        } else {
+            _occupant = _occupant?.copyAsSelf()
+        }
+        guard let occupant = _occupant else {
+            return nil
+        }
+        
+        occupant.addJid(jid)
+        
+        // also add lowercased version of nickname
+        if let lowercased = XMPPJID(string: jid.full.lowercased()) {
+            occupant.addJid(lowercased)
         }
         
         // Set realJID?
-        if let occupant = occupant, let realJID = realJID, occupant.realJID == nil {
+        if let realJID = realJID {
             occupant.realJID = realJID.bare
         }
 
         // While we're at it, match room occupant with a buddy on our roster if possible
         // This should probably be moved elsewhere
-        if let existingOccupant = occupant,
-            let realJID = existingOccupant.realJID,
+        if let realJID = occupant.realJID,
             let jid = XMPPJID(string: realJID),
-            existingOccupant.buddyUniqueId == nil,
             let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) {
-            if !didCreate {
-                occupant = existingOccupant.copy() as? OTRXMPPRoomOccupant
-            }
-            occupant?.buddyUniqueId = buddy.uniqueId
+            occupant.buddyUniqueId = buddy.uniqueId
         }
         return occupant
     }

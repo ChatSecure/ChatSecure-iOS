@@ -40,6 +40,12 @@ public extension YapDatabase {
                 return nil
             }
             
+            // Filter out occupants not associated with any JIDs
+            if occupant.jids.count == 0,
+                occupant.realJID == nil {
+                return nil
+            }
+            
             return roomId
         }
         
@@ -69,6 +75,6 @@ public extension YapDatabase {
             return name1.localizedCompare(name2)
         }
         
-        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegisterView(grouping, sorting: sorting, version: "3", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
 }
