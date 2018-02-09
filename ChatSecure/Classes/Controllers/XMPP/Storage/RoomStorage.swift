@@ -72,6 +72,11 @@ import YapDatabase
             // TODO unify this with the non-MUC receipt logic
             OTRXMPPRoomMessage.handleDeliveryReceiptRequest(message: xmppMessage, xmppStream: xmppStream)
             
+            // If this is a receipt, we are done
+            if xmppMessage.hasReceiptResponse {
+                return
+            }
+            
             let stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: self.capabilities)
             let originId = xmppMessage.originId
             
