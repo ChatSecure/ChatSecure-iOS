@@ -475,7 +475,11 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 buddy.username = roomOccupant.realJID ?? roomOccupant.jids.first?.full ?? ""
                 buddy.displayName = roomOccupant.roomName ?? buddy.username
                 var status: OTRThreadStatus = .available
-                if !roomOccupant.available {
+                
+                //Any of the occupants jids online?
+                if !roomOccupant.jids.contains(where: { (jid) -> Bool in
+                    return OTRBuddyCache.shared.jidOnline(jid.full, in: room)
+                }) {
                     status = .offline
                 }
                 OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)

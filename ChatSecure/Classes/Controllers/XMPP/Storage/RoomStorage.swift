@@ -166,16 +166,25 @@ extension RoomStorage: XMPPRoomStorage {
             if let buddyJidString = item.attributeStringValue(forName: "jid") {
                 buddyJID = XMPPJID(string: buddyJidString)?.bareJID
             }
-            guard let occupant = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: buddyJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
+            
+            // Is this nickname stored as belonging to someone else? In that case we need to remove that old mapping.
+            var occupantByJID = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: nil, roomJID: room.roomJID, accountId: accountId, createIfNeeded: false, transaction: transaction)?.copyAsSelf()
+            if let occupant = occupantByJID, let buddyRealJid = buddyJID, let oldRealJid = occupant.realJID, oldRealJid != buddyRealJid.full {
+                DDLogVerbose("Change nickname mapping from \(oldRealJid) to \(buddyRealJid)")
+                occupant.removeJid(presenceJID)
+                occupant.save(with: transaction)
+                occupantByJID = nil
+            }
+            
+            guard let occupant = occupantByJID ?? OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: buddyJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
                 DDLogWarn("Could not create room occupant")
                 return
             }
             let role = item.attributeStringValue(forName: "role") ?? ""
             let affiliation = item.attributeStringValue(forName: "affiliation") ?? ""
-            if presence.presenceType == .unavailable {
-                occupant.removeJid(presenceJID)
-            } else {
-                occupant.addJid(presenceJID)
+            occupant.addJid(presenceJID)
+            if let room = OTRXMPPRoom.fetch(xmppRoom: room, transaction: transaction) {
+                OTRBuddyCache.shared.setJid(presenceJID.full, online: presence.presenceType != .unavailable, in:room)
             }
             occupant.roomName = presenceJID.resource
             occupant.role = RoomOccupantRole(stringValue: role)

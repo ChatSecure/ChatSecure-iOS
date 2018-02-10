@@ -10,6 +10,15 @@
 #import "OTRDatabaseManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
+@implementation OTRXMPPRoomRuntimeProperties
+- (instancetype)init {
+    if (self = [super init]) {
+        _onlineJids = [NSMutableArray array];
+    }
+    return self;
+}
+@end
+
 @interface OTRBuddyCache() {
     void *IsOnInternalQueueKey;
 }
@@ -19,8 +28,7 @@
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDictionary<NSString*, NSNumber*>*> *threadStatuses;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *waitingForvCardTempFetch;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSDate*> *lastSeenDates;
-@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *roomJoinedFlags;
-@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,NSNumber*> *roomHasFetchedHistoryFlags;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,OTRXMPPRoomRuntimeProperties*> *roomProperties;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t queue;
 
@@ -50,8 +58,7 @@
         _threadStatuses = [NSMutableDictionary dictionary];
         _waitingForvCardTempFetch = [NSMutableDictionary dictionary];
         _lastSeenDates = [NSMutableDictionary dictionary];
-        _roomJoinedFlags = [NSMutableDictionary dictionary];
-        _roomHasFetchedHistoryFlags = [NSMutableDictionary dictionary];
+        _roomProperties = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -225,41 +232,42 @@
     }];
 }
 
-- (void)setJoined:(BOOL)joined forRoom:(OTRXMPPRoom *)room {
+- (OTRXMPPRoomRuntimeProperties *)runtimePropertiesForRoom:(OTRXMPPRoom *)room {
     NSParameterAssert(room.uniqueId);
-    if (!room.uniqueId) { return; }
-    [self performAsyncWrite:^{
-        [self.roomJoinedFlags setObject:@(joined) forKey:room.uniqueId];
-    }];
-}
-
-- (BOOL)joinedForRoom:(OTRXMPPRoom *)room {
-    NSParameterAssert(room.uniqueId);
-    if (!room.uniqueId) { return NO; }
-    __block BOOL joined = NO;
+    if (!room.uniqueId) { return nil; }
+    __block OTRXMPPRoomRuntimeProperties *properties = nil;
     [self performSyncRead:^{
-        joined = [self.roomJoinedFlags objectForKey:room.uniqueId].boolValue;
+        properties = [self.roomProperties objectForKey:room.uniqueId];
+        if (!properties) {
+            properties = [[OTRXMPPRoomRuntimeProperties alloc] init];
+            [self performAsyncWrite:^{
+                [self.roomProperties setObject:properties forKey:room.uniqueId];
+            }];
+        }
     }];
-    return joined;
+    return properties;
 }
 
-- (void)setHasFetchedHistory:(BOOL)hasFetchedHistory forRoom:(OTRXMPPRoom *)room {
-    NSParameterAssert(room.uniqueId);
-    if (!room.uniqueId) { return; }
-    [self performAsyncWrite:^{
-        [self.roomHasFetchedHistoryFlags setObject:@(hasFetchedHistory) forKey:room.uniqueId];
-    }];
+- (void)setJid:(NSString *)jid online:(BOOL)online inRoom:(OTRXMPPRoom *)room {
+    OTRXMPPRoomRuntimeProperties *properties = [self runtimePropertiesForRoom:room];
+    if (properties) {
+        if (online) {
+            if (![properties.onlineJids containsObject:jid]) {
+                [properties.onlineJids addObject:jid];
+            }
+        } else {
+            if ([properties.onlineJids containsObject:jid]) {
+                [properties.onlineJids removeObject:jid];
+            }
+        }
+    }
 }
 
-- (BOOL)hasFetchedHistoryForRoom:(OTRXMPPRoom *)room {
-    NSParameterAssert(room.uniqueId);
-    if (!room.uniqueId) { return NO; }
-    __block BOOL hasFetchedHistory = NO;
-    [self performSyncRead:^{
-        hasFetchedHistory = [self.roomHasFetchedHistoryFlags objectForKey:room.uniqueId].boolValue;
-    }];
-    return hasFetchedHistory;
+- (BOOL)jidOnline:(NSString *)jid inRoom:(OTRXMPPRoom *)room {
+    OTRXMPPRoomRuntimeProperties *properties = [self runtimePropertiesForRoom:room];
+    return (properties && [properties.onlineJids containsObject:jid]);
 }
+
 
 /** Clears everything for given buddies */
 - (void) purgeAllPropertiesForBuddies:(NSArray <OTRBuddy*>*)buddies {
@@ -296,8 +304,7 @@
     
     [self performAsyncWrite:^{
         [rooms enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull room, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self.roomJoinedFlags removeObjectForKey:room.uniqueId];
-            [self.roomHasFetchedHistoryFlags removeObjectForKey:room.uniqueId];
+            [self.roomProperties removeObjectForKey:room.uniqueId];
         }];
     }];
 }

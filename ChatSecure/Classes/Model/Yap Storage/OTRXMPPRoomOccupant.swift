@@ -93,10 +93,6 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     
     @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
-    @objc open var available:Bool {
-        return (_jids?.count ?? 0) > 0
-    }
-    
     /** This is all JIDs of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
     @objc private var _jids: [String]?
     
@@ -151,7 +147,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     }
     
     @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
-        if key == #keyPath(available) || key == #keyPath(jids) {
+        if key == #keyPath(jids) {
             return MTLPropertyStorageNone
         }
         return super.storageBehaviorForProperty(withKey: key)
