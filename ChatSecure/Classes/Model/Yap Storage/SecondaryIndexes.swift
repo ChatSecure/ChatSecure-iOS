@@ -113,11 +113,11 @@ public extension YapDatabaseSecondaryIndex {
     
     @objc public static var roomOccupantIndex: YapDatabaseSecondaryIndex {
         let columns: [String:YapDatabaseSecondaryIndexType] = [
-            RoomOccupantIndexColumnName.jids: .text,
+            RoomOccupantIndexColumnName.jid: .text,
             RoomOccupantIndexColumnName.realJID: .text,
             RoomOccupantIndexColumnName.roomUniqueId: .text,
             RoomOccupantIndexColumnName.buddyUniqueId: .text,
-        ]
+            ]
         let setup = YapDatabaseSecondaryIndexSetup(capacity: UInt(columns.count))
         columns.forEach { (key, value) in
             setup.addColumn(key, with: value)
@@ -127,14 +127,11 @@ public extension YapDatabaseSecondaryIndex {
             guard let occupant = object as? OTRXMPPRoomOccupant else {
                 return
             }
-            if occupant.jids.count > 0 {
-                // Concatenate all jids with a null character \t so we can use a LIKE %\tjid\t construct to look them up without risking partial matches with other jids!
-                dict[RoomOccupantIndexColumnName.jids] = "\t".appending(occupant.jids.flatMap { (jid) -> String in
-                        jid.full
-                    }.joined(separator: "\t")).appending("\t")
+            if let jid = occupant.jid {
+                dict[RoomOccupantIndexColumnName.jid] = jid.full
             }
-            if let realJID = occupant.realJID, realJID.count > 0 {
-                dict[RoomOccupantIndexColumnName.realJID] = realJID
+            if let realJID = occupant.realJID {
+                dict[RoomOccupantIndexColumnName.realJID] = realJID.bare
             }
             if let roomUniqueId = occupant.roomUniqueId, roomUniqueId.count > 0 {
                 dict[RoomOccupantIndexColumnName.roomUniqueId] = roomUniqueId
@@ -144,7 +141,7 @@ public extension YapDatabaseSecondaryIndex {
             }
         }
         let options = YapDatabaseSecondaryIndexOptions(whitelist: [OTRXMPPRoomOccupant.collection])
-        let secondaryIndex = YapDatabaseSecondaryIndex(setup: setup, handler: handler, versionTag: "5", options: options)
+        let secondaryIndex = YapDatabaseSecondaryIndex(setup: setup, handler: handler, versionTag: "6", options: options)
         return secondaryIndex
     }
 }
@@ -248,7 +245,7 @@ public extension OTRXMPPBuddy {
 
 @objc public class RoomOccupantIndexColumnName: NSObject {
     /// jids
-    @objc public static let jids = "OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName"
+    @objc public static let jid = "OTRYapDatabaseRoomOccupantJidSecondaryIndexColumnName"
     @objc public static let realJID = "RoomOccupantIndexColumnName_realJID"
     @objc public static let roomUniqueId = "RoomOccupantIndexColumnName_roomUniqueId"
     @objc public static let buddyUniqueId = "RoomOccupantIndexColumnName_buddyUniqueId"

@@ -24,19 +24,37 @@ import YapDatabase.YapDatabaseRelationship
     @objc open var muteExpiration:Date?
     @objc open var accountUniqueId:String?
     /** Your full JID for the room e.g. xmpp-development@conference.deusty.com/robbiehanson */
-    @objc open var ownJID:String?
+    @objc private var ownJID:String?
     
     /// JID of the room itself
-    @objc open var jid:String?
+    @objc private var jid:String?
     
     @objc open var preferredSecurity: RoomSecurity = .best
     
     /// XMPPJID of the room itself
-    public var roomJID: XMPPJID? {
-        if let jid = jid {
+    @objc public var roomJID: XMPPJID? {
+        get {
+            if let jid = jid {
+                return XMPPJID(string: jid)
+            } else {
+                return nil
+            }
+        }
+        set {
+            jid = newValue?.bare
+        }
+    }
+    
+    
+    public var ourJID: XMPPJID? {
+        get {
+            guard let jid = ownJID else {
+                return nil
+            }
             return XMPPJID(string: jid)
-        } else {
-            return nil
+        }
+        set {
+            ownJID = newValue?.full
         }
     }
 
@@ -87,7 +105,9 @@ import YapDatabase.YapDatabaseRelationship
     }
     
     @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
-        if key == #keyPath(hasFetchedHistory) || key == #keyPath(joined) {
+        if [#keyPath(hasFetchedHistory),
+            #keyPath(joined),
+            #keyPath(roomJID)].contains(key) {
             return MTLPropertyStorageNone
         }
         return super.storageBehaviorForProperty(withKey: key)
@@ -284,6 +304,8 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
     public func allOccupants(_ transaction: YapDatabaseReadTransaction) -> [OTRXMPPRoomOccupant] {
         let occupants = OTRXMPPRoom.allOccupantKeys(roomUniqueId: self.uniqueId, transaction: transaction).flatMap {
             OTRXMPPRoomOccupant.fetchObject(withUniqueID: $0, transaction: transaction)
+            }.filter {
+                $0.jid != nil || $0.realJID != nil
         }
         return occupants
     }

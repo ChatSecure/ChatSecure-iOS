@@ -41,7 +41,7 @@ public extension YapDatabase {
             }
             
             // Filter out occupants not associated with any JIDs
-            if occupant.jids.count == 0,
+            if occupant.jid == nil,
                 occupant.realJID == nil {
                 return nil
             }
@@ -64,17 +64,17 @@ public extension YapDatabase {
                 }
             }
             
-            guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.roomName ?? (object1 as? OTRXMPPRoomOccupant)?.realJID ?? (object1 as? OTRXMPPRoomOccupant)?.jids.first?.full else {
+            guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.roomName ?? (object1 as? OTRXMPPRoomOccupant)?.realJID?.full ?? (object1 as? OTRXMPPRoomOccupant)?.jid?.full else {
                 return .orderedSame
             }
             
-            guard let name2 = (object2 as? OTRXMPPRoomOccupant)?.roomName ?? (object2 as? OTRXMPPRoomOccupant)?.realJID ?? (object2 as? OTRXMPPRoomOccupant)?.jids.first?.full else {
+            guard let name2 = (object2 as? OTRXMPPRoomOccupant)?.roomName ?? (object2 as? OTRXMPPRoomOccupant)?.realJID?.full ?? (object2 as? OTRXMPPRoomOccupant)?.jid?.full else {
                 return .orderedSame
             }
             
             return name1.localizedCompare(name2)
         }
         
-        self.asyncRegisterView(grouping, sorting: sorting, version: "3", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegisterView(grouping, sorting: sorting, version: "9", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
 }

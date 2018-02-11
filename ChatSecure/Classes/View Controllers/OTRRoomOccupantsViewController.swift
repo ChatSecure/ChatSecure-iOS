@@ -150,7 +150,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         var canInviteOthers = false
         var canModifySubject = false
         
-        if let room = self.room, let accountId = room.accountUniqueId, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let ownJidStr = room.ownJID, let ownJid = XMPPJID(string: ownJidStr), let connection = self.connection {
+        if let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection {
                 connection.read({ (transaction) in
                     if let ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction) {
                         canInviteOthers = ownOccupant.role.canInviteOthers()
@@ -315,7 +315,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open func didSelectFooterCell(type:String) {
         switch type {
         case CellIdentifier.FooterCellLeave:
-            if let room = self.room, let roomJidStr = room.jid, let roomJid = XMPPJID(string: roomJidStr), let xmppRoomManager = self.xmppRoomManager(for: room) {
+            if let room = self.room,
+                let roomJid = room.roomJID,
+                let xmppRoomManager = self.xmppRoomManager(for: room) {
                 //Leave room
                 xmppRoomManager.leaveRoom(roomJid)
                 if let delegate = self.delegate {
@@ -461,28 +463,26 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                 accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
             })
             var isYou = false
-            if let accountJid = accountObject?.bareJID?.bare, roomOccupant.realJID == accountJid {
+            if let accountJid = accountObject?.bareJID?.bare, roomOccupant.realJID?.bare == accountJid {
                 isYou = true
             }
 
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
-            } else if let roomJid = room.jid {
+            } else if let roomJid = room.roomJID {
                 // Create temporary buddy
                 // Do not save here or it will auto-trust random people
-                let uniqueId = roomJid + account
+                let uniqueId = roomJid.bare + account
                 let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
-                buddy.username = roomOccupant.realJID ?? roomOccupant.jids.first?.full ?? ""
+                buddy.trustLevel = .untrusted
+                buddy.username = roomOccupant.realJID?.bare ?? roomOccupant.jid?.full ?? ""
                 buddy.displayName = roomOccupant.roomName ?? buddy.username
-                var status: OTRThreadStatus = .available
-                
-                //Any of the occupants jids online?
-                if !roomOccupant.jids.contains(where: { (jid) -> Bool in
-                    return OTRBuddyCache.shared.jidOnline(jid.full, in: room)
-                }) {
-                    status = .offline
+                var status = OTRThreadStatus.offline
+                if let jid = roomOccupant.jid,
+                    OTRBuddyCache.shared.jidOnline(jid.full, in: room)  {
+                    status = .available
                 }
-                OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: nil)
+                OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: roomOccupant.jid?.bare)
                 cell.setThread(buddy, account: nil)
             }
             

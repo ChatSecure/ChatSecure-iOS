@@ -107,7 +107,7 @@
             room = [[OTRXMPPRoom alloc] init];
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
-            room.jid = jid.bare;
+            room.roomJID = jid;
         } else {
             // Clear out roles, we'll getpresence updates once we join
             [self clearOccupantRolesInRoom:room withTransaction:transaction];
@@ -219,7 +219,7 @@
             
             if ([object isKindOfClass:[OTRXMPPRoom class]]) {
                 OTRXMPPRoom *room = (OTRXMPPRoom *)object;
-                if ([room.jid length]) {
+                if (room.roomJID) {
                     [roomArray addObject:room];
                 }
             }
@@ -233,7 +233,7 @@
         }];
     }];
     [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:nickname subject:obj.subject password:obj.roomPassword];
+        [self joinRoom:obj.roomJID withNickname:nickname subject:obj.subject password:obj.roomPassword];
     }];
     
     [self addRoomsToBookmarks:roomArray];

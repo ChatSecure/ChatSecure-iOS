@@ -17,13 +17,12 @@ public extension OTRXMPPRoomManager {
     
     private func roomForBookmark(_ bookmark: XMPPBookmark) -> OTRXMPPRoom? {
         guard let conference = bookmark as? XMPPConferenceBookmark,
-            let jidString = conference.jid?.bare,
             let accountId = self.accountId else {
                 return nil
         }
         let room = OTRXMPPRoom()!
         room.accountUniqueId = accountId
-        room.jid = jidString
+        room.roomJID = conference.jid
         room.subject = conference.bookmarkName
         room.roomPassword = conference.password
         return room

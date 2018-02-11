@@ -30,8 +30,23 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     @objc open static let roomEdgeName = "OTRRoomMesageEdgeName"
     
     @objc open var roomJID:String?
-    /** This is the full JID of the sender. This should be equal to the occupant.jid*/
+    /** This is the full JID of the sender within the room. This should be equal to the occupant.jid*/
     @objc open var senderJID:String?
+    
+    /** This is the "real" JID of the non-anonymous buddy if it can be directly inferred from the message*/
+    @objc private var _realJID:String?
+    
+    /** This is the "real" JID of the non-anonymous buddy if it can be directly inferred from the message*/
+    open var realJID: XMPPJID? {
+        get {
+            guard let jid = _realJID else { return nil }
+            return XMPPJID(string: jid)
+        }
+        set {
+            _realJID = newValue?.full
+        }
+    }
+    
     @objc open var state:RoomMessageState = .received
     @objc open var deliveredDate = Date.distantPast
     @objc open var messageText:String?
@@ -55,7 +70,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
 }
 
 public extension OTRXMPPRoomMessage {
-    public convenience init(message: XMPPMessage, delayed: Date?, room: OTRXMPPRoom) {
+    public convenience init(message: XMPPMessage, delayed: Date?, room: OTRXMPPRoom, transaction: YapDatabaseReadTransaction) {
         self.init()
         xmppId = message.elementID
         messageText = message.body
@@ -67,15 +82,40 @@ public extension OTRXMPPRoomMessage {
             messageDate = Date()
         }
         senderJID = message.from?.full
-        roomJID = room.jid
+        roomJID = room.roomJID?.bare
         // compare with lowercase-only because sometimes
         // we get both lowercase and uppercase nicknames?
-        if room.ownJID?.lowercased() == message.from?.full.lowercased() {
+        if room.ourJID?.full.lowercased() == message.from?.full.lowercased() {
             state = .sent
         } else {
             state = .received
         }
         roomUniqueId = room.uniqueId
+        
+        
+        // Try to find buddy of sender. We might get an muc#user item element from where we can pull the real jid of the sender, else we try by message.senderJID.
+        if let x = message.element(forName: "x", xmlns: XMPPMUCUserNamespace),
+            let item = x.element(forName: "item"),
+            let jidString = item.attribute(forName: "jid")?.stringValue,
+            let jid = XMPPJID(string: jidString) {
+            realJID = jid
+        }
+        // first try to scoop out buddy from realJID
+        if let realJID = realJID,
+             let accountId = room.accountUniqueId {
+            if let buddy = OTRXMPPBuddy.fetchBuddy(jid: realJID, accountUniqueId: accountId, transaction: transaction)  {
+                buddyUniqueId = buddy.uniqueId
+            }
+        }
+        // if that fails, try to get an existing occupant
+        if buddyUniqueId == nil,
+            let accountId = room.accountUniqueId,
+            let senderJID = message.from,
+            let roomJID = room.roomJID,
+            let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJID, realJID: realJID, roomJID: roomJID, accountId: accountId, createIfNeeded: false, transaction: transaction) {
+            buddyUniqueId = occupant.buddyUniqueId
+        }
+        
         read = false
     }
 }

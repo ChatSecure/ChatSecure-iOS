@@ -1819,10 +1819,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             displayName = [buddy displayName];
                         } else if (occupant.roomName) {
                             displayName = occupant.roomName;
-                        } else {
-                            if (occupant.jids && occupant.jids.count > 0) {
-                                displayName = [[occupant.jids anyObject] resource];
-                            }
                         }
                     }
                 }

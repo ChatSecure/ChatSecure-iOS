@@ -89,15 +89,30 @@ import CocoaLumberjack
     }
 }
 
-open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
+open class OTRXMPPRoomOccupant: OTRYapDatabaseObject {
     
     @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
-    /** This is all JIDs of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
-    @objc private var _jids: [String]?
+    /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
+    @objc private var _jid: String?
     
-    /** This is the name your known as in the room. Seems to be username without domain */
-    @objc open var roomName:String?
+    /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
+    @objc open var jid: XMPPJID? {
+        get {
+            guard let jidString = _jid else {
+                return nil
+            }
+            return XMPPJID(string: jidString)
+        }
+        set {
+            _jid = newValue?.full
+        }
+    }
+    
+    /** Aka "nickname". This is the name your known as in the room. Seems to be username without domain */
+    @objc open var roomName:String? {
+        return jid?.resource
+    }
     
     /** This is the role of the occupant in the room */
     @objc open var role:RoomOccupantRole = .none
@@ -105,23 +120,34 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
     /** This is the affiliation of the occupant in the room */
     @objc open var affiliation:RoomOccupantAffiliation = .none
 
-    /**When given by the server we get the room participants reall JID*/
-    @objc open var realJID:String?
+    @objc private var _realJID:String?
+    
+    /** When given by the server we get the room participants real JID*/
+    @objc open var realJID:XMPPJID? {
+        get {
+            guard let jidString = _realJID else {
+                return nil
+            }
+            return XMPPJID(string: jidString)?.bareJID
+        }
+        set {
+            _realJID = newValue?.bare
+        }
+    }
+
 
     @objc open var buddyUniqueId:String?
     @objc open var roomUniqueId:String?
     
-    @objc open func avatarImage() -> UIImage {
-        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName ?? realJID ?? _jids?.first, username: self.realJID)
+    // jid is the full JID of the room participant e.g. baseball_chat@conference.dukgo.com/user123
+    @objc public convenience init(jid: XMPPJID?, roomUniqueId: String) {
+        self.init()
+        _jid = jid?.full
+        self.roomUniqueId = roomUniqueId
     }
     
-    //MARK: YapDatabaseRelationshipNode Methods
-    open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
-        if let roomID = self.roomUniqueId {
-            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection, destinationKey: roomID, collection: OTRXMPPRoom.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
-            return [relationship]
-        }
-        return nil
+    @objc open func avatarImage() -> UIImage {
+        return OTRImages.avatarImage(withUniqueIdentifier: self.uniqueId, avatarData: nil, displayName: roomName, username: self.realJID?.full)
     }
     
     // MARK: Helper Functions
@@ -133,24 +159,51 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNod
         return nil
     }
     
+    // MARK: MTLModel Overrides
+    
     open override func decodeValue(forKey key: String!, with coder: NSCoder!, modelVersion: UInt) -> Any! {
-        if modelVersion == 0, key == "_jids" {
-            if let jid = coder.decodeObject(forKey: "jid") as? String {
-                return [jid]
+        if modelVersion == 0 {
+            if key == "_jid",
+                let jid = coder.decodeObject(forKey: "jid") as? String {
+                return jid
+            } else if key == "_realJID",
+                let realJID = coder.decodeObject(forKey: "realJID") as? String {
+                return realJID
+            }
+        } else if modelVersion == 1 {
+            if key == "_jid",
+                let jids = coder.decodeObject(forKey: "jid") as? [String] {
+                return jids.first
+            } else if key == "_realJID",
+                let realJID = coder.decodeObject(forKey: "realJID") as? String {
+                return realJID
             }
         }
         return super.decodeValue(forKey: key, with: coder, modelVersion: modelVersion)
     }
     
     open class override func modelVersion() -> UInt {
-        return 1
+        return 2
     }
     
     @objc override open class func storageBehaviorForProperty(withKey key:String) -> MTLPropertyStorage {
-        if key == #keyPath(jids) {
+        if [#keyPath(jid),
+            #keyPath(roomName),
+            #keyPath(realJID)].contains(key) {
             return MTLPropertyStorageNone
         }
         return super.storageBehaviorForProperty(withKey: key)
+    }
+}
+
+// MARK: YapDatabaseRelationshipNode Methods
+extension OTRXMPPRoomOccupant: YapDatabaseRelationshipNode {
+    open func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
+        if let roomID = self.roomUniqueId {
+            let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection, destinationKey: roomID, collection: OTRXMPPRoom.collection, nodeDeleteRules: YDB_NodeDeleteRules.deleteSourceIfDestinationDeleted)
+            return [relationship]
+        }
+        return nil
     }
 }
 
@@ -163,7 +216,7 @@ public extension OTRXMPPRoomOccupant {
      * realJID is only available for non-anonymous rooms
      * createIfNeeded=true will return a new unsaved object if it's not found
      */
-    @objc public static func occupant(jid: XMPPJID,
+    @objc public static func occupant(jid: XMPPJID?,
                                realJID: XMPPJID?,
                                roomJID: XMPPJID,
                                accountId: String,
@@ -178,18 +231,23 @@ public extension OTRXMPPRoomOccupant {
         
         var parameters: [String] = [roomUniqueId]
         var queryString = "Where \(RoomOccupantIndexColumnName.roomUniqueId) == ? AND ("
-        // We build the secondary index with appended \0 to avoid matching wrong jids, so add a matching \0s here.
-        parameters.append("%\t\(jid.full)\t%")
-        queryString.append("\(RoomOccupantIndexColumnName.jids) LIKE ?")
+        if let jid = jid {
+            parameters.append(jid.full)
+            queryString.append("\(RoomOccupantIndexColumnName.jid) LIKE ?")
+        }
+        if jid != nil, realJID != nil {
+            queryString.append(" OR ")
+        }
         if let realJID = realJID {
             parameters.append(realJID.bare)
-            queryString.append(" OR \(RoomOccupantIndexColumnName.realJID) == ?")
+            queryString.append("\(RoomOccupantIndexColumnName.realJID) == ?")
         }
         queryString.append(")")
         
         let query = YapDatabaseQuery(string: queryString, parameters: parameters)
         let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
-            if let matchingOccupant = object as? OTRXMPPRoomOccupant {
+            if let matchingOccupant = object as? OTRXMPPRoomOccupant,
+                matchingOccupant.jid != nil || matchingOccupant.realJID != nil {
                 matchingOccupants.append(matchingOccupant)
             }
         }
@@ -199,13 +257,21 @@ public extension OTRXMPPRoomOccupant {
         }
         if matchingOccupants.count > 1 {
             DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query \(query): \(matchingOccupants)")
+
+            // if we have a corrupted database with extra occupants, try to filter
+            // out some of the bad ones
+            let filtered = matchingOccupants.filter({ (occupant) -> Bool in
+                occupant.jid != nil
+            })
+            if filtered.count > 0 {
+                matchingOccupants = filtered
+            }
         }
         var _occupant: OTRXMPPRoomOccupant? = matchingOccupants.first
         
         if _occupant == nil {
             if createIfNeeded {
-                _occupant = OTRXMPPRoomOccupant()!
-                _occupant?.roomUniqueId = roomUniqueId
+                _occupant = OTRXMPPRoomOccupant(jid: jid, roomUniqueId: roomUniqueId)
             } else {
                 return nil
             }
@@ -216,57 +282,22 @@ public extension OTRXMPPRoomOccupant {
             return nil
         }
         
-        occupant.addJid(jid)
-        
-        // also add lowercased version of nickname
-        if let lowercased = XMPPJID(string: jid.full.lowercased()) {
-            occupant.addJid(lowercased)
+        // sometimes a bad database makes this nil
+        if occupant.jid == nil, let jid = jid {
+            occupant.jid = jid
         }
         
         // Set realJID?
         if let realJID = realJID {
-            occupant.realJID = realJID.bare
+            occupant.realJID = realJID
         }
 
         // While we're at it, match room occupant with a buddy on our roster if possible
         // This should probably be moved elsewhere
         if let realJID = occupant.realJID,
-            let jid = XMPPJID(string: realJID),
-            let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: accountId, transaction: transaction) {
+            let buddy = OTRXMPPBuddy.fetchBuddy(jid: realJID, accountUniqueId: accountId, transaction: transaction) {
             occupant.buddyUniqueId = buddy.uniqueId
         }
         return occupant
-    }
-}
-
-// Extension for adding/removing jids from the jids array
-public extension OTRXMPPRoomOccupant {
-
-    @objc public var jids: Set<XMPPJID> {
-        get {
-            let validJids = _jids?.flatMap({ (jidStr) -> XMPPJID? in
-                XMPPJID(string: jidStr)
-            })
-            return Set(validJids ?? [])
-        }
-        set {
-            _jids = newValue.map { (jid) -> String in
-                jid.full
-            }
-        }
-    }
-    
-    @objc public func addJid(_ jid:XMPPJID) {
-        if jid.bare != realJID {
-            var jidSet = self.jids
-            jidSet.insert(jid)
-            self.jids = jidSet
-        }
-    }
-    
-    @objc public func removeJid(_ jid:XMPPJID) {
-        var jidSet = self.jids
-        jidSet.remove(jid)
-        self.jids = jidSet
     }
 }

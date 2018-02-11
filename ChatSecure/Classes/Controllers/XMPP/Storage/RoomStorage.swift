@@ -63,6 +63,10 @@ import YapDatabase
             DDLogWarn("Group OMEMO message received but couldn't decrypt body")
             return
         }
+        guard let senderJID = xmppMessage.from else {
+            // No sender JID?
+            return
+        }
         
         connection.asyncReadWrite { (transaction) in
             guard let account = xmppRoom.account(with: transaction),
@@ -90,9 +94,10 @@ import YapDatabase
                 let room = OTRXMPPRoom(uniqueId: yapKey)
                 room.lastRoomMessageId = "" // Hack to make it show up in list
                 room.accountUniqueId = account.uniqueId
-                room.jid = room.roomJID?.bare
+                room.roomJID = xmppRoom.roomJID
             }
-            guard let room = _room?.copyAsSelf() else {
+            guard let room = _room?.copyAsSelf(),
+                let roomJID = room.roomJID else {
                 DDLogError("Could not find or create room for \(xmppRoom)")
                 return
             }
@@ -102,31 +107,16 @@ import YapDatabase
                 return
             }
             
-            let message = OTRXMPPRoomMessage(message: xmppMessage, delayed: delayed, room: room)
+            let message = OTRXMPPRoomMessage(message: xmppMessage, delayed: delayed, room: room, transaction: transaction)
             // override body if this was an encrypted message
             if let body = body {
                 message.messageText = body
             }
             message.originId = originId
             message.stanzaId = stanzaId
-
-            // Try to find buddy of sender. We might get an muc#user item element from where we can pull the real jid of the sender, else we try by message.senderJID.
-            if let x = xmppMessage.element(forName: "x", xmlns: XMPPMUCUserNamespace), let item = x.element(forName: "item"), let jidString = item.attribute(forName: "jid")?.stringValue, let jid = XMPPJID(string: jidString) {
-                if let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: account.uniqueId, transaction: transaction) {
-                    message.buddyUniqueId = buddy.uniqueId
-                }
-                // Is this from us?
-                if let accountJid = account.bareJID, jid.bareJID.isEqual(to: accountJid) {
-                    message.state = .sent
-                }
-            }
-            if message.buddyUniqueId == nil, let senderJidString = message.senderJID, let senderJid = XMPPJID(string: senderJidString), let roomJid = room.roomJID, let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJid, realJID: senderJid, roomJID: roomJid, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction), let buddy = occupant.buddy(with: transaction) {
-                message.buddyUniqueId = buddy.uniqueId
-                // Is this from us?
-                if let accountJid = account.bareJID, let realJid = occupant.realJID, realJid.isEqual(accountJid) {
-                    message.state = .sent
-                }
-            }
+            
+            let occupant = OTRXMPPRoomOccupant.occupant(jid: senderJID, realJID: message.realJID, roomJID: roomJID, accountId: account.uniqueId, createIfNeeded: true, transaction: transaction)
+            occupant?.save(with: transaction)
             
             room.lastRoomMessageId = message.uniqueId
             room.save(with: transaction)
@@ -153,40 +143,28 @@ extension RoomStorage: XMPPRoomStorage {
     
     public func handle(_ presence: XMPPPresence, room: XMPPRoom) {
         guard let presenceJID = presence.from,
-            let accountId = room.accountId,
-            let mucElement = presence.element(forName: "x", xmlns: XMPPMUCUserNamespace),
-            let item = mucElement.element(forName: "item")
-            else {
+            let accountId = room.accountId else {
             // DDLogWarn("Discarding MUC presence \(presence)")
             return
         }
+        let item = presence.element(forName: "x", xmlns: XMPPMUCUserNamespace)?.element(forName: "item")
+        
         connection.asyncReadWrite { (transaction) in
             // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
-            var buddyJID: XMPPJID? = nil
-            if let buddyJidString = item.attributeStringValue(forName: "jid") {
-                buddyJID = XMPPJID(string: buddyJidString)?.bareJID
+            var realJID: XMPPJID? = nil
+            if let buddyJidString = item?.attributeStringValue(forName: "jid") {
+                realJID = XMPPJID(string: buddyJidString)
             }
             
-            // Is this nickname stored as belonging to someone else? In that case we need to remove that old mapping.
-            var occupantByJID = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: nil, roomJID: room.roomJID, accountId: accountId, createIfNeeded: false, transaction: transaction)?.copyAsSelf()
-            if let occupant = occupantByJID, let buddyRealJid = buddyJID, let oldRealJid = occupant.realJID, oldRealJid != buddyRealJid.full {
-                DDLogVerbose("Change nickname mapping from \(oldRealJid) to \(buddyRealJid)")
-                occupant.removeJid(presenceJID)
-                occupant.save(with: transaction)
-                occupantByJID = nil
-            }
-            
-            guard let occupant = occupantByJID ?? OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: buddyJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
+            guard let occupant = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: realJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
                 DDLogWarn("Could not create room occupant")
                 return
             }
-            let role = item.attributeStringValue(forName: "role") ?? ""
-            let affiliation = item.attributeStringValue(forName: "affiliation") ?? ""
-            occupant.addJid(presenceJID)
+            let role = item?.attributeStringValue(forName: "role") ?? ""
+            let affiliation = item?.attributeStringValue(forName: "affiliation") ?? ""
             if let room = OTRXMPPRoom.fetch(xmppRoom: room, transaction: transaction) {
                 OTRBuddyCache.shared.setJid(presenceJID.full, online: presence.presenceType != .unavailable, in:room)
             }
-            occupant.roomName = presenceJID.resource
             occupant.role = RoomOccupantRole(stringValue: role)
             occupant.affiliation = RoomOccupantAffiliation(stringValue: affiliation)
             occupant.save(with: transaction)
@@ -227,10 +205,12 @@ extension RoomStorage: XMPPRoomStorage {
                 return
             }
             room.joined = true
-            room.ownJID = xmppRoom.myRoomJID?.full
+            room.ourJID = xmppRoom.myRoomJID
             room.save(with: transaction)
         }
     }
+    
+    
     
     
 }

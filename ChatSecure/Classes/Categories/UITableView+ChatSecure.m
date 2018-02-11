@@ -62,8 +62,9 @@
                 account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
             }];
             OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            XMPPJID *jid = [XMPPJID jidWithString:room.jid];
-            [xmppManager.roomManager leaveRoom:jid];
+            if (room.roomJID) {
+                [xmppManager.roomManager leaveRoom:room.roomJID];
+            }
             [xmppManager.roomManager removeRoomsFromBookmarks:@[room]];
             
             //Delete database items
