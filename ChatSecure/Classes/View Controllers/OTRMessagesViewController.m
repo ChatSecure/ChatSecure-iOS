@@ -760,6 +760,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                   handler:nil];
 }
 
+- (nullable UIAlertAction *)cancelDownloadActionForMessage:(id<OTRMessageProtocol>)message {
+    __block OTRMediaItem *mediaItem = nil;
+    __block OTRXMPPManager *xmpp = nil;
+    
+    //Get the media item
+    [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        mediaItem = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
+        xmpp = [self xmppManagerWithTransaction:transaction];
+    }];
+    UIAlertAction *action = nil;
+    
+    // Only show "Cancel" for messages that are not fully downloaded
+    if (mediaItem && mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+        action = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [xmpp.fileTransferManager cancelDownloadWithMediaItem:mediaItem];
+        }];
+    }
+    return action;
+}
+
 - (NSArray <UIAlertAction *>*)actionForMessage:(id<OTRMessageProtocol>)message {
     NSMutableArray <UIAlertAction *>*actions = [[NSMutableArray alloc] init];
     
@@ -771,19 +791,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     // If we are currently downloading, allow us to cancel
     if([[message messageMediaItemKey] length] > 0 && [message conformsToProtocol:@protocol(OTRDownloadMessage)] && message.messageError == nil) {
-        //id<OTRDownloadMessage> downloadMessage = (id<OTRDownloadMessage>)message;
-        __block OTRMediaItem *mediaItem = nil;
-        __block OTRXMPPManager *xmpp = nil;
-        //Get the media item
-        [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
-            xmpp = [self xmppManagerWithTransaction:transaction];
-        }];
-        if (mediaItem && mediaItem.isIncoming && mediaItem.transferProgress < 1/* && xmpp != nil && [xmpp.fileTransferManager downloading:downloadMessage]*/) {
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [xmpp.fileTransferManager cancelDownloadWithMediaItem:mediaItem];
-            }];
-            [actions addObject:cancelAction];
+        UIAlertAction *cancelDownloadAction = [self cancelDownloadActionForMessage:message];
+        if (cancelDownloadAction) {
+            [actions addObject:cancelDownloadAction];
         }
     }
     
