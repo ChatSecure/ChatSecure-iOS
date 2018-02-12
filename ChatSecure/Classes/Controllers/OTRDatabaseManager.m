@@ -197,7 +197,9 @@
         [self.database registerExtension:roomOccupantIndex withName:SecondaryIndexName.roomOccupants];
         YapDatabaseSecondaryIndex *buddyIndex = YapDatabaseSecondaryIndex.buddyIndex;
         [self.database registerExtension:buddyIndex withName:SecondaryIndexName.buddy];
-        
+        YapDatabaseSecondaryIndex *mediaItemIndex = YapDatabaseSecondaryIndex.mediaItemIndex;
+        [self.database registerExtension:mediaItemIndex withName:SecondaryIndexName.mediaItems];
+
         // Register action manager
         self.actionManager = [[YapDatabaseActionManager alloc] init];
         NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];

@@ -144,6 +144,29 @@ public extension YapDatabaseSecondaryIndex {
         let secondaryIndex = YapDatabaseSecondaryIndex(setup: setup, handler: handler, versionTag: "6", options: options)
         return secondaryIndex
     }
+    
+    @objc public static var mediaItemIndex: YapDatabaseSecondaryIndex {
+        let columns: [String:YapDatabaseSecondaryIndexType] = [
+            MediaItemIndexColumnName.mediaItemId: .text,
+            MediaItemIndexColumnName.transferProgress: .real,
+            MediaItemIndexColumnName.isIncoming: .integer
+        ]
+        let setup = YapDatabaseSecondaryIndexSetup(capacity: UInt(columns.count))
+        columns.forEach { (key, value) in
+            setup.addColumn(key, with: value)
+        }
+        let handler = YapDatabaseSecondaryIndexHandler.withObjectBlock { (transaction, dict, collection, key, object) in
+            guard let mediaItem = object as? OTRMediaItem else {
+                return
+            }
+            dict[MediaItemIndexColumnName.mediaItemId] = mediaItem.uniqueId
+            dict[MediaItemIndexColumnName.transferProgress] = mediaItem.transferProgress
+            dict[MediaItemIndexColumnName.isIncoming] = mediaItem.isIncoming
+        }
+        let options = YapDatabaseSecondaryIndexOptions(whitelist: [OTRMediaItem.collection])
+        let secondaryIndex = YapDatabaseSecondaryIndex(setup: setup, handler: handler, versionTag: "1", options: options)
+        return secondaryIndex
+    }
 }
 
 // MARK: - Extensions
@@ -223,6 +246,7 @@ public extension OTRXMPPBuddy {
     @objc public static let signal = "OTRYapDatabseMessageIdSecondaryIndexExtension"
     @objc public static let roomOccupants = "SecondaryIndexName_roomOccupantIndex"
     @objc public static let buddy = "SecondaryIndexName_buddy"
+    @objc public static let mediaItems = "SecondaryIndexName_mediaItems"
 }
 
 @objc public class BuddyIndexColumnName: NSObject {
@@ -255,4 +279,10 @@ public extension OTRXMPPBuddy {
     @objc public static let session = "OTRYapDatabaseSignalSessionSecondaryIndexColumnName"
     @objc public static let preKeyId = "OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName"
     @objc public static let preKeyAccountKey = "OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName"
+}
+
+@objc public class MediaItemIndexColumnName: NSObject {
+    @objc public static let mediaItemId = "MediaItemIndexColumnName_mediaItemId"
+    @objc public static let transferProgress = "MediaItemIndexColumnName_transferProgress"
+    @objc public static let isIncoming = "MediaItemIndexColumnName_isIncoming"
 }

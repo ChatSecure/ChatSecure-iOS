@@ -128,5 +128,22 @@ public extension YapDatabaseReadTransaction {
             }
         }
     }
+}
+
+public extension YapDatabaseReadTransaction {
     
+    @objc public func enumerateUnfinishedDownloads(_ block:@escaping (_ mediaItem:OTRMediaItem,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.mediaItems) as? YapDatabaseSecondaryIndexTransaction else {
+            return
+        }
+        let queryString = "Where \(MediaItemIndexColumnName.transferProgress) < 1 AND \(MediaItemIndexColumnName.isIncoming) == 1"
+        let query = YapDatabaseQuery(string: queryString, parameters: [])
+        secondaryIndexTransaction.enumerateKeysAndObjects(matching: query) { (key, collection, object, stop) in
+            if let download = object as? OTRMediaItem {
+                block(download, stop)
+            } else {
+                DDLogError("Non-media item object in downloads index \(object)")
+            }
+        }
+    }
 }
