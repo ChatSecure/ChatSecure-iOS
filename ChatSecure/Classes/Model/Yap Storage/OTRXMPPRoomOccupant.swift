@@ -172,7 +172,7 @@ open class OTRXMPPRoomOccupant: OTRYapDatabaseObject {
             }
         } else if modelVersion == 1 {
             if key == "_jid",
-                let jids = coder.decodeObject(forKey: "jid") as? [String] {
+                let jids = coder.decodeObject(forKey: "jids") as? [String] {
                 return jids.first
             } else if key == "_realJID",
                 let realJID = coder.decodeObject(forKey: "realJID") as? String {
