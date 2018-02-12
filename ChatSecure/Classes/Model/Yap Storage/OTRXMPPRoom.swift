@@ -48,19 +48,19 @@ import YapDatabase.YapDatabaseRelationship
     // Transient properties stored in OTRBuddyCache
     @objc open var joined:Bool {
         get {
-            return OTRBuddyCache.shared.joined(for: self)
+            return OTRBuddyCache.shared.runtimeProperties(for: self)?.joined ?? false
         }
         set (value) {
-            OTRBuddyCache.shared.setJoined(value, for: self)
+            OTRBuddyCache.shared.runtimeProperties(for: self)?.joined = value
         }
     }
     
     @objc open var hasFetchedHistory:Bool {
         get {
-            return OTRBuddyCache.shared.hasFetchedHistory(for: self)
+            return OTRBuddyCache.shared.runtimeProperties(for: self)?.hasFetchedHistory ?? false
         }
         set (value) {
-            OTRBuddyCache.shared.setHasFetchedHistory(value, for: self)
+            OTRBuddyCache.shared.runtimeProperties(for: self)?.hasFetchedHistory = value
         }
     }
     

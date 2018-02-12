@@ -12,6 +12,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class OTRXMPPRoom;
+typedef SWIFT_ENUM(NSInteger, RoomOccupantRole);
+@class OTRXMPPRoomOccupant;
+
+@interface OTRXMPPRoomRuntimeProperties : NSObject
+@property (nonatomic) BOOL joined;
+@property (nonatomic) BOOL hasFetchedHistory;
+@property (nonatomic) BOOL hasFetchedOwners;
+@property (nonatomic) BOOL hasFetchedAdmins;
+@property (nonatomic) BOOL hasFetchedMembers;
+@property (nonatomic, strong) NSMutableArray *onlineJids;
+@end
 
 /** Thread safe getters and setters for ephemeral in-memory storage of some buddy properties */
 @interface OTRBuddyCache : NSObject
@@ -52,16 +63,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setLastSeenDate:(nullable NSDate*)date forBuddy:(OTRBuddy*)buddy;
 
 /**
- Room status
+ Cached room properties
  */
-- (void) setJoined:(BOOL)joined forRoom:(OTRXMPPRoom*)room;
-- (BOOL) joinedForRoom:(OTRXMPPRoom*)room;
+- (nullable OTRXMPPRoomRuntimeProperties *) runtimePropertiesForRoom:(OTRXMPPRoom*)room;
 
-/**
- Flag that indicates if we have fetched initial history for the room upon joining
- */
-- (void) setHasFetchedHistory:(BOOL)hasFetchedHistory forRoom:(OTRXMPPRoom*)room;
-- (BOOL) hasFetchedHistoryForRoom:(OTRXMPPRoom*)room;
+- (void) setJid:(nonnull NSString*)jid online:(BOOL)online inRoom:(nonnull OTRXMPPRoom*)room;
+- (BOOL) jidOnline:(NSString*)jid inRoom:(nonnull OTRXMPPRoom*)room;
 
 @end
 NS_ASSUME_NONNULL_END

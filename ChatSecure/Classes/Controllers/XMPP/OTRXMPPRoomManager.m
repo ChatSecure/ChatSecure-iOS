@@ -10,6 +10,7 @@
 @import XMPPFramework;
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRBuddy.h"
+#import "OTRBuddyCache.h"
 @import YapDatabase;
 #import "OTRLog.h"
 
@@ -363,33 +364,68 @@
 
 #pragma - mark XMPPRoomDelegate Methods
 
-// After we have gotten the initial room subject we are ready for live messages. Go ahead and fetch MAM history now.
-- (void)xmppRoomDidChangeSubject:(XMPPRoom *)sender {
-    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:[sender.roomJID bare]];
+- (OTRXMPPRoom*)roomWithXMPPRoom:(XMPPRoom*)xmppRoom {
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:[xmppRoom.roomJID bare]];
+    __block OTRXMPPRoom *room = nil;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
-        if (room) {
-            if (!room.hasFetchedHistory) {
-                room.hasFetchedHistory = YES;
-                [self fetchHistoryFor:sender];
-            }
-        }
+        room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
     }];
+    return room;
+}
+
+- (OTRXMPPRoomRuntimeProperties *)roomRuntimeProperties:(XMPPRoom*)xmppRoom {
+    OTRXMPPRoom *room = [self roomWithXMPPRoom:xmppRoom];
+    if (room) {
+        return [OTRBuddyCache.shared runtimePropertiesForRoom:room];
+    }
+    return nil;
+}
+
+- (void) fetchHistoryIfListsDownloaded:(XMPPRoom *)xmppRoom {
+    OTRXMPPRoomRuntimeProperties *properties = [self roomRuntimeProperties:xmppRoom];
+    if (properties && !properties.hasFetchedHistory &&
+        properties.hasFetchedMembers &&
+        properties.hasFetchedAdmins &&
+        properties.hasFetchedOwners) {
+        properties.hasFetchedHistory = YES;
+        [self fetchHistoryFor:xmppRoom];
+    }
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched members list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
+    [[self roomRuntimeProperties:room] setHasFetchedMembers:YES];
+    [self fetchHistoryIfListsDownloaded:room];
+}
+
+- (void)xmppRoom:(XMPPRoom *)room didNotFetchMembersList:(XMPPIQ *)iqError {
+    [[self roomRuntimeProperties:room] setHasFetchedMembers:YES];
+    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchAdminsList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched admins list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
+    [[self roomRuntimeProperties:room] setHasFetchedAdmins:YES];
+    [self fetchHistoryIfListsDownloaded:room];
+}
+     
+- (void)xmppRoom:(XMPPRoom *)room didNotFetchAdminsList:(XMPPIQ *)iqError {
+    [[self roomRuntimeProperties:room] setHasFetchedAdmins:YES];
+    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchOwnersList:(NSArray<NSXMLElement*> *)items {
     DDLogInfo(@"Fetched owners list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
+    [[self roomRuntimeProperties:room] setHasFetchedOwners:YES];
+    [self fetchHistoryIfListsDownloaded:room];
+}
+
+- (void)xmppRoom:(XMPPRoom *)room didNotFetchOwnersList:(XMPPIQ *)iqError {
+    [[self roomRuntimeProperties:room] setHasFetchedOwners:YES];
+    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void)xmppRoom:(XMPPRoom *)room didFetchModeratorsList:(NSArray *)items {
@@ -402,14 +438,21 @@
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *jidString = [item attributeStringValueForName:@"jid"];
-            XMPPJID *jid = [XMPPJID jidWithString:jidString];
+            XMPPJID *realJid = [XMPPJID jidWithString:jidString];
             NSString *affiliation = [item attributeStringValueForName:@"affiliation"];
             
             // jid and affiliation MUST be included
-            if (!jid || !affiliation) { return; }
-            
+            if (!realJid || !affiliation) { return; }
+
+            // Nickname MAY be included
+            XMPPJID *jid = nil;
+            NSString *nick = [item attributeStringValueForName:@"nick"];
+            if (nick) {
+                jid = [room.roomJID jidWithNewResource:nick];
+            }
+
             // Make sure occupant object exists/is created
-            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:jid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
+            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:realJid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
             occupant.affiliation = [RoomOccupantAffiliationHelper affiliationWithString:affiliation];
             
             // Role MAY be included, so get that if it's there
