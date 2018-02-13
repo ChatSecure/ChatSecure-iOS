@@ -151,7 +151,7 @@
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */; };
 		D9315CB21BB606890077D2EE /* ShareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CB11BB606890077D2EE /* ShareController.swift */; };
-		D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		D935EF0B1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D935EF091CFFA19A005A1AC8 /* OTRBuddyApprovalCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D935EF0C1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D935EF0A1CFFA19A005A1AC8 /* OTRBuddyApprovalCell.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D936D6C91E8B0F6C003B1343 /* FileTransferManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6C81E8B0F6C003B1343 /* FileTransferManager.swift */; };

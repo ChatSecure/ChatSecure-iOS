@@ -1059,6 +1059,10 @@
         "comment": "Describes an error without a known cause",
         "string": "Unknown Error"
     },
+    "USER_CANCELED_STRING" : {
+        "comment": "Describes a state entered by user cancelation",
+        "string": "Canceled"
+    },
     "ENABLE_PUSH_STRING" : {
         "comment": "button for enabling push messages",
         "string": "Enable Push"

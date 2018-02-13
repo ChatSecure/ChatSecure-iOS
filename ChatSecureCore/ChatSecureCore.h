@@ -87,6 +87,7 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRXMPPRoomManager.h"
 #import "OTRQRCodeReaderDelegate.h"
 #import "OTRYapDatabaseRosterStorage.h"
+#import "OTRBuddyApprovalCell.h"
 
 #import "OTRImageItem.h"
 #import "OTRAudioItem.h"

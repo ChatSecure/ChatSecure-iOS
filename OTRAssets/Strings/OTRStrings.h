@@ -498,6 +498,8 @@ FOUNDATION_EXPORT NSString* UNTRUSTED_DEVICE_SENT_STRING();
 FOUNDATION_EXPORT NSString* UNTRUSTED_DEVICE_STRING();
 /** "Username", Label text for username field on login screen */
 FOUNDATION_EXPORT NSString* USERNAME_STRING();
+/** "Canceled", Describes a state entered by user cancelation */
+FOUNDATION_EXPORT NSString* USER_CANCELED_STRING();
 /** "Camera", Label for button to take a photo from camera */
 FOUNDATION_EXPORT NSString* USE_CAMERA_STRING();
 /** "Unrecognized Invite Format", shown when invite QR code doesnt work */
