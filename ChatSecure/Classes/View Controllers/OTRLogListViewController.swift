@@ -18,6 +18,15 @@ import OTRAssets
     
     @objc public static let shared = LogManager()
     
+    public override init() {
+        super.init()
+        // Disable file logging if it's disabled via branding flag
+        // this will also delete any old log files
+        if OTRBranding.allowDebugFileLogging == false {
+            fileLoggingEnabled = false
+        }
+    }
+    
     /// Resets all logging functionality
     @objc public func setupLogging() {
         debugPrint("Resetting all loggers...")
@@ -43,6 +52,8 @@ import OTRAssets
         }
     }
     
+    /// setting to `false` will also delete any old log files
+    /// and reset the debugger
     @objc public var fileLoggingEnabled: Bool {
         get {
             return UserDefaults.standard.bool(forKey: kOTREnableDebugLoggingKey)
