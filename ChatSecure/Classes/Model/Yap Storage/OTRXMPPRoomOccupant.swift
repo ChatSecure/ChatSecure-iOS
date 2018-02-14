@@ -252,11 +252,11 @@ public extension OTRXMPPRoomOccupant {
             }
         }
         if !success {
-            DDLogError("Error looking up OTRXMPPRoomOccupant with query \(query)")
+            DDLogError("Error looking up OTRXMPPRoomOccupant with query")
             return nil
         }
         if matchingOccupants.count > 1 {
-            DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query \(query): \(matchingOccupants)")
+            DDLogWarn("WARN: More than one OTRXMPPRoomOccupant matching query")
 
             // if we have a corrupted database with extra occupants, try to filter
             // out some of the bad ones

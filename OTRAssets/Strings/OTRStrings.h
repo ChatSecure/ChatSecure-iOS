@@ -148,6 +148,10 @@ FOUNDATION_EXPORT NSString* Database_Error_String();
 FOUNDATION_EXPORT NSString* EDIT_ACCOUNT_STRING();
 /** "Email", The string describing account name or email address for a buddy */
 FOUNDATION_EXPORT NSString* EMAIL_STRING();
+/** "Beware! These logs are for debugging purposes only and will contain sensitive material like usernames, passwords, contacts, and message history. Disabling this option will delete all existing logs.", extra information about debug logging */
+FOUNDATION_EXPORT NSString* ENABLE_DEBUG_LOGGING_HELP_STRING();
+/** "Enable Debug Logging", switch label for toggling debug logs */
+FOUNDATION_EXPORT NSString* ENABLE_DEBUG_LOGGING_STRING();
 /** "Enable Push in Settings", button for enabling push messages in iOS system settings */
 FOUNDATION_EXPORT NSString* ENABLE_PUSH_IN_SETTINGS_STRING();
 /** "Enable Push", button for enabling push messages */

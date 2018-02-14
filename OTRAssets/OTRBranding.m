@@ -151,6 +151,11 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return result;
 }
 
++ (BOOL) allowDebugFileLogging {
+    BOOL result = [[[self defaultPlist] objectForKey:@"AllowDebugFileLogging"] boolValue];
+    return result;
+}
+
 /** Returns true if we're running the official ChatSecure */
 + (BOOL) matchesUpstream {
     return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.chrisballinger.ChatSecure"];

@@ -145,13 +145,13 @@
         [advancedGroup addSetting:omemoGroupKeySetting];
     }
     
-#ifdef DEBUG
-    OTRViewSetting *logsSetting = [[OTRViewSetting alloc] initWithTitle:MANAGE_DEBUG_LOGS_STRING()
-                                                            description:nil
-                                                    viewControllerClass:[OTRLogListViewController class]];
-    logsSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    [advancedGroup addSetting:logsSetting];
-#endif
+    if (OTRBranding.allowDebugFileLogging) {
+        OTRViewSetting *logsSetting = [[OTRViewSetting alloc] initWithTitle:MANAGE_DEBUG_LOGS_STRING()
+                                                                description:nil
+                                                        viewControllerClass:[OTRLogListViewController class]];
+        logsSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        [advancedGroup addSetting:logsSetting];
+    }
     
     [settingsGroups addObject:otherGroup];
     

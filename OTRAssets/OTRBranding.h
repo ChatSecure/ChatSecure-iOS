@@ -92,5 +92,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, will show UI for enabling OMEMO group encryption. */
 @property (class, readonly) BOOL allowGroupOMEMO;
 
+/** If enabled, will show UI for managing debug log files. */
+@property (class, readonly) BOOL allowDebugFileLogging;
+
 @end
 NS_ASSUME_NONNULL_END

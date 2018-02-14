@@ -84,14 +84,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#if DEBUG
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    
-    DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-    fileLogger.rollingFrequency = 0;
-    fileLogger.maximumFileSize = 0;
-    [DDLog addLogger:fileLogger withLevel:DDLogLevelAll];
-#endif
+    [LogManager.shared setupLogging];
     
     [self setupCrashReporting];
     

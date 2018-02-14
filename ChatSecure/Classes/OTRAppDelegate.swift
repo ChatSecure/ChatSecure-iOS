@@ -9,6 +9,7 @@
 import Foundation
 import YapDatabase
 import UserNotifications
+import CocoaLumberjack
 
 public extension OTRAppDelegate {
     /// gets the last user interaction date, or current date if app is activate

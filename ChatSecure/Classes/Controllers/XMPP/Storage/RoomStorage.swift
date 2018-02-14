@@ -84,8 +84,8 @@ import YapDatabase
             let stanzaId = xmppMessage.extractStanzaId(account: account, capabilities: self.capabilities)
             let originId = xmppMessage.originId
             
-            if let duplicate = self.existingMessage(xmppMessage: xmppMessage, delayed: delayed, stanzaId: stanzaId, originId: originId, transaction: transaction) {
-                DDLogVerbose("Discarding duplicate MUC message: \(duplicate) \(xmppMessage)")
+            if let _ = self.existingMessage(xmppMessage: xmppMessage, delayed: delayed, stanzaId: stanzaId, originId: originId, transaction: transaction) {
+                // DDLogVerbose("Discarding duplicate MUC message: \(duplicate) \(xmppMessage)")
                 return
             }
             

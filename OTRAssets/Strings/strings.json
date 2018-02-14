@@ -239,6 +239,14 @@
         "comment": "The string describing account name or email address for a buddy",
         "string": "Email"
     },
+    "ENABLE_DEBUG_LOGGING_STRING": {
+        "comment": "switch label for toggling debug logs",
+        "string": "Enable Debug Logging"
+    },
+    "ENABLE_DEBUG_LOGGING_HELP_STRING": {
+        "comment": "extra information about debug logging",
+        "string": "Beware! These logs are for debugging purposes only and will contain sensitive material like usernames, passwords, contacts, and message history. Disabling this option will delete all existing logs."
+    },
     "ENCRYPTION_ERROR_STRING": {
         "comment": "Generic title for encryption errors",
         "string": "Encryption Error"

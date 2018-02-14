@@ -148,6 +148,10 @@ NSString* Database_Error_String() { return [OTRLanguageManager translatedString:
 NSString* EDIT_ACCOUNT_STRING() { return [OTRLanguageManager translatedString:@"Edit Account"]; }
 /** "Email", The string describing account name or email address for a buddy */
 NSString* EMAIL_STRING() { return [OTRLanguageManager translatedString:@"Email"]; }
+/** "Beware! These logs are for debugging purposes only and will contain sensitive material like usernames, passwords, contacts, and message history. Disabling this option will delete all existing logs.", extra information about debug logging */
+NSString* ENABLE_DEBUG_LOGGING_HELP_STRING() { return [OTRLanguageManager translatedString:@"Beware! These logs are for debugging purposes only and will contain sensitive material like usernames, passwords, contacts, and message history. Disabling this option will delete all existing logs."]; }
+/** "Enable Debug Logging", switch label for toggling debug logs */
+NSString* ENABLE_DEBUG_LOGGING_STRING() { return [OTRLanguageManager translatedString:@"Enable Debug Logging"]; }
 /** "Enable Push in Settings", button for enabling push messages in iOS system settings */
 NSString* ENABLE_PUSH_IN_SETTINGS_STRING() { return [OTRLanguageManager translatedString:@"Enable Push in Settings"]; }
 /** "Enable Push", button for enabling push messages */

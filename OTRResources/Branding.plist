@@ -44,5 +44,7 @@
 	<true/>
 	<key>AllowGroupOMEMO</key>
 	<true/>
+	<key>AllowDebugFileLogging</key>
+	<true/>
 </dict>
 </plist>

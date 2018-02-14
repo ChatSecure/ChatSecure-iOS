@@ -84,6 +84,8 @@ extern NSString *const kOTRPushEnabledKey;
 extern NSString *const kOTRIgnoreDonationDateKey;
 /** Shows OMEMO Group Encryption toggle on group chat screen */
 extern NSString *const kOTRShowOMEMOGroupEncryptionKey;
+/** Enables or disables debug file logging */
+extern NSString *const kOTREnableDebugLoggingKey;
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;
