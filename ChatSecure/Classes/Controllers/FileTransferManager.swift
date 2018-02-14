@@ -315,7 +315,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                             DDLogError("Upload error: \(error)")
                         }
                     }.uploadProgress(queue: self.internalQueue) { progress in
-                        DDLogVerbose("Upload progress \(progress.fractionCompleted)")
+                        //DDLogVerbose("Upload progress \(progress.fractionCompleted)")
                         self.connection.asyncReadWrite { transaction in
                             if let media = media.refetch(with: transaction) {
                                 media.transferProgress = Float(progress.fractionCompleted)
@@ -683,7 +683,7 @@ extension FileTransferManager {
                     DDLogError("Download Error \(error)")
                 }
             }.downloadProgress(queue: self.internalQueue) { progress in
-                DDLogVerbose("Download progress \(progress.fractionCompleted)")
+                //DDLogVerbose("Download progress \(progress.fractionCompleted)")
                 self.connection.asyncReadWrite { transaction in
                     if let media = media.refetch(with: transaction) {
                         media.transferProgress = Float(progress.fractionCompleted)
