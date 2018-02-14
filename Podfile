@@ -36,6 +36,9 @@ abstract_target 'ChatSecureCorePods' do
 
   # Debugging
   pod 'Reveal-SDK', :configurations => ['Debug']
+  # pod 'LumberjackConsole', '~> 3.3.0'
+  pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
+
 
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.4.0'

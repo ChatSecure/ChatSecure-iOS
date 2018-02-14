@@ -458,6 +458,8 @@ NSString* SETTINGS_STRING() { return [OTRLanguageManager translatedString:@"Sett
 NSString* SHARE_MESSAGE_STRING() { return [OTRLanguageManager translatedString:@"Chat with me securely"]; }
 /** "Share", Title for sharing a link to the app */
 NSString* SHARE_STRING() { return [OTRLanguageManager translatedString:@"Share"]; }
+/** "Show Console", button label for showing log console */
+NSString* SHOW_CONSOLE_STRING() { return [OTRLanguageManager translatedString:@"Show Console"]; }
 /** "Would you like to connect to UserVoice to send feedback?", actionsheet for showing uservoice feedback service */
 NSString* SHOW_USERVOICE_STRING() { return [OTRLanguageManager translatedString:@"Would you like to connect to UserVoice to send feedback?"]; }
 /** "Sign Up", title label for signing up for a new account */

@@ -10,9 +10,11 @@ import Foundation
 import PureLayout
 import CocoaLumberjack
 import OTRAssets
+import LumberjackConsole
 
 @objc public class LogManager: NSObject {
     
+    fileprivate var consoleLogger: PTEConsoleLogger?
     private var fileLogger: DDFileLogger?
     private let fileManager = DDLogFileManagerDefault()
     
@@ -47,8 +49,14 @@ import OTRAssets
             DDLog.add(fileLogger)
             self.fileLogger = fileLogger
             DDLogVerbose("File logger enabled.")
+            
+            let consoleLogger = PTEConsoleLogger()
+            DDLog.add(consoleLogger)
+            self.consoleLogger = consoleLogger
+            DDLogVerbose("Console logger enabled.")
         } else {
             self.fileLogger = nil
+            self.consoleLogger = nil
         }
     }
     
@@ -56,9 +64,18 @@ import OTRAssets
     /// and reset the debugger
     @objc public var fileLoggingEnabled: Bool {
         get {
+            // Disable file logging if it's disabled via branding flag
+            if OTRBranding.allowDebugFileLogging == false {
+                return false
+            }
             return UserDefaults.standard.bool(forKey: kOTREnableDebugLoggingKey)
         }
         set {
+            var newValue = newValue
+            // Disable file logging if it's disabled via branding flag
+            if OTRBranding.allowDebugFileLogging == false {
+                newValue = false
+            }
             UserDefaults.standard.set(newValue, forKey: kOTREnableDebugLoggingKey)
             UserDefaults.standard.synchronize()
             
@@ -99,9 +116,11 @@ private class LogInfoCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         textLabel?.text = nil
+        textLabel?.font = nil
         detailTextLabel?.text = nil
         accessoryView = nil
         accessoryType = .none
+        selectionStyle = .none
     }
 }
 
@@ -115,9 +134,10 @@ public class OTRLogListViewController: UIViewController {
     
     private enum TableSection: Int {
         case logSwitch
+        case showConsole
         case files
         
-        static let all: [TableSection] = [.logSwitch, .files]
+        static let all: [TableSection] = [.logSwitch, .showConsole, .files]
     }
     
     private let logManager = LogManager.shared
@@ -167,7 +187,7 @@ public class OTRLogListViewController: UIViewController {
         if animated == false {
             animation = .none
         }
-        tableView.reloadSections([TableSection.files.rawValue], with: animation)
+        tableView.reloadSections([TableSection.files.rawValue, TableSection.showConsole.rawValue], with: animation)
     }
     
     @objc func refreshTimerUpdate(_ timer: Timer) {
@@ -191,12 +211,7 @@ public class OTRLogListViewController: UIViewController {
         refreshFileList(animated: true)
     }
     
-}
-
-extension OTRLogListViewController: UITableViewDelegate {
-    
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func shareFile(at indexPath: IndexPath) {
         guard let file = file(at: indexPath) else {
             return
         }
@@ -204,6 +219,35 @@ extension OTRLogListViewController: UITableViewDelegate {
         
         let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
         self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    func showConsole() {
+        guard let storyboard = UIStoryboard.lumberjackConsole,
+        let vc = storyboard.instantiateInitialViewController() as? PTEConsoleTableViewController else {
+            return
+        }
+        vc.logger = logManager.consoleLogger
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}
+
+extension OTRLogListViewController: UITableViewDelegate {
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let section = TableSection(rawValue: indexPath.section) else {
+            return
+        }
+        switch section {
+        case .logSwitch:
+            break
+        case .showConsole:
+            showConsole()
+            tableView.deselectRow(at: indexPath, animated: true)
+        case .files:
+            shareFile(at: indexPath)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
     
     public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -236,6 +280,12 @@ extension OTRLogListViewController: UITableViewDataSource {
         switch tableSection {
         case .logSwitch:
             return 1
+        case .showConsole:
+            if logManager.fileLoggingEnabled {
+                return 1
+            } else {
+                return 0
+            }
         case .files:
             return files.count
         }
@@ -254,14 +304,24 @@ extension OTRLogListViewController: UITableViewDataSource {
             toggleSwitch.isOn = logManager.fileLoggingEnabled
             toggleSwitch.addTarget(self, action: #selector(loggingSwitchValueChanged(_:)), for: .valueChanged)
             cell.accessoryView = toggleSwitch
+            cell.selectionStyle = .none
+        case .showConsole:
+            cell.textLabel?.text = SHOW_CONSOLE_STRING()
+            cell.accessoryType = .disclosureIndicator
+            cell.selectionStyle = .default
         case .files:
             guard let file = file(at: indexPath) else {
                 break
+            }
+            // bold the first entry because that's the active one
+            if indexPath.row == 0 {
+                cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 17)
             }
             cell.textLabel?.text = DateFormatter.localizedString(from: file.modificationDate, dateStyle: .long, timeStyle: .long)
             let bytes = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
             cell.detailTextLabel?.text = bytes
             cell.accessoryType = .disclosureIndicator
+            cell.selectionStyle = .default
         }
         
         return cell
@@ -272,10 +332,18 @@ extension OTRLogListViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard let tableSection = TableSection(rawValue: section),
-            tableSection == .logSwitch else {
-                return nil
+        if let tableSection = TableSection(rawValue: section),
+            tableSection == .logSwitch {
+                return ENABLE_DEBUG_LOGGING_HELP_STRING()
         }
-        return ENABLE_DEBUG_LOGGING_HELP_STRING()
+        return nil
+    }
+}
+
+private extension UIStoryboard {
+    static var lumberjackConsole: UIStoryboard? {
+        let bundle = Bundle(for: PTEConsoleLogger.self)
+        let storyboard = UIStoryboard(name: "LumberjackConsole", bundle: bundle)
+        return storyboard
     }
 }

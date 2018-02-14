@@ -458,6 +458,8 @@ FOUNDATION_EXPORT NSString* SETTINGS_STRING();
 FOUNDATION_EXPORT NSString* SHARE_MESSAGE_STRING();
 /** "Share", Title for sharing a link to the app */
 FOUNDATION_EXPORT NSString* SHARE_STRING();
+/** "Show Console", button label for showing log console */
+FOUNDATION_EXPORT NSString* SHOW_CONSOLE_STRING();
 /** "Would you like to connect to UserVoice to send feedback?", actionsheet for showing uservoice feedback service */
 FOUNDATION_EXPORT NSString* SHOW_USERVOICE_STRING();
 /** "Sign Up", title label for signing up for a new account */

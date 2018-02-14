@@ -28,3 +28,6 @@
 [submodule "Submodules/SignalProtocol-ObjC"]
 	path = Submodules/SignalProtocol-ObjC
 	url = git@github.com:ChatSecure/SignalProtocol-ObjC.git
+[submodule "Submodules/LumberjackConsole"]
+	path = Submodules/LumberjackConsole
+	url = git@github.com:ChatSecure/LumberjackConsole.git

@@ -687,6 +687,10 @@
         "comment": "Title for sharing a link to the app",
         "string": "Share"
     },
+    "SHOW_CONSOLE_STRING": {
+        "comment": "button label for showing log console",
+        "string": "Show Console"
+    },
     "SHOW_USERVOICE_STRING": {
         "comment": "actionsheet for showing uservoice feedback service",
         "string": "Would you like to connect to UserVoice to send feedback?"
