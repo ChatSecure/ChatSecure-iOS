@@ -148,18 +148,26 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     func updateUIBasedOnOwnRole() {
         var canInviteOthers = false
+        var isOnline = false
         var canModifySubject = false
         
         if let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection {
                 connection.read({ (transaction) in
                     if let ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction) {
-                        canInviteOthers = ownOccupant.role.canInviteOthers()
-                        canModifySubject = ownOccupant.role.canModifySubject()
+                        canInviteOthers = ownOccupant.canInviteOthers()
+                        canModifySubject = ownOccupant.canModifySubject()
+                        isOnline = ownOccupant.role != .none
                     }
             })
         }
         
+        let disabledAlphaValue:CGFloat = 0.5
+        
         tableHeaderView?.setView(CellIdentifier.HeaderCellAddFriends, hidden: !canInviteOthers)
+        if let addFriendsCell = tableHeaderView?.viewWithIdentifier(identifier: CellIdentifier.HeaderCellAddFriends) as? UITableViewCell {
+            addFriendsCell.isUserInteractionEnabled = isOnline
+            addFriendsCell.contentView.alpha = isOnline ? 1 : disabledAlphaValue
+        }
         
         if let subjectCell = tableHeaderView?.viewWithIdentifier(identifier: CellIdentifier.HeaderCellGroupName) as? UITableViewCell {
             if !canModifySubject {
@@ -175,8 +183,10 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 button.setTitleColor(UIColor.black, for: UIControlState())
                 button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
                 button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                button.titleLabel?.alpha = isOnline ? 1 :disabledAlphaValue
                 subjectCell.accessoryView = button
-                subjectCell.isUserInteractionEnabled = true
+                subjectCell.isUserInteractionEnabled = isOnline
+                subjectCell.contentView.alpha = isOnline ? 1 : disabledAlphaValue
             }
         }
     }

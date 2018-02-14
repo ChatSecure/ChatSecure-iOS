@@ -16,21 +16,7 @@ import CocoaLumberjack
     case participant = 1
     case moderator = 2
     case visitor = 3
-    
-    public func canModifySubject() -> Bool {
-        switch self {
-        case .moderator: return true // TODO - Check muc#roomconfig_changesubject, participants may be allowed to change subject based on config!
-        default: return false
-        }
-    }
-    
-    public func canInviteOthers() -> Bool {
-        switch self {
-        case .moderator: return true // TODO - participants may be allowed
-        default: return false
-        }
-    }
-    
+
     public init(stringValue: String) {
         self = RoomOccupantRoleHelper.role(withString: stringValue)
     }
@@ -299,5 +285,17 @@ public extension OTRXMPPRoomOccupant {
             occupant.buddyUniqueId = buddy.uniqueId
         }
         return occupant
+    }
+}
+
+public extension OTRXMPPRoomOccupant {
+    public func canModifySubject() -> Bool {
+        // TODO - Check muc#roomconfig_changesubject, participants may be allowed to change subject based on config!
+        return self.role == .moderator || [RoomOccupantAffiliation.owner, RoomOccupantAffiliation.admin].contains(self.affiliation)
+    }
+    
+    public func canInviteOthers() -> Bool {
+        // TODO - participants may be allowed
+        return self.role == .moderator || [RoomOccupantAffiliation.owner, RoomOccupantAffiliation.admin].contains(self.affiliation)
     }
 }
