@@ -30,11 +30,18 @@ private class CellIdentifier {
 
 open class OTRRoomOccupantsViewController: UIViewController {
  
+    let GroupNameHeader = "UITableViewSectionHeader"
+    let GroupNameFooter = "UITableViewSectionFooter"
+
     @objc public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
 
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
    
+    let disabledCellAlphaValue:CGFloat = 0.5
+    let headerCellHeight:CGFloat = 44
+    let footerCellHeight:CGFloat = 44
+
     // For matching navigation bar and avatar
     var navigationBarShadow:UIImage?
     var navigationBarBackground:UIImage?
@@ -43,6 +50,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open var viewHandler:OTRYapViewHandler?
     
     open var roomUniqueId: String?
+    var notificationToken:NSObjectProtocol? = nil
     
     /// opens implicit db transaction
     open var room:OTRXMPPRoom? {
@@ -58,16 +66,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     open var headerRows:[String] = []
     open var footerRows:[String] = []
+    
     /// for reads only
     fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
     /// for reads and writes
     private let connection = OTRDatabaseManager.shared.readWriteDatabaseConnection
     open var crownImage:UIImage?
     
-
-
-    open var tableHeaderView:OTRVerticalStackView?
-    open var tableFooterView:OTRVerticalStackView?
     
     @objc public init(databaseConnection:YapDatabaseConnection, roomKey:String) {
         super.init(nibName: nil, bundle: nil)
@@ -87,17 +92,24 @@ open class OTRRoomOccupantsViewController: UIViewController {
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
-            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [roomKey])
+            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [GroupNameHeader, roomKey, GroupNameFooter])
+        }
+        
+        self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name.YapDatabaseModified, object: OTRDatabaseManager.shared.database, queue: OperationQueue.main) {[weak self] (notification) -> Void in
+            self?.yapDatabaseModified(notification)
+        }
+    }
+    
+    deinit {
+        if let token = self.notificationToken {
+            NotificationCenter.default.removeObserver(token)
         }
     }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        tableHeaderView = OTRVerticalStackView()
-        tableFooterView = OTRVerticalStackView()
-        
-        var headerCells = [
+        headerRows = [
             CellIdentifier.HeaderCellGroupName,
             CellIdentifier.HeaderCellAddFriends,
             CellIdentifier.HeaderCellMute,
@@ -105,31 +117,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
         ]
         
         if OTRSettingsManager.allowGroupOMEMO {
-            headerCells.insert(CellIdentifier.HeaderCellGroupOMEMO, at: 1)
+            headerRows.insert(CellIdentifier.HeaderCellGroupOMEMO, at: 1)
         }
         
-        let footerCells = [
+        footerRows = [
             CellIdentifier.FooterCellLeave
         ]
-
-        for name in headerCells {
-            let cell = createHeaderCell(type: name)
-            tableHeaderView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: {
-                self.didSelectHeaderCell(type: name)
-            })
-        }
-        for name in footerCells {
-            let cell = createFooterCell(type: name)
-            tableFooterView?.addStackedSubview(cell, identifier: name, gravity: .middle, height: 44, callback: {
-                self.didSelectFooterCell(type: name)
-            })
-        }
-        
-        // Add the avatar view topmost
-        tableHeaderView?.addStackedSubview(largeAvatarView, identifier: "avatar", gravity: .top)
-        
-        self.tableView.tableHeaderView = self.tableHeaderView
-        self.tableView.tableFooterView = self.tableFooterView
         
         if let room = self.room {
             let seed = room.avatarSeed
@@ -145,39 +138,40 @@ open class OTRRoomOccupantsViewController: UIViewController {
         
         self.updateUIBasedOnOwnRole()
     }
+
+    func yapDatabaseModified(_ notification:Notification) {
+        guard let connection = self.connection, let roomUniqueId = self.roomUniqueId else { return }
+        if connection.hasChange(forKey: roomUniqueId, inCollection: OTRXMPPRoom.collection, in: [notification]) {
+            // Subject has changed, update cell
+            refreshSubjectCell()
+        }
+    }
+    
+    func ownOccupant() -> OTRXMPPRoomOccupant? {
+        guard let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection else { return nil }
+        var occupant:OTRXMPPRoomOccupant? = nil
+        connection.read({ (transaction) in
+           occupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction)
+        })
+        return occupant
+    }
     
     func updateUIBasedOnOwnRole() {
         var canInviteOthers = false
-        var canModifySubject = false
-        
-        if let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection {
-                connection.read({ (transaction) in
-                    if let ownOccupant = OTRXMPPRoomOccupant.occupant(jid: ownJid, realJID: ownJid, roomJID: roomJid, accountId: accountId, createIfNeeded: false, transaction: transaction) {
-                        canInviteOthers = ownOccupant.role.canInviteOthers()
-                        canModifySubject = ownOccupant.role.canModifySubject()
-                    }
-            })
+        if let ownOccupant = ownOccupant() {
+            canInviteOthers = ownOccupant.canInviteOthers()
+        }
+
+        if !canInviteOthers, let idx = headerRows.index(of: CellIdentifier.HeaderCellAddFriends) {
+            headerRows.remove(at: idx)
+        } else if canInviteOthers, !headerRows.contains(CellIdentifier.HeaderCellAddFriends) {
+            headerRows.insert(CellIdentifier.HeaderCellAddFriends, at: headerRows.index(of: CellIdentifier.HeaderCellMute) ?? 1)
         }
         
-        tableHeaderView?.setView(CellIdentifier.HeaderCellAddFriends, hidden: !canInviteOthers)
-        
-        if let subjectCell = tableHeaderView?.viewWithIdentifier(identifier: CellIdentifier.HeaderCellGroupName) as? UITableViewCell {
-            if !canModifySubject {
-                subjectCell.accessoryView = nil
-                subjectCell.isUserInteractionEnabled = false
-            } else {
-                let font:UIFont? = UIFont(name: "Material Icons", size: 24)
-                let button = UIButton(type: UIButtonType.custom)
-                if font != nil {
-                    button.titleLabel?.font = font
-                    button.setTitle("", for: UIControlState())
-                }
-                button.setTitleColor(UIColor.black, for: UIControlState())
-                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
-                subjectCell.accessoryView = button
-                subjectCell.isUserInteractionEnabled = true
-            }
+        // Update the header section
+        if let idx = self.viewHandler?.mappings?.section(forGroup: GroupNameHeader) {
+            let set = IndexSet(integer: Int(idx))
+            tableView.reloadSections(set, with: .none)
         }
     }
     
@@ -227,9 +221,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(self.navigationBarBackground, for: .default)
     }
     
-    private func refreshNotificationSwitch(_ notificationsSwitch: UISwitch, room: OTRXMPPRoom) {
+    private func refreshNotificationSwitch(_ notificationsSwitch: UISwitch, room: OTRXMPPRoom, animated: Bool) {
         let notificationsEnabled = !room.isMuted
-        notificationsSwitch.setOn(notificationsEnabled, animated: true)
+        notificationsSwitch.setOn(notificationsEnabled, animated: animated)
     }
     
     private func refreshOMEMOGroupSwitch(_ omemoSwitch: UISwitch, room: OTRXMPPRoom) {
@@ -252,6 +246,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
     }
     
+    private func refreshSubjectCell() {
+        if let section = self.viewHandler?.mappings?.section(forGroup: GroupNameHeader), let row = self.headerRows.index(of: CellIdentifier.HeaderCellGroupName) {
+            self.tableView.reloadRows(at: [IndexPath(row: row, section: Int(section))], with: .none)
+        }
+    }
+    
     open func createHeaderCell(type:String) -> UITableViewCell {
         var cell:UITableViewCell?
         switch type {
@@ -261,13 +261,47 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 cell?.textLabel?.text = room.subject
                 cell?.detailTextLabel?.text = "" // Do we have creation date?
             }
+            
+            var isOnline = false
+            var canModifySubject = false
+            if let ownOccupant = ownOccupant() {
+                canModifySubject = ownOccupant.canModifySubject()
+                isOnline = ownOccupant.role != .none
+            }
+            if !canModifySubject {
+                cell?.accessoryView = nil
+                cell?.isUserInteractionEnabled = false
+            } else {
+                let font:UIFont? = UIFont(name: "Material Icons", size: 24)
+                let button = UIButton(type: UIButtonType.custom)
+                if font != nil {
+                    button.titleLabel?.font = font
+                    button.setTitle("", for: UIControlState())
+                }
+                button.setTitleColor(UIColor.black, for: UIControlState())
+                button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                button.titleLabel?.alpha = isOnline ? 1 :disabledCellAlphaValue
+                cell?.accessoryView = button
+                cell?.isUserInteractionEnabled = isOnline
+            }
+            cell?.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
             cell?.selectionStyle = .none
+            break
+        case CellIdentifier.HeaderCellAddFriends:
+            cell = tableView.dequeueReusableCell(withIdentifier: type)
+            var isOnline = false
+            if let ownOccupant = ownOccupant() {
+                isOnline = ownOccupant.role != .none
+            }
+            cell?.isUserInteractionEnabled = isOnline
+            cell?.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
             break
         case CellIdentifier.HeaderCellMute:
             cell = tableView.dequeueReusableCell(withIdentifier: type)
             let muteswitch = UISwitch()
             if let room = self.room {
-                refreshNotificationSwitch(muteswitch, room: room)
+                refreshNotificationSwitch(muteswitch, room: room, animated:false)
             }
             muteswitch.addTarget(self, action: #selector(self.didChangeNotificationSwitch(_:)), for: .valueChanged)
             cell?.accessoryView = muteswitch
@@ -341,7 +375,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         connection?.readWrite({ (transaction) in
             room.save(with: transaction)
         })
-        refreshNotificationSwitch(notificationSwitch, room: room)
+        refreshNotificationSwitch(notificationSwitch, room: room, animated:true)
     }
     
     @objc func didChangeGroupOMEMOSwitch(_ sender: UISwitch) {
@@ -365,9 +399,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
         let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
             if let newSubject = alert.textFields?.first?.text {
-                if let cell = self.tableHeaderView?.viewWithIdentifier(identifier: CellIdentifier.HeaderCellGroupName) as? UITableViewCell {
-                    cell.textLabel?.text = newSubject
-                }
+                self.room?.subject = newSubject
+                self.refreshSubjectCell()
                 if let room = self.room, let xmppRoom = self.xmppRoom(for: room) {
                     xmppRoom.changeSubject(newSubject)
                 }
@@ -389,7 +422,23 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+
+    open func grantAdmin(_ occupant:OTRXMPPRoomOccupant) {
+        guard let room = self.room,
+            let xmppRoom = self.xmppRoom(for: room),
+            let occupantRealJid = occupant.realJID
+            else { return }
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.admin.stringValue, jid: occupantRealJid)])
+    }
     
+    open func revokeMembership(_ occupant:OTRXMPPRoomOccupant) {
+        guard let room = self.room,
+            let xmppRoom = self.xmppRoom(for: room),
+            let occupantRealJid = occupant.realJID
+            else { return }
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.none.stringValue, jid: occupantRealJid)])
+    }
+
     open func viewOccupantInfo(_ occupant:OTRXMPPRoomOccupant) {
         // Show profile view?
     }
@@ -449,10 +498,27 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let group = self.viewHandler?.mappings?.group(forSection: UInt(section))
+        if group == GroupNameHeader {
+            return headerRows.count
+        } else if group == GroupNameFooter {
+            return footerRows.count
+        }
         return Int(self.viewHandler?.mappings?.numberOfItems(inSection: UInt(section)) ?? 0)
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
+        if group == GroupNameHeader {
+            return createHeaderCell(type: headerRows[indexPath.row])
+        } else if group == GroupNameFooter {
+            return createFooterCell(type: footerRows[indexPath.row])
+        }
+        
+        if indexPath.section == 0 {
+            let cell = createHeaderCell(type: CellIdentifier.HeaderCellMembers)
+            return cell
+        }
         let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.Generic, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
@@ -512,17 +578,60 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
 
 extension OTRRoomOccupantsViewController:UITableViewDelegate {
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
+        if group == GroupNameHeader {
+            return headerCellHeight
+        } else if group == GroupNameFooter {
+            return footerCellHeight
+        }
         return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
+        if group == GroupNameHeader {
+            return headerCellHeight
+        } else if group == GroupNameFooter {
+            return footerCellHeight
+        }
         return OTRBuddyInfoCellHeight
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
+        if group == GroupNameHeader {
+            didSelectHeaderCell(type: headerRows[indexPath.row])
+            return
+        } else if group == GroupNameFooter {
+            didSelectFooterCell(type: footerRows[indexPath.row])
+            return
+        }
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant {
-            viewOccupantInfo(roomOccupant)
+            if let ownOccupant = ownOccupant(), ownOccupant.role == .moderator {
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                if ownOccupant.canGrantAdmin(roomOccupant) {
+                    let promoteAction = UIAlertAction(title: GROUP_GRANT_ADMIN_STRING(), style: .default, handler: { (action) in
+                        self.grantAdmin(roomOccupant)
+                    })
+                    alert.addAction(promoteAction)
+                }
+                let viewAction = UIAlertAction(title: VIEW_PROFILE_STRING(), style: .default, handler: { (action) in
+                    self.viewOccupantInfo(roomOccupant)
+                })
+                alert.addAction(viewAction)
+                if ownOccupant.canRevokeMembership(roomOccupant) {
+                    let kickAction = UIAlertAction(title: GROUP_REVOKE_MEMBERSHIP_STRING(), style: .destructive, handler: { (action) in
+                        self.revokeMembership(roomOccupant)
+                    })
+                    alert.addAction(kickAction)
+                }
+                let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
+                alert.addAction(cancelAction)
+                present(alert, animated: true, completion: nil)
+            } else {
+                viewOccupantInfo(roomOccupant)
+            }
         }
     }
 }
