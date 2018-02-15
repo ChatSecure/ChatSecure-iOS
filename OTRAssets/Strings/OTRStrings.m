@@ -194,14 +194,14 @@ NSString* GITHUB_STRING() { return [OTRLanguageManager translatedString:@"GitHub
 NSString* GOOGLE_TALK_STRING() { return [OTRLanguageManager translatedString:@"Google Talk"]; }
 /** "Group Chat", a subtitle label for a group chat */
 NSString* GROUP_CHAT_STRING() { return [OTRLanguageManager translatedString:@"Group Chat"]; }
-/** "Make group admin", Label for granting admin privileges to someone in a group */
-NSString* GROUP_GRANT_ADMIN_STRING() { return [OTRLanguageManager translatedString:@"Make group admin"]; }
+/** "Make Admin", Label for granting admin privileges to someone in a group */
+NSString* GROUP_GRANT_ADMIN_STRING() { return [OTRLanguageManager translatedString:@"Make Admin"]; }
 /** "you", This will be shown after your own JID in the group profile view */
 NSString* GROUP_INFO_YOU() { return [OTRLanguageManager translatedString:@"you"]; }
 /** "Group Name", The title for the view to enter a group chat name or label */
 NSString* GROUP_NAME_STRING() { return [OTRLanguageManager translatedString:@"Group Name"]; }
-/** "Kickout", Label for revoking membership for someone in a group */
-NSString* GROUP_REVOKE_MEMBERSHIP_STRING() { return [OTRLanguageManager translatedString:@"Kickout"]; }
+/** "Kick Out", Label for revoking membership for someone in a group */
+NSString* GROUP_REVOKE_MEMBERSHIP_STRING() { return [OTRLanguageManager translatedString:@"Kick Out"]; }
 /** "Generate Secure Password", whether or not we should generate a strong password for them */
 NSString* Generate_Secure_Password() { return [OTRLanguageManager translatedString:@"Generate Secure Password"]; }
 /** "We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else.", help text for password generator */

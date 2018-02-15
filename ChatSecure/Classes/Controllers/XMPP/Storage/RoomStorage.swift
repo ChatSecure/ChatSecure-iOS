@@ -166,6 +166,23 @@ import YapDatabase
                 if let affiliation = item?.attributeStringValue(forName: "affiliation") {
                     occupant.affiliation = RoomOccupantAffiliation(stringValue: affiliation)
                 }
+                
+                // it's best to map "real" buddies to room occupants when we can
+                if let realJID = realJID {
+                    if let buddy = OTRXMPPBuddy.fetchBuddy(jid: realJID, accountUniqueId: accountId, transaction: transaction) {
+                        occupant.buddyUniqueId = buddy.uniqueId
+                    } else {
+                        // if an existing buddy is not found
+                        // let's create an 'untrusted' room buddy,
+                        // this facilitates vCard fetch and OMEMO key fetch
+                        // this buddy is not considered on the user's roster
+                        let buddy = OTRXMPPBuddy(jid: realJID, accountId: accountId)
+                        buddy.trustLevel = .untrusted
+                        buddy.save(with: transaction)
+                        occupant.buddyUniqueId = buddy.uniqueId
+                        DDLogInfo("Created non-roster buddy for room \(realJID) \(room)")
+                    }
+                }
                 occupant.save(with: transaction)
             })
         }

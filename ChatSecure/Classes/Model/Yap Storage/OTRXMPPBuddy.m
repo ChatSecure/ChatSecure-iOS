@@ -56,6 +56,15 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
     return self;
 }
 
+- (instancetype) initWithJID:(XMPPJID *)jid
+                   accountId:(NSString*)accountId {
+    if (self = [self init]) {
+        self.username = [jid.bare copy];
+        self.accountUniqueId = [accountId copy];
+    }
+    return self;
+}
+
 #pragma - mark setters & getters
 
 - (void)setVCardTemp:(XMPPvCardTemp *)vCardTemp

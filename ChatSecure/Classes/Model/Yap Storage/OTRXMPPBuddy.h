@@ -11,6 +11,8 @@
 
 @import XMPPFramework;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /** Contains userInfo with buddy object in "buddy" key */
 extern NSString * _Nonnull const OTRBuddyPendingApprovalDidChangeNotification;
 
@@ -44,4 +46,9 @@ typedef NS_ENUM(NSInteger, BuddyTrustLevel) {
 @property (nonatomic) SubscriptionAttribute subscription;
 @property (nonatomic) SubscriptionPendingAttribute pending;
 
+- (instancetype) initWithJID:(XMPPJID*)jid
+                   accountId:(NSString*)accountId;
+
 @end
+
+NS_ASSUME_NONNULL_END
