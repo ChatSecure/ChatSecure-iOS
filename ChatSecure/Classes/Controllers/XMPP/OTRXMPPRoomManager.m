@@ -434,36 +434,13 @@
 }
 
 - (void) xmppRoom:(XMPPRoom *)room addOccupantItems:(NSArray<NSXMLElement*> *)items {
-    NSString *accountId = room.xmppStream.tag;
-    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *jidString = [item attributeStringValueForName:@"jid"];
-            XMPPJID *realJid = [XMPPJID jidWithString:jidString];
-            NSString *affiliation = [item attributeStringValueForName:@"affiliation"];
-            
-            // jid and affiliation MUST be included
-            if (!realJid || !affiliation) { return; }
-
-            // Nickname MAY be included
-            XMPPJID *jid = nil;
-            NSString *nick = [item attributeStringValueForName:@"nick"];
-            if (nick) {
-                jid = [room.roomJID jidWithNewResource:nick];
-            }
-
-            // Make sure occupant object exists/is created
-            OTRXMPPRoomOccupant *occupant = [OTRXMPPRoomOccupant occupantWithJid:jid realJID:realJid roomJID:room.roomJID accountId:accountId createIfNeeded:YES transaction:transaction];
-            occupant.affiliation = [RoomOccupantAffiliationHelper affiliationWithString:affiliation];
-            
-            // Role MAY be included, so get that if it's there
-            NSString *role = [item attributeStringValueForName:@"role"];
-            if (role) {
-                occupant.role = [RoomOccupantRoleHelper roleWithString:role];
-            }
-            
-            [occupant saveWithTransaction:transaction];
-        }];
-    }];
+    NSAssert([room.xmppRoomStorage isKindOfClass:RoomStorage.class], @"Wrong room storage class");
+    if ([room.xmppRoomStorage isKindOfClass:RoomStorage.class]) {
+        RoomStorage *roomStorage = (RoomStorage*)room.xmppRoomStorage;
+        [roomStorage insertOccupantItems:items into:room];
+    } else {
+        DDLogError(@"Could not store occupants. Wrong room storage class!");
+    }
 }
 
 - (void)xmppRoomDidCreate:(XMPPRoom *)sender {

@@ -220,6 +220,12 @@ public extension OTRXMPPRoomOccupant {
                                accountId: String,
                                createIfNeeded: Bool,
                                transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomOccupant? {
+        assert(jid != nil || realJID != nil, "Cannot create occupant if both jid and realJID are nil!")
+        // Bail out if both paramters are nil
+        if jid == nil && realJID == nil {
+            DDLogError("Cannot create occupant if both jid and realJID are nil!")
+            return nil
+        }
         let roomUniqueId = OTRXMPPRoom.createUniqueId(accountId, jid: roomJID.bare)
         guard let indexTransaction = transaction.ext(SecondaryIndexName.roomOccupants) as? YapDatabaseSecondaryIndexTransaction else {
             DDLogError("Error looking up OTRXMPPRoomOccupant via SecondaryIndex") 

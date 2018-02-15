@@ -13,13 +13,13 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
   - CocoaAsyncSocket (7.6.2)
-  - CocoaLumberjack (3.4.0):
-    - CocoaLumberjack/Default (= 3.4.0)
-    - CocoaLumberjack/Extensions (= 3.4.0)
-  - CocoaLumberjack/Default (3.4.0)
-  - CocoaLumberjack/Extensions (3.4.0):
+  - CocoaLumberjack (3.4.1):
+    - CocoaLumberjack/Default (= 3.4.1)
+    - CocoaLumberjack/Extensions (= 3.4.1)
+  - CocoaLumberjack/Default (3.4.1)
+  - CocoaLumberjack/Extensions (3.4.1):
     - CocoaLumberjack/Default
-  - CocoaLumberjack/Swift (3.4.0):
+  - CocoaLumberjack/Swift (3.4.1):
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
@@ -40,7 +40,7 @@ PODS:
     - IOCipher/common
   - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
-  - KissXML (5.2.0)
+  - KissXML (5.2.2)
   - KSCrash (1.15.16):
     - KSCrash/Installations (= 1.15.16)
   - KSCrash/Installations (1.15.16):
@@ -307,7 +307,7 @@ SPEC CHECKSUMS:
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 7e4452fd4ba0a68002c099d637a2e08230482d31
   CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
-  CocoaLumberjack: e033a5d8513357af2dd456eb66e202c325c30627
+  CocoaLumberjack: 2e258a064cacc8eb9a2aca318e24d02a0a7fd56d
   CPAProxy: 99fdb9becacc7f48fbd80ca42fba77376fd6488f
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
@@ -316,7 +316,7 @@ SPEC CHECKSUMS:
   IOCipher: 3b86ccd68b08ee73b3de80c24a10de130269698c
   JSQMessagesViewController: bc44afc60cca8c9e0fb127243d57551013e1f319
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
-  KissXML: 1c1eeeb6b94e4522cd2f2373e5d0d03c9227738f
+  KissXML: 4418f32138aec43797891845d682b00fc8cd4677
   KSCrash: e4cda5c8612c5f9478defcf43418f24870d313f4
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f

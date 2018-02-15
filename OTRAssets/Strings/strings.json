@@ -1049,11 +1049,11 @@
     },
     "GROUP_GRANT_ADMIN_STRING": {
         "comment": "Label for granting admin privileges to someone in a group",
-        "string": "Make group admin"
+        "string": "Make Admin"
     },
     "GROUP_REVOKE_MEMBERSHIP_STRING": {
         "comment": "Label for revoking membership for someone in a group",
-        "string": "Kickout"
+        "string": "Kick Out"
     },
     "RESEND_STRING": {
         "comment": "Label for button to resend message.",

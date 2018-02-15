@@ -11,9 +11,14 @@ import XMPPFramework
 import YapDatabase
 
 @objc public class RoomStorage: NSObject {
+    
+    // MARK: Properties
+    
     private let connection: YapDatabaseConnection
     private let capabilities: XMPPCapabilities
     private let fileTransfer: FileTransferManager
+    
+    // MARK: Init
     
     @objc public init(connection: YapDatabaseConnection,
                       capabilities: XMPPCapabilities,
@@ -23,33 +28,17 @@ import YapDatabase
         self.fileTransfer = fileTransfer
     }
     
-    private func existingMessage(xmppMessage: XMPPMessage,
-                               delayed: Date?,
-                               stanzaId: String?,
-                               originId: String?,
-                               transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomMessage? {
-        guard xmppMessage.wasDelayed == true || delayed != nil else {
-            // When the xmpp server sends us a room message, it will always timestamp delayed messages.
-            // For example, when retrieving the discussion history, all messages will include the original timestamp.
-            // If a message doesn't include such timestamp, then we know we're getting it in "real time".
-            return nil
+    // MARK: Public
+    
+    
+    /// This is used in the OTRXMPPRoomManager to insert
+    /// the realJID of room members/admins/etc
+    @objc public func insertOccupantItems(_ items: [XMLElement],
+                                        into room: XMPPRoom) {
+        let occupants = items.map { (element) in
+            OccupantInfo(jid: nil, presence: nil, item: element)
         }
-        // Only use elementId as a fallback if originId and stanzaId are missing
-        var elementId: String? = nil
-        if originId == nil, stanzaId == nil {
-            elementId = xmppMessage.elementID
-        }
-        var result: OTRXMPPRoomMessage? = nil
-        transaction.enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
-            if let roomMessage = message as? OTRXMPPRoomMessage,
-                roomMessage.senderJID == xmppMessage.from?.full {
-                result = roomMessage
-                stop.pointee = true
-            } else {
-                DDLogWarn("Found matching MUC message but intended for different recipient \(message) \(xmppMessage)")
-            }
-        }
-        return result
+        insertOccupants(occupants, into: room)
     }
     
     /// body param is optional and is for overriding the xmppMessage's body
@@ -132,6 +121,86 @@ import YapDatabase
         }
     }
     
+    // MARK: Private
+    
+    private struct OccupantInfo {
+        /// JID of the occupant inside the room
+        var jid: XMPPJID?
+        /// optional presence information
+        var presence: XMPPPresence?
+        /// additional item information about occupant
+        /// containing role, affiliation, public JID, etc
+        var item: XMLElement?
+    }
+    
+    private func insertOccupants(_ occupants:[OccupantInfo],
+                                 into room: XMPPRoom) {
+        guard let accountId = room.accountId else {
+            assert(room.accountId != nil)
+            DDLogError("No accountId attached to room!")
+            return
+        }
+        
+        connection.asyncReadWrite { (transaction) in
+            occupants.forEach({ (occupantInfo) in
+                let presenceJID = occupantInfo.jid
+                let item = occupantInfo.item
+                // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
+                var realJID: XMPPJID? = nil
+                if let buddyJidString = item?.attributeStringValue(forName: "jid") {
+                    realJID = XMPPJID(string: buddyJidString)
+                }
+                guard let occupant = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: realJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
+                    DDLogWarn("Could not create room occupant")
+                    return
+                }
+                if let room = OTRXMPPRoom.fetch(xmppRoom: room, transaction: transaction),
+                    let presence = occupantInfo.presence,
+                    let presenceJID = presence.from {
+                    OTRBuddyCache.shared.setJid(presenceJID.full, online: presence.presenceType != .unavailable, in:room)
+                }
+                // Update their role/affiliation information
+                if let role = item?.attributeStringValue(forName: "role") {
+                    occupant.role = RoomOccupantRole(stringValue: role)
+                }
+                if let affiliation = item?.attributeStringValue(forName: "affiliation") {
+                    occupant.affiliation = RoomOccupantAffiliation(stringValue: affiliation)
+                }
+                occupant.save(with: transaction)
+            })
+        }
+    }
+    
+    
+    private func existingMessage(xmppMessage: XMPPMessage,
+                                 delayed: Date?,
+                                 stanzaId: String?,
+                                 originId: String?,
+                                 transaction: YapDatabaseReadTransaction) -> OTRXMPPRoomMessage? {
+        guard xmppMessage.wasDelayed == true || delayed != nil else {
+            // When the xmpp server sends us a room message, it will always timestamp delayed messages.
+            // For example, when retrieving the discussion history, all messages will include the original timestamp.
+            // If a message doesn't include such timestamp, then we know we're getting it in "real time".
+            return nil
+        }
+        // Only use elementId as a fallback if originId and stanzaId are missing
+        var elementId: String? = nil
+        if originId == nil, stanzaId == nil {
+            elementId = xmppMessage.elementID
+        }
+        var result: OTRXMPPRoomMessage? = nil
+        transaction.enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
+            if let roomMessage = message as? OTRXMPPRoomMessage,
+                roomMessage.senderJID == xmppMessage.from?.full {
+                result = roomMessage
+                stop.pointee = true
+            } else {
+                DDLogWarn("Found matching MUC message but intended for different recipient \(message) \(xmppMessage)")
+            }
+        }
+        return result
+    }
+    
 }
 
 
@@ -142,32 +211,11 @@ extension RoomStorage: XMPPRoomStorage {
     }
     
     public func handle(_ presence: XMPPPresence, room: XMPPRoom) {
-        guard let presenceJID = presence.from,
-            let accountId = room.accountId else {
-            // DDLogWarn("Discarding MUC presence \(presence)")
-            return
-        }
-        let item = presence.element(forName: "x", xmlns: XMPPMUCUserNamespace)?.element(forName: "item")
-        
-        connection.asyncReadWrite { (transaction) in
-            // Will be nil in anonymous rooms (and semi-anonymous rooms if we are not moderators)
-            var realJID: XMPPJID? = nil
-            if let buddyJidString = item?.attributeStringValue(forName: "jid") {
-                realJID = XMPPJID(string: buddyJidString)
-            }
-            
-            guard let occupant = OTRXMPPRoomOccupant.occupant(jid: presenceJID, realJID: realJID, roomJID: room.roomJID, accountId: accountId, createIfNeeded: true, transaction: transaction)?.copyAsSelf() else {
-                DDLogWarn("Could not create room occupant")
-                return
-            }
-            let role = item?.attributeStringValue(forName: "role") ?? ""
-            let affiliation = item?.attributeStringValue(forName: "affiliation") ?? ""
-            if let room = OTRXMPPRoom.fetch(xmppRoom: room, transaction: transaction) {
-                OTRBuddyCache.shared.setJid(presenceJID.full, online: presence.presenceType != .unavailable, in:room)
-            }
-            occupant.role = RoomOccupantRole(stringValue: role)
-            occupant.affiliation = RoomOccupantAffiliation(stringValue: affiliation)
-            occupant.save(with: transaction)
+        if let item = presence.element(forName: "x", xmlns: XMPPMUCUserNamespace)?.element(forName: "item") {
+            let occupant = OccupantInfo(jid: presence.from, presence: presence, item: item)
+            insertOccupants([occupant], into: room)
+        } else {
+            DDLogError("Could not extract occupant item from presence \(presence)")
         }
     }
     
@@ -209,10 +257,6 @@ extension RoomStorage: XMPPRoomStorage {
             room.save(with: transaction)
         }
     }
-    
-    
-    
-    
 }
 
 // MARK: - XEP-0380: Explicit Message Encryption
