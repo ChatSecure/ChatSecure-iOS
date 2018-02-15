@@ -701,14 +701,15 @@ extension FileTransferManager {
             return
         }
         guard var data = inData, let response = urlResponse, let url = response.url else {
-            self.setError(FileTransferError.fileNotFound, onMessage: downloadMessage)
-            DDLogError("No data or response")
+            let error = FileTransferError.fileNotFound
+            self.setError(error, onMessage: downloadMessage)
+            DDLogError("No data or response \(error)")
             return
         }
-        DDLogVerbose("Received response \(response)")
+        //DDLogVerbose("Received response \(response)")
         let authTagSize = 16 // i'm not sure if this can be assumed, but how else would we know the size?
         if let (key, iv) = url.aesGcmKey, data.count > authTagSize {
-            DDLogVerbose("Received encrypted response, attempting decryption...")
+            //DDLogVerbose("Received encrypted response, attempting decryption...")
             
             let cryptedData = data.subdata(in: 0..<data.count - authTagSize)
             let authTag = data.subdata(in: data.count - authTagSize..<data.count)
@@ -720,7 +721,7 @@ extension FileTransferManager {
                 DDLogError("Error decrypting data: \(error)")
                 return
             }
-            DDLogVerbose("Decrpytion successful")
+            //DDLogVerbose("Decrpytion successful")
         }
         OTRMediaFileManager.sharedInstance().setData(data, for: mediaItem, buddyUniqueId: downloadMessage.threadId, completion: { (bytesWritten, error) in
             if let error = error {

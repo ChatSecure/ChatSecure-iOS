@@ -328,7 +328,11 @@ extension OTRLogListViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        if let tableSection = TableSection(rawValue: indexPath.section),
+            tableSection == .files {
+            return 60
+        }
+        return 50
     }
     
     public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {

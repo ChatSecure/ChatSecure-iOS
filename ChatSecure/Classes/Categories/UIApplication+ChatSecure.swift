@@ -64,7 +64,7 @@ public extension UIApplication {
                     } else if notification.request.content.body == SOMEONE_IS_TYPING_STRING() {
                         typingIdentifiers.append(notification.request.identifier)
                     }
-                    DDLogVerbose("notification delivered: \(notification)")
+                    //DDLogVerbose("notification delivered: \(notification)")
                 }
                 if newMessageIdentifiers.count > 1 {
                     _ = newMessageIdentifiers.popLast()

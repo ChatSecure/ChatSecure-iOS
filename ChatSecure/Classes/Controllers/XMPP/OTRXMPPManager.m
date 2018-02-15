@@ -807,7 +807,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
-    DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
+    //DDLogWarn(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
     
     self.loginStatus = OTRLoginStatusDisconnected;
     
@@ -859,7 +859,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+	DDLogWarn(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
     NSError *err = [OTRXMPPError errorForXMLElement:error];
     [self failedToConnect:err];
     [self disconnect];
@@ -906,17 +906,17 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
-	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
+	DDLogWarn(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
 }
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendIQ:(XMPPIQ *)iq error:(NSError *)error
 {
-    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, iq, error);
+    DDLogWarn(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, iq, error);
 }
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error
 {
-    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, message, error);
+    DDLogWarn(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, message, error);
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction enumerateMessagesWithElementId:message.elementID originId:message.originId stanzaId:nil block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
             if ([databaseMessage isKindOfClass:[OTRBaseMessage class]]) {
@@ -929,7 +929,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 }
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
 {
-    DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, presence, error);
+    DDLogWarn(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, presence, error);
     [self finishDisconnectingIfNeeded];
 }
 
@@ -977,7 +977,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppvCardTempModule:(XMPPvCardTempModule *)vCardTempModule
    failedToFetchvCardForJID:(XMPPJID *)jid
                       error:(NSXMLElement*)error {
-    // DDLogVerbose(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, jid, error);
+    DDLogWarn(@"%@: %@ %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, jid, error);
     
     // update my vCard to local nickname setting
     if ([self.xmppStream.myJID isEqualToJID:jid options:XMPPJIDCompareBare] &&
@@ -993,7 +993,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 }
 
 - (void)xmppvCardTempModule:(XMPPvCardTempModule *)vCardTempModule failedToUpdateMyvCard:(NSXMLElement *)error {
-    //DDLogVerbose(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
+    DDLogWarn(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, vCardTempModule, error);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

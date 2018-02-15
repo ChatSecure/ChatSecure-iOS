@@ -393,7 +393,7 @@
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
-    DDLogInfo(@"Fetched members list: %@", items);
+    //DDLogInfo(@"Fetched members list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
     [[self roomRuntimeProperties:room] setHasFetchedMembers:YES];
     [self fetchHistoryIfListsDownloaded:room];
@@ -405,7 +405,7 @@
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchAdminsList:(NSArray<NSXMLElement*> *)items {
-    DDLogInfo(@"Fetched admins list: %@", items);
+    //DDLogInfo(@"Fetched admins list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
     [[self roomRuntimeProperties:room] setHasFetchedAdmins:YES];
     [self fetchHistoryIfListsDownloaded:room];
@@ -417,7 +417,7 @@
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchOwnersList:(NSArray<NSXMLElement*> *)items {
-    DDLogInfo(@"Fetched owners list: %@", items);
+    //DDLogInfo(@"Fetched owners list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
     [[self roomRuntimeProperties:room] setHasFetchedOwners:YES];
     [self fetchHistoryIfListsDownloaded:room];
@@ -429,7 +429,7 @@
 }
 
 - (void)xmppRoom:(XMPPRoom *)room didFetchModeratorsList:(NSArray *)items {
-    DDLogInfo(@"Fetched moderators list: %@", items);
+    //DDLogInfo(@"Fetched moderators list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
 }
 

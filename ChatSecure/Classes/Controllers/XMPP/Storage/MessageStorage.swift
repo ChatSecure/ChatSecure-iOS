@@ -115,7 +115,7 @@ import CocoaLumberjack
             }
         }
         if _deliveredMessage == nil {
-            DDLogVerbose("Outgoing message not found for receipt: \(message)")
+            DDLogWarn("Outgoing message not found for receipt: \(message)")
             // This can happen with MAM + OMEMO where the decryption
             // for the OMEMO message makes it come in after the receipt
             // To solve this, we need to make a placeholder message...

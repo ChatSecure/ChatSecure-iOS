@@ -917,8 +917,6 @@
 		637ABBC61DD530CD00B18DD2 /* OTRIncomingMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRIncomingMessage.m; sourceTree = "<group>"; };
 		637ABBC71DD5312200B18DD2 /* OTROutgoingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROutgoingMessage.h; sourceTree = "<group>"; };
 		637ABBC81DD5312200B18DD2 /* OTROutgoingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROutgoingMessage.m; sourceTree = "<group>"; };
-		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStorage.h; sourceTree = "<group>"; };
-		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStorage.m; sourceTree = "<group>"; };
 		638045671BB4BDEC002D8BAE /* PushSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSerializer.swift; sourceTree = "<group>"; };
 		638045691BB4C832002D8BAE /* PushDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushDeserializer.swift; sourceTree = "<group>"; };
 		6381F35F1DFB7AD800563057 /* OTRXMPPChangePasswordManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPChangePasswordManager.swift; sourceTree = "<group>"; };
@@ -953,8 +951,6 @@
 		63BA43DD1D418F14007FAF7F /* OTRAccountSignalIdentity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRAccountSignalIdentity.h; path = "Signal-Storage/OTRAccountSignalIdentity.h"; sourceTree = "<group>"; };
 		63BA43DE1D418F14007FAF7F /* OTRAccountSignalIdentity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRAccountSignalIdentity.m; path = "Signal-Storage/OTRAccountSignalIdentity.m"; sourceTree = "<group>"; };
 		63BAB26C1C863C60005185F3 /* PushMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushMessage.swift; sourceTree = "<group>"; };
-		63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPRoomYapStorage.h; sourceTree = "<group>"; };
-		63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPRoomYapStorage.m; sourceTree = "<group>"; };
 		63BB66B31BC5D5F00004A619 /* OTRXMPPRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoom.swift; sourceTree = "<group>"; };
 		63BE425C1B320EE20017058C /* OTRLoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginHandler.h; sourceTree = "<group>"; };
 		63BE425D1B320EE20017058C /* OTRLoginHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginHandler.m; sourceTree = "<group>"; };
@@ -2059,14 +2055,10 @@
 				D97097A11FC4DB3D008ED04B /* MessageStorage.swift */,
 				D945D6FC1FDA08DD00C7502C /* RoomStorage.swift */,
 				92BE6C842014DBB400A79C8B /* RosterStorage.swift */,
-				637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.h */,
-				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStorage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
 				633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */,
 				6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */,
 				6331053E1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m */,
-				63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */,
-				63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */,
 				63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */,
 				63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */,
 			);

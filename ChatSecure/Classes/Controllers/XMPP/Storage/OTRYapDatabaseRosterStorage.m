@@ -69,11 +69,11 @@
 
 - (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream withVersion:(NSString *)version
 {
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
+    //DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 }
 - (void)endRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
+    //DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 }
 
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream {
@@ -187,12 +187,12 @@
 
 - (void)clearAllResourcesForXMPPStream:(XMPPStream *)stream
 {
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
+    //DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 
 }
 - (void)clearAllUsersAndResourcesForXMPPStream:(XMPPStream *)stream
 {
-    DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
+    //DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 
 }
 

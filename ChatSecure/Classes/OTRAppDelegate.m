@@ -299,7 +299,7 @@
 - (void) timerUpdate:(NSTimer*)timer {
     UIApplication *application = [UIApplication sharedApplication];
     NSTimeInterval timeRemaining = application.backgroundTimeRemaining;
-    DDLogVerbose(@"Timer update, background time left: %f", timeRemaining);
+    //DDLogVerbose(@"Timer update, background time left: %f", timeRemaining);
 }
 
 /** Doesn't stop autoLogin if previous crash when it's a background launch */

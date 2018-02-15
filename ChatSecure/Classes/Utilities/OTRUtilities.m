@@ -124,12 +124,12 @@
     
     //GEt number of Supported Ciphers
     status = SSLGetNumberSupportedCiphers(sslContext, &numCiphers);
-    DDLogVerbose(@"SSLGetNumberSupportedCiphers result %d, count %d",(int)status, (int)numCiphers);
+    //DDLogVerbose(@"SSLGetNumberSupportedCiphers result %d, count %d",(int)status, (int)numCiphers);
     SSLCipherSuite ciphers[numCiphers];
     
     //Get list of Supported Ciphers
     status = SSLGetSupportedCiphers(sslContext, ciphers, &numCiphers);
-    DDLogVerbose(@"SSLGetSupportedCiphers result %d",(int)status);
+    //DDLogVerbose(@"SSLGetSupportedCiphers result %d",(int)status);
     
     
     //NSMutableArray * discardedCiphers = [NSMutableArray array];

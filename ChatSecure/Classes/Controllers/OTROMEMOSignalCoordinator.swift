@@ -569,7 +569,7 @@ import SignalProtocolObjC
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     
     public func omemo(_ omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        DDLogVerbose("publishedDeviceIds: \(responseIq)")
+        //DDLogVerbose("publishedDeviceIds: \(responseIq)")
 
     }
     
@@ -578,7 +578,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, deviceListUpdate deviceIds: [NSNumber], from fromJID: XMPPJID, incomingElement: XMPPElement) {
-        DDLogVerbose("deviceListUpdate: \(fromJID) \(deviceIds)")
+        //DDLogVerbose("deviceListUpdate: \(fromJID) \(deviceIds)")
         self.workQueue.async { [weak self] in
             if let eid = incomingElement.elementID {
                 self?.callAndRemoveOutstandingBundleBlock(eid, success: true)
@@ -591,7 +591,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        DDLogVerbose("publishedBundle: \(responseIq) \(outgoingIq)")
+        //DDLogVerbose("publishedBundle: \(responseIq) \(outgoingIq)")
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToPublishBundle bundle: OMEMOBundle, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
@@ -599,7 +599,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, fetchedBundle bundle: OMEMOBundle, from fromJID: XMPPJID, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
-        DDLogVerbose("fetchedBundle: \(responseIq) \(outgoingIq)")
+        //DDLogVerbose("fetchedBundle: \(responseIq) \(outgoingIq)")
 
         if (self.isOurJID(fromJID) && bundle.deviceId == self.signalEncryptionManager.registrationId) {
             //DDLogVerbose("fetchedOurOwnBundle: \(responseIq) \(outgoingIq)")
@@ -646,7 +646,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToRemoveBundleId bundleId: UInt32, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
-        
+        DDLogWarn("Error removing bundle: \(String(describing: errorIq))")
     }
     
     public func omemo(_ omemo: OMEMOModule, failedToRemoveDeviceIds deviceIds: [NSNumber], errorIq: XMPPIQ?, elementId: String?) {

@@ -352,7 +352,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
     
     if ([tlvs count]) {
-        DDLogVerbose(@"Found TLVS: %@",tlvs);
+        //DDLogVerbose(@"Found TLVS: %@",tlvs);
     }
 }
 
@@ -460,7 +460,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
            accountName:(NSString*)accountName
               protocol:(NSString*)protocol
 {
-    DDLogVerbose(@"Received Symetric Key");
+    //DDLogVerbose(@"Received Symetric Key");
 }
 
  ////// Optional //////
