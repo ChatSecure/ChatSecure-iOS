@@ -1047,6 +1047,14 @@
         "comment": "The placeholder text for the text field to enter a group chat name or label",
         "string": "Enter a group name"
     },
+    "GROUP_GRANT_ADMIN_STRING": {
+        "comment": "Label for granting admin privileges to someone in a group",
+        "string": "Make group admin"
+    },
+    "GROUP_REVOKE_MEMBERSHIP_STRING": {
+        "comment": "Label for revoking membership for someone in a group",
+        "string": "Kickout"
+    },
     "RESEND_STRING": {
         "comment": "Label for button to resend message.",
         "string": "Resend"

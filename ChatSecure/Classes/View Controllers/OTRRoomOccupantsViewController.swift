@@ -422,7 +422,23 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+
+    open func grantAdmin(_ occupant:OTRXMPPRoomOccupant) {
+        guard let room = self.room,
+            let xmppRoom = self.xmppRoom(for: room),
+            let occupantRealJid = occupant.realJID
+            else { return }
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.admin.stringValue, jid: occupantRealJid)])
+    }
     
+    open func revokeMembership(_ occupant:OTRXMPPRoomOccupant) {
+        guard let room = self.room,
+            let xmppRoom = self.xmppRoom(for: room),
+            let occupantRealJid = occupant.realJID
+            else { return }
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.none.stringValue, jid: occupantRealJid)])
+    }
+
     open func viewOccupantInfo(_ occupant:OTRXMPPRoomOccupant) {
         // Show profile view?
     }
@@ -593,8 +609,26 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
         }
         if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant {
             if let ownOccupant = ownOccupant(), ownOccupant.role == .moderator {
-                // TODO
-                print("Admin ops")
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                if ownOccupant.canGrantAdmin(roomOccupant) {
+                    let promoteAction = UIAlertAction(title: GROUP_GRANT_ADMIN_STRING(), style: .default, handler: { (action) in
+                        self.grantAdmin(roomOccupant)
+                    })
+                    alert.addAction(promoteAction)
+                }
+                let viewAction = UIAlertAction(title: VIEW_PROFILE_STRING(), style: .default, handler: { (action) in
+                    self.viewOccupantInfo(roomOccupant)
+                })
+                alert.addAction(viewAction)
+                if ownOccupant.canRevokeMembership(roomOccupant) {
+                    let kickAction = UIAlertAction(title: GROUP_REVOKE_MEMBERSHIP_STRING(), style: .destructive, handler: { (action) in
+                        self.revokeMembership(roomOccupant)
+                    })
+                    alert.addAction(kickAction)
+                }
+                let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
+                alert.addAction(cancelAction)
+                present(alert, animated: true, completion: nil)
             } else {
                 viewOccupantInfo(roomOccupant)
             }

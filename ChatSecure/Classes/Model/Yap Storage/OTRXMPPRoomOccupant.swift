@@ -55,6 +55,18 @@ import CocoaLumberjack
     public init(stringValue: String) {
         self = RoomOccupantAffiliationHelper.affiliation(withString: stringValue)
     }
+    
+    public var stringValue:String {
+        get {
+            switch self {
+            case .owner: return "owner"
+            case .admin: return "admin"
+            case .member: return "member"
+            case .outcast: return "outcast"
+            default: return "none"
+            }
+        }
+    }
 }
 
 // Helper class to create from string, callable from obj-c
@@ -288,6 +300,7 @@ public extension OTRXMPPRoomOccupant {
     }
 }
 
+// Extension to handle privileges
 public extension OTRXMPPRoomOccupant {
     public func canModifySubject() -> Bool {
         // TODO - Check muc#roomconfig_changesubject, participants may be allowed to change subject based on config!
@@ -297,5 +310,22 @@ public extension OTRXMPPRoomOccupant {
     public func canInviteOthers() -> Bool {
         // TODO - participants may be allowed
         return self.role == .moderator || [RoomOccupantAffiliation.owner, RoomOccupantAffiliation.admin].contains(self.affiliation)
+    }
+    
+    //https://xmpp.org/extensions/xep-0045.html#grantadmin
+    //An owner can grant admin status to a member or an unaffiliated user; this is done by changing the user's affiliation to "admin":
+    public func canGrantAdmin(_ occupant:OTRXMPPRoomOccupant) -> Bool {
+        return self.affiliation == .owner && (occupant.affiliation == .member || occupant.affiliation == .none)
+    }
+
+    public func canRevokeMembership(_ occupant:OTRXMPPRoomOccupant) -> Bool {
+        return self.affiliation == .owner || (self.affiliation == .member && occupant.affiliation != .none)
+    }
+
+    //https://xmpp.org/extensions/xep-0045.html#ban
+    //An admin or owner can ban one or more users from a room. The ban MUST be performed based on the occupant's bare JID. In order to ban a user, an admin MUST change the user's affiliation to "outcast".
+    //As with Kicking an Occupant, a user cannot be banned by an admin with a lower affiliation. Therefore, if an admin attempts to ban an owner, the service MUST deny the request and return a <not-allowed/> error to the sender
+    public func canBan(_ occupant:OTRXMPPRoomOccupant) -> Bool {
+        return self.affiliation == .owner || (self.affiliation == .admin && occupant.affiliation != .owner)
     }
 }

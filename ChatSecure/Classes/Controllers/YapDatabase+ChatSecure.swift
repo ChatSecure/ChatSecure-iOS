@@ -46,6 +46,11 @@ public extension YapDatabase {
                 return nil
             }
             
+            // Filter out outcasts and occupants that have affilition none and role none (which in private rooms means not a member and in public rooms means not currently in the room
+            if occupant.affiliation == .outcast || (occupant.affiliation == .none && occupant.role == .none) {
+                return nil
+            }
+            
             return roomId
         }
         
@@ -75,6 +80,6 @@ public extension YapDatabase {
             return name1.localizedCompare(name2)
         }
         
-        self.asyncRegisterView(grouping, sorting: sorting, version: "9", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+        self.asyncRegisterView(grouping, sorting: sorting, version: "10", whiteList: [OTRXMPPRoomOccupant.collection], name: .groupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
 }
