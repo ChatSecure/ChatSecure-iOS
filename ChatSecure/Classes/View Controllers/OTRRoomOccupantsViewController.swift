@@ -535,14 +535,10 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
 
             if let buddy = buddy {
                 cell.setThread(buddy, account: nil)
-            } else if let roomJid = room.roomJID {
-                // Create temporary buddy
-                // Do not save here or it will auto-trust random people
-                let uniqueId = roomJid.bare + account
-                let buddy = OTRXMPPBuddy(uniqueId: uniqueId)
+            } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
+                // Create temporary buddy for anonymous room members
+                let buddy = OTRXMPPBuddy(jid: jid, accountId: account)
                 buddy.trustLevel = .untrusted
-                buddy.username = roomOccupant.realJID?.bare ?? roomOccupant.jid?.full ?? ""
-                buddy.displayName = roomOccupant.roomName ?? buddy.username
                 var status = OTRThreadStatus.offline
                 if let jid = roomOccupant.jid,
                     OTRBuddyCache.shared.jidOnline(jid.full, in: room)  {

@@ -38,6 +38,7 @@ import CocoaLumberjack
     @objc public init(connection: YapDatabaseConnection,
                       capabilities: XMPPCapabilities,
                       fileTransfer: FileTransferManager,
+                      roomStorage: RoomStorage,
                       dispatchQueue: DispatchQueue? = nil) {
         self.connection = connection
         self.capabilities = capabilities
@@ -46,7 +47,6 @@ import CocoaLumberjack
         self.archiving = archiving
         self.archiving.resultAutomaticPagingPageSize = NSNotFound
         self.fileTransfer = fileTransfer
-        let roomStorage = RoomStorage(connection: connection, capabilities: capabilities, fileTransfer: fileTransfer)
         self.roomStorage = roomStorage
         self.roomManager = OTRXMPPRoomManager(databaseConnection: connection, roomStorage: roomStorage, archiving: archiving, dispatchQueue: dispatchQueue)
         super.init(dispatchQueue: dispatchQueue)

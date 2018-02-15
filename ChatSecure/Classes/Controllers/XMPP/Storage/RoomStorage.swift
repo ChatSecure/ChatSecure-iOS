@@ -17,15 +17,18 @@ import YapDatabase
     private let connection: YapDatabaseConnection
     private let capabilities: XMPPCapabilities
     private let fileTransfer: FileTransferManager
+    private let vCardModule: XMPPvCardTempModule
     
     // MARK: Init
     
     @objc public init(connection: YapDatabaseConnection,
                       capabilities: XMPPCapabilities,
-                      fileTransfer: FileTransferManager) {
+                      fileTransfer: FileTransferManager,
+                      vCardModule: XMPPvCardTempModule) {
         self.connection = connection
         self.capabilities = capabilities
         self.fileTransfer = fileTransfer
+        self.vCardModule = vCardModule
     }
     
     // MARK: Public
@@ -168,26 +171,34 @@ import YapDatabase
                 }
                 
                 // it's best to map "real" buddies to room occupants when we can
-                if let realJID = realJID {
-                    if let buddy = OTRXMPPBuddy.fetchBuddy(jid: realJID, accountUniqueId: accountId, transaction: transaction) {
-                        occupant.buddyUniqueId = buddy.uniqueId
-                    } else {
+                if let realJID = realJID?.bareJID {
+                    var buddy = OTRXMPPBuddy.fetchBuddy(jid: realJID, accountUniqueId: accountId, transaction: transaction)
+                    if buddy == nil {
                         // if an existing buddy is not found
                         // let's create an 'untrusted' room buddy,
                         // this facilitates vCard fetch and OMEMO key fetch
                         // this buddy is not considered on the user's roster
-                        let buddy = OTRXMPPBuddy(jid: realJID, accountId: accountId)
-                        buddy.trustLevel = .untrusted
-                        buddy.save(with: transaction)
-                        occupant.buddyUniqueId = buddy.uniqueId
+                        buddy = OTRXMPPBuddy(jid: realJID, accountId: accountId)
+                        buddy?.trustLevel = .untrusted
+                        buddy?.save(with: transaction)
                         DDLogInfo("Created non-roster buddy for room \(realJID) \(room)")
                     }
+                    occupant.buddyUniqueId = buddy?.uniqueId
+                    self.fetchvCardIfNeeded(jid: realJID)
                 }
                 occupant.save(with: transaction)
             })
         }
     }
     
+    private func fetchvCardIfNeeded(jid: XMPPJID) {
+        DispatchQueue.global(qos: .default).async {
+            let vCard = self.vCardModule.vCardTemp(for: jid, shouldFetch: true)
+            if vCard == nil {
+                DDLogInfo("Fetching vCard for room occupant: \(jid)")
+            }
+        }
+    }
     
     private func existingMessage(xmppMessage: XMPPMessage,
                                  delayed: Date?,
