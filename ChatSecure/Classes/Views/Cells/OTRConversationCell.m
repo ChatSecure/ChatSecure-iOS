@@ -108,6 +108,9 @@
     CGFloat fontSize = currentFont.pointSize;
     NSError *messageError = lastMessage.messageError;
     NSString *messageText = lastMessage.messageText;
+    if (!messageText) {
+        messageText = @"";
+    }
     
     NSString *messageTextPrefix = @"";
     if (!lastMessage.isMessageIncoming) {

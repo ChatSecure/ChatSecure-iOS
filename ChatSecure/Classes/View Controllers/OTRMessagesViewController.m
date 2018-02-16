@@ -2160,11 +2160,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             } else {
                 // We can't use finishSendingMessage here because it might
                 // accidentally clear out unsent message text
-                //[self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
                 [self scrollToBottomAnimated:YES];
             }
-        } else {
-            //[self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
         }
     }];
 }
