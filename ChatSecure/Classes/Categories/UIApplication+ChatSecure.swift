@@ -79,18 +79,23 @@ public extension UIApplication {
     }
     
     @objc public func showLocalNotification(_ message:OTRMessageProtocol, transaction: YapDatabaseReadTransaction) {
-        var thread:OTRThreadOwner? = nil
+        guard let thread = message.threadOwner(with: transaction) else {
+            return
+        }
         var unreadCount:UInt = 0
         var mediaItem: OTRMediaItem? = nil
         unreadCount = transaction.numberOfUnreadMessages()
-        thread = message.threadOwner(with: transaction)
         mediaItem = OTRMediaItem.init(forMessage: message, transaction: transaction)
-        guard let threadOwner = thread else {
-            return
-        }
-        let threadName = threadOwner.threadName
+        let threadName = thread.threadName
         
         var text = "\(threadName)"
+        
+        // Show author of group messages
+        if thread.isGroupThread,
+            let displayName = message.buddy(with: transaction)?.displayName,
+                displayName.count > 0 {
+            text += " (\(displayName))"
+        }
         
         if let mediaItem = mediaItem {
             let mediaText = mediaItem.displayText()
@@ -106,7 +111,7 @@ public extension UIApplication {
             return
         }
         
-        self.showLocalNotificationFor(threadOwner, text: text, unreadCount: Int(unreadCount))
+        self.showLocalNotificationFor(thread, text: text, unreadCount: Int(unreadCount))
     }
     
     @objc public func showLocalNotificationForKnockFrom(_ thread:OTRThreadOwner?) {
