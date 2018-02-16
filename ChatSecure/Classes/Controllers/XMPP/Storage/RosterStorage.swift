@@ -40,9 +40,10 @@ import YapDatabase
         }
         switch type {
         case .subscribed:
-            buddy.pendingApproval = false
             writeConnection.asyncReadWrite({ (transaction) in
-                buddy.save(with: transaction)
+                let buddy = buddy.refetch(with: transaction)?.copyAsSelf()
+                buddy?.pendingApproval = false
+                buddy?.save(with: transaction)
             }, completionBlock: {
                 NotificationCenter.default.post(name: NSNotification.Name.OTRBuddyPendingApprovalDidChange, object: self, userInfo: ["buddy": buddy])
             })
@@ -52,7 +53,9 @@ import YapDatabase
         case .unsubscribed:
             buddy.pendingApproval = false
             writeConnection.asyncReadWrite { (transaction) in
-                buddy.save(with: transaction)
+                let buddy = buddy.refetch(with: transaction)?.copyAsSelf()
+                buddy?.pendingApproval = false
+                buddy?.save(with: transaction)
             }
             let presence = XMPPPresence(type: .unsubscribe, to: jid)
             stream.send(presence)
@@ -110,8 +113,7 @@ extension RosterStorage: XMPPRosterStorage {
         readConnection.read { (transaction) in
             _buddy = OTRXMPPBuddy.fetchBuddy(jid: fromJID, accountUniqueId: accountId, transaction: transaction)
         }
-        // are we sure we don't want to make a new buddy here?
-        guard let buddy = _buddy?.copyAsSelf() else {
+        guard let buddy = _buddy else {
             return
         }
         let status = OTRThreadStatus(presence: presence)
