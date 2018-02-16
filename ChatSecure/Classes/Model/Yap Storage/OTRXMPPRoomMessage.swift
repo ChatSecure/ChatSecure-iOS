@@ -242,7 +242,9 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
     
     public static func download(withParentMessage parentMessage: OTRMessageProtocol, url: URL) -> OTRDownloadMessage {
         let download = OTRGroupDownloadMessage()!
-        
+        if let parent = parentMessage as? OTRXMPPRoomMessage {
+            download.buddyUniqueId = parent.buddyUniqueId
+        }
         download.downloadURL = url
         download.parentMessageKey = parentMessage.messageKey
         download.parentMessageCollection = parentMessage.messageCollection
