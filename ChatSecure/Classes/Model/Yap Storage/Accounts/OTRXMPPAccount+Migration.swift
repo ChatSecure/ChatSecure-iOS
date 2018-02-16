@@ -9,6 +9,25 @@
 import Foundation
 
 public extension OTRXMPPAccount {
+    /// This returns all buddies attached to an account, regardless of trust level
+    @objc public static func allBuddies(accountId: String,
+                                        transaction: YapDatabaseReadTransaction) -> [OTRXMPPBuddy] {
+        let extensionName = YapDatabaseConstants.extensionName(.relationshipExtensionName)
+        let edgeName = YapDatabaseConstants.edgeName(.buddyAccountEdgeName)
+        guard let relationshipTransaction = transaction.ext(extensionName) as? YapDatabaseRelationshipTransaction else {
+            return []
+        }
+        var buddies: [OTRXMPPBuddy] = []
+        relationshipTransaction.enumerateEdges(withName: edgeName, destinationKey: accountId, collection: OTRXMPPAccount.collection) { (edge, stop) in
+            if let buddy = OTRXMPPBuddy.fetchObject(withUniqueID: edge.sourceKey, transaction: transaction) {
+                buddies.append(buddy)
+            }
+        }
+        return buddies
+    }
+}
+
+public extension OTRXMPPAccount {
 
     @objc public var needsMigration: Bool {
         guard let jid = bareJID else { return false }

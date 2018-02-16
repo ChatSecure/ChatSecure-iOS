@@ -9,9 +9,9 @@
 import Foundation
 import XMPPFramework
 
-public extension XMPPStream {
+@objc public extension XMPPStream {
     /// Stream tags should be the OTRXMPPAccount uniqueId
-    public var accountId: String? {
+    @objc public var accountId: String? {
         return tag as? String
     }
 }

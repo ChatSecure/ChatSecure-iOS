@@ -10,7 +10,6 @@
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPBuddyManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "OTRYapDatabaseRosterStorage.h"
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPBuddyTimers.h"
 #import "OTRXMPPStream.h"
@@ -22,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
-@property (nonatomic, strong, readonly) OTRYapDatabaseRosterStorage * xmppRosterStorage;
+@property (nonatomic, strong, readonly) RosterStorage * xmppRosterStorage;
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
 
 @property (nonatomic, strong, readonly) XMPPStreamManagement *streamManagement;

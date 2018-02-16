@@ -24,7 +24,6 @@
 
 @import CocoaAsyncSocket;
 @import XMPPFramework;
-#import "OTRYapDatabaseRosterStorage.h"
 
 #import "OTRLog.h"
 
@@ -147,7 +146,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    _xmppRosterStorage = [[OTRYapDatabaseRosterStorage alloc] init];
+    _xmppRosterStorage = [[RosterStorage alloc] initWithReadConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection
+                                                       writeConnection:self.databaseConnection];
 	
 	_xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:self.xmppRosterStorage];
 	

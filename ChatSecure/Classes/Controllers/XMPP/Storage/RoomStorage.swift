@@ -184,19 +184,10 @@ import YapDatabase
                         DDLogInfo("Created non-roster buddy for room \(realJID) \(room)")
                     }
                     occupant.buddyUniqueId = buddy?.uniqueId
-                    self.fetchvCardIfNeeded(jid: realJID)
+                    self.vCardModule.fetchvCardTemp(for: realJID, ignoreStorage: false)
                 }
                 occupant.save(with: transaction)
             })
-        }
-    }
-    
-    private func fetchvCardIfNeeded(jid: XMPPJID) {
-        DispatchQueue.global(qos: .default).async {
-            let vCard = self.vCardModule.vCardTemp(for: jid, shouldFetch: true)
-            if vCard == nil {
-                DDLogInfo("Fetching vCard for room occupant: \(jid)")
-            }
         }
     }
     
