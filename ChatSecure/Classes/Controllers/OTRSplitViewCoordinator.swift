@@ -131,11 +131,14 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         guard splitViewController?.presentedViewController == nil,
         let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager,
         let longLivedReadConnection = OTRDatabaseManager.shared.longLivedReadOnlyConnection,
-        let writeConnection =  OTRDatabaseManager.shared.readWriteDatabaseConnection else {
+        let writeConnection =  OTRDatabaseManager.shared.readWriteDatabaseConnection,
+        let read = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+            else {
             return
         }
         
-        let detailVC = OTRAppDelegate.appDelegate.theme.accountDetailViewController(for: account, xmpp: xmpp, longLivedRead: longLivedReadConnection, write: writeConnection)
+        let detailVC = OTRAppDelegate.appDelegate.theme.accountDetailViewController(for: account, xmpp: xmpp, longLivedRead: longLivedReadConnection, read: read, write: writeConnection)
+        
         let nav = UINavigationController(rootViewController: detailVC)
         nav.modalPresentationStyle = .formSheet
         splitViewController?.present(nav, animated: true, completion: completion)

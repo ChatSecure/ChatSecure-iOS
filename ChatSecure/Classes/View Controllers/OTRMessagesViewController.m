@@ -361,10 +361,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
 }
 
-- (nullable OTRBuddy *)buddyWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+- (nullable OTRXMPPBuddy *)buddyWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id <OTRThreadOwner> object = [self threadObjectWithTransaction:transaction];
-    if ([object isKindOfClass:[OTRBuddy class]]) {
-        return (OTRBuddy *)object;
+    if ([object isKindOfClass:[OTRXMPPBuddy class]]) {
+        return (OTRXMPPBuddy *)object;
     }
     return nil;
 }
@@ -377,10 +377,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
 }
 
-- (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+- (nullable OTRXMPPAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
     id <OTRThreadOwner> thread =  [self threadObjectWithTransaction:transaction];
     if (!thread) { return nil; }
-    OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
+    OTRXMPPAccount *account = [OTRXMPPAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
     return account;
 }
 
@@ -936,8 +936,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (void) infoButtonPressed:(id)sender {
-    __block OTRAccount *account = nil;
-    __block OTRBuddy *buddy = nil;
+    __block OTRXMPPAccount *account = nil;
+    __block OTRXMPPBuddy *buddy = nil;
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [self accountWithTransaction:transaction];
         buddy = [self buddyWithTransaction:transaction];
@@ -950,12 +950,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
     [self fetchOMEMODeviceList];
     
-    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:@[buddy] connection:self.readOnlyDatabaseConnection];
-
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId connection:self.readOnlyDatabaseConnection form:form];
-    verify.completionBlock = ^{
-        [self updateEncryptionState];
-    };
+    UserProfileViewController *verify = [OTRAppDelegate.appDelegate.theme userProfileViewControllerForAccount:account buddies:@[buddy] readConnection:self.readOnlyDatabaseConnection writeConnection:self.readWriteDatabaseConnection];
+    if ([verify isKindOfClass:UserProfileViewController.class]) {
+        verify.completionBlock = ^{
+            [self updateEncryptionState];
+        };
+    }
     UINavigationController *verifyNav = [[UINavigationController alloc] initWithRootViewController:verify];
     verifyNav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:verifyNav animated:YES completion:nil];

@@ -11,6 +11,7 @@
 
 @class OTRAccount;
 @class OTRXMPPAccount;
+@class OTRXMPPBuddy;
 @class OTRXMPPManager;
 @class YapDatabaseConnection;
 @class JSQMessagesViewController;
@@ -40,8 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns new instance. Override this in subclass to use a different invite view controller class */
 - (__kindof UIViewController* ) inviteViewControllerForAccount:(OTRAccount*)account;
 
+/** Returns new instance. Override this in subclass to use a different profile view controller class */
+- (__kindof UIViewController* ) userProfileViewControllerForAccount:(OTRXMPPAccount*)account buddies:(NSArray<OTRXMPPBuddy*>*)buddies readConnection:(YapDatabaseConnection*)readConnection writeConnection:(YapDatabaseConnection*)writeConnection;
+
 /** Returns new instance. Override this in subclass to use a different account detail view controller class */
-- (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection;
+- (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection readConnection:(YapDatabaseConnection * _Nonnull)readConnection  writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -323,7 +323,8 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
     }
-    OTRAccountDetailViewController *detailVC = [[OTRAppDelegate appDelegate].theme accountDetailViewControllerForAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+    OTRAccountDetailViewController *detailVC = [[OTRAppDelegate appDelegate].theme accountDetailViewControllerForAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection
+                                                                                                          readConnection:[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];

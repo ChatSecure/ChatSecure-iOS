@@ -23,11 +23,12 @@ open class UserProfileViewController: XLFormViewController {
     open static let ShowAdvancedCryptoSettingsTag = "ShowAdvancedCryptoSettingsTag"
     
     open let accountKey:String
-    open var connection: YapDatabaseConnection
+    open var readConnection: YapDatabaseConnection
+    open var writeConnection: YapDatabaseConnection
     
     lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
         var account:OTRAccount? = nil
-        self.connection.read { (transaction) in
+        self.readConnection.read { (transaction) in
             account = OTRAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
         }
         
@@ -41,9 +42,13 @@ open class UserProfileViewController: XLFormViewController {
         return xmpp.omemoSignalCoordinator
     }()
     
-    @objc public init(accountKey:String, connection: YapDatabaseConnection, form: XLFormDescriptor) {
+    @objc public init(accountKey:String,
+                      readConnection: YapDatabaseConnection,
+                      writeConnection:YapDatabaseConnection,
+                      form: XLFormDescriptor) {
         self.accountKey = accountKey
-        self.connection = connection
+        self.readConnection = readConnection
+        self.writeConnection = writeConnection
         super.init(nibName: nil, bundle: nil)
         
         self.form = form
@@ -435,7 +440,7 @@ open class UserProfileViewController: XLFormViewController {
         if let device = cell.rowDescriptor.value as? OTROMEMODevice {
             cryptoType = "OMEMO"
             fingerprint = device.humanReadableFingerprint
-            self.connection.read({ (transaction) in
+            self.readConnection.read({ (transaction) in
                 if let buddy = transaction.object(forKey: device.parentKey, inCollection: device.parentCollection) as? OTRBuddy {
                     username = buddy.username
                 }

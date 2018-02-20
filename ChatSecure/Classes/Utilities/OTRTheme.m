@@ -52,8 +52,16 @@
     return [[OTRInviteViewController alloc] initWithAccount:account];
 }
 
-- (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection {
-    return [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:longLivedReadConnection writeConnection:writeConnection];
+/** Returns new instance. Override this in subclass to use a different profile view controller class */
+- (__kindof UIViewController* ) userProfileViewControllerForAccount:(OTRXMPPAccount*)account buddies:(NSArray<OTRXMPPBuddy*>*)buddies readConnection:(YapDatabaseConnection*)readConnection writeConnection:(YapDatabaseConnection*)writeConnection {
+    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:buddies connection:readConnection];
+    
+    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId readConnection:readConnection writeConnection:writeConnection form:form];
+    return verify;
+}
+
+- (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection readConnection:(YapDatabaseConnection * _Nonnull)readConnection  writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection {
+    return [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:longLivedReadConnection readConnection:readConnection  writeConnection:writeConnection];
 }
 
 @end

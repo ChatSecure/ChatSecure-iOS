@@ -13,7 +13,7 @@
 @import OTRKit;
 @import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
+@class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRXMPPAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
 @protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
@@ -48,7 +48,7 @@
 
 
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
-- (nullable OTRAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable OTRXMPPAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRXMPPManager *)xmppManagerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(nonnull NSIndexPath *)indexPath;
 

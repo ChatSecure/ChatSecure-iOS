@@ -523,49 +523,54 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         var accountObject:OTRXMPPAccount? = nil
-        if let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant, let room = self.room, let account = room.accountUniqueId {
-            readConnection?.read({ (transaction) in
-                buddy = roomOccupant.buddy(with: transaction)
-                accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
-            })
-            var isYou = false
-            if let accountJid = accountObject?.bareJID?.bare, roomOccupant.realJID?.bare == accountJid {
-                isYou = true
+        guard let roomOccupant = self.viewHandler?.object(indexPath) as? OTRXMPPRoomOccupant,
+            let room = self.room,
+            let account = room.accountUniqueId 
+            else {
+                DDLogError("Could not configure RoomOccupant cell!")
+                return cell
+        }
+        readConnection?.read({ (transaction) in
+            buddy = roomOccupant.buddy(with: transaction)
+            accountObject = OTRXMPPAccount.fetchObject(withUniqueID: account, transaction: transaction)
+        })
+        var isYou = false
+        if let accountJid = accountObject?.bareJID?.bare,
+            roomOccupant.realJID?.bare == accountJid {
+            isYou = true
+        }
+        if let buddy = buddy {
+            cell.setThread(buddy, account: nil)
+        } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
+            // Create temporary buddy for anonymous room members
+            let buddy = OTRXMPPBuddy(jid: jid, accountId: account)
+            buddy.trustLevel = .untrusted
+            var status = OTRThreadStatus.offline
+            if let jid = roomOccupant.jid,
+                OTRBuddyCache.shared.jidOnline(jid.full, in: room)  {
+                status = .available
             }
-
-            if let buddy = buddy {
-                cell.setThread(buddy, account: nil)
-            } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
-                // Create temporary buddy for anonymous room members
-                let buddy = OTRXMPPBuddy(jid: jid, accountId: account)
-                buddy.trustLevel = .untrusted
-                var status = OTRThreadStatus.offline
-                if let jid = roomOccupant.jid,
-                    OTRBuddyCache.shared.jidOnline(jid.full, in: room)  {
-                    status = .available
-                }
-                OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: roomOccupant.jid?.bare)
-                cell.setThread(buddy, account: nil)
+            OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: roomOccupant.jid?.bare)
+            cell.setThread(buddy, account: nil)
+        }
+        
+        if isYou {
+            if let accountObject = accountObject {
+                cell.avatarImageView.image = accountObject.avatarImage()
             }
-            
-            if isYou {
-                if let accountObject = accountObject {
-                    cell.avatarImageView.image = accountObject.avatarImage()
-                }
-                cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
-            }
-            
-            if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
-                cell.setChecked(checked: true)
-            } else {
-                cell.setChecked(checked: false)
-            }
-            if roomOccupant.role == .none {
-                // Not present in the room
-                cell.nameLabel.textColor = UIColor.lightGray
-                cell.identifierLabel.textColor = UIColor.lightGray
-                cell.accountLabel.textColor = UIColor.lightGray
-            }
+            cell.nameLabel.text?.append(" (" + GROUP_INFO_YOU() + ")")
+        }
+        
+        if roomOccupant.affiliation == .owner || roomOccupant.affiliation == .admin {
+            cell.setChecked(checked: true)
+        } else {
+            cell.setChecked(checked: false)
+        }
+        if roomOccupant.role == .none {
+            // Not present in the room
+            cell.nameLabel.textColor = UIColor.lightGray
+            cell.identifierLabel.textColor = UIColor.lightGray
+            cell.accountLabel.textColor = UIColor.lightGray
         }
         cell.selectionStyle = .none
         return cell
