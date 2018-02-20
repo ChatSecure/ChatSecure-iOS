@@ -2121,6 +2121,12 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
     NSUInteger numberMappingsItems = [self.viewHandler.mappings numberOfItemsInSection:0];
     
+    // Collection view has a bug which makes it call numberOfSections if it is not visible, ending up with an inconsistency exception at the end of the batch updates below. Work around: If we are not visible, just call reloadData.
+    if (self.collectionView.window == nil) {
+        [self.collectionView reloadData];
+        return;
+    }
+    
     [self.collectionView performBatchUpdates:^{
         
         for (YapDatabaseViewRowChange *rowChange in rowChanges)
