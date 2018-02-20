@@ -59,15 +59,16 @@
     [super viewWillAppear:animated];
     [self.view bringSubviewToFront:self.showOwnQRCodeButton];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
+- (BOOL) prefersStatusBarHidden {
+    return YES;
+}
 
 - (void)showOwnQRCode:(id)sender
 {

@@ -59,6 +59,7 @@
 
 @import AVFoundation;
 @import MediaPlayer;
+@import AVKit;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 static NSUInteger const kOTRMessagePageSize = 50;
@@ -232,12 +233,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.loadingMessages = NO;
 }
 
+- (BOOL) prefersStatusBarHidden {
+    return NO;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     self.currentIndexPath = nil;
     
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
     if (self.lastSeenRefreshTimer) {
         [self.lastSeenRefreshTimer invalidate];
@@ -1380,7 +1384,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if (videoItem.filename) {
         NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.threadKey];
-        MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+        AVPlayer *player = [[AVPlayer alloc] initWithURL:videoURL];
+        AVPlayerViewController *moviePlayerViewController = [[AVPlayerViewController alloc] init];
+        moviePlayerViewController.player = player;
         [self presentViewController:moviePlayerViewController animated:YES completion:nil];
     }
 }

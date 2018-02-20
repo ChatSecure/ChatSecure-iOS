@@ -130,8 +130,10 @@
 
 - (void)forgotTapped:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FORGOT_PASSPHRASE_STRING() message:FORGOT_PASSPHRASE_INFO_STRING() delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING(), nil];
-    [alertView show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:FORGOT_PASSPHRASE_STRING() message:FORGOT_PASSPHRASE_INFO_STRING() preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification

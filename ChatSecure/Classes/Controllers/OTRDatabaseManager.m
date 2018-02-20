@@ -248,8 +248,6 @@
         return YES;
     }
     else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:Database_Error_String() message:Could_Not_Decrypt_Database() delegate:nil cancelButtonTitle:OK_STRING() otherButtonTitles:nil];
-        [alert show];
         return NO;
     }
 }
