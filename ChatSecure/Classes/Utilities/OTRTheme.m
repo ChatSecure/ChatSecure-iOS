@@ -56,9 +56,4 @@
     return [[OTRAccountDetailViewController alloc] initWithAccount:account xmpp:xmpp longLivedReadConnection:longLivedReadConnection writeConnection:writeConnection];
 }
 
-- (BOOL) enableOMEMO
-{
-    return YES;
-}
-
 @end

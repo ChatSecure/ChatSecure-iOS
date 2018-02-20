@@ -147,6 +147,9 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 }
 
 + (BOOL) allowGroupOMEMO {
+    if (![self allowOMEMO]) {
+        return NO;
+    }
     BOOL result = [[[self defaultPlist] objectForKey:@"AllowGroupOMEMO"] boolValue];
     return result;
 }
@@ -154,6 +157,15 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 + (BOOL) allowDebugFileLogging {
     BOOL result = [[[self defaultPlist] objectForKey:@"AllowDebugFileLogging"] boolValue];
     return result;
+}
+
++ (BOOL) allowOMEMO {
+    NSNumber *result = [[self defaultPlist] objectForKey:@"AllowOMEMO"];
+    if (!result) {
+        return YES;
+    } else {
+        return result.boolValue;
+    }
 }
 
 /** Returns true if we're running the official ChatSecure */

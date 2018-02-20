@@ -43,8 +43,5 @@ NS_ASSUME_NONNULL_BEGIN
 /** Returns new instance. Override this in subclass to use a different account detail view controller class */
 - (__kindof UIViewController* ) accountDetailViewControllerForAccount:(OTRXMPPAccount*)account xmpp:(OTRXMPPManager * _Nonnull)xmpp longLivedReadConnection:(YapDatabaseConnection * _Nonnull)longLivedReadConnection writeConnection:(YapDatabaseConnection * _Nonnull)writeConnection;
 
-/** Override this to disable OMEMO message encryption. default: YES */
-- (BOOL) enableOMEMO;
-
 @end
 NS_ASSUME_NONNULL_END

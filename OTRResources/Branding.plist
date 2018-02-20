@@ -46,5 +46,7 @@
 	<true/>
 	<key>AllowDebugFileLogging</key>
 	<true/>
+	<key>AllowOMEMO</key>
+	<true/>
 </dict>
 </plist>
