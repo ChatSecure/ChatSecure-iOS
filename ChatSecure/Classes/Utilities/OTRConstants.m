@@ -82,7 +82,7 @@ NSString *const kOTRNotificationTypeChatMessage = @"kOTRNotificationTypeChatMess
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";
 NSString *const kOTRShowOMEMOGroupEncryptionKey = @"kOTRShowOMEMOGroupEncryptionKey";
-extern NSString *const kOTREnableDebugLoggingKey = @"kOTREnableDebugLoggingKey";
+NSString *const kOTREnableDebugLoggingKey = @"kOTREnableDebugLoggingKey";
 
 extern NSString *const kOTREnableDebugLoggingKey;
 //Chatview

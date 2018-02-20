@@ -126,10 +126,8 @@
             NSString *firstName = [NSString stringWithFormat:@"buddy%d", buddyIndex + 1];
             NSString *jidString = [NSString stringWithFormat:@"%@@example.com", firstName];
             XMPPJID *jid = [XMPPJID jidWithString:jidString];
-            OTRXMPPBuddy * buddy = [[OTRXMPPBuddy alloc] init];
+            OTRXMPPBuddy * buddy = [[OTRXMPPBuddy alloc] initWithJID:jid accountId:account.uniqueId];
             buddy.displayName = name;
-            buddy.username = jidString;
-            buddy.accountUniqueId  = account.uniqueId;
             buddy.trustLevel = BuddyTrustLevelRoster;
             [OTRBuddyCache.shared setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
             buddy.preferredSecurity = OTRSessionSecurityOMEMO;

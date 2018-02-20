@@ -297,8 +297,8 @@
 }
                                 
 - (void) timerUpdate:(NSTimer*)timer {
-    UIApplication *application = [UIApplication sharedApplication];
-    NSTimeInterval timeRemaining = application.backgroundTimeRemaining;
+    //UIApplication *application = [UIApplication sharedApplication];
+    //NSTimeInterval timeRemaining = application.backgroundTimeRemaining;
     //DDLogVerbose(@"Timer update, background time left: %f", timeRemaining);
 }
 
