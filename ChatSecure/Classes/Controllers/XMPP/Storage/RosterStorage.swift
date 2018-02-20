@@ -211,7 +211,7 @@ extension RosterStorage: XMPPRosterDelegate {
                     buddy = buddy?.copyAsSelf()
                 }
                 guard let buddy = buddy else { return }
-                buddy.subscription = SubscriptionAttribute(rawValue: subscription) ?? .none
+                buddy.subscription = SubscriptionAttribute(stringValue: subscription)
                 buddy.pending.setPendingOut(pending: (ask == "subscribe"))
                 if buddy.subscribedFrom {
                     buddy.pending.setPendingIn(pending: false)

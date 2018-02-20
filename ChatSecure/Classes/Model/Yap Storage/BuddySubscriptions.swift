@@ -86,11 +86,10 @@ extension SubscriptionPendingAttribute {
     }
 }
 
-extension SubscriptionAttribute: RawRepresentable {
-    public typealias RawValue = String
+extension SubscriptionAttribute {
     
-    public init?(rawValue: RawValue) {
-        switch rawValue {
+    public init(stringValue: String) {
+        switch stringValue {
         case "from": self = .from
         case "to": self = .to
         case "both": self = .both
@@ -98,7 +97,7 @@ extension SubscriptionAttribute: RawRepresentable {
         }
     }
     
-    public var rawValue: RawValue {
+    public var stringValue: String {
         switch self {
         case .from: return "from"
         case .to: return "to"
@@ -148,6 +147,6 @@ extension SubscriptionAttribute: RawRepresentable {
 
 @objc public class SubscriptionAttributeBridge: NSObject {
     @objc public static func subscription(withString subscription:String) -> SubscriptionAttribute {
-        return SubscriptionAttribute(rawValue: subscription) ?? .none
+        return SubscriptionAttribute(stringValue: subscription)
     }
 }
