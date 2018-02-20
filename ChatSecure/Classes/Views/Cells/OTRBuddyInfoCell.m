@@ -46,7 +46,8 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
             label.adjustsFontSizeToFitWidth = YES;
             [self.contentView addSubview:label];
         }];
-        
+        _infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        [self.infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -109,6 +110,13 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.nameLabel.textColor = [UIColor blackColor];
     self.identifierLabel.textColor = [UIColor darkTextColor];
     self.accountLabel.textColor = [UIColor lightGrayColor];
+}
+
+- (void) infoButtonPressed:(UIButton*)sender {
+    if (!self.infoAction) {
+        return;
+    }
+    self.infoAction(self, sender);
 }
 
 @end
