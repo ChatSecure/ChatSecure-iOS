@@ -543,9 +543,13 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             let account = accountObject {
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
-            cell.infoAction = { (cell, sender) in
-                let profile = OTRAppDelegate.appDelegate.theme.userProfileViewController(for: account, buddies: [buddy], read: self.readConnection!, write: OTRDatabaseManager.shared.readWriteDatabaseConnection!)
-                self.navigationController?.pushViewController(profile, animated: true)
+            cell.infoAction = { [weak self] (cell, sender) in
+                guard let read = self?.readConnection,
+                    let write = self?.connection else {
+                        return
+                }
+                let profile = OTRAppDelegate.appDelegate.theme.userProfileViewController(for: account, buddies: [buddy], read: read, write: write)
+                self?.navigationController?.pushViewController(profile, animated: true)
             }
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
             // Create temporary buddy for anonymous room members
