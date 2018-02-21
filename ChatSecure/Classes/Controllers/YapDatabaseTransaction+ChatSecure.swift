@@ -10,6 +10,22 @@ import Foundation
 import YapDatabase
 import CocoaLumberjack
 
+public extension YapDatabaseConnection {
+    /// synchronously fetch object an object.
+    public func fetch<T>(_ block: @escaping (YapDatabaseReadTransaction) -> T?) -> T? {
+        var result: T?
+        read { (transaction) in
+            result = block(transaction)
+        }
+        return result
+    }
+    
+    /// synchronously fetch object an object.
+    @objc public func fetch(_ block: @escaping (YapDatabaseReadTransaction) -> Any?) -> Any? {
+        return fetch(block)
+    }
+}
+
 public extension YapDatabaseReadTransaction {
     
     /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359

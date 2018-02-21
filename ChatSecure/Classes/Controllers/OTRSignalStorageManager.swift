@@ -286,7 +286,7 @@ open class OTRSignalStorageManager: NSObject {
         return device
     }
     
-    fileprivate func parentKeyAndCollectionForSignalAddress(_ signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OTRDatabaseEntry? {
+    fileprivate func parentKeyAndCollectionForSignalAddress(_ signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> (key: String, collection: String)? {
         var parentKey:String? = nil
         var parentCollection:String? = nil
         
@@ -305,7 +305,7 @@ open class OTRSignalStorageManager: NSObject {
             return nil
         }
         
-        return OTRDatabaseEntry(key: key, collection: collection)
+        return (key: key, collection: collection)
     }
 }
 //MARK: SignalStore

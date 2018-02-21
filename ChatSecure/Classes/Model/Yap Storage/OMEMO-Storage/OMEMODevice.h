@@ -12,9 +12,13 @@
  *
  */
 typedef NS_ENUM(NSUInteger, OMEMOTrustLevel) {
+    /// new device seen
     OMEMOTrustLevelUntrustedNew = 0,
+    /// device manually untrusted
     OMEMOTrustLevelUntrusted    = 1,
+    /// device trusted on first use
     OMEMOTrustLevelTrustedTofu  = 2,
+    /// device manually trusted by user
     OMEMOTrustLevelTrustedUser  = 3,
     /** If the device has been removed from the server */
     OMEMOTrustLevelRemoved  = 4,
@@ -22,6 +26,7 @@ typedef NS_ENUM(NSUInteger, OMEMOTrustLevel) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Also see OMEMODevice.swift
 @interface OMEMODevice : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
 
 @property (nonatomic, strong, readonly) NSString *parentKey;

@@ -53,10 +53,10 @@
 }
 
 /** Returns new instance. Override this in subclass to use a different profile view controller class */
-- (__kindof UIViewController* ) userProfileViewControllerForAccount:(OTRXMPPAccount*)account buddies:(NSArray<OTRXMPPBuddy*>*)buddies readConnection:(YapDatabaseConnection*)readConnection writeConnection:(YapDatabaseConnection*)writeConnection {
-    XLFormDescriptor *form = [UserProfileViewController profileFormDescriptorForAccount:account buddies:buddies connection:readConnection];
+- (__kindof UIViewController* ) keyManagementViewControllerForAccount:(OTRXMPPAccount*)account buddies:(NSArray<OTRXMPPBuddy*>*)buddies readConnection:(YapDatabaseConnection*)readConnection writeConnection:(YapDatabaseConnection*)writeConnection {
+    XLFormDescriptor *form = [KeyManagementViewController profileFormDescriptorForAccount:account buddies:buddies connection:readConnection];
     
-    UserProfileViewController *verify = [[UserProfileViewController alloc] initWithAccountKey:account.uniqueId readConnection:readConnection writeConnection:writeConnection form:form];
+    KeyManagementViewController *verify = [[KeyManagementViewController alloc] initWithAccountKey:account.uniqueId readConnection:readConnection writeConnection:writeConnection form:form];
     return verify;
 }
 

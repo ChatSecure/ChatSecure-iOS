@@ -7,3 +7,20 @@
 //
 
 import Foundation
+
+public extension OMEMODevice {
+    
+    /// Generally either an OTRXMPPAccount or OTRXMPPBuddy
+    @objc public func parent(with transaction: YapDatabaseReadTransaction) -> Any? {
+        return transaction.object(forKey: parentKey, inCollection: parentCollection)
+    }
+    
+    /// Checks if any of the devices are untrusted/new
+    @objc public static func filterNewDevices(_ devices: [OMEMODevice], transaction: YapDatabaseReadTransaction) {
+        let untrusted = devices.filter { (device) -> Bool in
+            device.trustLevel == .untrustedNew
+        }
+        
+        
+    }
+}

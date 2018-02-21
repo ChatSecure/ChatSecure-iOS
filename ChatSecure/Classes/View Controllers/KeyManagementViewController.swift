@@ -11,32 +11,29 @@ import XLForm
 import YapDatabase
 import OTRAssets
 
+
+/** Crypto Chooser row tags */
+private struct RowTags {
+    static let DefaultRowTag = "DefaultRowTag"
+    static let PlaintextRowTag = "PlaintextRowTag"
+    static let OTRRowTag = "OTRRowTag"
+    static let OMEMORowTag = "OMEMORowTag"
+    static let ShowAdvancedCryptoSettingsTag = "ShowAdvancedCryptoSettingsTag"
+}
+
 open class KeyManagementViewController: XLFormViewController {
     
     @objc open var completionBlock: (()->Void)?
-    
-    // Crypto Chooser row tags
-    open static let DefaultRowTag = "DefaultRowTag"
-    open static let PlaintextRowTag = "PlaintextRowTag"
-    open static let OTRRowTag = "OTRRowTag"
-    open static let OMEMORowTag = "OMEMORowTag"
-    open static let ShowAdvancedCryptoSettingsTag = "ShowAdvancedCryptoSettingsTag"
-    
-    open let accountKey:String
-    open var readConnection: YapDatabaseConnection
-    open var writeConnection: YapDatabaseConnection
+
+    private let accountKey:String
+    private let readConnection: YapDatabaseConnection
+    private let writeConnection: YapDatabaseConnection
     
     lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
-        var account:OTRAccount? = nil
-        self.readConnection.read { (transaction) in
-            account = OTRAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
-        }
-        
-        guard let acct = account else {
-            return nil
-        }
-        
-        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: acct) as? XMPPManager else {
+        guard let account = self.readConnection.fetch({ (transaction) in
+            OTRXMPPAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
+        }),
+        let xmpp = OTRProtocolManager.shared.xmppManager(for: account) else {
             return nil
         }
         return xmpp.omemoSignalCoordinator
@@ -163,11 +160,11 @@ open class KeyManagementViewController: XLFormViewController {
     
     open static func cryptoChooserRows(_ buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
         
-        let bestAvailableRow = XLFormRowDescriptor(tag: DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Best_Available())
-        let plaintextOnlyRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Only())
-        let plaintextOtrRow = XLFormRowDescriptor(tag: PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Opportunistic_OTR())
-        let otrRow = XLFormRowDescriptor(tag: OTRRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OTR")
-        let omemoRow = XLFormRowDescriptor(tag: OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO")
+        let bestAvailableRow = XLFormRowDescriptor(tag: RowTags.DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Best_Available())
+        let plaintextOnlyRow = XLFormRowDescriptor(tag: RowTags.PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Only())
+        let plaintextOtrRow = XLFormRowDescriptor(tag: RowTags.PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Opportunistic_OTR())
+        let otrRow = XLFormRowDescriptor(tag: RowTags.OTRRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OTR")
+        let omemoRow = XLFormRowDescriptor(tag: RowTags.OMEMORowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: "OMEMO")
         
         var hasDevices = false
         
@@ -403,13 +400,13 @@ open class KeyManagementViewController: XLFormViewController {
             let buddy = buddies.first!
             let cryptoSection = XLFormSectionDescriptor.formSection(withTitle: Advanced_Encryption_Settings())
             cryptoSection.footerTitle = Advanced_Crypto_Warning()
-            let showAdvancedSwitch = XLFormRowDescriptor.init(tag: self.ShowAdvancedCryptoSettingsTag, rowType: XLFormRowDescriptorTypeBooleanSwitch, title: Show_Advanced_Encryption_Settings())
+            let showAdvancedSwitch = XLFormRowDescriptor.init(tag: RowTags.ShowAdvancedCryptoSettingsTag, rowType: XLFormRowDescriptorTypeBooleanSwitch, title: Show_Advanced_Encryption_Settings())
             showAdvancedSwitch.value = NSNumber(value: false as Bool)
             let cryptoChooser = cryptoChooserRows(buddy, connection: connection)
             for row in cryptoChooser {
                 cryptoSection.addFormRow(row)
             }
-            cryptoSection.hidden = "$\(ShowAdvancedCryptoSettingsTag)==0"
+            cryptoSection.hidden = "$\(RowTags.ShowAdvancedCryptoSettingsTag)==0"
             let buddySection = theirSections.first!
             buddySection.addFormRow(showAdvancedSwitch)
             sectionsToAdd.append(cryptoSection)

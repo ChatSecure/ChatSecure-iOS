@@ -548,7 +548,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
                     let write = self?.connection else {
                         return
                 }
-                let profile = OTRAppDelegate.appDelegate.theme.userProfileViewController(for: account, buddies: [buddy], read: read, write: write)
+                let profile = OTRAppDelegate.appDelegate.theme.keyManagementViewController(for: account, buddies: [buddy], read: read, write: write)
                 self?.navigationController?.pushViewController(profile, animated: true)
             }
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
