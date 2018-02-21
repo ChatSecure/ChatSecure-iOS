@@ -13,7 +13,7 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRXMPPAccount.h"
-#import "OTROMEMODevice.h"
+#import "OMEMODevice.h"
 #import "OTRBuddyCache.h"
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -58,7 +58,7 @@
                 [OTRBuddyCache.shared setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
                 buddy.preferredSecurity = OTRSessionSecurityOMEMO;
                 NSData *fingerprintData = [OTRPasswordGenerator randomDataWithLength:32];
-                OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
+                OMEMODevice *device = [[OMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
                 [device saveWithTransaction:transaction];
             }
             
@@ -132,7 +132,7 @@
             [OTRBuddyCache.shared setThreadStatus:OTRThreadStatusAvailable forBuddy:buddy resource:nil];
             buddy.preferredSecurity = OTRSessionSecurityOMEMO;
             NSData *fingerprintData = [OTRPasswordGenerator randomDataWithLength:32];
-            OTROMEMODevice *device = [[OTROMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
+            OMEMODevice *device = [[OMEMODevice alloc] initWithDeviceId:@(1) trustLevel:OMEMOTrustLevelTrustedUser parentKey:buddy.uniqueId parentCollection:[buddy.class collection] publicIdentityKeyData:fingerprintData lastSeenDate:[NSDate date]];
             [device saveWithTransaction:transaction];
             
             [OTRBuddyCache.shared setThreadStatus:(NSInteger)OTRThreadStatusAvailable forBuddy:buddy resource:nil];

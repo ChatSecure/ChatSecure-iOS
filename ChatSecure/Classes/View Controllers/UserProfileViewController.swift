@@ -77,11 +77,11 @@ open class UserProfileViewController: XLFormViewController {
     }
     
     @objc open func doneButtonPressed(_ sender: AnyObject?) {
-        var devicesToSave: [OTROMEMODevice] = []
+        var devicesToSave: [OMEMODevice] = []
         var otrFingerprintsToSave: [OTRFingerprint] = []
         for (_, value) in form.formValues() {
             switch value {
-            case let device as OTROMEMODevice:
+            case let device as OMEMODevice:
                 devicesToSave.append(device)
             case let fingerprint as OTRFingerprint:
                 otrFingerprintsToSave.append(fingerprint)
@@ -91,8 +91,8 @@ open class UserProfileViewController: XLFormViewController {
         }
         OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
             for viewedDevice in devicesToSave {
-                if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OTROMEMODevice.collection) as? OTROMEMODevice {
-                    device = device.copy() as! OTROMEMODevice
+                if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OMEMODevice.collection) as? OMEMODevice {
+                    device = device.copy() as! OMEMODevice
                     device.trustLevel = viewedDevice.trustLevel
                     
                     if (device.trustLevel == .trustedUser && device.isExpired()) {
@@ -117,10 +117,10 @@ open class UserProfileViewController: XLFormViewController {
         if let rowDescriptor = self.form.formRow(atIndex: indexPath) {
             
             switch rowDescriptor.value {
-            case let device as OTROMEMODevice:
+            case let device as OMEMODevice:
                 if let myBundle = self.signalCoordinator?.fetchMyBundle() {
                     // This is only used to compare so we don't allow delete UI on our device
-                    let thisDeviceYapKey = OTROMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: self.accountKey, parentCollection: OTRAccount.collection)
+                    let thisDeviceYapKey = OMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: self.accountKey, parentCollection: OTRAccount.collection)
                     if device.uniqueId != thisDeviceYapKey {
                         return true
                     }
@@ -141,7 +141,7 @@ open class UserProfileViewController: XLFormViewController {
             if let rowDescriptor = self.form.formRow(atIndex: indexPath) {
                 rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
                 switch rowDescriptor.value {
-                case let device as OTROMEMODevice:
+                case let device as OMEMODevice:
                     
                     self.signalCoordinator?.removeDevice([device], completion: { (success) in
                         
@@ -172,7 +172,7 @@ open class UserProfileViewController: XLFormViewController {
         var hasDevices = false
         
         connection.read { (transaction: YapDatabaseReadTransaction) in
-            if OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction).count > 0 {
+            if OMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction).count > 0 {
                 hasDevices = true
             }
         }
@@ -311,20 +311,20 @@ open class UserProfileViewController: XLFormViewController {
         guard let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() else {
             return form
         }
-        let thisDevice = OTROMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection, publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
-        var ourDevices: [OTROMEMODevice] = []
+        let thisDevice = OMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection, publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
+        var ourDevices: [OMEMODevice] = []
         connection.read { (transaction: YapDatabaseReadTransaction) in
-            ourDevices = OTROMEMODevice.allDevices(forParentKey: account.uniqueId, collection: type(of: account).collection, transaction: transaction)
+            ourDevices = OMEMODevice.allDevices(forParentKey: account.uniqueId, collection: type(of: account).collection, transaction: transaction)
         }
 
         
-        let ourFilteredDevices = ourDevices.filter({ (device: OTROMEMODevice) -> Bool in
+        let ourFilteredDevices = ourDevices.filter({ (device: OMEMODevice) -> Bool in
             return device.uniqueId != thisDevice.uniqueId
         })
         
         // TODO - Sort ourDevices and theirDevices by lastSeen
         
-        let addDevicesToSection: ([OTROMEMODevice], XLFormSectionDescriptor) -> Void = { devices, section in
+        let addDevicesToSection: ([OMEMODevice], XLFormSectionDescriptor) -> Void = { devices, section in
             for device in devices {
                 guard let _ = device.publicIdentityKeyData else {
                     continue
@@ -362,7 +362,7 @@ open class UserProfileViewController: XLFormViewController {
             }
         }
         
-        var allMyDevices: [OTROMEMODevice] = []
+        var allMyDevices: [OMEMODevice] = []
         allMyDevices.append(thisDevice)
         allMyDevices.append(contentsOf: ourFilteredDevices)
         addDevicesToSection(allMyDevices, yourProfileSection)
@@ -380,9 +380,9 @@ open class UserProfileViewController: XLFormViewController {
             let buddyRow = XLFormRowDescriptor(tag: buddy.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
             buddyRow.value = buddy
             theirSection.addFormRow(buddyRow)
-            var theirDevices: [OTROMEMODevice] = []
+            var theirDevices: [OMEMODevice] = []
             connection.read({ (transaction: YapDatabaseReadTransaction) in
-                theirDevices = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
+                theirDevices = OMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
             })
             let theirFingerprints = allFingerprints.filter({ (fingerprint: OTRFingerprint) -> Bool in
                 return fingerprint.username == buddy.username &&
@@ -437,7 +437,7 @@ open class UserProfileViewController: XLFormViewController {
         var fingerprint = ""
         var username = ""
         var cryptoType = ""
-        if let device = cell.rowDescriptor.value as? OTROMEMODevice {
+        if let device = cell.rowDescriptor.value as? OMEMODevice {
             cryptoType = "OMEMO"
             fingerprint = device.humanReadableFingerprint
             self.readConnection.read({ (transaction) in

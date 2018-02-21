@@ -66,7 +66,7 @@ open class OMEMODeviceFingerprintCell: XLFormBaseCell {
     
     open override func update() {
         super.update()
-        if let device = rowDescriptor.value as? OTROMEMODevice {
+        if let device = rowDescriptor.value as? OMEMODevice {
             updateCellFromDevice(device)
         }
         if let fingerprint = rowDescriptor.value as? OTRFingerprint {
@@ -79,7 +79,7 @@ open class OMEMODeviceFingerprintCell: XLFormBaseCell {
     }
     
     @IBAction func switchValueChanged(_ sender: UISwitch) {
-        if let device = rowDescriptor.value as? OTROMEMODevice {
+        if let device = rowDescriptor.value as? OMEMODevice {
             switchValueWithDevice(device)
         }
         if let fingerprint = rowDescriptor.value as? OTRFingerprint {
@@ -87,7 +87,7 @@ open class OMEMODeviceFingerprintCell: XLFormBaseCell {
         }
     }
     
-    fileprivate func updateCellFromDevice(_ device: OTROMEMODevice) {
+    fileprivate func updateCellFromDevice(_ device: OMEMODevice) {
         let trusted = device.isTrusted()
         trustSwitch.isOn = trusted
         
@@ -111,7 +111,7 @@ open class OMEMODeviceFingerprintCell: XLFormBaseCell {
         }
     }
     
-    fileprivate func switchValueWithDevice(_ device: OTROMEMODevice) {
+    fileprivate func switchValueWithDevice(_ device: OMEMODevice) {
         if (trustSwitch.isOn) {
             device.trustLevel = .trustedUser
             if (device.isExpired()){

@@ -41,10 +41,10 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      **/
-    open func getDevicesForParentYapKey(_ yapKey:String, yapCollection:String, trustedOnly:Bool) -> [OTROMEMODevice] {
-        var result:[OTROMEMODevice] = []
+    open func getDevicesForParentYapKey(_ yapKey:String, yapCollection:String, trustedOnly:Bool) -> [OMEMODevice] {
+        var result:[OMEMODevice] = []
         self.databaseConnection.read { (transaction) in
-            result = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, trustedOnly: trustedOnly, transaction: transaction)
+            result = OMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, trustedOnly: trustedOnly, transaction: transaction)
         }
         return result
     }
@@ -54,7 +54,7 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    open func getDevicesForOurAccount(trustedOnly:Bool) -> [OTROMEMODevice] {
+    open func getDevicesForOurAccount(trustedOnly:Bool) -> [OMEMODevice] {
         return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection, trustedOnly: trustedOnly)
     }
     
@@ -65,9 +65,9 @@ open class OTROMEMOStorageManager {
      
      - returns: An Array of OTROMEMODevices. If there are no devices the array will be empty.
      */
-    open func getDevicesForBuddy(_ username:String, trustedOnly:Bool) -> [OTROMEMODevice] {
+    open func getDevicesForBuddy(_ username:String, trustedOnly:Bool) -> [OMEMODevice] {
         guard let jid = XMPPJID(string: username) else { return [] }
-        var result: [OTROMEMODevice] = []
+        var result: [OMEMODevice] = []
         self.databaseConnection.read { (transaction) in
             if let buddy = OTRXMPPBuddy.fetchBuddy(jid: jid, accountUniqueId: self.accountKey, transaction: transaction) {
                 result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRXMPPBuddy.collection, trustedOnly: trustedOnly)
@@ -86,7 +86,7 @@ open class OTROMEMOStorageManager {
      */
     fileprivate func storeDevices(_ devices:[NSNumber], parentYapKey:String, parentYapCollection:String, transaction:YapDatabaseReadWriteTransaction) {
         
-        let previouslyStoredDevices = OTROMEMODevice.allDevices(forParentKey: parentYapKey, collection: parentYapCollection, transaction: transaction)
+        let previouslyStoredDevices = OMEMODevice.allDevices(forParentKey: parentYapKey, collection: parentYapCollection, transaction: transaction)
         let previouslyStoredDevicesIds = previouslyStoredDevices.map({ (device) -> NSNumber in
             return device.deviceId
         })
@@ -105,13 +105,13 @@ open class OTROMEMOStorageManager {
             
             // Instead of fulling removing devices, mark them as removed for historical purposes
             devicesToRemove.forEach({ (deviceId) in
-                let deviceKey = OTROMEMODevice.yapKey(withDeviceId: deviceId, parentKey: parentYapKey, parentCollection: parentYapCollection)
-                guard var device = transaction.object(forKey: deviceKey, inCollection: OTROMEMODevice.collection) as? OTROMEMODevice else {
+                let deviceKey = OMEMODevice.yapKey(withDeviceId: deviceId, parentKey: parentYapKey, parentCollection: parentYapCollection)
+                guard var device = transaction.object(forKey: deviceKey, inCollection: OMEMODevice.collection) as? OMEMODevice else {
                     return
                 }
-                device = device.copy() as! OTROMEMODevice
+                device = device.copy() as! OMEMODevice
                 device.trustLevel = .removed
-                transaction.setObject(device, forKey: device.uniqueId, inCollection: OTROMEMODevice.collection)
+                transaction.setObject(device, forKey: device.uniqueId, inCollection: OMEMODevice.collection)
             })
             
             devicesToAdd.forEach({ (deviceId) in
@@ -122,7 +122,7 @@ open class OTROMEMOStorageManager {
                     trustLevel = .trustedTofu
                 }
                 
-                let newDevice = OTROMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil, lastSeenDate:Date())
+                let newDevice = OMEMODevice(deviceId: deviceId, trustLevel:trustLevel, parentKey: parentYapKey, parentCollection: parentYapCollection, publicIdentityKeyData: nil, lastSeenDate:Date())
                 newDevice.save(with: transaction)
             })
             

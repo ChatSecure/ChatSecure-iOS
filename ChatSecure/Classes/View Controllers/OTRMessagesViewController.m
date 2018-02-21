@@ -906,7 +906,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     } else if (baseMessage.messageSecurityInfo.messageSecurity == OTRMessageTransportSecurityOMEMO) {
         NSString *omemoDeviceYapKey = baseMessage.messageSecurityInfo.omemoDeviceYapKey;
         NSString *omemoDeviceYapCollection = baseMessage.messageSecurityInfo.omemoDeviceYapCollection;
-        __block OTROMEMODevice *device = nil;
+        __block OMEMODevice *device = nil;
         [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             device = [transaction objectForKey:omemoDeviceYapKey inCollection:omemoDeviceYapCollection];
         }];

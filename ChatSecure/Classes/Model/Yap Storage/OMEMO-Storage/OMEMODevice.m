@@ -1,15 +1,15 @@
 //
-//  OTROMEMODevice.m
+//  OMEMODevice.m
 //  ChatSecure
 //
 //  Created by David Chiles on 9/14/16.
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-#import "OTROMEMODevice.h"
+#import "OMEMODevice.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-@implementation OTROMEMODevice
+@implementation OMEMODevice
 
 - (instancetype) initWithDeviceId:(NSNumber *)deviceId trustLevel:(OMEMOTrustLevel)trustLevel parentKey:(NSString *)parentKey parentCollection:(NSString *)parentCollection publicIdentityKeyData:(nullable NSData *)publicIdentityKeyData lastSeenDate:(nullable NSDate *)lastSeenDate
 {
@@ -28,6 +28,15 @@
 
 - (NSString *)uniqueId {
     return [[self class] yapKeyWithDeviceId:self.deviceId parentKey:self.parentKey parentCollection:self.parentCollection];
+}
+
++ (NSUInteger) modelVersion {
+    return 2;
+}
+
++ (NSString*) collection {
+    // for historical purposes
+    return @"OTROMEMODevice";
 }
 
 /** (OMEMOTrustLevelTrustedTofu || OMEMOTrustLevelTrustedUser) && !isExpired */
@@ -64,7 +73,7 @@
     return fingerprint;
 }
 
-+ (void)enumerateDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block
++ (void)enumerateDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block
 {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
     NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameOmemoDeviceEdgeName];
@@ -72,20 +81,20 @@
     [((YapDatabaseRelationshipTransaction *)[transaction ext:extensionName]) enumerateEdgesWithName:edgeName destinationKey:key collection:collection usingBlock:^(YapDatabaseRelationshipEdge * _Nonnull edge, BOOL * _Nonnull stop) {
         
         id possibleDevice = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if (possibleDevice != nil && [possibleDevice isKindOfClass:[OTROMEMODevice class] ]) {
-            OTROMEMODevice *device = possibleDevice;
+        if (possibleDevice != nil && [possibleDevice isKindOfClass:[OMEMODevice class] ]) {
+            OMEMODevice *device = possibleDevice;
             block(device,stop);
         }
     }];
 }
 
-+ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction {
++ (NSArray <OMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection transaction:(YapDatabaseReadTransaction *)transaction {
     return [self allDevicesForParentKey:key collection:collection trustedOnly:NO transaction:transaction];
 }
 
-+ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection trustedOnly:(BOOL)trustedOnly transaction:(YapDatabaseReadTransaction *)transaction {
-    __block NSMutableArray <OTROMEMODevice *>*devices = [[NSMutableArray alloc] init];
-    [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
++ (NSArray <OMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection trustedOnly:(BOOL)trustedOnly transaction:(YapDatabaseReadTransaction *)transaction {
+    __block NSMutableArray <OMEMODevice *>*devices = [[NSMutableArray alloc] init];
+    [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
         if (trustedOnly && device.isTrusted) {
             [devices addObject:device];
         } else {
@@ -114,4 +123,14 @@
     return [NSString stringWithFormat:@"%@-%@-%@",deviceId,parentKey,parentCollection];
 }
 
+@end
+
+/// Migration from old model name
+@interface OTROMEMODevice: MTLModel
+@end
+@implementation OTROMEMODevice
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    return (OTROMEMODevice *)[[OMEMODevice alloc] initWithCoder:aDecoder];
+}
 @end

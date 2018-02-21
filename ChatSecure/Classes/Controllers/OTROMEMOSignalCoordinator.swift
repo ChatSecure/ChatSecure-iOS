@@ -101,12 +101,12 @@ import SignalProtocolObjC
      - parameter completion: The completion closure called on callbackQueue. If it successfully was able to fetch all the bundles or if it wasn't necessary. If there were no devices for this buddy it will also return flase
      */
     open func prepareSession(_ yapKey:String, yapCollection:String, completion:@escaping (Bool) -> Void) {
-        var devices:[OTROMEMODevice] = []
+        var devices:[OMEMODevice] = []
         var user:String? = nil
         
         //Get all the devices ID's for this buddy as well as their username for use with signal and XMPPFramework.
         self.databaseConnection.read { (transaction) in
-            devices = OTROMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, transaction: transaction)
+            devices = OMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, transaction: transaction)
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
@@ -173,7 +173,7 @@ import SignalProtocolObjC
         self.prepareSession(self.accountYapKey, yapCollection: OTRAccount.collection, completion: completion)
     }
     
-    fileprivate func encryptPayloadWithSignalForDevice(_ device:OTROMEMODevice, payload:Data) throws -> OMEMOKeyData? {
+    fileprivate func encryptPayloadWithSignalForDevice(_ device:OMEMODevice, payload:Data) throws -> OMEMOKeyData? {
         var user:String? = nil
         self.databaseConnection.read({ (transaction) in
             user = self.fetchUsername(device.parentKey, yapCollection: device.parentCollection, transaction: transaction)
@@ -256,7 +256,7 @@ import SignalProtocolObjC
                 }
                 
                 // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
-                let encryptClosure:(OTROMEMODevice) -> (OMEMOKeyData?) = { device in
+                let encryptClosure:(OMEMODevice) -> (OMEMOKeyData?) = { device in
                     do {
                         // new OMEMO format puts auth tag inside omemo session
                         // see https://github.com/siacs/Conversations/commit/f0c3b31a42ac6269a0ca299f2fa470586f6120be#diff-e9eacf512943e1ab4c1fbc21394b4450R170
@@ -340,7 +340,7 @@ import SignalProtocolObjC
      
      - parameter deviceId: The OMEMO device id
     */
-    open func removeDevice(_ devices:[OTROMEMODevice], completion:@escaping ((Bool) -> Void)) {
+    open func removeDevice(_ devices:[OMEMODevice], completion:@escaping ((Bool) -> Void)) {
         
         self.workQueue.async { [weak self] in
             
@@ -350,7 +350,7 @@ import SignalProtocolObjC
             }
             //Array with tuple of username and the device
             //Needed to avoid nesting yap transactions
-            var usernameDeviceArray = [(String,OTROMEMODevice)]()
+            var usernameDeviceArray = [(String,OMEMODevice)]()
             self?.databaseConnection.readWrite({ (transaction) in
                 devices.forEach({ (device) in
                     
@@ -404,17 +404,13 @@ import SignalProtocolObjC
     
     /// transforms incoming group message into JID matching a 1:1 Buddy
     private func extractAddressFromGroupMessage(_ message: XMPPMessage) -> XMPPJID? {
-        if let fromJID = message.from,
-        let nickname = fromJID.resource {
+        if let fromJID = message.from {
             let roomJID = fromJID.bareJID
             // This formula is defined in XMPPRoom.roomYapKey
             let accountId = accountYapKey
-            let roomYapKey = accountId + roomJID.bare
-            var _room: OTRXMPPRoom? = nil
             var _occupant: OTRXMPPRoomOccupant? = nil
             var _buddy: OTRXMPPBuddy? = nil
             self.databaseConnection.read({ (transaction) in
-                _room = OTRXMPPRoom.fetchObject(withUniqueID: roomYapKey, transaction: transaction)
                 _occupant = OTRXMPPRoomOccupant.occupant(jid: fromJID, realJID: nil, roomJID: roomJID, accountId: accountId, createIfNeeded: false, transaction: transaction)
                 _buddy = _occupant?.buddy(with: transaction)
             })
@@ -528,8 +524,8 @@ import SignalProtocolObjC
                 }
 
                 let deviceNumber = NSNumber(value: senderDeviceId as UInt32)
-                let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection)
-                message.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OTROMEMODevice.collection)
+                let deviceYapKey = OMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: buddy.uniqueId, parentCollection: OTRBuddy.collection)
+                message.messageSecurityInfo = OTRMessageEncryptionInfo.init(omemoDevice: deviceYapKey, collection: OMEMODevice.collection)
                 
                 message.save(with: transaction)
                 
@@ -539,7 +535,7 @@ import SignalProtocolObjC
                 }
                 
                 //Update device last received message
-                guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction)?.copyAsSelf() else {
+                guard let device = OMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction)?.copyAsSelf() else {
                     return
                 }
                 device.lastSeenDate = Date()
@@ -692,7 +688,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     }
     
     public func fetchDeviceIds(for jid: XMPPJID) -> [NSNumber] {
-        var devices:[OTROMEMODevice]?
+        var devices:[OMEMODevice]?
         if self.isOurJID(jid) {
             devices = self.omemoStorageManager.getDevicesForOurAccount(trustedOnly: false)
         } else {

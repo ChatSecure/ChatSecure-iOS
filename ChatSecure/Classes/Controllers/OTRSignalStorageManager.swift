@@ -273,14 +273,14 @@ open class OTRSignalStorageManager: NSObject {
         return bundle
     }
     
-    fileprivate func fetchDeviceForSignalAddress(_ signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OTROMEMODevice? {
+    fileprivate func fetchDeviceForSignalAddress(_ signalAddress:SignalAddress, transaction:YapDatabaseReadTransaction) -> OMEMODevice? {
         guard let parentEntry = self.parentKeyAndCollectionForSignalAddress(signalAddress, transaction: transaction) else {
             return nil
         }
         
         let deviceNumber = NSNumber(value: signalAddress.deviceId as Int32)
-        let deviceYapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: parentEntry.key, parentCollection: parentEntry.collection)
-        guard let device = OTROMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction) else {
+        let deviceYapKey = OMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: parentEntry.key, parentCollection: parentEntry.collection)
+        guard let device = OMEMODevice.fetchObject(withUniqueID: deviceYapKey, transaction: transaction) else {
             return nil
         }
         return device
@@ -478,14 +478,14 @@ extension OTRSignalStorageManager: SignalStore {
         var result = false
         self.databaseConnection.readWrite { (transaction) in
             if let device = self.fetchDeviceForSignalAddress(address, transaction: transaction) {
-                let newDevice = OTROMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey, lastSeenDate:device.lastSeenDate)
+                let newDevice = OMEMODevice(deviceId: device.deviceId, trustLevel: device.trustLevel, parentKey: device.parentKey, parentCollection: device.parentCollection, publicIdentityKeyData: identityKey, lastSeenDate:device.lastSeenDate)
                 newDevice.save(with: transaction)
                 result = true
             } else if let parentEntry = self.parentKeyAndCollectionForSignalAddress(address, transaction: transaction) {
                 
                 //See if we have any devices
                 var hasDevices = false
-                OTROMEMODevice.enumerateDevices(forParentKey: parentEntry.key, collection: parentEntry.collection, transaction: transaction, using: { (device, stop) in
+                OMEMODevice.enumerateDevices(forParentKey: parentEntry.key, collection: parentEntry.collection, transaction: transaction, using: { (device, stop) in
                     hasDevices = true
                     stop.pointee = true
                 })
@@ -496,7 +496,7 @@ extension OTRSignalStorageManager: SignalStore {
                     trustLevel = .trustedTofu
                 }
                 let deviceIdNumber = NSNumber(value: address.deviceId as Int32)
-                let newDevice = OTROMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey, lastSeenDate:Date())
+                let newDevice = OMEMODevice(deviceId: deviceIdNumber, trustLevel: trustLevel, parentKey: parentEntry.key, parentCollection: parentEntry.collection, publicIdentityKeyData: identityKey, lastSeenDate:Date())
                 newDevice.save(with: transaction)
                 result = true
             }

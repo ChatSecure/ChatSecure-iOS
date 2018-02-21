@@ -105,7 +105,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         let buddy = self.bobUser!.buddy
         let connection = self.bobUser?.databaseManager.readOnlyDatabaseConnection
         connection?.read({ (transaction) in
-            let devices = OTROMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
+            let devices = OMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
             XCTAssert(devices.count > 0)
         })
     }
@@ -145,8 +145,8 @@ class OTROMEMOIntegrationTest: XCTestCase {
                 
             })
             
-            transaction.enumerateKeysAndObjects(inCollection: OTROMEMODevice.collection, using: { (key, object, stop) in
-                let device = object as! OTROMEMODevice
+            transaction.enumerateKeysAndObjects(inCollection: OMEMODevice.collection, using: { (key, object, stop) in
+                let device = object as! OMEMODevice
                 XCTAssertNotNil(device.lastSeenDate)
             })
             
@@ -159,7 +159,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.bobOmemoModule?.xmppStreamDidAuthenticate(XMPPStream())
         let expectation = self.expectation(description: "Remove Devices")
         let deviceNumber = NSNumber(value: 5 as Int32)
-        let device = OTROMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.trustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection, publicIdentityKeyData: nil, lastSeenDate: nil)
+        let device = OMEMODevice(deviceId: deviceNumber, trustLevel: OMEMOTrustLevel.trustedTofu, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection, publicIdentityKeyData: nil, lastSeenDate: nil)
         
         self.bobUser?.databaseManager.readWriteDatabaseConnection?.readWrite({ (transaction) in
             
@@ -168,8 +168,8 @@ class OTROMEMOIntegrationTest: XCTestCase {
         self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
             self.bobUser!.databaseManager.readOnlyDatabaseConnection?.read({ (transaction) in
-                let yapKey = OTROMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection)
-                let device = OTROMEMODevice.fetchObject(withUniqueID: yapKey, transaction: transaction)
+                let yapKey = OMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection)
+                let device = OMEMODevice.fetchObject(withUniqueID: yapKey, transaction: transaction)
                 XCTAssertNil(device)
             })
             

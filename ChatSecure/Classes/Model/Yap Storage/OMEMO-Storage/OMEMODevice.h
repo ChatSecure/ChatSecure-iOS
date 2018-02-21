@@ -1,5 +1,5 @@
 //
-//  OTROMEMODevice.h
+//  OMEMODevice.h
 //  ChatSecure
 //
 //  Created by David Chiles on 9/14/16.
@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, OMEMOTrustLevel) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OTROMEMODevice : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
+@interface OMEMODevice : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
 
 @property (nonatomic, strong, readonly) NSString *parentKey;
 @property (nonatomic, strong, readonly) NSString *parentCollection;
@@ -58,14 +58,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)enumerateDevicesForParentKey:(NSString *)key
                           collection:(NSString *)collection
                          transaction:(YapDatabaseReadTransaction *)transaction
-                          usingBlock:(void (^)(OTROMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block;
+                          usingBlock:(void (^)(OMEMODevice * _Nonnull device, BOOL * _Nonnull stop))block;
 
-+ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key
++ (NSArray <OMEMODevice *>*)allDevicesForParentKey:(NSString *)key
                                            collection:(NSString *)collection
                                           transaction:(YapDatabaseReadTransaction *)transaction;
 
 /** trustedOnly=true returns only trusted devices, otherwise it returns all devices */
-+ (NSArray <OTROMEMODevice *>*)allDevicesForParentKey:(NSString *)key
++ (NSArray <OMEMODevice *>*)allDevicesForParentKey:(NSString *)key
                                            collection:(NSString *)collection
                                           trustedOnly:(BOOL)trustedOnly
                                           transaction:(YapDatabaseReadTransaction *)transaction;

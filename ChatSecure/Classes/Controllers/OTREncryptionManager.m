@@ -101,7 +101,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             buddy = databaseObject;
             account = [buddy accountWithTransaction:transaction];
         }
-        hasOMEMODevices = [OTROMEMODevice allDevicesForParentKey:buddyKey collection:collection transaction:transaction].count > 0;
+        hasOMEMODevices = [OMEMODevice allDevicesForParentKey:buddyKey collection:collection transaction:transaction].count > 0;
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
         
         if (buddy == nil || account == nil) {

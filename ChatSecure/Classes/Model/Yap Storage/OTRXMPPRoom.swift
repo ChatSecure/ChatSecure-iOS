@@ -115,6 +115,17 @@ import YapDatabase.YapDatabaseRelationship
 }
 
 extension OTRXMPPRoom:OTRThreadOwner {
+    public func omemoDevices(with transaction: YapDatabaseReadTransaction) -> [OMEMODevice] {
+        let occupants = allOccupants(transaction)
+        let buddyKeys = occupants.flatMap { $0.buddyUniqueId }
+        var devices: [OMEMODevice] = []
+        buddyKeys.forEach { (buddyKey) in
+            let buddyDevices = OMEMODevice.allDevices(forParentKey: buddyKey, collection: OTRXMPPBuddy.collection, transaction: transaction)
+            devices.append(contentsOf: buddyDevices)
+        }
+        return devices
+    }
+    
     public func preferredTransportSecurity(with transaction: YapDatabaseReadTransaction) -> OTRMessageTransportSecurity {
         if !OTRSettingsManager.allowGroupOMEMO {
             return .plaintext
@@ -134,18 +145,15 @@ extension OTRXMPPRoom:OTRThreadOwner {
     // if we have keys for _any_ of the room occupants, we can do omemo
     // TODO: should we only do omemo if we have keys for _all_ occupants?
     public func bestTransportSecurity(with transaction: YapDatabaseReadTransaction) -> OTRMessageTransportSecurity {
-        let occupants = allOccupants(transaction)
-        let buddyKeys = occupants.flatMap { $0.buddyUniqueId }
-        var devices: [OTROMEMODevice] = []
-        buddyKeys.forEach { (buddyKey) in
-            let buddyDevices = OTROMEMODevice.allDevices(forParentKey: buddyKey, collection: OTRXMPPBuddy.collection, transaction: transaction)
-            devices.append(contentsOf: buddyDevices)
-        }
+        let devices = omemoDevices(with: transaction)
         if devices.count > 0 {
             return .OMEMO
         }
         return .plaintext
     }
+    
+    
+    
     
     /** New outgoing message. Unsaved! */
     public func outgoingMessage(withText text: String, transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol {

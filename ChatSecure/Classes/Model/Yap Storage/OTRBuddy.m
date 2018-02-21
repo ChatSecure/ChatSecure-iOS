@@ -160,13 +160,7 @@
 
 - (OTRMessageTransportSecurity)bestTransportSecurityWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction
 {
-    NSParameterAssert(transaction);
-    if (!transaction) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Missing transaction for bestTransportSecurityWithTransaction!" userInfo:nil];
-    }
-    NSArray <OTROMEMODevice *>*devices = [OTROMEMODevice allDevicesForParentKey:self.uniqueId
-                                                                     collection:[[self class] collection]
-                                                                        transaction:transaction];
+    NSArray <OMEMODevice *>*devices = [self omemoDevicesWithTransaction:transaction];
     // If we have some omemo devices then that's the best we have.
     if ([devices count] > 0) {
         return OTRMessageTransportSecurityOMEMO;
@@ -182,6 +176,17 @@
     } else {
         return OTRMessageTransportSecurityPlaintextWithOTR;
     }
+}
+
+- (NSArray<OMEMODevice*>*)omemoDevicesWithTransaction:(YapDatabaseReadTransaction*)transaction {
+    NSParameterAssert(transaction);
+    if (!transaction) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Missing transaction for bestTransportSecurityWithTransaction!" userInfo:nil];
+    }
+    NSArray <OMEMODevice *>*devices = [OMEMODevice allDevicesForParentKey:self.uniqueId
+                                                                     collection:[[self class] collection]
+                                                                    transaction:transaction];
+    return devices;
 }
 
 #pragma - mark OTRUserInfoProfile Protocol

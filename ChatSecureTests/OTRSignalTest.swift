@@ -58,7 +58,7 @@ class OTRSignalTest: XCTestCase {
             buddy.username = ourAccount.username
             buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
+            let device = OMEMODevice(deviceId: NSNumber(value:ourOutgoingBundle.deviceId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
             device.save(with:transaction)
         })
         ourDatabaseConnection.readWrite ({ (transaction) in
@@ -69,7 +69,7 @@ class OTRSignalTest: XCTestCase {
             buddy.username = otherAccount.username
             buddy.save(with:transaction)
             
-            let device = OTROMEMODevice(deviceId: NSNumber(value:otherEncryptionManager.registrationId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
+            let device = OMEMODevice(deviceId: NSNumber(value:otherEncryptionManager.registrationId), trustLevel: .trustedTofu, parentKey: buddy.uniqueId, parentCollection: OTRXMPPBuddy.collection, publicIdentityKeyData: nil, lastSeenDate:nil)
             device.save(with:transaction)
         })
         
