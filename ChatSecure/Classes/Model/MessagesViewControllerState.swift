@@ -14,15 +14,20 @@ import Foundation
     /** This should reflect whether the textview currently has text */
     @objc open var hasText = false
     
-    /** This should reflect if the current thread can send a knock message and therefore show knock UI */
-    @objc open var canKnock = false
-    
-    /** Reflects media messages can be send. Right now OTRData is only supported so based on if OTR session exists */
+    /** Reflects media messages can be sent. */
     @objc open var canSendMedia = false
     
     /** This should reflect how messages should be sent and what the buddy prefrences are */
     @objc open var messageSecurity = OTRMessageTransportSecurity.plaintext
     
-    /** This should reflect if the thread(buddy) is online or not so show knock UI or not. */
+    /** This should reflect if the thread(buddy or room) is online or not. */
     @objc open var isThreadOnline = false
+    
+    /// Resets all state
+    @objc open func reset() {
+        hasText = false
+        canSendMedia = false
+        messageSecurity = .invalid
+        isThreadOnline = false
+    }
 }

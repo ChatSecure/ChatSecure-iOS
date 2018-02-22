@@ -39,8 +39,6 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 @property (nonatomic, strong) UIView *recordingBackgroundView;
 
-@property (nonatomic, strong) UIButton *knockButton;
-
 @end
 
 @implementation OTRMessagesHoldTalkViewController
@@ -58,22 +56,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
     self.keyboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.keyboardButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAKeyboardO]
                            forState:UIControlStateNormal];
-    
-    self.knockButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
-    NSString *title = KNOCK_STRING();
-    CGFloat maxHeight = 32.0f;
-    [self.knockButton setTitle:title forState:UIControlStateNormal];
-    
-    CGRect sendTitleRect = [title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, maxHeight)
-                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                attributes:@{ NSFontAttributeName : self.knockButton.titleLabel.font }
-                                                   context:nil];
-    
-    self.knockButton.frame = CGRectMake(0.0f,
-                                  0.0f,
-                                  CGRectGetWidth(CGRectIntegral(sendTitleRect)),
-                                  maxHeight);
-    
+        
     [self.view setNeedsUpdateConstraints];
 }
 
@@ -219,18 +202,11 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)didUpdateState
 {
-    if (self.state.canKnock && !self.state.isThreadOnline && !self.state.hasText) {
-        //Show Knock Button
-        self.inputToolbar.contentView.rightBarButtonItem = self.knockButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
+    [self setupDefaultSendButton];
+    if (self.state.hasText) {
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
     } else {
-        [self setupDefaultSendButton];
-        if (self.state.hasText) {
-            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        } else {
-            self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
-        }
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
     }
     
     if (self.state.canSendMedia) {
@@ -420,30 +396,6 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
         [self removeTrashViewItems];
         [self.inputToolbar.contentView.textView becomeFirstResponder];
         self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-    }
-    else if ([sender isEqual:self.knockButton]) {
-        //Sending knock
-        
-        //Create PushMessage to insert into conversation timeline
-        __block PushMessage *message = [[PushMessage alloc] init];
-        message.buddyKey = self.threadKey;
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [message saveWithTransaction:transaction];
-        }];
-        
-        //Actually send off knock
-        __weak __typeof__(self) weakSelf = self;
-        [OTRProtocolManager.pushController sendKnock:self.threadKey completion:^(BOOL success, NSError * _Nullable error) {
-            
-            //If there was an error sending off knock then mark the message with it
-            if(error != nil) {
-                __typeof__(self) strongSelf = weakSelf;
-                message.error = error;
-                [strongSelf.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    [message saveWithTransaction:transaction];
-                }];
-            }
-        }];
     } else {
         [super didPressAccessoryButton:sender];
     }

@@ -398,11 +398,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
     
     // Clear out old state (don't just alloc a new object, we have KVOs attached to this!)
-    self.state.canSendMedia = NO;
-    self.state.canKnock = NO;
-    self.state.messageSecurity = OTRMessageTransportSecurityInvalid;
-    self.state.hasText = NO;
-    self.state.isThreadOnline = NO;
+    [self.state reset];
     self.showTypingIndicator = NO;
     
     // This is set to nil so the refreshTitleView: method knows to reset username instead of last seen time
@@ -554,21 +550,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.state.isThreadOnline = buddy.status != OTRThreadStatusOffline;
         
         [self didUpdateState];
-        
-        //Update Buddy knock status
-        //Async because this calls down to the database and iterates over a relation. Might slowdown the UI if on main thread
-        __weak __typeof__(self) weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            __typeof__(self) strongSelf = weakSelf;
-            __block BOOL canKnock = [[OTRProtocolManager.pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (canKnock != strongSelf.state.canKnock) {
-                    strongSelf.state.canKnock = canKnock;
-                    [strongSelf didUpdateState];
-                }
-            });
-            
-        });
         
         [self refreshTitleView:[self titleView]];
 
@@ -977,7 +958,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         account = [self accountWithTransaction:transaction];
         buddy = [self buddyWithTransaction:transaction];
-    }];
+    }]; 
     if (!account || !buddy || ([buddy isKindOfClass:[OTRXMPPBuddy class]] && [(OTRXMPPBuddy *)buddy pendingApproval])) {
         return;
     }

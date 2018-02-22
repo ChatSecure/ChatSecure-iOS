@@ -562,6 +562,7 @@ import SignalProtocolObjC
     }
 }
 
+// MARK: - OMEMOModuleDelegate
 extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     
     public func omemo(_ omemo: OMEMOModule, publishedDeviceIds deviceIds: [NSNumber], responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
@@ -662,6 +663,7 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     }
 }
 
+// MARK: - OMEMOStorageDelegate
 extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
     
     public func configure(withParent aParent: OMEMOModule, queue: DispatchQueue) -> Bool {

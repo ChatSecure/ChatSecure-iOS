@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * This method takes a buddy key and collection. If it finds an object in the database and `hasGoneEncryptedBefore` is true
  * It will try to initiate a new OTR session. This is useful when re-entering a converstaion with a buddy.
+ * This will bail out unless buddy.preferredSecurity == .OTR
  *
  * @param buddyKey The Yap key for the buddy
  * @param collection The Yap collection for the buddy
