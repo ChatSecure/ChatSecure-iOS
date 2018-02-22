@@ -37,7 +37,7 @@
     
     if (self = [super init]) {
         
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             self.account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         }];
     }

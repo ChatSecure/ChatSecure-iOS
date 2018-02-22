@@ -27,7 +27,7 @@
 {
     if (self = [super init]) {
         self.storageQueue = dispatch_queue_create("OTR.OTRvCardYapDatabaseStorage", NULL);
-        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        self.databaseConnection = [OTRDatabaseManager sharedInstance].writeConnection;
     }
     return self;
 }
@@ -88,7 +88,7 @@
  **/
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         id<OTRvCard> vCard = nil;
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
             vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
@@ -140,7 +140,7 @@
  **/
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         id<OTRvCard> vCard = nil;
         if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
             vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];

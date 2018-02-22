@@ -123,7 +123,7 @@
         if ([[[NSProcessInfo processInfo] environment][@"OTRLaunchMode"] isEqualToString:@"ChatSecureUITestsDemoData"]) {
             [OTRChatDemo loadDemoChatInDatabase];
         } else if ([[[NSProcessInfo processInfo] environment][@"OTRLaunchMode"] isEqualToString:@"ChatSecureUITests"]) {
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [transaction removeAllObjectsInAllCollections];
             }];
         }
@@ -217,7 +217,7 @@
 - (UIViewController *)setupDefaultSplitViewControllerWithLeadingViewController:(nonnull UIViewController *)leadingViewController
 {
     
-    YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].writeConnection;
     _splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
     self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
     self.conversationViewController.delegate = self.splitViewCoordinator;
@@ -262,7 +262,7 @@
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
     __block NSUInteger unread = 0;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         unread = [transaction numberOfUnreadMessages];
     } completionBlock:^{
         application.applicationIconBadgeNumber = unread;

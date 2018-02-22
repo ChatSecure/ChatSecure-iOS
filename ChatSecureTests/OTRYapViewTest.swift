@@ -66,7 +66,7 @@ class OTRYapViewTest: XCTestCase {
         let delegate = ViewHandlerTestDelegate(didSetup: {
             setupExpecation.fulfill()
             //Once our view handler is ready we need to make a change to the database that will be reflected in the view.
-            self.databaseManager?.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+            self.databaseManager?.writeConnection?.asyncReadWrite({ (transaction) in
                 guard let account = OTRXMPPAccount(username: "account@test.com", accountType: .jabber) else {
                     XCTFail()
                     return

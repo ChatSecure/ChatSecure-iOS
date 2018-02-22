@@ -113,7 +113,7 @@
                 OTRGoogleOAuthXMPPAccount *googleAccount = [[OTRGoogleOAuthXMPPAccount alloc] initWithUsername:auth.userEmail accountType:OTRAccountTypeGoogleTalk];
                 googleAccount.oAuthTokenDictionary = auth.parameters;
                 
-                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [googleAccount saveWithTransaction:transaction];
                 }];
                 

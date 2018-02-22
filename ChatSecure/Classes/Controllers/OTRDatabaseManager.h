@@ -22,9 +22,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, nullable) YapDatabase *database;
 @property (nonatomic, strong, nullable) OTRMediaServer *mediaServer;
-@property (nonatomic, readonly, nullable) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, readonly, nullable) YapDatabaseConnection *readWriteDatabaseConnection;
 
+/// User interface / synchronous main-thread reads only!
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *uiConnection;
+/// Background / async reads only! Not for use in main thread / UI code.
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *readConnection;
+/// Background writes only! Never use this synchronously from the main thread!
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *writeConnection;
+
+/// This is only to be used by the YapViewHandler for main thread reads only!
 @property (nonatomic, readonly, nullable) YapDatabaseConnection *longLivedReadOnlyConnection;
 
 @property (nonatomic, readonly, nullable) MessageQueueHandler *messageQueueHandler;
@@ -42,8 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName
                     directory:(nullable NSString*)directory
                   withMediaStorage:(BOOL)withMediaStorage;
-
-- (nullable YapDatabaseConnection *)newConnection;
 
 - (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError *_Nullable*)error;
 

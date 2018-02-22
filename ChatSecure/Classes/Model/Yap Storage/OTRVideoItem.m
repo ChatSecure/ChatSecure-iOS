@@ -39,7 +39,7 @@
 - (NSURL *)mediaURL
 {
     __block NSString *buddyUniqueId = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         id<OTRMessageProtocol> message = [self parentMessageWithTransaction:transaction];
         id<OTRThreadOwner> thread = [message threadOwnerWithTransaction:transaction];
         buddyUniqueId = [thread threadIdentifier];
@@ -76,7 +76,7 @@
         CGImageRelease(imageRef);
         if (image && !error) {
             [OTRImages setImage:image forIdentifier:self.uniqueId];
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [self touchParentMessageWithTransaction:transaction];
             }];
         }

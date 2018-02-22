@@ -30,7 +30,7 @@
 - (id<JSQMessageMediaData>)media
 {
     __block id <JSQMessageMediaData>media = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         media = [OTRMediaItem fetchObjectWithUniqueID:self.mediaItemUniqueId transaction:transaction];
     }];
     return media;
@@ -41,7 +41,7 @@
     if (self.isMessageIncoming) {
         sender = self.buddyUniqueId;
     } else {
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
             OTRAccount *account = [buddy accountWithTransaction:transaction];
             sender = account.uniqueId;
@@ -53,7 +53,7 @@
 - (NSString *)senderDisplayName {
     __block NSString *sender = @"";
     if (self.isMessageIncoming) {
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
             if ([buddy.displayName length]) {
                 sender = buddy.displayName;
@@ -63,7 +63,7 @@
             }
         }];
     } else {
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
             OTRAccount *account = [buddy accountWithTransaction:transaction];
             if ([account.displayName length]) {

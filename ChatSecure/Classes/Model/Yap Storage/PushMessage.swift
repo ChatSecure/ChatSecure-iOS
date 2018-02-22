@@ -159,7 +159,7 @@ extension PushMessage: YapDatabaseRelationshipNode {
 extension PushMessage {
     func account() -> OTRAccount? {
         var account:OTRAccount? = nil
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().uiConnection?.read { (transaction) -> Void in
             if let buddyKey = self.buddyKey {
                 if let buddy = OTRBuddy.fetchObject(withUniqueID: buddyKey, transaction: transaction) {
                     account = buddy.account(with: transaction)

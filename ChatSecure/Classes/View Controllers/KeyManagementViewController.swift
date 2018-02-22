@@ -86,7 +86,7 @@ open class KeyManagementViewController: XLFormViewController {
                 break
             }
         }
-        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
+        OTRDatabaseManager.sharedInstance().writeConnection?.asyncReadWrite({ (t: YapDatabaseReadWriteTransaction) in
             for viewedDevice in devicesToSave {
                 if var device = t.object(forKey: viewedDevice.uniqueId, inCollection: OMEMODevice.collection) as? OMEMODevice {
                     device = device.copy() as! OMEMODevice
@@ -247,7 +247,7 @@ open class KeyManagementViewController: XLFormViewController {
                 preferredSecurity = .plaintextWithOTR
             }
             
-            OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection?.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in
+            OTRDatabaseManager.sharedInstance().writeConnection?.readWrite({ (transaction: YapDatabaseReadWriteTransaction) in
                 guard var buddy = transaction.object(forKey: buddy.uniqueId, inCollection: type(of: buddy).collection) as? OTRBuddy else {
                     return
                 }

@@ -242,7 +242,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
         // this code is used to fetch the image from the data store and then cache in ram
         __block id<OTRThreadOwner> thread = nil;
         __block id<OTRMessageProtocol> message = nil;
-        [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [OTRDatabaseManager.shared.readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             message = [self parentMessageWithTransaction:transaction];
             thread = [message threadOwnerWithTransaction:transaction];
         }];
@@ -258,7 +258,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
             DDLogError(@"Could not handle display for media item %@", self);
         } else {
             // Success, touch parent message to display it.
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [self touchParentMessageWithTransaction:transaction];
             }];
         }
@@ -275,7 +275,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
 /** ⚠️ Do not call from within an existing database transaction */
 - (nullable id<OTRDownloadMessage>) downloadMessage {
     __block id<OTRMessageProtocol> message = nil;
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [OTRDatabaseManager.shared.uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         message = [self parentMessageWithTransaction:transaction];
     }];
     if ([message conformsToProtocol:@protocol(OTRDownloadMessage)]) {
@@ -332,7 +332,7 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     //#865 Delete File because the parent OTRMessage was deleted
     __block id<OTRThreadOwner> thread = nil;
     __block id<OTRMessageProtocol> message = nil;
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [OTRDatabaseManager.shared.readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         message = [self parentMessageWithTransaction:transaction];
         thread = [message threadOwnerWithTransaction:transaction];
     }];

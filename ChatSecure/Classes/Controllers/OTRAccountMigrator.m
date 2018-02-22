@@ -72,7 +72,7 @@
     self.isMigrationInProgress = YES;
     self.completion = completion;
     NSParameterAssert(completion != nil);
-    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [OTRDatabaseManager.shared.writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [self.migratedAccount saveWithTransaction:transaction];
     }];
     if ([self areBothAccountsAreOnline]) {
@@ -107,7 +107,7 @@
     NSMutableArray<id<OTRMessageProtocol>> *outgoingMessages = [NSMutableArray array];
     __block NSArray<OTRXMPPBuddy*> *buddies = @[];
     __block NSMutableArray<OTRBuddy*> *newBuddies = [NSMutableArray array];
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddies = [self.oldAccount allBuddiesWithTransaction:transaction];
         newBuddies = [NSMutableArray arrayWithCapacity:buddies.count];
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -137,7 +137,7 @@
     }];
     
     
-    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [newBuddies enumerateObjectsUsingBlock:^(OTRBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [obj saveWithTransaction:transaction];
         }];
@@ -162,7 +162,7 @@
     vCard.jid = self.migratedAccount.bareJID;
     self.oldAccount.waitingForvCardTempFetch = NO;
     self.oldAccount.lastUpdatedvCardTemp = [NSDate date];
-    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [self.oldAccount saveWithTransaction:transaction];
     }];
     [oldXmpp.xmppvCardTempModule updateMyvCardTemp:vCard];
@@ -175,7 +175,7 @@
     
     // Step 6 - Mark your old conversations as 'archived'
     
-    [OTRDatabaseManager.shared.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             obj = [obj copy];
             obj.isArchived = YES;

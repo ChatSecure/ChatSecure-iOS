@@ -92,7 +92,7 @@
     /// this is so we can show who sent a group message
     __block OTRXMPPBuddy *groupBuddy = nil;
     
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
         unreadMessages = [thread numberOfUnreadMessagesWithTransaction:transaction];
         lastMessage = [thread lastMessageWithTransaction:transaction];

@@ -67,7 +67,7 @@ public extension OTRAppDelegate {
     
     /// Temporary hack to fix corrupted development database. Empty incoming MAM messages were stored as unread
     @objc public func fixUnreadMessageCount(_ completion: ((_ unread: UInt) -> Void)?) {
-        OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncReadWrite({ (transaction) in
+        OTRDatabaseManager.shared.writeConnection?.asyncReadWrite({ (transaction) in
             var messagesToRemove: [OTRIncomingMessage] = []
             var messagesToMarkAsRead: [OTRIncomingMessage] = []
             transaction.enumerateUnreadMessages({ (message, stop) in
@@ -95,7 +95,7 @@ public extension OTRAppDelegate {
             })
         }, completionBlock: {
             var unread: UInt = 0
-            OTRDatabaseManager.shared.readWriteDatabaseConnection?.asyncRead({ (transaction) in
+            OTRDatabaseManager.shared.writeConnection?.asyncRead({ (transaction) in
                 unread = transaction.numberOfUnreadMessages()
             }, completionBlock: {
                 completion?(unread)
@@ -105,7 +105,7 @@ public extension OTRAppDelegate {
     
     @objc public func enterThread(key: String, collection: String) {
         var thread: OTRThreadOwner?
-        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+        OTRDatabaseManager.shared.uiConnection?.read({ (transaction) in
             thread = transaction.object(forKey: key, inCollection: collection) as? OTRThreadOwner
         })
         if let thread = thread {
@@ -145,7 +145,7 @@ extension OTRAppDelegate: UNUserNotificationCenterDelegate {
             return nil
         }
         var account: OTRXMPPAccount?
-        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+        OTRDatabaseManager.shared.uiConnection?.read({ (transaction) in
             account = OTRXMPPAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
         })
         return account

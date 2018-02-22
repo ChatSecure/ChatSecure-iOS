@@ -53,7 +53,7 @@ public class MediaDownloadView: UIView {
         self.downloadAction = { [weak self] view, sender in
             self?.downloadButton.isEnabled = false
             var xmpp: XMPPManager? = nil
-            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read { transaction in
+            OTRDatabaseManager.shared.uiConnection?.read { transaction in
                 guard let thread = message.threadOwner(with: transaction) else { return }
                 guard let account = thread.account(with: transaction) else { return }
                 xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager

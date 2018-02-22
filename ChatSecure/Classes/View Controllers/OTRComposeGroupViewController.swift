@@ -102,7 +102,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
 
     open func filterOnAccount(accountUniqueId:String?) {
         // Setup filtering to only show default account!
-        OTRDatabaseManager.shared.readWriteDatabaseConnection?.readWrite({ (transaction) in
+        OTRDatabaseManager.shared.writeConnection?.readWrite({ (transaction) in
             if let fvt = transaction.ext(OTRArchiveFilteredBuddiesName) as? YapDatabaseFilteredViewTransaction {
                 let filtering = YapDatabaseViewFiltering.withObjectBlock { (transaction, group, collection, key, object) -> Bool in
                     if let accountId = accountUniqueId, let buddy = object as? OTRXMPPBuddy {
@@ -155,7 +155,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if let cell = tableView.dequeueReusableCell(withIdentifier: OTRBuddyInfoCheckableCell.reuseIdentifier(), for: indexPath) as? OTRBuddyInfoCheckableCell,
             let threadOwner = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             var account:OTRAccount? = nil
-            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+            OTRDatabaseManager.shared.uiConnection?.read({ (transaction) in
                 if self.shouldShowAccountLabelWithTransaction(transaction: transaction) {
                     account = OTRAccount(forThread: threadOwner, transaction: transaction)
                 }
@@ -224,7 +224,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
                     for row in 0..<mappings.numberOfItems(inSection: section) {
                         var buddy:OTRXMPPBuddy? = nil
                         if let roomOccupant = viewHandler.object(IndexPath(row: Int(row), section: Int(section))) as? OTRXMPPRoomOccupant {
-                            OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+                            OTRDatabaseManager.shared.uiConnection?.read({ (transaction) in
                                 buddy = roomOccupant.buddy(with: transaction)
                             })
                             if let buddy = buddy {

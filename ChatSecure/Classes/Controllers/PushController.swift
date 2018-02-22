@@ -80,7 +80,7 @@ open class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerPr
     var pubsubEndpoint: NSString?
     
     @objc public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, databaseConnection: YapDatabaseConnection? = nil, tlvHandler:OTRPushTLVHandlerProtocol? = nil) {
-        let databaseConnection = databaseConnection ?? OTRDatabaseManager.shared.readWriteDatabaseConnection!
+        let databaseConnection = databaseConnection ?? OTRDatabaseManager.shared.writeConnection!
 
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
         self.storage = PushStorage(databaseConnection: databaseConnection)

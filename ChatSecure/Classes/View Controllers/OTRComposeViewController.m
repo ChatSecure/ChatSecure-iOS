@@ -53,7 +53,7 @@
     if (self = [super init]) {
         self.selectedBuddiesIdSet = [[NSMutableSet alloc] init];
         _database = [OTRDatabaseManager sharedInstance].database;
-        _readWriteConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        _readWriteConnection = [OTRDatabaseManager sharedInstance].writeConnection;
         _searchConnection = [self.database newConnection];
         _searchConnection.name = @"ComposeViewSearchConnection";
         _searchQueue = [[YapDatabaseSearchQueue alloc] init];
@@ -205,7 +205,7 @@
 }
 
 - (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRArchiveFilteredBuddiesName];
         YapDatabaseViewFiltering *filtering = [self getFilteringBlock:showArchived];
         [fvt setFiltering:filtering versionTag:[NSUUID UUID].UUIDString];
@@ -446,7 +446,7 @@
     id<OTRThreadOwner> threadOwner = [self threadOwnerAtIndexPath:indexPath withTableView:tableView];
     
     __block OTRAccount *account = nil;
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.uiConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         BOOL showAccount = [self shouldShowAccountLabelWithTransaction:transaction];
         if (showAccount) {
             account = [OTRAccount accountForThread:threadOwner transaction:transaction];
@@ -507,7 +507,7 @@
     NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
     id <OTRThreadOwner> thread = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
     if (!thread) { return nil; }
-    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:YES connection:OTRDatabaseManager.shared.readWriteDatabaseConnection];
+    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:YES connection:OTRDatabaseManager.shared.writeConnection];
 }
 
 - (void)addBuddy:(NSArray *)accountsAbleToAddBuddies

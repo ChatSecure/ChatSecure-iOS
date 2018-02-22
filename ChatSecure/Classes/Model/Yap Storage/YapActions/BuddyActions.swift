@@ -38,7 +38,7 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
         case .delete:
             let action = YapActionItem(identifier:"delete", date: nil, retryTimeout: 30, requiresInternet: true, block: { (collection, key, object, metadata) -> Void in
                 
-                guard let connection = OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection else {
+                guard let connection = OTRDatabaseManager.sharedInstance().writeConnection else {
                     return
                 }
                 

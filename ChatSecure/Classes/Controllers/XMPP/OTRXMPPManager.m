@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
         _workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
         _buddyTimers = [NSMutableDictionary dictionary];
-        _databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        _databaseConnection = [OTRDatabaseManager sharedInstance].writeConnection;
     }
     return self;
 }
@@ -146,7 +146,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    _xmppRosterStorage = [[RosterStorage alloc] initWithReadConnection:OTRDatabaseManager.shared.readOnlyDatabaseConnection
+    _xmppRosterStorage = [[RosterStorage alloc] initWithReadConnection:OTRDatabaseManager.shared.readConnection
                                                        writeConnection:self.databaseConnection];
 	
 	_xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:self.xmppRosterStorage];
@@ -1199,7 +1199,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
         return;
     }
     __block OTRXMPPBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = (OTRXMPPBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
     if (!buddy || ![buddy isKindOfClass:[OTRXMPPBuddy class]]) {
@@ -1247,7 +1247,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
     dispatch_async(self.workQueue, ^{
         
         __block OTRXMPPBuddy *buddy = nil;
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
         if (!buddy) { return; }
@@ -1312,7 +1312,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 - (void) addBuddies:(NSArray<OTRXMPPBuddy*> *)buddies {
     NSParameterAssert(buddies != nil);
     if (!buddies.count) { return; }
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [buddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy * _Nonnull buddyInformation, NSUInteger idx, BOOL * _Nonnull stop) {
             [self addToRosterWithJID:buddyInformation.bareJID displayName:nil transaction:transaction];
         }];
@@ -1376,7 +1376,7 @@ failedToDisablePushWithErrorIq:(nullable XMPPIQ*)errorIq
 }
 -(void)removeBuddies:(NSArray *)buddies
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         // Add actions to the queue
         for (OTRXMPPBuddy *buddy in buddies){
@@ -1509,7 +1509,7 @@ managedBuddyObjectID
 
 // Delivery receipts
 - (void) sendDeliveryReceiptForMessage:(OTRIncomingMessage*)message {
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];        
         XMPPMessage *tempMessage = [XMPPMessage messageWithType:@"chat" elementID:message.messageId];
         [tempMessage addAttributeWithName:@"from" stringValue:buddy.username];

@@ -62,12 +62,12 @@ class OTROmemoStorageTest: XCTestCase {
         let databaseManager = OTRDatabaseManager()
         self.databaseManager = databaseManager
         self.databaseManager?.setupTestDatabase(name: name)
-        self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection!)
+        self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.writeConnection!)
         
-        self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!, delegate: nil)
-        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection!)
+        self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.writeConnection!, delegate: nil)
+        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.writeConnection!)
         
-        databaseManager.readWriteDatabaseConnection?.readWrite( { (transaction) in
+        databaseManager.writeConnection?.readWrite( { (transaction) in
             account.save(with: transaction)
         })
     }

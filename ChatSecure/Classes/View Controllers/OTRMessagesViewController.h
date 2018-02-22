@@ -26,8 +26,9 @@
 
 @interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong, nonnull) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong, nonnull) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *uiConnection;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *readConnection;
+@property (nonatomic, strong, nonnull) YapDatabaseConnection *writeConnection;
 @property (nonatomic, strong, nullable) NSString *threadKey;
 @property (nonatomic, strong, nullable) NSString *threadCollection;
 @property (nonatomic, strong, nullable) UIButton *microphoneButton;

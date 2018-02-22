@@ -384,7 +384,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
     public func senderId() -> String! {
         var result:String? = nil
-        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection?.read { (transaction) -> Void in
+        OTRDatabaseManager.sharedInstance().uiConnection?.read { (transaction) -> Void in
             if (self.state.incoming()) {
                 result = self.senderJID
             } else {
@@ -432,7 +432,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
             return nil
         }
         var media: JSQMessageMediaData? = nil
-        OTRDatabaseManager.shared.readOnlyDatabaseConnection?.read({ (transaction) in
+        OTRDatabaseManager.shared.uiConnection?.read({ (transaction) in
             media = OTRMediaItem.fetchObject(withUniqueID: mediaId, transaction: transaction)
         })
         return media
