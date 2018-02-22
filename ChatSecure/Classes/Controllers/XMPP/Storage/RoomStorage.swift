@@ -18,17 +18,20 @@ import YapDatabase
     private let capabilities: XMPPCapabilities
     private let fileTransfer: FileTransferManager
     private let vCardModule: XMPPvCardTempModule
+    private let omemoModule: OMEMOModule
     
     // MARK: Init
     
     @objc public init(connection: YapDatabaseConnection,
                       capabilities: XMPPCapabilities,
                       fileTransfer: FileTransferManager,
-                      vCardModule: XMPPvCardTempModule) {
+                      vCardModule: XMPPvCardTempModule,
+                      omemoModule: OMEMOModule) {
         self.connection = connection
         self.capabilities = capabilities
         self.fileTransfer = fileTransfer
         self.vCardModule = vCardModule
+        self.omemoModule = omemoModule
     }
     
     // MARK: Public
@@ -184,7 +187,10 @@ import YapDatabase
                         DDLogInfo("Created non-roster buddy for room \(realJID) \(room)")
                     }
                     occupant.buddyUniqueId = buddy?.uniqueId
+                    /// Fetch vCard for avatar
                     self.vCardModule.fetchvCardTemp(for: realJID, ignoreStorage: false)
+                    /// Fetch DeviceIds for prepping future OMEMO sessions
+                    self.omemoModule.fetchDeviceIds(for: realJID, elementId: nil)
                 }
                 occupant.save(with: transaction)
             })

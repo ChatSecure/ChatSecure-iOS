@@ -226,7 +226,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     _fileTransferManager = [[FileTransferManager alloc] initWithConnection:self.databaseConnection serverCapabilities:self.serverCheck.serverCapabilities sessionConfiguration:sessionConfiguration];
     
     // Message storage
-    RoomStorage *roomStorage = [[RoomStorage alloc] initWithConnection:self.databaseConnection capabilities:self.serverCheck.xmppCapabilities fileTransfer:self.fileTransferManager vCardModule:self.xmppvCardTempModule];
+    RoomStorage *roomStorage = [[RoomStorage alloc] initWithConnection:self.databaseConnection capabilities:self.serverCheck.xmppCapabilities fileTransfer:self.fileTransferManager vCardModule:self.xmppvCardTempModule omemoModule:self.omemoModule];
 
     _messageStorage = [[MessageStorage alloc] initWithConnection:self.databaseConnection
                                                     capabilities:self.serverCheck.xmppCapabilities
