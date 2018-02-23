@@ -926,7 +926,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
     [self fetchOMEMODeviceList];
     
-    KeyManagementViewController *verify = [OTRAppDelegate.appDelegate.theme keyManagementViewControllerForAccount:account buddies:@[buddy] readConnection:self.connections.ui writeConnection:self.connections.write];
+    KeyManagementViewController *verify = [OTRAppDelegate.theme keyManagementViewControllerForAccount:account buddies:@[buddy]];
     if ([verify isKindOfClass:KeyManagementViewController.class]) {
         verify.completionBlock = ^{
             [self updateEncryptionState];

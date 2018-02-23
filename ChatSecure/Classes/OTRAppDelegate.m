@@ -55,7 +55,6 @@
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
 #import "OTRXMPPTorAccount.h"
@@ -71,6 +70,8 @@
 
 @interface OTRAppDelegate ()
 
+@property (nonatomic, strong, readonly) DefaultTheme *defaultTheme;
+
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @property (nonatomic, strong) NSTimer *fetchTimer;
@@ -81,6 +82,7 @@
 
 @implementation OTRAppDelegate
 @synthesize window = _window;
+@dynamic theme;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -88,16 +90,15 @@
     
     [self setupCrashReporting];
     
-    _theme = [[[self themeClass] alloc] init];
-    [self.theme setupGlobalTheme];
+    [self setupTheme];
     
     [SAMKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
     
     UIViewController *rootViewController = nil;
     
     // Create 3 primary view controllers, settings, conversation list and messages
-    _conversationViewController = [self.theme conversationViewController];
-    _messagesViewController = [self.theme messagesViewController];
+    _conversationViewController = [OTRAppDelegate.theme conversationViewController];
+    _messagesViewController = [OTRAppDelegate.theme messagesViewController];
     
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -510,8 +511,18 @@
 
 #pragma mark - Theming
 
-- (Class) themeClass {
-    return [OTRTheme class];
+- (void) setupTheme {
+    _defaultTheme = [[DefaultTheme alloc] init];
+    [self.defaultTheme setupAppearance];
+}
+
+/// public access to this property is deprecated
+- (id<AppTheme>) theme {
+    return self.class.theme;
+}
+
++ (id<AppTheme>) theme {
+    return OTRAppDelegate.appDelegate.defaultTheme;
 }
 
 @end

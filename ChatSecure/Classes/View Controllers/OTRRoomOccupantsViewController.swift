@@ -71,6 +71,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     fileprivate let readConnection = OTRDatabaseManager.shared.uiConnection
     /// for reads and writes
     private let connection = OTRDatabaseManager.shared.writeConnection
+    private let connections = OTRDatabaseManager.shared.connections
     open var crownImage:UIImage?
     
     
@@ -544,11 +545,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
             cell.infoAction = { [weak self] (cell, sender) in
-                guard let read = self?.readConnection,
-                    let write = self?.connection else {
-                        return
-                }
-                let profile = OTRAppDelegate.appDelegate.theme.keyManagementViewController(for: account, buddies: [buddy], read: read, write: write)
+                let profile = OTRAppDelegate.theme.keyManagementViewController(for: account, buddies: [buddy])
                 self?.navigationController?.pushViewController(profile, animated: true)
             }
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {

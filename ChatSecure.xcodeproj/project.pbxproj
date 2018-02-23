@@ -453,8 +453,6 @@
 		D97097A21FC4DB3D008ED04B /* MessageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97097A11FC4DB3D008ED04B /* MessageStorage.swift */; };
 		D97175531E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D97175541E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */; };
-		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; };
 		D985BC771EBD307D00993D27 /* PurchaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985BC751EBD307D00993D27 /* PurchaseViewController.swift */; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D98B8E321E4CF90400A713E1 /* OTRServerCapabilities.h in Headers */ = {isa = PBXBuildFile; fileRef = D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -540,6 +538,8 @@
 		D9FD360A1EFAFD3C00398CE4 /* XLForm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47751EFA03FC00C39B25 /* XLForm.framework */; };
 		D9FD360B1EFAFD3C00398CE4 /* ZXingObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47761EFA03FC00C39B25 /* ZXingObjC.framework */; };
 		D9FD360C1EFAFD3C00398CE4 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EC47671EFA03D800C39B25 /* AFNetworking.framework */; };
+		D9FF60222040A9EF003207DC /* AppTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D9FF60212040A9EF003207DC /* AppTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9FF60242040B0E5003207DC /* DefaultTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FF60232040B0E5003207DC /* DefaultTheme.swift */; };
 		DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31610826406FD0CB714045AD /* Pods_ChatSecureCorePods_ChatSecureCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -1096,8 +1096,6 @@
 		D97175511E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YapDatabaseViewConnection+ChatSecure.h"; sourceTree = "<group>"; };
 		D97175521E60D59300675DDE /* YapDatabaseViewConnection+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "YapDatabaseViewConnection+ChatSecure.m"; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
-		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
-		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
 		D984F6CD1EFC6D41008D0CF7 /* Kvitto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kvitto.framework; path = Carthage/Build/iOS/Kvitto.framework; sourceTree = "<group>"; };
 		D985BC751EBD307D00993D27 /* PurchaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PurchaseViewController.swift; sourceTree = "<group>"; };
 		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -1173,6 +1171,8 @@
 		D9F5EC492016E94800010966 /* OTRProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRProtocolManager.swift; sourceTree = "<group>"; };
 		D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomManager.swift; sourceTree = "<group>"; };
 		D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRAppDelegate.swift; sourceTree = "<group>"; };
+		D9FF60212040A9EF003207DC /* AppTheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppTheme.h; sourceTree = "<group>"; };
+		D9FF60232040B0E5003207DC /* DefaultTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTheme.swift; sourceTree = "<group>"; };
 		DE32B878BAC9A236855EAF6E /* Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1573,10 +1573,10 @@
 		633105E71A16D1A300C17BAE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D9FF60212040A9EF003207DC /* AppTheme.h */,
 				D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */,
 				9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */,
-				D978BC901BABE0F4009246CF /* OTRTheme.h */,
-				D978BC911BABE0F4009246CF /* OTRTheme.m */,
+				D9FF60232040B0E5003207DC /* DefaultTheme.swift */,
 				633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */,
 				633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */,
 				633105EA1A16D1A300C17BAE /* OTRChatDemo.h */,
@@ -2145,6 +2145,7 @@
 				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
 				D9ABD72B1ED7886100219A9C /* OTRTextItem.h in Headers */,
 				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
+				D9FF60222040A9EF003207DC /* AppTheme.h in Headers */,
 				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
 				D94ACBA41DFA206500B8C0F5 /* OTRBuddyCache.h in Headers */,
 				D93DDB331BA79A7000CD8331 /* NSString+ChatSecure.h in Headers */,
@@ -2302,7 +2303,6 @@
 				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
 				D93DDB341BA79A7000CD8331 /* NSFileManager+ChatSecure.h in Headers */,
 				D93DDB321BA79A7000CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.h in Headers */,
-				D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */,
 				D93DDBC91BA79AD500CD8331 /* OTRBuddyImageCell.h in Headers */,
 				D93DDBCA1BA79AD700CD8331 /* OTRBuddyInfoCell.h in Headers */,
 				632AA7321D4819E000F65733 /* OTRSignalSignedPreKey.h in Headers */,
@@ -3057,6 +3057,7 @@
 				9236F56B1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift in Sources */,
 				63D65D2A1DD68A2D00D9E52E /* OTRMessageEncryptionInfo.m in Sources */,
 				63D65D291DD689B500D9E52E /* OTRIncomingMessage.m in Sources */,
+				D9FF60242040B0E5003207DC /* DefaultTheme.swift in Sources */,
 				D98C850B203D133800F8DA6B /* OMEMODevice.swift in Sources */,
 				D93DDB291BA79A5400CD8331 /* OTRWelcomeViewController.swift in Sources */,
 				D93DDB2A1BA79A5400CD8331 /* OTRUsernameCell.swift in Sources */,
@@ -3151,7 +3152,6 @@
 				D93DDACB1BA79A2600CD8331 /* OTRSettingsGroup.m in Sources */,
 				D93DDACC1BA79A2600CD8331 /* OTRShareSetting.m in Sources */,
 				D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */,
-				D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */,
 				D93DDACE1BA79A2600CD8331 /* OTRViewSetting.m in Sources */,
 				D93DDACF1BA79A2600CD8331 /* OTRFacebookOAuthXMPPAccount.m in Sources */,
 				D93DDAD01BA79A2600CD8331 /* OTRAccount.m in Sources */,
