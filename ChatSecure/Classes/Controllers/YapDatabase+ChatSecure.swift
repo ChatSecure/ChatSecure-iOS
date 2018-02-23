@@ -24,9 +24,13 @@ import YapDatabase
 /// This class holds shared references to commonly-needed Yap database connections
 @objcMembers
 public class DatabaseConnections: NSObject {
+    /// User interface / synchronous main-thread reads only!
     public let ui: YapDatabaseConnection
+    /// Background / async reads only! Not for use in main thread / UI code.
     public let read: YapDatabaseConnection
+    /// Background writes only! Never use this synchronously from the main thread!
     public let write: YapDatabaseConnection
+    /// This is only to be used by the YapViewHandler for main thread reads only!
     public let longLivedRead: YapDatabaseConnection
     
     init(ui: YapDatabaseConnection,
