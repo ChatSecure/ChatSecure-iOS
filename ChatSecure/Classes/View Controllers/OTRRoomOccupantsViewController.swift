@@ -545,7 +545,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
             cell.infoAction = { [weak self] (cell, sender) in
-                let profile = OTRAppDelegate.theme.keyManagementViewController(for: account, buddies: [buddy])
+                let profile = GlobalTheme.shared.keyManagementViewController(for: account, buddies: [buddy])
                 self?.navigationController?.pushViewController(profile, animated: true)
             }
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {

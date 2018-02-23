@@ -8,16 +8,17 @@
 
 import Foundation
 
-/// Do not use this class directly, use OTRAppDelegate.theme
+@objc public class GlobalTheme: NSObject {
+    @objc public static var shared: AppTheme = DefaultTheme()
+}
+
 @objc public class DefaultTheme: NSObject, AppTheme {
     
     public let mainThemeColor = UIColor.white
     public let lightThemeColor = UIColor(white: 0.95, alpha: 1.0)
     public let buttonLabelColor = UIColor.darkGray
     
-    public func setupAppearance() {
-        
-    }
+    public func setupAppearance() { }
     
     public func conversationViewController() -> UIViewController {
         return OTRConversationViewController()

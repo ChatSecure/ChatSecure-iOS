@@ -38,14 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
-#pragma mark Theming
-
-/// Override this in AppDelegate subclass to customize app appearance
-- (void) setupTheme;
-/// Override this in AppDelegate subclass to customize app appearance
-@property (nonatomic, class, readonly) id<AppTheme> theme;
-@property (nonatomic, strong, readonly) id<AppTheme> theme DEPRECATED_MSG_ATTRIBUTE("Use static member OTRAppDelegate.theme instead.");
-
 @end
 
 

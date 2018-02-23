@@ -70,8 +70,6 @@
 
 @interface OTRAppDelegate ()
 
-@property (nonatomic, strong, readonly) DefaultTheme *defaultTheme;
-
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @property (nonatomic, strong) NSTimer *fetchTimer;
@@ -82,23 +80,20 @@
 
 @implementation OTRAppDelegate
 @synthesize window = _window;
-@dynamic theme;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [LogManager.shared setupLogging];
     
     [self setupCrashReporting];
-    
-    [self setupTheme];
-    
+ 
     [SAMKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
     
     UIViewController *rootViewController = nil;
     
     // Create 3 primary view controllers, settings, conversation list and messages
-    _conversationViewController = [OTRAppDelegate.theme conversationViewController];
-    _messagesViewController = [OTRAppDelegate.theme messagesViewController];
+    _conversationViewController = [GlobalTheme.shared conversationViewController];
+    _messagesViewController = [GlobalTheme.shared messagesViewController];
     
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -511,18 +506,6 @@
 
 #pragma mark - Theming
 
-- (void) setupTheme {
-    _defaultTheme = [[DefaultTheme alloc] init];
-    [self.defaultTheme setupAppearance];
-}
-
-/// public access to this property is deprecated
-- (id<AppTheme>) theme {
-    return self.class.theme;
-}
-
-+ (id<AppTheme>) theme {
-    return OTRAppDelegate.appDelegate.defaultTheme;
-}
+- (void) setupTheme { }
 
 @end
