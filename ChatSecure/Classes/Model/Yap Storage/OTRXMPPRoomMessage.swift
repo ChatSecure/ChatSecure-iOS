@@ -394,6 +394,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
                 result = thread.accountUniqueId
             }
         }
+        assert(result != nil)
         return result
     }
     

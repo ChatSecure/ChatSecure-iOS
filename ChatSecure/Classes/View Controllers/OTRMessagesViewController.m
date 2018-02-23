@@ -136,6 +136,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return self.connections.ui;
 }
 
+- (DatabaseConnections*) connections {
+    return OTRDatabaseManager.shared.connections;
+}
+
 #pragma - mark Lifecylce Methods
 
 - (void) dealloc {
@@ -146,7 +150,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _connections = OTRDatabaseManager.shared.connections;
     
     self.automaticallyScrollsToMostRecentMessage = YES;
     
@@ -405,10 +408,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.threadKey = key;
     self.threadCollection = collection;
+    __block NSString *senderId = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.connections.ui readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        self.senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
-        self.automaticURLFetchingDisabled = [[self accountWithTransaction:transaction] disableAutomaticURLFetching];
+        senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
+        account = [self accountWithTransaction:transaction];
     }];
+    NSParameterAssert(senderId.length > 0);
+    if (senderId.length > 0) {
+        self.senderId = senderId;
+    } else {
+        self.senderId = @"";
+    }
+    if (account) {
+        self.automaticURLFetchingDisabled = account.disableAutomaticURLFetching;
+    } else {
+        self.automaticURLFetchingDisabled = YES;
+    }
+    
     
     // Clear out old state (don't just alloc a new object, we have KVOs attached to this!)
     [self.state reset];
