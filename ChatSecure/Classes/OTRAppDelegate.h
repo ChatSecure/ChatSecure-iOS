@@ -22,13 +22,11 @@
 
 @import UIKit;
 
-#import "OTRTheme.h"
-#import "OTRMessagesViewController.h"
-#import "OTRConversationViewController.h"
-
-@class OTRSplitViewCoordinator;
+@class OTRSplitViewCoordinator, OTRConversationViewController, OTRMessagesViewController;
+@protocol AppTheme;
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong, readonly) OTRConversationViewController *conversationViewController;
@@ -40,11 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
-#pragma mark Theming
-
-@property (nonatomic, strong, readonly) __kindof OTRTheme *theme;
-/** Override this in subclass to use a different theme class */
-- (Class) themeClass;
-
 @end
+
+
 NS_ASSUME_NONNULL_END

@@ -77,10 +77,7 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
     }
     
     public func conversationViewController(_ conversationViewController: OTRConversationViewController!, didSelectCompose sender: Any!) {
-        guard let appDelegate = UIApplication.shared.delegate as? OTRAppDelegate else {
-            return
-        }
-        let composeViewController = appDelegate.theme.composeViewController()
+        let composeViewController = GlobalTheme.shared.composeViewController()
         if let composeViewController = composeViewController as? OTRComposeViewController {
             composeViewController.delegate = self
         }
@@ -129,15 +126,11 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
     
     @objc open func showAccountDetails(account: OTRXMPPAccount, completion: (()->Void)?) {
         guard splitViewController?.presentedViewController == nil,
-        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager,
-        let longLivedReadConnection = OTRDatabaseManager.shared.longLivedReadOnlyConnection,
-        let writeConnection =  OTRDatabaseManager.shared.writeConnection,
-        let read = OTRDatabaseManager.shared.readConnection
-            else {
+        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
             return
         }
         
-        let detailVC = OTRAppDelegate.appDelegate.theme.accountDetailViewController(for: account, xmpp: xmpp, longLivedRead: longLivedReadConnection, read: read, write: writeConnection)
+        let detailVC = GlobalTheme.shared.accountDetailViewController(for: account, xmpp: xmpp)
         
         let nav = UINavigationController(rootViewController: detailVC)
         nav.modalPresentationStyle = .formSheet

@@ -55,7 +55,6 @@
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRMessagesViewController.h"
 #import "OTRXMPPTorAccount.h"
@@ -87,17 +86,14 @@
     [LogManager.shared setupLogging];
     
     [self setupCrashReporting];
-    
-    _theme = [[[self themeClass] alloc] init];
-    [self.theme setupGlobalTheme];
-    
+ 
     [SAMKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
     
     UIViewController *rootViewController = nil;
     
     // Create 3 primary view controllers, settings, conversation list and messages
-    _conversationViewController = [self.theme conversationViewController];
-    _messagesViewController = [self.theme messagesViewController];
+    _conversationViewController = [GlobalTheme.shared conversationViewController];
+    _messagesViewController = [GlobalTheme.shared messagesViewController];
     
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -510,8 +506,6 @@
 
 #pragma mark - Theming
 
-- (Class) themeClass {
-    return [OTRTheme class];
-}
+- (void) setupTheme { }
 
 @end

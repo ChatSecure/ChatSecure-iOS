@@ -27,7 +27,6 @@
 #import "OTRDatabaseView.h"
 @import KVOController;
 #import "OTRAppDelegate.h"
-#import "OTRTheme.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -287,7 +286,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)settingsButtonPressed:(id)sender
 {
-    UIViewController * settingsViewController = [[OTRAppDelegate appDelegate].theme settingsViewController];
+    UIViewController * settingsViewController = [GlobalTheme.shared settingsViewController];
     
     [self.navigationController pushViewController:settingsViewController animated:YES];
 }

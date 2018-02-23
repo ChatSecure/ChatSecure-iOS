@@ -13,7 +13,6 @@
 @import MessageUI;
 #import "OTRAccount.h"
 #import "OTRAppDelegate.h"
-#import "OTRTheme.h"
 #import "OTRColors.h"
 @import OTRAssets;
 
@@ -41,7 +40,7 @@ static CGFloat const kOTRButtonHeight = 40;
         _titleImageView = [[UIImageView alloc] initForAutoLayout];
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
         _subtitleLabel.numberOfLines = 0;
-        _subtitleLabel.textColor = [OTRAppDelegate appDelegate].theme.buttonLabelColor;
+        _subtitleLabel.textColor = GlobalTheme.shared.buttonLabelColor;
         _subtitleLabel.textAlignment = NSTextAlignmentCenter;
         [self setupServerCheck];
     }
@@ -86,7 +85,7 @@ static CGFloat const kOTRButtonHeight = 40;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [OTRAppDelegate appDelegate].theme.mainThemeColor;
+    self.view.backgroundColor = GlobalTheme.shared.mainThemeColor;
     self.title = INVITE_LINK_STRING();
     
     self.titleImageView.image = [UIImage imageNamed:@"invite_success" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
