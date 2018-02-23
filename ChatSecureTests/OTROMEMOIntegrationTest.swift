@@ -167,7 +167,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
         })
         self.bobUser?.signalOMEMOCoordinator.removeDevice([device], completion: { (result) in
             XCTAssertTrue(result)
-            self.bobUser!.databaseManager.uiConnection?.read({ (transaction) in
+            self.bobUser!.databaseManager.readConnection?.read({ (transaction) in
                 let yapKey = OMEMODevice.yapKey(withDeviceId: deviceNumber, parentKey: self.bobUser!.account.uniqueId, parentCollection: OTRAccount.collection)
                 let device = OMEMODevice.fetchObject(withUniqueID: yapKey, transaction: transaction)
                 XCTAssertNil(device)

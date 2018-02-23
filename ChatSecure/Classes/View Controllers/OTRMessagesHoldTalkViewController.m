@@ -180,7 +180,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)isTyping {
     __weak __typeof__(self) weakSelf = self;
-    [self.readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.connections.read asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
         [xmppManager sendChatState:OTRChatStateComposing withBuddyID:[strongSelf threadKey]];
@@ -191,7 +191,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)didFinishTyping {
     __weak __typeof__(self) weakSelf = self;
-    [self.readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [self.connections.read asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         __typeof__(self) strongSelf = weakSelf;
         OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
         [xmppManager sendChatState:OTRChatStateActive withBuddyID:[strongSelf threadKey]];

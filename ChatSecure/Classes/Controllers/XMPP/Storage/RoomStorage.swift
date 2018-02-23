@@ -18,7 +18,8 @@ import YapDatabase
     private let capabilities: XMPPCapabilities
     private let fileTransfer: FileTransferManager
     private let vCardModule: XMPPvCardTempModule
-    private let omemoModule: OMEMOModule
+    /// This is public because of a test-related circular dependency with OTROMEMOSignalCoordinator
+    public var omemoModule: OMEMOModule?
     
     // MARK: Init
     
@@ -26,7 +27,7 @@ import YapDatabase
                       capabilities: XMPPCapabilities,
                       fileTransfer: FileTransferManager,
                       vCardModule: XMPPvCardTempModule,
-                      omemoModule: OMEMOModule) {
+                      omemoModule: OMEMOModule? = nil) {
         self.connection = connection
         self.capabilities = capabilities
         self.fileTransfer = fileTransfer
@@ -190,7 +191,7 @@ import YapDatabase
                     /// Fetch vCard for avatar
                     self.vCardModule.fetchvCardTemp(for: realJID, ignoreStorage: false)
                     /// Fetch DeviceIds for prepping future OMEMO sessions
-                    self.omemoModule.fetchDeviceIds(for: realJID, elementId: nil)
+                    self.omemoModule?.fetchDeviceIds(for: realJID, elementId: nil)
                 }
                 occupant.save(with: transaction)
             })

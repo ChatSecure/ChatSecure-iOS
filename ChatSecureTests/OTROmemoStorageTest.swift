@@ -17,7 +17,7 @@ extension OTROMEMOSignalCoordinator {
         let file = FileTransferManager(connection: databaseConnection, serverCapabilities: serverCaps, sessionConfiguration: URLSessionConfiguration.ephemeral)
         let vCardStorage = OTRvCardYapDatabaseStorage()
         let vCard = XMPPvCardTempModule(vCardStorage: vCardStorage)
-        let roomStorage = RoomStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file, vCardModule: vCard)
+        let roomStorage = RoomStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file, vCardModule: vCard, omemoModule: nil)
         let messageStorage = MessageStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file, roomStorage: roomStorage)
         let mam = XMPPMessageArchiveManagement()
         let roomManager = OTRXMPPRoomManager(databaseConnection: databaseConnection, roomStorage: roomStorage, archiving: mam, dispatchQueue: nil)

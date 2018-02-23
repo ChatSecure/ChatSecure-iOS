@@ -35,8 +35,8 @@ class OTRSignalTest: XCTestCase {
         let ourAccount = TestXMPPAccount(username: "our.account@something.com", accountType: .jabber)!
         let otherAccount = TestXMPPAccount(username: "other.account@something.com", accountType: .jabber)!
         
-        let ourDatabaseConnection = ourDatabaseManager.newConnection()!
-        let otherDatabaseConnection = otherDatbaseManager.newConnection()!
+        let ourDatabaseConnection = ourDatabaseManager.database!.newConnection()
+        let otherDatabaseConnection = otherDatbaseManager.database!.newConnection()
         
         ourDatabaseConnection.readWrite({ (transaction) in
             ourAccount.save(with:transaction)
