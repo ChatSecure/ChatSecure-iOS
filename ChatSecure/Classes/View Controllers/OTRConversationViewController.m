@@ -112,12 +112,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return;
     }
     __block BOOL hasAccounts = NO;
-    NSParameterAssert(OTRDatabaseManager.shared.readOnlyDatabaseConnection != nil);
-    if (!OTRDatabaseManager.shared.readOnlyDatabaseConnection) {
+    NSParameterAssert(OTRDatabaseManager.shared.uiConnection != nil);
+    if (!OTRDatabaseManager.shared.uiConnection) {
         DDLogWarn(@"Database isn't setup yet! Skipping onboarding...");
         return;
     }
-    [OTRDatabaseManager.shared.readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+    [OTRDatabaseManager.shared.readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
         if (count > 0) {
             hasAccounts = YES;
@@ -180,7 +180,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (OTRXMPPAccount *)checkIfNeedsMigration {
     __block OTRXMPPAccount *needsMigration;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSArray<OTRAccount*> *accounts = [OTRAccount allAccountsWithTransaction:transaction];
         [accounts enumerateObjectsUsingBlock:^(OTRAccount * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (![obj isKindOfClass:[OTRXMPPAccount class]]) {
@@ -271,7 +271,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 }
 
 - (void) updateInboxArchiveFilteringAndShowArchived:(BOOL)showArchived {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         YapDatabaseFilteredViewTransaction *fvt = [transaction ext:OTRArchiveFilteredConversationsName];
         YapDatabaseViewFiltering *filtering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction * _Nonnull transaction, NSString * _Nonnull group, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
             if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
@@ -399,7 +399,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     OTRXMPPManager *manager = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     [buddy setAskingForApproval:NO];
     if (approved) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             buddy.trustLevel = BuddyTrustLevelRoster;
             [buddy saveWithTransaction:transaction];
         }];
@@ -411,7 +411,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             });
         }
     } else {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [buddy removeWithTransaction:transaction];
         }];
         [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:buddy.bareJID];
@@ -460,7 +460,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
-    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:NO connection:OTRDatabaseManager.shared.readWriteDatabaseConnection];
+    return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:NO connection:OTRDatabaseManager.shared.writeConnection];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

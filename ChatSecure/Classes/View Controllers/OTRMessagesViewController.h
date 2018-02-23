@@ -13,7 +13,7 @@
 @import OTRKit;
 @import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRXMPPAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
+@class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRXMPPAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState, DatabaseConnections;
 
 @protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
@@ -26,8 +26,10 @@
 
 @interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong, nonnull) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong, nonnull) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, readonly, nullable) DatabaseConnections *connections;
+@property (nonatomic, strong, readonly, nullable) YapDatabaseConnection *uiConnection DEPRECATED_MSG_ATTRIBUTE("Use connections.ui instead");
+@property (nonatomic, strong, readonly, nullable) YapDatabaseConnection *readConnection DEPRECATED_MSG_ATTRIBUTE("Use connections.read instead");
+@property (nonatomic, strong, readonly, nullable) YapDatabaseConnection *writeConnection DEPRECATED_MSG_ATTRIBUTE("Use connections.write instead");
 @property (nonatomic, strong, nullable) NSString *threadKey;
 @property (nonatomic, strong, nullable) NSString *threadCollection;
 @property (nonatomic, strong, nullable) UIButton *microphoneButton;

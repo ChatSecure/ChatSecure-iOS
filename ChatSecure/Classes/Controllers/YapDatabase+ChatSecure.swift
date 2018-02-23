@@ -9,6 +9,41 @@
 import Foundation
 import YapDatabase
 
+@objc public extension OTRDatabaseManager {
+    @objc var connections: DatabaseConnections? {
+        guard let ui = uiConnection,
+        let read = readConnection,
+        let write = writeConnection,
+            let long = longLivedReadOnlyConnection else {
+                return nil
+        }
+        return DatabaseConnections(ui: ui, read: read, write: write, longLivedRead: long)
+    }
+}
+
+/// This class holds shared references to commonly-needed Yap database connections
+@objcMembers
+public class DatabaseConnections: NSObject {
+    /// User interface / synchronous main-thread reads only!
+    public let ui: YapDatabaseConnection
+    /// Background / async reads only! Not for use in main thread / UI code.
+    public let read: YapDatabaseConnection
+    /// Background writes only! Never use this synchronously from the main thread!
+    public let write: YapDatabaseConnection
+    /// This is only to be used by the YapViewHandler for main thread reads only!
+    public let longLivedRead: YapDatabaseConnection
+    
+    init(ui: YapDatabaseConnection,
+    read: YapDatabaseConnection,
+    write: YapDatabaseConnection,
+    longLivedRead: YapDatabaseConnection) {
+        self.ui = ui
+        self.read = read
+        self.write = write
+        self.longLivedRead = longLivedRead
+    }
+}
+
 public extension YapDatabase {
     
      @objc func asyncRegisterView(_ grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseExtensionName, completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {

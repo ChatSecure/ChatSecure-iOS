@@ -131,8 +131,8 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
         guard splitViewController?.presentedViewController == nil,
         let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager,
         let longLivedReadConnection = OTRDatabaseManager.shared.longLivedReadOnlyConnection,
-        let writeConnection =  OTRDatabaseManager.shared.readWriteDatabaseConnection,
-        let read = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+        let writeConnection =  OTRDatabaseManager.shared.writeConnection,
+        let read = OTRDatabaseManager.shared.readConnection
             else {
             return
         }

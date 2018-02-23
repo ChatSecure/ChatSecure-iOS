@@ -68,9 +68,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
     open var footerRows:[String] = []
     
     /// for reads only
-    fileprivate let readConnection = OTRDatabaseManager.shared.readOnlyDatabaseConnection
+    fileprivate let readConnection = OTRDatabaseManager.shared.uiConnection
     /// for reads and writes
-    private let connection = OTRDatabaseManager.shared.readWriteDatabaseConnection
+    private let connection = OTRDatabaseManager.shared.writeConnection
     open var crownImage:UIImage?
     
     

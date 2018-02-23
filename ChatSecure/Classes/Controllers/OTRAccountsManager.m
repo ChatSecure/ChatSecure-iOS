@@ -37,7 +37,7 @@
     NSParameterAssert(account);
     if (!account) { return; }
     [account removeKeychainPassword:nil];
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeObjectForKey:account.uniqueId inCollection:[OTRAccount collection]];
     }];
 }
@@ -45,7 +45,7 @@
 + (NSArray<OTRAccount*> *)allAccounts  {
     
     __block NSArray *accounts = @[];
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
     return accounts;
@@ -54,7 +54,7 @@
 + (OTRAccount *)accountWithUsername:(NSString *)username
 {
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [[OTRAccount allAccountsWithUsername:username transaction:transaction] firstObject];
     }];
     return account;
@@ -63,7 +63,7 @@
 + (NSArray *)allAutoLoginAccounts
 {
     __block NSArray *accounts = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
 

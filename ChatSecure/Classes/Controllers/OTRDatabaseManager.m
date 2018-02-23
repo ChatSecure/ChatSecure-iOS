@@ -35,8 +35,6 @@
 @interface OTRDatabaseManager ()
 
 @property (nonatomic, strong, nullable) YapDatabase *database;
-@property (nonatomic, strong, nullable) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong, nullable) YapDatabaseConnection *readWriteDatabaseConnection;
 @property (nonatomic, strong, nullable) YapDatabaseActionManager *actionManager;
 @property (nonatomic, strong, nullable) NSString *inMemoryPassphrase;
 
@@ -148,22 +146,7 @@
     self.database.defaultObjectPolicy = YapDatabasePolicyShare;
     self.database.defaultObjectCacheLimit = 10000;
     
-    self.readOnlyDatabaseConnection = [self.database newConnection];
-    self.readOnlyDatabaseConnection.name = @"readOnlyDatabaseConnection";
-
-    
-    self.readWriteDatabaseConnection = [self.database newConnection];
-    self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
-
-    _longLivedReadOnlyConnection = [self.database newConnection];
-    self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
-    
-#if DEBUG
-    self.readOnlyDatabaseConnection.permittedTransactions = YDB_AnyReadTransaction;
-    // TODO: We can do better work at isolating work between connections
-    //self.readWriteDatabaseConnection.permittedTransactions = YDB_AnyReadWriteTransaction;
-    //self.longLivedReadOnlyConnection.permittedTransactions = YDB_MainThreadOnly;
-#endif
+    [self setupConnections];
     
     __weak __typeof__(self) weakSelf = self;
     self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
@@ -177,7 +160,7 @@
     }];
     [self.longLivedReadOnlyConnection beginLongLivedReadTransaction];
     
-    _messageQueueHandler = [[MessageQueueHandler alloc] initWithDbConnection:self.readWriteDatabaseConnection];
+    _messageQueueHandler = [[MessageQueueHandler alloc] initWithDbConnection:self.writeConnection];
     
     ////// Register Extensions////////
     
@@ -226,7 +209,7 @@
         [self.database registerExtension:searchResultsView withName:viewName];
         
         // Remove old unused objects
-        [self.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
         }];
     };
@@ -250,6 +233,28 @@
     else {
         return NO;
     }
+}
+
+- (void) setupConnections {
+    _uiConnection = [self.database newConnection];
+    self.uiConnection.name = @"uiConnection";
+    
+    _readConnection = [self.database newConnection];
+    self.readConnection.name = @"readConnection";
+    
+    _writeConnection = [self.database newConnection];
+    self.writeConnection.name = @"writeConnection";
+    
+    _longLivedReadOnlyConnection = [self.database newConnection];
+    self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
+    
+#if DEBUG
+    self.uiConnection.permittedTransactions = YDB_SyncReadTransaction | YDB_MainThreadOnly;
+    self.readConnection.permittedTransactions = YDB_AnyReadTransaction;
+    // TODO: We can do better work at isolating work between connections
+    //self.writeConnection.permittedTransactions = YDB_AnyReadWriteTransaction;
+    self.longLivedReadOnlyConnection.permittedTransactions = YDB_AnyReadTransaction; // | YDB_MainThreadOnly;
+#endif
 }
 
 - (YapDatabaseConnection *)newConnection

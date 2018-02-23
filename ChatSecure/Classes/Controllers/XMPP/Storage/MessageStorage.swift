@@ -505,7 +505,7 @@ extension NSCopying {
 public extension MessageStorage {
     @objc public static func markAsReadIfVisible(message: OTRMessageProtocol) {
         guard message.isMessageRead == false,
-            let connection = OTRDatabaseManager.shared.readWriteDatabaseConnection else {
+            let connection = OTRDatabaseManager.shared.writeConnection else {
             return
         }
         OTRAppDelegate.visibleThread({ (ck) in

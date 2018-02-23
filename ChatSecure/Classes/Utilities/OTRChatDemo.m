@@ -34,7 +34,7 @@
                             @"Merhaba",@"مرحبا",
                             @"Olá"];
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         [transaction removeAllObjectsInAllCollections];
         
@@ -113,7 +113,7 @@
 }
 
 + (void)loadPerformanceTestChatsInDatabase {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         [transaction removeAllObjectsInAllCollections];
         
@@ -172,7 +172,7 @@
 }
 
 + (void)addDummyMessagesForExistingAccount:(NSString*)accountJid toFromBuddy:(NSString*)buddyJid count:(int)count {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         OTRXMPPAccount *account = (OTRXMPPAccount *)[[OTRXMPPAccount allAccountsWithUsername:accountJid transaction:transaction] firstObject];
         if (!account) {return;}

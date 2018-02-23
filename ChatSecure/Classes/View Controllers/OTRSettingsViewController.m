@@ -324,7 +324,7 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
         xmpp = (OTRXMPPManager*)protocol;
     }
     OTRAccountDetailViewController *detailVC = [[OTRAppDelegate appDelegate].theme accountDetailViewControllerForAccount:account xmpp:xmpp longLivedReadConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection
-                                                                                                          readConnection:[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection writeConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+                                                                                                          readConnection:[OTRDatabaseManager sharedInstance].readConnection writeConnection:[OTRDatabaseManager sharedInstance].writeConnection];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];

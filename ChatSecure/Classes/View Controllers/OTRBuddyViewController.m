@@ -37,7 +37,7 @@
 {
     if(self = [self init])
     {
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             self.buddy = [OTRBuddy fetchObjectWithUniqueID:buddyID transaction:transaction];
             self.account = [self.buddy accountWithTransaction:transaction];
             isXMPPAccount = [[self.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];

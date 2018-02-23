@@ -74,7 +74,7 @@
 
 +(void)deleteAllBuddiesAndMessages
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeAllObjectsInCollection:[OTRBuddy collection]];
         [transaction removeAllObjectsInCollection:[OTRBaseMessage collection]];
     }];
@@ -82,7 +82,7 @@
 
 + (void)deleteAccountsWithoutUsername
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSMutableArray *deleteKeys = [NSMutableArray array];
         [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString *key, OTRAccount *account, BOOL *stop) {
             if (![account.username length]) {
