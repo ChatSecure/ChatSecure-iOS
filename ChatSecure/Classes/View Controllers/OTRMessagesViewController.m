@@ -2395,7 +2395,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             _prototypeCellUnknownSender.frame = CGRectMake(0, 0, self.collectionView.bounds.size.width, _prototypeCellUnknownSender.frame.size.height);
             int height = [_prototypeCellUnknownSender systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
             
-            OTRMessagesCollectionSupplementaryViewInfo *info = [[OTRMessagesCollectionSupplementaryViewInfo alloc] initWithKind:[OTRMessagesUnknownSenderCell reuseIdentifier] height:height];
+            NSString *tag = nil;
+            if (roomMessage.buddyUniqueId) {
+                tag = [NSString stringWithFormat:@"%@-%@", roomMessage.buddyUniqueId, [OTRMessagesUnknownSenderCell reuseIdentifier]];
+            }
+            OTRMessagesCollectionSupplementaryViewInfo *info = [[OTRMessagesCollectionSupplementaryViewInfo alloc] initWithKind:[OTRMessagesUnknownSenderCell reuseIdentifier] height:height tag:tag tagBehavior:SupplementaryViewTagBehaviorShowLast];
             return [NSArray arrayWithObject:info];
         }
     }
