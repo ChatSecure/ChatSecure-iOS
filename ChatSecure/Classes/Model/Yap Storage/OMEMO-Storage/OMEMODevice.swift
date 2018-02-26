@@ -16,11 +16,10 @@ public extension OMEMODevice {
     }
     
     /// Checks if any of the devices are untrusted/new
-    @objc public static func filterNewDevices(_ devices: [OMEMODevice], transaction: YapDatabaseReadTransaction) {
+    @objc public static func filterNewDevices(_ devices: [OMEMODevice], transaction: YapDatabaseReadTransaction) -> [OMEMODevice] {
         let untrusted = devices.filter { (device) -> Bool in
             device.trustLevel == .untrustedNew
         }
-        
-        
+        return untrusted
     }
 }
