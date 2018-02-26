@@ -2385,11 +2385,22 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         OTRGroupDownloadMessage *roomMessage = (OTRGroupDownloadMessage *)message;
         // A message that is not automatically downloaded, even though auto download not disabled, means that this is group download message from someone who is not our friend.
         if ([roomMessage.messageError isAutomaticDownloadError] && !self.automaticURLFetchingDisabled && [roomMessage.media isKindOfClass:[OTRImageItem class]]) {
+            
+            // We may have become friends since this message was sent, see if we can find a buddy
+            __block BOOL areFriendsNow = NO;
+            [self.readConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                OTRXMPPBuddy *buddy = [roomMessage buddyWithTransaction:transaction];
+                areFriendsNow = buddy && (buddy.trustLevel == BuddyTrustLevelRoster || buddy.pendingApproval);
+            }];
+            if (areFriendsNow) {
+                return nil;
+            }
+            
             if (!_prototypeCellUnknownSender) {
                 UINib *nib = [UINib nibWithNibName:@"OTRMessageUnknownSenderCell" bundle:OTRAssets.resourcesBundle];
                 _prototypeCellUnknownSender = (OTRMessagesUnknownSenderCell *)[nib instantiateWithOwner:self options:nil][0];
             }
-            [self populateUnknownSenderCell:_prototypeCellUnknownSender withMessage:message];
+            [self populateUnknownSenderCell:_prototypeCellUnknownSender withMessage:message indexPath:indexPath];
             [_prototypeCellUnknownSender setNeedsLayout];
             [_prototypeCellUnknownSender layoutIfNeeded];
             _prototypeCellUnknownSender.frame = CGRectMake(0, 0, self.collectionView.bounds.size.width, _prototypeCellUnknownSender.frame.size.height);
@@ -2406,15 +2417,71 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return nil;
 }
 
-- (void)populateUnknownSenderCell:(OTRMessagesUnknownSenderCell *)cell withMessage:(id<OTRMessageProtocol,JSQMessageData>)message {
+- (void)populateUnknownSenderCell:(OTRMessagesUnknownSenderCell *)cell withMessage:(id<OTRMessageProtocol,JSQMessageData>)message indexPath:(NSIndexPath *)indexPath {
     cell.titleLabel.text = [NSString stringWithFormat:ADD_FRIEND_TO_AUTO_DOWNLOAD(), message.senderDisplayName];
+    cell.nickLabel.text = message.senderDisplayName;
+    cell.jidLabel.text = nil;
+    if ([message isKindOfClass:[OTRGroupDownloadMessage class]]) {
+        OTRGroupDownloadMessage *roomMessage = (OTRGroupDownloadMessage *)message;
+        
+        __block OTRXMPPRoomOccupant *roomOccupant = nil;
+        if (roomMessage.senderJID) {
+            [self.readConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                OTRAccount *account = [self accountWithTransaction:transaction];
+                if (account) {
+                    roomOccupant = [OTRXMPPRoomOccupant occupantWithJid:[XMPPJID jidWithString:roomMessage.senderJID] realJID:nil roomJID:[XMPPJID jidWithString:roomMessage.roomJID] accountId:account.uniqueId createIfNeeded:NO transaction:transaction];
+                }
+            }];
+        }
+        if (roomOccupant && roomOccupant.realJID) {
+            cell.jidLabel.text = [roomOccupant.realJID bare];
+            if (cell.jidLabel.text.length == 0) {
+                cell.jidLabel.text = roomMessage.senderJID;
+            }
+            cell.senderJID = [roomOccupant.realJID bare];
+            cell.senderDisplayName = [roomOccupant displayText];
+            
+            __weak typeof(self)weakSelf = self;
+            cell.acceptButtonCallback = ^(NSString * _Nullable senderJIDString, NSString * _Nullable senderDisplayName) {
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                
+                if (!senderJIDString) { return; }
+                XMPPJID *senderJID = [XMPPJID jidWithString:senderJIDString];
+                if (!senderJID) { return; }
+                
+                __block OTRAccount *account = nil;
+                [strongSelf.readConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                    account = [strongSelf accountWithTransaction:transaction];
+                }];
+                if (account) {
+                    OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                    if (manager) {
+                        [manager addToRosterWithJID:senderJID displayName:senderDisplayName];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.collectionView reloadData];
+                        });
+                    }
+                }
+            };
+            //Use this when we implement blocking
+            //cell.denyButtonCallback = ^() {
+            //    __strong typeof(weakSelf)strongSelf = weakSelf;
+            //};
+            cell.collapsed = NO;
+        } else {
+            // No occupant, hide the friending part
+            cell.collapsed = YES;
+        }
+    }
+    cell.avatarImageView.image = [[self collectionView:self.collectionView avatarImageDataForItemAtIndexPath:indexPath] avatarImage];
 }
+
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if ([OTRMessagesUnknownSenderCell.reuseIdentifier isEqualToString:kind]) {
         id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
         OTRMessagesUnknownSenderCell *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:kind forIndexPath:indexPath];
-        [self populateUnknownSenderCell:cell withMessage:message];
+        [self populateUnknownSenderCell:cell withMessage:message indexPath:indexPath];
         return cell;
     }
     return [super collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
