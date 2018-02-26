@@ -318,6 +318,18 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
         return occupants
     }
     
+    public func allBuddies(_ transaction: YapDatabaseReadTransaction) -> [OTRXMPPBuddy] {
+        guard let account = account(with: transaction) as? OTRXMPPAccount else { return [] }
+        let myJID = account.bareJID
+        let buddies = allOccupants(transaction)
+        .flatMap { $0.buddyUniqueId }
+        .flatMap { OTRXMPPBuddy.fetchObject(withUniqueID: $0, transaction: transaction) }
+        let filtered = buddies
+        .filter { $0.bareJID != myJID }
+        .sorted { $0.username < $1.username }
+        return filtered
+    }
+    
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         guard let accountId = self.accountUniqueId else { return nil }
         let edgeName = YapDatabaseConstants.edgeName(.room)
@@ -336,3 +348,4 @@ public extension XMPPRoom {
         return accountId + roomJID.bare
     }
 }
+

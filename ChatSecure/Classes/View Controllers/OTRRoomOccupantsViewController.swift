@@ -17,30 +17,58 @@ import OTRAssets
     func didArchiveRoom(_ roomOccupantsViewController: OTRRoomOccupantsViewController) -> Void
 }
 
-private class CellIdentifier {
-    static let Generic = "Cell"
-    static let HeaderCellGroupName = "cellGroupName"
-    static let HeaderCellShare = "cellGroupShare"
-    static let HeaderCellAddFriends = "cellGroupAddFriends"
-    static let HeaderCellMute = "cellGroupMute"
-    static let HeaderCellMembers = "cellGroupMembers"
-    static let HeaderCellGroupOMEMO = "cellGroupOMEMO"
-    static let FooterCellLeave = "cellGroupLeave"
+private struct CellIdentifier {
+    /// Storyboard Cell Identifiers
+    static let HeaderCellGroupName = StoryboardCellIdentifier.groupName.rawValue
+    static let HeaderCellShare = StoryboardCellIdentifier.share.rawValue
+    static let HeaderCellAddFriends = StoryboardCellIdentifier.addFriends.rawValue
+    static let HeaderCellMute = StoryboardCellIdentifier.mute.rawValue
+    static let HeaderCellMembers = StoryboardCellIdentifier.members.rawValue
+    static let FooterCellLeave = StoryboardCellIdentifier.leave.rawValue
 }
 
-open class OTRRoomOccupantsViewController: UIViewController {
- 
-    let GroupNameHeader = "UITableViewSectionHeader"
-    let GroupNameFooter = "UITableViewSectionFooter"
 
+/// Cell identifiers only used in code
+private enum DynamicCellIdentifier: String {
+    case occupant = "occupant"
+    case omemoToggle = "cellGroupOMEMOToggle"
+    case omemoConfig = "cellGroupOMEMOConfig"
+}
+
+/// Cell identifiers from the OTRRoomOccupants.storyboard
+private enum StoryboardCellIdentifier: String {
+    case groupName = "cellGroupName"
+    case share = "cellGroupShare"
+    case addFriends = "cellGroupAddFriends"
+    case mute = "cellGroupMute"
+    case members = "cellGroupMembers"
+    case leave = "cellGroupLeave"
+}
+
+private class GenericHeaderCell: UITableViewCell {
+    static let cellHeight: CGFloat = 44
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        textLabel?.text = nil
+        accessoryView = nil
+    }
+}
+
+private enum GroupName: String {
+    case header = "UITableViewSectionHeader"
+    case footer = "UITableViewSectionFooter"
+}
+
+private let GroupNameHeader = GroupName.header.rawValue
+private let GroupNameFooter = GroupName.footer.rawValue
+
+open class OTRRoomOccupantsViewController: UIViewController {
     @objc public weak var delegate:OTRRoomOccupantsViewControllerDelegate? = nil
 
     @IBOutlet open weak var tableView:UITableView!
     @IBOutlet weak var largeAvatarView:UIImageView!
    
     let disabledCellAlphaValue:CGFloat = 0.5
-    let headerCellHeight:CGFloat = 44
-    let footerCellHeight:CGFloat = 44
 
     // For matching navigation bar and avatar
     var navigationBarShadow:UIImage?
@@ -54,14 +82,14 @@ open class OTRRoomOccupantsViewController: UIViewController {
     
     /// opens implicit db transaction
     open var room:OTRXMPPRoom? {
+        return connections?.ui.fetch { self.room($0) }
+    }
+    
+    private func room(_ transaction: YapDatabaseReadTransaction) -> OTRXMPPRoom? {
         guard let roomUniqueId = self.roomUniqueId else {
             return nil
         }
-        var _room: OTRXMPPRoom?
-        readConnection?.read({ (transaction) in
-            _room = OTRXMPPRoom.fetchObject(withUniqueID: roomUniqueId, transaction: transaction)
-        })
-        return _room
+        return OTRXMPPRoom.fetchObject(withUniqueID: roomUniqueId, transaction: transaction)
     }
     
     open var headerRows:[String] = []
@@ -93,7 +121,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
-            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [GroupNameHeader, roomKey, GroupNameFooter])
+            viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [GroupName.header.rawValue, roomKey, GroupName.footer.rawValue])
         }
         
         self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name.YapDatabaseModified, object: OTRDatabaseManager.shared.database, queue: OperationQueue.main) {[weak self] (notification) -> Void in
@@ -118,7 +146,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
         ]
         
         if OTRSettingsManager.allowGroupOMEMO {
-            headerRows.insert(CellIdentifier.HeaderCellGroupOMEMO, at: 1)
+            headerRows.insert(DynamicCellIdentifier.omemoToggle.rawValue, at: 1)
+            headerRows.insert(DynamicCellIdentifier.omemoConfig.rawValue, at: 2)
         }
         
         footerRows = [
@@ -135,7 +164,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: CellIdentifier.Generic)
+        self.tableView.register(OTRBuddyInfoCheckableCell.self, forCellReuseIdentifier: DynamicCellIdentifier.occupant.rawValue)
+        self.tableView.register(GenericHeaderCell.self, forCellReuseIdentifier: DynamicCellIdentifier.omemoConfig.rawValue)
+        self.tableView.register(GenericHeaderCell.self, forCellReuseIdentifier: DynamicCellIdentifier.omemoToggle.rawValue)
         
         self.updateUIBasedOnOwnRole()
     }
@@ -170,7 +201,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
         
         // Update the header section
-        if let idx = self.viewHandler?.mappings?.section(forGroup: GroupNameHeader) {
+        if let idx = self.viewHandler?.mappings?.section(forGroup: GroupName.header.rawValue) {
             let set = IndexSet(integer: Int(idx))
             tableView.reloadSections(set, with: .none)
         }
@@ -248,19 +279,25 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
     
     private func refreshSubjectCell() {
-        if let section = self.viewHandler?.mappings?.section(forGroup: GroupNameHeader), let row = self.headerRows.index(of: CellIdentifier.HeaderCellGroupName) {
+        if let section = self.viewHandler?.mappings?.section(forGroup: GroupName.header.rawValue), let row = self.headerRows.index(of: CellIdentifier.HeaderCellGroupName) {
             self.tableView.reloadRows(at: [IndexPath(row: row, section: Int(section))], with: .none)
         }
     }
     
-    open func createHeaderCell(type:String) -> UITableViewCell {
-        var cell:UITableViewCell?
+    open func createHeaderCell(type:String, at indexPath: IndexPath) -> UITableViewCell {
+        var _cell: UITableViewCell?
+        if DynamicCellIdentifier(rawValue: type) != nil {
+            _cell = tableView.dequeueReusableCell(withIdentifier: type, for: indexPath)
+        } else {
+            // storyboard cell
+            _cell = tableView.dequeueReusableCell(withIdentifier: type)
+        }
+        guard let cell = _cell else { return UITableViewCell() }
         switch type {
         case CellIdentifier.HeaderCellGroupName:
-            cell = tableView.dequeueReusableCell(withIdentifier: type)
             if let room = self.room {
-                cell?.textLabel?.text = room.subject
-                cell?.detailTextLabel?.text = "" // Do we have creation date?
+                cell.textLabel?.text = room.subject
+                cell.detailTextLabel?.text = "" // Do we have creation date?
             }
             
             var isOnline = false
@@ -270,8 +307,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 isOnline = ownOccupant.role != .none
             }
             if !canModifySubject {
-                cell?.accessoryView = nil
-                cell?.isUserInteractionEnabled = false
+                cell.accessoryView = nil
+                cell.isUserInteractionEnabled = false
             } else {
                 let font:UIFont? = UIFont(name: "Material Icons", size: 24)
                 let button = UIButton(type: UIButtonType.custom)
@@ -283,42 +320,36 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
                 button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
                 button.titleLabel?.alpha = isOnline ? 1 :disabledCellAlphaValue
-                cell?.accessoryView = button
-                cell?.isUserInteractionEnabled = isOnline
+                cell.accessoryView = button
+                cell.isUserInteractionEnabled = isOnline
             }
-            cell?.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
-            cell?.selectionStyle = .none
+            cell.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
+            cell.selectionStyle = .none
             break
         case CellIdentifier.HeaderCellAddFriends:
-            cell = tableView.dequeueReusableCell(withIdentifier: type)
             var isOnline = false
             if let ownOccupant = ownOccupant() {
                 isOnline = ownOccupant.role != .none
             }
-            cell?.isUserInteractionEnabled = isOnline
-            cell?.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
+            cell.isUserInteractionEnabled = isOnline
+            cell.contentView.alpha = isOnline ? 1 : disabledCellAlphaValue
             break
         case CellIdentifier.HeaderCellMute:
-            cell = tableView.dequeueReusableCell(withIdentifier: type)
             let muteswitch = UISwitch()
             if let room = self.room {
                 refreshNotificationSwitch(muteswitch, room: room, animated:false)
             }
             muteswitch.addTarget(self, action: #selector(self.didChangeNotificationSwitch(_:)), for: .valueChanged)
-            cell?.accessoryView = muteswitch
-            cell?.isUserInteractionEnabled = true
-            cell?.selectionStyle = .none
+            cell.accessoryView = muteswitch
+            cell.isUserInteractionEnabled = true
+            cell.selectionStyle = .none
             break
-        case CellIdentifier.HeaderCellGroupOMEMO:
-            cell = tableView.dequeueReusableCell(withIdentifier: type)
-            if cell == nil {
-                cell = UITableViewCell(style: .subtitle, reuseIdentifier: type)
-            }
-            cell?.textLabel?.text = "OMEMO"
-            cell?.isUserInteractionEnabled = true
-            cell?.selectionStyle = .none
+        case DynamicCellIdentifier.omemoToggle.rawValue:
+            cell.textLabel?.text = OMEMO_GROUP_ENCRYPTION_STRING()
+            cell.isUserInteractionEnabled = true
+            cell.selectionStyle = .none
             let omemoSwitch = UISwitch()
-            cell?.accessoryView = omemoSwitch
+            cell.accessoryView = omemoSwitch
             omemoSwitch.addTarget(self, action: #selector(self.didChangeGroupOMEMOSwitch(_:)), for: .valueChanged)
             if let room = self.room {
                 refreshOMEMOGroupSwitch(omemoSwitch, room: room)
@@ -327,15 +358,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 omemoSwitch.isEnabled = false
             }
             break
+        case DynamicCellIdentifier.omemoConfig.rawValue:
+            cell.textLabel?.text = "OMEMO Configuration"
+            cell.accessoryType = .disclosureIndicator
         default:
-            cell = tableView.dequeueReusableCell(withIdentifier: type)
             break
         }
-        return cell ?? UITableViewCell()
+        return cell
     }
     
-    open func createFooterCell(type:String) -> UITableViewCell {
-        return tableView.dequeueReusableCell(withIdentifier: type) ?? UITableViewCell()
+    open func createFooterCell(type:String, at indexPath: IndexPath) -> UITableViewCell {
+        return tableView.dequeueReusableCell(withIdentifier:type) ?? UITableViewCell()
     }
     
     open func didSelectHeaderCell(type:String) {
@@ -343,6 +376,19 @@ open class OTRRoomOccupantsViewController: UIViewController {
         case CellIdentifier.HeaderCellAddFriends:
             addMoreFriends()
             break
+        case DynamicCellIdentifier.omemoConfig.rawValue:
+            var _account: OTRXMPPAccount?
+            var buddies: [OTRXMPPBuddy] = []
+            connections?.ui.read {
+                let room = self.room($0)
+                _account = room?.account(with: $0) as? OTRXMPPAccount
+                buddies = room?.allBuddies($0) ?? []
+            }
+            guard let account = _account else {
+                return
+            }
+            let profile = GlobalTheme.shared.keyManagementViewController(for: account, buddies: buddies)
+            self.navigationController?.pushViewController(profile, animated: true)
         default: break
         }
     }
@@ -478,6 +524,7 @@ extension OTRRoomOccupantsViewController {
     }
 }
 
+// MARK: - OTRYapViewHandlerDelegateProtocol
 extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
 
     public func didSetupMappings(_ handler: OTRYapViewHandler) {
@@ -492,6 +539,7 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension OTRRoomOccupantsViewController: UITableViewDataSource {
     //Int and UInt issue https://github.com/yapstudios/YapDatabase/issues/116
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -500,6 +548,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let group = self.viewHandler?.mappings?.group(forSection: UInt(section))
+        
         if group == GroupNameHeader {
             return headerRows.count
         } else if group == GroupNameFooter {
@@ -511,16 +560,16 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
         if group == GroupNameHeader {
-            return createHeaderCell(type: headerRows[indexPath.row])
+            return createHeaderCell(type: headerRows[indexPath.row], at: indexPath)
         } else if group == GroupNameFooter {
-            return createFooterCell(type: footerRows[indexPath.row])
+            return createFooterCell(type: footerRows[indexPath.row], at: indexPath)
         }
         
         if indexPath.section == 0 {
-            let cell = createHeaderCell(type: CellIdentifier.HeaderCellMembers)
+            let cell = createHeaderCell(type: CellIdentifier.HeaderCellMembers, at: indexPath)
             return cell
         }
-        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.Generic, for: indexPath) as! OTRBuddyInfoCheckableCell
+        let cell:OTRBuddyInfoCheckableCell = tableView.dequeueReusableCell(withIdentifier: DynamicCellIdentifier.occupant.rawValue, for: indexPath) as! OTRBuddyInfoCheckableCell
         cell.setCheckImage(image: self.crownImage)
         var buddy:OTRXMPPBuddy? = nil
         var accountObject:OTRXMPPAccount? = nil
@@ -584,13 +633,14 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension OTRRoomOccupantsViewController:UITableViewDelegate {
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
         if group == GroupNameHeader {
-            return headerCellHeight
+            return GenericHeaderCell.cellHeight
         } else if group == GroupNameFooter {
-            return footerCellHeight
+            return GenericHeaderCell.cellHeight
         }
         return OTRBuddyInfoCellHeight
     }
@@ -598,9 +648,9 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
         if group == GroupNameHeader {
-            return headerCellHeight
+            return GenericHeaderCell.cellHeight
         } else if group == GroupNameFooter {
-            return footerCellHeight
+            return GenericHeaderCell.cellHeight
         }
         return OTRBuddyInfoCellHeight
     }
@@ -644,6 +694,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     }
 }
 
+// MARK: - OTRComposeGroupViewControllerDelegate
 extension OTRRoomOccupantsViewController: OTRComposeGroupViewControllerDelegate {
     
     public func groupSelectionCancelled(_ composeViewController: OTRComposeGroupViewController) {

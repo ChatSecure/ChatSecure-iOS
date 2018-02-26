@@ -414,7 +414,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         senderId = [[self threadObjectWithTransaction:transaction] threadAccountIdentifier];
         account = [self accountWithTransaction:transaction];
     }];
-    NSParameterAssert(senderId.length > 0);
+    // this can be nil for an empty chat window
     if (senderId.length > 0) {
         self.senderId = senderId;
     } else {

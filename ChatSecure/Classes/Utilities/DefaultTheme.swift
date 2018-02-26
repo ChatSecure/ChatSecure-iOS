@@ -18,6 +18,10 @@ import Foundation
     public let lightThemeColor = UIColor(white: 0.95, alpha: 1.0)
     public let buttonLabelColor = UIColor.darkGray
     
+    private var connections: DatabaseConnections? {
+        return OTRDatabaseManager.shared.connections
+    }
+    
     public func setupAppearance() { }
     
     public func conversationViewController() -> UIViewController {
@@ -41,19 +45,19 @@ import Foundation
     }
     
     public func keyManagementViewController(for account: OTRXMPPAccount, buddies: [OTRXMPPBuddy]) -> UIViewController {
-        guard let connections = OTRDatabaseManager.shared.connections else {
+        guard let connections = self.connections else {
             return UIViewController()
         }
-        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: buddies, connection: connections.read)
-        let verify = KeyManagementViewController(accountKey: account.uniqueId, readConnection: connections.read, writeConnection: connections.write, form: form)
+        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: buddies, connection: connections.ui)
+        let verify = KeyManagementViewController(accountKey: account.uniqueId, readConnection: connections.ui, writeConnection: connections.write, form: form)
         return verify
     }
     
     public func accountDetailViewController(for account: OTRXMPPAccount, xmpp: XMPPManager) -> UIViewController {
-        guard let connections = OTRDatabaseManager.shared.connections else {
+        guard let connections = self.connections else {
             return UIViewController()
         }
-        let detail = AccountDetailViewController(account: account, xmpp: xmpp, longLivedReadConnection: connections.longLivedRead, readConnection: connections.read, writeConnection: connections.write)
+        let detail = AccountDetailViewController(account: account, xmpp: xmpp, longLivedReadConnection: connections.longLivedRead, readConnection: connections.ui, writeConnection: connections.write)
         return detail
     }
 }
