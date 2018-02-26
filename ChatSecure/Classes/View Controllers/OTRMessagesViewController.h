@@ -75,4 +75,7 @@
 /** override this method to customize what should be shown at the beginning of the message status */
 - (nullable NSAttributedString *) encryptionStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message;
 
+- (void)removeSupplementaryViewsOfType:(nonnull NSString*)type;
+- (void)addSupplementaryViewForMessage:(nonnull id<OTRMessageProtocol>)message supplementaryView:(NSString*)type;
+
 @end
