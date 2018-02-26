@@ -128,6 +128,42 @@ import JSQMessagesViewController
                 }
             }
         }
+        
+        // All the views that super returns may be offset by all supplementary views above. We need to walk backwards from the "first" index path returned by super and add any views intersecting the rect. First find out the index path of the first view, or if none: the last valid index path of the collectionView.
+        var indexPath = attributes.first?.indexPath
+        if indexPath == nil {
+            var section = collectionView.numberOfSections - 1
+            while section >= 0 {
+                let item = collectionView.numberOfItems(inSection: section)
+                if item > 0 {
+                    indexPath = IndexPath(item: item, section: section)
+                    break
+                }
+                section -= 1
+            }
+        }
+        
+        // Then walk backwards, adding views as long as they are actually intersecting the "rect" parameter.
+        if let indexPath = indexPath {
+            var section = indexPath.section
+            var item = indexPath.item
+            while true {
+                if item == 0 && section > 0 {
+                    section -= 1
+                    item = collectionView.numberOfItems(inSection: section) - 1
+                } else if item > 0 {
+                    item -= 1
+                } else {
+                    break
+                }
+                guard let itemAttrs = layoutAttributesForItem(at: IndexPath(item: item, section: section)) else { break }
+                if itemAttrs.frame.intersects(rect) {
+                    outAttributes.insert(itemAttrs, at: 0)
+                } else {
+                    break
+                }
+            }
+        }
         return outAttributes
     }
     
