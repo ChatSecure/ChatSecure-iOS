@@ -2381,7 +2381,17 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)newDeviceButtonPressed:(NSString *)buddyUniqueId {
-    //TODO
+    __block OTRXMPPAccount *account = nil;
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.connections.ui readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [self accountWithTransaction:transaction];
+        buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
+    }];
+    if (account && buddy) {
+        UIViewController *vc = [GlobalTheme.shared keyManagementViewControllerForAccount:account buddies:@[buddy]];
+        UINavigationController *keyNav = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:keyNav animated:YES completion:nil];
+    }
 }
 
 @end
