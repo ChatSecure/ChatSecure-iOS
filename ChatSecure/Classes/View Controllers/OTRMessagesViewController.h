@@ -37,6 +37,7 @@
 @property (nonatomic, strong, nullable) UIButton *cameraButton;
 
 @property (nonatomic, strong, nonnull, readonly) MessagesViewControllerState *state;
+@property (nonatomic) BOOL automaticURLFetchingDisabled;
 
 - (void)setThreadKey:(nullable NSString *)key collection:(nullable NSString *)collection;
 - (void)sendAudioFileURL:(nonnull NSURL *)url;
@@ -74,8 +75,5 @@
 
 /** override this method to customize what should be shown at the beginning of the message status */
 - (nullable NSAttributedString *) encryptionStatusStringForMessage:(nonnull id<OTRMessageProtocol>)message;
-
-- (void)removeSupplementaryViewsOfType:(nonnull NSString*)type;
-- (void)addSupplementaryViewForMessage:(nonnull id<OTRMessageProtocol>)message supplementaryView:(NSString*)type;
 
 @end

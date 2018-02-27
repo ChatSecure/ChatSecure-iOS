@@ -111,4 +111,42 @@ import OTRAssets
         jidLabel.text = nil
         avatarImageView.image = nil
     }
+    
+    @objc open func populate(message:OTRMessageProtocol & JSQMessageData,
+                             account:OTRAccount?,
+                             connection:YapDatabaseConnection,
+                             acceptButtonCallback:((_ senderJID:String?,_ senderDisplayName:String?) -> Void)?,
+                             denyButtonCallback:((_ senderJID:String?,_ senderDisplayName:String?) -> Void)?,
+                             avatarData:JSQMessageAvatarImageDataSource?) {
+        titleLabel.text = String(format: ADD_FRIEND_TO_AUTO_DOWNLOAD(), message.senderDisplayName())
+        nickLabel.text = message.senderDisplayName()
+        jidLabel.text = nil
+        collapsed = true
+        if let groupDownloadMessage = message as? OTRGroupDownloadMessage {
+            var roomOccupant:OTRXMPPRoomOccupant? = nil
+            if let senderJIDString = groupDownloadMessage.senderJID,
+                let roomJIDString = groupDownloadMessage.roomJID,
+                let senderJID = XMPPJID(string: senderJIDString),
+                let roomJID = XMPPJID(string:roomJIDString),
+                let account = account {
+                connection.read({ (transaction) in
+                    roomOccupant = OTRXMPPRoomOccupant.occupant(jid: senderJID, realJID: nil, roomJID: roomJID, accountId: account.uniqueId, createIfNeeded: false, transaction: transaction)
+                })
+                if let occupant = roomOccupant, let realJid = occupant.realJID {
+                    jidLabel.text = realJid.bare
+                    if jidLabel.text?.count == 0 {
+                        jidLabel.text = groupDownloadMessage.senderJID
+                    }
+                    self.senderJID = realJid.bare
+                    self.senderDisplayName = occupant.displayText()
+                    self.acceptButtonCallback = acceptButtonCallback
+                    self.denyButtonCallback = denyButtonCallback
+                    collapsed = false
+                }
+            }
+        }
+        if let avatarData = avatarData {
+            avatarImageView.image = avatarData.avatarImage()
+        }
+    }
 }
