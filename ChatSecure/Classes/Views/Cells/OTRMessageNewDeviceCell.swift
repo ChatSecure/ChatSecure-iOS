@@ -9,7 +9,14 @@
 @objc open class OTRMessagesNewDeviceCell: UICollectionReusableView {
     @objc public static let reuseIdentifier = "newDeviceCell"
     
+    @objc @IBOutlet open weak var actionButton:UIButton!
+    @objc @IBOutlet open weak var avatarImageView:UIImageView!
     @objc @IBOutlet open weak var titleLabel:UILabel!
+    @objc @IBOutlet open weak var descriptionLabel:UILabel!
+    @objc @IBOutlet open weak var iconLabel:UILabel!
+    
+    @objc open var buddyUniqueId:String?
+    @objc open var actionButtonCallback:((_ buddyUniqueId:String?) -> Void)?
     
     override open func layoutSubviews() {
         super.layoutSubviews()
@@ -22,6 +29,16 @@
         }
     }
     
-    @objc open func populate(buddy:OTRXMPPBuddy) {
+    @objc open func populate(buddy:OTRXMPPBuddy, actionButtonCallback:((_ buddyUniqueId:String?) -> Void)?) {
+        buddyUniqueId = buddy.uniqueId
+        avatarImageView.image = buddy.avatarImage
+        iconLabel.backgroundColor = GlobalTheme.shared.mainThemeColor
+        self.actionButtonCallback = actionButtonCallback
+    }
+    
+    @IBAction open func didTapActionButton(_ sender: Any) {
+        if let callback = actionButtonCallback {
+            callback(buddyUniqueId)
+        }
     }
 }

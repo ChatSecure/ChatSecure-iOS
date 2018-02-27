@@ -48,7 +48,7 @@
 - (nullable UIBarButtonItem *)rightBarButtonItem;
 
 - (void)infoButtonPressed:(nullable id)sender;
-
+- (void)newDeviceButtonPressed:(nonnull NSString *)buddyUniqueId;
 
 - (nullable id<OTRThreadOwner>)threadObjectWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (nullable OTRXMPPAccount *)accountWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;

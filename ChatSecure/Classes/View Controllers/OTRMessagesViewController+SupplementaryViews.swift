@@ -204,7 +204,15 @@ public extension OTRMessagesViewController {
             buddy = self.threadObject(with: transaction) as? OTRXMPPBuddy
         })
         if let buddy = buddy {
-            newDeviceCell.populate(buddy: buddy)
+            var actionButtonCallback:((String?) -> Void)? = nil
+            if !forSizingOnly {
+                actionButtonCallback = {[unowned self] (buddyUniqueId:String?) in
+                    if let buddy = buddyUniqueId {
+                        self.newDeviceButtonPressed(buddy)
+                    }
+                }
+            }
+            newDeviceCell.populate(buddy: buddy, actionButtonCallback: actionButtonCallback)
         }
     }
 }

@@ -104,9 +104,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) id currentMessage;
 @property (nonatomic, strong) NSCache *messageSizeCache;
 
-@property (nonatomic, strong) OTRMessagesUnknownSenderCell *prototypeCellUnknownSender;
-@property (nonatomic, strong) OTRMessagesNewDeviceCell *prototypeCellNewDevice;
-
 @end
 
 @implementation OTRMessagesViewController
@@ -2381,6 +2378,10 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     } else {
         [self.navigationController.navigationController popViewControllerAnimated:YES];
     }
+}
+
+- (void)newDeviceButtonPressed:(NSString *)buddyUniqueId {
+    //TODO
 }
 
 @end
