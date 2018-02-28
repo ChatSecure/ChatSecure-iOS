@@ -14,6 +14,7 @@
 @import JSQMessagesViewController;
 
 @class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRXMPPAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState, DatabaseConnections;
+@class SupplementaryViewHandler;
 
 @protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
@@ -26,6 +27,7 @@
 
 @interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
+@property (nonatomic, readonly, nullable) SupplementaryViewHandler *supplementaryViewHandler;
 @property (nonatomic, readonly, nullable) DatabaseConnections *connections;
 @property (nonatomic, strong, readonly, nullable) YapDatabaseConnection *uiConnection DEPRECATED_MSG_ATTRIBUTE("Use connections.ui instead");
 @property (nonatomic, strong, readonly, nullable) YapDatabaseConnection *readConnection DEPRECATED_MSG_ATTRIBUTE("Use connections.read instead");

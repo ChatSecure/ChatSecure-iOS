@@ -9,11 +9,24 @@
 import Foundation
 import OTRAssets
 
-var OTRMessagesViewController_supplementaryViewsAssociatedObject: UInt8 = 0
-var OTRMessagesViewController_prototypeCellsAssociatedObject: UInt8 = 0
 
-extension OTRMessagesViewController: OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
-
+@objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
+    
+    // TODO: make these init'd properties
+    @objc public var connections: DatabaseConnections
+    @objc public var viewHandler: OTRYapViewHandler
+    @objc public var collectionView: JSQMessagesCollectionView
+    
+    @objc public var actionButtonCallback:((_ buddyUniqueId:String?) -> Void)?
+    
+    @objc public init(collectionView: JSQMessagesCollectionView,
+                      viewHandler: OTRYapViewHandler,
+                      connections: DatabaseConnections) {
+        self.collectionView = collectionView
+        self.viewHandler = viewHandler
+        self.connections = connections
+    }
+    
     fileprivate var supplementaryViewNibs:[String:String] {
         return [
             OTRMessagesUnknownSenderCell.reuseIdentifier:"OTRMessageUnknownSenderCell",
@@ -21,14 +34,7 @@ extension OTRMessagesViewController: OTRMessagesCollectionViewFlowLayoutSuppleme
         ]
     }
     
-    fileprivate var supplementaryViews:[String:[String]] {
-        get {
-            return objc_getAssociatedObject(self, &OTRMessagesViewController_supplementaryViewsAssociatedObject) as? [String:[String]] ?? [:]
-        }
-        set {
-            objc_setAssociatedObject(self, &OTRMessagesViewController_supplementaryViewsAssociatedObject, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
+    fileprivate var supplementaryViews:[String:[String]] = [:]
     
     @objc public func registerSupplementaryViewTypes(collectionView:UICollectionView) {
         for (identifier,nibName) in supplementaryViewNibs {
@@ -37,21 +43,24 @@ extension OTRMessagesViewController: OTRMessagesCollectionViewFlowLayoutSuppleme
         }
     }
     
-    public func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath) -> [OTRMessagesCollectionSupplementaryViewInfo]? {
-        guard let message = message(at: indexPath) else { return nil }
+    public func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath, message: OTRMessageProtocol) -> [OTRMessagesCollectionSupplementaryViewInfo]? {
         let supplementaryViews = self.supplementaryViews[message.uniqueId]
+        
+        var automaticURLFetchingDisabled = true
+        connections.ui.fetch {
+            automaticURLFetchingDisabled = (message.buddy(with: $0)?.account(with: $0) as? OTRXMPPAccount)?.disableAutomaticURLFetching ?? true
+        }
         
         var supplementaryViewsInfo:[OTRMessagesCollectionSupplementaryViewInfo] = []
         
-        if isGroupChat(),
-            let message = message as? OTRGroupDownloadMessage,
+        if let message = message as? OTRGroupDownloadMessage,
             let error = message.messageError as NSError?,
             error.isAutomaticDownloadError,
             !automaticURLFetchingDisabled
         {
             // We may have become friends since this message was sent, see if we can find a buddy
             var areFriendsNow = false
-            self.connections?.read.read({ (transaction) in
+            self.connections.read.read({ (transaction) in
                 if let buddy = message.buddy(with: transaction) {
                     areFriendsNow = (buddy.trustLevel == .roster)
                 }
@@ -112,7 +121,7 @@ extension OTRMessagesViewController: OTRMessagesCollectionViewFlowLayoutSuppleme
         self.supplementaryViews[message.uniqueId] = value
     }
 
-    open override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView? {
         if kind == OTRMessagesUnknownSenderCell.reuseIdentifier {
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath)
             populateUnknownSenderCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
@@ -122,21 +131,10 @@ extension OTRMessagesViewController: OTRMessagesCollectionViewFlowLayoutSuppleme
             populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
             return cell
         }
-        return super.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+        return nil
     }
-}
 
-public extension OTRMessagesViewController {
-    
-    fileprivate var prototypeCells: [String:UICollectionReusableView] {
-        get {
-            return objc_getAssociatedObject(self, &OTRMessagesViewController_prototypeCellsAssociatedObject) as? [String:UICollectionReusableView] ?? [:]
-        }
-        set {
-            objc_setAssociatedObject(self, &OTRMessagesViewController_prototypeCellsAssociatedObject, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-    
+    fileprivate var prototypeCells: [String:UICollectionReusableView] = [:]
     
     fileprivate func prototypeCell(kind:String) -> UICollectionReusableView? {
         if prototypeCells[kind] == nil, let nibName = supplementaryViewNibs[kind] {
@@ -165,18 +163,30 @@ public extension OTRMessagesViewController {
         }
         return nil
     }
+    
+    private func fetchMessageInfo(at indexPath: IndexPath) -> (JSQMessageData & OTRMessageProtocol, OTRThreadOwner, OTRXMPPAccount)? {
+        guard let message = self.viewHandler.object(indexPath) as? (JSQMessageData & OTRMessageProtocol) else { return nil }
+        var thread: OTRThreadOwner?
+        var account: OTRXMPPAccount?
+        connections.ui.read {
+            thread = message.threadOwner(with: $0)
+            account = thread?.account(with: $0) as? OTRXMPPAccount
+        }
+        if let thread = thread,
+            let account = account {
+            return (message, thread, account)
+        } else {
+            return nil
+        }
+    }
 
     fileprivate func populateUnknownSenderCell(cell:UICollectionReusableView?, indexPath:IndexPath, forSizingOnly:Bool) {
         guard let unknownSenderCell = cell as? OTRMessagesUnknownSenderCell else { return }
-        guard let message = self.message(at: indexPath) else { return }
-
-        var account:OTRXMPPAccount? = nil
-        connections?.read.read({ (transaction) in
-            account = self.account(with: transaction)
-        })
-        if let account = account, let readConnection = connections?.read {
-            let dataSource:JSQMessagesCollectionViewDataSource = self
-            let avatarData = dataSource.collectionView(self.collectionView, avatarImageDataForItemAt: indexPath)
+        guard let (message, _, account) = fetchMessageInfo(at: indexPath) else { return }
+        
+        connections.ui.read { transaction in
+        
+            let avatarData = self.collectionView.dataSource.collectionView(self.collectionView, avatarImageDataForItemAt: indexPath)
             
             // Set callback only for "real" cell, not when sizing
             var acceptButtonCallback:((String?,String?) -> Void)? = nil
@@ -193,24 +203,18 @@ public extension OTRMessagesViewController {
                 }
             }
             
-            unknownSenderCell.populate(message: message, account: account, connection: readConnection, acceptButtonCallback: acceptButtonCallback, denyButtonCallback: nil, avatarData:avatarData)
+            unknownSenderCell.populate(message: message, account: account, connection: self.connections.ui, acceptButtonCallback: acceptButtonCallback, denyButtonCallback: nil, avatarData:avatarData)
         }
     }
     
     fileprivate func populateNewDeviceCell(cell:UICollectionReusableView?, indexPath:IndexPath, forSizingOnly:Bool) {
-        guard let newDeviceCell = cell as? OTRMessagesNewDeviceCell else { return }
-        var buddy:OTRXMPPBuddy? = nil
-        self.connections?.read.read({ (transaction) in
-            buddy = self.threadObject(with: transaction) as? OTRXMPPBuddy
-        })
-        if let buddy = buddy {
+        guard let newDeviceCell = cell as? OTRMessagesNewDeviceCell,
+        let (_, thread, _) = fetchMessageInfo(at: indexPath) else { return }
+        
+        if let buddy = thread as? OTRXMPPBuddy {
             var actionButtonCallback:((String?) -> Void)? = nil
             if !forSizingOnly {
-                actionButtonCallback = {[unowned self] (buddyUniqueId:String?) in
-                    if let buddy = buddyUniqueId {
-                        self.newDeviceButtonPressed(buddy)
-                    }
-                }
+                actionButtonCallback = self.actionButtonCallback
             }
             newDeviceCell.populate(buddy: buddy, actionButtonCallback: actionButtonCallback)
         }
@@ -253,8 +257,8 @@ public extension OTRMessagesViewController {
             let lastSection = self.numberOfSections(in: collectionView) - 1
             let lastIndexPath = IndexPath(row: self.collectionView(collectionView, numberOfItemsInSection: lastSection) - 1, section: lastSection)
             if let message = self.message(at: lastIndexPath) {
-                removeSupplementaryViewsOfType(type: OTRMessagesNewDeviceCell.reuseIdentifier)
-                addSupplementaryViewForMessage(message: message, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier)
+                supplementaryViewHandler?.removeSupplementaryViewsOfType(type: OTRMessagesNewDeviceCell.reuseIdentifier)
+                supplementaryViewHandler?.addSupplementaryViewForMessage(message: message, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier)
             }
         }
     }

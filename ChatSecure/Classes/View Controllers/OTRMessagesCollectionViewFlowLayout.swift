@@ -43,11 +43,12 @@ import JSQMessagesViewController
 }
 
 @objc public protocol OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
-    func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath) -> [OTRMessagesCollectionSupplementaryViewInfo]?
+    func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath, message: OTRMessageProtocol) -> [OTRMessagesCollectionSupplementaryViewInfo]?
 }
 
 @objc open class OTRMessagesCollectionViewFlowLayout:JSQMessagesCollectionViewFlowLayout {
     
+    @objc open weak var viewHandler: OTRYapViewHandler?
     @objc open weak var sizeDelegate:OTRMessagesCollectionViewFlowLayoutSizeProtocol?
     @objc open weak var supplementaryViewDelegate:OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol?
 
@@ -83,9 +84,11 @@ import JSQMessagesViewController
     
     private func addSupplementaryViewsFor(item:Int, section:Int) {
         let index = cacheIndexFor(item: item, section: section)
+        let indexPath = IndexPath(item: item, section: section)
+        let message = viewHandler?.object(indexPath) as? OTRMessageProtocol
         self.supplementaryViews[index] = nil
-        if let delegate = self.supplementaryViewDelegate {
-            if var views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section)) {
+        if let delegate = self.supplementaryViewDelegate, let message = message {
+            if var views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section), message: message) {
                 for i in (views.count-1)...0 {
                     let view = views[i]
                     view.key = index

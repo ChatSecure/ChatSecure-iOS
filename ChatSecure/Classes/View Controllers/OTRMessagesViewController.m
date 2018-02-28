@@ -190,14 +190,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     
+    
+    SupplementaryViewHandler *supp = [[SupplementaryViewHandler alloc] initWithCollectionView:self.collectionView viewHandler:self.viewHandler connections:self.connections];
+    _supplementaryViewHandler = supp;
+    supp.actionButtonCallback = ^(NSString * _Nullable buddyId) {
+        [self newDeviceButtonPressed:buddyId];
+    };
+    [supp registerSupplementaryViewTypesWithCollectionView:self.collectionView];
+    
     ///Custom Layout to account for no bubble cells
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
+    layout.viewHandler = self.viewHandler;
     layout.sizeDelegate = self;
-    layout.supplementaryViewDelegate = self;
+    layout.supplementaryViewDelegate = supp;
     self.collectionView.collectionViewLayout = layout;
     
-    [self registerSupplementaryViewTypesWithCollectionView:self.collectionView];
-
     ///"Loading Earlier" header view
     [self.collectionView registerNib:[UINib nibWithNibName:@"OTRMessagesLoadingView" bundle:OTRAssets.resourcesBundle]
           forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
@@ -437,7 +444,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self receivedTextViewChanged:self.inputToolbar.contentView.textView];
     }
 
-    [self removeAllSupplementaryViews];
+    [self.supplementaryViewHandler removeAllSupplementaryViews];
     
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
     if (self.threadKey && self.threadCollection) {
