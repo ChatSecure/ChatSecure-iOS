@@ -190,13 +190,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
     self.viewHandler.delegate = self;
     
-    
     SupplementaryViewHandler *supp = [[SupplementaryViewHandler alloc] initWithCollectionView:self.collectionView viewHandler:self.viewHandler connections:self.connections];
     _supplementaryViewHandler = supp;
-    supp.actionButtonCallback = ^(NSString * _Nullable buddyId) {
+    supp.newDeviceViewActionButtonCallback = ^(NSString * _Nullable buddyId) {
         [self newDeviceButtonPressed:buddyId];
     };
-    [supp registerSupplementaryViewTypesWithCollectionView:self.collectionView];
     
     ///Custom Layout to account for no bubble cells
     OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
@@ -453,9 +451,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.viewHandler setup:OTRFilteredChatDatabaseViewExtensionName groups:@[self.threadKey]];
         [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     } else {
-        // Reset the view handler
-        self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[OTRDatabaseManager sharedInstance].longLivedReadOnlyConnection databaseChangeNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]];
-        self.viewHandler.delegate = self;
+        [self.viewHandler setup:OTRFilteredChatDatabaseViewExtensionName groups:@[]];
         self.senderDisplayName = @"";
         self.senderId = @"";
     }
