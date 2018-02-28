@@ -2388,7 +2388,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
     }];
     if (account && buddy) {
-        UIViewController *vc = [GlobalTheme.shared keyManagementViewControllerForAccount:account buddies:@[buddy]];
+        UIViewController *vc = [GlobalTheme.shared newUntrustedKeyViewControllerForBuddies:@[buddy]];
         UINavigationController *keyNav = [[UINavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:keyNav animated:YES completion:nil];
     }

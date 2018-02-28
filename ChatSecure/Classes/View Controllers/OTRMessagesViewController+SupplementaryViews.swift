@@ -232,15 +232,24 @@ public extension OTRMessagesViewController {
     }
     
     @objc public func checkForDeviceListUpdate(buddy:OTRXMPPBuddy?) {
-        guard let bud = buddy else { return }
-        var hasNewDevice = false
+        guard let bud = buddy, let jid = buddy?.bareJID else { return }
+        var newDevices: [OMEMODevice] = []
+        var omemo: OMEMOModule?
         connections?.read.read({ (transaction) in
+            omemo = self.xmppManager(with: transaction)?.omemoSignalCoordinator?.omemoModule
             let devices = OMEMODevice.allDevices(forParentKey: bud.uniqueId, collection: type(of: bud).collection, transaction: transaction)
-            if OMEMODevice.filterNewDevices(devices, transaction: transaction).count > 0 {
-                hasNewDevice = true
+            newDevices = OMEMODevice.filterNewDevices(devices, transaction: transaction)
+        })
+
+        // Not the right place for this, but we need to fetch missing bundle data
+        // to show fingerprints. Hopefully they are fetched in time.
+        newDevices.forEach({ (device) in
+            if device.publicIdentityKeyData == nil {
+                omemo?.fetchBundle(forDeviceId: UInt32(truncating: device.deviceId), jid: jid, elementId: nil)
             }
         })
-        if hasNewDevice, self.collectionView != nil {
+        
+        if newDevices.count > 0, self.collectionView != nil {
             let lastSection = self.numberOfSections(in: collectionView) - 1
             let lastIndexPath = IndexPath(row: self.collectionView(collectionView, numberOfItemsInSection: lastSection) - 1, section: lastSection)
             if let message = self.message(at: lastIndexPath) {
