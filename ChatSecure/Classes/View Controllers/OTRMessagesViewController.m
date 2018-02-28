@@ -1983,6 +1983,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark  JSQMessagesCollectionViewDelegateFlowLayout Methods
 
+- (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionReusableView *supplement = [self.supplementaryViewHandler collectionView:collectionView viewForSupplementaryElementOfKind:kind at:indexPath];
+    if (supplement) {
+        return supplement;
+    }
+    return [super collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
+}
+
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath

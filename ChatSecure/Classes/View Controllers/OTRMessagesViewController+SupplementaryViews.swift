@@ -121,7 +121,8 @@ import OTRAssets
         self.supplementaryViews[message.uniqueId] = value
     }
 
-    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView? {
+    
+    @objc open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView? {
         if kind == OTRMessagesUnknownSenderCell.reuseIdentifier {
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath)
             populateUnknownSenderCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
