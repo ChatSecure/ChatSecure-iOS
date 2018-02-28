@@ -12,12 +12,11 @@ import OTRAssets
 
 @objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
     
-    // TODO: make these init'd properties
-    @objc public var connections: DatabaseConnections
-    @objc public var viewHandler: OTRYapViewHandler
-    @objc public var collectionView: JSQMessagesCollectionView
+    @objc public let connections: DatabaseConnections
+    @objc public let viewHandler: OTRYapViewHandler
+    @objc public let collectionView: JSQMessagesCollectionView
     
-    @objc public var actionButtonCallback:((_ buddyUniqueId:String?) -> Void)?
+    @objc public var newDeviceViewActionButtonCallback:((_ buddyUniqueId:String?) -> Void)?
     
     @objc public init(collectionView: JSQMessagesCollectionView,
                       viewHandler: OTRYapViewHandler,
@@ -25,6 +24,8 @@ import OTRAssets
         self.collectionView = collectionView
         self.viewHandler = viewHandler
         self.connections = connections
+        super.init()
+        registerSupplementaryViewTypes(collectionView: collectionView)
     }
     
     fileprivate var supplementaryViewNibs:[String:String] {
@@ -215,7 +216,7 @@ import OTRAssets
         if let buddy = thread as? OTRXMPPBuddy {
             var actionButtonCallback:((String?) -> Void)? = nil
             if !forSizingOnly {
-                actionButtonCallback = self.actionButtonCallback
+                actionButtonCallback = self.newDeviceViewActionButtonCallback
             }
             newDeviceCell.populate(buddy: buddy, actionButtonCallback: actionButtonCallback)
         }
@@ -255,12 +256,21 @@ public extension OTRMessagesViewController {
         })
         
         if newDevices.count > 0, self.collectionView != nil {
-            let lastSection = self.numberOfSections(in: collectionView) - 1
-            let lastIndexPath = IndexPath(row: self.collectionView(collectionView, numberOfItemsInSection: lastSection) - 1, section: lastSection)
-            if let message = self.message(at: lastIndexPath) {
+            if let lastIndexPath = collectionView.lastIndexPath(), let message = self.message(at: lastIndexPath) {
                 supplementaryViewHandler?.removeSupplementaryViewsOfType(type: OTRMessagesNewDeviceCell.reuseIdentifier)
                 supplementaryViewHandler?.addSupplementaryViewForMessage(message: message, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier)
             }
         }
+    }
+}
+
+extension UICollectionView {
+    func lastIndexPath() -> IndexPath? {
+        for sectionIndex in (0..<self.numberOfSections).reversed() {
+            if self.numberOfItems(inSection: sectionIndex) > 0 {
+                return IndexPath.init(item: self.numberOfItems(inSection: sectionIndex)-1, section: sectionIndex)
+            }
+        }
+        return nil
     }
 }

@@ -32,7 +32,9 @@
     @objc open func populate(buddy:OTRXMPPBuddy, actionButtonCallback:((_ buddyUniqueId:String?) -> Void)?) {
         buddyUniqueId = buddy.uniqueId
         avatarImageView.image = buddy.avatarImage
-        iconLabel.backgroundColor = GlobalTheme.shared.mainThemeColor
+        avatarImageView.layer.cornerRadius = avatarImageView.frame.height/2
+        avatarImageView.layer.masksToBounds = true
+        iconLabel.backgroundColor = iconLabel.tintColor
         self.actionButtonCallback = actionButtonCallback
     }
     

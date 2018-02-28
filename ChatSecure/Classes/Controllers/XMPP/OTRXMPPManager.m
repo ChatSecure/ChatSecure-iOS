@@ -799,7 +799,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)xmppStreamDidConnect:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
+    [self.account setWaitingForvCardTempFetch:NO];
     if (self.isRegisteringNewAccount) {
         [self continueRegisteringNewAccount];
     }
