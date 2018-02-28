@@ -200,8 +200,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     }
     
     func pushKeyManagementView(account: OTRXMPPAccount, sender: Any) {
-        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: [], connection: writeConnection)
-        let keys = KeyManagementViewController(accountKey: account.uniqueId, readConnection: readConnection, writeConnection: writeConnection, form: form)
+        let keys = GlobalTheme.shared.keyManagementViewController(account: account)
         navigationController?.pushViewController(keys, animated: true)
     }
     

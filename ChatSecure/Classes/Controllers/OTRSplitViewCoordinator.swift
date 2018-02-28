@@ -125,12 +125,11 @@ open class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDeleg
     }
     
     @objc open func showAccountDetails(account: OTRXMPPAccount, completion: (()->Void)?) {
-        guard splitViewController?.presentedViewController == nil,
-        let xmpp = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
+        guard splitViewController?.presentedViewController == nil else {
             return
         }
         
-        let detailVC = GlobalTheme.shared.accountDetailViewController(for: account, xmpp: xmpp)
+        let detailVC = GlobalTheme.shared.accountDetailViewController(account: account)
         
         let nav = UINavigationController(rootViewController: detailVC)
         nav.modalPresentationStyle = .formSheet

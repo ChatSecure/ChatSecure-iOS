@@ -25,27 +25,25 @@ open class KeyManagementViewController: XLFormViewController {
     
     @objc open var completionBlock: (()->Void)?
 
-    private let accountKey:String
-    private let readConnection: YapDatabaseConnection
-    private let writeConnection: YapDatabaseConnection
+    private let accountKey:String?
+    private let connections: DatabaseConnections
     
-    lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
-        guard let account = self.readConnection.fetch({ (transaction) in
-            OTRXMPPAccount.fetchObject(withUniqueID: self.accountKey, transaction: transaction)
+    private lazy var signalCoordinator:OTROMEMOSignalCoordinator? = {
+        guard let accountKey = accountKey,
+            let account = self.connections.ui.fetch({ (transaction) in
+            OTRXMPPAccount.fetchObject(withUniqueID: accountKey, transaction: transaction)
         }),
-        let xmpp = OTRProtocolManager.shared.xmppManager(for: account) else {
+            let xmpp = OTRProtocolManager.shared.xmppManager(for: account) else {
             return nil
         }
         return xmpp.omemoSignalCoordinator
     }()
     
-    @objc public init(accountKey:String,
-                      readConnection: YapDatabaseConnection,
-                      writeConnection:YapDatabaseConnection,
+    @objc public init(accountKey:String?,
+                      connections: DatabaseConnections,
                       form: XLFormDescriptor) {
         self.accountKey = accountKey
-        self.readConnection = readConnection
-        self.writeConnection = writeConnection
+        self.connections = connections
         super.init(nibName: nil, bundle: nil)
         
         self.form = form
@@ -71,6 +69,28 @@ open class KeyManagementViewController: XLFormViewController {
     open override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    private func removeDevice(_ device: OMEMODevice) {
+        connections.write.asyncReadWrite {
+            let parent = device.parent(with: $0)
+            var _account: OTRXMPPAccount?
+            if let buddy = parent as? OTRXMPPBuddy {
+                _account = buddy.account(with: $0) as? OTRXMPPAccount
+            } else if let account = parent as? OTRXMPPAccount {
+                _account = account
+            }
+            guard let account = _account,
+                let xmpp = OTRProtocolManager.shared.xmppManager(for: account),
+                let signal = xmpp.omemoSignalCoordinator else {
+                return
+            }
+            signal.removeDevice([device], completion: { (success) in
+                if !success {
+                    DDLogError("Error removing OMEMO device")
+                }
+            })
+        }
     }
     
     @objc open func doneButtonPressed(_ sender: AnyObject?) {
@@ -115,9 +135,10 @@ open class KeyManagementViewController: XLFormViewController {
             
             switch rowDescriptor.value {
             case let device as OMEMODevice:
-                if let myBundle = self.signalCoordinator?.fetchMyBundle() {
+                if let myBundle = self.signalCoordinator?.fetchMyBundle(),
+                    let accountKey = self.accountKey {
                     // This is only used to compare so we don't allow delete UI on our device
-                    let thisDeviceYapKey = OMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: self.accountKey, parentCollection: OTRAccount.collection)
+                    let thisDeviceYapKey = OMEMODevice.yapKey(withDeviceId: NSNumber(value: myBundle.deviceId as UInt32), parentKey: accountKey, parentCollection: OTRAccount.collection)
                     if device.uniqueId != thisDeviceYapKey {
                         return true
                     }
@@ -131,31 +152,6 @@ open class KeyManagementViewController: XLFormViewController {
             }
         }
         return false
-    }
-    
-    fileprivate func performEdit(_ action:UITableViewCellEditingStyle, indexPath:IndexPath) {
-        if ( action == .delete ) {
-            if let rowDescriptor = self.form.formRow(atIndex: indexPath) {
-                rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
-                switch rowDescriptor.value {
-                case let device as OMEMODevice:
-                    
-                    self.signalCoordinator?.removeDevice([device], completion: { (success) in
-                        
-                    })
-                    break
-                case let fingerprint as OTRFingerprint:
-                    do {
-                        try OTRProtocolManager.encryptionManager.otrKit.delete(fingerprint)
-                    } catch {
-                        
-                    }
-                    break
-                default:
-                    break
-                }
-            }
-        }
     }
     
     open static func cryptoChooserRows(_ buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
@@ -272,7 +268,7 @@ open class KeyManagementViewController: XLFormViewController {
         return formRows
     }
     
-//MARK UITableView Delegate overrides
+    // MARK:  UITableView Delegate overrides
     
     open override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if  self.isAbleToDeleteCellAtIndexPath(indexPath) {
@@ -289,35 +285,76 @@ open class KeyManagementViewController: XLFormViewController {
     }
     
     open override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-        self.performEdit(editingStyle, indexPath: indexPath)
+        if editingStyle == .delete,
+           self.isAbleToDeleteCellAtIndexPath(indexPath)  {
+            guard let rowDescriptor = self.form.formRow(atIndex: indexPath) else {
+                return
+            }
+            rowDescriptor.sectionDescriptor.removeFormRow(rowDescriptor)
+            switch rowDescriptor.value {
+            case let device as OMEMODevice:
+                self.removeDevice(device)
+                break
+            case let fingerprint as OTRFingerprint:
+                do {
+                    try OTRProtocolManager.encryptionManager.otrKit.delete(fingerprint)
+                } catch {
+                    DDLogError("Error deleting fingerprint: \(error)")
+                }
+                break
+            default:
+                break
+            }
+        }
     }
+
+    /// MARK: Static Methods
     
-    
-    @objc open static func profileFormDescriptorForAccount(_ account: OTRAccount, buddies: [OTRBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
+    @objc open static func profileFormDescriptorForAccount(_ account: OTRXMPPAccount?, buddies: [OTRXMPPBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
+        let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let form = XLFormDescriptor(title: Profile_String())
         
-        let yourProfileSection = XLFormSectionDescriptor.formSection(withTitle: Me_String())
-        let yourProfileRow = XLFormRowDescriptor(tag: account.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
-        yourProfileRow.value = account
-        yourProfileSection.addFormRow(yourProfileRow)
-        
-        guard let xmpp = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
-            return form
-        }
-        guard let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() else {
-            return form
-        }
-        let thisDevice = OMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection, publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
-        var ourDevices: [OMEMODevice] = []
-        connection.read { (transaction: YapDatabaseReadTransaction) in
-            ourDevices = OMEMODevice.allDevices(forParentKey: account.uniqueId, collection: type(of: account).collection, transaction: transaction)
-        }
+        var _yourProfileSection: XLFormSectionDescriptor?
+        if let account = account,
+            let xmpp = OTRProtocolManager.shared.xmppManager(for: account),
+            let myBundle = xmpp.omemoSignalCoordinator?.fetchMyBundle() {
+            
+            let section = XLFormSectionDescriptor.formSection(withTitle: Me_String())
+            let yourProfileRow = XLFormRowDescriptor(tag: account.uniqueId, rowType: UserInfoProfileCell.defaultRowDescriptorType())
+            yourProfileRow.value = account
+            section.addFormRow(yourProfileRow)
+            
+            let thisDevice = OMEMODevice(deviceId: NSNumber(value: myBundle.deviceId as UInt32), trustLevel: .trustedUser, parentKey: account.uniqueId, parentCollection: type(of: account).collection, publicIdentityKeyData: myBundle.identityKey, lastSeenDate: Date())
+            let ourOtherDevices = connection.fetch {
+                OMEMODevice.allDevices(forParentKey: account.uniqueId, collection: OTRXMPPAccount.collection, transaction: $0)
+                }?.filter {
+                    $0.uniqueId != thisDevice.uniqueId
+            } ?? []
+            
+            let allMyDevices = [thisDevice] + ourOtherDevices
+            allMyDevices.filter { $0.publicIdentityKeyData != nil }
+                .forEach { device in
+                let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
+                row.value = device.copy()
+                
+                // Don't allow editing of your own device
+                if device.uniqueId == thisDevice.uniqueId {
+                    row.disabled = true
+                }
+                
+                section.addFormRow(row)
+            }
+            
+            if let myFingerprint = otrKit.fingerprint(forAccountName: account.username, protocol: account.protocolTypeString()) {
+                let row = XLFormRowDescriptor(tag: (myFingerprint.fingerprint as NSData).otr_hexString(), rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
+                row.value = myFingerprint
+                row.disabled = true
+                section.addFormRow(row)
+            }
 
+            _yourProfileSection = section
+        }
         
-        let ourFilteredDevices = ourDevices.filter({ (device: OMEMODevice) -> Bool in
-            return device.uniqueId != thisDevice.uniqueId
-        })
         
         // TODO - Sort ourDevices and theirDevices by lastSeen
         
@@ -329,46 +366,20 @@ open class KeyManagementViewController: XLFormViewController {
                 let row = XLFormRowDescriptor(tag: device.uniqueId, rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
                 row.value = device.copy()
                 
-                // Don't allow editing of your own device
-                if device.uniqueId == thisDevice.uniqueId {
-                    row.disabled = true
-                }
-                
                 section.addFormRow(row)
             }
         }
         
-        let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let allFingerprints = otrKit.allFingerprints()
-        let myFingerprint = otrKit.fingerprint(forAccountName: account.username, protocol: account.protocolTypeString())
         let addFingerprintsToSection: ([OTRFingerprint], XLFormSectionDescriptor) -> Void = { fingerprints, section in
             for fingerprint in fingerprints {
                 let row = XLFormRowDescriptor(tag: (fingerprint.fingerprint as NSData).otr_hexString(), rowType: OMEMODeviceFingerprintCell.defaultRowDescriptorType())
-                if let myFingerprint = myFingerprint {
-                    if (fingerprint === myFingerprint) {
-                        // We implicitly trust ourselves with OTR
-                        row.disabled = true
-                    } else {
-                        row.disabled = false
-                    }
-                }
-                
                 row.value = fingerprint
-                
                 section.addFormRow(row)
             }
         }
         
-        var allMyDevices: [OMEMODevice] = []
-        allMyDevices.append(thisDevice)
-        allMyDevices.append(contentsOf: ourFilteredDevices)
-        addDevicesToSection(allMyDevices, yourProfileSection)
-        
         var theirSections: [XLFormSectionDescriptor] = []
-
-        if let myFingerprint = myFingerprint {
-            addFingerprintsToSection([myFingerprint], yourProfileSection)
-        }
         
         // Add section for each buddy's device
         for buddy in buddies {
@@ -381,13 +392,16 @@ open class KeyManagementViewController: XLFormViewController {
             connection.read({ (transaction: YapDatabaseReadTransaction) in
                 theirDevices = OMEMODevice.allDevices(forParentKey: buddy.uniqueId, collection: type(of: buddy).collection, transaction: transaction)
             })
-            let theirFingerprints = allFingerprints.filter({ (fingerprint: OTRFingerprint) -> Bool in
-                return fingerprint.username == buddy.username &&
-                fingerprint.accountName == account.username
-            })
-
+            // Only show OTR keys for 1:1 chats with an account
+            if let account = account {
+                let theirFingerprints = allFingerprints.filter({ (fingerprint: OTRFingerprint) -> Bool in
+                    return fingerprint.username == buddy.username &&
+                        fingerprint.accountName == account.username
+                })
+                addFingerprintsToSection(theirFingerprints, theirSection)
+            }
+            
             addDevicesToSection(theirDevices, theirSection)
-            addFingerprintsToSection(theirFingerprints, theirSection)
             theirSections.append(theirSection)
         }
  
@@ -396,7 +410,8 @@ open class KeyManagementViewController: XLFormViewController {
         sectionsToAdd.append(contentsOf: theirSections)
         
         // cryptoChooserRows is only meaningful for 1:1 conversations at the moment
-        if buddies.count == 1 {
+        if buddies.count == 1,
+            account != nil {
             let buddy = buddies.first!
             let cryptoSection = XLFormSectionDescriptor.formSection(withTitle: Advanced_Encryption_Settings())
             cryptoSection.footerTitle = Advanced_Crypto_Warning()
@@ -412,7 +427,9 @@ open class KeyManagementViewController: XLFormViewController {
             sectionsToAdd.append(cryptoSection)
         }
         
-        sectionsToAdd.append(yourProfileSection)
+        if let section = _yourProfileSection {
+            sectionsToAdd.append(section)
+        }
     
         for section in sectionsToAdd {
             if section.formRows.count > 0 {
@@ -437,7 +454,7 @@ open class KeyManagementViewController: XLFormViewController {
         if let device = cell.rowDescriptor.value as? OMEMODevice {
             cryptoType = "OMEMO"
             fingerprint = device.humanReadableFingerprint
-            self.readConnection.read({ (transaction) in
+            self.connections.ui.read({ (transaction) in
                 if let buddy = transaction.object(forKey: device.parentKey, inCollection: device.parentCollection) as? OTRBuddy {
                     username = buddy.username
                 }

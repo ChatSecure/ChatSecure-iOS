@@ -943,7 +943,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // TODO: Ideally this should be moved to some sort of manual refresh in the Profile view
     [self fetchOMEMODeviceList];
     
-    KeyManagementViewController *verify = [GlobalTheme.shared keyManagementViewControllerForAccount:account buddies:@[buddy]];
+    KeyManagementViewController *verify = [GlobalTheme.shared keyManagementViewControllerForBuddy:buddy];
     if ([verify isKindOfClass:KeyManagementViewController.class]) {
         verify.completionBlock = ^{
             [self updateEncryptionState];

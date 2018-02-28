@@ -377,17 +377,12 @@ open class OTRRoomOccupantsViewController: UIViewController {
             addMoreFriends()
             break
         case DynamicCellIdentifier.omemoConfig.rawValue:
-            var _account: OTRXMPPAccount?
             var buddies: [OTRXMPPBuddy] = []
             connections?.ui.read {
                 let room = self.room($0)
-                _account = room?.account(with: $0) as? OTRXMPPAccount
                 buddies = room?.allBuddies($0) ?? []
             }
-            guard let account = _account else {
-                return
-            }
-            let profile = GlobalTheme.shared.keyManagementViewController(for: account, buddies: buddies)
+            let profile = GlobalTheme.shared.groupKeyManagementViewController(buddies: buddies)
             self.navigationController?.pushViewController(profile, animated: true)
         default: break
         }
@@ -589,12 +584,11 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             roomOccupant.realJID?.bare == accountJid {
             isYou = true
         }
-        if let buddy = buddy,
-            let account = accountObject {
+        if let buddy = buddy {
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
             cell.infoAction = { [weak self] (cell, sender) in
-                let profile = GlobalTheme.shared.keyManagementViewController(for: account, buddies: [buddy])
+                let profile = GlobalTheme.shared.groupKeyManagementViewController(buddies: [buddy])
                 self?.navigationController?.pushViewController(profile, animated: true)
             }
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {

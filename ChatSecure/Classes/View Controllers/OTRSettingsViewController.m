@@ -323,7 +323,7 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
         xmpp = (OTRXMPPManager*)protocol;
     }
-    OTRAccountDetailViewController *detailVC = [GlobalTheme.shared accountDetailViewControllerForAccount:account xmpp:xmpp];
+    OTRAccountDetailViewController *detailVC = [GlobalTheme.shared accountDetailViewControllerForAccount:account];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];

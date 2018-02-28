@@ -40,24 +40,58 @@ import Foundation
         return OTRComposeViewController()
     }
     
-    public func inviteViewController(for account: OTRAccount) -> UIViewController {
+    public func inviteViewController(account: OTRAccount) -> UIViewController {
         return OTRInviteViewController(account: account)
     }
     
-    public func keyManagementViewController(for account: OTRXMPPAccount, buddies: [OTRXMPPBuddy]) -> UIViewController {
+    public func accountDetailViewController(account: OTRXMPPAccount) -> UIViewController {
+        guard let connections = self.connections,
+            let xmpp = OTRProtocolManager.shared.xmppManager(for: account) else {
+            return UIViewController()
+        }
+        
+        let detail = AccountDetailViewController(account: account, xmpp: xmpp, longLivedReadConnection: connections.longLivedRead, readConnection: connections.ui, writeConnection: connections.write)
+        return detail
+    }
+    
+    public func keyManagementViewController(account: OTRXMPPAccount) -> UIViewController {
         guard let connections = self.connections else {
             return UIViewController()
         }
-        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: buddies, connection: connections.ui)
-        let verify = KeyManagementViewController(accountKey: account.uniqueId, readConnection: connections.ui, writeConnection: connections.write, form: form)
+        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: [], connection: connections.ui)
+        let verify = KeyManagementViewController(accountKey: account.uniqueId, connections: connections, form: form)
         return verify
     }
     
-    public func accountDetailViewController(for account: OTRXMPPAccount, xmpp: XMPPManager) -> UIViewController {
+    public func keyManagementViewController(buddy: OTRXMPPBuddy) -> UIViewController {
         guard let connections = self.connections else {
             return UIViewController()
         }
-        let detail = AccountDetailViewController(account: account, xmpp: xmpp, longLivedReadConnection: connections.longLivedRead, readConnection: connections.ui, writeConnection: connections.write)
-        return detail
+        let account = connections.ui.fetch {
+            buddy.account(with: $0) as? OTRXMPPAccount
+        }
+        let form = KeyManagementViewController.profileFormDescriptorForAccount(account, buddies: [buddy], connection: connections.ui)
+        let verify = KeyManagementViewController(accountKey: buddy.accountUniqueId, connections: connections, form: form)
+        return verify
+    }
+    
+    public func groupKeyManagementViewController(buddies: [OTRXMPPBuddy]) -> UIViewController {
+        guard let connections = self.connections,
+            let accountId = buddies.first?.accountUniqueId else {
+            return UIViewController()
+        }
+        let form = KeyManagementViewController.profileFormDescriptorForAccount(nil, buddies: buddies, connection: connections.ui)
+        let verify = KeyManagementViewController(accountKey: accountId, connections: connections, form: form)
+        return verify
+    }
+    
+    public func newUntrustedKeyViewController(buddies: [OTRXMPPBuddy]) -> UIViewController {
+        guard let connections = self.connections,
+            let accountId = buddies.first?.accountUniqueId else {
+            return UIViewController()
+        }
+        let form = KeyManagementViewController.profileFormDescriptorForAccount(nil, buddies: buddies, connection: connections.ui)
+        let verify = KeyManagementViewController(accountKey: accountId, connections: connections, form: form)
+        return verify
     }
 }

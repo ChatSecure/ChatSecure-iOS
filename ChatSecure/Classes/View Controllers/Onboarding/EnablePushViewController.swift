@@ -61,7 +61,7 @@ open class EnablePushViewController: UIViewController {
     
     func showNextScreen() {
         if let account = account {
-            let inviteVC = GlobalTheme.shared.inviteViewController(for: account)
+            let inviteVC = GlobalTheme.shared.inviteViewController(account: account)
             self.navigationController?.pushViewController(inviteVC, animated: true)
         } else {
             self.dismiss(animated: true, completion: nil)
