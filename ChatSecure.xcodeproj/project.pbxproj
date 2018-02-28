@@ -117,6 +117,8 @@
 		9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */; };
 		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
 		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
+		926142002006566400E8216F /* OTRMessageNewDeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926141FF2006566400E8216F /* OTRMessageNewDeviceCell.swift */; };
+		92614201200656CB00E8216F /* OTRMessageNewDeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 926141FD2006563D00E8216F /* OTRMessageNewDeviceCell.xib */; };
 		9265091A1F4CB45B003FCAD3 /* OTRVerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */; };
 		929D6F1C1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */; };
 		929FCF6B2010AA4D004736AF /* BuddySubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */; };
@@ -128,6 +130,7 @@
 		92CC68F11F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */; };
 		92CC68F41F4309B50006CDF8 /* OTRComposeGroupBuddyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68F21F43054E0006CDF8 /* OTRComposeGroupBuddyCell.xib */; };
 		92DC0F761F442DBA00318E49 /* OTRBuddyInfoCheckableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DC0F751F442DBA00318E49 /* OTRBuddyInfoCheckableCell.swift */; };
+		92ED91D620441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92ED91D520441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift */; };
 		D9040CB11EF1EB050027A862 /* OTRMediaItem+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = D9040CB01EF1EB050027A862 /* OTRMediaItem+Private.h */; };
 		D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90E711B1E6CB4360008D83B /* AccountDetailViewController.swift */; };
 		D917CCDE1E553007003636B7 /* ServerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D917CCDD1E553007003636B7 /* ServerCheck.swift */; };
@@ -1021,6 +1024,8 @@
 		9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRRoomOccupants.storyboard; path = Interface/OTRRoomOccupants.storyboard; sourceTree = "<group>"; };
 		9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ios-icon-font.ttf"; sourceTree = "<group>"; };
 		9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
+		926141FD2006563D00E8216F /* OTRMessageNewDeviceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OTRMessageNewDeviceCell.xib; sourceTree = "<group>"; };
+		926141FF2006566400E8216F /* OTRMessageNewDeviceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRMessageNewDeviceCell.swift; sourceTree = "<group>"; };
 		926509191F4CB45B003FCAD3 /* OTRVerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRVerticalStackView.swift; sourceTree = "<group>"; };
 		929D6F1B1EC4EC9C00802941 /* OTRXMPPAccount+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OTRXMPPAccount+Migration.swift"; sourceTree = "<group>"; };
 		929FCF6A2010AA4D004736AF /* BuddySubscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuddySubscriptions.swift; sourceTree = "<group>"; };
@@ -1032,6 +1037,7 @@
 		92CC68F01F42FF8D0006CDF8 /* OTRComposeGroupBuddyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRComposeGroupBuddyCell.swift; sourceTree = "<group>"; };
 		92CC68F21F43054E0006CDF8 /* OTRComposeGroupBuddyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRComposeGroupBuddyCell.xib; sourceTree = "<group>"; };
 		92DC0F751F442DBA00318E49 /* OTRBuddyInfoCheckableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRBuddyInfoCheckableCell.swift; sourceTree = "<group>"; };
+		92ED91D520441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTRMessagesViewController+SupplementaryViews.swift"; sourceTree = "<group>"; };
 		962ED3D89B1F330A2A34928B /* Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C492FFACC855CE12E882968E /* Pods_ChatSecureCorePods_ChatSecureUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1745,6 +1751,8 @@
 				92CC68F21F43054E0006CDF8 /* OTRComposeGroupBuddyCell.xib */,
 				9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */,
 				9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */,
+				926141FF2006566400E8216F /* OTRMessageNewDeviceCell.swift */,
+				926141FD2006563D00E8216F /* OTRMessageNewDeviceCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1975,6 +1983,7 @@
 				63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */,
 				63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */,
 				63FA130B1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift */,
+				92ED91D520441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift */,
 			);
 			name = "Messages View Controller";
 			sourceTree = "<group>";
@@ -2642,6 +2651,7 @@
 				D967CA8E1E516B8D005FBB49 /* PushAccountTableViewCell.xib in Resources */,
 				9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */,
 				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
+				92614201200656CB00E8216F /* OTRMessageNewDeviceCell.xib in Resources */,
 				D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */,
 				924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */,
 				8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */,
@@ -3067,6 +3077,7 @@
 				D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */,
 				634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */,
 				924F68571EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift in Sources */,
+				926142002006566400E8216F /* OTRMessageNewDeviceCell.swift in Sources */,
 				D997E3F51EAECD1400BF72EF /* UITableView+ChatSecure.m in Sources */,
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D90E711C1E6CB4360008D83B /* AccountDetailViewController.swift in Sources */,
@@ -3211,6 +3222,7 @@
 				D93DDAEF1BA79A2800CD8331 /* OTRQRCodeReaderDelegate.m in Sources */,
 				D93DDAF01BA79A2800CD8331 /* OTRBaseLoginViewController.m in Sources */,
 				634905B01BD05E3900347FE2 /* OTRYapViewHandler.swift in Sources */,
+				92ED91D620441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift in Sources */,
 				D93DDAF11BA79A2800CD8331 /* OTRXLFormCreator.m in Sources */,
 				D93DDAF21BA79A2800CD8331 /* OTRXMPPServerListViewController.m in Sources */,
 				D93DDAF31BA79A2800CD8331 /* OTRXMPPLoginHandler.m in Sources */,

@@ -17,11 +17,28 @@ import JSQMessagesViewController
 @objc public class OTRMessagesCollectionSupplementaryViewInfo: NSObject {
     public var kind:String
     public var height:CGFloat
+    public var tag:String?
+    @objc public enum SupplementaryViewTagBehavior: Int {
+        case none
+        case showFirst
+        case showLast
+    }
+    public var tagBehavior:SupplementaryViewTagBehavior = .none
+    
+    // The key is set by the layout to tie this view info to an actual IndexPath.
+    var key:UInt64
 
     @objc public init(kind:String, height:CGFloat) {
         self.kind = kind
         self.height = height
+        self.key = 0
         super.init()
+    }
+    
+    @objc public convenience init(kind:String, height:CGFloat, tag:String?, tagBehavior:SupplementaryViewTagBehavior) {
+        self.init(kind: kind, height: height)
+        self.tag = tag
+        self.tagBehavior = tagBehavior
     }
 }
 
@@ -36,6 +53,7 @@ import JSQMessagesViewController
 
     /* For caching supplementary view information. The 64bit keys of this dictionary are formed by or:ing section and item together */
     private var supplementaryViews:[UInt64:[OTRMessagesCollectionSupplementaryViewInfo]] = [:]
+    private var supplementaryViewsByTag:[String:OTRMessagesCollectionSupplementaryViewInfo] = [:]
     
     @objc override open func messageBubbleSizeForItem(at indexPath: IndexPath!) -> CGSize {
         guard let delegate = self.sizeDelegate, !delegate.hasBubbleSizeForCellAtIndexPath(indexPath) else {
@@ -49,28 +67,66 @@ import JSQMessagesViewController
     override open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         if context.invalidateEverything || context.invalidateDataSourceCounts {
             self.supplementaryViews.removeAll()
-            if let delegate = self.supplementaryViewDelegate {
-                for section in 0..<self.collectionView.numberOfSections {
-                    for item in 0..<self.collectionView.numberOfItems(inSection: section) {
-                        if let views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section)) {
-                            let index = cacheIndexFor(item: item, section: section)
-                            supplementaryViews[index] = views
-                        }
-                    }
+            self.supplementaryViewsByTag.removeAll()
+            for section in 0..<self.collectionView.numberOfSections {
+                for item in 0..<self.collectionView.numberOfItems(inSection: section) {
+                    addSupplementaryViewsFor(item: item, section: section)
                 }
             }
         } else {
             for indexPath in context.invalidatedItemIndexPaths ?? [] {
-                let index = cacheIndexFor(item: indexPath.item, section: indexPath.section)
-                self.supplementaryViews[index] = nil
-                if let delegate = self.supplementaryViewDelegate {
-                    if let views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: indexPath.item, section: indexPath.section)) {
-                        supplementaryViews[index] = views
-                    }
-                }
+                addSupplementaryViewsFor(item: indexPath.item, section: indexPath.section)
             }
         }
         super.invalidateLayout(with: context)
+    }
+    
+    private func addSupplementaryViewsFor(item:Int, section:Int) {
+        let index = cacheIndexFor(item: item, section: section)
+        self.supplementaryViews[index] = nil
+        if let delegate = self.supplementaryViewDelegate {
+            if var views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section)) {
+                for i in (views.count-1)...0 {
+                    let view = views[i]
+                    view.key = index
+                    if !applyTagBehavior(view: view) {
+                        views.remove(at: i)
+                    }
+                }
+                supplementaryViews[index] = views
+            }
+        }
+    }
+    
+    // Apply current tag behavior of the supplementary view. For each tag we store the "latest" supplementary view that this tag is mapped to. Based on the tagBehavior we update that mapping below and remove other supplementary views with the same tag, so that only one exists at any given time.
+    // Note that view.key must be set at this point
+    // Returns a boolean indicating whether this view should be added or not - false to ignore it
+    private func applyTagBehavior(view:OTRMessagesCollectionSupplementaryViewInfo) -> Bool {
+        guard let tag = view.tag, view.tagBehavior != .none else { return true }
+        
+        if let currentTagView = supplementaryViewsByTag[tag] {
+            let currentTagIndexPath = currentTagView.key
+            if (view.tagBehavior == .showFirst && view.key < currentTagIndexPath) || (view.tagBehavior == .showLast && view.key > currentTagIndexPath) {
+                
+                // Remove previously mapped view
+                if var suppViews = supplementaryViews[currentTagIndexPath] {
+                    if let suppViewIndex = suppViews.index(of: currentTagView) {
+                        suppViews.remove(at: suppViewIndex)
+                        supplementaryViews[currentTagIndexPath] = suppViews
+                    }
+                }
+                
+                // Store new index path of this tag
+                supplementaryViewsByTag[tag] = view
+            } else {
+                // Remove this view, we are showing another view for this tag already
+                return false
+            }
+        } else {
+            // Nothing stored previously
+            supplementaryViewsByTag[tag] = view
+        }
+        return true
     }
     
     open override var collectionViewContentSize: CGSize {
@@ -125,6 +181,42 @@ import JSQMessagesViewController
                             viewOffset += view.height
                         }
                     }
+                }
+            }
+        }
+        
+        // All the views that super returns may be offset by all supplementary views above. We need to walk backwards from the "first" index path returned by super and add any views intersecting the rect. First find out the index path of the first view, or if none: the last valid index path of the collectionView.
+        var indexPath = attributes.first?.indexPath
+        if indexPath == nil {
+            var section = collectionView.numberOfSections - 1
+            while section >= 0 {
+                let item = collectionView.numberOfItems(inSection: section)
+                if item > 0 {
+                    indexPath = IndexPath(item: item, section: section)
+                    break
+                }
+                section -= 1
+            }
+        }
+        
+        // Then walk backwards, adding views as long as they are actually intersecting the "rect" parameter.
+        if let indexPath = indexPath {
+            var section = indexPath.section
+            var item = indexPath.item
+            while true {
+                if item == 0 && section > 0 {
+                    section -= 1
+                    item = collectionView.numberOfItems(inSection: section) - 1
+                } else if item > 0 {
+                    item -= 1
+                } else {
+                    break
+                }
+                guard let itemAttrs = layoutAttributesForItem(at: IndexPath(item: item, section: section)) else { break }
+                if itemAttrs.frame.intersects(rect) {
+                    outAttributes.insert(itemAttrs, at: 0)
+                } else {
+                    break
                 }
             }
         }
