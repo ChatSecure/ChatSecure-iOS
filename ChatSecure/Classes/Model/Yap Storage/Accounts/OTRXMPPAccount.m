@@ -19,7 +19,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 @implementation OTRXMPPAccount
 @synthesize vCardTemp = _vCardTemp;
 @synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
-@synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
+@dynamic waitingForvCardTempFetch;
 @synthesize photoHash = _photoHash;
 
 - (instancetype) initWithUsername:(NSString *)username accountType:(OTRAccountType)accountType {
@@ -122,5 +122,50 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     }];
     return allRooms;
 }
+
+- (BOOL) waitingForvCardTempFetch {
+    return [OTRBuddyCache.shared waitingForvCardTempFetchForVcard:self];
+}
+
+- (void) setWaitingForvCardTempFetch:(BOOL)waitingForvCardTempFetch {
+    [OTRBuddyCache.shared setWaitingForvCardTempFetch:waitingForvCardTempFetch forVcard:self];
+}
+
+#pragma - mark Class Methods
+
+#pragma mark Disable Mantle Storage of Dynamic Properties
+
++ (NSSet<NSString*>*) excludedProperties {
+    static NSSet<NSString*>* excludedProperties = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        excludedProperties = [NSSet setWithArray:@[NSStringFromSelector(@selector(waitingForvCardTempFetch))]];
+    });
+    return excludedProperties;
+}
+
+// See MTLModel+NSCoding.h
+// This helps enforce that only the properties keys that we
+// desire will be encoded. Be careful to ensure that values
+// that should be stored in the keychain don't accidentally
+// get serialized!
++ (NSDictionary *)encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    NSSet<NSString*> *excludedProperties = [self excludedProperties];
+    [excludedProperties enumerateObjectsUsingBlock:^(NSString * _Nonnull selector, BOOL * _Nonnull stop) {
+        [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:selector];
+    }];
+    return behaviors;
+}
+
++ (MTLPropertyStorage)storageBehaviorForPropertyWithKey:(NSString *)propertyKey {
+    NSSet<NSString*> *excludedProperties = [self excludedProperties];
+    if ([excludedProperties containsObject:propertyKey]) {
+        return MTLPropertyStorageNone;
+    }
+    return [super storageBehaviorForPropertyWithKey:propertyKey];
+}
+
+
 
 @end

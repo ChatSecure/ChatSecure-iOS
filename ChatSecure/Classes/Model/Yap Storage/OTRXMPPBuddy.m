@@ -92,11 +92,11 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
 }
 
 - (void) setWaitingForvCardTempFetch:(BOOL)waitingForvCardTempFetch {
-    [OTRBuddyCache.shared setWaitingForvCardTempFetch:waitingForvCardTempFetch forBuddy:self];
+    [OTRBuddyCache.shared setWaitingForvCardTempFetch:waitingForvCardTempFetch forVcard:self];
 }
 
 - (BOOL) waitingForvCardTempFetch {
-    return [OTRBuddyCache.shared waitingForvCardTempFetchForBuddy:self];
+    return [OTRBuddyCache.shared waitingForvCardTempFetchForVcard:self];
 }
 
 - (NSString *)threadName

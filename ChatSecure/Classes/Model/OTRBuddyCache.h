@@ -53,8 +53,8 @@ typedef SWIFT_ENUM(NSInteger, RoomOccupantRole);
 - (void)setThreadStatus:(OTRThreadStatus)status forBuddy:(OTRBuddy*)buddy resource:(nullable NSString *)resource;
 - (OTRThreadStatus)threadStatusForBuddy:(OTRBuddy*)buddy;
 
-- (void)setWaitingForvCardTempFetch:(BOOL)waiting forBuddy:(OTRXMPPBuddy*)buddy;
-- (BOOL)waitingForvCardTempFetchForBuddy:(OTRXMPPBuddy*)buddy;
+- (void)setWaitingForvCardTempFetch:(BOOL)waiting forVcard:(id<OTRvCard>)vCard;
+- (BOOL)waitingForvCardTempFetchForVcard:(id<OTRvCard>)vCard;
 
 /** 
  * Last Seen is associated with querying a presence with delayed delivery. See https://xmpp.org/extensions/xep-0318.html

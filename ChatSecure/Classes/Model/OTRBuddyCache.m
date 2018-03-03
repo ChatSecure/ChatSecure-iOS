@@ -187,7 +187,7 @@
     }
 }
 
-- (void)setWaitingForvCardTempFetch:(BOOL)waiting forBuddy:(OTRXMPPBuddy*)buddy {
+- (void)setWaitingForvCardTempFetch:(BOOL)waiting forVcard:(OTRXMPPBuddy*)buddy {
     NSParameterAssert(buddy.uniqueId);
     if (!buddy.uniqueId) { return; }
     [self performAsyncWrite:^{
