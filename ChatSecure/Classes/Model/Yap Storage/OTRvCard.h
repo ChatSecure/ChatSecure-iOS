@@ -10,11 +10,13 @@
 @class XMPPvCardTemp;
 #import "OTRYapDatabaseObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRvCard <OTRYapDatabaseObjectProtocol>
-
-@property (nonatomic, strong) XMPPvCardTemp *vCardTemp;
-@property (nonatomic, strong) NSDate *lastUpdatedvCardTemp;
+@required
+@property (nonatomic, strong, nullable) XMPPvCardTemp *vCardTemp;
+@property (nonatomic, strong, nullable) NSDate *lastUpdatedvCardTemp;
 @property (nonatomic) BOOL waitingForvCardTempFetch;
-@property (nonatomic, strong) NSString *photoHash;
-
+@property (nonatomic, strong, nullable) NSString *photoHash;
+@property (nonatomic, strong, nullable) NSData *avatarData;
 @end
+NS_ASSUME_NONNULL_END

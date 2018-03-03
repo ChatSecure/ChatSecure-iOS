@@ -91,11 +91,6 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
         return self.uniqueId
     }
     
-    /// The yap collection of this item
-    public func yapCollection() -> String {
-        return type(of: self).collection
-    }
-    
     /// The queue that this item is in.
     public func queueName() -> String {
         let brokerName = YapDatabaseConstants.extensionName(.messageQueueBrokerViewName)

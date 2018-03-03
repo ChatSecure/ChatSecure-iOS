@@ -8,6 +8,7 @@
 
 #import "OTRBuddyCache.h"
 #import "OTRDatabaseManager.h"
+#import "OTRYapDatabaseObject.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRXMPPRoomRuntimeProperties
@@ -187,21 +188,21 @@
     }
 }
 
-- (void)setWaitingForvCardTempFetch:(BOOL)waiting forVcard:(OTRXMPPBuddy*)buddy {
-    NSParameterAssert(buddy.uniqueId);
-    if (!buddy.uniqueId) { return; }
+- (void)setWaitingForvCardTempFetch:(BOOL)waiting forVcard:(id<OTRvCard>)vCard {
+    NSParameterAssert(vCard.uniqueId);
+    if (!vCard.uniqueId) { return; }
     [self performAsyncWrite:^{
-        [self.waitingForvCardTempFetch setObject:@(waiting) forKey:buddy.uniqueId];
-        [self touchBuddy:buddy];
+        [self.waitingForvCardTempFetch setObject:@(waiting) forKey:vCard.uniqueId];
+        [self touchObject:vCard];
     }];
 }
 
-- (BOOL)waitingForvCardTempFetchForBuddy:(OTRXMPPBuddy*)buddy {
-    NSParameterAssert(buddy.uniqueId);
-    if (!buddy.uniqueId) { return NO; }
+- (BOOL)waitingForvCardTempFetchForVcard:(id<OTRvCard>)vCard {
+    NSParameterAssert(vCard.uniqueId);
+    if (!vCard.uniqueId) { return NO; }
     __block BOOL waiting = NO;
     [self performSyncRead:^{
-        waiting = [self.waitingForvCardTempFetch objectForKey:buddy.uniqueId].boolValue;
+        waiting = [self.waitingForvCardTempFetch objectForKey:vCard.uniqueId].boolValue;
     }];
     return waiting;
 }
@@ -313,16 +314,25 @@
 
 /** This is needed so database views are updated properly */
 - (void) touchBuddy:(OTRBuddy*)buddy withTransaction:(YapDatabaseReadWriteTransaction *)transaction {
-    NSParameterAssert(buddy.uniqueId);
-    if (!buddy.uniqueId) { return; }
-    [transaction touchObjectForKey:buddy.uniqueId inCollection:[[buddy class] collection]];
+    [self touchObject:buddy withTransaction:transaction];
 }
 
 - (void) touchBuddy:(OTRBuddy*)buddy {
-    [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [self touchBuddy:buddy withTransaction:transaction];
+    [self touchObject:buddy];
+}
+
+- (void) touchObject:(id<OTRYapDatabaseObjectProtocol>)object withTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    NSParameterAssert(object.uniqueId != nil);
+    if (!object.uniqueId) { return; }
+    [transaction touchObjectForKey:object.uniqueId inCollection:object.yapCollection];
+}
+
+- (void) touchObject:(id<OTRYapDatabaseObjectProtocol>)object {
+    [OTRDatabaseManager.shared.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [self touchObject:object withTransaction:transaction];
     }];
 }
+
 
 /** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
 - (void) performSyncRead:(dispatch_block_t)block {

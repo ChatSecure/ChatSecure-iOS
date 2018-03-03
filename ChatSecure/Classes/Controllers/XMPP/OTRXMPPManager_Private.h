@@ -34,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) OTRXMPPMessageStatusModule *messageStatusModule;
 @property (nonatomic, strong, readonly) OTRStreamManagementDelegate *streamManagementDelegate;
 @property (nonatomic, strong, readonly) XMPPStanzaIdModule *stanzaIdModule;
-
+/// This is a readwrite connection
+@property (nonatomic, strong, readonly) YapDatabaseConnection *databaseConnection;
 
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 @property (nonatomic, strong, readonly) NSMutableDictionary<NSString*,OTRXMPPBuddyTimers*> * buddyTimers;

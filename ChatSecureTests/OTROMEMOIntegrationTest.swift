@@ -90,7 +90,7 @@ class OTROMEMOIntegrationTest: XCTestCase {
             account.save(with:transaction)
             buddy.save(with:transaction)
         })
-        let signalOMEMOCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: account.uniqueId, databaseConnection: databaseManager.writeConnection!)
+        let signalOMEMOCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: account.uniqueId, connections: databaseManager.connections!)
         return TestUser(account: account,buddy:buddy, databaseManager: databaseManager, signalOMEMOCoordinator: signalOMEMOCoordinator)
     }
     

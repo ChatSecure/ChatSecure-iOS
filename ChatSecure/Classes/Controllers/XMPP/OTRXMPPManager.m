@@ -43,7 +43,6 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
-#import "OTRvCardYapDatabaseStorage.h"
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
 #import "OTRXMPPRoomManager.h"
@@ -76,7 +75,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
         _workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
         _buddyTimers = [NSMutableDictionary dictionary];
-        _databaseConnection = [OTRDatabaseManager sharedInstance].writeConnection;
+        _connections = OTRDatabaseManager.shared.connections;
     }
     return self;
 }
@@ -98,6 +97,10 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)dealloc
 {
 	[self teardownStream];
+}
+
+- (YapDatabaseConnection*) databaseConnection {
+    return self.connections.write;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +163,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
-    OTRvCardYapDatabaseStorage * vCardStorage  = [[OTRvCardYapDatabaseStorage alloc] init];
+    VCardStorage * vCardStorage  = [[VCardStorage alloc] initWithConnections:self.connections];
 	_xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardStorage];
 	
 	_xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:self.xmppvCardTempModule];

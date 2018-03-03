@@ -10,13 +10,14 @@ import XCTest
 @testable import ChatSecureCore
 
 extension OTROMEMOSignalCoordinator {
-    convenience init(accountYapKey: String, databaseConnection: YapDatabaseConnection) throws {
+    convenience init(accountYapKey: String, connections: DatabaseConnections) throws {
+        let databaseConnection = connections.write
         let capsStorage = XMPPCapabilitiesCoreDataStorage(inMemoryStore: ())!
         let caps = XMPPCapabilities(capabilitiesStorage: capsStorage)
         let serverCaps = OTRServerCapabilities(capabilities: caps, dispatchQueue: nil)
         let file = FileTransferManager(connection: databaseConnection, serverCapabilities: serverCaps, sessionConfiguration: URLSessionConfiguration.ephemeral)
-        let vCardStorage = OTRvCardYapDatabaseStorage()
-        let vCard = XMPPvCardTempModule(vCardStorage: vCardStorage)
+        let cardStorage = VCardStorage(connections: connections)
+        let vCard = XMPPvCardTempModule(vCardStorage: cardStorage)
         let roomStorage = RoomStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file, vCardModule: vCard, omemoModule: nil)
         let messageStorage = MessageStorage(connection: databaseConnection, capabilities: caps, fileTransfer: file, roomStorage: roomStorage)
         let mam = XMPPMessageArchiveManagement()
@@ -65,7 +66,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.writeConnection!)
         
         self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.writeConnection!, delegate: nil)
-        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, databaseConnection: databaseManager.writeConnection!)
+        self.signalCoordinator = try! OTROMEMOSignalCoordinator(accountYapKey: accountKey, connections: databaseManager.connections!)
         
         databaseManager.writeConnection?.readWrite( { (transaction) in
             account.save(with: transaction)

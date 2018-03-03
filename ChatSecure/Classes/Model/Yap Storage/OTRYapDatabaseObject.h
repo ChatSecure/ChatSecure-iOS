@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
 
+/// Shortcut for self.class.collection
+- (NSString*) yapCollection;
+
 @end
 
 @interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObjectProtocol>

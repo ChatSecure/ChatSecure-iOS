@@ -50,6 +50,10 @@
     return object;
 }
 
+- (NSString*) yapCollection {
+    return self.class.collection;
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection
