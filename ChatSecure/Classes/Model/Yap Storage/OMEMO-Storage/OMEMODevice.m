@@ -93,15 +93,16 @@
 }
 
 + (NSArray <OMEMODevice *>*)allDevicesForParentKey:(NSString *)key collection:(NSString *)collection trustedOnly:(BOOL)trustedOnly transaction:(YapDatabaseReadTransaction *)transaction {
-    __block NSMutableArray <OMEMODevice *>*devices = [[NSMutableArray alloc] init];
+    NSMutableArray <OMEMODevice *>*devices = [[NSMutableArray alloc] init];
     [self enumerateDevicesForParentKey:key collection:collection transaction:transaction usingBlock:^(OMEMODevice * _Nonnull device, BOOL * _Nonnull stop) {
         if (trustedOnly && device.isTrusted) {
             [devices addObject:device];
-        } else {
+        } else if (!trustedOnly) {
             [devices addObject:device];
         }
+        
     }];
-    return [devices copy];
+    return devices;
 }
 
 #pragma MARK YapDatabaseRelationshipNode Methods
