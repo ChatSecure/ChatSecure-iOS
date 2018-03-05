@@ -41,6 +41,9 @@ import SignalProtocolObjC
     }
     let preKeyCount:UInt = 100
     fileprivate var outstandingXMPPStanzaResponseBlocks:[String: (Bool) -> Void]
+    /// callbacks for when fetching device Id list
+    private var deviceIdFetchCallbacks:[XMPPJID: (Bool) -> Void] = [:]
+    
     /**
      Create a OTROMEMOSignalCoordinator for an account. 
      
@@ -83,6 +86,15 @@ import SignalProtocolObjC
         self.outstandingXMPPStanzaResponseBlocks.removeValue(forKey: elementId)
     }
     
+    /** Always call on internal work queue */
+    fileprivate func callAndRemoveOutstandingDeviceIdFetch(_ jid:XMPPJID,success:Bool) {
+        guard let outstandingBlock = self.deviceIdFetchCallbacks[jid] else {
+            return
+        }
+        outstandingBlock(success)
+        self.deviceIdFetchCallbacks.removeValue(forKey: jid)
+    }
+    
     /** 
      This must be called before sending every message. It ensures that for every device there is a session and if not the bundles are fetched.
      
@@ -110,20 +122,22 @@ import SignalProtocolObjC
             user = self.fetchUsername(yapKey, yapCollection: yapCollection, transaction: transaction)
         }
         
-        guard let username = user, let jid = XMPPJID(string:username) else {
+        guard let username = user,
+            let jid = XMPPJID(string:username) else {
             self.callbackQueue.async(execute: {
                 completion(false)
             })
             return
         }
         
-        var finalSuccess = true
-        self.workQueue.async { [weak self] in
+        let bundleFetch = { [weak self] in
             guard let strongself = self else {
                 return
             }
+            var finalSuccess = true
             
             let group = DispatchGroup()
+            
             //For each device Check if we have a session. If not then we need to fetch it from their XMPP server.
             for device in devices where device.deviceId.uint32Value != self?.signalEncryptionManager.registrationId {
                 if !strongself.signalEncryptionManager.sessionRecordExistsForUsername(username, deviceId: device.deviceId.int32Value) || device.publicIdentityKeyData == nil {
@@ -150,7 +164,53 @@ import SignalProtocolObjC
                 group.notify(queue: cQueue) {
                     completion(finalSuccess)
                 }
-
+            }
+        }
+        
+        let deviceFetch = { [weak self] in
+            guard let sself = self else {
+                return
+            }
+            var deviceFetchSuccess = true
+            let group = DispatchGroup()
+            let elementId = UUID().uuidString
+            
+            group.enter()
+            // Hold on to a closure so that when we get the call back from OMEMOModule we can call this closure.
+            self?.deviceIdFetchCallbacks[jid] = { success in
+                if (!success) {
+                    deviceFetchSuccess = false
+                }
+                group.leave()
+            }
+            //Fetch the bundle
+            self?.omemoModule?.fetchDeviceIds(for: jid, elementId: elementId)
+            
+            group.notify(queue: sself.workQueue) {
+                devices = self?.databaseConnection.fetch {
+                    OMEMODevice.allDevices(forParentKey: yapKey, collection: yapCollection, transaction: $0)
+                } ?? []
+                if deviceFetchSuccess == false {
+                    DDLogWarn("Could not fetch devices for \(jid)")
+                }
+                if devices.count > 0 {
+                    DDLogVerbose("Fetched \(devices.count) devices on the fly while sending message for \(jid)")
+                    bundleFetch()
+                } else {
+                    self?.callbackQueue.async {
+                        completion(false)
+                    }
+                }
+            }
+        }
+        
+        self.workQueue.async {
+            // We are trying to send to someone but haven't fetched any devices
+            // this might happen if we aren't subscribed to someone's presence in a group chat
+            if devices.count == 0 {
+                deviceFetch()
+            } else {
+                bundleFetch()
             }
         }
     }
@@ -585,6 +645,12 @@ extension OTROMEMOSignalCoordinator: OMEMOModuleDelegate {
     
     public func omemo(_ omemo: OMEMOModule, failedToFetchDeviceIdsFor fromJID: XMPPJID, errorIq: XMPPIQ?, outgoingIq: XMPPIQ) {
         DDLogWarn("failedToFetchDeviceIdsFor \(fromJID)")
+        self.workQueue.async { [weak self] in
+            self?.callAndRemoveOutstandingDeviceIdFetch(fromJID, success: false)
+            if let eid = outgoingIq.elementID {
+                self?.callAndRemoveOutstandingBundleBlock(eid, success: false)
+            }
+        }
     }
     
     public func omemo(_ omemo: OMEMOModule, publishedBundle bundle: OMEMOBundle, responseIq: XMPPIQ, outgoingIq: XMPPIQ) {
@@ -676,6 +742,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
         
         let isOurDeviceList = self.isOurJID(jid)
         
+        
         if (isOurDeviceList) {
             self.omemoStorageManager.storeOurDevices(deviceIds)
         } else {
@@ -687,6 +754,7 @@ extension OTROMEMOSignalCoordinator:OMEMOStorageDelegate {
                 }
             })
         }
+        callAndRemoveOutstandingDeviceIdFetch(jid, success: true)
     }
     
     public func fetchDeviceIds(for jid: XMPPJID) -> [NSNumber] {

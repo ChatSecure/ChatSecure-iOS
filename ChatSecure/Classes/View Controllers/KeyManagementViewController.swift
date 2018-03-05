@@ -59,7 +59,7 @@ open class KeyManagementViewController: XLFormViewController {
         UserInfoProfileCell.registerCellClass(UserInfoProfileCell.defaultRowDescriptorType())
 
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: SAVE_STRING(), style: .done, target: self, action: #selector(saveButtonPressed(_:)))
         self.tableView.allowsMultipleSelectionDuringEditing = false
         
         // Overriding superclass behaviour. This prevents the red icon on left of cell for deletion. Just want swipe to delete on device/fingerprint.
@@ -93,7 +93,7 @@ open class KeyManagementViewController: XLFormViewController {
         }
     }
     
-    @objc open func doneButtonPressed(_ sender: AnyObject?) {
+    @objc open func saveButtonPressed(_ sender: AnyObject?) {
         var devicesToSave: [OMEMODevice] = []
         var otrFingerprintsToSave: [OTRFingerprint] = []
         for (_, value) in form.formValues() {
