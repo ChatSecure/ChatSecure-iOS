@@ -186,27 +186,24 @@ import OTRAssets
         guard let unknownSenderCell = cell as? OTRMessagesUnknownSenderCell else { return }
         guard let (message, _, account) = fetchMessageInfo(at: indexPath) else { return }
         
-        connections.ui.read { transaction in
+        let avatarData = self.collectionView.dataSource.collectionView(self.collectionView, avatarImageDataForItemAt: indexPath)
         
-            let avatarData = self.collectionView.dataSource.collectionView(self.collectionView, avatarImageDataForItemAt: indexPath)
-            
-            // Set callback only for "real" cell, not when sizing
-            var acceptButtonCallback:((String?,String?) -> Void)? = nil
-            if !forSizingOnly {
-                acceptButtonCallback = {[unowned self] (senderJIDString, senderDisplayName) in
-                    guard let senderJIDString = senderJIDString,
-                        let senderJID = XMPPJID(string: senderJIDString) else { return }
-                    if let manager = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager {
-                        manager.addToRoster(with: senderJID, displayName: senderDisplayName)
-                        DispatchQueue.main.async {
-                            self.collectionView.reloadData()
-                        }
+        // Set callback only for "real" cell, not when sizing
+        var acceptButtonCallback:((String?,String?) -> Void)? = nil
+        if !forSizingOnly {
+            acceptButtonCallback = {[unowned self] (senderJIDString, senderDisplayName) in
+                guard let senderJIDString = senderJIDString,
+                    let senderJID = XMPPJID(string: senderJIDString) else { return }
+                if let manager = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager {
+                    manager.addToRoster(with: senderJID, displayName: senderDisplayName)
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
                     }
                 }
             }
-            
-            unknownSenderCell.populate(message: message, account: account, connection: self.connections.ui, acceptButtonCallback: acceptButtonCallback, denyButtonCallback: nil, avatarData:avatarData)
         }
+        
+        unknownSenderCell.populate(message: message, account: account, connection: self.connections.ui, acceptButtonCallback: acceptButtonCallback, denyButtonCallback: nil, avatarData:avatarData)
     }
     
     fileprivate func populateNewDeviceCell(cell:UICollectionReusableView?, indexPath:IndexPath, forSizingOnly:Bool) {
