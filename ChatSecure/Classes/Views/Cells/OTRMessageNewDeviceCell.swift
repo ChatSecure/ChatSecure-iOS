@@ -38,6 +38,11 @@
         self.actionButtonCallback = actionButtonCallback
     }
     
+    open override func tintColorDidChange() {
+        super.tintColorDidChange()
+        iconLabel.backgroundColor = iconLabel.tintColor
+    }
+    
     @IBAction open func didTapActionButton(_ sender: Any) {
         if let callback = actionButtonCallback {
             callback(buddyUniqueId)
