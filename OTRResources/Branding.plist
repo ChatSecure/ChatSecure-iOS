@@ -45,7 +45,7 @@
 	<key>AllowGroupOMEMO</key>
 	<true/>
 	<key>AllowDebugFileLogging</key>
-	<true/>
+	<false/>
 	<key>AllowOMEMO</key>
 	<true/>
 </dict>
