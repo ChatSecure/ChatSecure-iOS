@@ -16,7 +16,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.6.0)</string>
+			<string>Alamofire (4.7.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.4.0)</string>
+			<string>CocoaLumberjack (3.4.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -160,7 +160,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/KissXML</string>
 			<key>Title</key>
-			<string>KissXML (5.2.0)</string>
+			<string>KissXML (5.2.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -168,7 +168,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/KSCrash</string>
 			<key>Title</key>
-			<string>KSCrash (1.15.16)</string>
+			<string>KSCrash (1.15.18)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -238,6 +238,14 @@
 		</dict>
 		<dict>
 			<key>File</key>
+			<string>com.mono0926.LicensePlist/LumberjackConsole</string>
+			<key>Title</key>
+			<string>LumberjackConsole (3.3.0)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
 			<string>com.mono0926.LicensePlist/Mantle</string>
 			<key>Title</key>
 			<string>Mantle (4c1a09c)</string>
@@ -265,6 +273,14 @@
 			<string>com.mono0926.LicensePlist/Navajo</string>
 			<key>Title</key>
 			<string>Navajo (0.0.1)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>com.mono0926.LicensePlist/NBUCore</string>
+			<key>Title</key>
+			<string>NBUCore (2.1.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
