@@ -10,8 +10,8 @@ import Foundation
 import OTRAssets
 
 @objc public protocol SupplementaryViewHandlerDelegate {
-    func supplementaryViewInfo(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath) -> OTRMessagesCollectionSupplementaryViewInfo?
-    func supplementaryView(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionReusableView?
+    func supplementaryViewInfo(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath, userData: AnyObject?) -> OTRMessagesCollectionSupplementaryViewInfo?
+    func supplementaryView(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath, userData: AnyObject?) -> UICollectionReusableView?
 }
 
 @objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
@@ -45,7 +45,7 @@ import OTRAssets
         collectionView.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: kind)
     }
     
-    fileprivate var supplementaryViews:[String:[String]] = [:]
+    fileprivate var supplementaryViews:[IndexPath:[(String,AnyObject?)]] = [:]
     
     @objc public func registerSupplementaryViewTypes(collectionView:UICollectionView) {
         for (identifier,nibName) in supplementaryViewNibs {
@@ -55,7 +55,7 @@ import OTRAssets
     }
     
     public func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath, message: OTRMessageProtocol) -> [OTRMessagesCollectionSupplementaryViewInfo]? {
-        let supplementaryViews = self.supplementaryViews[message.uniqueId]
+        let supplementaryViews = self.supplementaryViews[indexPath]
         
         var automaticURLFetchingDisabled = true
         connections.ui.fetch {
@@ -91,7 +91,7 @@ import OTRAssets
         }
         
         if let supplementaryViews = supplementaryViews {
-            for view in supplementaryViews {
+            for (view, data) in supplementaryViews {
                 if view == OTRMessagesNewDeviceCell.reuseIdentifier {
                     if let supplementaryViewInfo = createSupplementaryViewInfo(collectionView, kind: OTRMessagesNewDeviceCell.reuseIdentifier, populationCallback: { (cell) in
                         self.populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: true)
@@ -99,7 +99,7 @@ import OTRAssets
                         supplementaryViewsInfo.append(supplementaryViewInfo)
                     }
                 } else if let delegate = self.delegate {
-                    if let supplementaryViewInfo = delegate.supplementaryViewInfo(kind: view, for: collectionView, at: indexPath) {
+                    if let supplementaryViewInfo = delegate.supplementaryViewInfo(kind: view, for: collectionView, at: indexPath, userData: data) {
                         supplementaryViewsInfo.append(supplementaryViewInfo)
                     }
                 }
@@ -119,22 +119,26 @@ import OTRAssets
     open func removeSupplementaryViewsOfType(type:String) {
         for (key,value) in self.supplementaryViews {
             var newValue = value
-            if let index = newValue.index(of: type) {
+            if let index = newValue.index(where: { (viewKind,userData) -> Bool in
+                return viewKind == type
+            }) {
                 newValue.remove(at: index)
                 supplementaryViews[key] = newValue
             }
         }
     }
     
-    open func addSupplementaryViewForMessage(message:OTRMessageProtocol, supplementaryView type:String) {
-        var value = self.supplementaryViews[message.uniqueId]
-        if value == nil {
-            value = []
+    open func addSupplementaryView(indexPath:IndexPath, supplementaryView type:String, userData:AnyObject?) {
+        var value = self.supplementaryViews[indexPath] ?? []
+        if let index = value.index(where: { (viewKind, _) -> Bool in
+            return viewKind == type
+        }) {
+            // Update userdata
+            value[index] = (type, userData)
+        } else {
+            value.append((type, userData))
         }
-        if !(value?.contains(type) ?? false) {
-            value?.append(type)
-        }
-        self.supplementaryViews[message.uniqueId] = value
+        self.supplementaryViews[indexPath] = value
     }
 
     
@@ -148,7 +152,13 @@ import OTRAssets
             populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
             return cell
         } else if let delegate = self.delegate {
-            return delegate.supplementaryView(kind: kind, for: collectionView, at: indexPath)
+            var data:AnyObject? = nil
+            if let value = self.supplementaryViews[indexPath], let index = value.index(where: { (viewKind, userData) -> Bool in
+                return viewKind == kind
+            }) {
+                (_,data) = value[index]
+            }
+            return delegate.supplementaryView(kind: kind, for: collectionView, at: indexPath, userData: data)
         }
         return nil
     }
@@ -270,9 +280,9 @@ public extension OTRMessagesViewController {
         })
         
         if newDevices.count > 0, self.collectionView != nil {
-            if let lastIndexPath = collectionView.lastIndexPath(), let message = self.message(at: lastIndexPath) {
+            if let lastIndexPath = collectionView.lastIndexPath() {
                 supplementaryViewHandler?.removeSupplementaryViewsOfType(type: OTRMessagesNewDeviceCell.reuseIdentifier)
-                supplementaryViewHandler?.addSupplementaryViewForMessage(message: message, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier)
+                supplementaryViewHandler?.addSupplementaryView(indexPath: lastIndexPath, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier, userData: nil)
             }
         }
     }
