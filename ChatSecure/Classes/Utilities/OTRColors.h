@@ -6,13 +6,14 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
-#import "OTRBuddy.h"
+#import "OTRThreadOwner.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRColors : NSObject
 
-+(UIColor *)colorWithStatus:(OTRBuddyStatus)status;
++(UIColor *)colorWithStatus:(OTRThreadStatus)status;
 
 + (UIColor *)darkenColor:(UIColor *)color withValue:(CGFloat)value;
 + (UIColor *)bubbleBlueColor;
@@ -24,5 +25,5 @@
 + (UIColor *)warnColor;
 
 + (UIColor *)defaultBlueColor;
-
 @end
+NS_ASSUME_NONNULL_END

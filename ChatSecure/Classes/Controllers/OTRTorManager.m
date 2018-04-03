@@ -8,13 +8,18 @@
 
 #import "OTRTorManager.h"
 
+@import CPAProxy;
+
 @implementation OTRTorManager
 
 - (instancetype) init {
     if (self = [super init]) {
         // Get resource paths for the torrc and geoip files from the main bundle
-        NSURL *cpaProxyBundleURL = [[NSBundle mainBundle] URLForResource:@"CPAProxy" withExtension:@"bundle"];
-        NSBundle *cpaProxyBundle = [NSBundle bundleWithURL:cpaProxyBundleURL];
+        NSBundle *cpaProxyFrameworkBundle = [NSBundle bundleForClass:[CPAProxyManager class]];
+        NSURL *cpaProxyBundleURL = [cpaProxyFrameworkBundle URLForResource:@"CPAProxy" withExtension:@"bundle"];
+        NSBundle *cpaProxyBundle = [[NSBundle alloc] initWithURL:cpaProxyBundleURL];
+        NSParameterAssert(cpaProxyBundle != nil);
+
         NSString *torrcPath = [[NSBundle mainBundle] pathForResource:@"torrc" ofType:nil]; // use custom torrc
         NSString *geoipPath = [cpaProxyBundle pathForResource:@"geoip" ofType:nil];
         NSString *dataDirectory = [[[[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"com.ChatSecure.Tor"] path];

@@ -25,13 +25,15 @@
 
 @implementation OTRDoubleSetting
 @synthesize doubleValue, minValue, maxValue, numValues, isPercentage;
+@synthesize delegate = _delegate;
+@synthesize defaultValue = _defaultValue;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf editValue];
         };
         self.defaultValue = [NSNumber numberWithDouble:0.0];

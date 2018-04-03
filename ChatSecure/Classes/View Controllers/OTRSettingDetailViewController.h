@@ -20,14 +20,13 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "OTRSetting.h"
 
 @interface OTRSettingDetailViewController : UIViewController
 
 @property (nonatomic, strong) OTRSetting *otrSetting;
-@property (nonatomic, strong) UIBarButtonItem *saveButton;
-@property (nonatomic, strong) UIBarButtonItem *cancelButton;
+
 - (void) save:(id)sender;
 - (CGSize) textSizeForLabel:(UILabel*)label;
 

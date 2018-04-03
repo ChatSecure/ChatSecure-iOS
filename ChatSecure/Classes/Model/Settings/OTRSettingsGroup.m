@@ -22,23 +22,48 @@
 
 #import "OTRSettingsGroup.h"
 
-@implementation OTRSettingsGroup
-@synthesize title, settings;
+NS_ASSUME_NONNULL_BEGIN
 
-- (void) dealloc
+@interface OTRSettingsGroup()
+@property (nonatomic, readwrite) NSMutableArray<OTRSetting*> *mutableSettings;
+@end
+
+@implementation OTRSettingsGroup
+
+- (instancetype)init
 {
-    title = nil;
-    settings = nil;
+    [self doesNotRecognizeSelector:_cmd];
+    abort();
 }
 
-- (id) initWithTitle:(NSString*)newTitle settings:(NSArray*)newSettings
+- (instancetype) initWithTitle:(NSString*)title {
+    return [self initWithTitle:title settings:nil];
+}
+
+- (instancetype) initWithTitle:(NSString*)title settings:(nullable NSArray<OTRSetting*>*)settings
 {
+    NSParameterAssert(title);
     if (self = [super init])
     {
-        title = newTitle;
-        settings = newSettings;
+        _title = [title copy];
+        if (settings) {
+            _mutableSettings = [settings mutableCopy];
+        } else {
+            _mutableSettings = [NSMutableArray array];
+        }
     }
     return self;
 }
 
+- (NSArray<OTRSetting*>*) settings {
+    return [self.mutableSettings copy];
+}
+
+- (void) addSetting:(OTRSetting*)setting {
+    NSParameterAssert(setting);
+    [self.mutableSettings addObject:setting];
+}
+
 @end
+
+NS_ASSUME_NONNULL_END

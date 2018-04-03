@@ -6,16 +6,18 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "OTRProtocol.h"
 
 @class OTRAccount;
 
 @interface OTRAccountTableViewCell : UITableViewCell
 
-- (instancetype)initWithReuseIdentifier:(NSString *)identifier;
-- (void)setAccount:(OTRAccount *)account;
-- (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus;
+@property (nonatomic, strong) UIButton *shareButton;
+@property (nonatomic, strong) OTRAccount *account;
 
+- (void)setConnectedText:(OTRLoginStatus)connectionStatus;
+
++ (NSString*) cellIdentifier;
 
 @end

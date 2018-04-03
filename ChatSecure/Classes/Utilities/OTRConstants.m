@@ -21,61 +21,70 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 #import "OTRConstants.h"
 
+NSString *const kOTRIgnoreDonationDateKey = @"kOTRIgnoreDonationDateKey";
 NSString *const kOTRProtocolLoginSuccess                   = @"LoginSuccessNotification";
-NSString *const kOTRProtocolLoginFail                      = @"LoginFailedNotification";
-NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFailErrorKey";
-NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLoginFailSSLStatusKey";
-NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
-NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
-NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
-NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLoginUserInitiated";
 
-NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
 
-NSString *const kOTRNotificationAccountNameKey   = @"kOTRNotificationAccountNameKey";
-NSString *const kOTRNotificationUserNameKey      = @"kOTRNotificationUserNameKey";
-NSString *const kOTRNotificationProtocolKey      = @"kOTRNotificationProtocolKey";
-NSString *const kOTRNotificationBuddyUniqueIdKey = @"kOTRNotificationBuddyUniqueIdKey";
+NSString *const kOTRNotificationAccountNameKey       = @"kOTRNotificationAccountNameKey";
+NSString *const kOTRNotificationUserNameKey          = @"kOTRNotificationUserNameKey";
+NSString *const kOTRNotificationProtocolKey          = @"kOTRNotificationProtocolKey";
+NSString *const kOTRNotificationBuddyUniqueIdKey     = @"kOTRNotificationBuddyUniqueIdKey";
+NSString *const kOTRNotificationAccountUniqueIdKey   = @"kOTRNotificationAccountUniqueIdKey";
+NSString *const kOTRNotificationAccountCollectionKey = @"kOTRNotificationAccountCollectionKey";
 
-NSString *const kOTRXMPPResource = @"chatsecure";
-
-NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
 
 NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";
 NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certificate";
 
 NSString *const kOTRSettingKeyFontSize                 = @"kOTRSettingKeyFontSize";
 NSString *const kOTRSettingKeyDeleteOnDisconnect       = @"kOTRSettingKeyDeleteOnDisconnect";
-NSString *const kOTRSettingKeyOpportunisticOtr         = @"kOTRSettingKeyOpportunisticOtr";
+NSString *const kOTRSettingKeyAllowDBPassphraseBackup  = @"kOTRSettingKeyAllowDBPassphraseBackup";
 NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDisconnectionWarning";
 NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
 NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
-NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
 NSString *const kOTRSettingsValueUpdatedNotification = @"kOTRSettingsValueUpdatedNotification";
 
+NSString *const kOTRPushEnabledKey = @"kOTRPushEnabledKey";
 
 NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
-NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 NSString *const OTRArchiverKey = @"OTRArchiverKey";
 
-NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
-NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
-
 NSString *const kOTRErrorDomain = @"com.chatsecure";
 
-NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";
+
+NSString *const OTRUserNotificationsUNTextInputReply = @"OTRUserNotificationsUNTextInputReply";
+NSString *const OTRUserNotificationsChanged = @"OTRUserNotificationsChanged";
+NSString *const OTRPushAccountDeviceChanged = @"OTRPushAccountDeviceChanged";
+NSString *const OTRPushAccountTokensChanged = @"OTRPushAccountTokensChanged";
+
+
 NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRemoteNotificationRegistration";
 
 NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphraseAccountName";
 
 NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
 
+//Noticications
+NSString *const kOTRNotificationAccountKey = @"kOTRNotificationAccountKey";
+NSString *const kOTRNotificationThreadKey = @"kOTRNotificationThreadKey";
+NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadCollection";
+NSString *const kOTRNotificationType = @"kOTRNotificationType";
+NSString *const kOTRNotificationTypeNone = @"kOTRNotificationTypeNone";
+NSString *const kOTRNotificationTypeSubscriptionRequest = @"kOTRNotificationTypeSubscriptionRequest";
+NSString *const kOTRNotificationTypeApprovedBuddy = @"kOTRNotificationTypeApprovedBuddy";
+NSString *const kOTRNotificationTypeConnectionError = @"kOTRNotificationTypeConnectionError";
+NSString *const kOTRNotificationTypeChatMessage = @"kOTRNotificationTypeChatMessage";
+
+
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";
+NSString *const kOTRShowOMEMOGroupEncryptionKey = @"kOTRShowOMEMOGroupEncryptionKey";
+NSString *const kOTREnableDebugLoggingKey = @"kOTREnableDebugLoggingKey";
 
+extern NSString *const kOTREnableDebugLoggingKey;
 //Chatview
 CGFloat const kOTRSentDateFontSize            = 13;
 CGFloat const kOTRDeliveredFontSize           = 13;

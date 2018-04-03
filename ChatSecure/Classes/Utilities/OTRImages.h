@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "OTRConstants.h"
 
 @class OTRComposingImageView;
@@ -26,6 +26,10 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 + (UIImage *)twitterImage;
 
 + (UIImage *)facebookActivityImage;
+
++ (UIImage *)duckduckgoImage;
+
++ (UIImage *)xmppServerImageWithName:(NSString *)name;
 
 + (UIImage *)warningImage;
 + (UIImage *)circleWarningWithColor:(UIColor *)color;

@@ -2,15 +2,24 @@
 
 [![Build Status](https://travis-ci.org/ChatSecure/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/ChatSecure/ChatSecure-iOS)
 
-[ChatSecure](https://chatsecure.org) is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+[ChatSecure](https://chatsecure.org) is a free and open source [XMPP](https://en.wikipedia.org/wiki/XMPP) messaging client for iOS that integrates [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) and [OMEMO](https://en.wikipedia.org/wiki/OMEMO) encrypted messaging support, and has optional integrated support for connectivity via the [Tor](https://en.wikipedia.org/wiki/Tor_(anonymity_network)) network.
 
+[![download chatsecure on the app store](https://chatsecure.org/images/appstore.svg)](https://itunes.apple.com/us/app/chatsecure/id464200063)
 
 ## Cost
 
-This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
-However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
+### Redistributing ChatSecure Code on the App Store
 
-[![bitcoin coinbase donation](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![paypal donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
+Even though this project is open source, this does not mean you can reuse this code when distributing closed source commercial products. Please [contact us](mailto:chris@chatsecure.org) to discuss licensing options before you start building your product.
+
+If you are an open source project, please [contact us](mailto:chris@chatsecure.org) to arrange for an App Store redistribution exception. For more information about why this is required, please read [this blog post](https://whispersystems.org/blog/license-update/) from Open Whisper Systems.
+
+### Cost for End Users
+
+Downloading the ChatSecure app is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
+However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase!
+
+[![bitcoin coinbase donation](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![paypal donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=F9SM36SQY5EN8) 
 
 
 ## Localization
@@ -25,29 +34,24 @@ If you would like to contribute/improve a translation:
  3. [Open an issue on Github](https://github.com/ChatSecure/ChatSecure-iOS/issues) notifying us of your translation.
 
 
-
 ## Compatibility
 
-
-There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support).
-
+There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support). A smaller list of clients support the mobile-friendly [OMEMO Encryption](https://en.wikipedia.org/wiki/OMEMO#Usage).
 
 ### Desktop
 
-* [Adium](https://adium.im/) (Mac OS X)
-* [Jitsi](https://jitsi.org) (Cross-platform)
-* [Pidgin](https://pidgin.im/) (cross-platform), with [pidgin-otr](https://otr.cypherpunks.ca/index.php#downloads) plugin.
+* [dino](https://github.com/dino/dino) (Linux, macOS, Windows) **Supports OMEMO**
 
 ### Mobile
 
-* [ChatSecure-Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)
-* [BEEM](http://beem-project.com/projects/beem) (Android)
-* [Conversations](https://github.com/siacs/Conversations) (Android)
+* [Conversations](https://github.com/siacs/Conversations) (Android) **Supports OMEMO**
+* [Zom](https://zom.im/) (Android, iOS) **Supports OMEMO**
 
 ## Build Instructions
 
-You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies.
+You'll need [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/Carthage/Carthage) installed for most of our dependencies.
     
+    $ brew install carthage
     $ gem install cocoapods
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
@@ -56,18 +60,19 @@ Download the source code and **don't forget** to pull down all of the submodules
     $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
     
-Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
+Now you'll need to build the dependencies.
     
+    $ carthage bootstrap --platform ios # or carthage update --platform ios --cache-builds
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
+    $ pod repo update
     $ pod install
     
-Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m`:
+Next you'll need to create your own version of environment-specific data. Make a copy of `Secrets-template.plist` as `Secrets.plist`:
 
-    $ cp ChatSecure/Classes/Utilities/OTRSecrets-Template.m ChatSecure/Classes/Utilities/OTRSecrets.m
-    $ cp ./configurations/OTR_Codesigning.xcconfig.sample ./configurations/OTR_Codesigning.xcconfig
+    $ cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
     
-Then set your own value for `PROVISIONING_PROFILE_Debug` in `OTR_Codesigning.xcconfig` to your iOS team provisioning profile identifier to run it on your device. You can get this identifier by temporarily selecting the desired profile in Xcode (Build Settings -> Provisiong Profile), then selecting "Other...".
+You'll need to manually change the Team ID under Project -> Targets -> ChatSecure -> Signing. The old .xcconfig method doesn't seem to work well anymore.
 
 Open `ChatSecure.xcworkspace` in Xcode and build. 
 
@@ -116,6 +121,7 @@ in the sources themselves:
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
+* [libsignal-protocol-c](https://github.com/WhisperSystems/libsignal-protocol-c) - Provides [Signal Protocol](https://en.wikipedia.org/wiki/Signal_Protocol) support for OMEMO.
 * [OTRKit](https://github.com/chatsecure/otrkit) - Objective-C libotr wrapper library for OTR encryption [![Build Status](https://travis-ci.org/ChatSecure/OTRKit.svg?branch=master)](https://travis-ci.org/ChatSecure/OTRKit)
 	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
 	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
@@ -137,11 +143,20 @@ terms of a separate license:
 * [HockeySDK](https://github.com/bitstadium/HockeySDK-iOS) - crash reporting framework
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
-For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile).
+For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile) and [Cartfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Cartfile).
+
+#### Regenerating Acknowledgements
+
+To regenerate the acknowledgements in Settings.app use [LicensePlist](https://github.com/mono0926/LicensePlist) and copy the output to `Settings.bundle`.
+
+```
+$ brew install mono0926/license-plist/license-plist
+$ license-plist --add-version-numbers --output-path ChatSecure/Settings.bundle --suppress-opening-directory
+```
 
 ## Acknowledgements
 
-Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info) and [OpenITP](https://openitp.org).
+Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info), [OpenITP](http://web.archive.org/web/20160316141316/https://openitp.org/), and the [Open Technology Fund](https://www.opentech.fund).
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Icons8](http://icons8.com/license) - Various new "iOS 7"-style icons

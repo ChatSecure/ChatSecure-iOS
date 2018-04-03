@@ -6,16 +6,15 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <Twitter/Twitter.h>
-#import <MessageUI/MessageUI.h>
+@import UIKit;
+@import MessageUI;
 #import "OTRViewSetting.h"
 
 #import "OTRSetting.h"
 
 @class OTRShareSetting;
 
-@protocol OTRShareSettingDelegate <NSObject>
+@protocol OTRShareSettingDelegate <OTRSettingDelegate>
 
 - (void)didSelectShareSetting:(OTRShareSetting *)shareSetting;
 

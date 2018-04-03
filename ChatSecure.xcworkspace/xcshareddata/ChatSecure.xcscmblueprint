@@ -1,0 +1,156 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "65A79C2919A5538250064F3C245A290D7BFC656E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A3F0483F361B2F4077033C635E9F3F6840AE7757" : 0,
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : 0,
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : 0,
+    "46009F899FD1E549A6EA909CCE643A67FC5D3AED" : 9223372036854775807,
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : 0,
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : 0,
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : 0,
+    "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : 0,
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : 0,
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : 9223372036854775807,
+    "D2885296440547CB23891301E79B480A22EAC5F6" : 9223372036854775807,
+    "90530B99EB0008E7A50951FDFBE02169118FA649" : 9223372036854775807,
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : 9223372036854775807,
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : 9223372036854775807,
+    "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : 0,
+    "3B7D84660CA0A4984AC45911801FC3F5070A6DC2" : 9223372036854775807,
+    "1F0E69EE6C74FB8A0A162333FB8AE87DA223658A" : 9223372036854775807,
+    "E3F1CFC7B66794122E6D31906D72E79A4B1AAB6D" : 9223372036854775807,
+    "AF7423C487C4B1B7082E587F3AB70804F6530E81" : 0,
+    "6629762BA356A4C56436558F8BA2A9102478B1C6" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "26272AA3-3A8A-4250-865E-CACC120B6235",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A3F0483F361B2F4077033C635E9F3F6840AE7757" : "ChatSecure-iOS\/Submodules\/ChatSecure-Push-iOS\/",
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "ChatSecure\/Submodules\/ProxyKit\/",
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "ChatSecure-iOS\/Submodules\/XMPPFramework\/",
+    "46009F899FD1E549A6EA909CCE643A67FC5D3AED" : "ChatSecure-iOS\/Carthage\/Checkouts\/SignalProtocolC\/",
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : "ChatSecure-iOS\/",
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : "ChatSecure-iOS\/Submodules\/OTRKit\/",
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher\/",
+    "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : "ChatSecure\/Submodules\/ParkedTextField\/",
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure-iOS\/Submodules\/CPAProxy\/",
+    "E084C86B03F81D63323C9E7510697EA528A758C7" : "ChatSecure-iOS\/Carthage\/Checkouts\/Mantle\/Carthage\/Checkouts\/xcconfigs\/",
+    "D2885296440547CB23891301E79B480A22EAC5F6" : "ChatSecure-iOS\/Submodules\/KSCrash\/",
+    "90530B99EB0008E7A50951FDFBE02169118FA649" : "ChatSecure-iOS\/Submodules\/JSQMessagesViewController\/",
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : "",
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "ChatSecure-iOS\/Submodules\/YapDatabase\/",
+    "EF95512761D96C4A6BCF745F9F23442E0E2471D9" : "ChatSecure-iOS\/Carthage\/Checkouts\/SignalProtocol-ObjC\/",
+    "3B7D84660CA0A4984AC45911801FC3F5070A6DC2" : "ChatSecure-iOS\/Carthage\/Checkouts\/HTMLReader\/",
+    "1F0E69EE6C74FB8A0A162333FB8AE87DA223658A" : "ChatSecure-iOS\/Carthage\/Checkouts\/SignalProtocolC\/libsignal-protocol-c\/",
+    "E3F1CFC7B66794122E6D31906D72E79A4B1AAB6D" : "ChatSecure-iOS\/Carthage\/Checkouts\/Mantle\/",
+    "AF7423C487C4B1B7082E587F3AB70804F6530E81" : "ChatSecure-iOS\/Submodules\/XLForm\/",
+    "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure-iOS\/Submodules\/xmpp-server-list\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ChatSecure",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ChatSecure.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/IOCipher-ObjC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0667158F825A93D2AA325B5DCB5737C5DE9CB558"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/WhisperSystems\/libsignal-protocol-c.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1F0E69EE6C74FB8A0A162333FB8AE87DA223658A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ProxyKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2D31E58E12E928BB18019A2FA755DD659EB4E709"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nolanw\/HTMLReader.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3B7D84660CA0A4984AC45911801FC3F5070A6DC2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/OTRKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "425D736B25093B4D45BF64638604863B9D31F2C1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ChatSecure\/SignalProtocolC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "46009F899FD1E549A6EA909CCE643A67FC5D3AED"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/ChatSecure-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "65A79C2919A5538250064F3C245A290D7BFC656E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/xmpp-server-list.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6629762BA356A4C56436558F8BA2A9102478B1C6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/JSQMessagesViewController.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "90530B99EB0008E7A50951FDFBE02169118FA649"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ursachec\/CPAProxy.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98D05BCBC40AE5315578EEE7C186D3063CCA59C3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/ChatSecure-Push-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A3F0483F361B2F4077033C635E9F3F6840AE7757"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:zom\/Zom-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A9950D8C7A488A3339E7426A4D08917C04DE7033"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ParkedTextField.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A9EA2EFC6B3324DC133DBB5B2F093519479E5635"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/XLForm.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AF7423C487C4B1B7082E587F3AB70804F6530E81"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/XMPPFramework.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/KSCrash.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2885296440547CB23891301E79B480A22EAC5F6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/YapDatabase.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jspahrsummers\/xcconfigs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E084C86B03F81D63323C9E7510697EA528A758C7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Mantle\/Mantle.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E3F1CFC7B66794122E6D31906D72E79A4B1AAB6D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/SignalProtocol-ObjC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EF95512761D96C4A6BCF745F9F23442E0E2471D9"
+    }
+  ]
+}

@@ -1,0 +1,1245 @@
+{
+    "CONNECTION_ERROR_STRING": {
+        "comment": "alert title for connection errors",
+        "string": "There was an error connecting to account"
+    },
+    "CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING": {
+        "comment": "alert title for connection errors",
+        "string": "Please re-verify the server's certificate."
+    },
+    "ABOUT_STRING": {
+        "comment": "Title for the about page",
+        "string": "About"
+    },
+    "ACTIVE_BUDDIES_STRING": {
+        "comment": "segmented control value for active friends",
+        "string": "Active"
+    },
+    "ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING": {
+        "comment": "Description for allowing DB passphrase backup",
+        "string": "Restore iTunes backups to new devices"
+    },
+    "ALLOW_DB_PASSPHRASE_BACKUP_TITLE_STRING": {
+        "comment": "Title for allowing DB passphrase backup",
+        "string": "Allow Device Migration"
+    },
+    "AUDIO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Audio Message"
+    },
+    "MORE_WAYS_TO_HELP_STRING": {
+        "comment": "button for additional ways to help support development of the app",
+        "string": "More Ways to Help"
+    },
+    "VIDEO_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Video Message"
+    },
+    "PICTURE_MESSAGE_STRING": {
+        "comment": "Text for media message summary",
+        "string": "Picture Message"
+    },
+    "FILE_MESSAGE_STRING": {
+        "comment": "Text for file message summary",
+        "string": "File Message"
+    },
+    "JOIN_GROUP_STRING": {
+        "comment": "Text for joining existing XMPP room",
+        "string": "Join Group"
+    },
+    "ARCHIVE_STRING": {
+        "comment": "Noun. segmented control value for displaying archived conversations",
+        "string": "Archive"
+    },
+    "ARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for archiving an old conversation",
+        "string": "Archive"
+    },
+    "UNARCHIVE_ACTION_STRING": {
+        "comment": "Verb. action for moving archived converation back to inbox",
+        "string": "Unarchive"
+    },
+    "ABOUT_VERSION_STRING": {
+        "comment": "Label for button to show version numbers and licenses",
+        "string": "About This Version"
+    },
+    "ACCOUNTS_STRING": {
+        "comment": "Title for the accounts tab",
+        "string": "Accounts"
+    },
+    "ARE_YOU_SURE_STRING": {
+        "comment": "Shown to confirm destructive actions",
+        "string": "Are you sure?"
+    },
+    "ACCOUNT_STRING": {
+        "comment": "The string describing a buddy's account",
+        "string": "Account"
+    },
+    "ADD_BUDDY_STRING": {
+        "comment": "The title for the view to add a buddy",
+        "string": "Add Buddy"
+    },
+    "ADD_STRING": {
+        "comment": "Button title to add someone as a buddy",
+        "string": "Add"
+    },
+    "ADVANCED_STRING": {
+        "comment": "String to describe advanced set of settings",
+        "string": "Advanced"
+    },
+    "AVAILABLE_STRING": {
+        "comment": "Label in buddy list for users that are available",
+        "string": "Available"
+    },
+    "AWAY_STRING": {
+        "comment": "Label in buddy list for users that are away",
+        "string": "Away"
+    },
+    "BASIC_STRING": {
+        "comment": "string to describe basic set of settings",
+        "string": "Basic"
+    },
+    "BLOCK_AND_REMOVE_STRING": {
+        "comment": "The String for a buddy to block and remove a buddy from the buddy list",
+        "string": "Block & Remove"
+    },
+    "BLOCK_STRING": {
+        "comment": "The String for a button to block a buddy",
+        "string": "Block"
+    },
+    "BUDDY_APPROVED_STRING": {
+        "comment": "Notification message when buddy has approved you",
+        "string": "You and %@ are now friends."
+    },
+    "BUDDY_INFO_STRING": {
+        "comment": "The title for the view that shows detailed buddy info",
+        "string": "Buddy Info"
+    },
+    "CANCEL_STRING": {
+        "comment": "Cancel an alert window",
+        "string": "Cancel"
+    },
+    "CHATSECURE_PUSH_STRING": {
+        "comment": "Title for ChatSecure Push (this probably doesnt need to be translated)",
+        "string": "ChatSecure Push"
+    },
+    "CHATS_STRING": {
+        "comment": "Title for chats view",
+        "string": "Chats"
+    },
+    "CHAT_STRING": {
+        "comment": "Title for chat view",
+        "string": "Chat"
+    },
+    "COMPOSE_STRING": {
+        "comment": "Label for text field where you compose a new message",
+        "string": "Compose"
+    },
+    "CONNECTED_STRING": {
+        "comment": "Whether or not account is logged in",
+        "string": "Connected"
+    },
+    "CONNECTING_STRING": {
+        "comment": "String to state if an account is progress of creating a connection",
+        "string": "Connecting"
+    },
+    "CONNECTING_TO_TOR_STRING": {
+        "comment": "Message shown when connecting to the Tor network",
+        "string": "Connecting to Tor"
+    },
+    "ADD_EXISTING_STRING": {
+        "comment": "Label for button to create account by logging into an existing account",
+        "string": "Add Existing Account"
+    },
+    "COPY_STRING": {
+        "comment": "Copy string to clipboard as in copy and paste",
+        "string": "Copy"
+    },
+    "COPY_LINK_STRING": {
+        "comment": "Copy link URL to clipboard as in copy and paste",
+        "string": "Copy Link"
+    },
+    "CREATED_BY_STRING": {
+        "comment": "Start of sentence that will be followed by names",
+        "string": "Created by"
+    },
+    "CREATE_NEW_ACCOUNT_STRING": {
+        "comment": "Label for button to create a new account via in band registration",
+        "string": "Create New Account"
+    },
+    "CREATE_STRING": {
+        "comment": "Title for button to create account",
+        "string": "Create"
+    },
+    "CREATING_ACCOUNT_STRING": {
+        "comment": "Title for progress of creating a new account",
+        "string": "Creating Account"
+    },
+    "DELETE_STRING": {
+        "comment": "action button for deleting something",
+        "string": "Delete"
+    },
+    "DELETE_ACCOUNT_MESSAGE_STRING": {
+        "comment": "Ask user if they want to delete the stored account information",
+        "string": "Permanently delete"
+    },
+    "DELETE_ACCOUNT_BUTTON_STRING": {
+        "comment": "Button to delete account",
+        "string": "Delete Account"
+    },
+    "DELETE_ACCOUNT_TITLE_STRING": {
+        "comment": "Ask user if they want to delete the stored account information",
+        "string": "Delete Account?"
+    },
+    "DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING": {
+        "comment": "Description for automatic conversation deletion",
+        "string": "Delete chats on disconnect"
+    },
+    "DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING": {
+        "comment": "Title for automatic conversation deletion setting",
+        "string": "Auto-delete"
+    },
+    "DELIVERED_STRING": {
+        "comment": "Shows in the chat view when a message has been delivered",
+        "string": "Delivered"
+    },
+    "DEACTIVATE_STRING": {
+        "comment": "e.g. for deactivating your push account",
+        "string": "Deactivate"
+    },
+    "DID_YOU_KNOW_DONATION_STRING": {
+        "comment": "prompt users to donate money",
+        "string": "Did you know you can now help fund future development directly within the app?"
+    },
+    "DONATE_MESSAGE_STRING": {
+        "comment": "Message shown when about to donate",
+        "string": "Your donation will help fund the continued development of ChatSecure."
+    },
+    "DONATE_STRING": {
+        "comment": "Title for donation link",
+        "string": "Donate"
+    },
+    "DONE_STRING": {
+        "comment": "Title for button to press when user is finished",
+        "string": "Done"
+    },
+    "DOWNLOAD_STRING": {
+        "comment": "Title for button to download something",
+        "string": "Download"
+    },
+    "DO_NOT_DISTURB_STRING": {
+        "comment": "Default message when a user status is set to do not disturb",
+        "string": "Do Not Disturb"
+    },
+    "EDIT_ACCOUNT_STRING": {
+        "comment": "Button to edit account details",
+        "string": "Edit Account"
+    },
+    "EMAIL_STRING": {
+        "comment": "The string describing account name or email address for a buddy",
+        "string": "Email"
+    },
+    "ENABLE_DEBUG_LOGGING_STRING": {
+        "comment": "switch label for toggling debug logs",
+        "string": "Enable Debug Logging"
+    },
+    "ENABLE_DEBUG_LOGGING_HELP_STRING": {
+        "comment": "extra information about debug logging",
+        "string": "Beware! These logs are for debugging purposes only and will contain sensitive material like usernames, passwords, contacts, and message history. Disabling this option will delete all existing logs."
+    },
+    "ENCRYPTION_ERROR_STRING": {
+        "comment": "Generic title for encryption errors",
+        "string": "Encryption Error"
+    },
+    "ERROR_CREATING_ACCOUNT_STRING": {
+        "comment": "title label for error when creating account",
+        "string": "Error Creating Account"
+    },
+    "ERROR_STRING": {
+        "comment": "Title of error message pop-up box",
+        "string": "Error"
+    },
+    "EXTENDED_AWAY_STRING": {
+        "comment": "Default message when a user status is set to extended away",
+        "string": "Extended Away"
+    },
+    "EXPERIMENTAL_STRING": {
+        "comment": "Section for experimental settings",
+        "string": "Experimental"
+    },
+    "INBOX_STRING": {
+        "comment": "segmented control value for active conversations",
+        "string": "Inbox"
+    },
+    "FACEBOOK_STRING": {
+        "comment": "the name for facebook",
+        "string": "Facebook"
+    },
+    "FIX_BACKGROUND_FETCH_STRING": {
+        "comment": "prompt to fix background fetch",
+        "string": "Fix Background Fetch..."
+    },
+    "FIX_PERMISSIONS_STRING": {
+        "comment": "prompt to fix permissions",
+        "string": "Fix Permissions..."
+    },
+    "FORGOT_PASSPHRASE_INFO_STRING": {
+        "comment": "Text describing what happens when the user has forgotten the passphrase",
+        "string": "Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords."
+    },
+    "FORGOT_PASSPHRASE_STRING": {
+        "comment": "Label for button when you've forgotten the passphrase",
+        "string": "Forgot Passphrase?"
+    },
+    "GITHUB_STRING": {
+        "comment": "Name of popular web based hosting service",
+        "string": "GitHub"
+    },
+    "GOOGLE_TALK_STRING": {
+        "comment": "the name for Google talk",
+        "string": "Google Talk"
+    },
+    "HELP_TRANSLATE_STRING": {
+        "comment": "Label for button to open link to translate app",
+        "string": "Help Translate"
+    },
+    "HOSTNAME_STRING": {
+        "comment": "Label text for hostname field on login scree",
+        "string": "Hostname"
+    },
+    "INFO_STRING": {
+        "comment": "Short for information, button title to get more information",
+        "string": "Info"
+    },
+    "INVITE_FRIENDS_STRING": {
+        "comment": "Button to invite friends",
+        "string": "Invite Friends"
+    },
+    "INVALID_EMAIL_DETAIL_STRING": {
+        "comment": "detail title label for invalid email",
+        "string": "Please choose a valid email address"
+    },
+    "INVALID_EMAIL_TITLE_STRING": {
+        "comment": "title label for invalid email",
+        "string": "Invalid Email"
+    },
+    "IN_BAND_ERROR_STRING": {
+        "comment": "Error message for when in band registration is not supported",
+        "string": "The XMPP server does not support in-band registration"
+    },
+    "JABBER_STRING": {
+        "comment": "the name for jabber, also include (XMPP) at the end",
+        "string": "Jabber (XMPP)"
+    },
+    "LANGUAGE_STRING": {
+        "comment": "string to bring up language selector",
+        "string": "Language"
+    },
+    "LOGIN_AUTOMATICALLY_STRING": {
+        "comment": "Label for account setting that autologins on launch",
+        "string": "Login Automatically"
+    },
+    "LOGIN_STRING": {
+        "comment": "log in to account",
+        "string": "Log In"
+    },
+    "LOGOUT_STRING": {
+        "comment": "log out from account",
+        "string": "Log Out"
+    },
+    "MANAGE_DEBUG_LOGS_STRING": {
+        "comment": "Manage the device logs",
+        "string": "Manage Debug Logs"
+    },
+    "MANAGE_MY_KEYS": {
+        "comment": "Button to manage your OTR and OMEMO keys",
+        "string": "Manage My Keys"
+    },
+    "MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING": {
+        "comment": "Title for button to manage ChatSecure Push account",
+        "string": "Manage ChatSecure Push account"
+    },
+    "MESSAGE_COULD_NOT_BE_SENT_STRING": {
+        "comment": "Explanation for why a message could not be sent.",
+        "string": "The message could not be sent because this contact cannot receive your messages at this time. This could occur because they are offline, or if you are not authorized to send them messages."
+    },
+    "MESSAGE_FRIENDS_WITH_NEW_INFO_STRING": {
+        "comment": "Title for toggle switch to spam your friends with your new account info",
+        "string": "Notify Contacts of New Account"
+    },
+    "MIGRATION_FORM_DETAIL_STRING": {
+        "comment": "Description detail text for account migration form",
+        "string": "We will automatically migrate your contacts from your old account to the new one, and archive your old conversations.\\n\\nIf you'd like, we can also notify your existing contacts that your account has moved."
+    },
+    "MIGRATION_STRING": {
+        "comment": "Title for migration header view",
+        "string": "It's time to move!"
+    },
+    "MIGRATION_INFO_STRING": {
+        "comment": "Explanation for why migration is needed",
+        "string": "Your account currently lives on the %1$@ servers. That chat service is no longer in service, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_INFO_WITH_DATE_STRING": {
+        "comment": "Explanation for why migration is needed, contains a shutdown date",
+        "string": "Your account currently lives on the %1$@ servers. That chat service is closing on %2$@, so we're going to help move your account to a new server."
+    },
+    "MIGRATION_NOTIFICATION_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate",
+        "string": "Your account has expired."
+    },
+    "MIGRATION_NOTIFICATION_WITH_DATE_STRING": {
+        "comment": "Explanation that your account has expired and you need to migrate, contains a shutdown date",
+        "string": "Your account is expiring in '%1$d' days."
+    },
+    "MIGRATION_START_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Get Started"
+    },
+    "MIGRATE_ACCOUNT_STRING": {
+        "comment": "Title for button to start migration tool",
+        "string": "Migrate Account"
+    },
+    "MIGRATED_BUDDY_STRING": {
+        "comment": "Title for migrated buddy header view",
+        "string": "Buddy has moved!"
+    },
+    "MIGRATED_BUDDY_INFO_STRING": {
+        "comment": "Explanation that buddy has a different prefered jid in the vcard",
+        "string": "Your buddy has a different forwarding address than the jid you are currently chatting with. Do you want to switch to this account instead?"
+    },
+    "MIGRATED_BUDDY_IGNORE": {
+        "comment": "Button to ignore the migrated buddy warning",
+        "string": "Ignore"
+    },
+    "MIGRATED_BUDDY_SWITCH": {
+        "comment": "Button to switch the chat over to the migrated account",
+        "string": "Switch"
+    },
+    "MY_NEW_ACCOUNT_INFO_STRING": {
+        "comment": "label for new account info for migration",
+        "string": "My new account information"
+    },
+    "NAME_STRING": {
+        "comment": "The string describing a buddy's display name",
+        "string": "Name"
+    },
+    "NEW_ACCOUNT_STRING": {
+        "comment": "Title for New Account View",
+        "string": "New Account"
+    },
+    "NEW_CERTIFICATE_STRING": {
+        "comment": "Title for alert when a new SSL certificate is encountered",
+        "string": "New SSL Certificate"
+    },
+    "NEW_STRING": {
+        "comment": "For a new settings value",
+        "string": "New"
+    },
+    "NEW_MESSAGE_STRING": {
+        "comment": "when a new message notification is received",
+        "string": "New Message!"
+    },
+    "NEXT_STRING": {
+        "comment": "Label for button to go to next step",
+        "string": "Next"
+    },
+    "NOTIFICATIONS_STRING": {
+        "comment": "Label for notifications switch",
+        "string": "Notifications"
+    },
+    "OFFLINE_STRING": {
+        "comment": "Label in buddy list for users that are offline",
+        "string": "Offline"
+    },
+    "OK_STRING": {
+        "comment": "Accept the dialog",
+        "string": "OK"
+    },
+    "OLD_STRING": {
+        "comment": "For an old settings value",
+        "string": "Old"
+    },
+    "OMEMO_GROUP_ENCRYPTION_STRING": {
+        "comment": "toggling switch for showing OMEMO group encryption",
+        "string": "Allow OMEMO Group Encryption"
+    },
+    "OMEMO_GROUP_ENCRYPTION_DETAIL_STRING": {
+        "comment": "toggling switch detail for showing OMEMO group encryption",
+        "string": "Note: this does not automatically enable group encryption. It must also be manually enabled on a per-group basis."
+    },
+    "OMEMO_GROUP_ENCRYPTION_STRING": {
+        "comment": "For an old settings value",
+        "string": "OMEMO Group Encryption"
+    },
+    "OPEN_IN_SAFARI": {
+        "comment": "Label to open link in the Safari web browser",
+        "string": "Open in Safari"
+    },
+    "OPEN_IN_CHROME": {
+        "comment": "Label to open link in the chrome web browser",
+        "string": "Open in Chrome"
+    },
+    "OPEN_IN_FACEBOOK_STRING": {
+        "comment": "Label for button to open link in facebook app",
+        "string": "Open in Facebook"
+    },
+    "OPEN_IN_TWITTER_STRING": {
+        "comment": "Label for button to open link in twitter app",
+        "string": "Open in Twitter"
+    },
+    "OPTIONAL_STRING": {
+        "comment": "Hint text for domain field telling user this field is not required",
+        "string": "Optional"
+    },
+    "OTHER_STRING": {
+        "comment": "Title for other miscellaneous settings group",
+        "string": "Other"
+    },
+    "AUTO_URL_FETCH_STRING": {
+        "comment": "Title for other miscellaneous settings group",
+        "string": "Automatically Fetch Media"
+    },
+    "AUTO_URL_FETCH_WARNING_STRING": {
+        "comment": "Title for other miscellaneous settings group",
+        "string": "All incoming messages containing URLs will be fetched by default to show a media preview. This is required for media messaging to work properly. Disable this if you do not trust your contacts."
+    },
+    "OTRL_MSGEVENT_CONNECTION_ENDED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Message has not been sent because our buddy has ended the private conversation. We should either close the connection, or refresh it."
+    },
+    "OTRL_MSGEVENT_ENCRYPTION_ERROR_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "An error occured while encrypting a message and the message was not sent."
+    },
+    "OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Our policy requires encryption but we are trying to send an unencrypted message out."
+    },
+    "OTRL_MSGEVENT_LOG_HEARTBEAT_RCVD_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received a heartbeat."
+    },
+    "OTRL_MSGEVENT_LOG_HEARTBEAT_SENT_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Sent a heartbeat."
+    },
+    "OTRL_MSGEVENT_MSG_REFLECTED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received our own OTR messages."
+    },
+    "OTRL_MSGEVENT_MSG_RESENT_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "The previous message was resent."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_FOR_OTHER_INSTANCE_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received and discarded a message intended for another instance."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_GENERAL_ERR_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received a general OTR error."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_MALFORMED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "The message received contains malformed data."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_NOT_IN_PRIVATE_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received an encrypted message but cannot read it because no private connection is established yet."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_UNENCRYPTED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Received an unencrypted message."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_UNREADABLE_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Cannot read the received message."
+    },
+    "OTRL_MSGEVENT_RCVDMSG_UNRECOGNIZED_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "Cannot recognize the type of OTR message received."
+    },
+    "OTRL_MSGEVENT_SETUP_ERROR_STRING": {
+        "comment": "Error string for OTR message string",
+        "string": "A private conversation could not be set up."
+    },
+    "PASSWORD_STRING": {
+        "comment": "Label text for password field on login screen",
+        "string": "Password"
+    },
+    "PAYMENTS_SETUP_ERROR_STRING": {
+        "comment": "Error message when trying to make a purchase but payments haven't been set up yet",
+        "string": "This device doesn't seem to be configured to make payments."
+    },
+    "PENDING_APPROVAL_STRING": {
+        "comment": "String for XMPP buddies when adding buddy is pending",
+        "string": "Pending Approval"
+    },
+    "PINNED_CERTIFICATES_DESCRIPTION_STRING": {
+        "comment": "subtitle for the certificate pinned setting",
+        "string": "Manage saved SSL certificates"
+    },
+    "PINNED_CERTIFICATES_STRING": {
+        "comment": "Button Lable to show all pinned SSL certificates",
+        "string": "Pinned Certificates"
+    },
+    "PORT_STRING": {
+        "comment": "Label for port number field for connecting to service",
+        "string": "Port"
+    },
+    "PUBLIC_KEY_ERROR_STRING": {
+        "comment": "Error message when cannot get public key from SSL certificate",
+        "string": "Could not retrieve public key from certificate"
+    },
+    "PUSH_WARNING_STRING": {
+        "comment": "Button title to show more information about Push messaging might not be working",
+        "string": "Push Warning"
+    },
+    "PUSH_TITLE_STRING": {
+        "comment": "Title for push-messaging related settings",
+        "string": "Push"
+    },
+    "QR_CODE_STRING": {
+        "comment": "Label for qr code image",
+        "string": "QR code"
+    },
+    "RECENT_STRING": {
+        "comment": "Title for header of Buddy list view with Recent Buddies",
+        "string": "Recent"
+    },
+    "REJECT_STRING": {
+        "comment": "Button title to reject a request such as a buddy request",
+        "string": "Reject"
+    },
+    "REMEMBER_PASSPHRASE_INFO_STRING": {
+        "comment": "Text that describes what remembering your passphrase does",
+        "string": "Your password will be stored in the iOS Keychain of this device only, and is only as safe as your device passphrase or pin. However, it will not persist during a device backup/restore via iTunes, so please don't forget it, or you may lose your conversation history."
+    },
+    "REMEMBER_PASSPHRASE_STRING": {
+        "comment": "Label for switch to save passphrase",
+        "string": "Remember Passphrase"
+    },
+    "MAYBE_LATER_STRING": {
+        "comment": "button to do something later",
+        "string": "Maybe Later"
+    },
+    "REMEMBER_PASSWORD_STRING": {
+        "comment": "label for switch for whether or not we should save their password between launches",
+        "string": "Remember password"
+    },
+    "REMOVE_STRING": {
+        "comment": "The String for a button to remove a buddy from the buddy list",
+        "string": "Remove"
+    },
+    "REPLY_STRING": {
+        "comment": "Reply to an incoming message",
+        "string": "Reply"
+    },
+    "RESET_STRING": {
+        "comment": "e.g. for resetting push account",
+        "string": "Reset"
+    },
+    "REQUIRED_STRING": {
+        "comment": "String to let user know a certain field like a password is required to create an account",
+        "string": "Required"
+    },
+    "RESOURCE_STRING": {
+        "comment": "Label for text input for XMPP resource",
+        "string": "Resource"
+    },
+    "SAVED_CERTIFICATES_STRING": {
+        "comment": "Title for listing the user saved SSL certificates",
+        "string": "Saved Certificates"
+    },
+    "PAYMENTS_UNAVAILABLE_STRING": {
+        "comment": "Title for alert when user isn't allowed to make payments",
+        "string": "Payments Unavailable"
+    },
+    "SAVE_STRING": {
+        "comment": "Title for button for saving a setting",
+        "string": "Save"
+    },
+    "SEARCH_STRING": {
+        "comment": "Label for text field where you search for a buddy",
+        "string": "Search"
+    },
+    "SECURITY_STRING": {
+        "comment": "Title heading in settings",
+        "string": "Security"
+    },
+    "SECURITY_WARNING_STRING": {
+        "comment": "Title of alert box warning about security issues",
+        "string": "Security Warning"
+    },
+    "SEND_FEEDBACK_STRING": {
+        "comment": "String on button to email feedback",
+        "string": "Send Feedback"
+    },
+    "SETTINGS_STRING": {
+        "comment": "Title for the Settings screen",
+        "string": "Settings"
+    },
+    "SHARE_MESSAGE_STRING": {
+        "comment": "Body of SMS or email when sharing a link to the app",
+        "string": "Chat with me securely"
+    },
+    "SHARE_STRING": {
+        "comment": "Title for sharing a link to the app",
+        "string": "Share"
+    },
+    "SHOW_CONSOLE_STRING": {
+        "comment": "button label for showing log console",
+        "string": "Show Console"
+    },
+    "SHOW_USERVOICE_STRING": {
+        "comment": "actionsheet for showing uservoice feedback service",
+        "string": "Would you like to connect to UserVoice to send feedback?"
+    },
+    "SIGN_UP_STRING": {
+        "comment": "title label for signing up for a new account",
+        "string": "Sign Up"
+    },
+    "SKIP_STRING": {
+        "comment": "Label for button to skip this step",
+        "string": "Skip"
+    },
+    "SOURCE_STRING": {
+        "comment": "let users know source is on Github",
+        "string": "Check out the source here on Github"
+    },
+    "SOMEONE_IS_TYPING_STRING": {
+        "comment": "received a typing notification",
+        "string": "Someone is typing..."
+    },
+    "TOR_WARNING_MESSAGE_STRING": {
+        "comment": "Message for warning about using tor network",
+        "string": "Tor is an experimental feature, please use with caution."
+    },
+    "TWITTER_STRING": {
+        "comment": "Name of the popular social tweeting site",
+        "string": "Twitter"
+    },
+    "UNLOCK_STRING": {
+        "comment": "Label for button to unlock app",
+        "string": "Unlock"
+    },
+    "USERNAME_STRING": {
+        "comment": "Label text for username field on login screen",
+        "string": "Username"
+    },
+    "VALID_CERTIFICATE_STRING": {
+        "comment": "shown to show that the certificate was valid to the system",
+        "string": "Valid certificate"
+    },
+    "VERIFIED_STRING": {
+        "comment": "To let the user know the fingerprint as been checked",
+        "string": "Verified"
+    },
+    "VERIFY_FINGERPRINT_STRING": {
+        "comment": "Title of the dialog for fingerprint verification",
+        "string": "Verify Fingerprint"
+    },
+    "VERIFY_STRING": {
+        "comment": "Shown when verifying fingerprints",
+        "string": "Verify"
+    },
+    "VERSION_STRING": {
+        "comment": "when displaying version numbers such as 1.0.0",
+        "string": "Version"
+    },
+    "XMPP_FAIL_STRING": {
+        "comment": "Message when cannot connect to XMPP server",
+        "string": "Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
+    },
+    "XMPP_TOR_STRING": {
+        "comment": "Title for xmpp accounts that connect through the Tor network",
+        "string": "XMPP + Tor"
+    },
+    "XMPP_USERNAME_EXAMPLE_STRING": {
+        "comment": "Example of a username using the words user and example",
+        "string": "user@example.com"
+    },
+    "COULD_NOT_PARSE_URL_STRING": {
+        "comment": "Error description",
+        "string": "Could not parse URL."
+    },
+    "errSSLBadCertString": {
+        "comment": "SSL error message",
+        "string": "Bad certificate format"
+    },
+    "errSSLBadCipherSuiteString": {
+        "comment": "SSL error message",
+        "string": "Bad SSLCipherSuite"
+    },
+    "errSSLBadConfigurationString": {
+        "comment": "SSL error message",
+        "string": "Configuration error"
+    },
+    "errSSLBadRecordMacString": {
+        "comment": "SSL error message",
+        "string": "Bad MAC"
+    },
+    "errSSLBufferOverflowString": {
+        "comment": "SSL error message",
+        "string": "Insufficient buffer provided"
+    },
+    "errSSLCertExpiredString": {
+        "comment": "SSL error message",
+        "string": "Chain had an expired cert"
+    },
+    "errSSLCertNotYetValidString": {
+        "comment": "SSL error message",
+        "string": "Chain had a cert not yet valid"
+    },
+    "errSSLClientCertRequestedString": {
+        "comment": "SSL error message",
+        "string": "Server has requested a client cert"
+    },
+    "errSSLClosedAbortString": {
+        "comment": "SSL error message",
+        "string": "Connection closed via error"
+    },
+    "errSSLClosedGracefulString": {
+        "comment": "SSL error message",
+        "string": "Connection closed gracefully"
+    },
+    "errSSLClosedNoNotifyString": {
+        "comment": "SSL error message",
+        "string": "Server closed session with no notification"
+    },
+    "errSSLConnectionRefusedString": {
+        "comment": "SSL error message",
+        "string": "Peer dropped connection before responding"
+    },
+    "errSSLCryptoString": {
+        "comment": "SSL error message",
+        "string": "Underlying cryptographic error"
+    },
+    "errSSLDecryptionFailString": {
+        "comment": "SSL error message",
+        "string": "Decryption failure"
+    },
+    "errSSLFatalAlertString": {
+        "comment": "SSL error message",
+        "string": "Fatal alert"
+    },
+    "errSSLHostNameMismatchString": {
+        "comment": "SSL error message",
+        "string": "Peer host name mismatch"
+    },
+    "errSSLIllegalParamString": {
+        "comment": "SSL error message",
+        "string": "Illegal parameter"
+    },
+    "errSSLInternalString": {
+        "comment": "SSL error message",
+        "string": "Internal error"
+    },
+    "errSSLModuleAttachString": {
+        "comment": "SSL error message",
+        "string": "Module attach failure"
+    },
+    "errSSLNegotiationString": {
+        "comment": "SSL error message",
+        "string": "Cipher Suite negotiation failure"
+    },
+    "errSSLNoRootCertString": {
+        "comment": "SSL error message",
+        "string": "Cert chain not verified by root"
+    },
+    "errSSLPeerAccessDeniedString": {
+        "comment": "SSL error message",
+        "string": "Access denied"
+    },
+    "errSSLPeerAuthCompletedString": {
+        "comment": "SSL error message",
+        "string": "Peer cert is valid, or was ignored if verification disabled"
+    },
+    "errSSLPeerBadCertString": {
+        "comment": "SSL error message",
+        "string": "Miscellaneous bad certificate"
+    },
+    "errSSLPeerBadRecordMacString": {
+        "comment": "SSL error message",
+        "string": "Bad MAC"
+    },
+    "errSSLPeerCertExpiredString": {
+        "comment": "SSL error message",
+        "string": "Certificate expired"
+    },
+    "errSSLPeerCertRevokedString": {
+        "comment": "SSL error message",
+        "string": "Certificate revoked"
+    },
+    "errSSLPeerCertUnknownString": {
+        "comment": "SSL error message",
+        "string": "Unknown certificate"
+    },
+    "errSSLPeerDecodeErrorString": {
+        "comment": "SSL error message",
+        "string": "Decoding error"
+    },
+    "errSSLPeerDecompressFailString": {
+        "comment": "SSL error message",
+        "string": "Decompression failure"
+    },
+    "errSSLPeerDecryptErrorString": {
+        "comment": "SSL error message",
+        "string": "Decryption error"
+    },
+    "errSSLPeerDecryptionFailString": {
+        "comment": "SSL error message",
+        "string": "Decryption failed"
+    },
+    "errSSLPeerExportRestrictionString": {
+        "comment": "SSL error message",
+        "string": "Export restriction"
+    },
+    "errSSLPeerHandshakeFailString": {
+        "comment": "SSL error message",
+        "string": "Handshake failure"
+    },
+    "errSSLPeerInsufficientSecurityString": {
+        "comment": "SSL error message",
+        "string": "Insufficient security"
+    },
+    "errSSLPeerInternalErrorString": {
+        "comment": "SSL error message",
+        "string": "Internal error"
+    },
+    "errSSLPeerNoRenegotiationString": {
+        "comment": "SSL error message",
+        "string": "No renegotiation allowed"
+    },
+    "errSSLPeerProtocolVersionString": {
+        "comment": "SSL error message",
+        "string": "Bad protocol version"
+    },
+    "errSSLPeerRecordOverflowString": {
+        "comment": "SSL error message",
+        "string": "Record overflow"
+    },
+    "errSSLPeerUnexpectedMsgString": {
+        "comment": "SSL error message",
+        "string": "Unexpected message received"
+    },
+    "errSSLPeerUnknownCAString": {
+        "comment": "SSL error message",
+        "string": "Unknown Cert Authority"
+    },
+    "errSSLPeerUnsupportedCertString": {
+        "comment": "SSL error message",
+        "string": "Bad unsupported cert format"
+    },
+    "errSSLPeerUserCancelledString": {
+        "comment": "SSL error message",
+        "string": "User canceled"
+    },
+    "errSSLProtocolString": {
+        "comment": "SSL error message",
+        "string": "SSL protocol error"
+    },
+    "errSSLRecordOverflowString": {
+        "comment": "SSL error message",
+        "string": "Record overflow"
+    },
+    "errSSLSessionNotFoundString": {
+        "comment": "SSL error message",
+        "string": "Attempt to restore an unknown session"
+    },
+    "errSSLUnexpectedRecordString": {
+        "comment": "SSL error message",
+        "string": "Unexpected (skipped) record in DTLS"
+    },
+    "errSSLUnknownRootCertString": {
+        "comment": "SSL error message",
+        "string": "Valid cert chain, untrusted root"
+    },
+    "errSSLWouldBlockString": {
+        "comment": "SSL error message",
+        "string": "I/O would block (not fatal)"
+    },
+    "errSSLXCertChainInvalidString": {
+        "comment": "SSL error message",
+        "string": "Invalid certificate chain"
+    },
+    "noErrString": {
+        "comment": "SSL error message",
+        "string": "No Error"
+    },
+    "CONNECT_STRING": {
+        "comment": "String for button to connect connect",
+        "string": "Connect"
+    },
+    "USE_CAMERA_STRING" : {
+        "comment": "Label for button to take a photo from camera",
+        "string": "Camera"
+    },
+    "PHOTO_LIBRARY_STRING" : {
+        "comment": "Label for button to open up photo library and choose photo",
+        "string": "Photo Library"
+    },
+    "HOLD_TO_TALK_STRING" : {
+        "comment": "Label for button to hold to record audio",
+        "string": "Hold to talk"
+    },
+    "RELEASE_TO_SEND_STRING" : {
+        "comment": "Label for instruction to send current audio",
+        "string": "Release to send"
+    },
+    "RELEASE_TO_DELETE_STRING" : {
+        "comment": "Label for instruction to delete current recording",
+        "string": "Release to delete"
+    },
+    "WAITING_STRING" : {
+        "comment": "Label text for when a transfer has not started yet",
+        "string": "Waiting"
+    },
+    "SENDING_STRING" : {
+        "comment": "Label text for when a transfer is in progress (normally followed by a percent value 34%)",
+        "string": "Sending"
+    },
+    "INCOMING_STRING" : {
+        "comment": "Label for incoming data transfers",
+        "string": "Incoming"
+    },
+    "CUSTOM_STRING" : {
+        "comment": "Place holder label for custom domains",
+        "string": "Custom"
+    },
+    "ONBOARDING_SUCCESS_STRING": {
+        "comment": "String used when onboarding works",
+        "string": "You're ready to use"
+    },
+    "INVITE_LINK_STRING": {
+        "comment": "Label for inviting friends via URL",
+        "string": "Share Invite"
+    },
+    "SCAN_QR_STRING": {
+        "comment": "Label for sharing via QR Code",
+        "string": "Scan QR"
+    },
+    "KNOCK_STRING": {
+      "comment": "Label for button after to send push notification knock. Like knocking on a door",
+      "string": "Knock"
+    },
+    "KNOCK_SENT_STRING": {
+        "comment": "Text for label after knock is sent. Like knocking on a door",
+        "string": "Knock Sent"
+    },
+    "WANTS_TO_CHAT_STRING": {
+        "comment": "This string follows a user's dislplay name or username ex Bob wants to chat.",
+        "string": "wants to chat."
+    },
+    "SOMEONE_STRING": {
+        "comment": "A placeholder for a buddy's username like Someone wants to chat.",
+        "string": "Someone"
+    },
+    "GROUP_CHAT_STRING": {
+        "comment": "a subtitle label for a group chat",
+        "string": "Group Chat"
+    },
+    "GROUP_NAME_STRING": {
+        "comment": "The title for the view to enter a group chat name or label",
+        "string": "Group Name"
+    },
+    "ENTER_GROUP_NAME_STRING": {
+        "comment": "The placeholder text for the text field to enter a group chat name or label",
+        "string": "Enter a group name"
+    },
+    "GROUP_GRANT_ADMIN_STRING": {
+        "comment": "Label for granting admin privileges to someone in a group",
+        "string": "Make Admin"
+    },
+    "GROUP_REVOKE_MEMBERSHIP_STRING": {
+        "comment": "Label for revoking membership for someone in a group",
+        "string": "Kick Out"
+    },
+    "RESEND_STRING": {
+        "comment": "Label for button to resend message.",
+        "string": "Resend"
+    },
+    "SEND_PLAINTEXT_STRING" : {
+        "comment": "The placeholder text in the chat view where the message should go",
+        "string": "Send plaintext message"
+    },
+    "SEND_ENCRYPTED_STRING" : {
+        "comment": "The placeholder text in the chat view where the message should go",
+        "string": "Send %@ encrypted message"
+    },
+    "VIEW_PROFILE_STRING" : {
+        "comment": "The label for a button to view the buddy profile",
+        "string": "View Profile"
+    },
+    "UNENCRYPTED_STRING" : {
+        "comment": "Label for messages that are not encrypted",
+        "string": "plaintext"
+    },
+    "UNKNOWN_ERROR_STRING" : {
+        "comment": "Describes an error without a known cause",
+        "string": "Unknown Error"
+    },
+    "USER_CANCELED_STRING" : {
+        "comment": "Describes a state entered by user cancelation",
+        "string": "Canceled"
+    },
+    "ENABLE_PUSH_STRING" : {
+        "comment": "button for enabling push messages",
+        "string": "Enable Push"
+    },
+    "ENABLE_PUSH_IN_SETTINGS_STRING" : {
+        "comment": "button for enabling push messages in iOS system settings",
+        "string": "Enable Push in Settings"
+    },
+    "NO_DEVICES_BUDDY_ERROR_STRING" : {
+        "comment": "Error message for not finding any devices",
+        "string": "We could not find any trusted devices for this contact."
+    },
+    "RESEND_DESCRIPTION_STRING" : {
+        "comment": "Describe what resending will do the %@ will be replaced withe the method OTR/OMEMO/Plaintext",
+        "string": "Resending this message will use %@."
+    },
+    "THANK_YOU_FOR_CONTRIBUTION" : {
+        "comment": "string shown if user has already paid",
+        "string": "Thank you for your contribution!"
+    },
+    "VIEW_PROFILE_DESCRIPTION_STRING" : {
+        "comment": "Describe how to change a contact's device settings",
+        "string": "View profile to review contact's devices or change encryption settings."
+    },
+    "UNABLE_TO_SEND_STRING" : {
+        "comment": "Title for error message",
+        "string": "Unable to Send Message"
+    },
+    "UNTRUSTED_DEVICE_STRING" : {
+        "comment": "Title for error message",
+        "string": "Untrusted Device"
+    },
+    "UNTRUSTED_DEVICE_SENT_STRING" : {
+        "comment": "Error message description",
+        "string" : "This message was sent to an untrusted device."
+    },"UNTRUSTED_DEVICE_REVEIVED_STRING" : {
+        "comment": "Error message description",
+        "string" : "This message was received from an untrusted device."
+    }, "RESEND_MESSAGE_TITLE" : {
+        "comment": "Ttitle for alert view to resend a message",
+        "string" : "Resend Message"
+    }, "Advanced_Encryption_Settings" : {
+        "comment": "",
+        "string" : "Advanced Encryption Settings"
+    }, "Best_Available" : {
+        "comment": "",
+        "string" : "Best Available"
+    }, "Could_Not_Decrypt_Database": {
+        "comment": "",
+        "string" : "Could not decrypt database. If the app is not working properly, you may need to delete and reinstall."
+    }, "Database_Error_String": {
+        "comment": "",
+        "string" : "Database Error"
+    }, "Advanced_Crypto_Warning": {
+        "comment": "",
+        "string" : "Don't change these unless you really know what you're doing. By default we will always select the best available encryption method."
+    }, "Enable_String": {
+        "comment": "enable permission",
+        "string" : "Enable"
+    }, "Me_String": {
+        "comment": "",
+        "string" : "Me"
+    }, "AUTOMATIC_DOWNLOADS_DISABLED_STRING": {
+        "comment": "error",
+        "string" : "Automatic Downloads Disabled"
+    }, "Microphone_Disabled": {
+        "comment": "microphone permission is disabled",
+        "string" : "Microphone Disabled"
+    }, "Microphone_Reenable_Please": {
+        "comment": "microphone permission is disabled",
+        "string" : "To use this feature you must re-enable microphone permissions."
+    }, "Plaintext_Opportunistic_OTR": {
+        "comment": "",
+        "string" : "Plaintext (Opportunistic OTR)"
+    }, "Plaintext_Only": {
+        "comment": "",
+        "string" : "Plaintext Only"
+    }, "Profile_String": {
+        "comment": "title for contacts profile view",
+        "string" : "Profile"
+    }, "Show_Advanced_Encryption_Settings": {
+        "comment": "",
+        "string" : "Show Advanced Encryption Settings"
+    }, "Unrecognized_Invite_Format": {
+        "comment": "shown when invite QR code doesnt work",
+        "string" : "Unrecognized Invite Format"
+    }, "NO_DEVICES_ACCOUNT_ERROR_STRING" : {
+        "comment": "Error message for not finding any devices",
+        "string": "We could not find any trusted devices for this account."
+    }, "Removed_By_Server" : {
+        "comment": "",
+        "string": "Removed By Server"
+    }, "MY_QR_CODE" : {
+        "comment": "Your QR code",
+        "string": "My QR Code"
+    },  "Nickname_String": {
+        "comment": "for choosing your XMPP vCard display name",
+        "string": "Nickname"
+    }, "Basic_Setup": {
+        "comment": "username section",
+        "string": "Basic Setup"
+    }, "Basic_Setup_Hint": {
+        "comment": "basic setup selection footer",
+        "string": "Think of a unique nickname that you don't use anywhere else and doesn't contain personal information."
+    }, "Show_Advanced_Options": {
+        "comment": "toggle switch for show advanced",
+        "string": "Show Advanced Options"
+    }, "Generate_Secure_Password": {
+        "comment": "whether or not we should generate a strong password for them",
+        "string": "Generate Secure Password"
+    }, "Generate_Secure_Password_Hint": {
+        "comment": "help text for password generator",
+        "string": "We can automatically generate you a secure password. If you choose your own, make sure it's a unique password you don't use anywhere else."
+    }, "Customize_Username": {
+        "comment": "if you want to change your username",
+        "string": "Customize Username"
+    }, "Server_String": {
+        "comment": "server selection section title",
+        "string": "Server"
+    }, "SERVER_INFORMATION_STRING": {
+        "comment": "button to show more information about your XMPP server",
+        "string": "Server Information"
+    }, "Server_String_Hint": {
+        "comment": "server selection footer",
+        "string": "Choose from a selection of public servers, or use your own."
+    }, "PLEASE_CONTACT_SERVER_OP_STRING": {
+        "comment": "Error string for when there is a server configuration error.",
+        "string": "Please contact your server administrator."
+    }, "NO_HTTP_UPLOAD_SERVERS_STRING": {
+        "comment": "Error string for when there are no XEP-0363 upload servers.",
+        "string": "No HTTP upload servers found."
+    }, "FILE_NOT_FOUND_STRING": {
+        "comment": "Error",
+        "string": "File not found."
+    }, "FILE_EXCEEDS_MAX_SIZE_STRING": {
+        "comment": "Error string for when file is too big.",
+        "string": "File exceeds maximum size."
+    }, "Enable_Tor_String": {
+        "comment": "",
+        "string": "Enable Tor"
+    }, "Choose_Server_String": {
+        "comment": "title for server selection screen",
+        "string": "Choose Server"
+    }, "Crash_Detected_Title": {
+        "comment": "",
+        "string": "Crash Detected"
+    }, "Crash_Detected_Message": {
+        "comment": "",
+        "string": "The app crashed last time it was launched. Send a crash report?"
+    }, "ACTIVE_STRING": {
+        "comment": "This will be displayed in the UI as 'Active 10m ago' ",
+        "string": "Active"
+    }, "GROUP_INFO_YOU": {
+        "comment": "This will be shown after your own JID in the group profile view",
+        "string": "you"
+    }, "ADD_FRIEND_TO_AUTO_DOWNLOAD": {
+        "comment": "Shown in chat view to prompt user to add friend for auto-download of group media messages.",
+        "string": "Is %@ your friend? Add him/her to auto-download pictures in the future."
+    }
+}

@@ -9,23 +9,23 @@
 #import "OTRXMPPTorAccount.h"
 
 #import "OTRXMPPTorManager.h"
-#import "Strings.h"
+
+@import OTRAssets;
 
 
 @implementation OTRXMPPTorAccount
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPTorImageName];
-}
-
-- (NSString *)accountDisplayName
-{
-    return XMPP_TOR_STRING;
+    return [UIImage imageNamed:OTRXMPPTorImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 
 - (Class)protocolClass{
     return [OTRXMPPTorManager class];
+}
+
+- (BOOL) disableAutomaticURLFetching {
+    return YES;
 }
 
 #pragma - mark Class Methods

@@ -8,24 +8,41 @@
 
 #import "OTRVideoItem.h"
 #import "OTRImages.h"
-#import "JSQMessagesMediaViewBubbleImageMasker.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "OTRMessage.h"
-#import "UIImage+JSQMessages.h"
-#import "PureLayout.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
+@import JSQMessagesViewController;
+@import PureLayout;
 #import "OTRMediaServer.h"
+#import "OTRThreadOwner.h"
+#import "OTRMediaItem+Private.h"
 
 @import AVFoundation;
 
+@interface OTRVideoItem()
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+@end
+
 @implementation OTRVideoItem
+
+- (CGSize) size {
+    return CGSizeMake(_width, _height);
+}
+
+- (void) setSize:(CGSize)size {
+    _width = size.width;
+    _height = size.height;
+}
 
 - (NSURL *)mediaURL
 {
     __block NSString *buddyUniqueId = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRMessage *message = [self parentMessageInTransaction:transaction];
-        buddyUniqueId = message.buddyUniqueId;
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        id<OTRMessageProtocol> message = [self parentMessageWithTransaction:transaction];
+        id<OTRThreadOwner> thread = [message threadOwnerWithTransaction:transaction];
+        buddyUniqueId = [thread threadIdentifier];
     }];
     
     return [[OTRMediaServer sharedInstance] urlForMediaItem:self buddyUniqueId:buddyUniqueId];
@@ -39,67 +56,83 @@
     return [super mediaViewDisplaySize];
 }
 
-- (UIView *)mediaView
-{
-    UIView *view = [super mediaView];
-    if (!view) {
-        //async loading image into OTRImages image cache
-        __weak typeof(self)weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            AVURLAsset *asset = [AVURLAsset assetWithURL:[strongSelf mediaURL]];
-            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-            imageGenerator.appliesPreferredTrackTransform = YES;
-            NSError *error = nil;
-            //Grab middle frame
-            CMTime time = CMTimeMultiplyByFloat64(asset.duration, 0.5);
-            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&error];
-            UIImage *image = [UIImage imageWithCGImage:imageRef];
-            CGImageRelease(imageRef);
-            if (image && !error) {
-                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                [strongSelf touchParentMessage];
-            }
-        });
-    } else {
-        UIImage *playIcon = [[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:playIcon];
-        imageView.backgroundColor = [UIColor clearColor];
-        imageView.contentMode = UIViewContentModeCenter;
-        imageView.clipsToBounds = YES;
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        [view addSubview:imageView];
-        [imageView autoCenterInSuperview];
-    }
-    
-    
-    
-    return view;
+- (BOOL) shouldFetchMediaData {
+    return ![OTRImages imageWithIdentifier:self.uniqueId];
 }
 
-+ (instancetype)videoItemWithFileURL:(NSURL *)url
+- (void) fetchMediaData {
+    if (![self shouldFetchMediaData]) {
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AVURLAsset *asset = [AVURLAsset assetWithURL:[self mediaURL]];
+        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+        imageGenerator.appliesPreferredTrackTransform = YES;
+        NSError *error = nil;
+        //Grab middle frame
+        CMTime time = CMTimeMultiplyByFloat64(asset.duration, 0.5);
+        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&error];
+        UIImage *image = [UIImage imageWithCGImage:imageRef];
+        CGImageRelease(imageRef);
+        if (image && !error) {
+            [OTRImages setImage:image forIdentifier:self.uniqueId];
+            [[OTRDatabaseManager sharedInstance].writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [self touchParentMessageWithTransaction:transaction];
+            }];
+        }
+    });
+}
+
+- (UIView *)mediaView
 {
-    AVURLAsset *asset = [AVURLAsset assetWithURL:url];
-    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
-    CGSize videoSize = videoTrack.naturalSize;
-    
-    OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
-    videoItem.filename = url.lastPathComponent;
-    
-    CGAffineTransform transform = videoTrack.preferredTransform;
-    if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))
-    {
-        videoItem.width = videoSize.width;
-        videoItem.height = videoSize.height;
+    UIView *errorView = [self errorView];
+    if (errorView) { return errorView; }
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
+    if (!image) {
+        [self fetchMediaData];
+        return nil;
     }
-    else
-    {
-        videoItem.width = videoSize.height;
-        videoItem.height = videoSize.width;
-    }
+    CGSize size = [self mediaViewDisplaySize];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.frame = CGRectMake(0, 0, size.width, size.height);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
     
-    return videoItem;
+    UIImage *playIcon = [[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
+    UIImageView *playImageView = [[UIImageView alloc] initWithImage:playIcon];
+    playImageView.backgroundColor = [UIColor clearColor];
+    playImageView.contentMode = UIViewContentModeCenter;
+    playImageView.clipsToBounds = YES;
+    playImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [imageView addSubview:playImageView];
+    [playImageView autoCenterInSuperview];
+    
+    return imageView;
+}
+
+/** If mimeType is not provided, it will be guessed from filename */
+- (instancetype) initWithVideoURL:(NSURL*)url
+                       isIncoming:(BOOL)isIncoming {
+    NSParameterAssert(url);
+    if (self = [super initWithFilename:url.lastPathComponent mimeType:nil isIncoming:isIncoming]) {
+        AVURLAsset *asset = [AVURLAsset assetWithURL:url];
+        AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+        CGSize videoSize = videoTrack.naturalSize;
+        
+        CGAffineTransform transform = videoTrack.preferredTransform;
+        if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))
+        {
+            _width = videoSize.width;
+            _height = videoSize.height;
+        }
+        else
+        {
+            _width = videoSize.height;
+            _height = videoSize.width;
+        }
+    }
+    return self;
 }
 
 + (NSString *)collection

@@ -7,7 +7,7 @@
 //
 
 #import "OTRAudioControlsView.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRPlayPauseProgressView.h"
 
 NSInteger const kOTRAudioControlsViewTag = 301;

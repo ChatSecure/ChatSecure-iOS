@@ -7,13 +7,12 @@
 //
 
 #import "OTRAudioSessionManager.h"
-#import <KVOController/FBKVOController.h>
+@import KVOController;
 
 @import AVFoundation;
 
 @interface OTRAudioSessionManager () <AVAudioRecorderDelegate>
 
-@property (nonatomic, strong) AVAudioSession *audioSession;
 @property (nonatomic, strong) AVAudioRecorder *currentRecorder;
 @property (nonatomic, strong) AVPlayer *currentPlayer;
 
@@ -26,15 +25,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (instancetype)init
-{
-    if (self = [super init]) {
-        self.audioSession = [AVAudioSession sharedInstance];
-        [self.audioSession setMode:AVAudioSessionModeVoiceChat error:nil];
-    }
-    return self;
 }
 
 #pragma - mark Setters && Getters
@@ -64,7 +54,12 @@
     [self stopPlaying];
     [self stopRecording];
     error = nil;
-    [self.audioSession setCategory:AVAudioSessionCategoryPlayback error:error];
+    
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:error];
+    if (error) {
+        return;
+    }
+    [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeSpokenAudio error:error];
     if (error) {
         return;
     }
@@ -129,7 +124,11 @@
     [self stopRecording];
     [self stopPlaying];
     
-    [self.audioSession setCategory:AVAudioSessionCategoryRecord error:error];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error:error];
+    if (error) {
+        return;
+    }
+    [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeSpokenAudio error:error];
     if (error) {
         return;
     }
@@ -182,7 +181,7 @@
 
 - (void)deactivateSession:(NSError **)error
 {
-    [self.audioSession setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:error];
+    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:error];
 }
 
 - (AVPlayer *)audioPlayerWithURL:(NSURL *)url error:(NSError **)error

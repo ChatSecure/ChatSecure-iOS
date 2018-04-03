@@ -6,8 +6,12 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
+@class OTRAccount;
 
 @interface OTRChooseAccountViewController : UIViewController
+
+@property (nonatomic, copy, nullable) void (^selectionBlock)(OTRChooseAccountViewController * _Nonnull chooseVC, OTRAccount * _Nonnull account);
 
 @end

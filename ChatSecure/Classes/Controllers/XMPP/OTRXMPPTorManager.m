@@ -8,42 +8,44 @@
 
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
-#import "XMPPStream.h"
+@import XMPPFramework;
 #import "OTRXMPPTorAccount.h"
+#import "OTRXMPPError.h"
+#import "OTRProtocol.h"
+#import "OTRXMPPManager_Private.h"
+#import "ProxyXMPPStream.h"
 
 @interface OTRXMPPTorManager()
-@property (nonatomic, strong) OTRXMPPTorAccount *account;
 @end
 
 @implementation OTRXMPPTorManager
 
-@synthesize xmppStream = _xmppStream;
-
-- (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
-{
+- (void) connectUserInitiated:(BOOL)userInitiated {
     if ([OTRTorManager sharedInstance].torManager.isConnected) {
-        [super connectWithPassword:password userInitiated:userInitiated];
-    }
-    else {
-        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:@"Need to connect to Tor"}];
+        [super connectUserInitiated:userInitiated];
+    } else {
+        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
         [self failedToConnect:error];
     }
 }
 
-- (void)connectWithPassword:(NSString *)password
-{
-    [self connectWithPassword:password userInitiated:NO];
+/** Override XMPPStream with XMPPProxyStream */
+- (OTRXMPPStream*) newStream {
+    return [[ProxyXMPPStream alloc] init];
 }
 
--(XMPPStream *)xmppStream
-{
-    if (!_xmppStream) {
-        _xmppStream = [super xmppStream];
-        NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
-        NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
-        [_xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+// override
+- (void) setupStream {
+    [super setupStream];
+    NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
+    NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
+    if ([self.xmppStream isKindOfClass:[ProxyXMPPStream class]]) {
+        ProxyXMPPStream *proxyStream = (ProxyXMPPStream*)self.xmppStream;
+        [proxyStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+        [proxyStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
+    } else {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Stream socket is of wrong class!" userInfo:nil];
     }
-    return _xmppStream;
 }
 
 - (NSString *)accountDomainWithError:(NSError**)error;
@@ -58,7 +60,7 @@
     }
     
     if (!domainString.length) {
-        *error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPDomainError userInfo:@{NSLocalizedDescriptionKey:@"Tor accounts require a valid domain"}];
+        *error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeDomainError userInfo:@{NSLocalizedDescriptionKey:@"Tor accounts require a valid domain"}];
     }
     
     return domainString;

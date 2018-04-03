@@ -7,17 +7,26 @@
 //
 
 #import "OTRMediaFileManager.h"
-#import "IOCipher.h"
+@import IOCipher;
 #import "OTRMediaItem.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 
 NSString *const kOTRRootMediaDirectory = @"media";
 
-@interface OTRMediaFileManager ()
+@interface OTRMediaFileManager () {
+    void *IsOnInternalQueueKey;
+}
 
 @property (nonatomic) dispatch_queue_t concurrentQueue;
+
+/** Uses dispatch_barrier_async. Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
+- (void) performAsyncWrite:(dispatch_block_t)block;
+
+/** Uses dispatch_sync. Will perform block synchronously on the internalQueue and block for result if called on another queue. */
+- (void) performSyncRead:(dispatch_block_t)block;
 
 @end
 
@@ -26,7 +35,14 @@ NSString *const kOTRRootMediaDirectory = @"media";
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        // We use dispatch_barrier_async with a concurrent queue to allow for multiple-read single-write.
+        _concurrentQueue = dispatch_queue_create(NSStringFromClass(self.class).UTF8String, DISPATCH_QUEUE_CONCURRENT);
+        
+        // For safe usage of dispatch_sync
+        IsOnInternalQueueKey = &IsOnInternalQueueKey;
+        void *nonNullUnusedPointer = (__bridge void *)self;
+        dispatch_queue_set_specific(_concurrentQueue, IsOnInternalQueueKey, nonNullUnusedPointer, NULL);
+        
     }
     return self;
 }
@@ -39,36 +55,38 @@ NSString *const kOTRRootMediaDirectory = @"media";
     return _ioCipher != nil;
 }
 
-- (void)copyDataFromFilePath:(NSString *)filePath toEncryptedPath:(NSString *)path completionQueue:(dispatch_queue_t)completionQueue completion:(void (^)(NSError *))completion
+- (void)copyDataFromFilePath:(NSString *)filePath
+             toEncryptedPath:(NSString *)path
+                  completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+             completionQueue:(nullable dispatch_queue_t)completionQueue
 {
     if (!completionQueue) {
         completionQueue = dispatch_get_main_queue();
     }
     __weak typeof(self)weakSelf = self;
-    dispatch_async(self.concurrentQueue, ^{
+    [self performAsyncWrite:^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
         
         NSError *error = nil;
-        [strongSelf.ioCipher copyItemAtFileSystemPath:filePath toEncryptedPath:path error:&error];
+        BOOL result = [strongSelf.ioCipher copyItemAtFileSystemPath:filePath toEncryptedPath:path error:&error];
         
         if (completion) {
             dispatch_async(completionQueue, ^{
-                completion(error);
+                completion(result, error);
             });
         }
-    });
-    
+    }];
 }
 
-- (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSInteger bytesWritten, NSError *error))completion completionQueue:(dispatch_queue_t)completionQueue
-{
-    
+- (void)setData:(NSData *)data
+        forItem:(OTRMediaItem *)mediaItem
+  buddyUniqueId:(NSString *)buddyUniqueId
+     completion:(void (^)(NSInteger bytesWritten, NSError * _Nullable error))completion
+completionQueue:(nullable dispatch_queue_t)completionQueue {
     if (!completionQueue) {
         completionQueue = dispatch_get_main_queue();
     }
-
-    
-    dispatch_async(self.concurrentQueue, ^{
+    [self performAsyncWrite:^{
         NSString *path = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (![path length]) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
@@ -106,50 +124,110 @@ NSString *const kOTRRootMediaDirectory = @"media";
         dispatch_async(completionQueue, ^{
             completion(written, error);
         });
-        
-    });
-    
+
+    }];
 }
-- (void)dataForItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSData *, NSError *))completion completionQueue:(dispatch_queue_t)completionQueue
-{
+
+//#865
+- (void)deleteDataForItem:(OTRMediaItem *)mediaItem
+            buddyUniqueId:(NSString *)buddyUniqueId
+               completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+          completionQueue:(nullable dispatch_queue_t)completionQueue {
     if (!completionQueue) {
         completionQueue = dispatch_get_main_queue();
     }
-    
-    dispatch_async(self.concurrentQueue, ^{
-        NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
-        if (!filePath) {
+    [self performAsyncWrite:^{
+        NSString *path = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
+        if (![path length]) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
-            dispatch_async(completionQueue, ^{
-                completion(nil,error);
-            });
+            if (completion) {
+                dispatch_async(completionQueue, ^{
+                    completion(NO, error);
+                });
+            }
             return;
         }
         
-        BOOL fileExists = [self.ioCipher fileExistsAtPath:filePath isDirectory:nil];
+        BOOL fileExists = [self.ioCipher fileExistsAtPath:path isDirectory:NULL];
         
         if (fileExists) {
-            __block NSError *error;
-            NSDictionary *fileAttributes = [self.ioCipher fileAttributesAtPath:filePath error:&error];
+            NSError *error = nil;
+            [self.ioCipher removeItemAtPath:path error:&error];
             if (error) {
-                dispatch_async(completionQueue, ^{
-                    completion(nil,error);
-                });
+                NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:151 userInfo:@{NSLocalizedDescriptionKey:@"Unable to remove existing file"}];
+                if (completion) {
+                    dispatch_async(completionQueue, ^{
+                        completion(NO, error);
+                    });
+                }
                 return;
             }
-            
-            NSNumber *length = fileAttributes[NSFileSize];
-            
-            NSData *data = [self.ioCipher readDataFromFileAtPath:filePath length:[length integerValue] offset:0 error:&error];
-            
+        }
+        
+        if (completion) {
             dispatch_async(completionQueue, ^{
-                completion(data,error);
+                completion(YES, nil);
             });
         }
-    });
+    }];
+}
+
+/* Internal. If "length" is set, only return the length of the data, otherwise the data ifself */
+- (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
+                  buddyUniqueId:(NSString *)buddyUniqueId
+                          error:(NSError* __autoreleasing *)error
+                         length:(NSNumber* __autoreleasing *)length {
+    __block NSData *data = nil;
+    __block NSNumber *dataLength = nil;
+    [self performSyncRead:^{
+        NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
+        if (!filePath) {
+            if (error) {
+                *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
+            }
+            return;
+        }
+        BOOL fileExists = [self.ioCipher fileExistsAtPath:filePath isDirectory:nil];
+        if (!fileExists) {
+            if (error) {
+                *error = [NSError errorWithDomain:kOTRErrorDomain code:151 userInfo:@{NSLocalizedDescriptionKey:@"File does not exist!"}];
+            }
+            return;
+        }
+        NSDictionary *fileAttributes = [self.ioCipher fileAttributesAtPath:filePath error:error];
+        if (error && *error) {
+            return;
+        }
+        if (length != nil) {
+            dataLength = fileAttributes[NSFileSize];
+        } else {
+            NSNumber *length = fileAttributes[NSFileSize];
+            data = [self.ioCipher readDataFromFileAtPath:filePath length:length.integerValue offset:0 error:error];
+        }
+    }];
+    if (length != nil) {
+        *length = dataLength;
+    }
+    return data;
+}
+
+- (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
+                  buddyUniqueId:(NSString *)buddyUniqueId
+                          error:(NSError* __autoreleasing *)error {
+    return [self dataForItem:mediaItem buddyUniqueId:buddyUniqueId error:error length:nil];
+}
+
+- (NSNumber *)dataLengthForItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError * _Nullable __autoreleasing *)error {
+    NSNumber *length = nil;
+    [self dataForItem:mediaItem buddyUniqueId:buddyUniqueId error:error length:&length];
+    return length;
 }
 
 #pragma - mark Class Methods
+
++ (OTRMediaFileManager*) shared {
+    return [self sharedInstance];
+}
 
 + (instancetype)sharedInstance
 {
@@ -164,10 +242,43 @@ NSString *const kOTRRootMediaDirectory = @"media";
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
 {
+    return [self pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId withLeadingSlash:YES];
+}
+
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash
+{
     if ([buddyUniqueId length] && [mediaItem.uniqueId length] && [mediaItem.filename length]) {
-        return [NSString pathWithComponents:@[@"/",kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
+        NSString *path = [NSString pathWithComponents:@[kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
+        if (includeLeadingSlash) {
+            return [NSString stringWithFormat:@"/%@",path];
+        }
+        return path;
     }
     return nil;
+}
+
+#pragma mark Utility
+
+/** Will perform block synchronously on the internalQueue and block for result if called on another queue. */
+- (void) performSyncRead:(dispatch_block_t)block {
+    NSParameterAssert(block != nil);
+    if (!block) { return; }
+    if (dispatch_get_specific(IsOnInternalQueueKey)) {
+        block();
+    } else {
+        dispatch_sync(_concurrentQueue, block);
+    }
+}
+
+/** Will perform block asynchronously on the internalQueue, unless we're already on internalQueue */
+- (void) performAsyncWrite:(dispatch_block_t)block {
+    NSParameterAssert(block != nil);
+    if (!block) { return; }
+    if (dispatch_get_specific(IsOnInternalQueueKey)) {
+        block();
+    } else {
+        dispatch_barrier_async(_concurrentQueue, block);
+    }
 }
 
 @end

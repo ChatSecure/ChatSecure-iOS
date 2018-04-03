@@ -8,7 +8,7 @@
 
 #import "OTRLanguageSetting.h"
 #import "OTRListSettingValue.h"
-#import "Strings.h"
+@import OTRAssets;
 
 @interface OTRLanguageSetting ()
 
@@ -52,7 +52,7 @@
         return NSOrderedSame;
     }];
     
-    OTRListSettingValue *defaultValue = [[OTRListSettingValue alloc] initWithTitle:DEFAULT_LANGUAGE_STRING detail:nil value:kOTRDefaultLanguageLocale];
+    OTRListSettingValue *defaultValue = [[OTRListSettingValue alloc] initWithTitle:DEFAULT_LANGUAGE_STRING() detail:nil value:kOTRDefaultLanguageLocale];
     
     [tempPossibleValues insertObject:defaultValue atIndex:0];
     

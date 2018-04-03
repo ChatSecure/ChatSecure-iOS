@@ -7,29 +7,24 @@
 //
 
 #import "UIActivityViewController+ChatSecure.h"
-#import "ARChromeActivity.h"
-#import "TUSafariActivity.h"
+@import ARChromeActivity;
+@import TUSafariActivity;
 #import "OTROpenInFacebookActivity.h"
 #import "OTROpenInTwitterActivity.h"
-#import "Strings.h"
+@import OTRAssets;
+#import "UIActivity+ChatSecure.h"
+
 
 @implementation UIActivityViewController (ChatSecure)
 
 + (instancetype)otr_linkActivityViewControllerWithURLs:(NSArray *)urlArray
 {
-    if ([urlArray count]) {
-        TUSafariActivity *safariActivity = [TUSafariActivity new];
-        ARChromeActivity *chromeActivity = [ARChromeActivity new];
-        chromeActivity.activityTitle = OPEN_IN_CHROME;
-        chromeActivity.callbackURL = [NSURL URLWithString:@"chatsecure://"];
-        OTROpenInTwitterActivity *twitterActivity = [OTROpenInTwitterActivity new];
-        OTROpenInFacebookActivity *facebookActivity = [OTROpenInFacebookActivity new];
-        
-        
-        NSArray *applicationActivites  = @[twitterActivity,facebookActivity,safariActivity,chromeActivity];
-        return [[self alloc] initWithActivityItems:urlArray applicationActivities:applicationActivites];
+    if (!urlArray.count) {
+        return nil;
     }
-    return nil;
+    return [[self alloc] initWithActivityItems:urlArray applicationActivities:UIActivity.otr_linkActivities];
 }
+
+
 
 @end

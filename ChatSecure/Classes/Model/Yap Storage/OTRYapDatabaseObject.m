@@ -7,51 +7,71 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-
-@interface OTRYapDatabaseObject ()
-
-@property (nonatomic, strong) NSString *uniqueId;
-
-@end
+#import "OTRLog.h"
 
 @implementation OTRYapDatabaseObject
+@synthesize uniqueId = _uniqueId;
 
-- (id)init
+- (instancetype)init
 {
-    if (self = [super init])
-    {
-        self.uniqueId = [[NSUUID UUID] UUIDString];
-    }
-    return self;
+    return [self initWithUniqueId:[NSUUID UUID].UUIDString];
 }
 
 - (instancetype)initWithUniqueId:(NSString *)uniqueId
 {
+    NSParameterAssert(uniqueId);
     if (self = [super init]) {
-        self.uniqueId = uniqueId;
+        _uniqueId = [uniqueId copy];
     }
     return self;
 }
 
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [transaction setObject:self forKey:self.uniqueId inCollection:[[self class] collection]];
+    NSString *collection = self.class.collection;
+    [transaction setObject:self forKey:self.uniqueId inCollection:collection];
 }
 
 - (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [transaction removeObjectForKey:self.uniqueId inCollection:[[self class] collection]];
+    NSString *collection = self.class.collection;
+    [transaction removeObjectForKey:self.uniqueId inCollection:collection];
+}
+
+- (void)touchWithTransaction:(YapDatabaseReadWriteTransaction *)transaction {
+    NSString *collection = self.class.collection;
+    [transaction touchObjectForKey:self.uniqueId inCollection:collection];
+}
+
+/** This will fetch an updated instance of the object */
+- (nullable instancetype)refetchWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction {
+    id object = [self.class fetchObjectWithUniqueID:self.uniqueId transaction:transaction];
+    object = [object copy];
+    return object;
+}
+
+- (NSString*) yapCollection {
+    return self.class.collection;
 }
 
 #pragma - mark Class Methods
 
 + (NSString *)collection
 {
-    return NSStringFromClass([self class]);
+    return NSStringFromClass(self.class);
 }
 
-+ (instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
-    return [transaction objectForKey:uniqueID inCollection:[self collection]];
++ (nullable instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
+    NSString *collection = self.collection;
+    NSParameterAssert(collection);
+    NSParameterAssert(uniqueID);
+    NSParameterAssert(transaction);
+    if (!uniqueID || !transaction || !collection) {
+        return nil;
+    }
+    id object = [transaction objectForKey:uniqueID inCollection:collection];
+    NSParameterAssert(!object || [object isKindOfClass:self.class]);
+    return object;
 }
 
 @end

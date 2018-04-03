@@ -7,7 +7,7 @@
 //
 
 #import "OTRHoldToTalkView.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRTouchAndHoldGestureRecognizer.h"
 
 @interface OTRHoldToTalkView ()
@@ -15,7 +15,7 @@
 @property (nonatomic) BOOL addedConstraints;
 @property (nonatomic, strong) OTRTouchAndHoldGestureRecognizer *gestureRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-
+@property (nonatomic) BOOL gestureRecognizerIsInTouch;
 
 @end
 
@@ -52,6 +52,11 @@
     [super updateConstraints];
 }
 
+- (BOOL)isInTouch
+{
+    return self.gestureRecognizerIsInTouch;
+}
+
 #pragma - mark Touches
 
 - (void)gesture:(OTRTouchAndHoldGestureRecognizer *)sender
@@ -59,6 +64,7 @@
     switch (sender.state) {
         case UIGestureRecognizerStateBegan: {
             NSLog(@"Touch Began");
+            self.gestureRecognizerIsInTouch = YES;
             [self.delegate didBeginTouch:self];
             break;
         }
@@ -69,10 +75,12 @@
         }
         case UIGestureRecognizerStateCancelled: {
            [self.delegate touchCancelled:self];
+            self.gestureRecognizerIsInTouch = NO;
             break;
         }
         case UIGestureRecognizerStateEnded: {
             [self.delegate didReleaseTouch:self];
+            self.gestureRecognizerIsInTouch = NO;
             break;
         }
         default:

@@ -1,5 +1,5 @@
+osx_image: xcode9.1
 language: objective-c
-osx_image: xcode6.4
 
 # Handle git submodules yourself
 # http://stackoverflow.com/a/24600210/805882
@@ -8,20 +8,34 @@ git:
 
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
-    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
-    - git submodule update --init --recursive
+  # Fix Travis  xcodebuild exited with 65 https://github.com/travis-ci/travis-ci/issues/6675#issuecomment-257964767
+  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (11" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
+  - echo $IOS_SIMULATOR_UDID
+  - open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+  - bundle install # We need a pre-release CocoaPods version
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
+  - sed -i -e 's/git@github.com:/git:\/\/github.com\//' Podfile
+  - git submodule update --init --recursive
 
 install:
-  - cp ChatSecure/Classes/Utilities/OTRSecrets-Template.m ChatSecure/Classes/Utilities/OTRSecrets.m
-  - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
-  - export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
-  - bash ./Submodules/CPAProxy/scripts/build-all.sh
-  - bash ./Submodules/OTRKit/scripts/build-all.sh
+  - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
+  - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
+  - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
+  - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
+  - mkdir -p ./Carthage/Build/iOS/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Carthage-iOS.zip -d ./Carthage/Build
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
+  - mv ./Submodules/CPAProxy/CPAProxyDependencies ./Submodules/CPAProxy/CPAProxyDependencies-iOS
+  - cp -r ./Submodules/CPAProxy/CPAProxyDependencies-iOS ./Submodules/CPAProxy/CPAProxyDependencies-macOS
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies-iOS.zip -d ./Submodules/OTRKit/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:
-  - gem install cocoapods --no-rdoc --no-ri # Need Cocoapods >= 0.34.1
-  - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # Fix XMPPFramework podspec error w/ Cocoapods 0.38
-  - pod install
+  # Skip re-building of Carthage dependencies in favor of using precompiled
+  # - carthage update --platform ios --cache-builds
+  - bundle exec pod repo update
+  - bundle exec pod install
 script:
-  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator -arch i386 build
+  - set -o pipefail
+  - xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination "id=$IOS_SIMULATOR_UDID" test | xcpretty -c
+  

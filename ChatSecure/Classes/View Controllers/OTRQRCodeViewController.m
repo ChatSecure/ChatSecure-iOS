@@ -21,98 +21,96 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRQRCodeViewController.h"
-#import "Strings.h"
+@import ZXingObjC;
+@import PureLayout;
+#import  <QuartzCore/CALayer.h>
+
+@import OTRAssets;
+
+@interface OTRQRCodeViewController()
+@property (nonatomic, assign) BOOL didSetupConstraints;
+@end
 
 @implementation OTRQRCodeViewController
-@synthesize imageView, instructionsLabel,delegate;
 
-- (id) init 
-{
-    if (self = [super init]) 
-    {
-        self.title = @"QR Code";
+- (instancetype) initWithQRString:(NSString*)qrString {
+    if (self = [super init]) {
+        _qrString = qrString;
+        self.title = QR_CODE_STRING();
     }
     return self;
+}
+
+- (UIImage*)imageForQRString:(NSString*)qrString size:(CGSize)size {
+    if (!qrString) {
+        return nil;
+    }
+    ZXMultiFormatWriter *writer = [[ZXMultiFormatWriter alloc] init];
+    ZXBitMatrix *result = [writer encode:qrString
+                                  format:kBarcodeFormatQRCode
+                                   width:size.width
+                                  height:size.height
+                                   error:nil];
+    if (result) {
+        ZXImage *image = [ZXImage imageWithMatrix:result];
+        return [UIImage imageWithCGImage:image.cgimage];
+    } else {
+        return nil;
+    }
 }
 
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png"]];
-    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:imageView];
-    self.instructionsLabel = [[UILabel alloc] init];
-    self.instructionsLabel.text = QR_CODE_INSTRUCTIONS_STRING;
+    self.imageView = [[UIImageView alloc] initForAutoLayout];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.layer.magnificationFilter = kCAFilterNearest;
+    self.imageView.layer.shouldRasterize = YES;
+    [self.view addSubview:self.imageView];
+    
+    self.instructionsLabel = [[UILabel alloc] initForAutoLayout];
+    self.instructionsLabel.text = self.qrString;
     self.instructionsLabel.numberOfLines = 3;
-    [self.view addSubview:instructionsLabel];
+    self.instructionsLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.instructionsLabel];
     
-    [self applyConstraints];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING() style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
+    [self.view setNeedsUpdateConstraints];
+}
+
+- (void)updateViewConstraints {
+    if (!self.didSetupConstraints) {
+        CGFloat padding = 10;
+        [self.imageView autoPinToTopLayoutGuideOfViewController:self withInset:padding];
+        [self.imageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
+        [self.imageView autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
+        [self.imageView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.instructionsLabel withOffset:padding];
+        
+        [self.instructionsLabel autoPinToBottomLayoutGuideOfViewController:self withInset:padding];
+        [self.instructionsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
+        [self.instructionsLabel autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
+        
+        self.didSetupConstraints = YES;
+    }
+    [super updateViewConstraints];
 }
 
 - (void) viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
-    //CGFloat width = 300;
-    //self.imageView.frame = CGRectMake(self.view.frame.size.width/2 - width/2, 11, width, width);
     
-    self.instructionsLabel.frame = CGRectMake(10, self.view.frame.size.height - 100, self.view.frame.size.width - 20, 100);
-}
-
-- (void)applyConstraints {
-    NSLayoutConstraint * contraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                                                  attribute:NSLayoutAttributeWidth
-                                                                  relatedBy:NSLayoutRelationEqual
-                                                                     toItem:nil
-                                                                  attribute:NSLayoutAttributeNotAnAttribute
-                                                                 multiplier:1.0
-                                                                   constant:300];
-    [self.imageView addConstraint:contraint];
-    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                             attribute:NSLayoutAttributeHeight
-                                             relatedBy:NSLayoutRelationEqual
-                                                toItem:nil
-                                             attribute:NSLayoutAttributeNotAnAttribute
-                                            multiplier:1.0
-                                              constant:300];
-    [self.imageView addConstraint:contraint];
-    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                             attribute:NSLayoutAttributeTop
-                                             relatedBy:NSLayoutRelationEqual
-                                                toItem:self.view
-                                             attribute:NSLayoutAttributeTop
-                                            multiplier:1.0
-                                              constant:70];
-    [self.view addConstraint:contraint];
-    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                             attribute:NSLayoutAttributeCenterX
-                                             relatedBy:NSLayoutRelationEqual
-                                                toItem:self.view
-                                             attribute:NSLayoutAttributeCenterX
-                                            multiplier:1.0
-                                              constant:0.0];
-    [self.view addConstraint:contraint];
+    UIImage *image = [self imageForQRString:self.qrString size:self.imageView.frame.size];
+    self.imageView.image = image;
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void) doneButtonPressed:(id)sender
 {
-    if ([delegate respondsToSelector:@selector(didDismiss)]) {
-        [delegate didDismiss];
-    }
-    else{
+    if ([self.delegate respondsToSelector:@selector(didDismissQRCodeViewController:)]) {
+        [self.delegate didDismissQRCodeViewController:self];
+    } else{
         [self dismissViewControllerAnimated:YES completion:nil];
-    }
-    
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return YES;
-    } else {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
 }
 

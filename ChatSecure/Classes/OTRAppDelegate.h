@@ -20,27 +20,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
-#import "HockeySDK.h"
+@import UIKit;
 
-@class OTRSettingsViewController;
-@class OTRMessagesHoldTalkViewController;
-@class OTRConversationViewController;
+@class OTRSplitViewCoordinator, OTRConversationViewController, OTRMessagesViewController;
+@protocol AppTheme;
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, strong) OTRMessagesHoldTalkViewController *messagesViewController;
-@property (nonatomic, strong) OTRConversationViewController *conversationViewController;
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, strong) NSTimer *backgroundTimer;
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
-@property (nonatomic) BOOL didShowDisconnectionWarning;
+@property (nonatomic, strong, readonly) OTRConversationViewController *conversationViewController;
+@property (nonatomic, strong, readonly) OTRMessagesViewController *messagesViewController;
+@property (nonatomic, strong, readonly) OTRSplitViewCoordinator *splitViewCoordinator;
 
+/** Only used from Database Unlock view. */
 - (void) showConversationViewController;
 
-+ (OTRAppDelegate *)appDelegate;
-
+@property (class, nonatomic, readonly) __kindof OTRAppDelegate *appDelegate;
 
 @end
+
+
+NS_ASSUME_NONNULL_END

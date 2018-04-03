@@ -32,7 +32,7 @@
     {
         viewControllerClass = newViewControllerClass;
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf showView];
         };
         self.accessoryType = UITableViewCellAccessoryNone;

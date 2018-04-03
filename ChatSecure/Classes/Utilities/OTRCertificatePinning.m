@@ -7,18 +7,17 @@
 //
 
 #import "OTRCertificatePinning.h"
-#import "SSKeychain.h"
-#import "SSKeychainQuery.h"
-#import "GCDAsyncSocket.h"
-#import "AFSecurityPolicy.h"
-#import "XMPPStream.h"
-#import "XMPPJID.h"
+@import SAMKeychain;
+@import CocoaAsyncSocket;
+@import AFNetworking;
+@import XMPPFramework;
+
 
 #import <CommonCrypto/CommonDigest.h>
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
-#import "XMPPStream.h"
+#import "OTRXMPPStream.h"
 
 
 ///////////////////////////////////////////////
@@ -68,12 +67,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 @implementation OTRCertificatePinning
 
-- (instancetype)initWithDefaultCertificates
+- (instancetype)init
 {
     if (self = [super init]) {
-        self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
+        _securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
         self.securityPolicy.validatesDomainName = NO;
-        self.securityPolicy.validatesCertificateChain = NO;
         self.securityPolicy.allowInvalidCertificates = YES;
     }
     return self;
@@ -84,7 +82,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     
     NSArray * hostnameCertificatesArray = [OTRCertificatePinning storedCertificatesWithHostName:hostname];
     
-    self.securityPolicy.pinnedCertificates = hostnameCertificatesArray;
+    
+    self.securityPolicy.pinnedCertificates = [[NSSet alloc] initWithArray:hostnameCertificatesArray];
 }
 
 - (BOOL)isValidPinnedTrust:(SecTrustRef)trust withHostName:(NSString *)hostname {
@@ -115,17 +114,10 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     }
 }
 
-+ (instancetype)defaultCertificates
-{
-    return [[self alloc] initWithDefaultCertificates];
-}
-
-+ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
-    
-    NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
-    
++ (void)addCertificateData:(NSData*)certificateData withHostName:(NSString *)hostname {
+    NSData *certData = certificateData;
     if ([hostname length] && [certData length]) {
-        SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+        SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
         keychainQuery.service = kOTRCertificateServiceName;
         keychainQuery.account = hostname;
         
@@ -154,10 +146,15 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     }
 }
 
++ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
+    NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
+    [self addCertificateData:certData withHostName:hostname];
+}
+
 + (NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
     NSArray * certificateArray = nil;
     
-    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
+    SAMKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
     
     NSError * error =nil;
     [keychainQuery fetch:&error];
@@ -198,29 +195,34 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return allowedCertificate;
 }
 
-+(NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate {
-    NSData * certData = [self dataForCertificate:certificate];
-    unsigned char sha1Buffer[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(certData.bytes, (CC_LONG)certData.length, sha1Buffer);
-    NSMutableString *fingerprint = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 3];
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; ++i)
++(NSString*)sha256FingerprintForCertificateData:(NSData*)certificateData {
+    NSData *certData = certificateData;
+    NSUInteger bufferLength = CC_SHA256_DIGEST_LENGTH;
+    unsigned char sha256Buffer[bufferLength];
+    CC_SHA256(certData.bytes, (CC_LONG)certData.length, sha256Buffer);
+    NSMutableString *fingerprint = [NSMutableString stringWithCapacity:bufferLength * 3];
+    for (int i = 0; i < bufferLength; ++i)
     {
-        [fingerprint appendFormat:@"%02x ",sha1Buffer[i]];
+        [fingerprint appendFormat:@"%02x",sha256Buffer[i]];
     }
-    
     return [fingerprint stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
++(NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate {
+    NSData * certData = [self dataForCertificate:certificate];
+    return [self sha256FingerprintForCertificateData:certData];
 }
 
 + (NSDictionary *)allCertificates {
     NSMutableDictionary * resultsDictionary = [NSMutableDictionary dictionary];
 
-    NSArray * allCertificatesArray = [SSKeychain accountsForService:kOTRCertificateServiceName];
+    NSArray * allCertificatesArray = [SAMKeychain accountsForService:kOTRCertificateServiceName];
     
     
     if ([allCertificatesArray count]) {
         [allCertificatesArray enumerateObjectsUsingBlock:^(NSDictionary * keychainProperties, NSUInteger idx, BOOL *stop) {
             
-            NSString * domain = keychainProperties[kSSKeychainAccountKey];
+            NSString * domain = keychainProperties[kSAMKeychainAccountKey];
             NSArray * certs = [self storedCertificatesWithHostName:domain];
             resultsDictionary[domain] = certs;
         }];
@@ -231,8 +233,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 }
 
-+ (SSKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
-    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
++ (SAMKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
+    SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
     keychainQuery.service = kOTRCertificateServiceName;
     keychainQuery.account = hostname;
     
@@ -241,13 +243,13 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 + (void)deleteAllCertificatesWithHostName:(NSString *)hostname {
     NSError * error = nil;
-    [SSKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
+    [SAMKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
     if (error) {
         DDLogError(@"Error deleting all certificates: %@", error);
     }
 }
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
-    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
+    SAMKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
     
     NSError * error = nil;
     
@@ -288,41 +290,6 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return nil;
 }
 
-+ (NSDictionary *)bundledCertHashes
-{
-    static NSDictionary *bundledCertHashes = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        bundledCertHashes = @{@"talk.google.com": @"83 56 59 a4 b0 02 c0 4b 37 91 70 59 70 e5 f7 95 ee 66 a1 70",
-                              @"chat.facebook.com": @"21 f1 6b d6 61 95 d5 b4 3a 06 b4 e9 a0 50 7e 15 30 56 2e d3"};
-    });
-    return bundledCertHashes;
-}
-
-+ (void)loadBundledCertificatesToKeychain
-{
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSArray *paths = [bundle pathsForResourcesOfType:@"cer" inDirectory:@"."];
-    
-    NSMutableDictionary *certificates = [NSMutableDictionary dictionaryWithCapacity:[paths count]];
-    for (NSString *path in paths) {
-        NSData *certificateData = [NSData dataWithContentsOfFile:path];
-        [certificates setObject:certificateData forKey:[[path lastPathComponent] stringByDeletingPathExtension]];
-    }
-    
-    NSDictionary *bundledCertificatesDictionary = [NSDictionary dictionaryWithDictionary:certificates];
-    
-    [bundledCertificatesDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *domain, NSData *bundledCertData, BOOL *stop) {
-        
-        NSString *hash = [self sha1FingerprintForCertificate:[self certForData:bundledCertData]];
-        if ([hash isEqualToString:[self bundledCertHashes][domain]]) {
-            [self addCertificate:[self certForData:bundledCertData] withHostName:domain];
-        }
-    }];
-    
-}
-
 
 
 /**
@@ -332,13 +299,26 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
 {
-    BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
+    NSString *hostName = nil;
+    if ([sender isKindOfClass:[OTRXMPPStream class]]) {
+        OTRXMPPStream *otrStream = (OTRXMPPStream*)sender;
+        hostName = otrStream.connectedHostName;
+    } else {
+        completionHandler(NO);
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"XMPPStream is of wrong class! Expected OTRXMPPStream." userInfo:nil];
+    }
+    // We should have a hostName. If we don't, something is wrong.
+    NSParameterAssert(hostName.length > 0);
+    if (!hostName.length) {
+        completionHandler(NO);
+    }
+    BOOL trusted = [self isValidPinnedTrust:trust withHostName:hostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
         SecTrustResultType result;
         OSStatus status =  SecTrustEvaluate(trust, &result);
         if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
-            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName systemTrustResult:result];
+            [self.delegate newTrust:trust withHostName:hostName systemTrustResult:result];
         }
     }
     completionHandler(trusted);

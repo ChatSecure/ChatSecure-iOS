@@ -11,53 +11,11 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMediaItem.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 
-@implementation OTRMessage (JSQMessageData)
+@implementation OTRBaseMessage (JSQMessageData)
 
-- (NSString *)senderId
-{
-    __block NSString *sender = @"";
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-        if (self.isIncoming) {
-            sender = buddy.uniqueId;
-        }
-        else {
-            OTRAccount *account = [buddy accountWithTransaction:transaction];
-            sender = account.uniqueId;
-        }
-    }];
-    return sender;
-}
-
-- (NSString *)senderDisplayName {
-    __block NSString *sender = @"";
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
-        if (self.isIncoming) {
-            if ([buddy.displayName length]) {
-                sender = buddy.displayName;
-            }
-            else {
-                sender = buddy.username;
-            }
-        }
-        else {
-            OTRAccount *account = [buddy accountWithTransaction:transaction];
-            if ([account.displayName length]) {
-                sender = account.displayName;
-            }
-            else {
-                sender = account.username;
-            }
-        }
-    }];
-    return sender;
-}
-
-- (NSUInteger)messageHash
-{
+- (NSUInteger)messageHash {
     return [self hash];
 }
 
@@ -72,11 +30,52 @@
 - (id<JSQMessageMediaData>)media
 {
     __block id <JSQMessageMediaData>media = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         media = [OTRMediaItem fetchObjectWithUniqueID:self.mediaItemUniqueId transaction:transaction];
     }];
     return media;
 }
 
+- (NSString *)senderId {
+    __block NSString *sender = nil;
+    if (self.isMessageIncoming) {
+        sender = self.buddyUniqueId;
+    } else {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            sender = account.uniqueId;
+        }];
+    }
+    return sender;
+}
+
+- (NSString *)senderDisplayName {
+    __block NSString *sender = @"";
+    if (self.isMessageIncoming) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            if ([buddy.displayName length]) {
+                sender = buddy.displayName;
+            }
+            else {
+                sender = buddy.username;
+            }
+        }];
+    } else {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            if ([account.displayName length]) {
+                sender = account.displayName;
+            }
+            else {
+                sender = account.username;
+            }
+        }];
+    }
+    return sender;
+}
 
 @end
+

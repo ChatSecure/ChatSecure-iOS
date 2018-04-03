@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+minimum_perc = 1
+
+[chatsecure.strings]
+file_filter = <lang>.lproj/Localizable.strings
+lang_map = da_DK : da-DK, fa_IR : fa-IR, no : nb-NO, nl_NL : nl-NL, pt_BR : pt-BR, pt_PT : pt-PT, ro_RO : ro-RO, zh_CN : zh-Hans-CN, zh_TW : zh-Hant-TW, sl_SI : sl-SI
+source_file = Base.lproj/Localizable.strings
+source_lang = en_US
+

@@ -20,37 +20,44 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-@class OTRMessage, OTRBuddy, OTRAccount;
+@class OTROutgoingMessage, OTRBuddy, OTRAccount;
+@protocol PushControllerProtocol;
 
 typedef NS_ENUM(int, OTRProtocolType) {
     OTRProtocolTypeNone        = 0,
     OTRProtocolTypeXMPP        = 1,
-    OTRProtocolTypeOscar       = 2
+    OTRProtocolTypeOscar       = 2 // deprecated
 };
 
-typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
-    OTRProtocolConnectionStatusDisconnected,
-    OTRProtocolConnectionStatusConnected,
-    OTRProtocolConnectionStatusConnecting
+typedef NS_ENUM(NSInteger, OTRLoginStatus) {
+    OTRLoginStatusDisconnected = 0,
+    OTRLoginStatusDisconnecting,
+    OTRLoginStatusConnecting,
+    OTRLoginStatusConnected,
+    OTRLoginStatusSecuring,
+    OTRLoginStatusSecured,
+    OTRLoginStatusAuthenticating,
+    OTRLoginStatusAuthenticated
 };
 
+NS_ASSUME_NONNULL_BEGIN
 @protocol OTRProtocol <NSObject>
 
-- (OTRAccount *)account;
-- (OTRProtocolConnectionStatus)connectionStatus;
+/** Send a message immediately. Bypasses (and used by) the message queue. */
+- (void) sendMessage:(OTROutgoingMessage*)message;
 
-- (void) sendMessage:(OTRMessage*)message;
-
-- (void) connectWithPassword:(NSString *)password;
-- (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated;
+- (void) connect;
+- (void) connectUserInitiated:(BOOL)userInitiated;
 
 - (void) disconnect;
+- (void) disconnectSocketOnly:(BOOL)socketOnly;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
+- (void) addBuddies:(NSArray<OTRBuddy*> *)buddies;
 
-- (void) removeBuddies:(NSArray *)buddies;
-- (void) blockBuddies:(NSArray *)buddies;
+- (void) removeBuddies:(NSArray<OTRBuddy*> *)buddies;
+- (void) blockBuddies:(NSArray<OTRBuddy*> *)buddies;
 
-- (id) initWithAccount:(OTRAccount*)account;
+- (instancetype) initWithAccount:(OTRAccount*)account;
 
 @end
 
@@ -58,3 +65,4 @@ typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
 - (void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy;
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRBuddy *)buddy;
 @end
+NS_ASSUME_NONNULL_END

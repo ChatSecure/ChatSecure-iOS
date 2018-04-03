@@ -8,7 +8,7 @@
 
 #import "OTRLanguageListSettingViewController.h"
 #import "OTRLanguageSetting.h"
-#import "Strings.h"
+@import OTRAssets;
 
 @interface OTRLanguageListSettingViewController ()
 

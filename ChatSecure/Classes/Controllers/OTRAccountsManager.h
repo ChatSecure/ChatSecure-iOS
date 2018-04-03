@@ -20,18 +20,20 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "OTRConstants.h"
 
 @class OTRAccount;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRAccountsManager : NSObject
 
 + (void)removeAccount:(OTRAccount*)account;
-+ (NSArray *)allAccountsAbleToAddBuddies;
-+ (OTRAccount *)accountWithUsername:(NSString *)username;
++ (NSArray<OTRAccount*> *)allAccounts;
++ (nullable OTRAccount *)accountWithUsername:(NSString *)username;
 
-+ (NSArray *)allAutoLoginAccounts;
++ (NSArray<OTRAccount*> *)allAutoLoginAccounts;
 
 
 @end
+NS_ASSUME_NONNULL_END

@@ -6,21 +6,30 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "YapDatabaseViewMappings.h"
-#import "YapDatabaseView.h"
+@import Foundation;
+@import YapDatabase;
+
+NS_ASSUME_NONNULL_BEGIN
+
 
 //Extension Strings
+/** Returns only Buddy threads with messages, not MUCs. Depends on OTRConversationDatabaseViewExtensionName */
+extern NSString *OTRBuddyFilteredConversationsName;
+/** Can filter on inbox vs archive. Depends on OTRConversationDatabaseViewExtensionName */
+extern NSString *OTRArchiveFilteredConversationsName;
+/** Can filter on inbox vs archive. Depends on OTRAllBuddiesDatabaseViewExtensionName */
+extern NSString *OTRArchiveFilteredBuddiesName;
+
 extern NSString *OTRConversationDatabaseViewExtensionName;
+/** Right now only filters messages without a length */
+extern NSString *OTRFilteredChatDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
-extern NSString *OTRBuddyNameSearchDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
 extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 extern NSString *OTRAllPushAccountInfoViewExtensionName;
-extern NSString *OTRUnreadMessagesViewExtensionName;
 
-// Group Strins
+// Group Strings
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
@@ -35,18 +44,22 @@ extern NSString *OTRPushTokenGroup;
 @interface OTRDatabaseView : NSObject
 
 
-+ (BOOL)registerConversationDatabaseView;
++ (BOOL)registerConversationDatabaseViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerArchiveFilteredConversationsViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerBuddyFilteredConversationsViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllAccountsDatabaseView;
++ (BOOL)registerAllAccountsDatabaseViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerChatDatabaseView;
 
-+ (BOOL)registerBuddyNameSearchDatabaseView;
+/**
+ Objects in this class are both OTRMessage and OTRXMPPRoomMessage. For OTRMessage they are grouped
+ by buddyUniqueID. For OTRXMPPRoomMessage they are grouped by roomUniqueID. In both cases they are
+ sorted by date.
+ */
++ (BOOL)registerChatDatabaseViewWithDatabase:(YapDatabase *)database;
 
-+ (BOOL)registerAllBuddiesDatabaseView;
-
-+ (BOOL)registerAllSubscriptionRequestsView;
-
-+ (BOOL)registerUnreadMessagesView;
++ (BOOL)registerAllBuddiesDatabaseViewWithDatabase:(YapDatabase *)database;
++ (BOOL)registerFilteredBuddiesViewWithDatabase:(YapDatabase *)database;
 
 @end
+NS_ASSUME_NONNULL_END

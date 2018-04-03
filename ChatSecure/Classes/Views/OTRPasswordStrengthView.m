@@ -7,7 +7,7 @@
 //
 
 #import "OTRPasswordStrengthView.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRPasswordStrengthView ()
 

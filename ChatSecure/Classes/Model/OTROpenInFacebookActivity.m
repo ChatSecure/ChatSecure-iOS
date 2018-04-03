@@ -10,7 +10,8 @@
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
-#import "Strings.h"
+@import OTRAssets;
+
 
 @interface OTROpenInFacebookActivity ()
 
@@ -39,7 +40,7 @@
 
 - (NSString *)activityTitle
 {
-    return OPEN_IN_FACEBOOK_STRING;
+    return OPEN_IN_FACEBOOK_STRING();
 }
 
 - (NSString *)activityType

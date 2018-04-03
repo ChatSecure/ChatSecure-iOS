@@ -9,10 +9,16 @@
 #import "OTRConversationCell.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+#import "OTRMediaItem.h"
+#import "OTRImageItem.h"
+#import "OTRAudioItem.h"
+#import "OTRVideoItem.h"
+@import OTRAssets;
+@import YapDatabase;
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRConversationCell ()
 
@@ -71,48 +77,77 @@
     }
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id <OTRThreadOwner>)thread
 {
-    [super setBuddy:buddy];
-    NSString * nameString = nil;
-    if (buddy.displayName.length) {
-        nameString = buddy.displayName;
-    }
-    else {
-        nameString = buddy.username;
-    }
+    [super setThread:thread];
+    NSString * nameString = [thread threadName];
+    
     self.nameLabel.text = nameString;
     
     __block OTRAccount *account = nil;
-    __block OTRMessage *lastMessage = nil;
-
+    __block id <OTRMessageProtocol> lastMessage = nil;
+    __block NSUInteger unreadMessages = 0;
+    __block OTRMediaItem *mediaItem = nil;
     
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [transaction objectForKey:buddy.accountUniqueId inCollection:[OTRAccount collection]];
-        
-        lastMessage = [buddy lastMessageWithTransaction:transaction];
+    /// this is so we can show who sent a group message
+    __block OTRXMPPBuddy *groupBuddy = nil;
+    
+    [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
+        unreadMessages = [thread numberOfUnreadMessagesWithTransaction:transaction];
+        lastMessage = [thread lastMessageWithTransaction:transaction];
+        groupBuddy = [lastMessage buddyWithTransaction:transaction];
+        if (lastMessage.messageMediaItemKey) {
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:lastMessage.messageMediaItemKey transaction:transaction];
+        }
     }];
-    
     
     self.accountLabel.text = account.username;
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
-    self.conversationLabel.text = lastMessage.text;
-    if (!lastMessage.isRead) {
+    NSError *messageError = lastMessage.messageError;
+    NSString *messageText = lastMessage.messageText;
+    if (!messageText) {
+        messageText = @"";
+    }
+    
+    NSString *messageTextPrefix = @"";
+    if (!lastMessage.isMessageIncoming) {
+        NSString *you = GROUP_INFO_YOU().localizedCapitalizedString;
+        messageTextPrefix = [NSString stringWithFormat:@"%@: ", you];
+    } else if (thread.isGroupThread) {
+        NSString *displayName = groupBuddy.displayName;
+        if (displayName.length) {
+            messageTextPrefix = [NSString stringWithFormat:@"%@: ", displayName];
+        }
+    }
+    
+    if (messageError &&
+        !messageError.isAutomaticDownloadError) {
+        if (!messageText.length) {
+            messageText = ERROR_STRING();
+        }
+        self.conversationLabel.text = [NSString stringWithFormat:@"⚠️ %@", messageText];
+    } else if (mediaItem) {
+        self.conversationLabel.text = [messageTextPrefix stringByAppendingString:mediaItem.displayText];
+    } else {
+        self.conversationLabel.text = [messageTextPrefix stringByAppendingString:messageText];
+    }
+    if (unreadMessages > 0) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor blackColor];
-        
-    }
-    else {
+    } else {
         self.nameLabel.font = [UIFont systemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
     }
     self.dateLabel.textColor = self.nameLabel.textColor;
     
-    [self updateDateString:lastMessage.date];
+    [self updateDateString:lastMessage.messageDate];
 }
+
+
 
 - (void)updateDateString:(NSDate *)date
 {
@@ -121,6 +156,9 @@
 
 - (NSString *)dateString:(NSDate *)messageDate
 {
+    if (!messageDate) {
+        return @"";
+    }
     NSTimeInterval timeInterval = fabs([messageDate timeIntervalSinceNow]);
     NSString * dateString = nil;
     if (timeInterval < 60){

@@ -6,29 +6,29 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+@import KissXML;
 
-@class NSXMLElement;
-
+NS_ASSUME_NONNULL_BEGIN
 extern NSString *const OTRXMPPErrorDomain;
 extern NSString *const OTRXMPPXMLErrorKey;
 extern NSString *const OTRXMPPSSLTrustResultKey;
 extern NSString *const OTRXMPPSSLCertificateDataKey;
 extern NSString *const OTRXMPPSSLHostnameKey;
 
-typedef NS_ENUM(NSUInteger, OTRXMPPErrorCode) {
-    OTRXMPPUnsupportedAction,
-    OTRXMPPXMLError,
-    OTRXMPPSSLError,
-    OTRXMPPDomainError,
-    OTRXMPPTorError
+typedef NS_ENUM(NSInteger, OTRXMPPErrorCode) {
+    OTRXMPPErrorCodeUnsupportedAction,
+    OTRXMPPErrorCodeSSLError,
+    OTRXMPPErrorCodeDomainError,
+    OTRXMPPErrorCodeTorError
 };
 
 @interface OTRXMPPError : NSObject
 
-+ (NSString *)errorStringWithSSLStatus:(OSStatus)status;
-+ (NSString *)errorStringWithTrustResultType:(SecTrustResultType)resultType;
++ (nullable NSString *)errorStringWithSSLStatus:(OSStatus)status;
++ (nullable NSString *)errorStringWithTrustResultType:(SecTrustResultType)resultType;
 + (NSError *)errorForXMLElement:(NSXMLElement *)xmlError;
 + (NSError *)errorForTrustResult:(SecTrustResultType)trustResultType withCertData:(NSData *)certData hostname:(NSString *)hostName;
 
 @end
+NS_ASSUME_NONNULL_END

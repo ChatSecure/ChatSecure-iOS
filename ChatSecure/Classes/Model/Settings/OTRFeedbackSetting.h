@@ -12,7 +12,7 @@
 
 @protocol OTRFeedbackSettingDelegate <OTRSettingDelegate>
 @required
-- (void) presentUserVoiceViewForSetting:(OTRSetting *)setting;
+- (void) presentFeedbackViewForSetting:(OTRSetting *)setting;
 @end
 
 @interface OTRFeedbackSetting : OTRSetting

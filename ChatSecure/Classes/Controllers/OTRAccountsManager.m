@@ -25,52 +25,36 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+
 #import "OTRLog.h"
 #import "OTRAccount.h"
-
-@interface OTRAccountsManager(Private)
-- (void) refreshAccountsArray;
-@end
 
 @implementation OTRAccountsManager
 
 + (void)removeAccount:(OTRAccount*)account
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        [transaction setObject:nil forKey:account.uniqueId inCollection:[OTRAccount collection]];
+    NSParameterAssert(account);
+    if (!account) { return; }
+    [account removeKeychainPassword:nil];
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction removeObjectForKey:account.uniqueId inCollection:[OTRAccount collection]];
     }];
 }
 
-+ (NSArray *)allAccountsAbleToAddBuddies  {
++ (NSArray<OTRAccount*> *)allAccounts  {
     
-    __block NSArray *accounts = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    __block NSArray *accounts = @[];
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        
-        if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
-            OTRAccount *account = (OTRAccount *)evaluatedObject;
-            
-            if ([[OTRProtocolManager sharedInstance] isAccountConnected:account]) {
-                return YES;
-            }
-        }
-        return NO;
-    }];
-    
-    
-    return [accounts filteredArrayUsingPredicate:predicate];
+    return accounts;
 }
 
 + (OTRAccount *)accountWithUsername:(NSString *)username
 {
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [[OTRAccount allAccountsWithUsername:username transaction:transaction] firstObject];
     }];
     return account;
@@ -79,7 +63,7 @@
 + (NSArray *)allAutoLoginAccounts
 {
     __block NSArray *accounts = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
 

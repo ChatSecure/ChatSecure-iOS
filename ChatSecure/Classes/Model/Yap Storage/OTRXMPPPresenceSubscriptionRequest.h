@@ -5,10 +5,12 @@
 //  Created by David Chiles on 3/28/14.
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
+//  Deprecated January 2018 in favor of the subscription and pending flags
+//  on OTRXMPPBuddy.
 
 #import "OTRYapDatabaseObject.h"
 
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
 
 @class OTRXMPPAccount;
 
@@ -17,14 +19,6 @@ extern const struct OTRXMPPPresenceSubscriptionRequestAttributes {
 	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *jid;
 } OTRXMPPPresenceSubscriptionRequestAttributes;
-
-extern const struct OTRXMPPPresenceSubscriptionRequestRelationships {
-	__unsafe_unretained NSString *accountUniqueId;
-} OTRXMPPPresenceSubscriptionRequestRelationships;
-
-extern const struct OTRXMPPPresenceSubscriptionRequestEdges {
-	__unsafe_unretained NSString *account;
-} OTRXMPPPresenceSubscriptionRequestEdges;
 
 @interface OTRXMPPPresenceSubscriptionRequest : OTRYapDatabaseObject
 

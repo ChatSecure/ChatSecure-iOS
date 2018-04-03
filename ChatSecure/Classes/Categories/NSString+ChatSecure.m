@@ -7,6 +7,7 @@
 //
 
 #import "NSString+ChatSecure.h"
+@import XMPPFramework;
 
 @implementation NSString (ChatSecure)
 
@@ -35,6 +36,25 @@
         
         return [finalString uppercaseString];
     }
+}
+
+- (NSString *)otr_stringByRemovingNonEnglishCharacters {
+    NSMutableString *string = [self mutableCopy];
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([^A-Za-z0-9])" options:0 error:nil];
+    [regex replaceMatchesInString:string options:0 range:NSMakeRange(0, [string length]) withTemplate:@""];
+    
+    return string;
+}
+
+- (nullable NSString*) otr_displayName {
+    XMPPJID *jid = [XMPPJID jidWithString:self];
+    NSString *user = [jid user];
+    if (!user) {
+        return nil;
+    }
+    user = [user capitalizedString];
+    return user;
 }
 
 @end

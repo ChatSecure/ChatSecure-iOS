@@ -6,12 +6,16 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 extern NSUInteger const OTRDefaultPasswordLength;
 
 @interface OTRPasswordGenerator : NSObject
 
-+ (NSString *)passwordWithLength:(NSUInteger)length;
+/** Length is number of raw random bytes, which is then converted to base64 so expect a longer length. */
++ (nullable NSString *)passwordWithLength:(NSUInteger)length;
+
+/** Length is number of raw random bytes */
++ (nullable NSData *)randomDataWithLength:(NSUInteger)length;
 
 @end

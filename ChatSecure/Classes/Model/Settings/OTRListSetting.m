@@ -11,13 +11,15 @@
 #import "OTRListSettingValue.h"
 
 @implementation OTRListSetting
+@synthesize delegate = _delegate;
+@synthesize defaultValue = _defaultValue;
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             __strong typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf editValue];
         };
@@ -49,7 +51,7 @@
 -(void)setValue:(NSString *)newValue
 {
     [super setValue:newValue];
-    if(self.delegate && [self.delegate respondsToSelector:@selector(referenceView)]) {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(refreshView)]) {
         [self.delegate refreshView];
     }
     

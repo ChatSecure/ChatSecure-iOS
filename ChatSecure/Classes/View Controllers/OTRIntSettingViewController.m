@@ -7,7 +7,8 @@
 //
 
 #import "OTRIntSettingViewController.h"
-#import "Strings.h"
+@import OTRAssets;
+
 
 @interface OTRIntSettingViewController (Private)
 - (void) setTextForValueLabel;
@@ -105,7 +106,7 @@
 }
 
 - (void) setTextForValueLabel {
-    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING, [self stringForValue:otrSetting.intValue], NEW_STRING, [self stringForValue:newValue]];
+    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING(), [self stringForValue:otrSetting.intValue], NEW_STRING(), [self stringForValue:newValue]];
     self.descriptionLabel.font = [UIFont systemFontOfSize:newValue];
     [self resizeDescriptionLabel];
 }

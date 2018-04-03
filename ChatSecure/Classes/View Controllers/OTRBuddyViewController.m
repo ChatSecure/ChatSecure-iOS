@@ -7,9 +7,8 @@
 //
 
 #import "OTRBuddyViewController.h"
-#import <QuartzCore/QuartzCore.h>
+@import QuartzCore;
 #import "OTRInLineTextEditTableViewCell.h"
-#import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
@@ -19,6 +18,10 @@
 #import "OTRBuddy.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
+
+
+@import OTRAssets;
+@import XLForm;
 
 @interface OTRBuddyViewController ()
 
@@ -34,13 +37,13 @@
 {
     if(self = [self init])
     {
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].uiConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             self.buddy = [OTRBuddy fetchObjectWithUniqueID:buddyID transaction:transaction];
             self.account = [self.buddy accountWithTransaction:transaction];
             isXMPPAccount = [[self.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
         }];
         
-        self.title = BUDDY_INFO_STRING;
+        self.title = BUDDY_INFO_STRING();
         
     }
     return self;
@@ -60,7 +63,7 @@
     [self.view addSubview:tableView];
     
     displayNameTextField = [[UITextField alloc]init];
-    displayNameTextField.placeholder = OPTIONAL_STRING;
+    displayNameTextField.placeholder = OPTIONAL_STRING();
     displayNameTextField.font = [UIFont systemFontOfSize:15];
     
     displayNameTextField.delegate = self;
@@ -70,15 +73,15 @@
     }
     
     removeBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [removeBuddyButton setTitle:REMOVE_STRING forState:UIControlStateNormal];
+    [removeBuddyButton setTitle:REMOVE_STRING() forState:UIControlStateNormal];
     [removeBuddyButton addTarget:self action:@selector(removeBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    [blockBuddyButton setTitle:BLOCK_STRING forState:UIControlStateNormal];
+    [blockBuddyButton setTitle:BLOCK_STRING() forState:UIControlStateNormal];
     
     if (!isXMPPAccount) {
-        [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING forState:UIControlStateNormal];
+        [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING() forState:UIControlStateNormal];
     }
     
     /*FIXMEif (!self.account.isConnected) {
@@ -142,7 +145,7 @@
         if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifierLabel];
-            cell.textLabel.text = EMAIL_STRING;
+            cell.textLabel.text = EMAIL_STRING();
             cell.detailTextLabel.text = self.buddy.username;
         }
         
@@ -153,7 +156,7 @@
         if (!cell) {
             cell =[[OTRInLineTextEditTableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifierText];
         }
-        cell.textLabel.text = NAME_STRING;
+        cell.textLabel.text = NAME_STRING();
         [cell layoutIfNeeded];
         ((OTRInLineTextEditTableViewCell *)cell).textField = displayNameTextField;
     }
@@ -167,7 +170,7 @@
         }
         
         if (indexPath.row == 0) {
-            cell.textLabel.text = ACCOUNT_STRING;
+            cell.textLabel.text = ACCOUNT_STRING();
             cell.detailTextLabel.text = self.account.username;
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;

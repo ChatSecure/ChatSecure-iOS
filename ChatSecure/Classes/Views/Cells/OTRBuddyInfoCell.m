@@ -11,9 +11,11 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
-#import "Strings.h"
-#import "PureLayout.h"
+@import OTRAssets;
+@import PureLayout;
 #import "OTRDatabaseManager.h"
+
+const CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @interface OTRBuddyInfoCell ()
 
@@ -28,86 +30,93 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.nameLabel = [[UILabel alloc] init];
-        self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.nameLabel.adjustsFontSizeToFitWidth = YES;
-        [self.contentView addSubview:self.nameLabel];
+        self.nameLabel = [[UILabel alloc] initForAutoLayout];
+        self.nameLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
         
-        self.identifierLabel = [[UILabel alloc] init];
-        self.identifierLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
-        self.identifierLabel.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-        self.identifierLabel.adjustsFontSizeToFitWidth = YES;
-        self.identifierLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:self.identifierLabel];
+        self.identifierLabel = [[UILabel alloc] initForAutoLayout];
+        self.identifierLabel.textColor = [UIColor darkTextColor];
+        self.identifierLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
         
         self.accountLabel = [[UILabel alloc] initForAutoLayout];
-        self.accountLabel.textColor = [UIColor colorWithWhite:.55 alpha:1.0];
-        self.accountLabel.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-        self.accountLabel.adjustsFontSizeToFitWidth = YES;
-        [self.contentView addSubview:self.accountLabel];
+        self.accountLabel.textColor = [UIColor lightGrayColor];
+        self.accountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
         
+        NSArray<UILabel*> *labels = @[self.nameLabel, self.identifierLabel, self.accountLabel];
+        [labels enumerateObjectsUsingBlock:^(UILabel * _Nonnull label, NSUInteger idx, BOOL * _Nonnull stop) {
+            label.adjustsFontSizeToFitWidth = YES;
+            [self.contentView addSubview:label];
+        }];
+        _infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+        [self.infoButton addTarget:self action:@selector(infoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName
-{
-    [self setBuddy:buddy];
-    if ([accountName length]) {
-        if ([self.identifierLabel.text length]) {
-            self.accountLabel.text = accountName;
-        }
-        else {
-            self.identifierLabel.text = accountName;
-            self.accountLabel.text = nil;
-        }
-    }
+- (void)setThread:(id<OTRThreadOwner>)thread {
+    [self setThread:thread account:nil];
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id<OTRThreadOwner>)thread account:(nullable OTRAccount*)account
 {
-    [super setBuddy:buddy];
+    [super setThread:thread];
     
-    NSString * displayName = buddy.displayName;
-    NSString * accountName = buddy.username;
+    NSString * name = [thread threadName];
     
-    if ([displayName length]) {
-        self.nameLabel.text = displayName;
-        self.identifierLabel.text = accountName;
-    }
-    else {
-        self.nameLabel.text = accountName;
-        self.identifierLabel.text = nil;
-    }
+    self.nameLabel.text = name;
+    self.accountLabel.text = account.username;
     
-    if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
-        if(((OTRXMPPBuddy *)buddy).isPendingApproval) {
-            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
-            self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
-        }
+    NSString *identifier = nil;
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
+        OTRBuddy *buddy = (OTRBuddy*)thread;
+        identifier = buddy.username;
+    } else if ([thread isGroupThread]) {
+        identifier = GROUP_NAME_STRING();
     }
+    self.identifierLabel.text = identifier;
+    
+    UIColor *textColor = [UIColor darkTextColor];
+    if ([thread isArchived]) {
+        textColor = [UIColor lightGrayColor];
+    }
+    [@[self.nameLabel, self.identifierLabel] enumerateObjectsUsingBlock:^(UILabel   * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.textColor = textColor;
+    }];
 }
 
 - (void)updateConstraints
 {
-
-    if (!self.addedConstraints) {
-        NSArray *textLabelsArray = @[self.nameLabel,self.identifierLabel,self.accountLabel];
-        
-        //same horizontal contraints for all labels
-        for(UILabel *label in textLabelsArray) {
-            [label autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.avatarImageView withOffset:OTRBuddyImageCellPadding];
-            [label autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:OTRBuddyImageCellPadding relation:NSLayoutRelationGreaterThanOrEqual];
-        }
-        
-        [self.nameLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
-        
-        [self.identifierLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nameLabel withOffset:0 relation:NSLayoutRelationGreaterThanOrEqual];
-        [self.identifierLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.accountLabel withOffset:0 relation:NSLayoutRelationGreaterThanOrEqual];
-        
-        [self.accountLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
+    if (self.addedConstraints) {
+        [super updateConstraints];
+        return;
     }
+    NSArray<UILabel*> *textLabelsArray = @[self.nameLabel,self.identifierLabel,self.accountLabel];
+    
+    //same horizontal contraints for all labels
+    for(UILabel *label in textLabelsArray) {
+        [label autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.avatarImageView withOffset:OTRBuddyImageCellPadding];
+        [label autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:OTRBuddyImageCellPadding relation:NSLayoutRelationGreaterThanOrEqual];
+    }
+    
+    [self.nameLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
+    
+    [self.accountLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nameLabel withOffset:3];
+    
+    [self.identifierLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
     [super updateConstraints];
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.nameLabel.textColor = [UIColor blackColor];
+    self.identifierLabel.textColor = [UIColor darkTextColor];
+    self.accountLabel.textColor = [UIColor lightGrayColor];
+}
+
+- (void) infoButtonPressed:(UIButton*)sender {
+    if (!self.infoAction) {
+        return;
+    }
+    self.infoAction(self, sender);
 }
 
 @end

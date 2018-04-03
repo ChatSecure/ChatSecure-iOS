@@ -7,7 +7,7 @@
 //
 
 #import "OTRAudioTrashView.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRColors.h"
 #import "OTRCircleView.h"
 

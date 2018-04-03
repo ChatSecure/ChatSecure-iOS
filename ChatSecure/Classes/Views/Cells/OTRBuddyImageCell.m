@@ -10,7 +10,8 @@
 #import "OTRBuddy.h"
 #import "OTRImages.h"
 #import "OTRColors.h"
-#import "PureLayout.h"
+@import PureLayout;
+@import OTRAssets;
 
 const CGFloat OTRBuddyImageCellPadding = 12.0;
 
@@ -32,7 +33,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         self.avatarImageView = [[UIImageView alloc] initWithImage:[self defaultImage]];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         CALayer *cellImageLayer = self.avatarImageView.layer;
-        [cellImageLayer setBorderWidth:2.0];
+        cellImageLayer.borderWidth = 0.0;
         
         [cellImageLayer setMasksToBounds:YES];
         [cellImageLayer setBorderColor:[self.imageViewBorderColor CGColor]];
@@ -57,22 +58,28 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     [self.avatarImageView.layer setBorderColor:[_imageViewBorderColor CGColor]];
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id<OTRThreadOwner>)thread
 {
-    if(buddy.avatarImage) {
-        self.avatarImageView.image = buddy.avatarImage;
+    UIImage *avatarImage = [thread avatarImage];
+    if(avatarImage) {
+        self.avatarImageView.image = avatarImage;
     }
     else {
         self.avatarImageView.image = [self defaultImage];
     }
-    UIColor *statusColor =  [OTRColors colorWithStatus:buddy.status];
+    UIColor *statusColor =  [OTRColors colorWithStatus:[thread currentStatus]];
+    if (statusColor) {
+        self.avatarImageView.layer.borderWidth = 1.5;
+    } else {
+        self.avatarImageView.layer.borderWidth = 0.0;
+    }
     self.imageViewBorderColor = statusColor;
     [self.contentView setNeedsUpdateConstraints];
 }
 
 - (UIImage *)defaultImage
 {
-    return [UIImage imageNamed:@"person"];
+    return [UIImage imageNamed:@"person" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 
 - (void)updateConstraints
@@ -84,6 +91,11 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         self.addedConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self.avatarImageView.layer setCornerRadius:(self.contentView.frame.size.height-2*OTRBuddyImageCellPadding)/2.0];
 }
 
 + (NSString *)reuseIdentifier

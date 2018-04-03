@@ -7,15 +7,22 @@
 //
 
 #import "OTRMessagesHoldTalkViewController.h"
-#import "PureLayout.h"
+@import PureLayout;
 #import "OTRHoldToTalkView.h"
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
-#import "Strings.h"
-#import "OTRKit.h"
+#import "OTRLog.h"
+@import OTRKit;
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
+
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+
+static Float64 kOTRMessagesMinimumAudioTime = .5;
+
+@import AVFoundation;
+@import OTRAssets;
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
 
@@ -49,8 +56,14 @@
     self.keyboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.keyboardButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAKeyboardO]
                            forState:UIControlStateNormal];
-    
+        
     [self.view setNeedsUpdateConstraints];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self updateEncryptionState];
 }
 
 #pragma - mark AutoLayout
@@ -79,6 +92,9 @@
 
 - (void)addPush2TalkButton
 {
+    if (self.hold2TalkButton) {
+        [self removePush2TalkButton];
+    }
     self.hold2TalkButton = [[OTRHoldToTalkView alloc] initForAutoLayout];
     [self setHold2TalkStatusWaiting];
     self.hold2TalkButton.delegate = self;
@@ -99,20 +115,23 @@
 
 - (void)setHold2TalkStatusWaiting
 {
-    self.hold2TalkButton.textLabel.text = HOLD_TO_TALK_STRING;
+    self.hold2TalkButton.textLabel.text = HOLD_TO_TALK_STRING();
     self.hold2TalkButton.textLabel.textColor = [UIColor whiteColor];
     self.hold2TalkButton.backgroundColor = [UIColor darkGrayColor];
 }
 
 - (void)setHold2TalkButtonRecording
 {
-    self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
+    self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING();
     self.hold2TalkButton.textLabel.textColor = [UIColor darkGrayColor];
     self.hold2TalkButton.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)addTrashViewItems
 {
+    if (self.trashView) {
+        [self removeTrashViewItems];
+    }
     self.trashView = [[OTRAudioTrashView alloc] initForAutoLayout];
     [self.view addSubview:self.trashView];
     
@@ -127,6 +146,9 @@
 
 - (void)addRecordingBackgroundView
 {
+    if (self.recordingBackgroundView) {
+        [self removeRecordingBackgroundView];
+    }
     self.recordingBackgroundView = [[UIView alloc] initForAutoLayout];
     self.recordingBackgroundView.backgroundColor = [UIColor grayColor];
     self.recordingBackgroundView.alpha = 0.7;
@@ -156,66 +178,73 @@
 
 #pragma - mark JSQMessageViewController
 
-- (void)receivedTextViewChangedNotification:(NSNotification *)notification
-{
-    [self textViewDidChange:notification.object];
+- (void)isTyping {
+    __weak __typeof__(self) weakSelf = self;
+    [self.connections.read asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
+        [xmppManager sendChatState:OTRChatStateComposing withBuddyID:[strongSelf threadKey]];
+    }];
+    
+    
 }
 
-- (void)textViewDidChange:(UITextView *)textView
+- (void)didFinishTyping {
+    __weak __typeof__(self) weakSelf = self;
+    [self.connections.read asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        OTRXMPPManager *xmppManager = [strongSelf xmppManagerWithTransaction:transaction];
+        [xmppManager sendChatState:OTRChatStateActive withBuddyID:[strongSelf threadKey]];
+    }];
+    
+    
+}
+
+- (void)didUpdateState
 {
-    if ([textView.text length]) {
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+    [self setupDefaultSendButton];
+    if (self.state.hasText) {
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        //typing
-        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
+    } else {
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
     }
-    else {
-        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-            if (messageState == OTRKitMessageStateEncrypted) {
-                
-                if ([self.hold2TalkButton superview]) {
-                     self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
-                } else {
-                     self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                }
-               
-                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-            }
-        }];
+    
+    if (self.state.canSendMedia) {
+        //Encrypted Show camera button
+        self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+        self.inputToolbar.contentView.leftBarButtonItem.enabled = YES;
         
-        //done typing
-        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
-        
-    }
-}
-
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
-{
-    //set correct camera and microphone
-    if (messageState == OTRKitMessageStateEncrypted) {
-        if (![self.inputToolbar.contentView.textView.text length]) {
-            
+        if (!self.state.hasText) {
+            //No text then show microphone
             if ([self.hold2TalkButton superview]) {
                 self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
             } else {
                 self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
             }
-            
             self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
             self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        } else {
+            //Default Send button
+            [self setupDefaultSendButton];
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         }
-        self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+    } else {
+        [self removeMediaButtons];
     }
-    else {
-        [self removePush2TalkButton];
-        [self removeRecordingBackgroundView];
-        [self removeTrashViewItems];
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-        self.inputToolbar.contentView.leftBarButtonItem = nil;
-    }
+}
+
+- (void)removeMediaButtons {
+    [self removePush2TalkButton];
+    [self removeRecordingBackgroundView];
+    [self removeTrashViewItems];
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+}
+
+- (void)setupDefaultSendButton {
+    //Default send button
+    
+    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
 }
 
 #pragma - mark OTRHoldToTalkViewStateDelegate
@@ -223,13 +252,33 @@
 - (void)didBeginTouch:(OTRHoldToTalkView *)view
 {
     //start Recording
-    [self addRecordingBackgroundView];
-    [self addTrashViewItems];
-    NSString *temporaryPath = NSTemporaryDirectory();
-    NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
-    NSURL *url = [NSURL fileURLWithPath:[temporaryPath stringByAppendingPathComponent:fileName]];
-    [self.audioSessionManager recordAudioToURL:url error:nil];
-    [self setHold2TalkButtonRecording];
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (![view isInTouch]) {
+                // Abort this, no longer in touch
+            } else if (granted) {
+                [self addRecordingBackgroundView];
+                [self addTrashViewItems];
+                NSString *temporaryPath = NSTemporaryDirectory();
+                NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
+                NSURL *url = [NSURL fileURLWithPath:[temporaryPath stringByAppendingPathComponent:fileName]];
+                
+                [self.audioSessionManager recordAudioToURL:url error:nil];
+                [self setHold2TalkButtonRecording];
+            } else {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:Microphone_Disabled() message:Microphone_Reenable_Please() preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *fix = [UIAlertAction actionWithTitle:Enable_String() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    NSURL *settings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                    [[UIApplication sharedApplication] openURL:settings];
+                }];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+                [alert addAction:fix];
+                [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        });
+    }];
+    
 }
 
 - (void)view:(OTRHoldToTalkView *)view touchDidMoveToPointInWindow:(CGPoint)point
@@ -256,11 +305,11 @@
     if (insideButton) {
         self.trashView.trashIconLabel.alpha = 1;
         self.trashView.microphoneIconLabel.alpha = 0;
-        self.hold2TalkButton.textLabel.text = RELEASE_TO_DELETE_STRING;
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_DELETE_STRING();
     } else {
         self.trashView.trashIconLabel.alpha = percentDistance;
         self.trashView.microphoneIconLabel.alpha = 1-percentDistance;
-        self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING();
     }
     
     [self.view setNeedsUpdateConstraints];
@@ -271,19 +320,26 @@
     //stop recording and send
     NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
     [self.audioSessionManager stopRecording];
-    if (self.trashView.trashButton.isHighlighted) {
-        if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
-            [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+    AVURLAsset *audioAsset = [AVURLAsset assetWithURL:currentURL];
+    Float64 duration = CMTimeGetSeconds(audioAsset.duration);
+    
+    
+    if (currentURL) {
+        // Delete recording if the button trash button is slelected or the audio is less than the minimum time.
+        // This prevents taps on the record button from sending audio with extremely little length
+        if (self.trashView.trashButton.isHighlighted || duration < kOTRMessagesMinimumAudioTime) {
+            if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
+                [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+            }
+        } else {
+            [self sendAudioFileURL:currentURL];
         }
-    } else {
-        [self sendAudioFileURL:currentURL];
-
     }
+
     
     [self removeTrashViewItems];
     [self setHold2TalkStatusWaiting];
     [self removeRecordingBackgroundView];
-    
 }
 
 - (void)touchCancelled:(OTRHoldToTalkView *)view

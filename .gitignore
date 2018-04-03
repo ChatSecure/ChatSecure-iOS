@@ -6,8 +6,11 @@ project.xcworkspace
 xcuserdata
 .svn
 DerivedData
-OTRSecrets.m
 *.orig
 *.xccheckout
 
-/Pods/
+Pods/
+Carthage/
+com.mono0926.LicensePlist.Output/
+
+Secrets.plist

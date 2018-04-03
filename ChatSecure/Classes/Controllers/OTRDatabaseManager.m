@@ -8,127 +8,111 @@
 
 #import "OTRDatabaseManager.h"
 
-#import "OTRManagedAccount.h"
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
-#import "YapDatabaseRelationship.h"
 #import "OTRDatabaseView.h"
-#import "SSKeychain.h"
+@import SAMKeychain;
 #import "OTRConstants.h"
-#import "YapDatabaseSecondaryIndexSetup.h"
-#import "YapDatabaseSecondaryIndex.h"
-
-#import "OTRManagedOscarAccount.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
-#import "OTRManagedGoogleAccount.h"
-#import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRMediaFileManager.h"
-#import "IOCipher.h"
+@import IOCipher;
 #import "NSFileManager+ChatSecure.h"
+@import OTRAssets;
+@import YapDatabase;
+@import YapTaskQueue;
 
-NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
-NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
-NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+#import "OTRSignalSession.h"
+#import "OTRSettingsManager.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
 @interface OTRDatabaseManager ()
 
-@property (nonatomic, strong) YapDatabase *database;
-@property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
-@property (nonatomic, strong) NSString *inMemoryPassphrase;
+@property (nonatomic, strong, nullable) YapDatabase *database;
+@property (nonatomic, strong, nullable) YapDatabaseActionManager *actionManager;
+@property (nonatomic, strong, nullable) NSString *inMemoryPassphrase;
+
+@property (nonatomic, strong) id yapDatabaseNotificationToken;
+@property (nonatomic, strong) id allowPassphraseBackupNotificationToken;
+@property (nonatomic, readonly, nullable) YapTaskQueueBroker *messageQueueBroker;
 
 @end
 
 @implementation OTRDatabaseManager
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        __weak __typeof__(self) weakSelf = self;
+        self.allowPassphraseBackupNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:kOTRSettingsValueUpdatedNotification
+                                                                                                        object:kOTRSettingKeyAllowDBPassphraseBackup
+                                                                                                         queue:[NSOperationQueue mainQueue]
+                                                                                                    usingBlock:^(NSNotification *_Nonnull note) {
+                                                                                                        [weakSelf updatePassphraseAccessibility];
+                                                                                                    }];
+    }
+
+    return self;
+}
+
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+    return [self setupDatabaseWithName:databaseName withMediaStorage:YES];
+}
+
+- (BOOL) setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage {
+    return [self setupDatabaseWithName:databaseName directory:nil withMediaStorage:withMediaStorage];
+}
+
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName
+                    directory:(nullable NSString*)directory
+             withMediaStorage:(BOOL)withMediaStorage {
     BOOL success = NO;
-    if ([self setupYapDatabaseWithName:databaseName] )
+    if ([self setupYapDatabaseWithName:databaseName directory:directory] )
     {
         success = YES;
     }
-    if (success) success = [self setupSecureMediaStorage];
+    if (success && withMediaStorage) success = [self setupSecureMediaStorage];
     
-    NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
     //Enumerate all files in yap database directory and exclude from backup
-    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:databaseDirectory];
+    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:self.databaseDirectory];
     //fix file protection on existing files
-     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:databaseDirectory];
+     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:self.databaseDirectory];
     return success;
+}
+
+- (void)dealloc {
+    if (self.yapDatabaseNotificationToken != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.yapDatabaseNotificationToken];
+    }
+    if (self.allowPassphraseBackupNotificationToken != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.allowPassphraseBackupNotificationToken];
+    }
 }
 
 - (BOOL)setupSecureMediaStorage
 {
     NSString *password = [self databasePassphrase];
-    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
+    NSString *path = self.databaseDirectory;
     path = [path stringByAppendingPathComponent:@"ChatSecure-media.sqlite"];
     BOOL success = [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
     
     self.mediaServer = [OTRMediaServer sharedInstance];
     NSError *error = nil;
-    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
+    BOOL mediaServerStarted = [self.mediaServer startOnPort:0 error:&error];
     if (!mediaServerStarted) {
         DDLogError(@"Error starting media server: %@",error);
     }
     return success;
 }
 
-- (OTRAccount *)accountWithCoreDataAccount:(OTRManagedAccount *)managedAccount
-{
-    NSDictionary *accountDictionary = [managedAccount propertiesDictionary];
-    
-    if ([accountDictionary[kOTRClassKey] isEqualToString:NSStringFromClass([OTRManagedOscarAccount class])]) {
-        return nil;
-    }
-    
-    OTRXMPPAccount *account = (OTRXMPPAccount *)[OTRAccount accountForAccountType:[self accountTypeWithCoreDataClass:accountDictionary[kOTRClassKey]]];
-    
-    account.username = accountDictionary[OTRManagedAccountAttributes.username];
-    account.autologin = [accountDictionary[OTRManagedAccountAttributes.autologin] boolValue];
-    account.rememberPassword = [accountDictionary[OTRManagedAccountAttributes.rememberPassword] boolValue];
-    account.displayName = accountDictionary[OTRManagedAccountAttributes.displayName];
-    account.domain = accountDictionary[OTRManagedXMPPAccountAttributes.domain];
-    account.port = [accountDictionary[OTRManagedXMPPAccountAttributes.port] intValue];
-    
-    ////// transfer saved passwords //////
-    
-    if (account.accountType == OTRAccountTypeGoogleTalk) {
-        NSError *error = nil;
-        SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
-        keychainQuery.service = kOTRServiceName;
-        keychainQuery.account = accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier];
-        [keychainQuery fetch:&error];
-        NSDictionary *dictionary = (NSDictionary *)keychainQuery.passwordObject;
-        
-        ((OTROAuthXMPPAccount *)account).oAuthTokenDictionary = dictionary;
-    }
-    else if (account.rememberPassword) {
-        NSError *error = nil;
-        NSString *password = [SSKeychain passwordForService:kOTRServiceName account:accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier] error:&error];
-        
-        account.password = password;
-    }
-    
-    return account;
-}
-
-- (OTRAccountType)accountTypeWithCoreDataClass:(NSString *)coreDataClass
-{
-    if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
-        return OTRAccountTypeJabber;
-    }
-    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
-        return OTRAccountTypeGoogleTalk;
-    }
-    return OTRAccountTypeNone;
-}
-
-- (BOOL)setupYapDatabaseWithName:(NSString *)name
+- (BOOL)setupYapDatabaseWithName:(NSString *)name directory:(nullable NSString*)directory
 {
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
     options.corruptAction = YapDatabaseCorruptAction_Fail;
@@ -140,42 +124,110 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         }
         return keyData;
     };
-    
-    NSString *databaseDirectory = [[self class] yapDatabaseDirectory];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:databaseDirectory]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    _databaseDirectory = [directory copy];
+    if (!_databaseDirectory) {
+        _databaseDirectory = [[self class] defaultYapDatabaseDirectory];
     }
-    NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
+    if (![[NSFileManager defaultManager] fileExistsAtPath:self.databaseDirectory]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:self.databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *databasePath = [self.databaseDirectory stringByAppendingPathComponent:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                            serializer:nil
                                          deserializer:nil
                                               options:options];
+    // Stop trying to setup up the database. Something went wrong. Most likely the password is incorrect.
+    if (self.database == nil) {
+        return NO;
+    }
     
     self.database.defaultObjectPolicy = YapDatabasePolicyShare;
-    self.database.defaultObjectCacheLimit = 1000;
+    self.database.defaultObjectCacheLimit = 10000;
     
-    self.readOnlyDatabaseConnection = [self.database newConnection];
-    self.readOnlyDatabaseConnection.name = @"readOnlyDatabaseConnection";
+    [self setupConnections];
     
-    self.readWriteDatabaseConnection = [self.database newConnection];
-    self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
+    __weak __typeof__(self) weakSelf = self;
+    self.yapDatabaseNotificationToken = [[NSNotificationCenter defaultCenter] addObserverForName:YapDatabaseModifiedNotification object:self.database queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        NSArray <NSNotification *>*changes = [weakSelf.longLivedReadOnlyConnection beginLongLivedReadTransaction];
+        if (changes != nil) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:[DatabaseNotificationName LongLivedTransactionChanges]
+                                                                object:weakSelf.longLivedReadOnlyConnection
+                                                              userInfo:@{[DatabaseNotificationKey ConnectionChanges]:changes}];
+        }
+        
+    }];
+    [self.longLivedReadOnlyConnection beginLongLivedReadTransaction];
+    
+    _messageQueueHandler = [[MessageQueueHandler alloc] initWithDbConnection:self.writeConnection];
+    
+    ////// Register Extensions////////
+    
+    //Async register all the views
+    dispatch_block_t registerExtensions = ^{
+        // Register realtionship extension
+        YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
+        
+        [self.database registerExtension:databaseRelationship withName:[YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName]];
+        
+        // Register Secondary Indexes
+        YapDatabaseSecondaryIndex *signalIndex = YapDatabaseSecondaryIndex.signalIndex;
+        [self.database registerExtension:signalIndex withName:SecondaryIndexName.signal];
+        YapDatabaseSecondaryIndex *messageIndex = YapDatabaseSecondaryIndex.messageIndex;
+        [self.database registerExtension:messageIndex withName:SecondaryIndexName.messages];
+        YapDatabaseSecondaryIndex *roomOccupantIndex = YapDatabaseSecondaryIndex.roomOccupantIndex;
+        [self.database registerExtension:roomOccupantIndex withName:SecondaryIndexName.roomOccupants];
+        YapDatabaseSecondaryIndex *buddyIndex = YapDatabaseSecondaryIndex.buddyIndex;
+        [self.database registerExtension:buddyIndex withName:SecondaryIndexName.buddy];
+        YapDatabaseSecondaryIndex *mediaItemIndex = YapDatabaseSecondaryIndex.mediaItemIndex;
+        [self.database registerExtension:mediaItemIndex withName:SecondaryIndexName.mediaItems];
+
+        // Register action manager
+        self.actionManager = [[YapDatabaseActionManager alloc] init];
+        NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
+        [self.database registerExtension:self.actionManager withName:actionManagerName];
+        
+        [OTRDatabaseView registerAllAccountsDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerChatDatabaseViewWithDatabase:self.database];
+        // Order is important - the conversation database view uses the lastMessageWithTransaction: method which in turn uses the OTRFilteredChatDatabaseViewExtensionName view registered above.
+        [OTRDatabaseView registerConversationDatabaseViewWithDatabase:self.database];
+        [OTRDatabaseView registerAllBuddiesDatabaseViewWithDatabase:self.database];
+        
+        
+        NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
+        _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];
+        
+        
+        //Register Buddy username & displayName FTS and corresponding view
+        YapDatabaseFullTextSearch *buddyFTS = [OTRYapExtensions buddyFTS];
+        NSString *FTSName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddyFTSExtensionName];
+        NSString *AllBuddiesName = OTRAllBuddiesDatabaseViewExtensionName;
+        [self.database registerExtension:buddyFTS withName:FTSName];
+        YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
+        NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+        [self.database registerExtension:searchResultsView withName:viewName];
+        
+        // Remove old unused objects
+        [self.writeConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [transaction removeAllObjectsInCollection:OTRXMPPPresenceSubscriptionRequest.collection];
+        }];
+    };
+    
+#if DEBUG
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    // This can make it easier when writing tests
+    if (environment[@"SYNC_DB_STARTUP"]) {
+        registerExtensions();
+    } else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), registerExtensions);
+    }
+#else
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), registerExtensions);
+#endif
     
     
-    ////// Register standard views////////
-    YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
-    BOOL success = [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
-    if (success) success = [OTRDatabaseView registerAllAccountsDatabaseView];
-    if (success) success = [OTRDatabaseView registerConversationDatabaseView];
-    if (success) success = [OTRDatabaseView registerChatDatabaseView];
-    if (success) success = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
-    if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
-    if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
-    if (success) success = [OTRDatabaseView registerUnreadMessagesView];
-    if (success) success = [self setupSecondaryIndexes];
-    
-    if (self.database && success) {
+    if (self.database != nil) {
         return YES;
     }
     else {
@@ -183,30 +235,31 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
 }
 
+- (void) setupConnections {
+    _uiConnection = [self.database newConnection];
+    self.uiConnection.name = @"uiConnection";
+    
+    _readConnection = [self.database newConnection];
+    self.readConnection.name = @"readConnection";
+    
+    _writeConnection = [self.database newConnection];
+    self.writeConnection.name = @"writeConnection";
+    
+    _longLivedReadOnlyConnection = [self.database newConnection];
+    self.longLivedReadOnlyConnection.name = @"LongLivedReadOnlyConnection";
+    
+#if DEBUG
+    self.uiConnection.permittedTransactions = YDB_SyncReadTransaction | YDB_MainThreadOnly;
+    self.readConnection.permittedTransactions = YDB_AnyReadTransaction;
+    // TODO: We can do better work at isolating work between connections
+    //self.writeConnection.permittedTransactions = YDB_AnyReadWriteTransaction;
+    self.longLivedReadOnlyConnection.permittedTransactions = YDB_AnyReadTransaction; // | YDB_MainThreadOnly;
+#endif
+}
+
 - (YapDatabaseConnection *)newConnection
 {
     return [self.database newConnection];
-}
-
-- (BOOL)setupSecondaryIndexes
-{
-    YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
-    [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
-    
-    YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRMessage class]])
-        {
-            OTRMessage *message = (OTRMessage *)object;
-            
-            if ([message.messageId length]) {
-                [dict setObject:message.messageId forKey:OTRYapDatabseMessageIdSecondaryIndex];
-            }
-        }
-    }];
-    
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler];
-    
-    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseMessageIdSecondaryIndexExtension];
 }
 
 + (void) deleteLegacyXMPPFiles {
@@ -229,115 +282,32 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
 }
 
-+ (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL*)destinationURL {
-    NSURL *mom1 = [[NSBundle mainBundle] URLForResource:@"ChatSecure" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSManagedObjectModel *version1Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom1];
-    NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-    NSArray *xmppMoms = [self legacyXMPPModels];
-    NSUInteger modelCount = xmppMoms.count + 1;
-    NSMutableArray *inputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    NSMutableArray *outputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    [inputModels addObjectsFromArray:xmppMoms];
-    [outputModels addObjectsFromArray:xmppMoms];
-    [inputModels addObject:version1Model];
-    [outputModels addObject:version2Model];
-    
-    NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
-    
-    return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
-}
-+ (BOOL)isManagedObjectModel:(NSManagedObjectModel *)managedObjectModel compatibleWithStoreAtUrl:(NSURL *)storeUrl {
-    
-    NSError * error = nil;
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeUrl error:&error];
-    if (!sourceMetadata) {
-        return NO;
-    }
-    return [managedObjectModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata];
-}
-
-+ (NSArray*) legacyXMPPModels {
-    NSURL *xmppRosterURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoster" withExtension:@"mom"];
-    NSURL *xmppCapsURL = [[NSBundle mainBundle] URLForResource:@"XMPPCapabilities" withExtension:@"mom"];
-    NSURL *xmppRoomURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoom" withExtension:@"mom" subdirectory:@"XMPPRoom.momd"];
-    NSURL *xmppRoomHybridURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoomHybrid" withExtension:@"mom" subdirectory:@"XMPPRoomHybrid.momd"];
-    NSURL *xmppvCardURL = [[NSBundle mainBundle] URLForResource:@"XMPPvCard" withExtension:@"mom" subdirectory:@"XMPPvCard.momd"];
-    NSURL *xmppMessageArchivingURL = [[NSBundle mainBundle] URLForResource:@"XMPPMessageArchiving" withExtension:@"mom" subdirectory:@"XMPPMessageArchiving.momd"];
-    NSArray *momUrls = @[xmppRosterURL, xmppCapsURL, xmppRoomURL, xmppRoomHybridURL, xmppvCardURL, xmppMessageArchivingURL];
-    NSMutableArray *xmppMoms = [NSMutableArray arrayWithCapacity:momUrls.count];
-    for (NSURL *url in momUrls) {
-        NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
-        [xmppMoms addObject:model];
-    }
-    return xmppMoms;
-}
-
-+ (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL *)dstStoreURL sourceModel:(NSManagedObjectModel*)sourceModel destinationModel:(NSManagedObjectModel*)destinationModel error:(NSError **)outError {
-    
-    // Try to get an inferred mapping model.
-    NSMappingModel *mappingModel =
-    [NSMappingModel inferredMappingModelForSourceModel:sourceModel
-                                      destinationModel:destinationModel error:outError];
-    
-    // If Core Data cannot create an inferred mapping model, return NO.
-    if (!mappingModel) {
-        return NO;
-    }
-    
-    // Create a migration manager to perform the migration.
-    NSMigrationManager *manager = [[NSMigrationManager alloc]
-                                   initWithSourceModel:sourceModel destinationModel:destinationModel];
-    
-    BOOL success = [manager migrateStoreFromURL:storeURL type:NSSQLiteStoreType
-                                        options:nil withMappingModel:mappingModel toDestinationURL:dstStoreURL
-                                destinationType:NSSQLiteStoreType destinationOptions:nil error:outError];
-    
-    return success;
-}
-
-+ (NSString *)yapDatabaseDirectory {
++ (NSString *)defaultYapDatabaseDirectory {
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
     return directory;
 }
 
-+ (NSString *)yapDatabasePathWithName:(NSString *)name
++ (NSString *)defaultYapDatabasePathWithName:(NSString *)name
 {
-    
-    return [[self yapDatabaseDirectory] stringByAppendingPathComponent:name];
+    return [[self defaultYapDatabaseDirectory] stringByAppendingPathComponent:name];
 }
 
 + (BOOL)existsYapDatabase
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self yapDatabasePathWithName:OTRYapDatabaseName]];
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self defaultYapDatabasePathWithName:OTRYapDatabaseName]];
 }
 
 - (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error
 {
     if (rememeber) {
         self.inMemoryPassphrase = nil;
-        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
+        [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
     } else {
-        [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
-}
-
-- (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber {
-    // Temporarily grab old password in case change fails
-    NSString *oldPassword = [self databasePassphrase];
-    NSError *error = nil;
-    [self setDatabasePassphrase:newPassphrase remember:rememeber error:&error];
-    
-    BOOL success = [self.database rekeyDatabase];
-    if (!success) {
-        [self setDatabasePassphrase:oldPassword remember:rememeber error:&error];
-    } else {
-       success = [[OTRMediaFileManager sharedInstance].ioCipher changePassword:newPassphrase oldPassword:oldPassword];
-    }
-    return success;
 }
 
 - (BOOL)hasPassphrase
@@ -351,12 +321,34 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         return self.inMemoryPassphrase;
     }
     else {
-        return [SSKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        return [SAMKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
     }
     
 }
 
+- (void)updatePassphraseAccessibility
+{
+    if (self.hasPassphrase && self.inMemoryPassphrase == nil) {
+        BOOL allowBackup = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowDBPassphraseBackup];
+
+        CFTypeRef previousAccessibilityType = [SAMKeychain accessibilityType];
+        [SAMKeychain setAccessibilityType:allowBackup ? kSecAttrAccessibleAfterFirstUnlock : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+
+        NSError *error = nil;
+        [self setDatabasePassphrase:self.databasePassphrase remember:YES error:&error];
+        if (error) {
+            DDLogError(@"Password Error: %@",error);
+        }
+
+        [SAMKeychain setAccessibilityType:previousAccessibilityType];
+    }
+}
+
 #pragma - mark Singlton Methodd
+
++ (OTRDatabaseManager*) shared {
+    return [self sharedInstance];
+}
 
 + (instancetype)sharedInstance
 {

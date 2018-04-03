@@ -7,27 +7,33 @@
 //
 
 #import "OTRColors.h"
+@import OTRAssets;
 
 @implementation OTRColors
 
-+(UIColor *)colorWithStatus:(OTRBuddyStatus)status
++(UIColor *)colorWithStatus:(OTRThreadStatus)status
 {
-    UIColor *color = nil;
+    if (!OTRBranding.showsColorForStatus) {
+        return [UIColor clearColor];
+    }
+    UIColor *color = [UIColor clearColor];
     switch(status)
     {
-        case OTRBuddyStatusOffline:
-            color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+        case OTRThreadStatusUnknown:
+        case OTRThreadStatusOffline:
+            //color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+            return [UIColor clearColor];
             break;
-        case OTRBuddyStatusAway:
+        case OTRThreadStatusAway:
             color = [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
             break;
-        case OTRBuddyStatusXa:
+        case OTRThreadStatusExtendedAway:
             color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case OTRBuddyStatusDnd:
+        case OTRThreadStatusDoNotDisturb:
             color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case OTRBuddyStatusAvailable:
+        case OTRThreadStatusAvailable:
             color = [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
             break;
     }

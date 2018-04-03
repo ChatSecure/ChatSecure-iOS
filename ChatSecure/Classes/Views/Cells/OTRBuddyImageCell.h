@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
+@import UIKit;
+#import "OTRThreadOwner.h"
 @class OTRBuddy;
 
 extern const CGFloat OTRBuddyImageCellPadding;
@@ -18,7 +18,7 @@ extern const CGFloat OTRBuddyImageCellPadding;
 @property (nonatomic, strong) UIColor *imageViewBorderColor;
 @property (nonatomic, readonly) BOOL addedConstraints;
 
-- (void)setBuddy:(OTRBuddy *)buddy;
+- (void)setThread:(id <OTRThreadOwner>)thread;
 
 + (NSString *)reuseIdentifier;
 

@@ -20,15 +20,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
+@class OTRQRCodeViewController;
+
 @protocol OTRQRCodeViewControllerDelegate <NSObject>
--(void)didDismiss;
+-(void)didDismissQRCodeViewController:(OTRQRCodeViewController*)qrCodeViewController;
 @end
 
 @interface OTRQRCodeViewController : UIViewController
 
 @property (nonatomic, retain) UIImageView *imageView;
 @property (nonatomic, retain) UILabel *instructionsLabel;
-@property (nonatomic, weak) id delegate;
+@property (nonatomic, copy, readonly) NSString *qrString;
+@property (nonatomic, weak) id<OTRQRCodeViewControllerDelegate> delegate;
+
+- (instancetype) initWithQRString:(NSString*)qrString;
 
 @end

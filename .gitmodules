@@ -7,18 +7,27 @@
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
-[submodule "Submodules/OnionKit"]
-	path = Submodules/OnionKit
-	url = git@github.com:ChatSecure/OnionKit.git
 [submodule "Submodules/ProxyKit"]
 	path = Submodules/ProxyKit
 	url = git@github.com:chrisballinger/ProxyKit.git
 [submodule "Submodules/CPAProxy"]
 	path = Submodules/CPAProxy
 	url = git@github.com:ursachec/CPAProxy.git
-[submodule "Submodules/YapDatabase"]
-	path = Submodules/YapDatabase
-	url = git@github.com:chrisballinger/YapDatabase.git
 [submodule "Submodules/IOCipher"]
 	path = Submodules/IOCipher
 	url = git@github.com:ChatSecure/IOCipher-ObjC.git
+[submodule "Submodules/xmpp-server-list"]
+	path = Submodules/xmpp-server-list
+	url = git@github.com:ChatSecure/xmpp-server-list.git
+[submodule "Submodules/ChatSecure-Push-iOS"]
+	path = Submodules/ChatSecure-Push-iOS
+	url = git@github.com:ChatSecure/ChatSecure-Push-iOS.git
+[submodule "Submodules/JSQMessagesViewController"]
+	path = Submodules/JSQMessagesViewController
+	url = git@github.com:ChatSecure/JSQMessagesViewController.git
+[submodule "Submodules/SignalProtocol-ObjC"]
+	path = Submodules/SignalProtocol-ObjC
+	url = git@github.com:ChatSecure/SignalProtocol-ObjC.git
+[submodule "Submodules/LumberjackConsole"]
+	path = Submodules/LumberjackConsole
+	url = git@github.com:ChatSecure/LumberjackConsole.git

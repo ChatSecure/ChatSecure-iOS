@@ -7,7 +7,7 @@
 //
 
 #import "OTROAuthXMPPAccount.h"
-#import "SSKeychain.h"
+@import SAMKeychain;
 #import "OTRLog.h"
 #import "OTRConstants.h"
 
@@ -38,7 +38,7 @@
     else {
         NSError *error = nil;
         
-        SSKeychainQuery * keychainQuery = [self baseKeychainQuery];
+        SAMKeychainQuery * keychainQuery = [self baseKeychainQuery];
         
         keychainQuery.passwordObject = oAuthTokenDictionary;
         
@@ -55,7 +55,7 @@
     NSError * error = nil;
     NSDictionary *dictionary = nil;
     
-    SSKeychainQuery * keychainQuery = [self baseKeychainQuery];
+    SAMKeychainQuery * keychainQuery = [self baseKeychainQuery];
     [keychainQuery fetch:&error];
     
     if (error) {
@@ -68,9 +68,9 @@
     return dictionary;
 }
 
--(SSKeychainQuery *)baseKeychainQuery
+-(SAMKeychainQuery *)baseKeychainQuery
 {
-    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+    SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
     keychainQuery.service = kOTRServiceName;
     keychainQuery.account = self.uniqueId;
     return keychainQuery;

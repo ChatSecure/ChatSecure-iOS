@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="22J-kO-64R" customClass="OTRMessagesUnknownSenderCell" customModule="ChatSecureCore">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="134"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ehj-44-1lF">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="134"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G82-bS-mGh">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="69"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="No data" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tP4-Uw-Q8q">
+                                    <rect key="frame" x="12" y="15" width="351" height="39"/>
+                                    <gestureRecognizers/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="tP4-Uw-Q8q" firstAttribute="leading" secondItem="G82-bS-mGh" secondAttribute="leading" constant="12" id="BqC-Zs-NYx"/>
+                                <constraint firstAttribute="bottom" secondItem="tP4-Uw-Q8q" secondAttribute="bottom" constant="15" id="ZAB-xN-HSm"/>
+                                <constraint firstAttribute="trailing" secondItem="tP4-Uw-Q8q" secondAttribute="trailing" constant="12" id="hDt-VY-1CU"/>
+                                <constraint firstItem="tP4-Uw-Q8q" firstAttribute="top" secondItem="G82-bS-mGh" secondAttribute="top" constant="15" id="hVw-Vh-BIx"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Llj-1U-CMt">
+                            <rect key="frame" x="0.0" y="69" width="375" height="65"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lPu-ya-Sku">
+                                    <rect key="frame" x="12" y="8.5" width="48" height="48"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="48" id="DhD-bZ-yvG"/>
+                                        <constraint firstAttribute="height" constant="48" id="ENw-CH-Oqf"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EbR-6O-jyF">
+                                    <rect key="frame" x="72" y="11.5" width="42" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="woE-uo-avV">
+                                    <rect key="frame" x="72" y="36" width="35.5" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Vl6-le-kr2">
+                                    <rect key="frame" x="281" y="18" width="82" height="35"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j0j-TZ-x3S" userLabel="Approve Button" customClass="BButton">
+                                            <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="35" id="Mym-6Q-amv"/>
+                                                <constraint firstAttribute="width" constant="35" id="enR-l2-px8"/>
+                                            </constraints>
+                                            <connections>
+                                                <action selector="didTapAccept:" destination="22J-kO-64R" eventType="touchUpInside" id="Dbr-ZZ-2mh"/>
+                                            </connections>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3fF-dY-VGy" userLabel="Deny Button" customClass="BButton">
+                                            <rect key="frame" x="47" y="0.0" width="35" height="35"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="35" id="Hp6-eZ-cSW"/>
+                                                <constraint firstAttribute="height" constant="35" id="ZnE-VB-5LK"/>
+                                            </constraints>
+                                            <connections>
+                                                <action selector="didTapDeny:" destination="22J-kO-64R" eventType="touchUpInside" id="6AG-u9-mNr"/>
+                                            </connections>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="35" id="aUs-X1-8X5"/>
+                                    </constraints>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="woE-uo-avV" firstAttribute="top" secondItem="EbR-6O-jyF" secondAttribute="bottom" constant="4" id="Clt-zA-A9d"/>
+                                <constraint firstItem="lPu-ya-Sku" firstAttribute="centerY" secondItem="Llj-1U-CMt" secondAttribute="centerY" id="IMz-ec-hUb"/>
+                                <constraint firstAttribute="bottom" secondItem="Vl6-le-kr2" secondAttribute="bottom" constant="12" id="JQR-Vd-PAR"/>
+                                <constraint firstItem="EbR-6O-jyF" firstAttribute="top" secondItem="lPu-ya-Sku" secondAttribute="top" constant="3" id="OlT-e6-ieP"/>
+                                <constraint firstAttribute="height" constant="65" id="V9k-h3-cFF"/>
+                                <constraint firstItem="lPu-ya-Sku" firstAttribute="leading" secondItem="Llj-1U-CMt" secondAttribute="leading" constant="12" id="ZMl-Lg-FZG"/>
+                                <constraint firstItem="woE-uo-avV" firstAttribute="leading" secondItem="EbR-6O-jyF" secondAttribute="leading" id="ceQ-mU-kBL"/>
+                                <constraint firstAttribute="trailing" secondItem="Vl6-le-kr2" secondAttribute="trailing" constant="12" id="l1h-z8-CRI"/>
+                                <constraint firstItem="EbR-6O-jyF" firstAttribute="leading" secondItem="lPu-ya-Sku" secondAttribute="trailing" constant="12" id="oQY-Sf-CEO"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Ehj-44-1lF" secondAttribute="trailing" id="Crc-5l-OKd"/>
+                <constraint firstItem="Ehj-44-1lF" firstAttribute="leading" secondItem="22J-kO-64R" secondAttribute="leading" id="HsF-yB-wCk"/>
+                <constraint firstItem="Ehj-44-1lF" firstAttribute="top" secondItem="22J-kO-64R" secondAttribute="top" id="Oix-BI-WZ8"/>
+                <constraint firstAttribute="bottom" secondItem="Ehj-44-1lF" secondAttribute="bottom" id="lY3-zw-lEI"/>
+            </constraints>
+            <connections>
+                <outlet property="acceptButton" destination="j0j-TZ-x3S" id="Uc1-GB-Ftg"/>
+                <outlet property="avatarImageView" destination="lPu-ya-Sku" id="Jla-ZW-KZl"/>
+                <outlet property="buttonStackView" destination="Vl6-le-kr2" id="aAl-L7-gUZ"/>
+                <outlet property="denyButton" destination="3fF-dY-VGy" id="teD-6l-BZY"/>
+                <outlet property="jidLabel" destination="woE-uo-avV" id="QNf-dQ-qkO"/>
+                <outlet property="mainStackView" destination="Ehj-44-1lF" id="mCP-BA-TNA"/>
+                <outlet property="nickLabel" destination="EbR-6O-jyF" id="1Ai-83-2wh"/>
+                <outlet property="occupantSection" destination="Llj-1U-CMt" id="USd-Rd-6j9"/>
+                <outlet property="titleLabel" destination="tP4-Uw-Q8q" id="b4e-Ao-C3K"/>
+            </connections>
+            <point key="canvasLocation" x="81.5" y="208"/>
+        </collectionReusableView>
+    </objects>
+</document>

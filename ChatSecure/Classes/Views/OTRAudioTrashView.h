@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "BButton.h"
+@import UIKit;
+@import BButton;
 
 @class OTRCircleView;
 

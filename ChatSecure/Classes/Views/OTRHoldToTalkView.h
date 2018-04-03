@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @class OTRHoldToTalkView;
 
@@ -25,5 +25,6 @@
 @property (nonatomic, strong, readonly) UILabel *textLabel;
 
 @property (nonatomic, weak) id <OTRHoldToTalkViewStateDelegate> delegate;
+- (BOOL) isInTouch;
 
 @end

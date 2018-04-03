@@ -49,7 +49,7 @@
 + (NSArray *)defaultDomainCellInfoArray
 {
     return @[[self domainCellInfoWithDisplayName:@"Dukgo" usernameDomain:nil domain:@"dukgo.com"],
-             [self domainCellInfoWithDisplayName:@"Computer Chaos Club" usernameDomain:nil domain:@"jabber.ccc.de"],
+             [self domainCellInfoWithDisplayName:@"Chaos Computer Club" usernameDomain:nil domain:@"jabber.ccc.de"],
              [self domainCellInfoWithDisplayName:@"The Calyx Institute" usernameDomain:nil domain:@"jabber.calyxinstitute.org"],
              [self domainCellInfoWithDisplayName:nil usernameDomain:nil domain:@"jabberpl.org"],
              [self domainCellInfoWithDisplayName:nil usernameDomain:nil domain:@"rkquery.de"],
@@ -60,7 +60,7 @@
 {
     return @[
              [self domainCellInfoWithDisplayName:@"The Calyx Institute" usernameDomain:@"jabber.calyxinstitute.org" domain:@"ijeeynrc6x2uy5ob.onion"],
-              [self domainCellInfoWithDisplayName:@"Computer Chaos Club" usernameDomain:@"jabber.ccc.de" domain:@"okj7xc6j2szr2y75.onion"],
+              [self domainCellInfoWithDisplayName:@"Chaos Computer Club" usernameDomain:@"jabber.ccc.de" domain:@"okj7xc6j2szr2y75.onion"],
              [self domainCellInfoWithDisplayName:@"Dukgo" usernameDomain:nil domain:@"dukgo.com"],
              [self domainCellInfoWithDisplayName:nil usernameDomain:nil domain:@"jabberpl.org"],
              [self domainCellInfoWithDisplayName:nil usernameDomain:nil domain:@"rkquery.de"],

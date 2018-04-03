@@ -1,0 +1,515 @@
+name: Alamofire, nameSpecified: 
+body: Copyright (c) 2014-2…
+version: 4.7.0
+
+name: Alamofire, nameSpecified: 
+body: Copyright (c) 2014-2…
+version: 4.7.0
+
+name: Alamofire, nameSpecified: 
+body: Copyright (c) 2014-2…
+version: 4.7.0
+
+name: Appirater, nameSpecified: 
+body: Copyright 2017. Aras…
+version: 2.3.1
+
+name: Appirater, nameSpecified: 
+body: Copyright 2017. Aras…
+version: 2.3.1
+
+name: Appirater, nameSpecified: 
+body: Copyright 2017. Aras…
+version: 2.3.1
+
+name: ARChromeActivity, nameSpecified: 
+body: ARChromeActivity
+Cop…
+version: 1.0.6
+
+name: ARChromeActivity, nameSpecified: 
+body: ARChromeActivity
+Cop…
+version: 1.0.6
+
+name: ARChromeActivity, nameSpecified: 
+body: ARChromeActivity
+Cop…
+version: 1.0.6
+
+name: BBlock, nameSpecified: 
+body: Copyright (c) 2012 D…
+version: 1.2.1
+
+name: BBlock, nameSpecified: 
+body: Copyright (c) 2012 D…
+version: 1.2.1
+
+name: BBlock, nameSpecified: 
+body: Copyright (c) 2012 D…
+version: 1.2.1
+
+name: BButton, nameSpecified: 
+body: BButton - copyright …
+version: 4.0.2
+
+name: BButton, nameSpecified: 
+body: BButton - copyright …
+version: 4.0.2
+
+name: BButton, nameSpecified: 
+body: BButton - copyright …
+version: 4.0.2
+
+name: ChatSecure-Push-iOS, nameSpecified: 
+body:                     …
+version: 1.0
+
+name: ChatSecure-Push-iOS, nameSpecified: 
+body:                     …
+version: 1.0
+
+name: ChatSecure-Push-iOS, nameSpecified: 
+body:                     …
+version: 1.0
+
+name: CocoaAsyncSocket, nameSpecified: 
+body: Public Domain Licens…
+version: 7.6.2
+
+name: CocoaAsyncSocket, nameSpecified: 
+body: Public Domain Licens…
+version: 7.6.2
+
+name: CocoaAsyncSocket, nameSpecified: 
+body: Public Domain Licens…
+version: 7.6.2
+
+name: CocoaLumberjack, nameSpecified: 
+body: Software License Agr…
+version: 3.4.1
+
+name: CocoaLumberjack, nameSpecified: 
+body: Software License Agr…
+version: 3.4.1
+
+name: CocoaLumberjack, nameSpecified: 
+body: Software License Agr…
+version: 3.4.1
+
+name: CPAProxy, nameSpecified: 
+body: Copyright (c) 2013 C…
+version: 1.2.0
+
+name: CPAProxy, nameSpecified: 
+body: Copyright (c) 2013 C…
+version: 1.2.0
+
+name: CPAProxy, nameSpecified: 
+body: Copyright (c) 2013 C…
+version: 1.2.0
+
+name: DTFoundation, nameSpecified: 
+body: Copyright (c) 2011, …
+version: 1.7.13
+
+name: DTFoundation, nameSpecified: 
+body: Copyright (c) 2011, …
+version: 1.7.13
+
+name: DTFoundation, nameSpecified: 
+body: Copyright (c) 2011, …
+version: 1.7.13
+
+name: GCDWebServer, nameSpecified: 
+body: Copyright (c) 2012-2…
+version: 3.4.2
+
+name: GCDWebServer, nameSpecified: 
+body: Copyright (c) 2012-2…
+version: 3.4.2
+
+name: GCDWebServer, nameSpecified: 
+body: Copyright (c) 2012-2…
+version: 3.4.2
+
+name: gtm-http-fetcher, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: gtm-http-fetcher, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: gtm-http-fetcher, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: gtm-oauth2, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: gtm-oauth2, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: gtm-oauth2, nameSpecified: 
+body: 
+                   …
+version: 1.1
+
+name: IOCipher, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 0.1.0
+
+name: IOCipher, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 0.1.0
+
+name: IOCipher, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 0.1.0
+
+name: JSQMessagesViewController, nameSpecified: 
+body: 
+MIT License
+Copyrig…
+version: 7.3.4
+
+name: JSQMessagesViewController, nameSpecified: 
+body: 
+MIT License
+Copyrig…
+version: 7.3.4
+
+name: JSQMessagesViewController, nameSpecified: 
+body: 
+MIT License
+Copyrig…
+version: 7.3.4
+
+name: JTSImageViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.5.1
+
+name: JTSImageViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.5.1
+
+name: JTSImageViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.5.1
+
+name: KissXML, nameSpecified: 
+body: Copyright (c) 2012, …
+version: 5.2.2
+
+name: KissXML, nameSpecified: 
+body: Copyright (c) 2012, …
+version: 5.2.2
+
+name: KissXML, nameSpecified: 
+body: Copyright (c) 2012, …
+version: 5.2.2
+
+name: KSCrash, nameSpecified: 
+body: Copyright (c) 2012 K…
+version: 1.15.18
+
+name: KSCrash, nameSpecified: 
+body: Copyright (c) 2012 K…
+version: 1.15.18
+
+name: KSCrash, nameSpecified: 
+body: Copyright (c) 2012 K…
+version: 1.15.18
+
+name: Kvitto, nameSpecified: 
+body: Copyright (c) 2015, …
+version: 1.0.3
+
+name: Kvitto, nameSpecified: 
+body: Copyright (c) 2015, …
+version: 1.0.3
+
+name: Kvitto, nameSpecified: 
+body: Copyright (c) 2015, …
+version: 1.0.3
+
+name: libidn, nameSpecified: 
+body: libidn-podspec
+
+The …
+version: 1.33
+
+name: libidn, nameSpecified: 
+body: libidn-podspec
+
+The …
+version: 1.33
+
+name: libidn, nameSpecified: 
+body: libidn-podspec
+
+The …
+version: 1.33
+
+name: libsqlfs, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 1.3.2
+
+name: libsqlfs, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 1.3.2
+
+name: libsqlfs, nameSpecified: 
+body: 		  GNU LESSER GENER…
+version: 1.3.2
+
+name: LumberjackConsole, nameSpecified: 
+body: Apache License
+     …
+version: 3.3.0
+
+name: LumberjackConsole, nameSpecified: 
+body: Apache License
+     …
+version: 3.3.0
+
+name: LumberjackConsole, nameSpecified: 
+body: Apache License
+     …
+version: 3.3.0
+
+name: MWFeedParser, nameSpecified: 
+body: Copyright (c) 2010 M…
+version: 1.0.1
+
+name: MWFeedParser, nameSpecified: 
+body: Copyright (c) 2010 M…
+version: 1.0.1
+
+name: MWFeedParser, nameSpecified: 
+body: Copyright (c) 2010 M…
+version: 1.0.1
+
+name: Navajo, nameSpecified: 
+body: Copyright (c) 2014 M…
+version: 0.0.1
+
+name: Navajo, nameSpecified: 
+body: Copyright (c) 2014 M…
+version: 0.0.1
+
+name: Navajo, nameSpecified: 
+body: Copyright (c) 2014 M…
+version: 0.0.1
+
+name: NBUCore, nameSpecified: 
+body: 
+                   …
+version: 2.1.0
+
+name: NBUCore, nameSpecified: 
+body: 
+                   …
+version: 2.1.0
+
+name: NBUCore, nameSpecified: 
+body: 
+                   …
+version: 2.1.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 2.0.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 2.0.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 2.0.0
+
+name: ParkedTextField, nameSpecified: 
+body: The MIT License (MIT…
+version: 0.4.0
+
+name: ParkedTextField, nameSpecified: 
+body: The MIT License (MIT…
+version: 0.4.0
+
+name: ParkedTextField, nameSpecified: 
+body: The MIT License (MIT…
+version: 0.4.0
+
+name: ProxyKit, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.2.0
+
+name: ProxyKit, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.2.0
+
+name: ProxyKit, nameSpecified: 
+body: The MIT License (MIT…
+version: 1.2.0
+
+name: QRCodeReaderViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 4.0.2
+
+name: QRCodeReaderViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 4.0.2
+
+name: QRCodeReaderViewController, nameSpecified: 
+body: The MIT License (MIT…
+version: 4.0.2
+
+name: Reveal-SDK, nameSpecified: 
+body: # REVEAL LICENSE AGR…
+version: 13
+
+name: Reveal-SDK, nameSpecified: 
+body: # REVEAL LICENSE AGR…
+version: 13
+
+name: Reveal-SDK, nameSpecified: 
+body: # REVEAL LICENSE AGR…
+version: 13
+
+name: SignalProtocolC, nameSpecified: 
+body:         Copyright 20…
+version: 2.3.1
+
+name: SignalProtocolC, nameSpecified: 
+body:         Copyright 20…
+version: 2.3.1
+
+name: SignalProtocolC, nameSpecified: 
+body:         Copyright 20…
+version: 2.3.1
+
+name: SignalProtocolObjC, nameSpecified: 
+body: Copyright 2016-2017 …
+version: 1.0.0
+
+name: SignalProtocolObjC, nameSpecified: 
+body: Copyright 2016-2017 …
+version: 1.0.0
+
+name: SignalProtocolObjC, nameSpecified: 
+body: Copyright 2016-2017 …
+version: 1.0.0
+
+name: SQLCipher, nameSpecified: 
+body: Copyright (c) 2008, …
+version: 3.4.2
+
+name: SQLCipher, nameSpecified: 
+body: Copyright (c) 2008, …
+version: 3.4.2
+
+name: SQLCipher, nameSpecified: 
+body: Copyright (c) 2008, …
+version: 3.4.2
+
+name: TUSafariActivity, nameSpecified: 
+body: Copyright (c) 2012 T…
+version: 1.0.4
+
+name: TUSafariActivity, nameSpecified: 
+body: Copyright (c) 2012 T…
+version: 1.0.4
+
+name: TUSafariActivity, nameSpecified: 
+body: Copyright (c) 2012 T…
+version: 1.0.4
+
+name: XMPPFramework, nameSpecified: 
+body: GCDAsyncSocket: (Pub…
+version: 4.0
+
+name: XMPPFramework, nameSpecified: 
+body: GCDAsyncSocket: (Pub…
+version: 4.0
+
+name: XMPPFramework, nameSpecified: 
+body: GCDAsyncSocket: (Pub…
+version: 4.0
+
+name: YapDatabase, nameSpecified: 
+body: Software License Agr…
+version: 3.0.2
+
+name: YapDatabase, nameSpecified: 
+body: Software License Agr…
+version: 3.0.2
+
+name: YapDatabase, nameSpecified: 
+body: Software License Agr…
+version: 3.0.2
+
+name: YapTaskQueue, nameSpecified: 
+body: This is free and une…
+version: 0.3.0
+
+name: YapTaskQueue, nameSpecified: 
+body: This is free and une…
+version: 0.3.0
+
+name: YapTaskQueue, nameSpecified: 
+body: This is free and une…
+version: 0.3.0
+
+name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.0
+
+name: FormatterKit, nameSpecified: , owner: mattt, version: 1.8.2
+
+name: HTMLReader, nameSpecified: , owner: nolanw, version: 1d0dda3
+
+name: KVOController, nameSpecified: , owner: facebook, version: v1.2.0
+
+name: Mantle, nameSpecified: , owner: ChatSecure, version: 4c1a09c
+
+name: MBProgressHUD, nameSpecified: , owner: jdg, version: 1.1.0
+
+name: PureLayout, nameSpecified: , owner: PureLayout, version: v3.0.2
+
+name: SAMKeychain, nameSpecified: , owner: soffes, version: v1.5.3
+
+name: TTTAttributedLabel, nameSpecified: , owner: TTTAttributedLabel, version: 2.0.0
+
+name: XLForm, nameSpecified: , owner: xmartlabs, version: 4.0.0
+
+name: ZXingObjC, nameSpecified: , owner: TheLevelUp, version: 3.2.2
+
+name: libevent, nameSpecified: , version: 2.0.22
+body: Libevent is availabl…
+
+name: libgcrypt, nameSpecified: , version: 1.8.1
+body: Libgcrypt - The GNU …
+
+name: libgpg-error, nameSpecified: , version: 
+body: Package: libgpg-erro…
+
+name: libotr, nameSpecified: , version: 4.1.1
+body: Off-the-Record Messa…
+
+name: OpenSSL, nameSpecified: , version: 1.0.2n
+body: LICENSE ISSUES
+  ===…
+
+name: Tor, nameSpecified: , version: 0.3.0.13
+body: This file contains t…
+
+add-version-numbers: true
+
+LicensePlist Version: 1.8.3

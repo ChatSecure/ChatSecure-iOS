@@ -10,7 +10,8 @@
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "Strings.h"
+@import OTRAssets;
+
 
 @interface OTRDatabaseUnlockViewController () <UITextFieldDelegate>
 
@@ -43,7 +44,7 @@
     [self.view addSubview:self.passphraseTextField];
     
     self.unlockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.unlockButton setTitle:UNLOCK_STRING forState:UIControlStateNormal];
+    [self.unlockButton setTitle:UNLOCK_STRING() forState:UIControlStateNormal];
     self.unlockButton.enabled = NO;
     [self.unlockButton addTarget:self action:@selector(unlockTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.unlockButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -52,7 +53,7 @@
     
     self.forgotPassphraseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.forgotPassphraseButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.forgotPassphraseButton setTitle:FORGOT_PASSPHRASE_STRING forState:UIControlStateNormal];
+    [self.forgotPassphraseButton setTitle:FORGOT_PASSPHRASE_STRING() forState:UIControlStateNormal];
     [self.forgotPassphraseButton addTarget:self action:@selector(forgotTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.forgotPassphraseButton];
@@ -129,8 +130,10 @@
 
 - (void)forgotTapped:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FORGOT_PASSPHRASE_STRING message:FORGOT_PASSPHRASE_INFO_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-    [alertView show];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:FORGOT_PASSPHRASE_STRING() message:FORGOT_PASSPHRASE_INFO_STRING() preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING() style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:ok];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification

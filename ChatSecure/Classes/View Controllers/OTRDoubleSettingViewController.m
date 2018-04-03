@@ -21,7 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRDoubleSettingViewController.h"
-#import "Strings.h"
+@import OTRAssets;
+
 
 @interface OTRDoubleSettingViewController (Private)
 - (void) setTextForValueLabel;
@@ -114,7 +115,7 @@
 }
 
 - (void) setTextForValueLabel {
-    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING, [self stringForValue:otrSetting.doubleValue], NEW_STRING, [self stringForValue:newValue]];
+    self.valueLabel.text = [NSString stringWithFormat:@"%@: %@\t%@: %@", OLD_STRING(), [self stringForValue:otrSetting.doubleValue], NEW_STRING(), [self stringForValue:newValue]];
 }
 
 - (NSString*) stringForValue:(double)value {

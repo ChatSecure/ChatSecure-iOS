@@ -8,22 +8,15 @@
 
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRAccount.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPAccount.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 const struct OTRXMPPPresenceSubscriptionRequestAttributes OTRXMPPPresenceSubscriptionRequestAttributes = {
 	.date = @"date",
 	.jid = @"jid",
 	.displayName = @"displayName"
-};
-
-const struct OTRXMPPPresenceSubscriptionRequestRelationships OTRXMPPPresenceSubscriptionRequestRelationships = {
-	.accountUniqueId = @"accountUniqueId"
-};
-
-const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscriptionRequestEdges = {
-	.account = @"account"
 };
 
 @implementation OTRXMPPPresenceSubscriptionRequest
@@ -45,7 +38,11 @@ const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscription
 + (instancetype)fetchPresenceSubscriptionRequestWithJID:(NSString *)jid accontUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
 {
     __block id request = nil;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRXMPPPresenceSubscriptionRequestEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    YapDatabaseRelationshipTransaction *relationshipTransactoin = [transaction ext:extensionName];
+    
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameSubscriptionRequestAccountEdgeName];
+    [relationshipTransactoin enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRXMPPPresenceSubscriptionRequest *edgeRequest = [OTRXMPPPresenceSubscriptionRequest fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if ([edgeRequest.jid isEqualToString:jid]) {
             request = edgeRequest;
@@ -61,7 +58,8 @@ const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscription
 
 - (NSArray *)yapDatabaseRelationshipEdges
 {
-    YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRXMPPPresenceSubscriptionRequestEdges.account
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameSubscriptionRequestAccountEdgeName];
+    YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                           destinationKey:self.accountUniqueId
                                                                               collection:[OTRAccount collection]
                                                                          nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];

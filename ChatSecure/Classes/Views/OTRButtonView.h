@@ -6,15 +6,18 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-#import "OTRKit.h"
+@import OTRKit;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRButtonView : UIView
 
-- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
+@property (nonnull, strong) NSLayoutConstraint *topLayoutConstraint;
 
+- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
 
 + (CGFloat )heightForTitle:(NSString *)title width:(CGFloat)width buttons:(NSArray *)buttons;
 
 @end
+NS_ASSUME_NONNULL_END

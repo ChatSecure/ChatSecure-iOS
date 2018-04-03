@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPModule.h"
+@import XMPPFramework;
 
+NS_ASSUME_NONNULL_BEGIN
 @class AFSecurityPolicy;
 
 @protocol OTRCertificatePinningDelegate <NSObject>
@@ -18,25 +19,25 @@
 
 @interface OTRCertificatePinning : XMPPModule
 
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
-@property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
+@property (nonatomic, strong, readonly) AFSecurityPolicy *securityPolicy;
+@property (nonatomic, weak, nullable) id<OTRCertificatePinningDelegate> delegate;
 
-+ (instancetype)defaultCertificates;
-
++ (void)addCertificateData:(NSData*)certificateData withHostName:(NSString *)hostname;
 + (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 
-+ (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
-+ (NSDictionary *)allCertificates;
-+ (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
-+ (SecCertificateRef)certForTrust:(SecTrustRef)trust;
-+ (NSData *)dataForCertificate:(SecCertificateRef)certificate;
-+ (SecCertificateRef)certForData:(NSData *)data;
++ (nullable NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate;
++ (NSString*)sha256FingerprintForCertificateData:(NSData*)certificateData;
++ (NSDictionary<NSString*,NSArray<NSData*>*> *)allCertificates;
++ (nullable NSArray<NSData*> *)storedCertificatesWithHostName:(NSString *)hostname;
++ (nullable SecCertificateRef)certForTrust:(SecTrustRef)trust;
++ (nullable NSData *)dataForCertificate:(SecCertificateRef)certificate;
+
++ (nullable SecCertificateRef)certForData:(NSData *)data;
 
 + (void)deleteAllCertificatesWithHostName:(NSString *)hostname;
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 
-+ (void)loadBundledCertificatesToKeychain;
-
-+ (id)publicKeyWithCertData:(NSData *)certData;
++ (nullable id)publicKeyWithCertData:(NSData *)certData;
 
 @end
+NS_ASSUME_NONNULL_END

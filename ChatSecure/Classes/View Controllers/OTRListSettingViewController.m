@@ -8,16 +8,23 @@
 
 #import "OTRListSettingViewController.h"
 #import "OTRListSettingValue.h"
-#import "PureLayout.h"
+#import "OTRListSetting.h"
+
+@import PureLayout;
 
 @interface OTRListSettingViewController ()
 
 @property (nonatomic, strong) id currentSelectedValue;
 @property (nonatomic) BOOL addedConstratints;
 
+@property (nonatomic,strong) OTRListSetting * otrSetting;
+@property (nonatomic,strong) NSIndexPath * selectedPath;
+@property (nonatomic,strong) UITableView * valueTable;
+
 @end
 
 @implementation OTRListSettingViewController
+@synthesize otrSetting = _otrSetting;
 
 -(void) viewDidLoad
 {

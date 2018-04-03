@@ -8,10 +8,12 @@
 
 #import "OTRUtilities.h"
 #import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import "OTRIncomingMessage.h"
+#import "OTROutgoingMessage.h"
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
-#import <Security/SecureTransport.h>
+@import Security;
+@import XLForm;
 
 #import "OTRLog.h"
 
@@ -72,15 +74,15 @@
 
 +(void)deleteAllBuddiesAndMessages
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeAllObjectsInCollection:[OTRBuddy collection]];
-        [transaction removeAllObjectsInCollection:[OTRMessage collection]];
+        [transaction removeAllObjectsInCollection:[OTRBaseMessage collection]];
     }];
 }
 
 + (void)deleteAccountsWithoutUsername
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].writeConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSMutableArray *deleteKeys = [NSMutableArray array];
         [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString *key, OTRAccount *account, BOOL *stop) {
             if (![account.username length]) {
@@ -122,12 +124,12 @@
     
     //GEt number of Supported Ciphers
     status = SSLGetNumberSupportedCiphers(sslContext, &numCiphers);
-    DDLogVerbose(@"SSLGetNumberSupportedCiphers result %d, count %d",(int)status, (int)numCiphers);
+    //DDLogVerbose(@"SSLGetNumberSupportedCiphers result %d, count %d",(int)status, (int)numCiphers);
     SSLCipherSuite ciphers[numCiphers];
     
     //Get list of Supported Ciphers
     status = SSLGetSupportedCiphers(sslContext, ciphers, &numCiphers);
-    DDLogVerbose(@"SSLGetSupportedCiphers result %d",(int)status);
+    //DDLogVerbose(@"SSLGetSupportedCiphers result %d",(int)status);
     
     
     //NSMutableArray * discardedCiphers = [NSMutableArray array];

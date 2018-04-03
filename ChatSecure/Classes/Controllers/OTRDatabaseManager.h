@@ -6,24 +6,34 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
-#import "YapDatabaseConnection.h"
-#import "YapDatabase.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+@import YapTaskQueue;
+
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 
-extern NSString *const OTRYapDatabaseRelationshipName;
-extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
-extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
+@class MessageQueueHandler;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface OTRDatabaseManager : NSObject
 
-@property (nonatomic, readonly) YapDatabase *database;
-@property (nonatomic, strong) OTRMediaServer *mediaServer;
-@property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
-@property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, readonly, nullable) YapDatabase *database;
+@property (nonatomic, strong, nullable) OTRMediaServer *mediaServer;
+
+/// User interface / synchronous main-thread reads only!
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *uiConnection;
+/// Background / async reads only! Not for use in main thread / UI code.
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *readConnection;
+/// Background writes only! Never use this synchronously from the main thread!
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *writeConnection;
+
+/// This is only to be used by the YapViewHandler for main thread reads only!
+@property (nonatomic, readonly, nullable) YapDatabaseConnection *longLivedReadOnlyConnection;
+
+@property (nonatomic, readonly, nullable) MessageQueueHandler *messageQueueHandler;
 
 
 /**
@@ -34,22 +44,29 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
  @return whether setup was successful
  */
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage;
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName
+                    directory:(nullable NSString*)directory
+                  withMediaStorage:(BOOL)withMediaStorage;
 
-- (YapDatabaseConnection *)newConnection;
-
-- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
-/** This only works after calling setDatabasePassphrase */
-- (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber;
+- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError *_Nullable*)error;
 
 
 - (BOOL)hasPassphrase;
 
-- (NSString *)databasePassphrase;
+- (nullable NSString *)databasePassphrase;
 
+/** Checks for database at default path */
 + (BOOL)existsYapDatabase;
 
-+ (NSString *)yapDatabasePathWithName:(NSString *)name;
+/** directory containing sqlite and WAL files. Will be nil until setupDatabaseWithName: is called.  */
+@property (nonatomic, strong, readonly, nullable) NSString *databaseDirectory;
++ (NSString *)defaultYapDatabaseDirectory;
++ (NSString *)defaultYapDatabasePathWithName:(NSString *_Nullable)name;
 
 + (instancetype)sharedInstance;
+@property (class, nonatomic, readonly) OTRDatabaseManager *shared;
+
+NS_ASSUME_NONNULL_END
 
 @end

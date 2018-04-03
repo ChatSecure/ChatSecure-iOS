@@ -10,7 +10,8 @@
 #import "OTRIntSettingViewController.h"
 
 @implementation OTRIntSetting
-
+@synthesize delegate = _delegate;
+@synthesize defaultValue = _defaultValue;
 @synthesize intValue, minValue, maxValue, numValues;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
@@ -18,7 +19,7 @@
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf editValue];
         };
         self.defaultValue = [NSNumber numberWithInt:0];

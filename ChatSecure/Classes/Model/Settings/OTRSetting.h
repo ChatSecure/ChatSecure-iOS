@@ -20,7 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @class OTRSetting;
 
@@ -30,7 +30,7 @@
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass;
 @end
 
-typedef void (^OTRSettingActionBlock)(void);
+typedef void (^OTRSettingActionBlock)(id sender);
 
 @interface OTRSetting : NSObject
 

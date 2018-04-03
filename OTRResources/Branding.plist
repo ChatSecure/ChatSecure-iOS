@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>kOTRXMPPResource</key>
+	<string>chatsecure</string>
+	<key>kOTRFeedbackEmail</key>
+	<string>support@chatsecure.org</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>719137339288.apps.googleusercontent.com</string>
+	<key>GOOGLE_APP_SCOPE</key>
+	<string>https://www.googleapis.com/auth/googletalk</string>
+	<key>GitHubURL</key>
+	<string>https://github.com/ChatSecure/ChatSecure-iOS/</string>
+	<key>FacebookAppURL</key>
+	<string>fb://profile/151354555075008</string>
+	<key>FacebookWebURL</key>
+	<string>https://www.facebook.com/chatsecure</string>
+	<key>TwitterAppURL</key>
+	<string>twitter://user?screen_name=ChatSecure</string>
+	<key>TwitterWebURL</key>
+	<string>https://twitter.com/ChatSecure</string>
+	<key>TransifexURL</key>
+	<string>https://www.transifex.com/projects/p/chatsecure</string>
+	<key>ProjectURL</key>
+	<string>https://chatsecure.org</string>
+	<key>ShareBaseURL</key>
+	<string>https://chatsecure.org/i/#</string>
+	<key>pushAPIURL</key>
+	<string>https://push.chatsecure.org/api/v1/</string>
+	<key>StagingPushAPIURL</key>
+	<string>https://chatsecure-push-staging.herokuapp.com/api/v1</string>
+	<key>TestflightSignupURL</key>
+	<string>https://goo.gl/forms/p8XAiaJFvodl7DLk2</string>
+	<key>ShouldShowPushWarning</key>
+	<true/>
+	<key>ShouldShowServerCell</key>
+	<true/>
+	<key>ShowsColorForStatus</key>
+	<true/>
+	<key>AllowsDonation</key>
+	<true/>
+	<key>TorEnabled</key>
+	<true/>
+	<key>AllowGroupOMEMO</key>
+	<true/>
+	<key>AllowDebugFileLogging</key>
+	<false/>
+	<key>AllowOMEMO</key>
+	<true/>
+</dict>
+</plist>

@@ -7,9 +7,8 @@
 //
 
 #import "OTRMediaServer.h"
-#import "GCDWebServer.h"
-#import "GCDWebServerRequest.h"
-#import "GCDWebServerVirtualFileResponse.h"
+@import GCDWebServer;
+@import IOCipher;
 #import "OTRMediaFileManager.h"
 
 @interface OTRMediaServer ()
@@ -34,9 +33,6 @@
 
 - (BOOL)startOnPort:(NSUInteger)port error:(NSError **)error
 {
-    if (!(port > 0)) {
-        port = 8080;
-    }
     __weak typeof(self)weakSelf = self;
     [self.webServer addHandlerForMethod:@"GET"
                               pathRegex:[NSString stringWithFormat:@"/%@/.*",kOTRRootMediaDirectory]
@@ -45,9 +41,7 @@
                           __strong typeof(weakSelf)strongSelf = weakSelf;
                           [strongSelf handleMediaRequest:request completion:completionBlock];
                       }];
-    return [self.webServer startWithOptions:@{GCDWebServerOption_Port: @(port),
-                                              GCDWebServerOption_BindToLocalhost: @(YES),
-                                              GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
+    return [self.webServer startWithOptions:@{GCDWebServerOption_BindToLocalhost: @(YES)}
                                       error:error];
     
 }
@@ -66,9 +60,10 @@
 
 - (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
 {
-    NSString *itemPath = [OTRMediaFileManager pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
-    NSString *path = [[NSString stringWithFormat:@"http://localhost:%lu",(unsigned long)self.webServer.port] stringByAppendingPathComponent:itemPath];
-    return [NSURL URLWithString:path];
+    NSString *itemPath = [OTRMediaFileManager pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId withLeadingSlash:NO];
+    NSURL *url = [self.webServer serverURL];
+    url = [url URLByAppendingPathComponent:itemPath];
+    return url;
 }
 
 #pragma - mark Class Methods

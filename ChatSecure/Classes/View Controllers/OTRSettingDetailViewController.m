@@ -21,7 +21,14 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRSettingDetailViewController.h"
-#import "Strings.h"
+#import "OTRSetting.h"
+@import OTRAssets;
+
+@interface OTRSettingDetailViewController()
+@property (nonatomic, strong) UIBarButtonItem *saveButton;
+@property (nonatomic, strong) UIBarButtonItem *cancelButton;
+@end
+
 
 @implementation OTRSettingDetailViewController
 @synthesize otrSetting, saveButton, cancelButton;
@@ -34,8 +41,8 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.saveButton = [[UIBarButtonItem alloc] initWithTitle:SAVE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
-        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
+        self.saveButton = [[UIBarButtonItem alloc] initWithTitle:SAVE_STRING() style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     }
     return self;
 }

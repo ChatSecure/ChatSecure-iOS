@@ -22,7 +22,7 @@
 
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRUtilities.h"
-#import "PureLayout.h"
+@import PureLayout;
 
 @interface OTRInLineTextEditTableViewCell ()
 
@@ -54,11 +54,11 @@
     if (!self.addedConstraints && self.textField) {
         
         NSLayoutConstraint *leadingEdgeConstraint = [self.textField autoPinEdge:ALEdgeLeading
-                                                                          toEdge:ALEdgeRight
+                                                                          toEdge:ALEdgeTrailing
                                                                           ofView:self.textLabel
                                                                       withOffset:6];
         
-        NSLayoutConstraint *trailingEdgeConstraint = [self.textField autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:5];
+        NSLayoutConstraint *trailingEdgeConstraint = [self.textField autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:5];
         
         NSLayoutConstraint *centerConstraint = [self.textField autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
         

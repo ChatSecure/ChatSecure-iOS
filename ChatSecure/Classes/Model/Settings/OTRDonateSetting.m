@@ -7,16 +7,17 @@
 //
 
 #import "OTRDonateSetting.h"
-#import "Strings.h"
+@import OTRAssets;
 
 @implementation OTRDonateSetting
+@synthesize delegate = _delegate;
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription
 {
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
         __weak typeof (self) weakSelf = self;
-        self.actionBlock = ^{
+        self.actionBlock = ^void(id sender){
             [weakSelf openDonationDialog];
         };
     }

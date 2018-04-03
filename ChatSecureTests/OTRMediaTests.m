@@ -7,11 +7,11 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OTRMediaFileManager.h"
-#import "OTRVideoItem.h"
-#import "OTRBuddy.h"
-#import "OTRMessage.h"
-#import "IOCipher.h"
+#import <ChatSecureCore/OTRMediaFileManager.h>
+#import <ChatSecureCore/OTRVideoItem.h>
+#import <ChatSecureCore/OTRBuddy.h>
+#import <ChatSecureCore/OTRMessage.h>
+#import <IOCipher/IOCipher.h>
 
 @interface OTRMediaTests : XCTestCase
 
@@ -29,9 +29,7 @@
     [super setUp];
     self.queue = dispatch_queue_create("OTRMediaTestsQUEUE", 0);
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:@"test.sqlite"];
+    NSString *filePath =  [NSTemporaryDirectory() stringByAppendingPathComponent:NSStringFromSelector(_cmd)];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
@@ -46,8 +44,7 @@
     
     NSArray *sampleFiles = [[NSBundle bundleForClass:[self class]] pathsForResourcesOfType:nil inDirectory:@"samples"];
     for (NSString *filePath in sampleFiles) {
-        OTRMediaItem *mediaItem = [[OTRMediaItem alloc] init];
-        mediaItem.filename = [filePath lastPathComponent];
+        OTRMediaItem *mediaItem = [[OTRMediaItem alloc] initWithFilename:[filePath lastPathComponent] mimeType:nil isIncoming:NO];
         
         self.mediaItems = [self.mediaItems arrayByAddingObject:mediaItem];
     }
@@ -69,13 +66,13 @@
     return [OTRMediaFileManager pathForMediaItem:mediaItem buddyUniqueId:self.buddy.uniqueId];
 }
 
-- (void)copyToEncryptedStorage:(OTRMediaItem *)mediaItem completion:(void (^)(NSError *error))completion
+- (void)copyToEncryptedStorage:(OTRMediaItem *)mediaItem completion:(void (^)(BOOL success, NSError *error))completion
 {
     
     __block NSString *bundlePath = [self bundlePathForMediaItem:mediaItem];
     __block NSString *encryptedPath = [self encryptedPathForMediaItem:mediaItem];;
     
-    [self.mediaFileManager copyDataFromFilePath:bundlePath toEncryptedPath:encryptedPath completionQueue:self.queue completion:completion];
+    [self.mediaFileManager copyDataFromFilePath:bundlePath toEncryptedPath:encryptedPath completion:completion completionQueue:self.queue];
 }
 
 - (void)testCopyIntoEncryptedStorage
@@ -84,7 +81,7 @@
     [self.mediaItems enumerateObjectsUsingBlock:^(OTRMediaItem *mediaItem, NSUInteger idx, BOOL *stop) {
         __block XCTestExpectation *expectation = [self expectationWithDescription:mediaItem.filename];
         
-        [self copyToEncryptedStorage:mediaItem completion:^(NSError *error) {
+        [self copyToEncryptedStorage:mediaItem completion:^(BOOL success, NSError *error) {
             XCTAssertNil(error,@"Error copying File: %@",error);
             NSError *attributesError = nil;
             NSDictionary *fileAttributes = [self.mediaFileManager.ioCipher fileAttributesAtPath:[self encryptedPathForMediaItem:mediaItem] error:&attributesError];
@@ -96,17 +93,14 @@
             XCTAssertNotNil(fileAttributes, @"Error no attributes");
             XCTAssertGreaterThan([[fileAttributes allKeys] count], 0,@"Error no attributes");
             
-            [self.mediaFileManager dataForItem:mediaItem buddyUniqueId:self.buddy.uniqueId completion:^(NSData *data, NSError *error) {
-                
-                XCTAssertNotNil(data, @"Data is nil");
-                XCTAssertNil(error, @"Found Error getting file");
-                NSData *unencryptedData = [[NSFileManager defaultManager] contentsAtPath:[self bundlePathForMediaItem:mediaItem]];
-                BOOL equalData = [unencryptedData isEqualToData:data];
-                XCTAssertTrue(equalData, @"Data is not equal");
-                
-                [expectation fulfill];
-                
-            } completionQueue:self.queue];
+            NSData *data = [self.mediaFileManager dataForItem:mediaItem buddyUniqueId:self.buddy.uniqueId error:&error];
+            XCTAssertNotNil(data, @"Data is nil");
+            XCTAssertNil(error, @"Found Error getting file");
+            NSData *unencryptedData = [[NSFileManager defaultManager] contentsAtPath:[self bundlePathForMediaItem:mediaItem]];
+            BOOL equalData = [unencryptedData isEqualToData:data];
+            XCTAssertTrue(equalData, @"Data is not equal");
+            
+            [expectation fulfill];
         }];
     }];
     

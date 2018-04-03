@@ -1,5 +1,5 @@
 //
-//  OTRImagePicker.m
+//  OTRAttachmentPicker.m
 //  ChatSecure
 //
 //  Created by David Chiles on 1/16/15.
@@ -8,11 +8,11 @@
 
 #import "OTRAttachmentPicker.h"
 
-#import <MobileCoreServices/MobileCoreServices.h>
-#import "Strings.h"
+@import MobileCoreServices;
+@import OTRAssets;
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "UIActionSheet+Blocks.h"
+
 
 @interface OTRAttachmentPicker () <UINavigationControllerDelegate>
 
@@ -24,67 +24,47 @@
 
 - (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)viewController delegate:(id<OTRAttachmentPickerDelegate>)delegate
 {
-    if (self = [self init]) {
+    if (self = [super init]) {
         _parentViewController = viewController;
         _delegate = delegate;
     }
     return self;
 }
 
-- (void)showAlertControllerWithCompletion:(void (^)(void))completion
+- (void)showAlertControllerFromSourceView:(UIView *)senderView withCompletion:(void (^)(void))completion
 {
-    if (SYSTEM_VERSION_LESS_THAN(@"8.0")) {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:nil destructiveButtonItem:nil otherButtonItems:nil];
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            RIButtonItem *takePhotoButton = [RIButtonItem itemWithLabel:USE_CAMERA_STRING action:^{
-                [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-            }];
-            [actionSheet addButtonItem:takePhotoButton];
-        }
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-            RIButtonItem *photoLibraryButton = [RIButtonItem itemWithLabel:PHOTO_LIBRARY_STRING action:^{
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            }];
-            [actionSheet addButtonItem:photoLibraryButton];
-        }
-        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-
-        [actionSheet addButtonItem:cancelButton];
-        [actionSheet setCancelButtonIndex:[actionSheet numberOfButtons]-1];
-        
-        [actionSheet otr_presentInView:self.parentViewController.view];
-    }
-    else {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-            }];
-            [alertController addAction:takePhotoAction];
-        }
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-            UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            }];
-            [alertController addAction:openLibraryAction];
-        }
-        
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        
-        [alertController addAction:cancelAlertAction];
-        
-        alertController.popoverPresentationController.delegate = self.parentViewController;
-        
-        [self.parentViewController presentViewController:alertController animated:YES completion:completion];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {            
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
+        [alertController addAction:takePhotoAction];
     }
     
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }];
+        [alertController addAction:openLibraryAction];
+    }
     
+    if ([self.delegate respondsToSelector:@selector(attachmentPicker:addAdditionalOptions:)]) {
+        [self.delegate attachmentPicker:self addAdditionalOptions:alertController];
+    }
+    
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
+    
+    [alertController addAction:cancelAlertAction];
+    
+    alertController.popoverPresentationController.delegate = self.parentViewController;
+    if (!senderView) {
+        senderView = self.parentViewController.view;
+    }
+    alertController.popoverPresentationController.sourceView = senderView;
+    alertController.popoverPresentationController.sourceRect = senderView.bounds;
+    
+    [self.parentViewController presentViewController:alertController animated:YES completion:completion];
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType
@@ -93,8 +73,18 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     imagePickerController.sourceType = sourceType;
-    NSArray* mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:sourceType];
-    imagePickerController.mediaTypes = mediaTypes;
+    NSArray* availableMediaTypes = [UIImagePickerController availableMediaTypesForSourceType:sourceType];
+    if ([self.delegate respondsToSelector:@selector(attachmentPicker:preferredMediaTypesForSource:)])  {
+        NSArray *preferredMediaTypes = [self.delegate attachmentPicker:self preferredMediaTypesForSource:sourceType];
+        if (preferredMediaTypes) {
+            NSMutableSet *availableSet = [NSMutableSet setWithArray:availableMediaTypes];
+            [availableSet intersectSet:[NSSet setWithArray:preferredMediaTypes]];
+            availableMediaTypes = [availableSet allObjects];
+        } else {
+            availableMediaTypes = @[];
+        }
+    }
+    imagePickerController.mediaTypes = availableMediaTypes;
     imagePickerController.delegate = self;
     
     self.imagePickerController = imagePickerController;

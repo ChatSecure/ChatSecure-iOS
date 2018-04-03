@@ -6,10 +6,14 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @interface UIActivity (ChatSecure)
 
 + (CGSize)otr_defaultImageSize;
+
+/** Activities relevant for links */
+@property (nonatomic, class, readonly) NSArray<UIActivity*> *otr_linkActivities;
+
 
 @end
