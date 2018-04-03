@@ -461,7 +461,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
             vc.delegate = self
             vc.setExistingRoomOccupants(viewHandler: self.viewHandler, room: self.room)
             self.navigationController?.pushViewController(vc, animated: true)
-            
         }
     }
 
