@@ -127,7 +127,17 @@ import OTRAssets
             }
         }
     }
-    
+
+    open func removeSupplementaryView(indexPath:IndexPath, supplementaryView type:String) {
+        var value = self.supplementaryViews[indexPath] ?? []
+        if let index = value.index(where: { (viewKind, _) -> Bool in
+            return viewKind == type
+        }) {
+            value.remove(at: index)
+            self.supplementaryViews[indexPath] = value
+        }
+    }
+
     open func addSupplementaryView(indexPath:IndexPath, supplementaryView type:String, userData:AnyObject?) {
         var value = self.supplementaryViews[indexPath] ?? []
         if let index = value.index(where: { (viewKind, _) -> Bool in
