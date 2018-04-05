@@ -656,6 +656,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
         let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
         if group == GroupNameHeader {
             didSelectHeaderCell(type: headerRows[indexPath.row])
@@ -685,6 +686,11 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
                 }
                 let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
+                if let popoverController = alert.popoverPresentationController {
+                    popoverController.sourceView = tableView
+                    popoverController.sourceRect = CGRect(x: tableView.bounds.midX, y: tableView.bounds.midY, width: 0, height: 0)
+                    popoverController.permittedArrowDirections = []
+                }
                 present(alert, animated: true, completion: nil)
             } else {
                 viewOccupantInfo(roomOccupant)
