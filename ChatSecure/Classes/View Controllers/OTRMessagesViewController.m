@@ -610,7 +610,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             
             [weakSelf.connections.write asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [toBeSaved enumerateObjectsUsingBlock:^(id<OTRMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [transaction setObject:obj forKey:[obj messageKey] inCollection:[obj messageCollection]];
+                    [obj saveWithTransaction:transaction];
                 }];
                 [transaction touchObjectForKey:[threadOwner threadIdentifier] inCollection:[threadOwner threadCollection]];
             }];
@@ -1148,7 +1148,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             return;
         }
         [thread setCurrentMessageText:text];
-        [transaction setObject:thread forKey:key inCollection:collection];
+        [thread saveWithTransaction:transaction];
         
         //Send inactive chat State
         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
@@ -1177,7 +1177,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (oldThreadText.length) {
         [thread setCurrentMessageText:nil];
         [self.connections.write asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [transaction setObject:thread forKey:key inCollection:collection];
+            [thread saveWithTransaction:transaction];
         }];
     }
 }
