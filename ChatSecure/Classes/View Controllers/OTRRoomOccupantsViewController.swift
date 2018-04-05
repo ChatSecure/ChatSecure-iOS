@@ -179,7 +179,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
     }
     
-    func ownOccupant() -> OTRXMPPRoomOccupant? {
+    open func ownOccupant() -> OTRXMPPRoomOccupant? {
         guard let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection else { return nil }
         var occupant:OTRXMPPRoomOccupant? = nil
         connection.read({ (transaction) in
@@ -465,13 +465,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
-
-    open func grantAdmin(_ occupant:OTRXMPPRoomOccupant) {
+    
+    open func grantPrivileges(_ occupant:OTRXMPPRoomOccupant, affiliation:RoomOccupantAffiliation) {
         guard let room = self.room,
             let xmppRoom = self.xmppRoom(for: room),
             let occupantRealJid = occupant.realJID
             else { return }
-        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.admin.stringValue, jid: occupantRealJid)])
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: affiliation.stringValue, jid: occupantRealJid)])
     }
     
     open func revokeMembership(_ occupant:OTRXMPPRoomOccupant) {
@@ -586,6 +586,10 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             isYou = true
         }
         if let buddy = buddy {
+            // Avoid showing ourselves as "pending approval"
+            if isYou {
+                buddy.pendingApproval = false
+            }
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
             cell.infoAction = { [weak self] (cell, sender) in
@@ -665,7 +669,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 if ownOccupant.canGrantAdmin(roomOccupant) {
                     let promoteAction = UIAlertAction(title: GROUP_GRANT_ADMIN_STRING(), style: .default, handler: { (action) in
-                        self.grantAdmin(roomOccupant)
+                        self.grantPrivileges(roomOccupant, affiliation: .admin)
                     })
                     alert.addAction(promoteAction)
                 }
