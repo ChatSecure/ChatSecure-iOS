@@ -396,6 +396,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 let xmppRoomManager = self.xmppRoomManager(for: room) {
                 //Leave room
                 xmppRoomManager.leaveRoom(roomJid)
+                xmppRoomManager.removeRoomsFromBookmarks([room])
                 if let delegate = self.delegate {
                     delegate.didLeaveRoom(self)
                 }
