@@ -119,13 +119,13 @@ PODS:
     - NBUCore (>= 2.1.0)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
-    - MWFeedParser/NSDate+InternetDateTime (= 1.0.1)
-    - MWFeedParser/NSString+HTML (= 1.0.1)
+    - "MWFeedParser/NSDate+InternetDateTime (= 1.0.1)"
+    - "MWFeedParser/NSString+HTML (= 1.0.1)"
   - MWFeedParser/FeedParser (1.0.1):
-    - MWFeedParser/NSDate+InternetDateTime
-    - MWFeedParser/NSString+HTML
-  - MWFeedParser/NSDate+InternetDateTime (1.0.1)
-  - MWFeedParser/NSString+HTML (1.0.1)
+    - "MWFeedParser/NSDate+InternetDateTime"
+    - "MWFeedParser/NSString+HTML"
+  - "MWFeedParser/NSDate+InternetDateTime (1.0.1)"
+  - "MWFeedParser/NSString+HTML (1.0.1)"
   - Navajo (0.0.1)
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
@@ -251,6 +251,33 @@ DEPENDENCIES:
   - YapDatabase/SQLCipher (from `https://github.com/yapstudios/YapDatabase.git`, commit `ce9c8db`)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `swift4`)
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Alamofire
+    - Appirater
+    - ARChromeActivity
+    - BBlock
+    - BButton
+    - CocoaAsyncSocket
+    - CocoaLumberjack
+    - DTFoundation
+    - GCDWebServer
+    - JTSImageViewController
+    - KissXML
+    - KSCrash
+    - Kvitto
+    - libidn
+    - MWFeedParser
+    - Navajo
+    - NBUCore
+    - OpenInChrome
+    - ProxyKit
+    - QRCodeReaderViewController
+    - Reveal-SDK
+    - SignalProtocolC
+    - SQLCipher
+    - TUSafariActivity
+
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
     :path: Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec
@@ -341,4 +368,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: df34137d0408cd003d94607e1f2a96cd233abd0f
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0
