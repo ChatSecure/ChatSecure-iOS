@@ -417,7 +417,6 @@ open class OTRRoomOccupantsViewController: UIViewController {
         connection?.readWrite({ (transaction) in
             room.save(with: transaction)
         })
-        refreshNotificationSwitch(notificationSwitch, room: room, animated:true)
     }
     
     @objc func didChangeGroupOMEMOSwitch(_ sender: UISwitch) {
