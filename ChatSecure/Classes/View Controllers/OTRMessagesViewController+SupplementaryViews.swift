@@ -15,6 +15,13 @@ import OTRAssets
 }
 
 @objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
+  
+    fileprivate struct SupplementaryView {
+        /// the kind of supplementary view
+        let kind: String
+        /// arbitrary user data
+        var userData: AnyObject?
+    }
     
     @objc public let connections: DatabaseConnections
     @objc public let viewHandler: OTRYapViewHandler
@@ -45,7 +52,7 @@ import OTRAssets
         collectionView.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: kind)
     }
     
-    fileprivate var supplementaryViews:[IndexPath:[(String,AnyObject?)]] = [:]
+    fileprivate var supplementaryViews:[IndexPath:[SupplementaryView]] = [:]
     
     @objc public func registerSupplementaryViewTypes(collectionView:UICollectionView) {
         for (identifier,nibName) in supplementaryViewNibs {
@@ -91,17 +98,15 @@ import OTRAssets
         }
         
         if let supplementaryViews = supplementaryViews {
-            for (view, data) in supplementaryViews {
-                if view == OTRMessagesNewDeviceCell.reuseIdentifier {
+            for supplementaryView in supplementaryViews {
+                if supplementaryView.kind == OTRMessagesNewDeviceCell.reuseIdentifier {
                     if let supplementaryViewInfo = createSupplementaryViewInfo(collectionView, kind: OTRMessagesNewDeviceCell.reuseIdentifier, populationCallback: { (cell) in
                         self.populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: true)
                     }, tag: nil, tagBehavior: .none) {
                         supplementaryViewsInfo.append(supplementaryViewInfo)
                     }
-                } else if let delegate = self.delegate {
-                    if let supplementaryViewInfo = delegate.supplementaryViewInfo(kind: view, for: collectionView, at: indexPath, userData: data) {
-                        supplementaryViewsInfo.append(supplementaryViewInfo)
-                    }
+                } else if let delegate = self.delegate, let supplementaryViewInfo = delegate.supplementaryViewInfo(kind: supplementaryView.kind, for: collectionView, at: indexPath, userData: supplementaryView.userData) {
+                    supplementaryViewsInfo.append(supplementaryViewInfo)
                 }
             }
         }
@@ -117,38 +122,36 @@ import OTRAssets
     }
     
     open func removeSupplementaryViewsOfType(type:String) {
-        for (key,value) in self.supplementaryViews {
-            var newValue = value
-            if let index = newValue.index(where: { (viewKind,userData) -> Bool in
-                return viewKind == type
-            }) {
-                newValue.remove(at: index)
-                supplementaryViews[key] = newValue
-            }
+        self.supplementaryViews = self.supplementaryViews.mapValues { (viewArray) -> [SupplementaryView] in
+            return viewArray.filter({ (view) -> Bool in
+                return view.kind != type
+            })
         }
     }
 
     open func removeSupplementaryView(indexPath:IndexPath, supplementaryView type:String) {
-        var value = self.supplementaryViews[indexPath] ?? []
-        if let index = value.index(where: { (viewKind, _) -> Bool in
-            return viewKind == type
-        }) {
-            value.remove(at: index)
-            self.supplementaryViews[indexPath] = value
-        }
+        guard let views = self.supplementaryViews[indexPath] else { return }
+        self.supplementaryViews[indexPath] = views.filter({ (view) -> Bool in
+            return view.kind != type
+        })
     }
-
-    open func addSupplementaryView(indexPath:IndexPath, supplementaryView type:String, userData:AnyObject?) {
-        var value = self.supplementaryViews[indexPath] ?? []
-        if let index = value.index(where: { (viewKind, _) -> Bool in
-            return viewKind == type
-        }) {
+    
+    fileprivate func supplementaryView(kind:String, at indexPath:IndexPath) -> SupplementaryView? {
+        guard let views = self.supplementaryViews[indexPath] else { return nil }
+        return views.first(where: { view -> Bool in
+            view.kind == kind
+        })
+    }
+    
+    open func addSupplementaryView(indexPath:IndexPath, supplementaryView kind:String, userData:AnyObject?) {
+        if var existingView = supplementaryView(kind: kind, at: indexPath) {
             // Update userdata
-            value[index] = (type, userData)
+            existingView.userData = userData
         } else {
-            value.append((type, userData))
+            var viewArray = (self.supplementaryViews[indexPath] ?? [])
+            viewArray.append(SupplementaryView(kind: kind, userData: userData))
+            self.supplementaryViews[indexPath] = viewArray
         }
-        self.supplementaryViews[indexPath] = value
     }
 
     
@@ -161,14 +164,8 @@ import OTRAssets
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath)
             populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
             return cell
-        } else if let delegate = self.delegate {
-            var data:AnyObject? = nil
-            if let value = self.supplementaryViews[indexPath], let index = value.index(where: { (viewKind, userData) -> Bool in
-                return viewKind == kind
-            }) {
-                (_,data) = value[index]
-            }
-            return delegate.supplementaryView(kind: kind, for: collectionView, at: indexPath, userData: data)
+        } else if let delegate = self.delegate, let view = supplementaryView(kind: kind, at: indexPath) {
+            return delegate.supplementaryView(kind: view.kind, for: collectionView, at: indexPath, userData: view.userData)
         }
         return nil
     }
