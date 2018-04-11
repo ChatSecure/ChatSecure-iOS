@@ -108,6 +108,7 @@
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.roomJID = jid;
+            room.hasSeenRoom = NO;
         } else {
             // Clear out roles, we'll getpresence updates once we join
             [self clearOccupantRolesInRoom:room withTransaction:transaction];

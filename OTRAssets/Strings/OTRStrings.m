@@ -470,6 +470,8 @@ NSString* SHOW_USERVOICE_STRING() { return [OTRLanguageManager translatedString:
 NSString* SIGN_UP_STRING() { return [OTRLanguageManager translatedString:@"Sign Up"]; }
 /** "Skip", Label for button to skip this step */
 NSString* SKIP_STRING() { return [OTRLanguageManager translatedString:@"Skip"]; }
+/** "Someone invited you to the ´%@´ group.", Title of screen for joining/not joining group */
+NSString* SOMEONE_INVITED_YOU_TO_GROUP_STRING() { return [OTRLanguageManager translatedString:@"Someone invited you to the ´%@´ group."]; }
 /** "Someone is typing...", received a typing notification */
 NSString* SOMEONE_IS_TYPING_STRING() { return [OTRLanguageManager translatedString:@"Someone is typing..."]; }
 /** "Someone", A placeholder for a buddy's username like Someone wants to chat. */

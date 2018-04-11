@@ -707,6 +707,10 @@
         "comment": "let users know source is on Github",
         "string": "Check out the source here on Github"
     },
+    "SOMEONE_INVITED_YOU_TO_GROUP_STRING": {
+        "comment": "Title of screen for joining/not joining group",
+        "string": "Someone invited you to the ´%@´ group."
+    },
     "SOMEONE_IS_TYPING_STRING": {
         "comment": "received a typing notification",
         "string": "Someone is typing..."

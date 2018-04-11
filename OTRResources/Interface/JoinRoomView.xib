@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="JoinRoomView" customModule="ChatSecureCore">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihV-L9-B4N">
+                    <rect key="frame" x="152.5" y="318.5" width="70" height="30"/>
+                    <state key="normal" title="No thanks">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="joinRoomDeclineWithSender:" destination="iN0-l3-epB" eventType="touchUpInside" id="hTy-IT-ciQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GiA-gk-1bb">
+                    <rect key="frame" x="137.5" y="268.5" width="100" height="40"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="AEj-wn-MQm"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="QtL-7l-zUj"/>
+                    </constraints>
+                    <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    <state key="normal" title="Join"/>
+                    <connections>
+                        <action selector="joinRoomAcceptWithSender:" destination="iN0-l3-epB" eventType="touchUpInside" id="OcG-cf-fDI"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKp-Uf-kr6">
+                    <rect key="frame" x="20" y="214.5" width="335" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="iKp-Uf-kr6" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="8c8-qk-CyF"/>
+                <constraint firstItem="ihV-L9-B4N" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Cpc-HU-N1I"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="iKp-Uf-kr6" secondAttribute="trailing" constant="20" id="Ibs-kP-JJx"/>
+                <constraint firstItem="GiA-gk-1bb" firstAttribute="top" secondItem="iKp-Uf-kr6" secondAttribute="bottom" constant="30" id="fPd-V7-unC"/>
+                <constraint firstItem="ihV-L9-B4N" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="fUk-zr-PWC"/>
+                <constraint firstItem="ihV-L9-B4N" firstAttribute="top" secondItem="GiA-gk-1bb" secondAttribute="bottom" constant="10" id="rJA-bz-sD1"/>
+                <constraint firstItem="GiA-gk-1bb" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ukX-32-xAM"/>
+                <constraint firstItem="iKp-Uf-kr6" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="yC7-Cg-MpG"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="acceptButton" destination="GiA-gk-1bb" id="ffr-oC-4o4"/>
+                <outlet property="declineButton" destination="ihV-L9-B4N" id="EJT-Qg-VGY"/>
+                <outlet property="titleLabel" destination="iKp-Uf-kr6" id="HYB-m1-v34"/>
+            </connections>
+        </view>
+    </objects>
+</document>

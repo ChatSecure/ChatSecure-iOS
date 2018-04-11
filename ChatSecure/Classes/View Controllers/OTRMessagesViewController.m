@@ -513,6 +513,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (![self isGroupChat]) {
         [self sendPresenceProbe];
         [self fetchOMEMODeviceList];
+    } else {
+        [self updateJoinRoomView];
     }
 }
 
@@ -2343,6 +2345,10 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         NSString *roomName = [NSUUID UUID].UUIDString;
         XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
         self.threadKey = [xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.displayName subject:name];
+        
+        // Mark new room as seen
+        [self setRoomSeen];
+        
         [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
     } else {
         DDLogError(@"No conference server for account: %@", account.username);
@@ -2352,23 +2358,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 #pragma - mark OTRRoomOccupantsViewControllerDelegate
 
 - (void)didLeaveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {
-    __block OTRXMPPRoom *room = nil;
-    [self.connections.ui readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        room = [self roomWithTransaction:transaction];
-    }];
-    if (room) {
-        [self setThreadKey:nil collection:nil];
-        [self.connections.write readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            [room removeWithTransaction:transaction];
-        }];
-    }
-    [self.navigationController popViewControllerAnimated:NO];
-    if ([[self.navigationController viewControllers] count] > 1) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self.navigationController.navigationController popViewControllerAnimated:YES];
-    }
-    
+    [self leaveRoom];
 }
 
 - (void)didArchiveRoom:(OTRRoomOccupantsViewController *)roomOccupantsViewController {

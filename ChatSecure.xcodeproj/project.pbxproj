@@ -108,6 +108,9 @@
 		8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */; };
 		9212364E1FCD779D009F97F0 /* OTRMessageUnknownSenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */; };
 		921236501FCD77B7009F97F0 /* OTRMessageUnknownSenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */; };
+		9224A5EF207E39CF00A044BF /* OTRMessagesViewController+RoomOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9224A5EE207E39CF00A044BF /* OTRMessagesViewController+RoomOperations.swift */; };
+		9224A5F1207E3B6700A044BF /* JoinRoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9224A5F0207E3B6700A044BF /* JoinRoomView.swift */; };
+		9224A5F3207E3BD800A044BF /* JoinRoomView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9224A5F2207E3BD800A044BF /* JoinRoomView.xib */; };
 		9236F56B1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */; };
 		924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
 		924F67C71EA55C6F00528FB6 /* MigrationInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */; };
@@ -1012,6 +1015,9 @@
 		9118152C0A7B287ABD07FF70 /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
 		9212364C1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRMessageUnknownSenderCell.swift; sourceTree = "<group>"; };
 		9212364D1FCD779C009F97F0 /* OTRMessageUnknownSenderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRMessageUnknownSenderCell.xib; sourceTree = "<group>"; };
+		9224A5EE207E39CF00A044BF /* OTRMessagesViewController+RoomOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTRMessagesViewController+RoomOperations.swift"; sourceTree = "<group>"; };
+		9224A5F0207E3B6700A044BF /* JoinRoomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinRoomView.swift; sourceTree = "<group>"; };
+		9224A5F2207E3BD800A044BF /* JoinRoomView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = JoinRoomView.xib; path = Interface/JoinRoomView.xib; sourceTree = "<group>"; };
 		9236F56A1F21FFA600C963D0 /* OTRGroupAvatarGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRGroupAvatarGenerator.swift; sourceTree = "<group>"; };
 		924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigrationInfoHeaderView.xib; path = Interface/MigrationInfoHeaderView.xib; sourceTree = "<group>"; };
 		924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationInfoHeaderView.swift; sourceTree = "<group>"; };
@@ -1702,6 +1708,7 @@
 				639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */,
 				924F67C61EA55C6F00528FB6 /* MigrationInfoHeaderView.swift */,
 				924F68561EA7A2FD00528FB6 /* MigratedBuddyHeaderView.swift */,
+				9224A5F0207E3B6700A044BF /* JoinRoomView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1982,6 +1989,7 @@
 				63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */,
 				63FA130B1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift */,
 				92ED91D520441B92002011FB /* OTRMessagesViewController+SupplementaryViews.swift */,
+				9224A5EE207E39CF00A044BF /* OTRMessagesViewController+RoomOperations.swift */,
 			);
 			name = "Messages View Controller";
 			sourceTree = "<group>";
@@ -2048,6 +2056,7 @@
 				8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */,
 				9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */,
 				92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */,
+				9224A5F2207E3BD800A044BF /* JoinRoomView.xib */,
 			);
 			path = OTRResources;
 			sourceTree = "<group>";
@@ -2634,6 +2643,7 @@
 				D99F178A1BAB946800604558 /* Branding.plist in Resources */,
 				D99F17881BAB936100604558 /* Localizable.strings in Resources */,
 				92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */,
+				9224A5F3207E3BD800A044BF /* JoinRoomView.xib in Resources */,
 				D943AA441E6A0BB9007F3564 /* XMPPAccountCell.xib in Resources */,
 				D9BC71DC1E53B31C007A3C4F /* SingleButtonTableViewCell.xib in Resources */,
 				9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */,
@@ -3198,6 +3208,7 @@
 				63564E101BBB1C5200EB4CA6 /* PushStorage.swift in Sources */,
 				D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */,
 				D93DDAE21BA79A2700CD8331 /* OTRColors.m in Sources */,
+				9224A5F1207E3B6700A044BF /* JoinRoomView.swift in Sources */,
 				D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */,
 				D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */,
 				637ABBCA1DD5312200B18DD2 /* OTROutgoingMessage.m in Sources */,
@@ -3273,6 +3284,7 @@
 				D93DDB141BA79A2B00CD8331 /* OTRBuddyInfoCell.m in Sources */,
 				D93DDB151BA79A2B00CD8331 /* OTRConversationCell.m in Sources */,
 				D93DDB161BA79A2B00CD8331 /* OTRInLineTextEditTableViewCell.m in Sources */,
+				9224A5EF207E39CF00A044BF /* OTRMessagesViewController+RoomOperations.swift in Sources */,
 				63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */,
 				D93DDB171BA79A2B00CD8331 /* OTRSettingTableViewCell.m in Sources */,
 				D9F8C3C21FBFD2CA00D4B857 /* RoomManager.swift in Sources */,

@@ -63,6 +63,8 @@ import OTRAssets
     @objc open var lastRoomMessageId:String?
     @objc open var subject:String?
     @objc open var roomPassword:String?
+    /// True if we have viewed the room, false if we just got invited. Can be used to show information the first time we enter a room
+    @objc open var hasSeenRoom:Bool = true
 
     // Transient properties stored in OTRBuddyCache
     @objc open var joined:Bool {

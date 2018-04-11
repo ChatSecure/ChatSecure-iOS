@@ -470,6 +470,8 @@ FOUNDATION_EXPORT NSString* SHOW_USERVOICE_STRING();
 FOUNDATION_EXPORT NSString* SIGN_UP_STRING();
 /** "Skip", Label for button to skip this step */
 FOUNDATION_EXPORT NSString* SKIP_STRING();
+/** "Someone invited you to the ´%@´ group.", Title of screen for joining/not joining group */
+FOUNDATION_EXPORT NSString* SOMEONE_INVITED_YOU_TO_GROUP_STRING();
 /** "Someone is typing...", received a typing notification */
 FOUNDATION_EXPORT NSString* SOMEONE_IS_TYPING_STRING();
 /** "Someone", A placeholder for a buddy's username like Someone wants to chat. */
