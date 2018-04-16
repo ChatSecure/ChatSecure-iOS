@@ -470,8 +470,6 @@ NSString* SHOW_USERVOICE_STRING() { return [OTRLanguageManager translatedString:
 NSString* SIGN_UP_STRING() { return [OTRLanguageManager translatedString:@"Sign Up"]; }
 /** "Skip", Label for button to skip this step */
 NSString* SKIP_STRING() { return [OTRLanguageManager translatedString:@"Skip"]; }
-/** "Someone invited you to the ´%@´ group.", Title of screen for joining/not joining group */
-NSString* SOMEONE_INVITED_YOU_TO_GROUP_STRING() { return [OTRLanguageManager translatedString:@"Someone invited you to the ´%@´ group."]; }
 /** "Someone is typing...", received a typing notification */
 NSString* SOMEONE_IS_TYPING_STRING() { return [OTRLanguageManager translatedString:@"Someone is typing..."]; }
 /** "Someone", A placeholder for a buddy's username like Someone wants to chat. */
@@ -542,6 +540,8 @@ NSString* XMPP_FAIL_STRING() { return [OTRLanguageManager translatedString:@"Fai
 NSString* XMPP_TOR_STRING() { return [OTRLanguageManager translatedString:@"XMPP + Tor"]; }
 /** "user@example.com", Example of a username using the words user and example */
 NSString* XMPP_USERNAME_EXAMPLE_STRING() { return [OTRLanguageManager translatedString:@"user@example.com"]; }
+/** "You have been invited to the ´%@´ group.", Title of screen for joining/not joining group */
+NSString* YOU_HAVE_BEEN_INVITED_TO_GROUP_STRING() { return [OTRLanguageManager translatedString:@"You have been invited to the ´%@´ group."]; }
 /** "Bad certificate format", SSL error message */
 NSString* errSSLBadCertString() { return [OTRLanguageManager translatedString:@"Bad certificate format"]; }
 /** "Bad SSLCipherSuite", SSL error message */

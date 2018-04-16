@@ -57,7 +57,7 @@ extension OTRMessagesViewController {
                     roomName = room.subject ?? room.roomJID?.bare ?? ""
                 }
             })
-            joinRoomView.titleLabel.text = String(format: SOMEONE_INVITED_YOU_TO_GROUP_STRING(), roomName)
+            joinRoomView.titleLabel.text = String(format: YOU_HAVE_BEEN_INVITED_TO_GROUP_STRING(), roomName)
             joinRoomView.acceptButtonCallback = {() -> Void in
                 self.setRoomSeen()
                 DispatchQueue.main.async {

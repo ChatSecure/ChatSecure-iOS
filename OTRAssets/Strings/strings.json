@@ -707,10 +707,6 @@
         "comment": "let users know source is on Github",
         "string": "Check out the source here on Github"
     },
-    "SOMEONE_INVITED_YOU_TO_GROUP_STRING": {
-        "comment": "Title of screen for joining/not joining group",
-        "string": "Someone invited you to the ´%@´ group."
-    },
     "SOMEONE_IS_TYPING_STRING": {
         "comment": "received a typing notification",
         "string": "Someone is typing..."
@@ -762,6 +758,10 @@
     "XMPP_USERNAME_EXAMPLE_STRING": {
         "comment": "Example of a username using the words user and example",
         "string": "user@example.com"
+    },
+    "YOU_HAVE_BEEN_INVITED_TO_GROUP_STRING": {
+        "comment": "Title of screen for joining/not joining group",
+        "string": "You have been invited to the ´%@´ group."
     },
     "COULD_NOT_PARSE_URL_STRING": {
         "comment": "Error description",
