@@ -23,6 +23,10 @@ open class JoinRoomView: UIView {
         // Initialization code
     }
     
+    open override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         self.acceptButton.layer.cornerRadius = self.acceptButton.frame.height / 2

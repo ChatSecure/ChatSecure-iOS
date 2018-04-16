@@ -83,6 +83,7 @@ extension OTRMessagesViewController {
             }
             self.view.addSubview(joinRoomView)
             joinRoomView.autoPinEdgesToSuperviewEdges()
+            joinRoomView.becomeFirstResponder()
         }
     }
     
