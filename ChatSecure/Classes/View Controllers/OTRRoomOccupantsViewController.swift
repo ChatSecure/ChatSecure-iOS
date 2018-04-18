@@ -691,14 +691,19 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
                     })
                     alert.addAction(kickAction)
                 }
-                let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
-                alert.addAction(cancelAction)
-                if let popoverController = alert.popoverPresentationController {
-                    popoverController.sourceView = tableView
-                    popoverController.sourceRect = CGRect(x: tableView.bounds.midX, y: tableView.bounds.midY, width: 0, height: 0)
-                    popoverController.permittedArrowDirections = []
+                
+                if alert.actions.count == 1 {
+                    viewOccupantInfo(roomOccupant)
+                } else {
+                    let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
+                    alert.addAction(cancelAction)
+                    if let popoverController = alert.popoverPresentationController {
+                        popoverController.sourceView = tableView
+                        popoverController.sourceRect = CGRect(x: tableView.bounds.midX, y: tableView.bounds.midY, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    present(alert, animated: true, completion: nil)
                 }
-                present(alert, animated: true, completion: nil)
             } else {
                 viewOccupantInfo(roomOccupant)
             }
