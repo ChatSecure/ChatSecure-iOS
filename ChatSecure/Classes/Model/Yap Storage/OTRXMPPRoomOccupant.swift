@@ -44,6 +44,7 @@ import CocoaLumberjack
     case member = 2
     case admin = 3
     case owner = 4
+    case transient = 99 // Value used when updating the DB
     
     public func isOwner() -> Bool {
         switch self {
