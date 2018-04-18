@@ -100,6 +100,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     /// for reads and writes
     private let connection = OTRDatabaseManager.shared.writeConnection
     private let connections = OTRDatabaseManager.shared.connections
+    private var ignoreChanges = false // When loading lists we don't want to update on every single change, so use this flag to ignoreChanges until everything is fetched.
     open var crownImage:UIImage?
     
     
@@ -513,10 +514,15 @@ extension OTRRoomOccupantsViewController {
             let xmppRoom = xmppRoom(for: room) else {
             return
         }
-        xmppRoom.fetchMembersList()
-        xmppRoom.fetchAdminsList()
-        xmppRoom.fetchOwnersList()
-        xmppRoom.fetchModeratorsList()
+        ignoreChanges = true
+        xmppRoomManager(for: room)?.fetchListsFor(room: xmppRoom, callback: { (success) in
+            self.ignoreChanges = false
+            if success {
+                self.tableView?.reloadData()
+                self.updateUIBasedOnOwnRole()
+                self.view.setNeedsLayout()
+            }
+        })
     }
 }
 
@@ -528,6 +534,7 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
     }
     
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
+        guard !ignoreChanges else {return}
         //TODO: pretty animations
         self.tableView?.reloadData()
         self.updateUIBasedOnOwnRole()
