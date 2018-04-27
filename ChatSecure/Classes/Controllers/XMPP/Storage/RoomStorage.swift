@@ -91,7 +91,7 @@ import YapDatabase
                 room.lastRoomMessageId = "" // Hack to make it show up in list
                 room.accountUniqueId = account.uniqueId
                 room.roomJID = xmppRoom.roomJID
-                room.hasSeenRoom = false
+                room.roomUserState = .invited
             }
             guard let room = _room?.copyAsSelf(),
                 let roomJID = room.roomJID else {

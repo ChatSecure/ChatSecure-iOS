@@ -17,6 +17,11 @@ import OTRAssets
     case omemo = 2
 }
 
+@objc public enum RoomUserState: Int {
+    case invited = 0
+    case hasViewed = 1
+}
+
 @objc open class OTRXMPPRoom: OTRYapDatabaseObject {
     
     @objc open var lastHistoryFetch: Date?
@@ -63,8 +68,9 @@ import OTRAssets
     @objc open var lastRoomMessageId:String?
     @objc open var subject:String?
     @objc open var roomPassword:String?
-    /// True if we have viewed the room, false if we just got invited. Can be used to show information the first time we enter a room
-    @objc open var hasSeenRoom:Bool = true
+    /// User state for the room, currently if we have viewed this room or not.
+    /// Can be used to show information the first time we enter a room.
+    @objc open var roomUserState:RoomUserState = .hasViewed
 
     // Transient properties stored in OTRBuddyCache
     @objc open var joined:Bool {

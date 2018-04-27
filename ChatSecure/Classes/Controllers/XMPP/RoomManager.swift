@@ -25,7 +25,7 @@ public extension OTRXMPPRoomManager {
         room.roomJID = conference.jid
         room.subject = conference.bookmarkName
         room.roomPassword = conference.password
-        room.hasSeenRoom = true
+        room.roomUserState = .hasViewed
         return room
     }
     

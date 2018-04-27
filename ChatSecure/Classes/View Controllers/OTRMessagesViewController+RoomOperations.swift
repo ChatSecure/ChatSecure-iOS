@@ -18,13 +18,13 @@ extension OTRMessagesViewController {
     }
 
     @objc open func updateJoinRoomView() {
-        var seen = false
+        var state:RoomUserState = .invited
         self.connections?.ui.read({ (transaction) in
             if let room = self.room(with: transaction) {
-                seen = room.hasSeenRoom
+                state = room.roomUserState
             }
         })
-        if seen {
+        if state == .hasViewed {
             hideJoinRoomView(animated: false)
         } else {
             showJoinRoomView()
@@ -90,7 +90,7 @@ extension OTRMessagesViewController {
     @objc open func setRoomSeen() {
         self.connections?.write.readWrite({ (transaction) in
             if let room = self.room(with: transaction) {
-                room.hasSeenRoom = true
+                room.roomUserState = .hasViewed
                 room.save(with: transaction)
             }
         })

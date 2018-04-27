@@ -18,9 +18,6 @@ typedef SWIFT_ENUM(NSInteger, RoomOccupantRole);
 @interface OTRXMPPRoomRuntimeProperties : NSObject
 @property (nonatomic) BOOL joined;
 @property (nonatomic) BOOL hasFetchedHistory;
-@property (nonatomic) BOOL hasFetchedOwners;
-@property (nonatomic) BOOL hasFetchedAdmins;
-@property (nonatomic) BOOL hasFetchedMembers;
 @property (nonatomic, strong) NSMutableArray *onlineJids;
 @end
 
