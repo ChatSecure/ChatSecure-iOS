@@ -100,7 +100,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
     /// for reads and writes
     private let connection = OTRDatabaseManager.shared.writeConnection
     private let connections = OTRDatabaseManager.shared.connections
-    private var ignoreChanges = false // When loading lists we don't want to update on every single change, so use this flag to ignoreChanges until everything is fetched.
+    /// When loading lists we don't want to update on every single change,
+    /// so use this flag to ignore changes until everything is fetched.
+    private var ignoreChanges = false
     open var crownImage:UIImage?
     
     
