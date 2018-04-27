@@ -170,7 +170,7 @@ public extension OTRXMPPRoomManager {
         }
     }
     
-    @objc public func fetchListsFor(room xmppRoom: XMPPRoom, callback:((_ success:Bool) -> Void)?) {
+    @objc public func fetchListsFor(room xmppRoom: XMPPRoom, callback:(() -> Void)?) {
         DispatchQueue.global().async {
             let group = DispatchGroup()
             let delegate = FetchListDelegate(group: group)
@@ -181,13 +181,12 @@ public extension OTRXMPPRoomManager {
             xmppRoom.fetchAdminsList()
             group.enter()
             xmppRoom.fetchOwnersList()
-            let waitResult = group.wait(timeout: DispatchTime.now() + 30)
-            xmppRoom.removeDelegate(delegate)
-            if let callback = callback {
-                DispatchQueue.main.async {
-                    callback(waitResult == .success)
+            group.notify(queue: .main, execute: {
+                xmppRoom.removeDelegate(delegate)
+                if let callback = callback {
+                    callback()
                 }
-            }
+            })
         }
     }
 }

@@ -517,13 +517,11 @@ extension OTRRoomOccupantsViewController {
             return
         }
         ignoreChanges = true
-        xmppRoomManager(for: room)?.fetchListsFor(room: xmppRoom, callback: { (success) in
+        xmppRoomManager(for: room)?.fetchListsFor(room: xmppRoom, callback: {
             self.ignoreChanges = false
-            if success {
-                self.tableView?.reloadData()
-                self.updateUIBasedOnOwnRole()
-                self.view.setNeedsLayout()
-            }
+            self.tableView?.reloadData()
+            self.updateUIBasedOnOwnRole()
+            self.view.setNeedsLayout()
         })
     }
 }

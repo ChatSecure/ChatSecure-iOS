@@ -458,7 +458,7 @@
 
 - (void)fetchAllListsForRoom:(XMPPRoom *)xmppRoom {
     [self beginUpdateAffiliationsInRoom:xmppRoom];
-    [self fetchListsForRoom:xmppRoom callback:^(BOOL success) {
+    [self fetchListsForRoom:xmppRoom callback:^ {
         OTRXMPPRoomRuntimeProperties *properties = [self roomRuntimeProperties:xmppRoom];
         // Lists are downloaded, delete stale occupants from the DB
         [self endUpdateAffiliationsInRoom:xmppRoom];
