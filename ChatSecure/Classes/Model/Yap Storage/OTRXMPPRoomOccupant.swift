@@ -44,7 +44,13 @@ import CocoaLumberjack
     case member = 2
     case admin = 3
     case owner = 4
-    case transient = 99 // Value used when updating the DB
+    /// Value used when updating the DB. This enables us to remove occupants that used to be
+    /// members, admins or owners, but are no longer that (e.g. they may have been kicked).
+    /// Before fetching the lists for room [members, admins, owners] we mark all existing
+    /// [members, admins, owners] as 'transient'. We then update the database from the lists.
+    /// After this, we remove all occupants with affiliation 'transient', since they are no
+    /// longer in the lists (or their affiliation would have been updated).
+    case transient = 99
     
     public func isOwner() -> Bool {
         switch self {
@@ -326,7 +332,16 @@ public extension OTRXMPPRoomOccupant {
     }
 
     public func canRevokeMembership(_ occupant:OTRXMPPRoomOccupant) -> Bool {
-        return self.affiliation == .owner || (self.affiliation == .member && occupant.affiliation != .none)
+        if occupant.affiliation == .owner {
+            return false
+        }
+        if self.affiliation == .owner {
+            return true
+        }
+        if self.affiliation == .admin && occupant.affiliation != .admin {
+            return true
+        }
+        return false
     }
 
     //https://xmpp.org/extensions/xep-0045.html#ban
