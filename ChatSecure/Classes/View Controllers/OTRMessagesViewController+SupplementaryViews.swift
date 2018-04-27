@@ -16,7 +16,7 @@ import OTRAssets
 
 @objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
   
-    fileprivate struct SupplementaryView {
+    fileprivate struct SupplementaryViewInfo {
         /// the kind of supplementary view
         let kind: String
         /// arbitrary user data
@@ -52,7 +52,7 @@ import OTRAssets
         collectionView.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: kind)
     }
     
-    fileprivate var supplementaryViews:[IndexPath:[SupplementaryView]] = [:]
+    fileprivate var supplementaryViews:[IndexPath:[SupplementaryViewInfo]] = [:]
     
     @objc public func registerSupplementaryViewTypes(collectionView:UICollectionView) {
         for (identifier,nibName) in supplementaryViewNibs {
@@ -122,7 +122,7 @@ import OTRAssets
     }
     
     open func removeSupplementaryViewsOfType(type:String) {
-        self.supplementaryViews = self.supplementaryViews.mapValues { (viewArray) -> [SupplementaryView] in
+        self.supplementaryViews = self.supplementaryViews.mapValues { (viewArray) -> [SupplementaryViewInfo] in
             return viewArray.filter({ (view) -> Bool in
                 return view.kind != type
             })
@@ -136,7 +136,7 @@ import OTRAssets
         })
     }
     
-    fileprivate func supplementaryView(kind:String, at indexPath:IndexPath) -> SupplementaryView? {
+    fileprivate func supplementaryView(kind:String, at indexPath:IndexPath) -> SupplementaryViewInfo? {
         guard let views = self.supplementaryViews[indexPath] else { return nil }
         return views.first(where: { view -> Bool in
             view.kind == kind
@@ -149,7 +149,7 @@ import OTRAssets
             existingView.userData = userData
         } else {
             var viewArray = (self.supplementaryViews[indexPath] ?? [])
-            viewArray.append(SupplementaryView(kind: kind, userData: userData))
+            viewArray.append(SupplementaryViewInfo(kind: kind, userData: userData))
             self.supplementaryViews[indexPath] = viewArray
         }
     }
