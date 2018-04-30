@@ -67,7 +67,7 @@ public extension YapDatabase {
     
     @objc public func asyncRegisterGroupOccupantsView(_ completionQueue:DispatchQueue?, completionBlock:((Bool) ->Void)?) {
         
-        let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection , key , object ) -> String! in
+        let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection , key , object ) -> String? in
             guard let occupant = object as? OTRXMPPRoomOccupant else {
                 return nil
             }

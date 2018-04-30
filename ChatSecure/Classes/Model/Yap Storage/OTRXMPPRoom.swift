@@ -126,7 +126,7 @@ import OTRAssets
 extension OTRXMPPRoom:OTRThreadOwner {
     public func omemoDevices(with transaction: YapDatabaseReadTransaction) -> [OMEMODevice] {
         let occupants = allOccupants(transaction)
-        let buddyKeys = occupants.flatMap { $0.buddyUniqueId }
+        let buddyKeys = occupants.compactMap { $0.buddyUniqueId }
         var devices: [OMEMODevice] = []
         buddyKeys.forEach { (buddyKey) in
             let buddyDevices = OMEMODevice.allDevices(forParentKey: buddyKey, collection: OTRXMPPBuddy.collection, transaction: transaction)
@@ -319,7 +319,7 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
     }
     
     public func allOccupants(_ transaction: YapDatabaseReadTransaction) -> [OTRXMPPRoomOccupant] {
-        let occupants = OTRXMPPRoom.allOccupantKeys(roomUniqueId: self.uniqueId, transaction: transaction).flatMap {
+        let occupants = OTRXMPPRoom.allOccupantKeys(roomUniqueId: self.uniqueId, transaction: transaction).compactMap {
             OTRXMPPRoomOccupant.fetchObject(withUniqueID: $0, transaction: transaction)
             }.filter {
                 $0.jid != nil || $0.realJID != nil
@@ -331,8 +331,8 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
         guard let account = account(with: transaction) as? OTRXMPPAccount else { return [] }
         let myJID = account.bareJID
         let buddies = allOccupants(transaction)
-        .flatMap { $0.buddyUniqueId }
-        .flatMap { OTRXMPPBuddy.fetchObject(withUniqueID: $0, transaction: transaction) }
+            .compactMap { $0.buddyUniqueId }
+            .compactMap { OTRXMPPBuddy.fetchObject(withUniqueID: $0, transaction: transaction) }
         let filtered = buddies
         .filter { $0.bareJID != myJID }
         .sorted { $0.username < $1.username }

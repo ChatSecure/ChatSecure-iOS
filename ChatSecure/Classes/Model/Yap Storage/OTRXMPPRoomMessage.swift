@@ -454,9 +454,9 @@ public extension OTRXMPPRoomMessage {
             return []
         }
         
-        let buddyKeys = OTRXMPPRoom.allOccupantKeys(roomUniqueId: roomId, transaction: transaction).flatMap {
+        let buddyKeys = OTRXMPPRoom.allOccupantKeys(roomUniqueId: roomId, transaction: transaction).compactMap {
             OTRXMPPRoomOccupant.fetchObject(withUniqueID: $0, transaction: transaction)
-            }.flatMap {
+            }.compactMap {
             $0.buddyUniqueId
         }
         

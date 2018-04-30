@@ -295,7 +295,7 @@ import SignalProtocolObjC
             //Strong self work here
             var buddies: [OTRXMPPBuddy] = []
             self.databaseConnection.read { (transaction) in
-                buddies = buddyKeys.flatMap({ key in
+                buddies = buddyKeys.compactMap({ key in
                     OTRXMPPBuddy.fetchObject(withUniqueID: key, transaction: transaction)
                 })
             }
@@ -334,7 +334,7 @@ import SignalProtocolObjC
                  4. Remove optional values
                 */
                 let buddyKeyDataArray = buddyKeys.flatMap({ key in
-                    self.omemoStorageManager.getDevicesForParentYapKey(key, yapCollection: OTRXMPPBuddy.collection, trustedOnly: true).map(encryptClosure).flatMap{ $0 }
+                    self.omemoStorageManager.getDevicesForParentYapKey(key, yapCollection: OTRXMPPBuddy.collection, trustedOnly: true).map(encryptClosure).compactMap{ $0 }
                 })
                 
                 // Stop here if we were not able to encrypt to any of the buddies
@@ -354,7 +354,7 @@ import SignalProtocolObjC
                  */
                 let ourDevicesKeyData = self.omemoStorageManager.getDevicesForOurAccount(trustedOnly: true).filter({ (device) -> Bool in
                     return device.deviceId.uint32Value != self.signalEncryptionManager.registrationId
-                }).map(encryptClosure).flatMap{ $0 }
+                }).map(encryptClosure).compactMap{ $0 }
                 
                 // Combine teh two arrays for all key data
                 let keyDataArray = ourDevicesKeyData + buddyKeyDataArray
