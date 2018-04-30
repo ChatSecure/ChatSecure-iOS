@@ -437,13 +437,7 @@
     return NO;
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    
-    
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL) application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     if ([url.scheme isEqualToString:@"xmpp"]) {
         XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
         XMPPJID *jid = xmppURI.jid;
@@ -461,8 +455,6 @@
     }
     return NO;
 }
-
-
 
 - (void) showSubscriptionRequestForBuddy:(NSDictionary*)userInfo {
     // This is probably in response to a user requesting subscriptions from us
