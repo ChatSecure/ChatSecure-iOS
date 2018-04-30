@@ -368,6 +368,7 @@ import SignalProtocolObjC
                         let groupMessage = self.omemoModule?.message(forKeyData: keyDataArray, iv: ivData, to: destinationJID, payload: finalPayload, elementId: message.remoteMessageId)
                         {
                         groupMessage.addAttribute(withName: "type", stringValue: "groupchat")
+                        groupMessage.addReceiptRequest()
                         self.omemoModule?.xmppStream?.send(groupMessage)
                     } else if message is OTROutgoingMessage {
                         self.omemoModule?.sendKeyData(keyDataArray, iv: ivData, to: destinationJID, payload: finalPayload, elementId: message.remoteMessageId)
