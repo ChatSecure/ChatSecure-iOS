@@ -429,7 +429,7 @@
                 }];
             }];
             if (jid) {
-                [OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint buddyAddedCallback:nil];
+                [_OTRProtocolManager handleInviteForJID:jid otrFingerprint:fingerprint buddyAddedCallback:nil];
             }
             return YES;
         }
@@ -450,7 +450,7 @@
         NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
         // NSString *action = xmppURI.queryAction; //  && [action isEqualToString:@"subscribe"]
         if (jid) {
-            [OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint buddyAddedCallback:^ (OTRBuddy *buddy) {
+            [_OTRProtocolManager handleInviteForJID:jid otrFingerprint:otrFingerprint buddyAddedCallback:^ (OTRBuddy *buddy) {
                 OTRXMPPBuddy *xmppBuddy = (OTRXMPPBuddy *)buddy;
                 if (xmppBuddy != nil) {
                     [self enterThreadWithKey:xmppBuddy.threadIdentifier collection:xmppBuddy.threadCollection];
