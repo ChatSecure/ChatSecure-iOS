@@ -29,7 +29,6 @@
 @import QuartzCore;
 #import "OTRConstants.h"
 #import "OTRAccountTableViewCell.h"
-#import "UIActionSheet+ChatSecure.h"
 #import "OTRSecrets.h"
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
