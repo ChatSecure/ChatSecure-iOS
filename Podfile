@@ -34,8 +34,6 @@ abstract_target 'ChatSecureCorePods' do
 
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
-  # Debugging
-  pod 'Reveal-SDK', :configurations => ['Debug']
   # pod 'LumberjackConsole', '~> 3.3.0'
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
 

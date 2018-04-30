@@ -49,8 +49,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
     if ([super activate:aXmppStream])
     {
         [self performBlock:^{
-            [self.capabilities addDelegate:self delegateQueue:moduleQueue];
-            _tracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:moduleQueue];
+            [self.capabilities addDelegate:self delegateQueue:self->moduleQueue];
+            self->_tracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:self->moduleQueue];
         }];
         return YES;
     }
@@ -60,8 +60,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 
 - (void) deactivate {
     [self performBlock:^{
-        [_tracker removeAllIDs];
-        _tracker = nil;
+        [self->_tracker removeAllIDs];
+        self->_tracker = nil;
         [self.capabilities removeDelegate:self];
         self.discoveredServices = nil;
     }];
@@ -74,7 +74,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (BOOL) autoDiscoverServices {
     __block BOOL discover = NO;
     [self performBlock:^{
-        discover = _autoDiscoverServices;
+        discover = self->_autoDiscoverServices;
     }];
     return discover;
 }
@@ -82,7 +82,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (void) setAutoDiscoverServices:(BOOL)autoDiscoverServices {
     [self performBlockAsync:^{
         [self willChangeValueForKey:NSStringFromSelector(@selector(autoDiscoverServices))];
-        _autoDiscoverServices = autoDiscoverServices;
+        self->_autoDiscoverServices = autoDiscoverServices;
         [self didChangeValueForKey:NSStringFromSelector(@selector(autoDiscoverServices))];
     }];
 }
@@ -90,7 +90,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (void) setDiscoveredServices:(NSArray<NSXMLElement *> * _Nullable)discoveredServices {
     [self performBlockAsync:^{
         [self willChangeValueForKey:NSStringFromSelector(@selector(discoveredServices))];
-        _discoveredServices = [discoveredServices copy];
+        self->_discoveredServices = [discoveredServices copy];
         [self didChangeValueForKey:NSStringFromSelector(@selector(discoveredServices))];
     }];
 }
@@ -98,7 +98,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (nullable NSArray<NSXMLElement *>*) discoveredServices {
     __block NSArray<NSXMLElement *> *services = nil;
     [self performBlock:^{
-        services = _discoveredServices;
+        services = self->_discoveredServices;
     }];
     return services;
 }
@@ -106,7 +106,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (void) setAllCapabilities:(NSDictionary<XMPPJID *,NSXMLElement *> * _Nullable)allCapabilities {
     [self performBlockAsync:^{
         [self willChangeValueForKey:NSStringFromSelector(@selector(allCapabilities))];
-        _allCapabilities = [allCapabilities copy];
+        self->_allCapabilities = [allCapabilities copy];
         [self didChangeValueForKey:NSStringFromSelector(@selector(allCapabilities))];
     }];
 }
@@ -114,7 +114,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (nullable NSDictionary<XMPPJID*, NSXMLElement *> *) allCapabilities {
     __block NSDictionary<XMPPJID*, NSXMLElement *> *caps = nil;
     [self performBlock:^{
-        caps = _allCapabilities;
+        caps = self->_allCapabilities;
     }];
     return caps;
 }
@@ -122,8 +122,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (NSXMLElement*) streamFeatures {
     __block NSXMLElement *features = nil;
     [self performBlock:^{
-        if (xmppStream.state >= STATE_XMPP_POST_NEGOTIATION) {
-            features = [[xmppStream.rootElement elementForName:@"stream:features"] copy];
+        if (self->xmppStream.state >= STATE_XMPP_POST_NEGOTIATION) {
+            features = [[self->xmppStream.rootElement elementForName:@"stream:features"] copy];
         }
     }];
     return features;
@@ -149,21 +149,21 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 {
     // This is a public method, so it may be invoked on any thread/queue.
     [self performBlockAsync:^{
-        if (_hasRequestedServices) return; // We've already requested services
-        if (_discoveredServices) { // We've already discovered the services
-            [multicastDelegate serverCapabilities:self didDiscoverServices:_discoveredServices];
+        if (self->_hasRequestedServices) return; // We've already requested services
+        if (self->_discoveredServices) { // We've already discovered the services
+            [self->multicastDelegate serverCapabilities:self didDiscoverServices:self->_discoveredServices];
             return;
         }
         
-        NSString *toStr = xmppStream.myJID.domain;
+        NSString *toStr = self->xmppStream.myJID.domain;
         NSXMLElement *query = [NSXMLElement elementWithName:@"query"
                                                       xmlns:XMPPDiscoverItemsNamespace];
         XMPPIQ *iq = [XMPPIQ iqWithType:@"get"
                                      to:[XMPPJID jidWithString:toStr]
-                              elementID:[xmppStream generateUUID]
+                              elementID:[self->xmppStream generateUUID]
                                   child:query];
         if (!iq) {
-            XMPPLogInfo(@"OTRServerCapabilities: Could not discover services for stream: %@", xmppStream);
+            XMPPLogInfo(@"OTRServerCapabilities: Could not discover services for stream: %@", self->xmppStream);
             return;
         }
         XMPPLogInfo(@"OTRServerCapabilities: Discovering services for domain %@...", toStr);
@@ -173,8 +173,8 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
                          selector:@selector(handleDiscoverServicesQueryIQ:withInfo:)
                           timeout:15];
         
-        [xmppStream sendElement:iq];
-        _hasRequestedServices = YES;
+        [self->xmppStream sendElement:iq];
+        self->_hasRequestedServices = YES;
     }];
 }
 
@@ -184,11 +184,11 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
  */
 - (void)fetchAllCapabilities {
     [self performBlockAsync:^{
-        if (xmppStream.state != STATE_XMPP_CONNECTED) {
+        if (self->xmppStream.state != STATE_XMPP_CONNECTED) {
             XMPPLogError(@"OTRServerCapabilities: fetchAllCapabilities error - not connected. %@", self);
             return;
         }
-        if (![xmppStream isAuthenticated]) {
+        if (![self->xmppStream isAuthenticated]) {
             XMPPLogError(@"OTRServerCapabilities: fetchAllCapabilities error - not authenticated. %@", self);
             return;
         }
@@ -209,11 +209,11 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
             // [self.allJIDs addObject:myJID];
             [self.allJIDs addObject:myJID.domainJID];
         }
-        if (!_autoDiscoverServices) {
+        if (!self->_autoDiscoverServices) {
             return;
         }
         [self discoverServices];
-        if (!_autoFetchAllCapabilities) {
+        if (!self->_autoFetchAllCapabilities) {
             return;
         }
         [self fetchCapabilitiesForJIDs:self.allJIDs];
@@ -241,7 +241,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
 - (void)handleDiscoverServicesQueryIQ:(XMPPIQ *)iq withInfo:(XMPPBasicTrackingInfo *)info
 {
     [self performBlockAsync:^{
-        _hasRequestedServices = NO; // Set this back to NO to allow for future requests
+        self->_hasRequestedServices = NO; // Set this back to NO to allow for future requests
         NSError *error = nil;
         if (!iq) {
             NSDictionary *dict = @{NSLocalizedDescriptionKey : @"The request timed out.",
@@ -262,15 +262,15 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
             }
         }
         if (error) {
-            XMPPLogError(@"OTRServerCapabilities: Error discovering services for domain %@: %@", xmppStream.myJID.domain, error);
-            [multicastDelegate serverCapabilitiesFailedToDiscoverServices:self
+            XMPPLogError(@"OTRServerCapabilities: Error discovering services for domain %@: %@", self->xmppStream.myJID.domain, error);
+            [self->multicastDelegate serverCapabilitiesFailedToDiscoverServices:self
                                                                 withError:error];
             
             // Deal with the race condition where we've already fetched your JID and server caps
             // but for whatever reason fetching services fails.
             NSSet *allCaps = [NSSet setWithArray:self.allCapabilities.allKeys];
             if ([self.allJIDs isEqualToSet:allCaps]) {
-                [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
+                [self->multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
             }
             return;
         }
@@ -280,15 +280,15 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         
         NSArray<NSXMLElement*> *items = [query elementsForName:@"item"];
         self.discoveredServices = [items copy];
-        [multicastDelegate serverCapabilities:self didDiscoverServices:items];
+        [self->multicastDelegate serverCapabilities:self didDiscoverServices:items];
         
-        XMPPLogInfo(@"OTRServerCapabilities: Discovered services for domain %@:\n%@", xmppStream.myJID.domain, items);
+        XMPPLogInfo(@"OTRServerCapabilities: Discovered services for domain %@:\n%@", self->xmppStream.myJID.domain, items);
 
         // Recursively fetch service capabilities if needed
-        if (!_autoFetchAllCapabilities) {
+        if (!self->_autoFetchAllCapabilities) {
             return;
         }
-        NSSet<XMPPJID*> *jids = [self jidsFromItems:_discoveredServices];
+        NSSet<XMPPJID*> *jids = [self jidsFromItems:self->_discoveredServices];
         [self.allJIDs unionSet:jids];
         [self fetchCapabilitiesForJIDs:jids];
     }];
@@ -340,7 +340,7 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
         }
         [newCaps setObject:caps forKey:jid];
         self.allCapabilities = newCaps;
-        [multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
+        [self->multicastDelegate serverCapabilities:self didDiscoverCapabilities:self.allCapabilities];
     }];
 }
 
@@ -385,9 +385,9 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
             return;
         }
         id <XMPPCapabilitiesStorage> storage = self.capabilities.xmppCapabilitiesStorage;
-        BOOL fetched = [storage areCapabilitiesKnownForJID:jid xmppStream:xmppStream];
+        BOOL fetched = [storage areCapabilitiesKnownForJID:jid xmppStream:self->xmppStream];
         if (fetched) {
-            NSXMLElement *capabilities = [storage capabilitiesForJID:jid xmppStream:xmppStream];
+            NSXMLElement *capabilities = [storage capabilitiesForJID:jid xmppStream:self->xmppStream];
             if (capabilities) {
                 [newCaps setObject:capabilities forKey:jid];
                 *stop = YES;

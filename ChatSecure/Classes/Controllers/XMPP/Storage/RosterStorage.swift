@@ -158,7 +158,7 @@ extension RosterStorage: XMPPRosterStorage {
             .filter {
                 $0.trustLevel == .roster
             }
-            .flatMap {
+                .compactMap {
                 $0.bareJID
             }
         }

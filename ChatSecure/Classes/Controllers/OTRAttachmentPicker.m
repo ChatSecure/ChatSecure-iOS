@@ -11,7 +11,6 @@
 @import MobileCoreServices;
 @import OTRAssets;
 #import "OTRUtilities.h"
-#import "UIActionSheet+ChatSecure.h"
 
 
 @interface OTRAttachmentPicker () <UINavigationControllerDelegate>

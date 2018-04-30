@@ -62,16 +62,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return YES;
-    } else {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    }
-}
-
 - (CGSize) textSizeForLabel:(UILabel*)label {
     return [label.text sizeWithAttributes:
             @{NSFontAttributeName:label.font}];
