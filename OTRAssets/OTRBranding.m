@@ -168,6 +168,16 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     }
 }
 
++ (BOOL) defaultGroupPlaintext {
+    NSNumber *result = [[self defaultPlist] objectForKey:@"DefaultGroupPlaintext"];
+    if (!result) {
+        return NO;
+    } else {
+        return result.boolValue;
+    }
+}
+
+
 /** Returns true if we're running the official ChatSecure */
 + (BOOL) matchesUpstream {
     return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.chrisballinger.ChatSecure"];

@@ -540,6 +540,8 @@ FOUNDATION_EXPORT NSString* XMPP_FAIL_STRING();
 FOUNDATION_EXPORT NSString* XMPP_TOR_STRING();
 /** "user@example.com", Example of a username using the words user and example */
 FOUNDATION_EXPORT NSString* XMPP_USERNAME_EXAMPLE_STRING();
+/** "You have been invited to the ´%@´ group.", Title of screen for joining/not joining group */
+FOUNDATION_EXPORT NSString* YOU_HAVE_BEEN_INVITED_TO_GROUP_STRING();
 /** "Bad certificate format", SSL error message */
 FOUNDATION_EXPORT NSString* errSSLBadCertString();
 /** "Bad SSLCipherSuite", SSL error message */

@@ -540,6 +540,8 @@ NSString* XMPP_FAIL_STRING() { return [OTRLanguageManager translatedString:@"Fai
 NSString* XMPP_TOR_STRING() { return [OTRLanguageManager translatedString:@"XMPP + Tor"]; }
 /** "user@example.com", Example of a username using the words user and example */
 NSString* XMPP_USERNAME_EXAMPLE_STRING() { return [OTRLanguageManager translatedString:@"user@example.com"]; }
+/** "You have been invited to the ´%@´ group.", Title of screen for joining/not joining group */
+NSString* YOU_HAVE_BEEN_INVITED_TO_GROUP_STRING() { return [OTRLanguageManager translatedString:@"You have been invited to the ´%@´ group."]; }
 /** "Bad certificate format", SSL error message */
 NSString* errSSLBadCertString() { return [OTRLanguageManager translatedString:@"Bad certificate format"]; }
 /** "Bad SSLCipherSuite", SSL error message */

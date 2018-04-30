@@ -25,6 +25,7 @@ public extension OTRXMPPRoomManager {
         room.roomJID = conference.jid
         room.subject = conference.bookmarkName
         room.roomPassword = conference.password
+        room.roomUserState = .hasViewed
         return room
     }
     
@@ -106,6 +107,86 @@ public extension OTRXMPPRoomManager {
                 dateToFetch = lastWeek
             }
             self.archiving.fetchHistory(archiveJID: xmppRoom.roomJID, userJID: nil, since: dateToFetch)
+        }
+    }
+    
+    @objc public func beginUpdateAffiliations(inRoom xmppRoom: XMPPRoom) {
+        self.databaseConnection.asyncReadWrite({ (transaction) in
+            guard let room = OTRXMPPRoom.fetch(xmppRoom: xmppRoom, transaction: transaction) else {
+                return
+            }
+            for occupant in room.allOccupants(transaction) {
+                switch occupant.affiliation {
+                case .admin, .member, .owner:
+                    occupant.affiliation = .transient
+                    occupant.save(with: transaction)
+                default: break
+                }
+            }
+        })
+    }
+
+    @objc public func endUpdateAffiliations(inRoom xmppRoom: XMPPRoom) {
+        self.databaseConnection.asyncReadWrite({ (transaction) in
+            guard let room = OTRXMPPRoom.fetch(xmppRoom: xmppRoom, transaction: transaction) else {
+                return
+            }
+            for occupant in room.allOccupants(transaction) {
+                if occupant.affiliation == .transient {
+                    occupant.remove(with: transaction)
+                }
+            }
+        })
+    }
+    
+    fileprivate class FetchListDelegate: NSObject, XMPPRoomDelegate {
+        let group:DispatchGroup
+        fileprivate init(group:DispatchGroup) {
+            self.group = group
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didFetchMembersList items: [Any]) {
+            group.leave()
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didNotFetchMembersList iqError: XMPPIQ) {
+            group.leave()
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didFetchAdminsList items: [Any]) {
+            group.leave()
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didNotFetchAdminsList iqError: XMPPIQ) {
+            group.leave()
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didFetchOwnersList items: [Any]) {
+            group.leave()
+        }
+        
+        func xmppRoom(_ sender: XMPPRoom, didNotFetchOwnersList iqError: XMPPIQ) {
+            group.leave()
+        }
+    }
+    
+    @objc public func fetchListsFor(room xmppRoom: XMPPRoom, callback:(() -> Void)?) {
+        DispatchQueue.global().async {
+            let group = DispatchGroup()
+            let delegate = FetchListDelegate(group: group)
+            xmppRoom.addDelegate(delegate, delegateQueue: DispatchQueue.global())
+            group.enter()
+            xmppRoom.fetchMembersList()
+            group.enter()
+            xmppRoom.fetchAdminsList()
+            group.enter()
+            xmppRoom.fetchOwnersList()
+            group.notify(queue: .main, execute: {
+                xmppRoom.removeDelegate(delegate)
+                if let callback = callback {
+                    callback()
+                }
+            })
         }
     }
 }

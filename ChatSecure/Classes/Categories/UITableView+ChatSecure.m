@@ -43,7 +43,7 @@
             }
             id <OTRThreadOwner> thread = object;
             thread.isArchived = !thread.isArchived;
-            [transaction setObject:thread forKey:key inCollection:collection];
+            [thread saveWithTransaction:transaction];
         }];
     }];
     

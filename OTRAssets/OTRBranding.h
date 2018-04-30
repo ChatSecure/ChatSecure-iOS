@@ -98,5 +98,8 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** If enabled, will allow OMEMO functionality within the app. Defaults to YES if setting key is not present. */
 @property (class, readonly) BOOL allowOMEMO;
 
+/** If enabled, will enter groups in plaintext mode. Defaults to NO if setting key is not present, which will result in setting transport security to "best". */
+@property (class, readonly) BOOL defaultGroupPlaintext;
+
 @end
 NS_ASSUME_NONNULL_END

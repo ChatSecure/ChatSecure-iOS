@@ -249,6 +249,7 @@ public class OTRGroupDownloadMessage: OTRXMPPRoomMessage, OTRDownloadMessage {
         download.parentMessageKey = parentMessage.messageKey
         download.parentMessageCollection = parentMessage.messageCollection
         download.messageText = url.absoluteString
+        download.messageSecurity = parentMessage.messageSecurity
         download.messageDate = parentMessage.messageDate
         download.roomUniqueId = parentMessage.threadId
         if let groupMessage = parentMessage as? OTRXMPPRoomMessage {

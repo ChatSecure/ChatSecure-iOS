@@ -9,14 +9,27 @@
 import Foundation
 import OTRAssets
 
+@objc public protocol SupplementaryViewHandlerDelegate {
+    func supplementaryViewInfo(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath, userData: AnyObject?) -> OTRMessagesCollectionSupplementaryViewInfo?
+    func supplementaryView(kind: String, for collectionView: UICollectionView, at indexPath: IndexPath, userData: AnyObject?) -> UICollectionReusableView?
+}
 
 @objc public class SupplementaryViewHandler: NSObject, OTRMessagesCollectionViewFlowLayoutSupplementaryViewProtocol {
+  
+    fileprivate struct SupplementaryViewInfo {
+        /// the kind of supplementary view
+        let kind: String
+        /// arbitrary user data
+        var userData: AnyObject?
+    }
     
     @objc public let connections: DatabaseConnections
     @objc public let viewHandler: OTRYapViewHandler
     @objc public let collectionView: JSQMessagesCollectionView
     
     @objc public var newDeviceViewActionButtonCallback:((_ buddyUniqueId:String?) -> Void)?
+    
+    @objc public var delegate:SupplementaryViewHandlerDelegate?
     
     @objc public init(collectionView: JSQMessagesCollectionView,
                       viewHandler: OTRYapViewHandler,
@@ -28,14 +41,18 @@ import OTRAssets
         registerSupplementaryViewTypes(collectionView: collectionView)
     }
     
-    fileprivate var supplementaryViewNibs:[String:String] {
-        return [
-            OTRMessagesUnknownSenderCell.reuseIdentifier:"OTRMessageUnknownSenderCell",
-            OTRMessagesNewDeviceCell.reuseIdentifier:"OTRMessageNewDeviceCell"
-        ]
+    fileprivate var supplementaryViewNibs:[String:String] = [
+        OTRMessagesUnknownSenderCell.reuseIdentifier:"OTRMessageUnknownSenderCell",
+        OTRMessagesNewDeviceCell.reuseIdentifier:"OTRMessageNewDeviceCell"
+    ]
+    
+    public func addSupplementaryViewKind(kind:String, nibName:String) {
+        supplementaryViewNibs[kind] = nibName
+        let nib = UINib(nibName: nibName, bundle: OTRAssets.resourcesBundle)
+        collectionView.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: kind)
     }
     
-    fileprivate var supplementaryViews:[String:[String]] = [:]
+    fileprivate var supplementaryViews:[IndexPath:[SupplementaryViewInfo]] = [:]
     
     @objc public func registerSupplementaryViewTypes(collectionView:UICollectionView) {
         for (identifier,nibName) in supplementaryViewNibs {
@@ -45,7 +62,7 @@ import OTRAssets
     }
     
     public func supplementaryViewsForCellAtIndexPath(_ indexPath: IndexPath, message: OTRMessageProtocol) -> [OTRMessagesCollectionSupplementaryViewInfo]? {
-        let supplementaryViews = self.supplementaryViews[message.uniqueId]
+        let supplementaryViews = self.supplementaryViews[indexPath]
         
         var automaticURLFetchingDisabled = true
         connections.ui.fetch {
@@ -72,7 +89,7 @@ import OTRAssets
                 if let buddyUniqueId = message.buddyUniqueId {
                     tag = String(format: "%@-%@", buddyUniqueId, OTRMessagesUnknownSenderCell.reuseIdentifier)
                 }
-                if let supplementaryViewInfo = createSuplementaryViewInfo(collectionView, kind:OTRMessagesUnknownSenderCell.reuseIdentifier, populationCallback: { (cell) in
+                if let supplementaryViewInfo = createSupplementaryViewInfo(collectionView, kind:OTRMessagesUnknownSenderCell.reuseIdentifier, populationCallback: { (cell) in
                     self.populateUnknownSenderCell(cell: cell, indexPath: indexPath, forSizingOnly: true)
                 }, tag: tag, tagBehavior: .showLast) {
                     supplementaryViewsInfo.append(supplementaryViewInfo)
@@ -81,13 +98,15 @@ import OTRAssets
         }
         
         if let supplementaryViews = supplementaryViews {
-            for view in supplementaryViews {
-                if view == OTRMessagesNewDeviceCell.reuseIdentifier {
-                    if let supplementaryViewInfo = createSuplementaryViewInfo(collectionView, kind: OTRMessagesNewDeviceCell.reuseIdentifier, populationCallback: { (cell) in
+            for supplementaryView in supplementaryViews {
+                if supplementaryView.kind == OTRMessagesNewDeviceCell.reuseIdentifier {
+                    if let supplementaryViewInfo = createSupplementaryViewInfo(collectionView, kind: OTRMessagesNewDeviceCell.reuseIdentifier, populationCallback: { (cell) in
                         self.populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: true)
                     }, tag: nil, tagBehavior: .none) {
                         supplementaryViewsInfo.append(supplementaryViewInfo)
                     }
+                } else if let delegate = self.delegate, let supplementaryViewInfo = delegate.supplementaryViewInfo(kind: supplementaryView.kind, for: collectionView, at: indexPath, userData: supplementaryView.userData) {
+                    supplementaryViewsInfo.append(supplementaryViewInfo)
                 }
             }
         }
@@ -103,23 +122,36 @@ import OTRAssets
     }
     
     open func removeSupplementaryViewsOfType(type:String) {
-        for (key,value) in self.supplementaryViews {
-            var newValue = value
-            if let index = newValue.index(of: type) {
-                newValue.remove(at: index)
-                supplementaryViews[key] = newValue
-            }
+        self.supplementaryViews = self.supplementaryViews.mapValues { (viewArray) -> [SupplementaryViewInfo] in
+            return viewArray.filter({ (view) -> Bool in
+                return view.kind != type
+            })
         }
     }
+
+    open func removeSupplementaryView(indexPath:IndexPath, supplementaryView type:String) {
+        guard let views = self.supplementaryViews[indexPath] else { return }
+        self.supplementaryViews[indexPath] = views.filter({ (view) -> Bool in
+            return view.kind != type
+        })
+    }
     
-    open func addSupplementaryViewForMessage(message:OTRMessageProtocol, supplementaryView type:String) {
-        var value = self.supplementaryViews[message.uniqueId]
-        if value == nil {
-            value = [type]
+    fileprivate func supplementaryView(kind:String, at indexPath:IndexPath) -> SupplementaryViewInfo? {
+        guard let views = self.supplementaryViews[indexPath] else { return nil }
+        return views.first(where: { view -> Bool in
+            view.kind == kind
+        })
+    }
+    
+    open func addSupplementaryView(indexPath:IndexPath, supplementaryView kind:String, userData:AnyObject?) {
+        if var existingView = supplementaryView(kind: kind, at: indexPath) {
+            // Update userdata
+            existingView.userData = userData
         } else {
-            value?.append(type)
+            var viewArray = (self.supplementaryViews[indexPath] ?? [])
+            viewArray.append(SupplementaryViewInfo(kind: kind, userData: userData))
+            self.supplementaryViews[indexPath] = viewArray
         }
-        self.supplementaryViews[message.uniqueId] = value
     }
 
     
@@ -132,6 +164,8 @@ import OTRAssets
             let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: kind, for: indexPath)
             populateNewDeviceCell(cell: cell, indexPath: indexPath, forSizingOnly: false)
             return cell
+        } else if let delegate = self.delegate, let view = supplementaryView(kind: kind, at: indexPath) {
+            return delegate.supplementaryView(kind: view.kind, for: collectionView, at: indexPath, userData: view.userData)
         }
         return nil
     }
@@ -148,7 +182,7 @@ import OTRAssets
         return prototypeCells[kind]
     }
     
-    fileprivate func createSuplementaryViewInfo(_ collectionView:UICollectionView,
+    public func createSupplementaryViewInfo(_ collectionView:UICollectionView,
                                             kind:String,
                                             populationCallback:((UICollectionReusableView)->Void)?,
                                             tag:String?,
@@ -253,16 +287,16 @@ public extension OTRMessagesViewController {
         })
         
         if newDevices.count > 0, self.collectionView != nil {
-            if let lastIndexPath = collectionView.lastIndexPath(), let message = self.message(at: lastIndexPath) {
+            if let lastIndexPath = collectionView.lastIndexPath() {
                 supplementaryViewHandler?.removeSupplementaryViewsOfType(type: OTRMessagesNewDeviceCell.reuseIdentifier)
-                supplementaryViewHandler?.addSupplementaryViewForMessage(message: message, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier)
+                supplementaryViewHandler?.addSupplementaryView(indexPath: lastIndexPath, supplementaryView: OTRMessagesNewDeviceCell.reuseIdentifier, userData: nil)
             }
         }
     }
 }
 
 extension UICollectionView {
-    func lastIndexPath() -> IndexPath? {
+    public func lastIndexPath() -> IndexPath? {
         for sectionIndex in (0..<self.numberOfSections).reversed() {
             if self.numberOfItems(inSection: sectionIndex) > 0 {
                 return IndexPath.init(item: self.numberOfItems(inSection: sectionIndex)-1, section: sectionIndex)

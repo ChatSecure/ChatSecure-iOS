@@ -88,8 +88,8 @@ import JSQMessagesViewController
         let message = viewHandler?.object(indexPath) as? OTRMessageProtocol
         self.supplementaryViews[index] = nil
         if let delegate = self.supplementaryViewDelegate, let message = message {
-            if var views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section), message: message) {
-                for i in (views.count-1)...0 {
+            if var views = delegate.supplementaryViewsForCellAtIndexPath(IndexPath(item: item, section: section), message: message), views.count > 0 {
+                for i in stride(from:views.count-1, to:0, by: -1) {
                     let view = views[i]
                     view.key = index
                     if !applyTagBehavior(view: view) {

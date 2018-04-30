@@ -48,5 +48,7 @@
 	<false/>
 	<key>AllowOMEMO</key>
 	<true/>
+	<key>DefaultGroupPlaintext</key>
+	<false/>
 </dict>
 </plist>

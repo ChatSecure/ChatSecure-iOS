@@ -8,12 +8,18 @@
 
 import UIKit
 import YapDatabase.YapDatabaseRelationship
+import OTRAssets
 
 @objc public enum RoomSecurity: Int {
     /// will choose omemo if _any_ occupants have available keys
     case best = 0
     case plaintext = 1
     case omemo = 2
+}
+
+@objc public enum RoomUserState: Int {
+    case invited = 0
+    case hasViewed = 1
 }
 
 @objc open class OTRXMPPRoom: OTRYapDatabaseObject {
@@ -29,7 +35,7 @@ import YapDatabase.YapDatabaseRelationship
     /// JID of the room itself
     @objc private var jid:String?
     
-    @objc open var preferredSecurity: RoomSecurity = .best
+    @objc open var preferredSecurity: RoomSecurity = OTRBranding.defaultGroupPlaintext ? .plaintext : .best
     
     /// XMPPJID of the room itself
     @objc public var roomJID: XMPPJID? {
@@ -62,6 +68,9 @@ import YapDatabase.YapDatabaseRelationship
     @objc open var lastRoomMessageId:String?
     @objc open var subject:String?
     @objc open var roomPassword:String?
+    /// User state for the room, currently if we have viewed this room or not.
+    /// Can be used to show information the first time we enter a room.
+    @objc open var roomUserState:RoomUserState = .hasViewed
 
     // Transient properties stored in OTRBuddyCache
     @objc open var joined:Bool {

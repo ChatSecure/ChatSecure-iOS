@@ -100,6 +100,9 @@ open class OTRRoomOccupantsViewController: UIViewController {
     /// for reads and writes
     private let connection = OTRDatabaseManager.shared.writeConnection
     private let connections = OTRDatabaseManager.shared.connections
+    /// When loading lists we don't want to update on every single change,
+    /// so use this flag to ignore changes until everything is fetched.
+    private var ignoreChanges = false
     open var crownImage:UIImage?
     
     
@@ -179,7 +182,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
         }
     }
     
-    func ownOccupant() -> OTRXMPPRoomOccupant? {
+    open func ownOccupant() -> OTRXMPPRoomOccupant? {
         guard let room = self.room, let accountId = room.accountUniqueId, let roomJid = room.roomJID, let ownJid = room.ourJID, let connection = self.connection else { return nil }
         var occupant:OTRXMPPRoomOccupant? = nil
         connection.read({ (transaction) in
@@ -396,6 +399,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 let xmppRoomManager = self.xmppRoomManager(for: room) {
                 //Leave room
                 xmppRoomManager.leaveRoom(roomJid)
+                xmppRoomManager.removeRoomsFromBookmarks([room])
                 if let delegate = self.delegate {
                     delegate.didLeaveRoom(self)
                 }
@@ -463,13 +467,13 @@ open class OTRRoomOccupantsViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
-
-    open func grantAdmin(_ occupant:OTRXMPPRoomOccupant) {
+    
+    open func grantPrivileges(_ occupant:OTRXMPPRoomOccupant, affiliation:RoomOccupantAffiliation) {
         guard let room = self.room,
             let xmppRoom = self.xmppRoom(for: room),
             let occupantRealJid = occupant.realJID
             else { return }
-        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: RoomOccupantAffiliation.admin.stringValue, jid: occupantRealJid)])
+        xmppRoom.editPrivileges([XMPPRoom.item(withAffiliation: affiliation.stringValue, jid: occupantRealJid)])
     }
     
     open func revokeMembership(_ occupant:OTRXMPPRoomOccupant) {
@@ -511,10 +515,13 @@ extension OTRRoomOccupantsViewController {
             let xmppRoom = xmppRoom(for: room) else {
             return
         }
-        xmppRoom.fetchMembersList()
-        xmppRoom.fetchAdminsList()
-        xmppRoom.fetchOwnersList()
-        xmppRoom.fetchModeratorsList()
+        ignoreChanges = true
+        xmppRoomManager(for: room)?.fetchListsFor(room: xmppRoom, callback: {
+            self.ignoreChanges = false
+            self.tableView?.reloadData()
+            self.updateUIBasedOnOwnRole()
+            self.view.setNeedsLayout()
+        })
     }
 }
 
@@ -526,6 +533,7 @@ extension OTRRoomOccupantsViewController: OTRYapViewHandlerDelegateProtocol {
     }
     
     public func didReceiveChanges(_ handler: OTRYapViewHandler, sectionChanges: [YapDatabaseViewSectionChange], rowChanges: [YapDatabaseViewRowChange]) {
+        guard !ignoreChanges else {return}
         //TODO: pretty animations
         self.tableView?.reloadData()
         self.updateUIBasedOnOwnRole()
@@ -584,6 +592,10 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             isYou = true
         }
         if let buddy = buddy {
+            // Avoid showing ourselves as "pending approval"
+            if isYou {
+                buddy.pendingApproval = false
+            }
             cell.setThread(buddy, account: nil)
             cell.accessoryView = cell.infoButton
             cell.infoAction = { [weak self] (cell, sender) in
@@ -650,6 +662,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
         let group = self.viewHandler?.mappings?.group(forSection: UInt(indexPath.section))
         if group == GroupNameHeader {
             didSelectHeaderCell(type: headerRows[indexPath.row])
@@ -663,7 +676,7 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 if ownOccupant.canGrantAdmin(roomOccupant) {
                     let promoteAction = UIAlertAction(title: GROUP_GRANT_ADMIN_STRING(), style: .default, handler: { (action) in
-                        self.grantAdmin(roomOccupant)
+                        self.grantPrivileges(roomOccupant, affiliation: .admin)
                     })
                     alert.addAction(promoteAction)
                 }
@@ -677,9 +690,19 @@ extension OTRRoomOccupantsViewController:UITableViewDelegate {
                     })
                     alert.addAction(kickAction)
                 }
-                let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
-                alert.addAction(cancelAction)
-                present(alert, animated: true, completion: nil)
+                
+                if alert.actions.count == 1 {
+                    viewOccupantInfo(roomOccupant)
+                } else {
+                    let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
+                    alert.addAction(cancelAction)
+                    if let popoverController = alert.popoverPresentationController {
+                        popoverController.sourceView = tableView
+                        popoverController.sourceRect = CGRect(x: tableView.bounds.midX, y: tableView.bounds.midY, width: 0, height: 0)
+                        popoverController.permittedArrowDirections = []
+                    }
+                    present(alert, animated: true, completion: nil)
+                }
             } else {
                 viewOccupantInfo(roomOccupant)
             }

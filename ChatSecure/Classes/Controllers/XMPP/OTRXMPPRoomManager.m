@@ -108,6 +108,7 @@
             room.lastRoomMessageId = @""; // Hack to make it show up in list
             room.accountUniqueId = accountId;
             room.roomJID = jid;
+            room.roomUserState = RoomUserStateInvited;
         } else {
             // Clear out roles, we'll getpresence updates once we join
             [self clearOccupantRolesInRoom:room withTransaction:transaction];
@@ -381,51 +382,19 @@
     return nil;
 }
 
-- (void) fetchHistoryIfListsDownloaded:(XMPPRoom *)xmppRoom {
-    OTRXMPPRoomRuntimeProperties *properties = [self roomRuntimeProperties:xmppRoom];
-    if (properties && !properties.hasFetchedHistory &&
-        properties.hasFetchedMembers &&
-        properties.hasFetchedAdmins &&
-        properties.hasFetchedOwners) {
-        properties.hasFetchedHistory = YES;
-        [self fetchHistoryFor:xmppRoom];
-    }
-}
-
 - (void) xmppRoom:(XMPPRoom *)room didFetchMembersList:(NSArray<NSXMLElement*> *)items {
     //DDLogInfo(@"Fetched members list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
-    [[self roomRuntimeProperties:room] setHasFetchedMembers:YES];
-    [self fetchHistoryIfListsDownloaded:room];
-}
-
-- (void)xmppRoom:(XMPPRoom *)room didNotFetchMembersList:(XMPPIQ *)iqError {
-    [[self roomRuntimeProperties:room] setHasFetchedMembers:YES];
-    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchAdminsList:(NSArray<NSXMLElement*> *)items {
     //DDLogInfo(@"Fetched admins list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
-    [[self roomRuntimeProperties:room] setHasFetchedAdmins:YES];
-    [self fetchHistoryIfListsDownloaded:room];
-}
-     
-- (void)xmppRoom:(XMPPRoom *)room didNotFetchAdminsList:(XMPPIQ *)iqError {
-    [[self roomRuntimeProperties:room] setHasFetchedAdmins:YES];
-    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void) xmppRoom:(XMPPRoom *)room didFetchOwnersList:(NSArray<NSXMLElement*> *)items {
     //DDLogInfo(@"Fetched owners list: %@", items);
     [self xmppRoom:room addOccupantItems:items];
-    [[self roomRuntimeProperties:room] setHasFetchedOwners:YES];
-    [self fetchHistoryIfListsDownloaded:room];
-}
-
-- (void)xmppRoom:(XMPPRoom *)room didNotFetchOwnersList:(XMPPIQ *)iqError {
-    [[self roomRuntimeProperties:room] setHasFetchedOwners:YES];
-    [self fetchHistoryIfListsDownloaded:room];
 }
 
 - (void)xmppRoom:(XMPPRoom *)room didFetchModeratorsList:(NSArray *)items {
@@ -469,10 +438,7 @@
 
     // Fetch member list. Ideally this would be done after the invites above have been sent to the network, but the messages pass all kinds of async delegates before they are actually sent, so unfortunately we can't wait for that.
     [self performBlockAsync:^{
-            [sender fetchMembersList];
-            [sender fetchAdminsList];
-            [sender fetchOwnersList];
-            [sender fetchModeratorsList];
+        [self fetchAllListsForRoom:sender];
     }];
 }
 
@@ -485,12 +451,23 @@
     } else {
         // Fetch member list
         [self performBlockAsync:^{
-            [sender fetchMembersList];
-            [sender fetchAdminsList];
-            [sender fetchOwnersList];
-            [sender fetchModeratorsList];
+            [self fetchAllListsForRoom:sender];
         }];
     }
+}
+
+- (void)fetchAllListsForRoom:(XMPPRoom *)xmppRoom {
+    [self beginUpdateAffiliationsInRoom:xmppRoom];
+    [self fetchListsForRoom:xmppRoom callback:^ {
+        OTRXMPPRoomRuntimeProperties *properties = [self roomRuntimeProperties:xmppRoom];
+        // Lists are downloaded, delete stale occupants from the DB
+        [self endUpdateAffiliationsInRoom:xmppRoom];
+        if (properties && !properties.hasFetchedHistory) {
+            // fetch history for the room
+            properties.hasFetchedHistory = YES;
+            [self fetchHistoryFor:xmppRoom];
+        }
+    }];
 }
 
 - (void)xmppRoomDidLeave:(XMPPRoom *)sender {
