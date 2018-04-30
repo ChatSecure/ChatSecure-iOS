@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.7.0)
+  - Alamofire (4.7.2)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
@@ -12,14 +12,14 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
-  - CocoaAsyncSocket (7.6.2)
-  - CocoaLumberjack (3.4.1):
-    - CocoaLumberjack/Default (= 3.4.1)
-    - CocoaLumberjack/Extensions (= 3.4.1)
-  - CocoaLumberjack/Default (3.4.1)
-  - CocoaLumberjack/Extensions (3.4.1):
+  - CocoaAsyncSocket (7.6.3)
+  - CocoaLumberjack (3.4.2):
+    - CocoaLumberjack/Default (= 3.4.2)
+    - CocoaLumberjack/Extensions (= 3.4.2)
+  - CocoaLumberjack/Default (3.4.2)
+  - CocoaLumberjack/Extensions (3.4.2):
     - CocoaLumberjack/Default
-  - CocoaLumberjack/Swift (3.4.1):
+  - CocoaLumberjack/Swift (3.4.2):
     - CocoaLumberjack/Default
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
@@ -137,7 +137,6 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
   - QRCodeReaderViewController (4.0.2)
-  - Reveal-SDK (13)
   - SignalProtocolC (2.3.1)
   - SignalProtocolObjC (1.0.0):
     - SignalProtocolC (~> 2.3.1)
@@ -244,7 +243,6 @@ DEPENDENCIES:
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `43f1d3b`)
   - ProxyKit/Client (~> 1.2.0)
   - QRCodeReaderViewController (~> 4.0)
-  - Reveal-SDK
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
@@ -273,7 +271,6 @@ SPEC REPOS:
     - OpenInChrome
     - ProxyKit
     - QRCodeReaderViewController
-    - Reveal-SDK
     - SignalProtocolC
     - SQLCipher
     - TUSafariActivity
@@ -327,14 +324,14 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
-  Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 7e4452fd4ba0a68002c099d637a2e08230482d31
-  CocoaAsyncSocket: 3541e024f48c54b251638ef72d51dd42808de932
-  CocoaLumberjack: 2e258a064cacc8eb9a2aca318e24d02a0a7fd56d
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   CPAProxy: 99fdb9becacc7f48fbd80ca42fba77376fd6488f
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
@@ -357,7 +354,6 @@ SPEC CHECKSUMS:
   ParkedTextField: bdefebdaec306fddefbceead1a7081500169606f
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
-  Reveal-SDK: ccc2b0f8014965ea448b7534a7c2c8da232b75e8
   SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
   SignalProtocolObjC: cddb256f5d3015dd507e59f7175fa6c9154f8dc6
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
@@ -366,6 +362,6 @@ SPEC CHECKSUMS:
   YapDatabase: 299a32de9d350d37a9ac5b0532609d87d5d2a5de
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: df34137d0408cd003d94607e1f2a96cd233abd0f
+PODFILE CHECKSUM: a3465172f60834508b141f5c6bbdbb38c93c595a
 
 COCOAPODS: 1.5.0
