@@ -156,7 +156,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                 notificationBody = [NSString stringWithFormat:MIGRATION_NOTIFICATION_WITH_DATE_STRING(), days];
             }
             
-            [[UIApplication sharedApplication] showLocalNotificationWithIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
+            [[UIApplication sharedApplication] showLocalNotificationWithGroupingIdentifier:@"Migration" body:notificationBody badge:1 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:kOTRNotificationTypeNone, kOTRNotificationType, @"Migration", kOTRNotificationThreadKey, nil] recurring:YES];
         }
     } else {
         [[UIApplication sharedApplication] cancelRecurringLocalNotificationWithIdentifier:@"Migration"];

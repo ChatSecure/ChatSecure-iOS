@@ -138,7 +138,7 @@ public extension UIApplication {
             let chatString = WANTS_TO_CHAT_STRING()
             let text = "\(name) \(chatString)"
             let unreadCount = self.applicationIconBadgeNumber + 1
-            self.showLocalNotificationWith(identifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
+            self.showLocalNotificationWith(groupingIdentifier: nil, body: text, badge: unreadCount, userInfo: [kOTRNotificationType:kOTRNotificationTypeSubscriptionRequest], recurring: false)
         }
     }
     
@@ -158,7 +158,7 @@ public extension UIApplication {
             let userInfo:[AnyHashable:Any] = [kOTRNotificationThreadKey:identifier,
                                               kOTRNotificationThreadCollection:thread.threadCollection,
                                               kOTRNotificationType: kOTRNotificationTypeApprovedBuddy]
-            self.showLocalNotificationWith(identifier: identifier, body: message, badge: unreadCount, userInfo: userInfo, recurring: false)
+            self.showLocalNotificationWith(groupingIdentifier: nil, body: message, badge: unreadCount, userInfo: userInfo, recurring: false)
         }
     }
     
@@ -173,13 +173,13 @@ public extension UIApplication {
                             kOTRNotificationThreadCollection:t.threadCollection,
                             kOTRNotificationType: kOTRNotificationTypeChatMessage]
             }
-            self.showLocalNotificationWith(identifier: identifier, body: text, badge: unreadCount, userInfo: userInfo, recurring: false)
+            self.showLocalNotificationWith(groupingIdentifier: nil, body: text, badge: unreadCount, userInfo: userInfo, recurring: false)
         }
     }
     
-    @objc public func showLocalNotificationWith(identifier:String?, body:String, badge:Int, userInfo:[AnyHashable:Any]?, recurring:Bool) {
+    @objc public func showLocalNotificationWith(groupingIdentifier:String?, body:String, badge:Int, userInfo:[AnyHashable:Any]?, recurring:Bool) {
         DispatchQueue.main.async {
-            if recurring, self.hasRecurringLocalNotificationWith(identifier: identifier) {
+            if recurring, self.hasRecurringLocalNotificationWith(identifier: groupingIdentifier) {
                 return // Already pending
             }
             // Use the new UserNotifications.framework on iOS 10+
@@ -188,8 +188,8 @@ public extension UIApplication {
                 localNotification.body = body
                 localNotification.badge = NSNumber(integerLiteral: badge)
                 localNotification.sound = UNNotificationSound.default()
-                if let identifier = identifier {
-                    localNotification.threadIdentifier = identifier
+                if let threadKey = userInfo?[kOTRNotificationThreadKey] as? String {
+                    localNotification.threadIdentifier = threadKey
                 }
                 if let userInfo = userInfo {
                     localNotification.userInfo = userInfo
@@ -201,7 +201,7 @@ public extension UIApplication {
                     date.minute = 0
                     trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
                 }
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: localNotification, trigger: trigger) // Schedule the notification.
+                let request = UNNotificationRequest(identifier: groupingIdentifier ?? UUID().uuidString, content: localNotification, trigger: trigger) // Schedule the notification.
                 let center = UNUserNotificationCenter.current()
                 center.add(request, withCompletionHandler: { (error: Error?) in
                     if let error = error as NSError? {
@@ -325,19 +325,6 @@ public extension UIApplication {
         let userInfo = [kOTRNotificationType: kOTRNotificationTypeConnectionError,
                         kOTRNotificationAccountKey: accountKey]
         
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().getDeliveredNotifications(completionHandler: { (notifications) in
-                // FIXME: this deduplication code doesn't seem to work
-                // if we are already showing a notification, let's not spam the user too much with more of them
-                for notification in notifications {
-                    if notification.request.identifier == accountKey {
-                        return
-                    }
-                }
-                self.showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
-            })
-        } else {
-            showLocalNotificationWith(identifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
-        }
+        self.showLocalNotificationWith(groupingIdentifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
     }
 }
