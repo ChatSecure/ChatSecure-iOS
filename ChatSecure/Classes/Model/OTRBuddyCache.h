@@ -12,7 +12,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class OTRXMPPRoom;
-typedef SWIFT_ENUM(NSInteger, RoomOccupantRole);
 @class OTRXMPPRoomOccupant;
 
 @interface OTRXMPPRoomRuntimeProperties : NSObject

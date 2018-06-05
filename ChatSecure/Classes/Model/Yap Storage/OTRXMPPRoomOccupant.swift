@@ -11,12 +11,7 @@ import YapDatabase
 import Mantle
 import CocoaLumberjack
 
-@objc public enum RoomOccupantRole:Int {
-    case none = 0
-    case participant = 1
-    case moderator = 2
-    case visitor = 3
-
+extension RoomOccupantRole {
     public init(stringValue: String) {
         self = RoomOccupantRoleHelper.role(withString: stringValue)
     }
