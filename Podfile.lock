@@ -137,9 +137,9 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
   - QRCodeReaderViewController (4.0.2)
-  - SignalProtocolC (2.3.1)
-  - SignalProtocolObjC (1.0.0):
-    - SignalProtocolC (~> 2.3.1)
+  - SignalProtocolC (2.3.2)
+  - SignalProtocolObjC (1.1.0):
+    - SignalProtocolC (~> 2.3.2)
   - SQLCipher (3.4.2):
     - SQLCipher/standard (= 3.4.2)
   - SQLCipher/common (3.4.2)
@@ -357,8 +357,8 @@ SPEC CHECKSUMS:
   ParkedTextField: bdefebdaec306fddefbceead1a7081500169606f
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
-  SignalProtocolC: e61c89693515347df8ed97961160a36cbe55c441
-  SignalProtocolObjC: cddb256f5d3015dd507e59f7175fa6c9154f8dc6
+  SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
+  SignalProtocolObjC: 081edb39a3e7f451e4433e298cfcf59fe4d3cdfc
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XMPPFramework: 42441b450fa312d8f6d8386ca1d371b31a881d1b
