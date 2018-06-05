@@ -40,7 +40,7 @@ PODS:
     - IOCipher/common
   - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
-  - KissXML (5.2.2)
+  - KissXML (5.2.3)
   - KSCrash (1.15.18):
     - KSCrash/Installations (= 1.15.18)
   - KSCrash/Installations (1.15.18):
@@ -109,7 +109,7 @@ PODS:
     - Kvitto/Core (= 1.0.3)
   - Kvitto/Core (1.0.3):
     - DTFoundation/DTASN1 (~> 1.7.13)
-  - libidn (1.33)
+  - libidn (1.35)
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
@@ -146,12 +146,12 @@ PODS:
   - SQLCipher/standard (3.4.2):
     - SQLCipher/common
   - TUSafariActivity (1.0.4)
-  - XMPPFramework/default (4.0):
-    - CocoaAsyncSocket (~> 7.6.0)
+  - XMPPFramework/default (4.0.0):
+    - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
-    - KissXML (~> 5.2.0)
-    - libidn (~> 1.33.0)
-  - XMPPFramework/Swift (4.0):
+    - KissXML (~> 5.2)
+    - libidn (~> 1.35)
+  - XMPPFramework/Swift (4.0.0):
     - CocoaLumberjack/Swift
     - XMPPFramework/default
   - YapDatabase/SQLCipher (3.0.2):
@@ -166,6 +166,7 @@ PODS:
     - YapDatabase/SQLCipher/Extensions/AutoView (= 3.0.2)
     - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.0.2)
     - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.0.2)
+    - YapDatabase/SQLCipher/Extensions/ConnectionPool (= 3.0.2)
     - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.0.2)
     - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.0.2)
     - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.0.2)
@@ -186,6 +187,8 @@ PODS:
   - YapDatabase/SQLCipher/Extensions/CloudCore (3.0.2):
     - YapDatabase/SQLCipher/Core
   - YapDatabase/SQLCipher/Extensions/CloudKit (3.0.2):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/ConnectionPool (3.0.2):
     - YapDatabase/SQLCipher/Core
   - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.0.2):
     - YapDatabase/SQLCipher/Core
@@ -246,11 +249,11 @@ DEPENDENCIES:
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (from `https://github.com/yapstudios/YapDatabase.git`, commit `ce9c8db`)
+  - YapDatabase/SQLCipher (from `https://github.com/yapstudios/YapDatabase.git`, commit `fcfda4e`)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `swift4`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Alamofire
     - Appirater
     - ARChromeActivity
@@ -303,7 +306,7 @@ EXTERNAL SOURCES:
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:
-    :commit: ce9c8db
+    :commit: fcfda4e
     :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :branch: swift4
@@ -317,7 +320,7 @@ CHECKOUT OPTIONS:
     :commit: 43f1d3b
     :git: https://github.com/gmertk/ParkedTextField.git
   YapDatabase:
-    :commit: ce9c8db
+    :commit: fcfda4e
     :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :commit: fb0716626af841b573ff752b9bd064d26d3fda96
@@ -340,10 +343,10 @@ SPEC CHECKSUMS:
   IOCipher: 3b86ccd68b08ee73b3de80c24a10de130269698c
   JSQMessagesViewController: bc44afc60cca8c9e0fb127243d57551013e1f319
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
-  KissXML: 4418f32138aec43797891845d682b00fc8cd4677
+  KissXML: 09f88ff8161fd058d67b70740b8b516687b52823
   KSCrash: 5394936f41e5c1ef7b79cf79b30d53299b0c160e
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
-  libidn: 90fc1a62b60288dcf543f13f4ebca913f17d829f
+  libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
   LumberjackConsole: 8ab064c6cf434e4a749de1e8e0ab53824bb53407
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
@@ -358,10 +361,10 @@ SPEC CHECKSUMS:
   SignalProtocolObjC: cddb256f5d3015dd507e59f7175fa6c9154f8dc6
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  XMPPFramework: 0e1a2db1a9a2b05ea354b5b418f797462885f9d9
-  YapDatabase: 299a32de9d350d37a9ac5b0532609d87d5d2a5de
+  XMPPFramework: 42441b450fa312d8f6d8386ca1d371b31a881d1b
+  YapDatabase: 178cc1eabfa25a1307a6245ca0de9dadadc6c331
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: a3465172f60834508b141f5c6bbdbb38c93c595a
+PODFILE CHECKSUM: ab8421772b71fcfaffc4015123e94b89e107ab25
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3

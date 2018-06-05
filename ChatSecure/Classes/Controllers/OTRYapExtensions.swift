@@ -18,7 +18,7 @@ open class OTRYapExtensions:NSObject {
         let usernameColumnName = BuddyFTSColumnName.username.name()
         let displayNameColumnName = BuddyFTSColumnName.displayName.name()
         
-        let searchHandler = YapDatabaseFullTextSearchHandler.withObjectBlock { (dict, collection, key, object) in
+        let searchHandler = YapDatabaseFullTextSearchHandler.withObjectBlock { (transaction, dict, collection, key, object) in
             guard let buddy = object as? OTRBuddy else {
                 return
             }

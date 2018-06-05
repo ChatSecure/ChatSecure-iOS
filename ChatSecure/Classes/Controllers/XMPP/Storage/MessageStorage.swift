@@ -400,7 +400,7 @@ extension MessageStorage: XMPPMessageArchiveManagementDelegate {
         }
     }
     
-    public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFailToReceiveMessages error: XMPPIQ) {
+    public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFailToReceiveMessages error: XMPPIQ?) {
         DDLogError("Failed to receive messages \(error)")
     }
     
