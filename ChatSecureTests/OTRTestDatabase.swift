@@ -11,7 +11,7 @@ import UIKit
 
 extension OTRDatabaseManager {
     func setupTestDatabase(name: String) {
-        setDatabasePassphrase("password", remember: false, error: nil)
+        try! setDatabasePassphrase("password", remember: false)
         let uuid = UUID().uuidString
         let tmpDir = NSTemporaryDirectory() as NSString
         let databaseDir = tmpDir.appendingPathComponent(uuid)

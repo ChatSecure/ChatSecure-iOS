@@ -301,12 +301,12 @@
 
 - (BOOL) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error
 {
-    BOOL result = NO;
+    BOOL result = YES;
     if (rememeber) {
         self.inMemoryPassphrase = nil;
         result = [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
     } else {
-        result = [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
     return result;
