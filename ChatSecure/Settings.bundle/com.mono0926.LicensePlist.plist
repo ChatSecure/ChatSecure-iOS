@@ -8,7 +8,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/AFNetworking</string>
 			<key>Title</key>
-			<string>AFNetworking (3.2.0)</string>
+			<string>AFNetworking (3.2.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -16,7 +16,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.7.0)</string>
+			<string>Alamofire (4.7.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -64,7 +64,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaAsyncSocket</string>
 			<key>Title</key>
-			<string>CocoaAsyncSocket (7.6.2)</string>
+			<string>CocoaAsyncSocket (7.6.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.4.1)</string>
+			<string>CocoaLumberjack (3.4.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -128,7 +128,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/HTMLReader</string>
 			<key>Title</key>
-			<string>HTMLReader (1d0dda3)</string>
+			<string>HTMLReader (v2.1.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -160,7 +160,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/KissXML</string>
 			<key>Title</key>
-			<string>KissXML (5.2.2)</string>
+			<string>KissXML (5.2.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -216,7 +216,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/libidn</string>
 			<key>Title</key>
-			<string>libidn (1.33)</string>
+			<string>libidn (1.35)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -248,7 +248,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Mantle</string>
 			<key>Title</key>
-			<string>Mantle (4c1a09c)</string>
+			<string>Mantle (db043e3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -334,14 +334,6 @@
 		</dict>
 		<dict>
 			<key>File</key>
-			<string>com.mono0926.LicensePlist/Reveal-SDK</string>
-			<key>Title</key>
-			<string>Reveal-SDK (13)</string>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-		</dict>
-		<dict>
-			<key>File</key>
 			<string>com.mono0926.LicensePlist/SAMKeychain</string>
 			<key>Title</key>
 			<string>SAMKeychain (v1.5.3)</string>
@@ -352,7 +344,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/SignalProtocolC</string>
 			<key>Title</key>
-			<string>SignalProtocolC (2.3.1)</string>
+			<string>SignalProtocolC (2.3.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -360,7 +352,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/SignalProtocolObjC</string>
 			<key>Title</key>
-			<string>SignalProtocolObjC (1.0.0)</string>
+			<string>SignalProtocolObjC (1.1.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -408,7 +400,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/XMPPFramework</string>
 			<key>Title</key>
-			<string>XMPPFramework (4.0)</string>
+			<string>XMPPFramework (4.0.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -416,7 +408,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/YapDatabase</string>
 			<key>Title</key>
-			<string>YapDatabase (3.0.2)</string>
+			<string>YapDatabase (3.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

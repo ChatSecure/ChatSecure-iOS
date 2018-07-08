@@ -1,14 +1,14 @@
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.0
+version: 4.7.2
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.0
+version: 4.7.2
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.0
+version: 4.7.2
 
 name: Appirater, nameSpecified: 
 body: Copyright 2017. Aras…
@@ -75,27 +75,27 @@ version: 1.0
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.2
+version: 7.6.3
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.2
+version: 7.6.3
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.2
+version: 7.6.3
 
 name: CocoaLumberjack, nameSpecified: 
 body: Software License Agr…
-version: 3.4.1
+version: 3.4.2
 
 name: CocoaLumberjack, nameSpecified: 
 body: Software License Agr…
-version: 3.4.1
+version: 3.4.2
 
 name: CocoaLumberjack, nameSpecified: 
 body: Software License Agr…
-version: 3.4.1
+version: 3.4.2
 
 name: CPAProxy, nameSpecified: 
 body: Copyright (c) 2013 C…
@@ -207,15 +207,15 @@ version: 1.5.1
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.2
+version: 5.2.3
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.2
+version: 5.2.3
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.2
+version: 5.2.3
 
 name: KSCrash, nameSpecified: 
 body: Copyright (c) 2012 K…
@@ -245,19 +245,19 @@ name: libidn, nameSpecified:
 body: libidn-podspec
 
 The …
-version: 1.33
+version: 1.35
 
 name: libidn, nameSpecified: 
 body: libidn-podspec
 
 The …
-version: 1.33
+version: 1.35
 
 name: libidn, nameSpecified: 
 body: libidn-podspec
 
 The …
-version: 1.33
+version: 1.35
 
 name: libsqlfs, nameSpecified: 
 body: 		  GNU LESSER GENER…
@@ -373,41 +373,29 @@ name: QRCodeReaderViewController, nameSpecified:
 body: The MIT License (MIT…
 version: 4.0.2
 
-name: Reveal-SDK, nameSpecified: 
-body: # REVEAL LICENSE AGR…
-version: 13
-
-name: Reveal-SDK, nameSpecified: 
-body: # REVEAL LICENSE AGR…
-version: 13
-
-name: Reveal-SDK, nameSpecified: 
-body: # REVEAL LICENSE AGR…
-version: 13
+name: SignalProtocolC, nameSpecified: 
+body:         Copyright 20…
+version: 2.3.2
 
 name: SignalProtocolC, nameSpecified: 
 body:         Copyright 20…
-version: 2.3.1
+version: 2.3.2
 
 name: SignalProtocolC, nameSpecified: 
 body:         Copyright 20…
-version: 2.3.1
-
-name: SignalProtocolC, nameSpecified: 
-body:         Copyright 20…
-version: 2.3.1
+version: 2.3.2
 
 name: SignalProtocolObjC, nameSpecified: 
 body: Copyright 2016-2017 …
-version: 1.0.0
+version: 1.1.0
 
 name: SignalProtocolObjC, nameSpecified: 
 body: Copyright 2016-2017 …
-version: 1.0.0
+version: 1.1.0
 
 name: SignalProtocolObjC, nameSpecified: 
 body: Copyright 2016-2017 …
-version: 1.0.0
+version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
@@ -435,27 +423,27 @@ version: 1.0.4
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0
+version: 4.0.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0
+version: 4.0.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0
+version: 4.0.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.0.2
+version: 3.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.0.2
+version: 3.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.0.2
+version: 3.1
 
 name: YapTaskQueue, nameSpecified: 
 body: This is free and une…
@@ -469,15 +457,15 @@ name: YapTaskQueue, nameSpecified:
 body: This is free and une…
 version: 0.3.0
 
-name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.0
+name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.1
 
 name: FormatterKit, nameSpecified: , owner: mattt, version: 1.8.2
 
-name: HTMLReader, nameSpecified: , owner: nolanw, version: 1d0dda3
+name: HTMLReader, nameSpecified: , owner: nolanw, version: v2.1.2
 
 name: KVOController, nameSpecified: , owner: facebook, version: v1.2.0
 
-name: Mantle, nameSpecified: , owner: ChatSecure, version: 4c1a09c
+name: Mantle, nameSpecified: , owner: Mantle, version: db043e3
 
 name: MBProgressHUD, nameSpecified: , owner: jdg, version: 1.1.0
 
