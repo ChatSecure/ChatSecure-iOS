@@ -8,7 +8,6 @@
 
 import UIKit
 import YapDatabase.YapDatabaseRelationship
-import OTRAssets
 
 @objc public enum RoomSecurity: Int {
     /// will choose omemo if _any_ occupants have available keys
@@ -35,7 +34,7 @@ import OTRAssets
     /// JID of the room itself
     @objc private var jid:String?
     
-    @objc open var preferredSecurity: RoomSecurity = OTRBranding.defaultGroupPlaintext ? .plaintext : .best
+    @objc open var preferredSecurity: RoomSecurity = .best
     
     /// XMPPJID of the room itself
     @objc public var roomJID: XMPPJID? {

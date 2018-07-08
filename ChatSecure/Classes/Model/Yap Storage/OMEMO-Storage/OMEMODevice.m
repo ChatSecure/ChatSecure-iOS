@@ -44,8 +44,19 @@
     return (_trustLevel == OMEMOTrustLevelTrustedTofu || _trustLevel == OMEMOTrustLevelTrustedUser) && ![self isExpired];
 }
 
-/** if lastSeenDate is > 30 days */
+/** if lastSeenDate is > 30 days, but not if ALL keys are expired and this is the one last seen */
 - (BOOL) isExpired {
+    if ([self _isExpired]) {
+        if (self.lastSeenDate && [OMEMODevice isLastSeenExpiredDevice:self]) {
+            return NO;
+        }
+        return YES;
+    }
+    return NO;
+}
+
+/** if lastSeenDate is > 30 days */
+- (BOOL) _isExpired {
     if (!self.lastSeenDate) {
         return YES;
     }
@@ -53,6 +64,35 @@
     NSTimeInterval thirtyDays = 86400 * 30;
     if (span > thirtyDays) {
         return YES;
+    }
+    return NO;
+}
+
+/** If ALL devices are considered expired, return TRUE if device is the one that was last seen of them all. Kind of hackish, but would have required major refactoring. */
++ (BOOL) isLastSeenExpiredDevice:(OMEMODevice *)device {
+    __block NSArray <OMEMODevice *>* devices = nil;
+    [[OTRDatabaseManager.shared connections].read readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        devices = [OMEMODevice allDevicesForParentKey:device.parentKey collection:device.parentCollection transaction:transaction];
+    }];
+    if (devices != nil && [devices count] > 0) {
+        NSArray *sortedDevices = [devices sortedArrayUsingComparator:^NSComparisonResult(OMEMODevice * _Nonnull obj1, OMEMODevice * _Nonnull obj2) {
+            NSDate *date1 = [NSDate distantPast];
+            NSDate *date2 = [NSDate distantPast];
+            if (obj1.lastSeenDate) {
+                date1 = obj1.lastSeenDate;
+            }
+            if (obj2.lastSeenDate) {
+                date2 = obj2.lastSeenDate;
+            }
+            // Latest first
+            return [date2 compare:date1];
+        }];
+        OMEMODevice *first = [sortedDevices firstObject];
+        
+        // They are ordered by date, so if "first" _isExpired they all are!
+        if (first.lastSeenDate && [first _isExpired] && [device.uniqueId isEqualToString:first.uniqueId]) {
+            return YES;
+        }
     }
     return NO;
 }
