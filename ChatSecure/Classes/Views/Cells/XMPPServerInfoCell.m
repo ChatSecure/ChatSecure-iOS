@@ -73,7 +73,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
     if (!image) {
         image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     }
-    self.logoImageView.image = info.logoImage;
+    self.logoImageView.image = image;
     NSString *name = info.name;
     if (!info.name) {
         name = CUSTOM_STRING();

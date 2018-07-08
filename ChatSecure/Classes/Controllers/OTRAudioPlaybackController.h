@@ -16,7 +16,7 @@
 @property (nonatomic, strong, readonly) OTRAudioItem *currentAudioItem;
 @property (nonatomic, weak, readonly) OTRAudioControlsView *currentAudioControlsView;
 
-- (void)playAudioItem:(OTRAudioItem *)audioItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError **)error;
+- (BOOL)playAudioItem:(OTRAudioItem *)audioItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError **)error;
 
 - (void)attachAudioControlsView:(OTRAudioControlsView *)audioControlsView;
 

@@ -25,7 +25,7 @@
 
 @property (nonatomic, weak) id<OTRAudioSessionManagerDelegate> delegate;
 
-- (void)playAudioWithURL:(NSURL *)url error:(NSError **)error;
+- (BOOL)playAudioWithURL:(NSURL *)url error:(NSError **)error;
 - (void)pausePlaying;
 - (void)resumePlaying;
 - (void)stopPlaying;
@@ -34,7 +34,7 @@
 - (NSURL *)currentPlayerURL;
 - (BOOL)isPlaying;
 
-- (void)recordAudioToURL:(NSURL *)url error:(NSError **)error;
+- (BOOL)recordAudioToURL:(NSURL *)url error:(NSError **)error;
 - (void)stopRecording;
 - (NSTimeInterval)currentTimeRecordTime;
 - (NSURL *)currentRecorderURL;

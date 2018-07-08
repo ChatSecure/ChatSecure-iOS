@@ -64,11 +64,11 @@
     [settingsGroups addObject:accountsGroup];
     
     if (OTRBranding.allowsDonation) {
-        NSString *donateTitle = DONATE_STRING();
+        NSString *donateTitle = nil;
         if (TransactionObserver.hasValidReceipt) {
             donateTitle = [NSString stringWithFormat:@"%@    ✅", DONATE_STRING()];
         } else {
-            donateTitle = [NSString stringWithFormat:@"%@    🆕", DONATE_STRING()];
+            donateTitle = [NSString stringWithFormat:@"%@    🎁", DONATE_STRING()];
         }
         OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:donateTitle description:nil];
         //donateSetting.imageName = @"29-heart.png";

@@ -279,6 +279,9 @@ static NSString *const OTRServerCapabilitiesErrorDomain = @"OTRServerCapabilitie
                                            xmlns:XMPPDiscoverItemsNamespace];
         
         NSArray<NSXMLElement*> *items = [query elementsForName:@"item"];
+        if (!items) {
+            items = @[];
+        }
         self.discoveredServices = [items copy];
         [self->multicastDelegate serverCapabilities:self didDiscoverServices:items];
         

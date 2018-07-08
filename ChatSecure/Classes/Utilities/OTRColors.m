@@ -16,13 +16,12 @@
     if (!OTRBranding.showsColorForStatus) {
         return [UIColor clearColor];
     }
-    UIColor *color = [UIColor clearColor];
+    UIColor *color = nil;
     switch(status)
     {
         case OTRThreadStatusUnknown:
         case OTRThreadStatusOffline:
-            //color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
-            return [UIColor clearColor];
+            color = [UIColor clearColor];
             break;
         case OTRThreadStatusAway:
             color = [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];

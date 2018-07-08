@@ -43,8 +43,8 @@ completionQueue:(nullable dispatch_queue_t)completionQueue;
                   buddyUniqueId:(NSString *)buddyUniqueId
                           error:(NSError* __autoreleasing *)error;
 
-+ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
-+ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;
++ (nullable NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
++ (nullable NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;
 
 @property (class, nonatomic, readonly) OTRMediaFileManager *shared;
 

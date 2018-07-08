@@ -1906,30 +1906,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return [[NSAttributedString alloc] initWithString:@""];
     }
     
-    UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
-    if (!font) {
-        font = [UIFont systemFontOfSize:12];
-    }
-    NSDictionary *iconAttributes = @{NSFontAttributeName: font};
-    NSDictionary *lockAttributes = [iconAttributes copy];
-    
     ////// Lock Icon //////
     NSAttributedString *lockString = [self encryptionStatusStringForMessage:message];
     if (!lockString) {
         lockString = [[NSAttributedString alloc] initWithString:@""];
     }
     NSMutableAttributedString *attributedString = [lockString mutableCopy];
-    
-    BOOL trusted = YES;
-    if([message isKindOfClass:[OTRBaseMessage class]]) {
-        trusted = [self isMessageTrusted:message];
-    };
-    
-    if (!trusted) {
-        NSMutableDictionary *mutableCopy = [lockAttributes mutableCopy];
-        [mutableCopy setObject:[UIColor redColor] forKey:NSForegroundColorAttributeName];
-        lockAttributes = mutableCopy;
-    }
     
     NSAttributedString *deliveryString = [self deliveryStatusStringForMessage:message];
     if (deliveryString) {
@@ -2261,11 +2243,12 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     // "buddy has moved" warning to allow the user to start a chat with that JID instead.
     BOOL showHeader = NO;
     XMPPJID *forwardingJid = [self getForwardingJIDForBuddy:buddy];
-    if (forwardingJid != nil && ![forwardingJid isEqualToJID:buddy.bareJID options:XMPPJIDCompareBare]) {
+    XMPPJID *buddyBareJID = buddy.bareJID;
+    if (buddyBareJID && forwardingJid != nil && ![forwardingJid isEqualToJID:buddyBareJID options:XMPPJIDCompareBare]) {
         showHeader = YES;
     }
     
-    if (showHeader) {
+    if (showHeader && forwardingJid) {
         [self showJIDForwardingHeaderWithNewJID:forwardingJid];
     } else if (!showHeader && self.jidForwardingHeaderView != nil) {
         self.additionalContentInset = UIEdgeInsetsZero;

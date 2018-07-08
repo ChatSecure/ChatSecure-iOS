@@ -68,9 +68,6 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
                    automaticallyDismiss:(BOOL)automaticallyDismiss
                                   block:(void (^)(int interactionType))block
 {
-    if (!block) {
-        block = ^void(int interactionType) { };
-    }
     /*
     CRToastInteractionResponder *interactionResponder = [CRToastInteractionResponder interactionResponderWithInteractionType:type automaticallyDismiss:automaticallyDismiss block:block];
     

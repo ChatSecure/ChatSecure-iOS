@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
                     directory:(nullable NSString*)directory
                   withMediaStorage:(BOOL)withMediaStorage;
 
-- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError *_Nullable*)error;
+- (BOOL)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError *_Nullable*)error;
 
 
 - (BOOL)hasPassphrase;

@@ -59,7 +59,7 @@
         domainString = jid.domain;
     }
     
-    if (!domainString.length) {
+    if (!domainString.length && error) {
         *error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeDomainError userInfo:@{NSLocalizedDescriptionKey:@"Tor accounts require a valid domain"}];
     }
     

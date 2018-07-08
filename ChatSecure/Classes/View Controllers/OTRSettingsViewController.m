@@ -307,11 +307,6 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
 #pragma - mark Other Methods
 
 - (void) showAccountDetailsView:(OTRXMPPAccount*)account {
-    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-    OTRXMPPManager *xmpp = nil;
-    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-        xmpp = (OTRXMPPManager*)protocol;
-    }
     OTRAccountDetailViewController *detailVC = [GlobalTheme.shared accountDetailViewControllerForAccount:account];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:detailVC];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;

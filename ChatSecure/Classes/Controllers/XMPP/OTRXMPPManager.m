@@ -301,8 +301,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [_messageStatusModule deactivate];
     [_omemoModule deactivate];
     [_serverCheck deactivate];
-    _serverCheck = nil;
-    _fileTransferManager = nil;
 
     [_xmppStream disconnect];
 }
@@ -405,7 +403,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 - (void)didRegisterNewAccountWithStream:(XMPPStream *)stream
 {
     self.isRegisteringNewAccount = NO;
-    [self authenticateWithStream:stream];
+    [self authenticateWithStream:stream error:nil];
 }
 
 - (void)failedToRegisterNewAccount:(NSError *)error
@@ -414,15 +412,15 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     [self failedToConnect:error];
 }
 
-- (void)authenticateWithStream:(XMPPStream *)stream {
-    NSError * error = nil;
-    BOOL status = YES;
+- (BOOL)authenticateWithStream:(XMPPStream *)stream error:(NSError**)error {
+    BOOL status = NO;
     if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
-        status = [stream authenticateWithGoogleAccessToken:self.account.password error:&error];
+        status = [stream authenticateWithGoogleAccessToken:self.account.password error:error];
     }
     else {
-        status = [stream authenticateWithPassword:self.account.password error:&error];
+        status = [stream authenticateWithPassword:self.account.password error:error];
     }
+    return status;
 }
 
 ///////////////////////////////
@@ -449,8 +447,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     }
     self.xmppStream.myJID = jid;
 	if (![self.xmppStream isDisconnected]) {
-        [self authenticateWithStream:self.xmppStream];
-		return YES;
+        return [self authenticateWithStream:self.xmppStream error:nil];
 	}
     
 	//
@@ -807,7 +804,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
         [self continueRegisteringNewAccount];
     }
     else{
-        [self authenticateWithStream:sender];
+        [self authenticateWithStream:sender error:nil];
     }
     
     self.loginStatus = OTRLoginStatusAuthenticating;

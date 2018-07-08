@@ -44,18 +44,19 @@
     [self.currentAudioControlsView setTime:currentTime];
 }
 
-- (void)playURL:(NSURL *)url error:(NSError **)error;
+- (BOOL)playURL:(NSURL *)url error:(NSError **)error;
 {
     AVURLAsset *asset = [AVURLAsset assetWithURL:url];
     self.duration = CMTimeGetSeconds(asset.duration);
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     error = nil;
-    [self.audioSessionManager playAudioWithURL:url error:error];
+    BOOL result = [self.audioSessionManager playAudioWithURL:url error:error];
     
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     [self.currentAudioControlsView setTime:0];
     
     [self startLabelTimer];
+    return result;
 }
 
 - (void)startLabelTimer
@@ -93,13 +94,13 @@
 
 #pragma - mark Public Methods
 
-- (void)playAudioItem:(OTRAudioItem *)audioItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError *__autoreleasing *)error
+- (BOOL)playAudioItem:(OTRAudioItem *)audioItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError *__autoreleasing *)error
 {
     NSURL *audioURL = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:buddyUniqueId];
     
     _currentAudioItem = audioItem;
     
-    [self playURL:audioURL error:error];
+    return [self playURL:audioURL error:error];
 }
 
 - (void)attachAudioControlsView:(OTRAudioControlsView *)audioControlsView

@@ -49,7 +49,7 @@
 #pragma - mark Public Methods
 
 ////// Playing //////
-- (void)playAudioWithURL:(NSURL *)url error:(NSError **)error
+- (BOOL)playAudioWithURL:(NSURL *)url error:(NSError **)error
 {
     [self stopPlaying];
     [self stopRecording];
@@ -57,20 +57,22 @@
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:error];
     if (error) {
-        return;
+        return NO;
     }
     [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeSpokenAudio error:error];
     if (error) {
-        return;
+        return NO;
     }
     
     error = nil;
     self.currentPlayer = [self audioPlayerWithURL:url error:error];
     if (error) {
-        return;
+        return NO;
     }
     
     [self.currentPlayer play];
+    
+    return YES;
 }
 
 - (void)pausePlaying
@@ -119,30 +121,32 @@
 }
 
 ////// Recording //////
-- (void)recordAudioToURL:(NSURL *)url error:(NSError **)error
+- (BOOL)recordAudioToURL:(NSURL *)url error:(NSError **)error
 {
     [self stopRecording];
     [self stopPlaying];
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error:error];
     if (error) {
-        return;
+        return NO;
     }
     [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeSpokenAudio error:error];
     if (error) {
-        return;
+        return NO;
     }
     
     self.currentRecorder = [self audioRecorderWithURL:url error:error];
     
     if (error) {
-        return;
+        return NO;
     }
     
     self.currentRecorder.meteringEnabled = YES;
     self.recordDecibelTimer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(updateDecibelRecording:) userInfo:nil repeats:YES];
     
     [self.currentRecorder record];
+    
+    return YES;
 }
 
 - (void)stopRecording
@@ -179,9 +183,9 @@
 
 #pragma - mark Private Methods
 
-- (void)deactivateSession:(NSError **)error
+- (BOOL)deactivateSession:(NSError **)error
 {
-    [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:error];
+    return [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:error];
 }
 
 - (AVPlayer *)audioPlayerWithURL:(NSURL *)url error:(NSError **)error

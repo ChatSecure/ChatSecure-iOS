@@ -110,7 +110,7 @@
             finalImage = originalImage;
         }
         
-        if ([self.delegate respondsToSelector:@selector(attachmentPicker:gotPhoto:withInfo:)]) {
+        if (finalImage && [self.delegate respondsToSelector:@selector(attachmentPicker:gotPhoto:withInfo:)]) {
             [self.delegate attachmentPicker:self gotPhoto:finalImage withInfo:info];
         }
         

@@ -214,6 +214,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -605,9 +606,7 @@
     }
     
     UITableView *tableView = self.tableView;
-    BOOL isSearchViewHandler = NO;
     if (self.searchViewHandler == handler) {
-        isSearchViewHandler = YES;
         tableView = ((UITableViewController*)self.searchController.searchResultsController).tableView;
     }
     

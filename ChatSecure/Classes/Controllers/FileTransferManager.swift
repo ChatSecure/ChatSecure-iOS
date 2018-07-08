@@ -360,7 +360,9 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             }
             mediaItem.parentObjectKey = message.messageKey
             mediaItem.parentObjectCollection = message.messageCollection
-            let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier)
+            guard let newPath = OTRMediaFileManager.path(for: mediaItem, buddyUniqueId: thread.threadIdentifier) else {
+                return
+            }
             self.connection.readWrite { transaction in
                 message.save(with: transaction)
                 mediaItem.save(with: transaction)

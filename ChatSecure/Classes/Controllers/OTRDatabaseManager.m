@@ -299,15 +299,17 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:[self defaultYapDatabasePathWithName:OTRYapDatabaseName]];
 }
 
-- (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error
+- (BOOL) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error
 {
+    BOOL result = NO;
     if (rememeber) {
         self.inMemoryPassphrase = nil;
-        [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
+        result = [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
     } else {
-        [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        result = [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
+    return result;
 }
 
 - (BOOL)hasPassphrase

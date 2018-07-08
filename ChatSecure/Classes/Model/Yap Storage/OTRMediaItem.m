@@ -109,9 +109,11 @@ static NSString* GetExtensionForMimeType(NSString* mimeType) {
     } else {
         mediaClass = [OTRFileItem class];
     }
-    
     if (mediaClass) {
         mediaItem = [[mediaClass alloc] initWithFilename:filename mimeType:mimeType isIncoming:YES];
+    } else {
+        // satisfying the static analyzer
+        mediaItem = [[OTRFileItem alloc] initWithFilename:filename mimeType:mimeType isIncoming:YES];
     }
     return mediaItem;
 }
