@@ -143,8 +143,8 @@
         return NO;
     }
     
-    self.database.defaultObjectPolicy = YapDatabasePolicyShare;
-    self.database.defaultObjectCacheLimit = 10000;
+    self.database.connectionDefaults.objectPolicy = YapDatabasePolicyShare;
+    self.database.connectionDefaults.objectCacheLimit = 10000;
     
     [self setupConnections];
     

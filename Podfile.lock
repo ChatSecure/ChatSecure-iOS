@@ -154,67 +154,67 @@ PODS:
   - XMPPFramework/Swift (4.0.0):
     - CocoaLumberjack/Swift
     - XMPPFramework/default
-  - YapDatabase/SQLCipher (3.0.2):
-    - YapDatabase/SQLCipher/Core (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions (= 3.0.2)
-  - YapDatabase/SQLCipher/Core (3.0.2):
+  - YapDatabase/SQLCipher (3.1):
+    - YapDatabase/SQLCipher/Core (= 3.1)
+    - YapDatabase/SQLCipher/Extensions (= 3.1)
+  - YapDatabase/SQLCipher/Core (3.1):
     - CocoaLumberjack
     - SQLCipher (>= 3.4.0)
-  - YapDatabase/SQLCipher/Extensions (3.0.2):
+  - YapDatabase/SQLCipher/Extensions (3.1):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/ActionManager (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/AutoView (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/ConnectionPool (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/ManualView (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 3.0.2)
-    - YapDatabase/SQLCipher/Extensions/View (= 3.0.2)
-  - YapDatabase/SQLCipher/Extensions/ActionManager (3.0.2):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/AutoView (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/ConnectionPool (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/ManualView (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 3.1)
+    - YapDatabase/SQLCipher/Extensions/View (= 3.1)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (3.1):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
-  - YapDatabase/SQLCipher/Extensions/AutoView (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/AutoView (3.1):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/CloudCore (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/CloudCore (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CloudKit (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionPool (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/ConnectionPool (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredView (3.0.2):
-    - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (3.0.2):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (3.0.2):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ManualView (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/FilteredView (3.1):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/Relationships (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/Hooks (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResultsView (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/ManualView (3.1):
+    - YapDatabase/SQLCipher/Core
+    - YapDatabase/SQLCipher/Extensions/View
+  - YapDatabase/SQLCipher/Extensions/Relationships (3.1):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (3.1):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/SearchResultsView (3.1):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (3.1):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/View (3.0.2):
+  - YapDatabase/SQLCipher/Extensions/View (3.1):
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.3.0):
     - YapDatabase/SQLCipher (~> 3.0)
@@ -249,7 +249,7 @@ DEPENDENCIES:
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (from `https://github.com/yapstudios/YapDatabase.git`, commit `fcfda4e`)
+  - YapDatabase/SQLCipher (~> 3.1.0)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `swift4`)
 
 SPEC REPOS:
@@ -277,6 +277,7 @@ SPEC REPOS:
     - SignalProtocolC
     - SQLCipher
     - TUSafariActivity
+    - YapDatabase
 
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
@@ -305,9 +306,6 @@ EXTERNAL SOURCES:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
-  YapDatabase:
-    :commit: fcfda4e
-    :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :branch: swift4
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -319,9 +317,6 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :commit: 43f1d3b
     :git: https://github.com/gmertk/ParkedTextField.git
-  YapDatabase:
-    :commit: fcfda4e
-    :git: https://github.com/yapstudios/YapDatabase.git
   YapTaskQueue:
     :commit: fb0716626af841b573ff752b9bd064d26d3fda96
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -362,9 +357,9 @@ SPEC CHECKSUMS:
   SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XMPPFramework: 42441b450fa312d8f6d8386ca1d371b31a881d1b
-  YapDatabase: 178cc1eabfa25a1307a6245ca0de9dadadc6c331
+  YapDatabase: 170882ac5926507a4ea6dddaf704ebdd3f1ec61c
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: ab8421772b71fcfaffc4015123e94b89e107ab25
+PODFILE CHECKSUM: 5223ccf7150713e71fb4fb5c08d8950006fcb055
 
 COCOAPODS: 1.5.3

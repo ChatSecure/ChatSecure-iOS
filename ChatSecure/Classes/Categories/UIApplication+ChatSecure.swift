@@ -165,10 +165,8 @@ public extension UIApplication {
     internal func showLocalNotificationFor(_ thread:OTRThreadOwner?, text:String, unreadCount:Int) {
         if let thread = thread, thread.isMuted { return } // No notifications for muted
         DispatchQueue.main.async {
-            var identifier:String? = nil
             var userInfo:[AnyHashable:Any]? = nil
             if let t = thread {
-                identifier = t.threadIdentifier
                 userInfo = [kOTRNotificationThreadKey:t.threadIdentifier,
                             kOTRNotificationThreadCollection:t.threadCollection,
                             kOTRNotificationType: kOTRNotificationTypeChatMessage]

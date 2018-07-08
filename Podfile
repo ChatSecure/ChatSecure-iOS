@@ -15,7 +15,7 @@ end
 platform :ios, "9.0"
 
 use_frameworks!
-# inhibit_all_warnings!
+inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -61,8 +61,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
-  # pod 'YapDatabase/SQLCipher', '~> 3.0.2'
-  pod 'YapDatabase/SQLCipher', :git => 'https://github.com/yapstudios/YapDatabase.git', :commit => 'fcfda4e' # 865 fix
+  pod 'YapDatabase/SQLCipher', '~> 3.1.0'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'

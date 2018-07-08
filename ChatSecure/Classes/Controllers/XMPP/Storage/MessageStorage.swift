@@ -401,7 +401,7 @@ extension MessageStorage: XMPPMessageArchiveManagementDelegate {
     }
     
     public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didFailToReceiveMessages error: XMPPIQ?) {
-        DDLogError("Failed to receive messages \(error)")
+        DDLogError("Failed to receive messages: \(String(describing: error))")
     }
     
     public func xmppMessageArchiveManagement(_ xmppMessageArchiveManagement: XMPPMessageArchiveManagement, didReceiveMAMMessage message: XMPPMessage) {

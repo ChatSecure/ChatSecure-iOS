@@ -145,16 +145,6 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return YES;
-    } else {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    }
-}
-
 - (OTRXMPPAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRXMPPAccount *account = [self.viewHandler object:indexPath];
