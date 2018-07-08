@@ -143,8 +143,8 @@ import CocoaLumberjack
         if oid == nil, sid == nil {
             return false
         }
-        transaction.enumerateMessages(elementId: nil, originId: oid, stanzaId: sid) { (message, stop) in
-            if message.threadId == buddyUniqueId {
+        transaction.enumerateMessages(elementId: oid, originId: oid, stanzaId: sid) { (foundMessage, stop) in
+            if foundMessage.threadId == buddyUniqueId {
                 result = true
                 stop.pointee = true
             }
