@@ -40,6 +40,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      disableMainThreadChecker = "YES"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
@@ -49,16 +50,6 @@
                BlueprintIdentifier = "6396AFB21A169D54009F3E6C"
                BuildableName = "ChatSecureTests.xctest"
                BlueprintName = "ChatSecureTests"
-               ReferencedContainer = "container:ChatSecure.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D9227C321BA7952100B5E1D0"
-               BuildableName = "ChatSecureCoreTests.xctest"
-               BlueprintName = "ChatSecureCoreTests"
                ReferencedContainer = "container:ChatSecure.xcodeproj">
             </BuildableReference>
          </TestableReference>

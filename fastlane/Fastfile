@@ -1,0 +1,38 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Generate new localized screenshots"
+  lane :screenshots do
+    capture_screenshots(workspace: "ChatSecure.xcworkspace", scheme: "ChatSecureUITests")
+  end
+
+  desc "Uploads screenshots to iTC"
+  lane :upload_screenshots do
+    upload_to_app_store(skip_binary_upload: true, skip_metadata: true,  skip_screenshots: false, force: true)
+  end
+
+  desc "Uploads metadata to iTC"
+  lane :upload_metadata do
+    upload_to_app_store(skip_binary_upload: true, skip_metadata: false, skip_screenshots: true)
+  end
+
+  desc "Uploads metadata and screenshots to iTC"
+  lane :upload_all do
+    upload_to_app_store(skip_binary_upload: true, skip_metadata: false, skip_screenshots: false)
+  end
+end
