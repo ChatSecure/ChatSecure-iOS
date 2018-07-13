@@ -155,14 +155,16 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     // Resume downloads, i.e. look for media items that are partially downloaded and retry getting them. TODO - use ranges
     @objc public func resumeDownloads() {
-        connection.asyncRead { (transaction) in
-            transaction.enumerateUnfinishedDownloads({ (mediaItem, stop) in
-                if let downloadMessage = mediaItem.parentObject(with: transaction) as? OTRDownloadMessage, downloadMessage.messageError == nil {
-                    self.internalQueue.async {
-                        self.downloadMedia(downloadMessage)
+        connection.asyncRead { [weak self] (transaction) in
+            let unfinished = transaction.unfinishedDownloads()
+            self?.internalQueue.async {
+                for mediaItem in unfinished {
+                    if let downloadMessage = mediaItem.parentObject(with: transaction) as? OTRDownloadMessage,
+                        downloadMessage.messageError == nil {
+                        self?.downloadMedia(downloadMessage)
                     }
                 }
-            })
+            }
         }
     }
     
