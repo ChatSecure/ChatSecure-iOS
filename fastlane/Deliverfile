@@ -17,14 +17,29 @@
 # beta_ipa "./app.ipa"
 
 # The version of your app - remove this if you provide an ipa file
-app_version "4.3.2"
+app_version "4.3.3"
 submit_for_review false
 skip_binary_upload true
 # overwrite_screenshots true
 skip_screenshots true
+force true
 
 metadata_path "./Submodules/ChatSecure-Metadata/metadata"
 screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
+
+release_notes({
+  'default' => "v4.3.3:
+* Actually fix crash on launch by disabling download resumption
+v4.3.2:
+* Fix crash on launch when resuming downloads 
+v4.3.1:
+* Fix bug causing duplicate MAM messages
+* No longer expires the last remaining OMEMO key after it hasn't been seen for > 30 days
+* Minor bug fixes
+
+Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.0...v4.3.3
+",
+})
 
 ###################### More Options ######################
 # If you want to have even more control, check out the documentation

@@ -155,17 +155,19 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     
     // Resume downloads, i.e. look for media items that are partially downloaded and retry getting them. TODO - use ranges
     @objc public func resumeDownloads() {
-        connection.asyncRead { [weak self] (transaction) in
-            let unfinished = transaction.unfinishedDownloads()
-            self?.internalQueue.async {
-                for mediaItem in unfinished {
-                    if let downloadMessage = mediaItem.parentObject(with: transaction) as? OTRDownloadMessage,
-                        downloadMessage.messageError == nil {
-                        self?.downloadMedia(downloadMessage)
-                    }
-                }
-            }
-        }
+        /// https://github.com/ChatSecure/ChatSecure-iOS/issues/1034
+        DDLogWarn("WARN: Download resumption is disabled. See https://github.com/ChatSecure/ChatSecure-iOS/issues/1034 for more information.")
+//        connection.asyncRead { [weak self] (transaction) in
+//            let unfinished = transaction.unfinishedDownloads()
+//            self?.internalQueue.async {
+//                for mediaItem in unfinished {
+//                    if let downloadMessage = mediaItem.parentObject(with: transaction) as? OTRDownloadMessage,
+//                        downloadMessage.messageError == nil {
+//                        self?.downloadMedia(downloadMessage)
+//                    }
+//                }
+//            }
+//        }
     }
     
     /// This will fetch capabilities and setup XMPP transfer module if needed

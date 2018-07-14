@@ -149,19 +149,21 @@ public extension YapDatabaseReadTransaction {
 public extension YapDatabaseReadTransaction {
     
     public func unfinishedDownloads() -> [OTRMediaItem] {
-        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.mediaItems) as? YapDatabaseSecondaryIndexTransaction else {
-            return []
-        }
-        var unfinished: [OTRMediaItem] = []
-        let queryString = "Where \(MediaItemIndexColumnName.transferProgress) < 1 AND \(MediaItemIndexColumnName.isIncoming) == 1"
-        let query = YapDatabaseQuery(string: queryString, parameters: [])
-        secondaryIndexTransaction.enumerateKeysAndObjects(matching: query) { (key, collection, object, stop) in
-            if let download = object as? OTRMediaItem {
-                unfinished.append(download)
-            } else {
-                DDLogError("Non-media item object in downloads index \(object)")
-            }
-        }
-        return unfinished
+        /// https://github.com/ChatSecure/ChatSecure-iOS/issues/1034
+        return []
+//        guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.mediaItems) as? YapDatabaseSecondaryIndexTransaction else {
+//            return []
+//        }
+//        var unfinished: [OTRMediaItem] = []
+//        let queryString = "Where \(MediaItemIndexColumnName.transferProgress) < 1 AND \(MediaItemIndexColumnName.isIncoming) == 1"
+//        let query = YapDatabaseQuery(string: queryString, parameters: [])
+//        secondaryIndexTransaction.enumerateKeysAndObjects(matching: query) { (key, collection, object, stop) in
+//            if let download = object as? OTRMediaItem {
+//                unfinished.append(download)
+//            } else {
+//                DDLogError("Non-media item object in downloads index \(object)")
+//            }
+//        }
+//        return unfinished
     }
 }
