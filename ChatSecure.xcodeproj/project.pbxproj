@@ -151,6 +151,7 @@
 		D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9229D541EA960CF003D0D09 /* OTRAccountMigrationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9229D551EA960CF003D0D09 /* OTRAccountMigrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */; };
+		D926C19B20FBDD9E0053C538 /* Compatibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D926C19A20FBDD9E0053C538 /* Compatibility.swift */; };
 		D927C9771EF0C5AF00B72026 /* UIView+OTRAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = D927C9761EF0C5AF00B72026 /* UIView+OTRAssets.swift */; };
 		D92AC2091DB023D8007BD3E7 /* KeyManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92AC2081DB023D8007BD3E7 /* KeyManagementViewController.swift */; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
@@ -1058,6 +1059,7 @@
 		D9227C2E1BA7952100B5E1D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9229D521EA960CF003D0D09 /* OTRAccountMigrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountMigrationViewController.h; sourceTree = "<group>"; };
 		D9229D531EA960CF003D0D09 /* OTRAccountMigrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountMigrationViewController.m; sourceTree = "<group>"; };
+		D926C19A20FBDD9E0053C538 /* Compatibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compatibility.swift; sourceTree = "<group>"; };
 		D927C9761EF0C5AF00B72026 /* UIView+OTRAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+OTRAssets.swift"; sourceTree = "<group>"; };
 		D92AC2081DB023D8007BD3E7 /* KeyManagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManagementViewController.swift; sourceTree = "<group>"; };
 		D93027561BAA381F000CC975 /* OTRResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTRResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1307,6 +1309,7 @@
 		633105001A16D1A300C17BAE /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D926C19A20FBDD9E0053C538 /* Compatibility.swift */,
 				D9FBDDC81FD74A93006F1C6C /* OTRAppDelegate.swift */,
 				633105E51A16D1A300C17BAE /* OTRAppDelegate.h */,
 				633105E61A16D1A300C17BAE /* OTRAppDelegate.m */,
@@ -3060,6 +3063,7 @@
 				D93DDA941BA79A2400CD8331 /* OTRXMPPBuddyTimers.m in Sources */,
 				D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */,
 				D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */,
+				D926C19B20FBDD9E0053C538 /* Compatibility.swift in Sources */,
 				63363FAE1CCAE29B00B0C720 /* OTRYapExtensions.swift in Sources */,
 				D93DDA971BA79A2400CD8331 /* OTRXMPPTorManager.m in Sources */,
 				D93DDA991BA79A2400CD8331 /* OTRXMPPServerInfo.m in Sources */,
@@ -3523,7 +3527,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4T8JLQR6GR;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -3561,7 +3565,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4T8JLQR6GR;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
