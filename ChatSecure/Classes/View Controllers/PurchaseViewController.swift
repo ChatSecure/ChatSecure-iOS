@@ -168,6 +168,15 @@ public class PurchaseViewController: UIViewController {
 
     }
     
+    @IBAction func privacyButtonPressed(_ sender: Any) {
+        let url = OTRBranding.projectURL.appendingPathComponent("/privacy")
+        prompt(toShow: url, sender: sender)
+    }
+    
+    @IBAction func termsButtonPressed(_ sender: Any) {
+        let url = OTRBranding.projectURL.appendingPathComponent("/terms")
+        prompt(toShow: url, sender: sender)
+    }
 }
 
 extension PurchaseViewController: SKProductsRequestDelegate {

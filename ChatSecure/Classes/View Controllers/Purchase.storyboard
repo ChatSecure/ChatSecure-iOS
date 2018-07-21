@@ -32,11 +32,11 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LOM-g8-hSh">
-                                        <rect key="frame" x="24" y="46" width="240" height="22.5"/>
+                                        <rect key="frame" x="24" y="46" width="240" height="6.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="tzh-dS-ZUa">
-                                        <rect key="frame" x="0.0" y="78.5" width="288" height="76.5"/>
+                                        <rect key="frame" x="0.0" y="62.5" width="288" height="76.5"/>
                                         <string key="text">Help us make developing free and open source privacy tools sustainable. We welcome any contribution to support ongoing development. </string>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <nil key="textColor"/>
@@ -44,7 +44,7 @@
                                         <string key="userLabel">Help us make developing free and open source privacy tools sustainable. We welcome any contribution to support ongoing development.</string>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5z-3N-jCk">
-                                        <rect key="frame" x="20" y="165" width="248.5" height="50.5"/>
+                                        <rect key="frame" x="20" y="149" width="248.5" height="50.5"/>
                                         <string key="text">• Feel good supporting indie software
 • Continued development and updates
 • Help keep the app free for everyone</string>
@@ -53,11 +53,11 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ro-4x-vR6">
-                                        <rect key="frame" x="24" y="225.5" width="240" height="22"/>
+                                        <rect key="frame" x="24" y="209.5" width="240" height="6"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="BZq-ME-rzB">
-                                        <rect key="frame" x="129" y="257.5" width="30" height="106"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="BZq-ME-rzB">
+                                        <rect key="frame" x="129" y="225.5" width="30" height="120"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fmr-wM-gJf">
                                                 <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -67,14 +67,14 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="boG-Bi-Djt">
-                                                <rect key="frame" x="0.0" y="38" width="30" height="30"/>
+                                                <rect key="frame" x="0.0" y="45" width="30" height="30"/>
                                                 <state key="normal" title="🍺"/>
                                                 <connections>
                                                     <action selector="mediumMoneyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="tbX-rd-nIN"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="647-wq-NMP">
-                                                <rect key="frame" x="0.0" y="76" width="30" height="30"/>
+                                                <rect key="frame" x="0.0" y="90" width="30" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" title="🎁"/>
                                                 <connections>
@@ -84,11 +84,11 @@
                                         </subviews>
                                     </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wps-1P-SXH">
-                                        <rect key="frame" x="24" y="373.5" width="240" height="22.5"/>
+                                        <rect key="frame" x="24" y="355.5" width="240" height="6.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cgw-yR-akB">
-                                        <rect key="frame" x="0.0" y="406" width="288" height="30"/>
+                                        <rect key="frame" x="0.0" y="372" width="288" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NHC-BV-VjX">
                                                 <rect key="frame" x="0.0" y="0.0" width="53" height="30"/>
@@ -111,12 +111,33 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YXH-bA-7Xi">
-                                        <rect key="frame" x="0.0" y="446" width="288" height="86"/>
-                                        <mutableString key="text">Payment will be charged to iTunes Account at confirmation of purchase. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal. Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user's Account Settings after purchase. Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.</mutableString>
+                                        <rect key="frame" x="0.0" y="412" width="288" height="86"/>
+                                        <string key="text">Payment will be charged to iTunes Account at confirmation of purchase. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal. Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user's Account Settings after purchase. Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="HqQ-Wd-ThL">
+                                        <rect key="frame" x="96" y="508" width="96" height="24"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9NL-2h-WYG">
+                                                <rect key="frame" x="0.0" y="0.0" width="30" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                <state key="normal" title="Terms"/>
+                                                <connections>
+                                                    <action selector="termsButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="qtP-qH-GLM"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6aV-QD-co0">
+                                                <rect key="frame" x="60" y="0.0" width="36" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                <state key="normal" title="Privacy"/>
+                                                <connections>
+                                                    <action selector="privacyButtonPressed:" destination="gpY-7F-1nv" eventType="touchUpInside" id="gu3-FP-ltr"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="cgw-yR-akB" firstAttribute="leading" secondItem="T1P-9j-rmZ" secondAttribute="leading" id="Cpq-R0-qe1"/>

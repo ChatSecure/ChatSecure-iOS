@@ -29,7 +29,8 @@ screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
   'default' => "v4.3.4:
-* Same code as v4.3.3 except built with Xcode 9.2 instead of Xcode 9.4 to fix regression in Swift runtime (reabstraction thunk helper swift_getObjectType crash).
+* Attempting to fix source of crash regression in Swift 4.1.2 runtime (reabstraction thunk helper swift_getObjectType crash).
+* Other crash fixes
 v4.3.3:
 * Actually fix crash on launch by disabling download resumption
 v4.3.2:
