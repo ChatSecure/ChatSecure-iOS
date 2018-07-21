@@ -23,8 +23,6 @@
 @import Foundation;
 @import OTRKit;
 
-@class OTRPushTLVHandler;
-
 extern NSString * _Nonnull const OTRMessageStateDidChangeNotification;
 extern NSString * _Nonnull const OTRWillStartGeneratingPrivateKeyNotification;
 extern NSString * _Nonnull const OTRDidFinishGeneratingPrivateKeyNotification;
@@ -43,7 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) OTRKit *otrKit;
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
-@property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
 
 /**
  * This method takes a buddy key and collection. If it finds an object in the database and `hasGoneEncryptedBefore` is true

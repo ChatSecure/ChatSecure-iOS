@@ -32,6 +32,7 @@ PODS:
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
+  - HockeySDK-Source (5.1.2)
   - IOCipher/common (0.1.0):
     - CocoaLumberjack
     - libsqlfs/SQLCipher
@@ -41,69 +42,6 @@ PODS:
   - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
   - KissXML (5.2.3)
-  - KSCrash (1.15.18):
-    - KSCrash/Installations (= 1.15.18)
-  - KSCrash/Installations (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting
-  - KSCrash/Recording (1.15.18):
-    - KSCrash/Recording/Tools (= 1.15.18)
-  - KSCrash/Recording/Tools (1.15.18)
-  - KSCrash/Reporting (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters (= 1.15.18)
-    - KSCrash/Reporting/MessageUI (= 1.15.18)
-    - KSCrash/Reporting/Sinks (= 1.15.18)
-    - KSCrash/Reporting/Tools (= 1.15.18)
-  - KSCrash/Reporting/Filters (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Alert (= 1.15.18)
-    - KSCrash/Reporting/Filters/AppleFmt (= 1.15.18)
-    - KSCrash/Reporting/Filters/Base (= 1.15.18)
-    - KSCrash/Reporting/Filters/Basic (= 1.15.18)
-    - KSCrash/Reporting/Filters/GZip (= 1.15.18)
-    - KSCrash/Reporting/Filters/JSON (= 1.15.18)
-    - KSCrash/Reporting/Filters/Sets (= 1.15.18)
-    - KSCrash/Reporting/Filters/Stringify (= 1.15.18)
-    - KSCrash/Reporting/Filters/Tools (= 1.15.18)
-  - KSCrash/Reporting/Filters/Alert (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/AppleFmt (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Base (1.15.18):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Filters/Basic (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/GZip (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/JSON (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Sets (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/AppleFmt
-    - KSCrash/Reporting/Filters/Base
-    - KSCrash/Reporting/Filters/Basic
-    - KSCrash/Reporting/Filters/GZip
-    - KSCrash/Reporting/Filters/JSON
-    - KSCrash/Reporting/Filters/Stringify
-  - KSCrash/Reporting/Filters/Stringify (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters/Base
-  - KSCrash/Reporting/Filters/Tools (1.15.18):
-    - KSCrash/Recording
-  - KSCrash/Reporting/MessageUI (1.15.18):
-    - KSCrash/Recording
-  - KSCrash/Reporting/Sinks (1.15.18):
-    - KSCrash/Recording
-    - KSCrash/Reporting/Filters
-    - KSCrash/Reporting/Tools
-  - KSCrash/Reporting/Tools (1.15.18):
-    - KSCrash/Recording
   - Kvitto (1.0.3):
     - DTFoundation/DTASN1 (~> 1.7.13)
     - Kvitto/Core (= 1.0.3)
@@ -232,10 +170,10 @@ DEPENDENCIES:
   - GCDWebServer (~> 3.4)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
+  - HockeySDK-Source
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - JTSImageViewController (~> 1.4)
-  - KSCrash (~> 1.15.3)
   - Kvitto (~> 1.0)
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
@@ -249,7 +187,7 @@ DEPENDENCIES:
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 3.1.0)
+  - YapDatabase/SQLCipher (from `https://github.com/ChatSecure/YapDatabase.git`, branch `nil-fixes`)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `swift4`)
 
 SPEC REPOS:
@@ -263,9 +201,9 @@ SPEC REPOS:
     - CocoaLumberjack
     - DTFoundation
     - GCDWebServer
+    - HockeySDK-Source
     - JTSImageViewController
     - KissXML
-    - KSCrash
     - Kvitto
     - libidn
     - MWFeedParser
@@ -277,7 +215,6 @@ SPEC REPOS:
     - SignalProtocolC
     - SQLCipher
     - TUSafariActivity
-    - YapDatabase
 
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
@@ -306,6 +243,9 @@ EXTERNAL SOURCES:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
+  YapDatabase:
+    :branch: nil-fixes
+    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
     :branch: swift4
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -317,6 +257,9 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :commit: 43f1d3b
     :git: https://github.com/gmertk/ParkedTextField.git
+  YapDatabase:
+    :commit: 51263d14572eaf80de14e5dc47b3dd517c5357af
+    :git: https://github.com/ChatSecure/YapDatabase.git
   YapTaskQueue:
     :commit: fb0716626af841b573ff752b9bd064d26d3fda96
     :git: https://github.com/ChatSecure/YapTaskQueue.git
@@ -335,11 +278,11 @@ SPEC CHECKSUMS:
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: 05f40d662527bf1f71dc878da1c585ba67547e74
+  HockeySDK-Source: 0e72e55e35cec26eaba207ec212fd1870961798a
   IOCipher: 3b86ccd68b08ee73b3de80c24a10de130269698c
   JSQMessagesViewController: bc44afc60cca8c9e0fb127243d57551013e1f319
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 09f88ff8161fd058d67b70740b8b516687b52823
-  KSCrash: 5394936f41e5c1ef7b79cf79b30d53299b0c160e
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
@@ -360,6 +303,6 @@ SPEC CHECKSUMS:
   YapDatabase: 170882ac5926507a4ea6dddaf704ebdd3f1ec61c
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: 5223ccf7150713e71fb4fb5c08d8950006fcb055
+PODFILE CHECKSUM: 10cf1d59d64df4aeb99712f08151595e50e89f1d
 
 COCOAPODS: 1.5.3

@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 @class OTROutgoingMessage, OTRBuddy, OTRAccount;
-@protocol PushControllerProtocol;
 
 typedef NS_ENUM(int, OTRProtocolType) {
     OTRProtocolTypeNone        = 0,

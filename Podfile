@@ -44,7 +44,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'MWFeedParser', '~> 1.0'
   pod 'Navajo', '~> 0.0'
   pod 'BBlock', '~> 1.2'
-  pod 'KSCrash', '~> 1.15.3'
+  # pod 'KSCrash', '~> 1.15.3'
+  pod 'HockeySDK-Source'
 
   # Network
   pod 'CocoaAsyncSocket', '~> 7.6.0'
@@ -61,7 +62,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
-  pod 'YapDatabase/SQLCipher', '~> 3.1.0'
+  # pod 'YapDatabase/SQLCipher', '~> 3.1.0'
+  pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'nil-fixes'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'

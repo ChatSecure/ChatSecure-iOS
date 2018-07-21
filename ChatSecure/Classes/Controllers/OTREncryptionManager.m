@@ -39,7 +39,6 @@
 #import "OTRMediaServer.h"
 #import "OTRDatabaseManager.h"
 #import "OTRLog.h"
-#import "OTRPushTLVHandler.h"
 #import "OTRXMPPManager.h"
 #import "OTRYapMessageSendAction.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -67,7 +66,6 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         _otrFingerprintCache = [[NSCache alloc] init];
         _otrKit = [[OTRKit alloc] initWithDelegate:self dataPath:nil];
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
-        _pushTLVHandler = [[OTRPushTLVHandler alloc] initWithOTRKit:self.otrKit delegate:nil];
         _readConnection = OTRDatabaseManager.shared.readConnection;
         NSArray *protectPaths = @[self.otrKit.privateKeyPath, self.otrKit.fingerprintsPath, self.otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {

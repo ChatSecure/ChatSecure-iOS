@@ -61,9 +61,12 @@
 @import OTRAssets;
 @import OTRKit;
 #import "OTRPushTLVHandlerProtocols.h"
+#if KSCRASH
 #import <KSCrash/KSCrash.h>
 #import <KSCrash/KSCrashInstallationQuincyHockey.h>
 #import <KSCrash/KSCrashInstallation+Alert.h>
+#endif
+@import HockeySDK_Source;
 @import UserNotifications;
 
 #import "OTRChatDemo.h"
@@ -166,6 +169,11 @@
 }
 
 - (void) setupCrashReporting {
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:[OTRSecrets hockeyLiveIdentifier]];
+    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAlwaysAsk];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    
+#if KSCRASH
     KSCrash *crash = [KSCrash sharedInstance];
     crash.monitoring = KSCrashMonitorTypeProductionSafeMinimal;
     
@@ -199,6 +207,7 @@
             NSLog(@"Sending %d KSCrashInstallationHockey reports.", (int)filteredReports.count);
         }
     }];
+#endif
 }
 
 /**
