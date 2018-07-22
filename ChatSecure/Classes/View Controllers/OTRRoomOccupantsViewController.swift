@@ -81,7 +81,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     var notificationToken:NSObjectProtocol? = nil
     
     /// opens implicit db transaction
-    open var room:OTRXMPPRoom? {
+    private var room: OTRXMPPRoom? {
         return connections?.ui.fetch { self.room($0) }
     }
     
@@ -117,19 +117,17 @@ open class OTRRoomOccupantsViewController: UIViewController {
 
     @objc public func setupViewHandler(databaseConnection:YapDatabaseConnection, roomKey:String) {
         self.roomUniqueId = roomKey
-        guard let _ = self.room else {
+        guard let room = self.room else {
             return
         }
-        self.fetchMembersList()
+        self.fetchMembersList(room: room)
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         if let viewHandler = self.viewHandler {
             viewHandler.delegate = self
             viewHandler.setup(DatabaseExtensionName.groupOccupantsViewName.name(), groups: [GroupName.header.rawValue, roomKey, GroupName.footer.rawValue])
         }
         
-        self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name.YapDatabaseModified, object: OTRDatabaseManager.shared.database, queue: OperationQueue.main) {[weak self] (notification) -> Void in
-            self?.yapDatabaseModified(notification)
-        }
+        
     }
     
     deinit {
@@ -171,11 +169,16 @@ open class OTRRoomOccupantsViewController: UIViewController {
         self.tableView.register(GenericHeaderCell.self, forCellReuseIdentifier: DynamicCellIdentifier.omemoConfig.rawValue)
         self.tableView.register(GenericHeaderCell.self, forCellReuseIdentifier: DynamicCellIdentifier.omemoToggle.rawValue)
         
+        self.tableView.reloadData()
         self.updateUIBasedOnOwnRole()
+        
+        self.notificationToken = NotificationCenter.default.addObserver(forName: NSNotification.Name.YapDatabaseModified, object: OTRDatabaseManager.shared.database, queue: OperationQueue.main) {[weak self] (notification) -> Void in
+            self?.yapDatabaseModified(notification)
+        }
     }
 
     func yapDatabaseModified(_ notification:Notification) {
-        guard let connection = self.connection, let roomUniqueId = self.roomUniqueId else { return }
+        guard let connection = self.connections?.ui, let roomUniqueId = self.roomUniqueId else { return }
         if connection.hasChange(forKey: roomUniqueId, inCollection: OTRXMPPRoom.collection, in: [notification]) {
             // Subject has changed, update cell
             refreshSubjectCell()
@@ -408,18 +411,20 @@ open class OTRRoomOccupantsViewController: UIViewController {
         default: break
         }
     }
-    @objc func didChangeNotificationSwitch(_ sender: UIControl!) {
-        guard let notificationSwitch = sender as? UISwitch,
-        let room = self.room?.copyAsSelf() else {
-            return
-        }
-        if notificationSwitch.isOn {
-            room.muteExpiration = Date.distantFuture
-        } else {
-            room.muteExpiration = nil
-        }
-        connection?.readWrite({ (transaction) in
+    
+    @objc func didChangeNotificationSwitch(_ sender: UISwitch) {
+        let notificationSwitchIsOn = sender.isOn
+        connections?.write.asyncReadWrite({ [weak self] (transaction) in
+            guard let room = self?.room(transaction) else { return }
+            if notificationSwitchIsOn {
+                room.muteExpiration = Date.distantPast
+            } else {
+                room.muteExpiration = Date.distantFuture
+            }
             room.save(with: transaction)
+            }, completionBlock: { [weak self] in
+                guard let room = self?.room else { return }
+                self?.refreshNotificationSwitch(sender, room: room, animated: false)
         })
     }
     
@@ -510,9 +515,8 @@ extension OTRRoomOccupantsViewController {
         return xmpp?.roomManager
     }
     
-    fileprivate func fetchMembersList() {
-        guard let room = self.room,
-            let xmppRoom = xmppRoom(for: room) else {
+    fileprivate func fetchMembersList(room: OTRXMPPRoom) {
+        guard let xmppRoom = xmppRoom(for: room) else {
             return
         }
         ignoreChanges = true
