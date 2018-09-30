@@ -291,7 +291,21 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                     }
                     return
                 }
-                self.sessionManager.upload(outData, to: slot.putURL, method: .put)
+                
+                // Pick optional headers from the slot and filter out any not allowed by
+                // XEP-0363 (https://xmpp.org/extensions/xep-0363.html#request)
+                let allowedHeaders = ["authorization", "cookie", "expires"]
+                var forwardedHeaders:HTTPHeaders = [:]
+                for (headerName, headerValue) in slot.putHeaders {
+                    let name = headerName.replacingOccurrences(of: "\n", with: "").lowercased()
+                    if allowedHeaders.contains(name) {
+                        forwardedHeaders[name] = headerValue.replacingOccurrences(of: "\n", with: "")
+                    }
+                }
+                forwardedHeaders["Content-Type"] = contentType
+                forwardedHeaders["Content-Length"] = "\(UInt(outData.count))"
+                
+                self.sessionManager.upload(outData, to: slot.putURL, method: .put, headers: forwardedHeaders)
                     .validate()
                     .responseData(queue: self.callbackQueue) { response in
                         switch response.result {
