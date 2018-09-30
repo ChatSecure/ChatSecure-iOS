@@ -62,8 +62,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
-  # pod 'YapDatabase/SQLCipher', '~> 3.1.0'
-  pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'nil-fixes'
+  pod 'YapDatabase/SQLCipher', '~> 3.1'
+  # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'nil-fixes'
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
