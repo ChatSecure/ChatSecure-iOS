@@ -17,7 +17,7 @@
 # beta_ipa "./app.ipa"
 
 # The version of your app - remove this if you provide an ipa file
-app_version "4.3.5"
+app_version "4.3.6"
 submit_for_review false
 skip_binary_upload true
 # overwrite_screenshots true
@@ -28,10 +28,10 @@ metadata_path "./Submodules/ChatSecure-Metadata/metadata"
 screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
-  'default' => "v4.3.5:
-* Support for new iPhone screen resolutions
+  'default' => "v4.3.6:
+* WIP
 
-Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.4...v4.3.5
+Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.5...v4.3.6
 ",
 })
 
