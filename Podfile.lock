@@ -181,7 +181,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, branch `swift-4.2`)
+  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
   - ProxyKit/Client (~> 1.2.0)
   - QRCodeReaderViewController (~> 4.0)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
@@ -239,7 +239,7 @@ EXTERNAL SOURCES:
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
-    :branch: swift-4.2
+    :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
@@ -254,7 +254,7 @@ CHECKOUT OPTIONS:
     :commit: 6c448695f1b18140fce6abc30dbf4046b7fa99eb
     :git: https://github.com/ChatSecure/libsqlfs.git
   ParkedTextField:
-    :commit: bb62479ba687f3910f6421b8da1b104e6037c218
+    :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
   YapTaskQueue:
     :commit: fb0716626af841b573ff752b9bd064d26d3fda96
@@ -299,6 +299,6 @@ SPEC CHECKSUMS:
   YapDatabase: b418a4baa6906e8028748938f9159807fd039af4
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: 4ad97a9e69881b52d1991649602dcd60cc85a03b
+PODFILE CHECKSUM: e3e003ccedd3dda782b9fa7a7ea771a5ddf46546
 
 COCOAPODS: 1.6.0.beta.2
