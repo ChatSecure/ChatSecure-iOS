@@ -17,7 +17,7 @@ open class OTRBuddyInfoCheckableCell: OTRBuddyInfoCell {
     static let checkViewSize:CGFloat = 20.0
     var checkView: UIImageView!
     
-    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         checkView = UIImageView(forAutoLayout: ())
         checkView.isHidden = true

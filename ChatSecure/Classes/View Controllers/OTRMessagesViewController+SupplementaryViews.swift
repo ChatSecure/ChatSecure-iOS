@@ -194,7 +194,7 @@ import OTRAssets
             prototype.setNeedsLayout()
             prototype.layoutIfNeeded()
             prototype.frame = CGRect(x: 0, y: 0, width: collectionView.bounds.size.width, height: prototype.frame.size.height)
-            let height = prototype.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height + 1
+            let height = prototype.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + 1
             return OTRMessagesCollectionSupplementaryViewInfo(kind: kind, height: height, tag: tag, tagBehavior: tagBehavior)
         }
         return nil

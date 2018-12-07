@@ -29,7 +29,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ARChromeActivity', '~> 1.0'
   pod 'QRCodeReaderViewController', '~> 4.0'
   # pod 'ParkedTextField', '~> 0.3.1'
-  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => '43f1d3b' # Swift 4
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => 'a3800e3' # Swift 4.2
 
 
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
@@ -62,9 +62,10 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
+  pod 'SQLCipher', '~> 4.0'
   pod 'YapDatabase/SQLCipher', '~> 3.1'
   # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'nil-fixes'
-  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'podspec-fix'
+  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'sqlcipher-4.0'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
 

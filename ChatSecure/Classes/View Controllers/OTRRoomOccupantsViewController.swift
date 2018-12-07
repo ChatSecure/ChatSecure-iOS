@@ -317,14 +317,14 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 cell.isUserInteractionEnabled = false
             } else {
                 let font:UIFont? = UIFont(name: "Material Icons", size: 24)
-                let button = UIButton(type: UIButtonType.custom)
+                let button = UIButton(type: .custom)
                 if font != nil {
                     button.titleLabel?.font = font
-                    button.setTitle("", for: UIControlState())
+                    button.setTitle("", for: .normal)
                 }
-                button.setTitleColor(UIColor.black, for: UIControlState())
+                button.setTitleColor(UIColor.black, for: .normal)
                 button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: UIControlEvents.touchUpInside)
+                button.addTarget(self, action: #selector(self.didPressEditGroupSubject(_:withEvent:)), for: .touchUpInside)
                 button.titleLabel?.alpha = isOnline ? 1 :disabledCellAlphaValue
                 cell.accessoryView = button
                 cell.isUserInteractionEnabled = isOnline
@@ -446,8 +446,8 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
     
     @objc func didPressEditGroupSubject(_ sender: UIControl!, withEvent: UIEvent!) {
-        let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in
+        let alert = UIAlertController(title: NSLocalizedString("Change room subject", comment: "Title for change room subject"), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: UIAlertAction.Style.default, handler: {(action: UIAlertAction!) in
             if let newSubject = alert.textFields?.first?.text {
                 self.room?.subject = newSubject
                 self.refreshSubjectCell()
@@ -456,7 +456,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
                 }
             }
         }))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: UIAlertActionStyle.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: UIAlertAction.Style.cancel, handler: nil))
         alert.addTextField(configurationHandler: {(textField: UITextField!) in
             textField.placeholder = self.room?.subject
             textField.isSecureTextEntry = false

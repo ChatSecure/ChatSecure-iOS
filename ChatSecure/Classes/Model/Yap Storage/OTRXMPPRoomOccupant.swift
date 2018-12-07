@@ -91,7 +91,7 @@ extension RoomOccupantRole {
 
 open class OTRXMPPRoomOccupant: OTRYapDatabaseObject {
     
-    @objc open static let roomEdgeName = "OTRRoomOccupantEdgeName"
+    @objc public static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
     /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
     @objc private var _jid: String?

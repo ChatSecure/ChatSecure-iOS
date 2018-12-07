@@ -70,7 +70,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         let height = collectionView.contentSize.height
         collectionViewHeightConstraint.constant = height
         if let header = tableView.tableHeaderView {
-            let size = header.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+            let size = header.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
             var frame = header.frame
             frame.size.height = size.height
             header.frame = frame
@@ -137,7 +137,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             prototype.bind(buddy: buddy)
             prototype.setNeedsLayout()
             prototype.layoutIfNeeded()
-            let size = prototype.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+            let size = prototype.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
             return size
         }
         return CGSize.zero
@@ -264,7 +264,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         }
     }
     
-    override open func willMove(toParentViewController parent: UIViewController?)
+    override open func willMove(toParent parent: UIViewController?)
     {
         if parent == nil, let delegate = self.delegate {
             delegate.groupSelectionCancelled(self)

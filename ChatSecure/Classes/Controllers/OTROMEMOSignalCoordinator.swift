@@ -19,16 +19,16 @@ import SignalProtocolObjC
 
     @objc public static let DeviceListUpdateNotificationName = Notification.Name(rawValue: "DeviceListUpdateNotification")
     
-    open let signalEncryptionManager:OTRAccountSignalEncryptionManager
-    open let omemoStorageManager:OTROMEMOStorageManager
-    @objc open let accountYapKey:String
-    @objc open let databaseConnection:YapDatabaseConnection
+    public let signalEncryptionManager:OTRAccountSignalEncryptionManager
+    public let omemoStorageManager:OTROMEMOStorageManager
+    @objc public let accountYapKey:String
+    @objc public let databaseConnection:YapDatabaseConnection
     @objc open weak var omemoModule:OMEMOModule?
     @objc open weak var omemoModuleQueue:DispatchQueue?
     @objc open var callbackQueue:DispatchQueue
-    @objc open let workQueue:DispatchQueue
-    @objc open let messageStorage: MessageStorage
-    @objc open let roomManager: OTRXMPPRoomManager
+    @objc public let workQueue:DispatchQueue
+    @objc public let messageStorage: MessageStorage
+    @objc public let roomManager: OTRXMPPRoomManager
     
     private var roomStorage: RoomStorage {
         return roomManager.roomStorage

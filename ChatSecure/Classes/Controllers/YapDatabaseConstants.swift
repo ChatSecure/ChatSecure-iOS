@@ -64,8 +64,8 @@ import Foundation
 }
 
 @objc open class DatabaseNotificationKey:NSObject {
-    @objc open static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
-    @objc open static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
+    @objc public static let ExtensionName = "DatabaseNotificationKey.ExtensionName"
+    @objc public static let ConnectionChanges = "DatabaseNotificationKey.ConnectionChanges"
 }
 
 @objc public enum BuddyFTSColumnName:Int {

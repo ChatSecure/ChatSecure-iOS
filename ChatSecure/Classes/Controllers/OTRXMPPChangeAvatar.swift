@@ -12,7 +12,7 @@ import XMPPFramework
 @objc open class OTRXMPPChangeAvatar: NSObject {
     
     open weak var xmppvCardTempModule:XMPPvCardTempModule?
-    open let photoData:Data
+    public let photoData:Data
     fileprivate let workQueue = DispatchQueue(label: "OTRXMPPChangeAvatar-workQueue", attributes: [])
     
     fileprivate var waitingForVCardFetch:Bool = false

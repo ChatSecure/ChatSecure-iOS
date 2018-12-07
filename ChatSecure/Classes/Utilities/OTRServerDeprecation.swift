@@ -24,11 +24,11 @@ open class OTRServerDeprecation: NSObject {
         dukgo.domain:dukgo,
     ]
     
-    @objc open static func isDeprecated(server: String) -> Bool {
+    @objc public static func isDeprecated(server: String) -> Bool {
         return deprecationInfo(withServer: server) != nil
     }
     
-    @objc open static func deprecationInfo(withServer server:String) -> OTRServerDeprecation? {
+    @objc public static func deprecationInfo(withServer server:String) -> OTRServerDeprecation? {
         return allDeprecatedServers[server.lowercased()];
     }
 }

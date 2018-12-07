@@ -51,8 +51,8 @@ PODS:
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
-    - SQLCipher (~> 3.4.0)
-  - LumberjackConsole (3.3.0):
+    - SQLCipher (>= 3.4.0)
+  - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
   - MWFeedParser (1.0.1):
@@ -68,7 +68,7 @@ PODS:
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
   - OTRKit (2.0.0)
-  - ParkedTextField (0.4.0)
+  - ParkedTextField (0.5.0)
   - ProxyKit/Client (1.2.0):
     - ProxyKit/common
   - ProxyKit/common (1.2.0):
@@ -78,10 +78,10 @@ PODS:
   - SignalProtocolC (2.3.2)
   - SignalProtocolObjC (1.1.0):
     - SignalProtocolC (~> 2.3.2)
-  - SQLCipher (3.4.2):
-    - SQLCipher/standard (= 3.4.2)
-  - SQLCipher/common (3.4.2)
-  - SQLCipher/standard (3.4.2):
+  - SQLCipher (4.0.0):
+    - SQLCipher/standard (= 4.0.0)
+  - SQLCipher/common (4.0.0)
+  - SQLCipher/standard (4.0.0):
     - SQLCipher/common
   - TUSafariActivity (1.0.4)
   - XMPPFramework/default (4.0.0):
@@ -175,16 +175,17 @@ DEPENDENCIES:
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - JTSImageViewController (~> 1.4)
   - Kvitto (~> 1.0)
-  - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `podspec-fix`)
+  - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `sqlcipher-4.0`)
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `43f1d3b`)
+  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, branch `swift-4.2`)
   - ProxyKit/Client (~> 1.2.0)
   - QRCodeReaderViewController (~> 4.0)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
+  - SQLCipher (~> 4.0)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (~> 3.1)
@@ -231,14 +232,14 @@ EXTERNAL SOURCES:
   JSQMessagesViewController:
     :path: Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec
   libsqlfs:
-    :branch: podspec-fix
+    :branch: sqlcipher-4.0
     :git: https://github.com/ChatSecure/libsqlfs.git
   LumberjackConsole:
     :path: Submodules/LumberjackConsole/LumberjackConsole.podspec
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
-    :commit: 43f1d3b
+    :branch: swift-4.2
     :git: https://github.com/gmertk/ParkedTextField.git
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
@@ -250,10 +251,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   libsqlfs:
-    :commit: 317d21a1e43e28396a62a462a8213a5f33678c2c
+    :commit: 6c448695f1b18140fce6abc30dbf4046b7fa99eb
     :git: https://github.com/ChatSecure/libsqlfs.git
   ParkedTextField:
-    :commit: 43f1d3b
+    :commit: bb62479ba687f3910f6421b8da1b104e6037c218
     :git: https://github.com/gmertk/ParkedTextField.git
   YapTaskQueue:
     :commit: fb0716626af841b573ff752b9bd064d26d3fda96
@@ -265,39 +266,39 @@ SPEC CHECKSUMS:
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: 7e4452fd4ba0a68002c099d637a2e08230482d31
+  ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
-  CPAProxy: 99fdb9becacc7f48fbd80ca42fba77376fd6488f
+  CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: 05f40d662527bf1f71dc878da1c585ba67547e74
   HockeySDK-Source: ebf3378833f457fa08aa452352b105dc21bfebcb
-  IOCipher: 3b86ccd68b08ee73b3de80c24a10de130269698c
-  JSQMessagesViewController: bc44afc60cca8c9e0fb127243d57551013e1f319
+  IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
+  JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 09f88ff8161fd058d67b70740b8b516687b52823
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
-  libsqlfs: 053504a0181dd89441857c02eea05c1f972abeed
-  LumberjackConsole: 8ab064c6cf434e4a749de1e8e0ab53824bb53407
+  libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
+  LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: 09654319755f20648e2a3a6f71a85c7974da5147
-  ParkedTextField: bdefebdaec306fddefbceead1a7081500169606f
+  OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
+  ParkedTextField: 865c835f54b39c611b580e0fe60199538cbc2f67
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
-  SignalProtocolObjC: 081edb39a3e7f451e4433e298cfcf59fe4d3cdfc
-  SQLCipher: f9fcf29b2e59ced7defc2a2bdd0ebe79b40d4990
+  SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
+  SQLCipher: 37c820e1ada7f2c2782ec6bfb6be9a9660209ff5
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  XMPPFramework: 42441b450fa312d8f6d8386ca1d371b31a881d1b
+  XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
   YapDatabase: b418a4baa6906e8028748938f9159807fd039af4
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: ec72f25d8bd9341e02bc3c04c158d348bf4675d8
+PODFILE CHECKSUM: 4ad97a9e69881b52d1991649602dcd60cc85a03b
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.2

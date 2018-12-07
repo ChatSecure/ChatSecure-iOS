@@ -82,7 +82,7 @@ open class BuddyAction: OTRYapDatabaseObject, YapActionable {
         return buddyKey
     }
 
-    override open static var collection: String {
+    override open class var collection: String {
         return OTRYapMessageSendAction.collection
     }
     
