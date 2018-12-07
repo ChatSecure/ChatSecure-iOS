@@ -677,7 +677,12 @@ extension FileTransferManager {
             // Remove placeholder media item
             mediaItem = OTRMediaItem(forMessage: downloadMessage, transaction: transaction)
             mediaItem?.remove(with: transaction)
-            mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
+            // If the file is encrypted, the server might not know its type
+            if url.aesGcmKey != nil && contentType == "application/octet-stream" {
+                mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: nil)
+            } else {
+                mediaItem = OTRMediaItem.incomingItem(withFilename: url.lastPathComponent, mimeType: contentType)
+            }
             mediaItem?.parentObjectKey = downloadMessage.uniqueId
             mediaItem?.parentObjectCollection = downloadMessage.messageCollection
             mediaItem?.save(with: transaction)
