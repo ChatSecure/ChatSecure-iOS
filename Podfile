@@ -40,11 +40,9 @@ abstract_target 'ChatSecureCorePods' do
 
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.4.0'
-  # pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :commit => 'acc32864538c5d75b41a4bfa364b1431cf89954d' # Fixes compile error on Xcode 9
   pod 'MWFeedParser', '~> 1.0'
   pod 'Navajo', '~> 0.0'
   pod 'BBlock', '~> 1.2'
-  # pod 'KSCrash', '~> 1.15.3'
   pod 'HockeySDK-Source'
   pod 'LicensePlist'
 
@@ -52,7 +50,6 @@ abstract_target 'ChatSecureCorePods' do
   pod 'CocoaAsyncSocket', '~> 7.6.0'
   pod 'ProxyKit/Client', '~> 1.2.0'
   pod 'GCDWebServer', '~> 3.4'
-  # pod 'GCDWebServer/CocoaLumberjack', :git => 'https://github.com/ChatSecure/GCDWebServer.git', :branch => 'kdbertel-CocoaLumberjack3'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
@@ -63,10 +60,9 @@ abstract_target 'ChatSecureCorePods' do
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
-  pod 'SQLCipher', '~> 4.0'
+  pod 'SQLCipher', '~> 3.4'
   pod 'YapDatabase/SQLCipher', '~> 3.1'
-  # pod 'YapDatabase/SQLCipher', :git => 'https://github.com/ChatSecure/YapDatabase.git', :branch => 'nil-fixes'
-  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => 'sqlcipher-4.0'
+  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/guardianproject/libsqlfs.git', :tag => 'v1.3.2'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
 

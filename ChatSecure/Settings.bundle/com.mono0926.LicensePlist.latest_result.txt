@@ -1,14 +1,14 @@
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.3
+version: 4.8.0
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.3
+version: 4.8.0
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.3
+version: 4.8.0
 
 name: Appirater, nameSpecified: 
 body: Copyright 2017. Aras…
@@ -423,15 +423,15 @@ version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.0.0
+version: 3.4.2
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.0.0
+version: 3.4.2
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.0.0
+version: 3.4.2
 
 name: TUSafariActivity, nameSpecified: 
 body: Copyright (c) 2012 T…

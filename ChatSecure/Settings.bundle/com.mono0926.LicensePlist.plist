@@ -16,7 +16,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.7.3)</string>
+			<string>Alamofire (4.8.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -368,7 +368,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/SQLCipher</string>
 			<key>Title</key>
-			<string>SQLCipher (4.0.0)</string>
+			<string>SQLCipher (3.4.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
