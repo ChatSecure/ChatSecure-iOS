@@ -46,6 +46,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'BBlock', '~> 1.2'
   # pod 'KSCrash', '~> 1.15.3'
   pod 'HockeySDK-Source'
+  pod 'LicensePlist'
 
   # Network
   pod 'CocoaAsyncSocket', '~> 7.6.0'

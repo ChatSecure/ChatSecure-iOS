@@ -1,14 +1,14 @@
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.2
+version: 4.7.3
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.2
+version: 4.7.3
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 4.7.2
+version: 4.7.3
 
 name: Appirater, nameSpecified: 
 body: Copyright 2017. Aras…
@@ -163,6 +163,24 @@ body:
                    …
 version: 1.1
 
+name: HockeySDK-Source, nameSpecified: 
+body: ## Licenses
+
+The Hoc…
+version: 5.1.4
+
+name: HockeySDK-Source, nameSpecified: 
+body: ## Licenses
+
+The Hoc…
+version: 5.1.4
+
+name: HockeySDK-Source, nameSpecified: 
+body: ## Licenses
+
+The Hoc…
+version: 5.1.4
+
 name: IOCipher, nameSpecified: 
 body: 		  GNU LESSER GENER…
 version: 0.1.0
@@ -217,18 +235,6 @@ name: KissXML, nameSpecified:
 body: Copyright (c) 2012, …
 version: 5.2.3
 
-name: KSCrash, nameSpecified: 
-body: Copyright (c) 2012 K…
-version: 1.15.18
-
-name: KSCrash, nameSpecified: 
-body: Copyright (c) 2012 K…
-version: 1.15.18
-
-name: KSCrash, nameSpecified: 
-body: Copyright (c) 2012 K…
-version: 1.15.18
-
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
 version: 1.0.3
@@ -271,20 +277,38 @@ name: libsqlfs, nameSpecified:
 body: 		  GNU LESSER GENER…
 version: 1.3.2
 
-name: LumberjackConsole, nameSpecified: 
-body: Apache License
-     …
-version: 3.3.0
+name: LicensePlist, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 2.0.0
+
+name: LicensePlist, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 2.0.0
+
+name: LicensePlist, nameSpecified: 
+body: MIT License
+
+Copyrig…
+version: 2.0.0
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
      …
-version: 3.3.0
+version: 3.3.1
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
      …
-version: 3.3.0
+version: 3.3.1
+
+name: LumberjackConsole, nameSpecified: 
+body: Apache License
+     …
+version: 3.3.1
 
 name: MWFeedParser, nameSpecified: 
 body: Copyright (c) 2010 M…
@@ -339,15 +363,15 @@ version: 2.0.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.4.0
+version: 0.5.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.4.0
+version: 0.5.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.4.0
+version: 0.5.0
 
 name: ProxyKit, nameSpecified: 
 body: The MIT License (MIT…
@@ -399,15 +423,15 @@ version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 3.4.2
+version: 4.0.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 3.4.2
+version: 4.0.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 3.4.2
+version: 4.0.0
 
 name: TUSafariActivity, nameSpecified: 
 body: Copyright (c) 2012 T…
@@ -435,15 +459,15 @@ version: 4.0.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1
+version: 3.1.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1
+version: 3.1.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1
+version: 3.1.1
 
 name: YapTaskQueue, nameSpecified: 
 body: This is free and une…
@@ -461,15 +485,15 @@ name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.1
 
 name: FormatterKit, nameSpecified: , owner: mattt, version: 1.8.2
 
-name: HTMLReader, nameSpecified: , owner: nolanw, version: v2.1.2
+name: HTMLReader, nameSpecified: , owner: nolanw, version: v2.1.3
 
 name: KVOController, nameSpecified: , owner: facebook, version: v1.2.0
 
-name: Mantle, nameSpecified: , owner: Mantle, version: db043e3
+name: Mantle, nameSpecified: , owner: Mantle, version: 0987467
 
 name: MBProgressHUD, nameSpecified: , owner: jdg, version: 1.1.0
 
-name: PureLayout, nameSpecified: , owner: PureLayout, version: v3.0.2
+name: PureLayout, nameSpecified: , owner: PureLayout, version: v3.1.4
 
 name: SAMKeychain, nameSpecified: , owner: soffes, version: v1.5.3
 
@@ -477,7 +501,7 @@ name: TTTAttributedLabel, nameSpecified: , owner: TTTAttributedLabel, version: 2
 
 name: XLForm, nameSpecified: , owner: xmartlabs, version: 4.0.0
 
-name: ZXingObjC, nameSpecified: , owner: TheLevelUp, version: 3.2.2
+name: ZXingObjC, nameSpecified: , owner: TheLevelUp, version: 3.6.3
 
 name: libevent, nameSpecified: , version: 2.0.22
 body: Libevent is availabl…
