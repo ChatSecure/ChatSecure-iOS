@@ -16,7 +16,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.7.2)</string>
+			<string>Alamofire (4.8.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -126,9 +126,17 @@
 		</dict>
 		<dict>
 			<key>File</key>
+			<string>com.mono0926.LicensePlist/HockeySDK-Source</string>
+			<key>Title</key>
+			<string>HockeySDK-Source (5.1.4)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
 			<string>com.mono0926.LicensePlist/HTMLReader</string>
 			<key>Title</key>
-			<string>HTMLReader (v2.1.2)</string>
+			<string>HTMLReader (v2.1.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -161,14 +169,6 @@
 			<string>com.mono0926.LicensePlist/KissXML</string>
 			<key>Title</key>
 			<string>KissXML (5.2.3)</string>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-		</dict>
-		<dict>
-			<key>File</key>
-			<string>com.mono0926.LicensePlist/KSCrash</string>
-			<key>Title</key>
-			<string>KSCrash (1.15.18)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -238,9 +238,17 @@
 		</dict>
 		<dict>
 			<key>File</key>
+			<string>com.mono0926.LicensePlist/LicensePlist</string>
+			<key>Title</key>
+			<string>LicensePlist (2.0.0)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
 			<string>com.mono0926.LicensePlist/LumberjackConsole</string>
 			<key>Title</key>
-			<string>LumberjackConsole (3.3.0)</string>
+			<string>LumberjackConsole (3.3.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -248,7 +256,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Mantle</string>
 			<key>Title</key>
-			<string>Mantle (db043e3)</string>
+			<string>Mantle (0987467)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -304,7 +312,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/ParkedTextField</string>
 			<key>Title</key>
-			<string>ParkedTextField (0.4.0)</string>
+			<string>ParkedTextField (0.5.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -320,7 +328,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/PureLayout</string>
 			<key>Title</key>
-			<string>PureLayout (v3.0.2)</string>
+			<string>PureLayout (v3.1.4)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -408,7 +416,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/YapDatabase</string>
 			<key>Title</key>
-			<string>YapDatabase (3.1)</string>
+			<string>YapDatabase (3.1.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -424,7 +432,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/ZXingObjC</string>
 			<key>Title</key>
-			<string>ZXingObjC (3.2.2)</string>
+			<string>ZXingObjC (3.6.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

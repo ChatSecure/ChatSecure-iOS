@@ -27,7 +27,7 @@ import CocoaLumberjack
 
 open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     
-    @objc open static let roomEdgeName = "OTRRoomMesageEdgeName"
+    @objc public static let roomEdgeName = "OTRRoomMesageEdgeName"
     
     @objc open var roomJID:String?
     /** This is the full JID of the sender within the room. This should be equal to the occupant.jid*/

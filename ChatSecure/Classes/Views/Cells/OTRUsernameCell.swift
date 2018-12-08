@@ -45,7 +45,7 @@ open class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     override open func configure() {
         super.configure()
-        self.selectionStyle = UITableViewCellSelectionStyle.none
+        self.selectionStyle = UITableViewCell.SelectionStyle.none
     }
     
     
@@ -78,7 +78,7 @@ open class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     // MARK: XLFormDescriptorCell
     
-    override open static func formDescriptorCellHeight(for rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
+    override open class func formDescriptorCellHeight(for rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
         return 43
     }
     

@@ -583,7 +583,7 @@ open class PushController: NSObject, PushControllerProtocol {
     
     //MARK: Push Preferences
     
-    @objc open static func getPushPreference() -> PushPreference {
+    @objc public static func getPushPreference() -> PushPreference {
         guard let value = UserDefaults.standard.object(forKey: kOTRPushEnabledKey) as? NSNumber else {
             return .undefined
         }
@@ -594,7 +594,7 @@ open class PushController: NSObject, PushControllerProtocol {
         }
     }
     
-    open static func setPushPreference(_ preference: PushPreference) {
+    public static func setPushPreference(_ preference: PushPreference) {
         var bool = false
         if preference == .enabled {
             bool = true
@@ -640,7 +640,7 @@ open class PushController: NSObject, PushControllerProtocol {
         }
     }
     
-    @objc open static func registerForPushNotifications() {
+    @objc public static func registerForPushNotifications() {
         if #available(iOS 10.0, *) {
             let center = UNUserNotificationCenter.current()
             center.requestAuthorization(options: [.badge, .alert, .sound], completionHandler: { (granted, error) in
@@ -659,7 +659,7 @@ open class PushController: NSObject, PushControllerProtocol {
         }
     }
     
-    @objc open static func canReceivePushNotifications() -> Bool {
+    @objc public static func canReceivePushNotifications() -> Bool {
         var isEnabled = false
         if let settings = UIApplication.shared.currentUserNotificationSettings {
             isEnabled = settings.types != UIUserNotificationType()

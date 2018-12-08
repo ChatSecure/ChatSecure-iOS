@@ -173,7 +173,7 @@ import JSQMessagesViewController
                 attribute.frame = attribute.frame.offsetBy(dx: 0, dy: offset)
                 
                 // If this is a cell attribute, check if we should add supplementary views below it
-                if (attribute.representedElementCategory == UICollectionElementCategory.cell) {
+                if (attribute.representedElementCategory == UICollectionView.ElementCategory.cell) {
                     let cacheIndex = cacheIndexFor(item: attribute.indexPath.item, section: attribute.indexPath.section)
                     if let views = self.supplementaryViews[cacheIndex] {
                         var viewOffset:CGFloat = 0

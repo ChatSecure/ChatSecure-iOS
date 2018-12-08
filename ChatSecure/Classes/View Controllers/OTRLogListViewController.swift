@@ -104,7 +104,7 @@ private class LogInfoCell: UITableViewCell {
     
     static let reuseIdentifier = "LogInfoCell"
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         detailTextLabel?.numberOfLines = 0
     }
@@ -183,7 +183,7 @@ public class OTRLogListViewController: UIViewController {
             return
         }
         files = logManager.allLogFiles
-        var animation = UITableViewRowAnimation.automatic
+        var animation = UITableView.RowAnimation.automatic
         if animated == false {
             animation = .none
         }

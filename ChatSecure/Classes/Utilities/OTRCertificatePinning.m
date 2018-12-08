@@ -316,7 +316,10 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     if (!trusted) {
         //Delegate firing off for user to verify with status
         SecTrustResultType result;
+        SecPolicyRef policy = SecPolicyCreateSSL(true, (__bridge CFStringRef)hostName);
+        SecTrustSetPolicies(trust, policy);
         OSStatus status =  SecTrustEvaluate(trust, &result);
+        CFRelease(policy);
         if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
             [self.delegate newTrust:trust withHostName:hostName systemTrustResult:result];
         }

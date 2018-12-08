@@ -22,11 +22,11 @@ open class ShareControllerURLSource: NSObject, UIActivityItemSource {
         return self.url!
     }
     
-    public func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType?) -> Any? {
+    public func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         return self.url
     }
     
-    open func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
+    open func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
         var name = SOMEONE_STRING()
         if let displayName = account?.username {
             name = displayName
@@ -38,7 +38,7 @@ open class ShareControllerURLSource: NSObject, UIActivityItemSource {
 }
 
 open class ShareController: NSObject {
-    @objc open static func shareAccount(_ account: OTRAccount, sender: Any, viewController: UIViewController) {
+    @objc public static func shareAccount(_ account: OTRAccount, sender: Any, viewController: UIViewController) {
         let fingerprintTypes = Set([NSNumber(value: OTRFingerprintType.OTR.rawValue as Int32)])
         
         account.generateShareURL(withFingerprintTypes: fingerprintTypes, completion: { (url: URL?, error: Error?) -> Void in
@@ -48,7 +48,7 @@ open class ShareController: NSObject {
             
             let qrCodeActivity = OTRQRCodeActivity()
             let activityViewController = UIActivityViewController(activityItems: [self.getShareSource(account, url: url)], applicationActivities: [qrCodeActivity])
-            activityViewController.excludedActivityTypes = [UIActivityType.print, UIActivityType.saveToCameraRoll, UIActivityType.addToReadingList]
+            activityViewController.excludedActivityTypes = [UIActivity.ActivityType.print, UIActivity.ActivityType.saveToCameraRoll, UIActivity.ActivityType.addToReadingList]
             if let ppc = activityViewController.popoverPresentationController {
                 if let view = sender as? UIView {
                     ppc.sourceView = view
@@ -61,7 +61,7 @@ open class ShareController: NSObject {
         
     }
     
-    @objc open static func getShareSource(_ account: OTRAccount, url: URL) -> AnyObject {
+    @objc public static func getShareSource(_ account: OTRAccount, url: URL) -> AnyObject {
         return ShareControllerURLSource(account: account, url: url)
     }
 }

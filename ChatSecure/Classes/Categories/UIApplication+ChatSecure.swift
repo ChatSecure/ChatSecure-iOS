@@ -185,7 +185,7 @@ public extension UIApplication {
                 let localNotification = UNMutableNotificationContent()
                 localNotification.body = body
                 localNotification.badge = NSNumber(integerLiteral: badge)
-                localNotification.sound = UNNotificationSound.default()
+                localNotification.sound = UNNotificationSound.default
                 if let threadKey = userInfo?[kOTRNotificationThreadKey] as? String {
                     localNotification.threadIdentifier = threadKey
                 }

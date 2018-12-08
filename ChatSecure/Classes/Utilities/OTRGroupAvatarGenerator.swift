@@ -20,7 +20,7 @@ open class OTRGroupAvatarGenerator {
         colorWithHexString(hexColorString: "#ff8376ff").cgColor
     ]
     
-    open static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
+    public static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
         
         // Create a pseudo-random random number generator and seed it with the identifier
         // hash. This will ensure that we get the same image every time we call it with
@@ -69,7 +69,7 @@ open class OTRGroupAvatarGenerator {
         return newImage
     }
     
-    open static func avatarTopColor(withSeed seed: String) -> CGColor {
+    public static func avatarTopColor(withSeed seed: String) -> CGColor {
         let generator = LinearCongruentialGenerator(seed: seed.javaHash())
         return arrayOfColors[Int(generator.random(at: 5) * Double(arrayOfColors.count))]
     }

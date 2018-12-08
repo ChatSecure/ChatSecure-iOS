@@ -297,7 +297,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     }
     
     open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height = UITableViewAutomaticDimension
+        var height = UITableView.automaticDimension
         guard let section = TableSections(rawValue: indexPath.section) else {
             return height
         }

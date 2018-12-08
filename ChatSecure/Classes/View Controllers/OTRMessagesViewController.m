@@ -1627,7 +1627,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (!self.loadingMessages) {
+    // Filter out events from JSQMessagesComposerTextView because otherwise
+    // the screen goes blank sometimes, possibly resolving #950
+    if (!self.loadingMessages &&
+        ![scrollView isKindOfClass:JSQMessagesComposerTextView.class]) {
         UIEdgeInsets insets = scrollView.contentInset;
         CGFloat highestOffset = -insets.top;
         CGFloat lowestOffset = scrollView.contentSize.height - scrollView.frame.size.height + insets.bottom;

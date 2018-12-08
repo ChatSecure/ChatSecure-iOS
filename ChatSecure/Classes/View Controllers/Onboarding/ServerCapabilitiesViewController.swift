@@ -51,7 +51,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
     @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
         tableView.reloadData()
         if !PushController.canReceivePushNotifications() {
-            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.openURL(appSettings)
             }
         }
@@ -101,7 +101,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // This will allow us to refresh the permission prompts after use changes them in background
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshAllData), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: NSNotification.Name(rawValue: OTRUserNotificationsChanged), object: nil)
         // Add capabilities listener
         NotificationCenter.default.addObserver(self, selector: #selector(serverCheckUpdate(_:)), name: ServerCheck.UpdateNotificationName, object: check)
@@ -187,7 +187,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         }
         fetchCell.button.setTitle(FIX_BACKGROUND_FETCH_STRING(), for: .normal)
         fetchCell.buttonAction = { (cell, sender) in
-            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.openURL(appSettings)
             }
         }

@@ -57,7 +57,7 @@ import PureLayout
         var subview = view
         var subviewHeight = height
         if subviewHeight == 0 {
-            subviewHeight = subview.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+            subviewHeight = subview.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         }
         if !(subview is UITableViewCell) {
             let cell = UITableViewCell()

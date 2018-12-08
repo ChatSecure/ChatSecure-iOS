@@ -56,7 +56,7 @@ extension UIImage {
                 numTries = numTries + 1
                 newSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
                 let scaledImage = UIImage.otr_image(with: image, scaledTo: newSize)
-                scaledImageData = UIImageJPEGRepresentation(scaledImage, jpegQuality)
+                scaledImageData = scaledImage.jpegData(compressionQuality: jpegQuality)
                 if let imageData = scaledImageData {
                     sizeInBytes = UInt(imageData.count)
                     scaleFactor = scaleFactor * scaleDecrement

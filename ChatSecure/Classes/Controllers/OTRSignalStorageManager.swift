@@ -110,8 +110,8 @@ public protocol OTRSignalStorageManagerDelegate: class {
  * This class implements the SignalStore protocol. One OTRSignalStorageManager should be created per account key/collection.
  */
 open class OTRSignalStorageManager: NSObject {
-    open let accountKey:String
-    open let databaseConnection:YapDatabaseConnection
+    public let accountKey:String
+    public let databaseConnection:YapDatabaseConnection
     open weak var delegate:OTRSignalStorageManagerDelegate?
     
     /**

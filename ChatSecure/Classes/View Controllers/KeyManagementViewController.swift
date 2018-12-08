@@ -154,7 +154,7 @@ open class KeyManagementViewController: XLFormViewController {
         return false
     }
     
-    open static func cryptoChooserRows(_ buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
+    public static func cryptoChooserRows(_ buddy: OTRBuddy, connection: YapDatabaseConnection) -> [XLFormRowDescriptor] {
         
         let bestAvailableRow = XLFormRowDescriptor(tag: RowTags.DefaultRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Best_Available())
         let plaintextOnlyRow = XLFormRowDescriptor(tag: RowTags.PlaintextRowTag, rowType: XLFormRowDescriptorTypeBooleanCheck, title: Plaintext_Only())
@@ -277,14 +277,14 @@ open class KeyManagementViewController: XLFormViewController {
         return false
     }
     
-    open override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    open override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         if  self.isAbleToDeleteCellAtIndexPath(indexPath) {
             return .delete
         }
         return .none
     }
     
-    open override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    open override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete,
            self.isAbleToDeleteCellAtIndexPath(indexPath)  {
             guard let rowDescriptor = self.form.formRow(atIndex: indexPath) else {
@@ -310,7 +310,7 @@ open class KeyManagementViewController: XLFormViewController {
 
     /// MARK: Static Methods
     
-    @objc open static func profileFormDescriptorForAccount(_ account: OTRXMPPAccount?, buddies: [OTRXMPPBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
+    @objc public static func profileFormDescriptorForAccount(_ account: OTRXMPPAccount?, buddies: [OTRXMPPBuddy], connection: YapDatabaseConnection) -> XLFormDescriptor {
         let otrKit = OTRProtocolManager.encryptionManager.otrKit
         let form = XLFormDescriptor(title: Profile_String())
         

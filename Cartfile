@@ -1,4 +1,4 @@
-github "Mantle/Mantle" "db043e3"
+github "Mantle/Mantle" "master"
 github "nolanw/HTMLReader" ~> 2.1.1
 github "AFNetworking/AFNetworking" ~> 3.1
 github "TheLevelUp/ZXingObjC" ~> 3.2.2
