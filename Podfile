@@ -62,7 +62,7 @@ abstract_target 'ChatSecureCorePods' do
   # Storage
   pod 'SQLCipher', '~> 3.4'
   pod 'YapDatabase/SQLCipher', '~> 3.1'
-  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/guardianproject/libsqlfs.git', :tag => 'v1.3.2'
+  pod 'libsqlfs/SQLCipher', :git => 'https://github.com/guardianproject/libsqlfs.git', :commit => '5b9c9e1aaac367b889e1fac76d9e3880c484324e'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
   pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
 
