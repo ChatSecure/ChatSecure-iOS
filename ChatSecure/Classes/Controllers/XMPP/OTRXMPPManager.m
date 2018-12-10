@@ -107,8 +107,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (OTRXMPPStream*) newStream {
-    return [[OTRXMPPStream alloc] init];
+- (XMPPStream*) newStream {
+    return [[XMPPStream alloc] init];
 }
 
 - (void)setupStream

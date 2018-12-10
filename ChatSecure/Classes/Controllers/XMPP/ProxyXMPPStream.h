@@ -6,10 +6,10 @@
 //  Copyright © 2017 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRXMPPStream.h"
+@import XMPPFramework;
 @import ProxyKit;
 
-@interface ProxyXMPPStream : OTRXMPPStream
+@interface ProxyXMPPStream : XMPPStream
 
 /**
  * Sets SOCKS proxy host and port

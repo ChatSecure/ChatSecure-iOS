@@ -12,12 +12,12 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPBuddyTimers.h"
-#import "OTRXMPPStream.h"
+@import XMPPFramework;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRXMPPManager() <OTRCertificatePinningDelegate>
 
-@property (nonatomic, strong, readonly) OTRXMPPStream *xmppStream;
+@property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
@@ -56,8 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** wtf. why isn't this being picked up by OTRProtocol */
 - (void) connectUserInitiated:(BOOL)userInitiated;
 
-/** Return a newly allocated stream object. This is overridden in OTRXMPPTorManager to use ProxyXMPPStream instead of OTRXMPPStream */
-- (OTRXMPPStream*) newStream;
+/** Return a newly allocated stream object. This is overridden in OTRXMPPTorManager to use ProxyXMPPStream instead of XMPPStream */
+- (XMPPStream*) newStream;
 
 @end
 NS_ASSUME_NONNULL_END

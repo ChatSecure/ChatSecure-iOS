@@ -476,8 +476,6 @@
 		D9A429D01F31169F00BD2545 /* UIAlertController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */; };
 		D9A7756F1E43F8A200027864 /* ProxyXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */; };
 		D9A775701E43F8A200027864 /* ProxyXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */; };
-		D9A7BCE71E4554E200888A8E /* OTRXMPPStream.h in Headers */ = {isa = PBXBuildFile; fileRef = D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */; };
-		D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */; };
 		D9ABD71E1ED787EE00219A9C /* OTRHTMLItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */; };
 		D9ABD71F1ED787EE00219A9C /* OTRHTMLItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */; };
 		D9ABD72B1ED7886100219A9C /* OTRTextItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ABD7291ED7886100219A9C /* OTRTextItem.h */; };
@@ -1118,8 +1116,6 @@
 		D9A429CF1F31169F00BD2545 /* UIAlertController+ChatSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ChatSecure.swift"; sourceTree = "<group>"; };
 		D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyXMPPStream.h; sourceTree = "<group>"; };
 		D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyXMPPStream.m; sourceTree = "<group>"; };
-		D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPStream.h; sourceTree = "<group>"; };
-		D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPStream.m; sourceTree = "<group>"; };
 		D9ABD71C1ED787EE00219A9C /* OTRHTMLItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRHTMLItem.h; sourceTree = "<group>"; };
 		D9ABD71D1ED787EE00219A9C /* OTRHTMLItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRHTMLItem.m; sourceTree = "<group>"; };
 		D9ABD7291ED7886100219A9C /* OTRTextItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTextItem.h; sourceTree = "<group>"; };
@@ -1422,8 +1418,6 @@
 				D9F8C3C11FBFD2CA00D4B857 /* RoomManager.swift */,
 				D98B8E301E4CF90400A713E1 /* OTRServerCapabilities.h */,
 				D98B8E311E4CF90400A713E1 /* OTRServerCapabilities.m */,
-				D9A7BCE51E4554E200888A8E /* OTRXMPPStream.h */,
-				D9A7BCE61E4554E200888A8E /* OTRXMPPStream.m */,
 				D9A7756D1E43F8A200027864 /* ProxyXMPPStream.h */,
 				D9A7756E1E43F8A200027864 /* ProxyXMPPStream.m */,
 				63D639E11D12124F002B4175 /* OTRStreamManagementDelegate.swift */,
@@ -2211,7 +2205,6 @@
 				D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */,
 				D93DDB2E1BA79A7000CD8331 /* UIActivity+ChatSecure.h in Headers */,
 				D9BEF8E01DCE6E12009945D1 /* OTRXMPPManager_Private.h in Headers */,
-				D9A7BCE71E4554E200888A8E /* OTRXMPPStream.h in Headers */,
 				D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */,
 				D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */,
 				D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */,
@@ -3077,7 +3070,6 @@
 				D943AA421E6A0BA3007F3564 /* XMPPAccountCell.swift in Sources */,
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA941BA79A2400CD8331 /* OTRXMPPBuddyTimers.m in Sources */,
-				D9A7BCE81E4554E200888A8E /* OTRXMPPStream.m in Sources */,
 				D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */,
 				D926C19B20FBDD9E0053C538 /* Compatibility.swift in Sources */,
 				63363FAE1CCAE29B00B0C720 /* OTRYapExtensions.swift in Sources */,
