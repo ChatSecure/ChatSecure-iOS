@@ -29,7 +29,12 @@ screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
   'default' => "v4.3.6:
-* WIP
+* Fix security issue in certificate pinning alert dialog, where any valid certificate would show as valid
+* Fix crash when rapidly scrolling through chat history
+* Fix issue where chat history is temporarily blank after sending a message 
+* Swift 4.2 / Xcode 10.1
+* Updated 3rd party dependencies
+* Other minor bug fixes
 
 Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.5...v4.3.6
 ",
