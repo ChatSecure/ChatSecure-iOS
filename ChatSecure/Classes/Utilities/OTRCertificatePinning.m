@@ -299,14 +299,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
 {
-    NSString *hostName = nil;
-    if ([sender isKindOfClass:[OTRXMPPStream class]]) {
-        OTRXMPPStream *otrStream = (OTRXMPPStream*)sender;
-        hostName = otrStream.connectedHostName;
-    } else {
-        completionHandler(NO);
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"XMPPStream is of wrong class! Expected OTRXMPPStream." userInfo:nil];
-    }
+    NSString *hostName = sender.myJID.domain;
     // We should have a hostName. If we don't, something is wrong.
     NSParameterAssert(hostName.length > 0);
     if (!hostName.length) {
