@@ -17,7 +17,6 @@
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
-#import "OTRXMPPStream.h"
 
 
 ///////////////////////////////////////////////

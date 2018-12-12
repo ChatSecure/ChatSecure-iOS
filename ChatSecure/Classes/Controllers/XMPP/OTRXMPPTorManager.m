@@ -30,7 +30,7 @@
 }
 
 /** Override XMPPStream with XMPPProxyStream */
-- (OTRXMPPStream*) newStream {
+- (XMPPStream*) newStream {
     return [[ProxyXMPPStream alloc] init];
 }
 
