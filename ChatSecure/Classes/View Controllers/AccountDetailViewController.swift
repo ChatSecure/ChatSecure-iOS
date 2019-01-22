@@ -153,7 +153,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let alert = UIAlertController(title: "\(DELETE_ACCOUNT_MESSAGE_STRING()) \(account.username)?", message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
         let delete = UIAlertAction(title: DELETE_ACCOUNT_BUTTON_STRING(), style: .destructive) { (action) in
-            let protocols = OTRProtocolManager.sharedInstance()
+            let protocols = OTRProtocolManager.shared
             if let xmpp = protocols.protocol(for: account) as? XMPPManager,
                 xmpp.loginStatus != .disconnected {
                 xmpp.disconnect()
@@ -175,7 +175,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let cancel = UIAlertAction(title: CANCEL_STRING(), style: .cancel)
         let logout = UIAlertAction(title: LOGOUT_STRING(), style: .destructive) { (action) in
-            let protocols = OTRProtocolManager.sharedInstance()
+            let protocols = OTRProtocolManager.shared
             if let xmpp = protocols.protocol(for: account) as? XMPPManager,
                 xmpp.loginStatus != .disconnected {
                 xmpp.disconnect()
@@ -214,7 +214,7 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
     }
     
     private func attemptLogin(_ sender: Any) {
-        let protocols = OTRProtocolManager.sharedInstance()
+        let protocols = OTRProtocolManager.shared
         if let _ = self.account.password,
             self.account.accountType != .xmppTor {
             protocols.loginAccount(self.account)

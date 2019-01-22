@@ -217,7 +217,7 @@ public class MessageQueueHandler:NSObject {
         switch message.messageSecurity {
         case .plaintext:
             self.waitingForMessage(message.uniqueId, messageCollection: message.messageCollection, messageSecurity:message.messageSecurity, completion: completion)
-            OTRProtocolManager.sharedInstance().send(message)
+            OTRProtocolManager.shared.send(message)
             break
         case .plaintextWithOTR:
             self.sendOTRMessage(message: message, buddyKey: buddy.uniqueId, buddyUsername: buddy.username, accountUsername: account.username, accountProtocolStrintg: account.protocolTypeString(), requiresActiveSession: false, completion: completion)
@@ -296,7 +296,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }
@@ -350,7 +350,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }
@@ -385,7 +385,7 @@ public class MessageQueueHandler:NSObject {
         }
         
         //Get the XMPP procol manager associated with this message and therefore account
-        guard let accountProtocol = OTRProtocolManager.sharedInstance().protocol(for: account) as? XMPPManager else {
+        guard let accountProtocol = OTRProtocolManager.shared.protocol(for: account) as? XMPPManager else {
             completion(true, 0.0)
             return
         }

@@ -61,7 +61,7 @@
             [connection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
                 account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
             }];
-            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[OTRProtocolManager.shared protocolForAccount:account];
             if (room.roomJID) {
                 [xmppManager.roomManager leaveRoom:room.roomJID];
             }

@@ -39,13 +39,11 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 
-@interface OTRProtocolManager ()
-@property (atomic, readwrite) NSUInteger numberOfConnectedProtocols;
-@property (atomic, readwrite) NSUInteger numberOfConnectingProtocols;
-@property (nonatomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
+@interface _OTRProtocolManager ()
+//@property (atomic, strong, readonly, nonnull) NSMutableDictionary<NSString*,id<OTRProtocol>> *protocolManagers;
 @end
 
-@implementation OTRProtocolManager
+@implementation _OTRProtocolManager
 
 -(instancetype)init
 {
@@ -53,11 +51,12 @@
     if(self)
     {
         _protocolManagers = [[NSMutableDictionary alloc] init];
-        
-        _numberOfConnectedProtocols = 0;
-        _numberOfConnectingProtocols = 0;
     }
     return self;
+}
+
+- (NSArray<id<OTRProtocol>> *)allProtocols {
+    return self.protocolManagers.allValues;
 }
 
 - (void)removeProtocolForAccount:(OTRAccount *)account
@@ -65,41 +64,23 @@
     NSParameterAssert(account);
     if (!account) { return; }
     id<OTRProtocol> protocol = nil;
-    @synchronized (self) {
-        protocol =  [self.protocolManagers objectForKey:account.uniqueId];
-    }
+    protocol =  [self.protocolManagers objectForKey:account.uniqueId];
     if (protocol && [protocol respondsToSelector:@selector(disconnect)]) {
         [protocol disconnect];
     }
-    [self.KVOController unobserve:protocol];
-    @synchronized (self) {
-        [self.protocolManagers removeObjectForKey:account.uniqueId];
-    }
+    [self.protocolManagers removeObjectForKey:account.uniqueId];
 }
 
 - (void)addProtocol:(id<OTRProtocol>)protocol forAccount:(OTRAccount *)account
 {
-    @synchronized (self) {
-        [self.protocolManagers setObject:protocol forKey:account.uniqueId];
-    }
-    [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(loginStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
+    [self.protocolManagers setObject:protocol forKey:account.uniqueId];
 }
 
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account
 {
     NSParameterAssert(account.uniqueId);
     if (!account.uniqueId) { return NO; }
-    @synchronized (self) {
-        return [self.protocolManagers objectForKey:account.uniqueId] != nil;
-    }
-}
-
-- (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
-{
-    NSParameterAssert(protocol);
-    NSParameterAssert(account.uniqueId);
-    if (!protocol || !account.uniqueId) { return; }
-    [self addProtocol:protocol forAccount:account];
+    return [self.protocolManagers objectForKey:account.uniqueId] != nil;
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
@@ -107,14 +88,12 @@
     NSParameterAssert(account);
     if (!account.uniqueId) { return nil; }
     id <OTRProtocol> protocol = nil;
-    @synchronized (self) {
-        protocol = [self.protocolManagers objectForKey:account.uniqueId];
-        if(!protocol)
-        {
-            protocol = [[[account protocolClass] alloc] initWithAccount:account];
-            if (protocol && account.uniqueId) {
-                [self addProtocol:protocol forAccount:account];
-            }
+    protocol = [self.protocolManagers objectForKey:account.uniqueId];
+    if(!protocol)
+    {
+        protocol = [[[account protocolClass] alloc] initWithAccount:account];
+        if (protocol && account.uniqueId) {
+            [self addProtocol:protocol forAccount:account];
         }
     }
     return protocol;
@@ -167,89 +146,19 @@
 }
 
 - (void)goAwayForAllAccounts {
-    @synchronized (self) {
-        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-            if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-                OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
-                [xmpp goAway];
-            }
-        }];
-    }
-}
-
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly timeout:(NSTimeInterval)timeout completionBlock:(nullable void (^)())completionBlock
-{
-    @synchronized (self) {
-        dispatch_group_t group = dispatch_group_create();
-        NSMutableDictionary<NSString*, NSObject<OTRProtocol>*> *observingManagersForTokens = [NSMutableDictionary new];
-        for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)manager;
-            NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
-            if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
-                DDLogError(@"Wrong protocol class for manager %@", manager);
-                continue;
-            }
-            
-            if (xmpp.loginStatus != OTRLoginStatusDisconnected) {
-                dispatch_group_enter(group);
-                NSString *token = [xmpp addObserverForKeyPath:NSStringFromSelector(@selector(loginStatus))
-                                                         options:0
-                                                           block:^(NSString *keyPath, OTRXMPPManager *mgr, NSDictionary *change) {
-                                                               if (mgr.loginStatus == OTRLoginStatusDisconnected) {
-                                                                   dispatch_group_leave(group);
-                                                               }
-                                                           }];
-                observingManagersForTokens[token] = manager;
-                [manager disconnectSocketOnly:socketOnly];
-            }
+    [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
+            [xmpp goAway];
         }
-        if (timeout > 0) {
-            dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t) (timeout * NSEC_PER_SEC)));
-        }
-        for (NSString *token in observingManagersForTokens.allKeys) {
-            [observingManagersForTokens[token] removeObserverForToken:token];
-        }
-        if (completionBlock != nil) {
-            completionBlock();
-        }
-    }
-}
-
-- (void)disconnectAllAccounts
-{
-    [self disconnectAllAccountsSocketOnly:NO timeout:0 completionBlock:nil];
-}
-
-- (void)protocolDidChange:(NSDictionary *)change
-{
-    __block NSUInteger connected = 0;
-    __block NSUInteger connecting = 0;
-    @synchronized (self) {
-        [self.protocolManagers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id<OTRProtocol>  _Nonnull obj, BOOL * _Nonnull stop) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)obj;
-            NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
-            if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
-                DDLogError(@"Wrong protocol class for account %@", obj);
-                return;
-            }
-            if (xmpp.loginStatus == OTRLoginStatusAuthenticated) {
-                connected++;
-            } else if (xmpp.loginStatus == OTRLoginStatusConnecting) {
-                connecting++;
-            }
-        }];
-    }
-    self.numberOfConnectedProtocols = connected;
-    self.numberOfConnectingProtocols = connecting;
+    }];
 }
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;
 {
     BOOL connected = NO;
     id <OTRProtocol> protocol = nil;
-    @synchronized (self) {
-        protocol = [self.protocolManagers objectForKey:account.uniqueId];
-    }
+    protocol = [self.protocolManagers objectForKey:account.uniqueId];
     OTRXMPPManager *xmpp = (OTRXMPPManager*)protocol;
     NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
     if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
@@ -268,7 +177,7 @@
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
         account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
     } completionBlock:^{
-        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRProtocolManager * protocolManager = [OTRProtocolManager shared];
         id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
         [protocol sendMessage:message];
     }];
@@ -307,7 +216,7 @@
                 title = account.username;
             }
             UIAlertAction *action = [UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                OTRXMPPManager *manager = (OTRXMPPManager *)[[OTRProtocolManager shared] protocolForAccount:account];
 
                 OTRXMPPBuddy *buddy = [manager addToRosterWithJID:jid displayName:nil];
 

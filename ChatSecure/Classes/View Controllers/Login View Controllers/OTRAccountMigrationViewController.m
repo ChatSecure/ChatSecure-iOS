@@ -73,10 +73,10 @@ typedef NS_ENUM(NSInteger, MigrationStatus) {
 
 - (void)loginButtonPressed:(id)sender {
     // If account isn't logged in, login so we can spam old contacts & update your old vCard.jid with new details
-    BOOL isConnected = [[OTRProtocolManager sharedInstance] isAccountConnected:self.oldAccount];
+    BOOL isConnected = [OTRProtocolManager.shared isAccountConnected:self.oldAccount];
     if (!isConnected) {
         // TODO: Fix Tor connection issues
-        [[OTRProtocolManager sharedInstance] loginAccount:self.oldAccount];
+        [OTRProtocolManager.shared loginAccount:self.oldAccount];
     }
     self.migrationStatus = MigrationStatusCreating;
     [super loginButtonPressed:sender];

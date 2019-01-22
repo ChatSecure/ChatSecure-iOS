@@ -246,7 +246,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     } completionBlock:^{
         if (!buddy) { return; }
         message.buddyUniqueId = buddy.uniqueId;
-        [[OTRProtocolManager sharedInstance] sendMessage:message];
+        [OTRProtocolManager.shared sendMessage:message];
     }];
 }
     
