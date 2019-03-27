@@ -113,7 +113,7 @@ import JSQMessagesViewController
                 
                 // Remove previously mapped view
                 if var suppViews = supplementaryViews[currentTagIndexPath] {
-                    if let suppViewIndex = suppViews.index(of: currentTagView) {
+                    if let suppViewIndex = suppViews.firstIndex(of: currentTagView) {
                         suppViews.remove(at: suppViewIndex)
                         supplementaryViews[currentTagIndexPath] = suppViews
                     }

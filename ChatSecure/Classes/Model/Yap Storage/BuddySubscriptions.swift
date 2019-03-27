@@ -6,7 +6,7 @@
 //  Copyright © 2018 Chris Ballinger. All rights reserved.
 //
 
-public extension OTRXMPPBuddy {
+extension OTRXMPPBuddy {
     @objc public var subscribedTo: Bool {
         get {
             return self.subscription.isSubscribedTo()

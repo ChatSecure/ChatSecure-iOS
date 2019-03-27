@@ -252,6 +252,8 @@ extension OTRThreadStatus {
         case .other,
              .chat:
             return .available
+        @unknown default:
+            return .offline
         }
     }
 }

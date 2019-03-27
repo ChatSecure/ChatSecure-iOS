@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-public extension UINavigationController {
+extension UINavigationController {
     
     @objc public func otr_baseViewContorllers() -> [UIViewController] {
         var result:[UIViewController] = []

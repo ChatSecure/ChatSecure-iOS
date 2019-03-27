@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension OTRXMPPAccount {
+extension OTRXMPPAccount {
     /// This returns all buddies attached to an account, regardless of trust level
     @objc public static func allBuddies(accountId: String,
                                         transaction: YapDatabaseReadTransaction) -> [OTRXMPPBuddy] {
@@ -27,7 +27,7 @@ public extension OTRXMPPAccount {
     }
 }
 
-public extension OTRXMPPAccount {
+extension OTRXMPPAccount {
 
     @objc public var needsMigration: Bool {
         guard let jid = bareJID else { return false }

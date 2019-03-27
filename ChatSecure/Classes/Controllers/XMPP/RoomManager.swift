@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension OTRXMPPRoomManager {
+extension OTRXMPPRoomManager {
     
     @objc public func join(room: OTRXMPPRoom) {
         guard let roomJID = room.roomJID else { return }

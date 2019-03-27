@@ -9,14 +9,14 @@
 import Foundation
 import XMPPFramework
 
-@objc public extension XMPPStream {
+extension XMPPStream {
     /// Stream tags should be the OTRXMPPAccount uniqueId
     @objc public var accountId: String? {
         return tag as? String
     }
 }
 
-public extension XMPPModule {
+extension XMPPModule {
     /// yapKey for OTRAccount
     public var accountId: String? {
         return xmppStream?.accountId
@@ -32,7 +32,7 @@ public extension XMPPModule {
 }
 
 
-public extension XMPPMessageArchiveManagement {
+extension XMPPMessageArchiveManagement {
     @objc public func fetchHistory(archiveJID: XMPPJID? = nil, userJID: XMPPJID? = nil, since: Date? = nil) {
         var fields: [XMLElement] = []
         

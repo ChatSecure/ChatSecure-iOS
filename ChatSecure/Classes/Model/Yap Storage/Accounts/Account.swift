@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension OTRAccount {
+extension OTRAccount {
     public func lastMessage(with transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
         guard let buddyTransaction = transaction.ext(OTRBuddyFilteredConversationsName) as? YapDatabaseFilteredViewTransaction,
         let lastBuddy = buddyTransaction.lastObject(inGroup: OTRConversationGroup) as? OTRBuddy,

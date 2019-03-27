@@ -291,7 +291,7 @@ extension OTRXMPPRoom {
 }
 
 
-public extension OTRXMPPRoom {
+extension OTRXMPPRoom {
     
     @objc public var bookmark: XMPPConferenceBookmark? {
         guard let jid = roomJID else { return nil }
@@ -346,7 +346,7 @@ extension OTRXMPPRoom: YapDatabaseRelationshipNode {
     }
 }
 
-public extension XMPPRoom {
+extension XMPPRoom {
     
     /// yapKey for OTRXMPPRoom
     public var roomYapKey: String? {

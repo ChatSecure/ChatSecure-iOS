@@ -9,14 +9,14 @@
 import Foundation
 
 
-public extension NSData {
+extension NSData {
     @objc public func hexString() -> String {
         return (self as Data).hexString()
     }
 }
 
 // http://stackoverflow.com/a/26502285/805882
-public extension NSString {
+extension NSString {
     
     /// Create `Data` from hexadecimal string representation
     ///

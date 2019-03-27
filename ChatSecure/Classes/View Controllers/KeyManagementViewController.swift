@@ -193,6 +193,8 @@ open class KeyManagementViewController: XLFormViewController {
             break
         case .plaintextWithOTR:
             plaintextOtrRow.value = trueValue
+        @unknown default:
+            fatalError("Unrecognized value!")
         }
         
         let formRows = [bestAvailableRow, plaintextOnlyRow, plaintextOtrRow, otrRow, omemoRow]

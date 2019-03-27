@@ -18,7 +18,7 @@ extension YapDatabaseSecondaryIndexOptions {
     }
 }
 
-public extension YapDatabaseSecondaryIndex {
+extension YapDatabaseSecondaryIndex {
     @objc public static var buddyIndex: YapDatabaseSecondaryIndex {
         let columns: [String:YapDatabaseSecondaryIndexType] = [
             BuddyIndexColumnName.accountKey: .text,
@@ -171,7 +171,7 @@ public extension YapDatabaseSecondaryIndex {
 
 // MARK: - Extensions
 
-public extension OTRSignalSession {
+extension OTRSignalSession {
     /// "\(accountKey)-\(name)", only used for SecondaryIndex lookups
     public var sessionKey: String {
         return OTRSignalSession.sessionKey(accountKey: accountKey, name: name)
@@ -183,7 +183,7 @@ public extension OTRSignalSession {
     }
 }
 
-public extension OTRXMPPBuddy {
+extension OTRXMPPBuddy {
     /// This function should only be used when the secondary index is not ready
     private static func slowLookup(jid: XMPPJID,
                                    accountUniqueId: String,

@@ -9,7 +9,7 @@
 import UIKit
 import OTRAssets
 
-public extension NSError {
+extension NSError {
     /// Returns true if the message error is caused by automatic downloads being disabled
     @objc public var isAutomaticDownloadError: Bool {
         if self.domain == FileTransferError.errorDomain &&

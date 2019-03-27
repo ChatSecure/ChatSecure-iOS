@@ -49,7 +49,7 @@ extension NotificationType: RawRepresentable {
     public typealias RawValue = String
 }
 
-public extension UIApplication {
+extension UIApplication {
     
     /// Removes all but one foreground notifications for typing and message events sent from APNS
     @objc public func removeExtraForegroundNotifications() {
@@ -296,6 +296,8 @@ public extension UIApplication {
             case .otherError:
                 // this is probably a SSL error
                 body = body + " \(CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING())"
+            @unknown default:
+                return
             }
         } else if error.domain == "kCFStreamErrorDomainSSL" {
             body = body + " \(CONNECTION_ERROR_CERTIFICATE_VERIFY_STRING())"

@@ -11,7 +11,7 @@ import YapDatabase
 import UserNotifications
 import CocoaLumberjack
 
-public extension OTRAppDelegate {
+extension OTRAppDelegate {
     /// gets the last user interaction date, or current date if app is activate
     @objc public static func getLastInteractionDate(_ block: @escaping (_ lastInteractionDate: Date?)->(), completionQueue: DispatchQueue? = nil) {
         DispatchQueue.main.async {
@@ -41,7 +41,7 @@ public extension OTRAppDelegate {
     private static var lastInteractionDate: Date? = nil
 }
 
-public extension OTRAppDelegate {
+extension OTRAppDelegate {
     
     /// Returns key/collection of visible thread, or nil if not visible or unset
     @objc public static func visibleThread(_ block: @escaping (_ thread: YapCollectionKey?)->(), completionQueue: DispatchQueue? = nil) {

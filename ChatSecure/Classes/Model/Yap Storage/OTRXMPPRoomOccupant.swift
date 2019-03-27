@@ -207,7 +207,7 @@ extension OTRXMPPRoomOccupant: YapDatabaseRelationshipNode {
     }
 }
 
-public extension OTRXMPPRoomOccupant {
+extension OTRXMPPRoomOccupant {
     
     
     /**
@@ -309,7 +309,7 @@ public extension OTRXMPPRoomOccupant {
 }
 
 // Extension to handle privileges
-public extension OTRXMPPRoomOccupant {
+extension OTRXMPPRoomOccupant {
     public func canModifySubject() -> Bool {
         // TODO - Check muc#roomconfig_changesubject, participants may be allowed to change subject based on config!
         return self.role == .moderator || [RoomOccupantAffiliation.owner, RoomOccupantAffiliation.admin].contains(self.affiliation)

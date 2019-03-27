@@ -254,7 +254,7 @@ import OTRAssets
     }
 }
 
-public extension OTRMessagesViewController {
+extension OTRMessagesViewController {
     @objc public func didReceiveDeviceListUpdate(notification:Notification) {
         guard let notificationJid = notification.userInfo?["jid"] as? XMPPJID else { return }
         var buddy:OTRXMPPBuddy? = nil
