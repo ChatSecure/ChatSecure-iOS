@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.8.0)
+  - Alamofire (4.8.1)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
@@ -13,22 +13,19 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.0)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.4.2):
-    - CocoaLumberjack/Default (= 3.4.2)
-    - CocoaLumberjack/Extensions (= 3.4.2)
-  - CocoaLumberjack/Default (3.4.2)
-  - CocoaLumberjack/Extensions (3.4.2):
-    - CocoaLumberjack/Default
-  - CocoaLumberjack/Swift (3.4.2):
-    - CocoaLumberjack/Default
+  - CocoaLumberjack (3.5.2):
+    - CocoaLumberjack/Core (= 3.5.2)
+  - CocoaLumberjack/Core (3.5.2)
+  - CocoaLumberjack/Swift (3.5.2):
+    - CocoaLumberjack/Core
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
   - DTFoundation/Core (1.7.13)
   - DTFoundation/DTASN1 (1.7.13):
     - DTFoundation/Core
-  - GCDWebServer (3.4.2):
-    - GCDWebServer/Core (= 3.4.2)
-  - GCDWebServer/Core (3.4.2)
+  - GCDWebServer (3.5.2):
+    - GCDWebServer/Core (= 3.5.2)
+  - GCDWebServer/Core (3.5.2)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
@@ -52,7 +49,7 @@ PODS:
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (>= 3.4.0)
-  - LicensePlist (2.0.0)
+  - LicensePlist (2.3.0)
   - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
@@ -166,7 +163,7 @@ DEPENDENCIES:
   - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - CocoaAsyncSocket (~> 7.6.0)
-  - CocoaLumberjack/Swift (~> 3.4.0)
+  - CocoaLumberjack/Swift (~> 3.5.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - GCDWebServer (~> 3.4)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
@@ -190,7 +187,7 @@ DEPENDENCIES:
   - SQLCipher (~> 3.4)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 3.1)
+  - YapDatabase/SQLCipher (= 3.1.1)
   - YapTaskQueue/SQLCipher (from `https://github.com/ChatSecure/YapTaskQueue.git`, branch `swift4`)
 
 SPEC REPOS:
@@ -264,17 +261,17 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
-  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
+  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
-  GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
+  GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: 05f40d662527bf1f71dc878da1c585ba67547e74
   HockeySDK-Source: ebf3378833f457fa08aa452352b105dc21bfebcb
@@ -285,7 +282,7 @@ SPEC CHECKSUMS:
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
-  LicensePlist: 558c95c739171b96896d38fa5502f3721aada13c
+  LicensePlist: 9425c4baf514ee5cb2e68cac95c9f567f5148c8b
   LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
@@ -303,6 +300,6 @@ SPEC CHECKSUMS:
   YapDatabase: b418a4baa6906e8028748938f9159807fd039af4
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: daef023a9394cf0efcc732d33e877c336f0cf92f
+PODFILE CHECKSUM: fc701b5f2d9396a5b8a5d4bfd7f6a97567bef7a2
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.7.0.beta.2

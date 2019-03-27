@@ -42,7 +42,8 @@ import LumberjackConsole
         #endif
         
         // allow file-based debug logging if user has enabled it
-        if fileLoggingEnabled, let fileLogger = DDFileLogger() {
+        let fileLogger = DDFileLogger()
+        if fileLoggingEnabled {
             debugPrint("Enabling file logger...")
             // create a new log on every launch
             fileLogger.doNotReuseLogFiles = true
@@ -81,14 +82,11 @@ import LumberjackConsole
             
             // Delete old logs when user disables
             if newValue == false {
-                if let logsDirectory = fileManager?.logsDirectory {
-                    do {
-                        try FileManager.default.removeItem(atPath: logsDirectory)
-                    } catch {
-                        DDLogError("Error deleting log files! \(error)")
-                    }
-                } else {
-                    DDLogError("Error deleting log files! Could not find logs directory.")
+                let logsDirectory = fileManager.logsDirectory
+                do {
+                    try FileManager.default.removeItem(atPath: logsDirectory)
+                } catch {
+                    DDLogError("Error deleting log files! \(error)")
                 }
             }
             setupLogging()
@@ -96,7 +94,7 @@ import LumberjackConsole
     }
     
     public var allLogFiles: [DDLogFileInfo] {
-        return fileManager?.sortedLogFileInfos ?? []
+        return fileManager.sortedLogFileInfos
     }
 }
 

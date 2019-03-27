@@ -16,7 +16,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.8.0)</string>
+			<string>Alamofire (4.8.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -72,7 +72,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.4.2)</string>
+			<string>CocoaLumberjack (3.5.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -104,7 +104,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/GCDWebServer</string>
 			<key>Title</key>
-			<string>GCDWebServer (3.4.2)</string>
+			<string>GCDWebServer (3.5.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -240,7 +240,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/LicensePlist</string>
 			<key>Title</key>
-			<string>LicensePlist (2.0.0)</string>
+			<string>LicensePlist (2.3.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -432,7 +432,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/ZXingObjC</string>
 			<key>Title</key>
-			<string>ZXingObjC (3.6.3)</string>
+			<string>ZXingObjC (3.6.4)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
