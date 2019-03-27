@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension XMPPMessage {
+extension XMPPMessage {
     /// Safely extracts XEP-0359 stanza-id
     @objc public func extractStanzaId(account: OTRXMPPAccount, capabilities: XMPPCapabilities) -> String? {
         let stanzaIds = self.stanzaIds

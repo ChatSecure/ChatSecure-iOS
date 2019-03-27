@@ -494,6 +494,8 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             shouldEncrypt = true
         case .invalid, .plaintext, .plaintextWithOTR:
             shouldEncrypt = false
+        @unknown default:
+            fatalError("Unhandled message security value!")
         }
         
         self.upload(mediaItem: mediaItem, shouldEncrypt: shouldEncrypt, prefetchedData: prefetchedData, completion: { (_url: URL?, error: Error?) in
@@ -811,19 +813,19 @@ extension OTRDownloadMessage {
     }
 }
 
-public extension OTRMessageProtocol {
+extension OTRMessageProtocol {
     public var downloadableURLs: [URL] {
         return self.messageText?.downloadableURLs ?? []
     }
 }
 
-public extension OTRBaseMessage {
+extension OTRBaseMessage {
     @objc public var downloadableNSURLs: [NSURL] {
         return self.downloadableURLs as [NSURL]
     }
 }
 
-public extension OTRXMPPRoomMessage {
+extension OTRXMPPRoomMessage {
     @objc public var downloadableNSURLs: [NSURL] {
         return self.downloadableURLs as [NSURL]
     }
@@ -909,13 +911,13 @@ extension URL {
     }
 }
 
-public extension NSString {
+extension NSString {
     public var isSingleURLOnly: Bool {
         return (self as String).isSingleURLOnly
     }
 }
 
-public extension String {
+extension String {
     
     private var urlRanges: ([URL], [NSRange]) {
         guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
@@ -967,7 +969,7 @@ public extension String {
     }
 }
 
-public extension FileTransferManager {
+extension FileTransferManager {
     /// Returns whether or not message should be displayed or hidden from collection. Single incoming URLs should be hidden, for example.
     @objc public static func shouldDisplayMessage(_ message: OTRMessageProtocol, transaction: YapDatabaseReadTransaction) -> Bool {
         // Always show media messages

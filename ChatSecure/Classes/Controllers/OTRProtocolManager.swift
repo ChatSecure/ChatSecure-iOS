@@ -9,7 +9,7 @@
 import Foundation
 import OTRAssets
 
-public extension OTRProtocolManager {
+extension OTRProtocolManager {
     #if DEBUG
     /// when OTRBranding.pushStagingAPIURL is nil (during tests) a valid value must be supplied for the integration tests to pass
     private static let pushApiEndpoint: URL = OTRBranding.pushStagingAPIURL ?? URL(string: "http://localhost")!

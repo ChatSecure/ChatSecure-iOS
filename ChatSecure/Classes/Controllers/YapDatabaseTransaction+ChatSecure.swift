@@ -10,7 +10,7 @@ import Foundation
 import YapDatabase
 import CocoaLumberjack
 
-public extension YapDatabaseConnection {
+extension YapDatabaseConnection {
     /// synchronously fetch object an object.
     public func fetch<T>(_ block: @escaping (YapDatabaseReadTransaction) -> T?) -> T? {
         var result: T?
@@ -26,7 +26,7 @@ public extension YapDatabaseConnection {
     }
 }
 
-public extension YapDatabaseReadTransaction {
+extension YapDatabaseReadTransaction {
     
     /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359
     @objc public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
@@ -128,7 +128,7 @@ public extension YapDatabaseReadTransaction {
     }
 }
 
-public extension YapDatabaseReadTransaction {
+extension YapDatabaseReadTransaction {
     
     @objc public func enumerateUnreadMessages(_ block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
@@ -146,7 +146,7 @@ public extension YapDatabaseReadTransaction {
     }
 }
 
-public extension YapDatabaseReadTransaction {
+extension YapDatabaseReadTransaction {
     
     public func unfinishedDownloads() -> [OTRMediaItem] {
         /// https://github.com/ChatSecure/ChatSecure-iOS/issues/1034

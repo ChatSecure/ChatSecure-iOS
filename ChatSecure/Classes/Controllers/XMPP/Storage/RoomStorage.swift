@@ -305,11 +305,11 @@ public extension XMPPMessage {
         var name: String?
     }
     
-    public func isUsingExplicitEncryption(namespace: EncryptionNamespace) -> Bool {
+    func isUsingExplicitEncryption(namespace: EncryptionNamespace) -> Bool {
         return explicitMessageEncryption?.namespace == namespace
     }
     
-    public var explicitMessageEncryption: ExplicitEncryption? {
+    var explicitMessageEncryption: ExplicitEncryption? {
         guard let element = element(forName: "encryption", xmlns: XMPPMessage.emeXmlns),
         let namespaceString = element.attributeStringValue(forName: "namespace"),
             let namespace = EncryptionNamespace(rawValue: namespaceString) else {

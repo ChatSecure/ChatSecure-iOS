@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension OMEMODevice {
+extension OMEMODevice {
     
     /// Generally either an OTRXMPPAccount or OTRXMPPBuddy
     @objc public func parent(with transaction: YapDatabaseReadTransaction) -> Any? {

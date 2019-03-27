@@ -354,6 +354,8 @@ open class AccountDetailViewController: UIViewController, UITableViewDelegate, U
                 self?.xmpp.disconnect()
             }
             cell.button.setTitleColor(UIColor.red, for: .normal)
+        @unknown default:
+            break
         }
         return cell
     }

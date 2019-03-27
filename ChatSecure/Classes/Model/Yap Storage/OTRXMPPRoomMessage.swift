@@ -69,7 +69,7 @@ open class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     }
 }
 
-public extension OTRXMPPRoomMessage {
+extension OTRXMPPRoomMessage {
     public convenience init(message: XMPPMessage, delayed: Date?, room: OTRXMPPRoom, transaction: YapDatabaseReadTransaction) {
         self.init()
         xmppId = message.elementID
@@ -442,7 +442,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
 }
 
-public extension OTRXMPPRoomMessage {
+extension OTRXMPPRoomMessage {
     
     public func room(_ transaction: YapDatabaseReadTransaction) -> OTRXMPPRoom? {
         return threadOwner(with: transaction) as? OTRXMPPRoom
@@ -465,7 +465,7 @@ public extension OTRXMPPRoomMessage {
 }
 
 // MARK: Delivery receipts
-public extension OTRXMPPRoomMessage {
+extension OTRXMPPRoomMessage {
     /// Marks our sent messages as delivered when we receive a matching receipt
     @objc public static func handleDeliveryReceiptResponse(message: XMPPMessage, writeConnection: YapDatabaseConnection) {
         guard message.isGroupChatMessage,
@@ -508,7 +508,7 @@ public extension OTRXMPPRoomMessage {
 
 }
 
-public extension XMPPRoom {
+extension XMPPRoom {
     @objc public func sendRoomMessage(_ message: OTRXMPPRoomMessage) {
         let elementId = message.xmppId ?? message.uniqueId
         let body = XMLElement(name: "body", stringValue: message.messageText)
@@ -520,7 +520,7 @@ public extension XMPPRoom {
     }
 }
 
-public extension XMPPMessage {
+extension XMPPMessage {
     /// Gets the non-anonymous user JID from MUC message
     /// <x xmlns="http://jabber.org/protocol/muc#user"><item jid="user@example.com" affiliation="member" role="participant"/></x>
     public var mucUserJID: XMPPJID? {

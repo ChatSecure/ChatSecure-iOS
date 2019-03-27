@@ -188,7 +188,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
         if !self.waitingForExcludedItems, let buddy = self.viewHandler?.object(indexPath) as? OTRXMPPBuddy {
             if !selectedItems.contains(buddy) {
                 selectedItems.append(buddy)
-            } else if let index = selectedItems.index(of: buddy) {
+            } else if let index = selectedItems.firstIndex(of: buddy) {
                 selectedItems.remove(at: index)
             }
             collectionView.reloadData()
@@ -199,7 +199,7 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     }
     
     public func didRemoveBuddy(_ buddy: OTRXMPPBuddy) {
-        if let index = selectedItems.index(of: buddy) {
+        if let index = selectedItems.firstIndex(of: buddy) {
             selectedItems.remove(at: index)
             collectionView.reloadData()
             didUpdateCollectionView()

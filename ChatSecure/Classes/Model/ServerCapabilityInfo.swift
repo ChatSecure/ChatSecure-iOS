@@ -100,7 +100,7 @@ public class ServerCapabilityInfo: NSObject, NSCopying {
     
 }
 
-public extension OTRServerCapabilities {
+extension OTRServerCapabilities {
     // MARK: Utility
 
     /**

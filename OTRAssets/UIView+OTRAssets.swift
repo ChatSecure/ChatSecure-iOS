@@ -9,7 +9,7 @@
 import UIKit
 
 
-public extension UIView {
+extension UIView {
     
     /// Helper for loading nibs from the OTRAssets bundle
     @objc public static func otr_viewFromNib() -> Self? {

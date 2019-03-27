@@ -13,7 +13,7 @@ import MBProgressHUD
 import OTRAssets
 import Kvitto
 
-public extension PurchaseViewController {
+extension PurchaseViewController {
     @objc public class func show(from viewController: UIViewController) {
         let assets = OTRAssets.resourcesBundle
         let storyboard = UIStoryboard(name: "Purchase", bundle: assets)
@@ -251,7 +251,7 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
         // https://stackoverflow.com/a/41598602/805882
         let uuid = vendorId.uuid // gives a uuid_t
         let uuidBytes = Mirror(reflecting: uuid).children.map({$0.1 as! UInt8}) // converts the tuple into an array
-        let vendorData = Data(bytes: uuidBytes)
+        let vendorData = Data(uuidBytes)
         
         var hashData = vendorData
         hashData.append(receiptOpaque)
@@ -321,6 +321,9 @@ public class TransactionObserver: NSObject, SKPaymentTransactionObserver, SKRequ
                 break
             case .purchasing:
                 DDLogInfo("Transaction purchasing: \(transaction)")
+                break
+            @unknown default:
+                DDLogError("Unknown transaction state: \(transaction)")
                 break
             }
         }

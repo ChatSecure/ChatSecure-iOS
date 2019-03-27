@@ -9,7 +9,7 @@
 import UIKit
 import OTRAssets
 
-public extension UIAlertController {
+extension UIAlertController {
     
     /** Returns a cert-pinning alert if needed */
     @objc public static func certificateWarningAlert(error: Error, saveHandler: @escaping (_ action: UIAlertAction) -> Void) -> UIAlertController? {

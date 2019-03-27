@@ -1,10 +1,15 @@
 # Disable CocoaPods deterministic UUIDs as Pods are not checked in
 ENV["COCOAPODS_DISABLE_DETERMINISTIC_UUIDS"] = "true"
 
+SWIFT_4_PODS = ['ChatSecure-Push-iOS']
+
 # Disable Bitcode for all targets http://stackoverflow.com/a/32685434/805882
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
+      if SWIFT_4_PODS.include? target.name
+        config.build_settings['SWIFT_VERSION'] = '4.2'
+      end
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
       config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'
@@ -39,7 +44,7 @@ abstract_target 'ChatSecureCorePods' do
 
 
   # Utility
-  pod 'CocoaLumberjack/Swift', '~> 3.4.0'
+  pod 'CocoaLumberjack/Swift', '~> 3.5.0'
   pod 'MWFeedParser', '~> 1.0'
   pod 'Navajo', '~> 0.0'
   pod 'BBlock', '~> 1.2'
@@ -62,7 +67,8 @@ abstract_target 'ChatSecureCorePods' do
   # Storage
   # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
   pod 'SQLCipher', '~> 3.4'
-  pod 'YapDatabase/SQLCipher', '~> 3.1'
+  # Version 3.1.2 breaks YapTaskQueue 0.3.0
+  pod 'YapDatabase/SQLCipher', '3.1.1'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => '1.3.2-chatsecure'

@@ -22,11 +22,8 @@ private class OutstandingActionInfo: Hashable, Equatable {
         self.completion = completion
     }
     
-    /// Needed so we can store the struct in a dictionary
-    var hashValue: Int {
-        get {
-            return action.yapKey().hashValue
-        }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(action.yapKey())
     }
 }
 
@@ -45,10 +42,9 @@ private struct OutstandingMessageInfo {
 
 /// Needed so we can store the struct in a dictionary
 extension OutstandingMessageInfo: Hashable {
-    var hashValue: Int {
-        get {
-            return "\(self.messageKey)\(self.messageCollection)".hashValue
-        }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.messageKey)
+        hasher.combine(self.messageCollection)
     }
 }
 
@@ -231,6 +227,8 @@ public class MessageQueueHandler:NSObject {
         case .invalid:
             fatalError("Invalid message security. This should never happen... so let's crash!")
             break
+        @unknown default:
+            fatalError("Invalid message security. This should never happen... so let's crash!")
         }
     }
     
@@ -259,6 +257,8 @@ public class MessageQueueHandler:NSObject {
             room.sendRoomMessage(message)
         case .OMEMO:
             sendOMEMOMessage(message: message, accountProtocol: accountProtocol, completion: completion)
+        @unknown default:
+            fatalError("Invalid group message security. This should never happen.")
         }
         databaseConnection.readWrite { transaction in
             if let sentMessage = message.refetch(with: transaction)?.copyAsSelf() {

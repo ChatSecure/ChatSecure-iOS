@@ -9,7 +9,7 @@
 import UIKit
 import OTRAssets
 
-public extension UIViewController {
+extension UIViewController {
     /// Will show a prompt to bring user into system settings
     public func showPromptForSystemSettings() {
         let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .alert)

@@ -200,10 +200,10 @@ open class OTRRoomOccupantsViewController: UIViewController {
             canInviteOthers = ownOccupant.canInviteOthers()
         }
 
-        if !canInviteOthers, let idx = headerRows.index(of: CellIdentifier.HeaderCellAddFriends) {
+        if !canInviteOthers, let idx = headerRows.firstIndex(of: CellIdentifier.HeaderCellAddFriends) {
             headerRows.remove(at: idx)
         } else if canInviteOthers, !headerRows.contains(CellIdentifier.HeaderCellAddFriends) {
-            headerRows.insert(CellIdentifier.HeaderCellAddFriends, at: headerRows.index(of: CellIdentifier.HeaderCellMute) ?? 1)
+            headerRows.insert(CellIdentifier.HeaderCellAddFriends, at: headerRows.firstIndex(of: CellIdentifier.HeaderCellMute) ?? 1)
         }
         
         // Update the header section
@@ -285,7 +285,7 @@ open class OTRRoomOccupantsViewController: UIViewController {
     }
     
     private func refreshSubjectCell() {
-        if let section = self.viewHandler?.mappings?.section(forGroup: GroupName.header.rawValue), let row = self.headerRows.index(of: CellIdentifier.HeaderCellGroupName) {
+        if let section = self.viewHandler?.mappings?.section(forGroup: GroupName.header.rawValue), let row = self.headerRows.firstIndex(of: CellIdentifier.HeaderCellGroupName) {
             self.tableView.reloadRows(at: [IndexPath(row: row, section: Int(section))], with: .none)
         }
     }
