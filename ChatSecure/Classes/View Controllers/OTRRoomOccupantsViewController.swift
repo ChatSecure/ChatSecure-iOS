@@ -609,6 +609,9 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
         } else if let jid = roomOccupant.realJID ?? roomOccupant.jid {
             // Create temporary buddy for anonymous room members
             let buddy = OTRXMPPBuddy(jid: jid, accountId: account)
+            if let occupantNickname = jid.resource {
+                buddy.username = occupantNickname
+            }
             buddy.trustLevel = .untrusted
             var status = OTRThreadStatus.offline
             if let jid = roomOccupant.jid,
@@ -617,6 +620,7 @@ extension OTRRoomOccupantsViewController: UITableViewDataSource {
             }
             OTRBuddyCache.shared.setThreadStatus(status, for: buddy, resource: roomOccupant.jid?.bare)
             cell.setThread(buddy, account: nil)
+            cell.accessoryView = nil
         }
         
         if isYou {
