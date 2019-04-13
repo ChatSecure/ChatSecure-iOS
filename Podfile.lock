@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.8.1)
+  - Alamofire (4.8.2)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
@@ -11,7 +11,7 @@ PODS:
   - BBlock/StoreKit (1.2.1)
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
-  - ChatSecure-Push-iOS (1.0)
+  - ChatSecure-Push-iOS (1.1)
   - CocoaAsyncSocket (7.6.3)
   - CocoaLumberjack (3.5.2):
     - CocoaLumberjack/Core (= 3.5.2)
@@ -49,7 +49,7 @@ PODS:
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (>= 3.4.0)
-  - LicensePlist (2.3.0)
+  - LicensePlist (2.5.0)
   - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
@@ -261,12 +261,12 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/YapTaskQueue.git
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: 8e336b0f94f80fae22e734e592c14de6ecf8d091
+  ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
@@ -282,7 +282,7 @@ SPEC CHECKSUMS:
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
-  LicensePlist: 9425c4baf514ee5cb2e68cac95c9f567f5148c8b
+  LicensePlist: e5f8f2e3465620e53ec4c669955a5a7d0692b9cb
   LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
@@ -300,6 +300,6 @@ SPEC CHECKSUMS:
   YapDatabase: b418a4baa6906e8028748938f9159807fd039af4
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
 
-PODFILE CHECKSUM: fc701b5f2d9396a5b8a5d4bfd7f6a97567bef7a2
+PODFILE CHECKSUM: 39a7b1246419227c99c4f43f455d00c70dd268fe
 
 COCOAPODS: 1.6.1

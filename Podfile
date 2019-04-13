@@ -1,15 +1,10 @@
 # Disable CocoaPods deterministic UUIDs as Pods are not checked in
 ENV["COCOAPODS_DISABLE_DETERMINISTIC_UUIDS"] = "true"
 
-SWIFT_4_PODS = ['ChatSecure-Push-iOS']
-
 # Disable Bitcode for all targets http://stackoverflow.com/a/32685434/805882
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      if SWIFT_4_PODS.include? target.name
-        config.build_settings['SWIFT_VERSION'] = '4.2'
-      end
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
       config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'

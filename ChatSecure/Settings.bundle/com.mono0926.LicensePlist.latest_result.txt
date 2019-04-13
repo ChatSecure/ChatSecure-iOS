@@ -1,14 +1,14 @@
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014 A…
-version: 4.8.1
+version: 4.8.2
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014 A…
-version: 4.8.1
+version: 4.8.2
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014 A…
-version: 4.8.1
+version: 4.8.2
 
 name: Appirater, nameSpecified: 
 body: Copyright 2017. Aras…
@@ -63,15 +63,15 @@ version: 4.0.2
 
 name: ChatSecure-Push-iOS, nameSpecified: 
 body:                     …
-version: 1.0
+version: 1.1
 
 name: ChatSecure-Push-iOS, nameSpecified: 
 body:                     …
-version: 1.0
+version: 1.1
 
 name: ChatSecure-Push-iOS, nameSpecified: 
 body:                     …
-version: 1.0
+version: 1.1
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
@@ -281,19 +281,19 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 2.3.0
+version: 2.5.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.3.0
+version: 2.5.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.3.0
+version: 2.5.0
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
