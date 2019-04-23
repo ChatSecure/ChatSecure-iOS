@@ -74,10 +74,18 @@ class ChatSecureUITests: XCTestCase {
         app.launch()
         skipEnablePush(app)
         skipDonatePrompt(app)
-        XCTAssertTrue(app.buttons[localizedString("Skip")].exists, "Skip button exists")
-        XCTAssertTrue(app.buttons[localizedString("Create New Account")].exists, "Create new Account button exists")
-        XCTAssertTrue(app.buttons[localizedString("Add Existing Account")].exists, "Add existing account button exists")
         
+        if app.buttons[localizedString("Skip")].exists {
+            XCTAssertTrue(app.buttons[localizedString("Skip")].exists, "Skip button exists")
+            XCTAssertTrue(app.buttons[localizedString("Create New Account")].exists, "Create new Account button exists")
+            XCTAssertTrue(app.buttons[localizedString("Add Existing Account")].exists, "Add existing account button exists")
+        } else {
+            let chatsNavigationBar = app.navigationBars[localizedString("Chats")]
+            chatsNavigationBar.buttons[localizedString("Chats")].tap()
+            chatsNavigationBar.children(matching: .button).element(boundBy: 1).tap()
+            app.tables["settingsTableView"].staticTexts[localizedString("New Account")].tap()
+            app.buttons[localizedString("Create New Account")].tap()
+        }
         app.buttons[localizedString("Create New Account")].tap()
         
         let tablesQuery = app.tables
@@ -88,42 +96,33 @@ class ChatSecureUITests: XCTestCase {
         
         tablesQuery.switches[localizedString("Show Advanced Options")].tap()
         
-        
         tablesQuery.switches[localizedString("Enable Tor")].tap()
         
         snapshot("01CreateAccountScreen")
     }
     
-//    func testConversationList() {
-//        let app = XCUIApplication()
-//        app.launchEnvironment["OTRLaunchMode"] = "ChatSecureUITestsDemoData"
-//        app.launch()
-//        skipEnablePush(app)
-//
-//        switch UIDevice.current.userInterfaceIdiom  {
-//        case .phone:
-//            snapshot("02ConversationListScreen")
-//            break
-//        case .pad:
-//            break
-//        default:
-//            break
-//        }
-//        sleep(2)
-//        skipEnablePush(app)
-//        XCUIApplication().tables["conversationTableView"].children(matching: .any).element(boundBy: 0).tap()
-//        snapshot("03ChatScreen")
-//        XCUIApplication().buttons["profileButton"].tap()
-//        snapshot("04ProfileScreen")
-//
-////        app.navigationBars["Profile"].buttons["Done"].tap()
-////
-////        let chatsNavigationBar = app.navigationBars["Chats"]
-////        chatsNavigationBar.buttons["Chats"].tap()
-////        chatsNavigationBar.childrenMatchingType(.Button).elementBoundByIndex(1).tap()
-////        app.tables["settingsTableView"].staticTexts["New Account"].tap()
-////        app.buttons["Create New Account"].tap()
-//
-//    }
-//
+    func testConversationList() {
+        let app = XCUIApplication()
+        app.launchEnvironment["OTRLaunchMode"] = "ChatSecureUITestsDemoData"
+        app.launch()
+        skipEnablePush(app)
+        skipDonatePrompt(app)
+
+        switch UIDevice.current.userInterfaceIdiom  {
+        case .phone:
+            snapshot("02ConversationListScreen")
+            break
+        case .pad:
+            break
+        default:
+            break
+        }
+        sleep(2)
+        skipEnablePush(app)
+        XCUIApplication().tables["conversationTableView"].children(matching: .any).element(boundBy: 0).tap()
+        snapshot("03ChatScreen")
+        XCUIApplication().buttons["profileButton"].tap()
+        snapshot("04ProfileScreen")
+    }
+
 }

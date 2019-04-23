@@ -17,7 +17,7 @@
 # beta_ipa "./app.ipa"
 
 # The version of your app - remove this if you provide an ipa file
-app_version "4.3.6"
+app_version "4.3.7"
 submit_for_review false
 skip_binary_upload true
 # overwrite_screenshots true
@@ -28,15 +28,12 @@ metadata_path "./Submodules/ChatSecure-Metadata/metadata"
 screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
-  'default' => "v4.3.6:
-* Fix security issue in certificate pinning alert dialog, where any valid certificate would show as valid
-* Fix crash when rapidly scrolling through chat history
-* Fix issue where chat history is temporarily blank after sending a message 
-* Swift 4.2 / Xcode 10.1
-* Updated 3rd party dependencies
-* Other minor bug fixes
+  'default' => "v4.3.7:
+* Swift 5.0 / Xcode 10.2
+* Updated translations
+* Minor bug fixes
 
-Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.5...v4.3.6
+Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.6...v4.3.7
 ",
 })
 

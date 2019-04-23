@@ -4,15 +4,17 @@
 devices([
   # "iPhone 8",
   # "iPhone 8 Plus",
-  "iPhone SE",
+  # "iPhone SE",
+  "iPhone Xs Max",
   # "iPhone X",
   # "iPad Pro (12.9-inch)",
   # "iPad Pro (9.7-inch)",
+  "iPad Pro (12.9-inch) (3rd generation)",
 ])
 
-languages([
-  "it", #{}"nl-NL", "pt-BR", "pt-PT", "tr", 
-])
+# languages([
+#   "it", #{}"nl-NL", "pt-BR", "pt-PT", "tr", 
+# ])
 
 # languages([
 #   "da", "el", "es-ES", "it", "nl-NL", "pt-BR", "pt-PT", "tr", 
