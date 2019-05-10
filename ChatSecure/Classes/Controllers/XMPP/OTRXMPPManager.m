@@ -107,8 +107,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (XMPPStream*) newStream {
-    return [[XMPPStream alloc] init];
+- (OTRXMPPStream*) newStream {
+    return [[OTRXMPPStream alloc] init];
 }
 
 - (void)setupStream
@@ -472,6 +472,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     }
     
     [self.xmppStream setHostPort:self.account.port];
+    
+    [self.xmppStream setCertificatePinning:self.account.certificatePinning];
 	
     
 	error = nil;

@@ -28,6 +28,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
         _resource = [[self class] newResource];
         self.autologin = YES;
         self.rememberPassword = YES;
+        self.certificatePinning = NO;
     }
     return self;
 }

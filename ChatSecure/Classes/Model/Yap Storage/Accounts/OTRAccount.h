@@ -46,6 +46,8 @@ extern NSString *const OTRXMPPTorImageName;
 /** Whether or not user would like to auto fetch media messages */
 @property (nonatomic, readwrite) BOOL disableAutomaticURLFetching;
 
+@property (nonatomic, readwrite) BOOL certificatePinning;
+
 /**
  * Setting this value does a comparison of against the previously value
  * to invalidate the OTRImages cache.

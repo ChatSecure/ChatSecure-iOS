@@ -35,6 +35,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 
 NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutomaticURLFetchTag";
+NSString *const kOTRXLFormCertificatePinningTag               = @"kOTRXLFormCertificatePinningTag";
 
 
 @implementation XLFormDescriptor (OTRAccount)
@@ -59,6 +60,7 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
             torRow.hidden = @YES;
         }
         [[descriptor formRowWithTag:kOTRXLFormAutomaticURLFetchTag] setValue:@(!xmppAccount.disableAutomaticURLFetching)];
+        [[descriptor formRowWithTag:kOTRXLFormCertificatePinningTag] setValue:@(xmppAccount.certificatePinning)];
     }
     if (account.accountType == OTRAccountTypeXMPPTor) {
         XLFormRowDescriptor *torRow = [descriptor formRowWithTag:kOTRXLFormUseTorTag];
@@ -135,6 +137,7 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
         otherSection.footerTitle = AUTO_URL_FETCH_WARNING_STRING();
         otherSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
         [otherSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
+        [otherSection addFormRow:[self certificatePinningRowDescriptorWithValue:NO]];
         
         [descriptor addFormSection:basicSection];
         [descriptor addFormSection:serverSection];
@@ -167,6 +170,7 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
                     [advancedSection addFormRow:[self torRowDescriptorWithValue:NO]];
                 }
                 [advancedSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
+                [advancedSection addFormRow:[self certificatePinningRowDescriptorWithValue:NO]];
                 
                 break;
             }
@@ -179,6 +183,7 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
                 
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
                 [advancedSection addFormRow:[self autoFetchRowDescriptorWithValue:YES]];
+                [advancedSection addFormRow:[self certificatePinningRowDescriptorWithValue:NO]];
                 
                 break;
             }
@@ -275,6 +280,12 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
     XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:Enable_Tor_String()];
     torRow.value = @(value);
     return torRow;
+}
+
++ (XLFormRowDescriptor*) certificatePinningRowDescriptorWithValue:(BOOL)value {
+    XLFormRowDescriptor *certificatePinningRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormCertificatePinningTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:CERTIFICATE_PINNING_STRING()];
+    certificatePinningRow.value = @(value);
+    return certificatePinningRow;
 }
 
 + (XLFormRowDescriptor *)resourceRowDescriptorWithValue:(NSString *)value
