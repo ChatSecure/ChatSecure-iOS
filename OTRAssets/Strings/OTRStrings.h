@@ -68,6 +68,8 @@ FOUNDATION_EXPORT NSString* Basic_Setup_Hint();
 FOUNDATION_EXPORT NSString* Best_Available();
 /** "Cancel", Cancel an alert window */
 FOUNDATION_EXPORT NSString* CANCEL_STRING();
+/** "Certificate Pinning", */
+FOUNDATION_EXPORT NSString* CERTIFICATE_PINNING_STRING();
 /** "ChatSecure Push", Title for ChatSecure Push (this probably doesnt need to be translated) */
 FOUNDATION_EXPORT NSString* CHATSECURE_PUSH_STRING();
 /** "Chats", Title for chats view */

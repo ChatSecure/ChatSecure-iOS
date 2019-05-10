@@ -50,6 +50,9 @@
     XLFormRowDescriptor *autofetch = [form formRowWithTag:kOTRXLFormAutomaticURLFetchTag];
     autofetch.value = @(!account.disableAutomaticURLFetching);
     
+    XLFormRowDescriptor *certificatePinning = [form formRowWithTag:kOTRXLFormCertificatePinningTag];
+    certificatePinning.value = @(account.certificatePinning);
+    
     [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:account.resource];
 }
 
@@ -143,6 +146,11 @@
     NSNumber *autofetch = [form formRowWithTag:kOTRXLFormAutomaticURLFetchTag].value;
     if (autofetch) {
         account.disableAutomaticURLFetching = !autofetch.boolValue;
+    }
+    
+    NSNumber *certificatePinning = [[form formRowWithTag:kOTRXLFormCertificatePinningTag] value];
+    if (certificatePinning) {
+        account.certificatePinning = [certificatePinning boolValue];
     }
     
     // Post-process values via XMPPJID for stringprep

@@ -23,6 +23,7 @@ extern NSString *const kOTRXLFormResourceTextFieldTag;
 extern NSString *const kOTRXLFormXMPPServerTag;
 extern NSString *const kOTRXLFormUseTorTag;
 extern NSString *const kOTRXLFormAutomaticURLFetchTag;
+extern NSString *const kOTRXLFormCertificatePinningTag;
 
 
 @interface XLFormDescriptor (OTRAccount)

@@ -68,6 +68,8 @@ NSString* Basic_Setup_Hint() { return [OTRLanguageManager translatedString:@"Thi
 NSString* Best_Available() { return [OTRLanguageManager translatedString:@"Best Available"]; }
 /** "Cancel", Cancel an alert window */
 NSString* CANCEL_STRING() { return [OTRLanguageManager translatedString:@"Cancel"]; }
+/** "Certificate Pinning", */
+NSString* CERTIFICATE_PINNING_STRING() { return [OTRLanguageManager translatedString:@"Certificate Pinning"]; }
 /** "ChatSecure Push", Title for ChatSecure Push (this probably doesnt need to be translated) */
 NSString* CHATSECURE_PUSH_STRING() { return [OTRLanguageManager translatedString:@"ChatSecure Push"]; }
 /** "Chats", Title for chats view */
