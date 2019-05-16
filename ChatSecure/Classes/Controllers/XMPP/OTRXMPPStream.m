@@ -7,12 +7,12 @@
 //
 
 #import "OTRXMPPStream.h"
-
-@implementation OTRXMPPStream
-
-- (void)setCertificatePinning:(BOOL)certificatePinning
-{
-    _certificatePinning = certificatePinning;
-}
-
-@end
+//
+//@implementation OTRXMPPStream
+//
+//- (void)setCertificatePinning:(BOOL)certificatePinning
+//{
+//    _certificatePinning = certificatePinning;
+//}
+//
+//@end

@@ -9,7 +9,7 @@
 #import "OTRXMPPStream.h"
 @import ProxyKit;
 
-@interface ProxyXMPPStream : OTRXMPPStream
+@interface ProxyXMPPStream : XMPPStream
 
 /**
  * Sets SOCKS proxy host and port

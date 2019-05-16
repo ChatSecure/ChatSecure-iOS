@@ -17,7 +17,6 @@
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
-#import "OTRXMPPStream.h"
 
 
 ///////////////////////////////////////////////
@@ -297,19 +296,15 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 **/
 #pragma - mark GCDAsyncSockeTDelegate Methods
 
-- (void)xmppStream:(OTRXMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
+- (void)xmppStream:(XMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
 {
-    BOOL certificatePinning = sender.certificatePinning;
     NSString *hostName = sender.myJID.domain;
     // We should have a hostName. If we don't, something is wrong.
     NSParameterAssert(hostName.length > 0);
     if (!hostName.length) {
         completionHandler(NO);
     }
-    BOOL trusted = NO;
-    if (certificatePinning) {
-        trusted = [self isValidPinnedTrust:trust withHostName:hostName];
-    }
+    BOOL trusted = [self isValidPinnedTrust:trust withHostName:hostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
         SecTrustResultType result;
@@ -317,16 +312,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
         SecTrustSetPolicies(trust, policy);
         OSStatus status =  SecTrustEvaluate(trust, &result);
         CFRelease(policy);
-        if (!certificatePinning && (result == kSecTrustResultProceed || result == kSecTrustResultUnspecified)) {
-            trusted = YES;
-        } else if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
+        if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
             [self.delegate newTrust:trust withHostName:hostName systemTrustResult:result];
         }
     }
     completionHandler(trusted);
 }
-
-
-
 
 @end

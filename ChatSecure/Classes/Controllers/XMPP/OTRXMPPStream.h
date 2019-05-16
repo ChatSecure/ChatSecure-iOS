@@ -9,10 +9,10 @@
 @import Foundation;
 @import XMPPFramework;
 
-@interface OTRXMPPStream : XMPPStream
-
-@property (nonatomic, readonly) BOOL certificatePinning;
-
-- (void)setCertificatePinning:(BOOL)certificatePinning;
-
-@end
+//@interface OTRXMPPStream : XMPPStream
+//
+//@property (nonatomic, readonly) BOOL certificatePinning;
+//
+//- (void)setCertificatePinning:(BOOL)certificatePinning;
+//
+//@end

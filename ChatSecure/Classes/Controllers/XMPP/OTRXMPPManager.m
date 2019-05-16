@@ -107,8 +107,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (OTRXMPPStream*) newStream {
-    return [[OTRXMPPStream alloc] init];
+- (XMPPStream*) newStream {
+    return [[XMPPStream alloc] init];
 }
 
 - (void)setupStream
@@ -121,7 +121,9 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     self.xmppStream.tag = self.account.uniqueId;
     self.xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     
-    [self.certificatePinningModule activate:self.xmppStream];
+    if (self.account.certificatePinning) {
+        [self.certificatePinningModule activate:self.xmppStream];
+    }
     
     _deliveryReceipts = [[XMPPMessageDeliveryReceipts alloc] init];
     // We want to check if OTR messages can be decrypted
@@ -458,9 +460,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 	//	myJID = @"user@gmail.com/xmppframework";
 	//	myPassword = @"";
     
-	
-    
-    
     NSError * error = nil;
     NSString * domainString = [self accountDomainWithError:error];
     if (error) {
@@ -472,9 +471,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     }
     
     [self.xmppStream setHostPort:self.account.port];
-    
-    [self.xmppStream setCertificatePinning:self.account.certificatePinning];
-	
     
 	error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
@@ -786,7 +782,10 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     
     settings[GCDAsyncSocketSSLProtocolVersionMin] = @(kTLSProtocol1);
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
-    settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
+    
+    if (self.account.certificatePinning) {
+        settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
+    }
     
     self.loginStatus = OTRLoginStatusSecuring;
 }
@@ -816,8 +815,6 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 {
     //DDLogWarn(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
     
-    self.loginStatus = OTRLoginStatusDisconnected;
-    
     if (error)
     {
         DDLogError(@"Disconnected from server %@ with error: %@", self.account.bareJID.domain, error);
@@ -825,6 +822,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     } else {
         DDLogError(@"Disconnected from server %@.", self.account.bareJID.domain);
     }
+    
+    self.loginStatus = OTRLoginStatusDisconnected;
     
     //Reset buddy info to offline
     __block NSArray<OTRXMPPBuddy*> *allBuddies = nil;
