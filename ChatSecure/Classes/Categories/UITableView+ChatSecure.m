@@ -8,7 +8,7 @@
 
 #import "UITableView+ChatSecure.h"
 #import "OTRXMPPBuddy.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRXMPPManager_Private.h"
 @import OTRAssets;
 

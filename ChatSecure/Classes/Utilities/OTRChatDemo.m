@@ -16,7 +16,7 @@
 #import "OMEMODevice.h"
 #import "OTRBuddyCache.h"
 #import "OTRPasswordGenerator.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRAssets;
 
 @implementation OTRChatDemo

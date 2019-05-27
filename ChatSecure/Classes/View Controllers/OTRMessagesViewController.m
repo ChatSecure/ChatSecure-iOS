@@ -46,7 +46,7 @@
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRYapMessageSendAction.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRBuddyCache.h"

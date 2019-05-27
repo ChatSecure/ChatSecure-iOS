@@ -12,7 +12,7 @@
 #import "OTRImages.h"
 #import "OTRDownloadMessage.h"
 #import "UIActivity+ChatSecure.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRDirectDownloadMessage()
 @property (nonatomic, strong, readonly) NSString *parentMessageKey;

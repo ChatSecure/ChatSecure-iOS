@@ -9,7 +9,7 @@
 #import "OTRBuddyCache.h"
 #import "OTRDatabaseManager.h"
 #import "OTRYapDatabaseObject.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @implementation OTRXMPPRoomRuntimeProperties
 - (instancetype)init {

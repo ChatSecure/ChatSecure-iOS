@@ -18,7 +18,7 @@
 #import "OTRVideoItem.h"
 @import OTRAssets;
 @import YapDatabase;
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRConversationCell ()
 

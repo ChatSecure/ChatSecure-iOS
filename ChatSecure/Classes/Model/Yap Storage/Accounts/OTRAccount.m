@@ -13,14 +13,13 @@
 
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
-#import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 @import YapDatabase;
 #import "OTRBuddy.h"
 #import "OTRImages.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRColors.h"
 
 
@@ -63,8 +62,6 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 + (nullable Class) accountClassForAccountType:(OTRAccountType)accountType {
     switch(accountType) {
-        case OTRAccountTypeGoogleTalk:
-            return [OTRGoogleOAuthXMPPAccount class];
         case OTRAccountTypeJabber:
             return [OTRXMPPAccount class];
         case OTRAccountTypeXMPPTor:

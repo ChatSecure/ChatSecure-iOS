@@ -23,7 +23,7 @@
 @import XMPPFramework;
 
 #import "NSURL+ChatSecure.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
 

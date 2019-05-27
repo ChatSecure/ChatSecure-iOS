@@ -13,7 +13,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPasswordGenerator.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import XMPPFramework;
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPTorAccount.h"

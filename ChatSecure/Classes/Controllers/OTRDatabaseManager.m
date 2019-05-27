@@ -15,7 +15,6 @@
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
-#import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
@@ -29,7 +28,7 @@
 #import "OTRSignalSession.h"
 #import "OTRSettingsManager.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 
 @interface OTRDatabaseManager ()

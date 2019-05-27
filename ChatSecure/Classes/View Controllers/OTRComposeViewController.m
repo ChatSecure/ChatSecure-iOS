@@ -24,7 +24,7 @@
 #import "OTRChooseAccountViewController.h"
 #import "UITableView+ChatSecure.h"
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @import OTRAssets;
 

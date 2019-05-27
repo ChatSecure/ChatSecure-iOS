@@ -55,7 +55,7 @@
 @import XMPPFramework;
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRMessagesViewController.h"
 #import "OTRXMPPTorAccount.h"
 @import OTRAssets;

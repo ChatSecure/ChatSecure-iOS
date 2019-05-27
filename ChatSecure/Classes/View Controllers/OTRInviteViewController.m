@@ -16,7 +16,7 @@
 #import "OTRColors.h"
 @import OTRAssets;
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 static CGFloat const kOTRInvitePadding = 10;
 static CGFloat const kOTRButtonHeight = 40;

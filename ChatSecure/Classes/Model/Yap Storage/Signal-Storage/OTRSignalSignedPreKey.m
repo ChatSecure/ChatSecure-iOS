@@ -8,7 +8,7 @@
 
 #import "OTRSignalSignedPreKey.h"
 #import "OTRAccount.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @implementation OTRSignalSignedPreKey
 

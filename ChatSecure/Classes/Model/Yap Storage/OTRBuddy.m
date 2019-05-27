@@ -15,7 +15,7 @@
 @import YapDatabase;
 #import "OTRImages.h"
 @import JSQMessagesViewController;
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRKit;
 #import "OTRLog.h"
 #import "OTRColors.h"

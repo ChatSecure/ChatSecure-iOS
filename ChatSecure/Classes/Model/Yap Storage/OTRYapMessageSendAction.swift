@@ -10,7 +10,7 @@ import Foundation
 import YapTaskQueue
 import YapDatabase
 
-public extension OTRYapMessageSendAction: YapDatabaseRelationshipNode {
+extension OTRYapMessageSendAction: YapDatabaseRelationshipNode {
     
     // Relationship only really used to make sure tasks are deleted when messages are deleted
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {

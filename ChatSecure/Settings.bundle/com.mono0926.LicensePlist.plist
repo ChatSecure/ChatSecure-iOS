@@ -62,6 +62,14 @@
 		</dict>
 		<dict>
 			<key>File</key>
+			<string>com.mono0926.LicensePlist/ChatSecureCore</string>
+			<key>Title</key>
+			<string>ChatSecureCore (0.1.0)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaAsyncSocket</string>
 			<key>Title</key>
 			<string>CocoaAsyncSocket (7.6.3)</string>
@@ -297,6 +305,14 @@
 			<string>com.mono0926.LicensePlist/OpenSSL</string>
 			<key>Title</key>
 			<string>OpenSSL (1.0.2n)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>com.mono0926.LicensePlist/OTRAssets</string>
+			<key>Title</key>
+			<string>OTRAssets (0.1.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

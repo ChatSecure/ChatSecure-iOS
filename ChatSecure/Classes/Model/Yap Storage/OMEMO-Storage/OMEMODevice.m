@@ -7,7 +7,7 @@
 //
 
 #import "OMEMODevice.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @implementation OMEMODevice
 

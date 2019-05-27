@@ -37,7 +37,6 @@ abstract_target 'ChatSecureCorePods' do
   # pod 'LumberjackConsole', '~> 3.3.0'
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
 
-
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.5.0'
   pod 'MWFeedParser', '~> 1.0'
@@ -77,7 +76,9 @@ abstract_target 'ChatSecureCorePods' do
   pod 'Alamofire', '~> 4.4'
   pod 'Kvitto', '~> 1.0'
 
-  target 'ChatSecureCore'
+  pod 'ChatSecureCore', :path => 'ChatSecureCore.podspec'
+  pod 'OTRAssets', :path => 'OTRAssets.podspec'
+
   target 'ChatSecureTests'
   target 'ChatSecure'
 end
