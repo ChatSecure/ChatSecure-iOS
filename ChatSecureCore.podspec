@@ -77,7 +77,7 @@ TODO: Add long description of the pod here.
   s.dependency "Mantle"
   s.dependency "HTMLReader", '~> 2.1.1'
   s.dependency "AFNetworking", '~> 3.1'
-  s.dependency "ZXingObjC", '~> 3.2.2'
+  s.dependency "ZXingObjC", '~> 3.6'
   s.dependency "SAMKeychain", '~> 1.5'
   s.dependency "MBProgressHUD", '~> 1.1'
   s.dependency "TTTAttributedLabel", '~> 2.0'

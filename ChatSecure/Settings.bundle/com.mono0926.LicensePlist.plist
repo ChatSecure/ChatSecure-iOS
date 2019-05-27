@@ -80,7 +80,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.5.2)</string>
+			<string>CocoaLumberjack (3.5.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

@@ -74,11 +74,11 @@ version: 7.6.3
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.5.2
+version: 3.5.3
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.5.2
+version: 3.5.3
 
 name: CPAProxy, nameSpecified: 
 body: Copyright (c) 2013 C…
@@ -402,11 +402,11 @@ version: 0.3.0
 
 name: ZXingObjC, nameSpecified: 
 body:                     …
-version: 3.2.2
+version: 3.6.5
 
 name: ZXingObjC, nameSpecified: 
 body:                     …
-version: 3.2.2
+version: 3.6.5
 
 name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.1
 

@@ -70,12 +70,12 @@ PODS:
     - XMPPFramework/Swift
     - YapDatabase/SQLCipher (= 3.1.1)
     - YapTaskQueue/SQLCipher
-    - ZXingObjC (~> 3.2.2)
+    - ZXingObjC (~> 3.6)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.5.2):
-    - CocoaLumberjack/Core (= 3.5.2)
-  - CocoaLumberjack/Core (3.5.2)
-  - CocoaLumberjack/Swift (3.5.2):
+  - CocoaLumberjack (3.5.3):
+    - CocoaLumberjack/Core (= 3.5.3)
+  - CocoaLumberjack/Core (3.5.3)
+  - CocoaLumberjack/Swift (3.5.3):
     - CocoaLumberjack/Core
   - CPAProxy (1.2.0):
     - CocoaAsyncSocket
@@ -251,9 +251,9 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.3.0):
     - YapDatabase/SQLCipher (~> 3.0)
-  - ZXingObjC (3.2.2):
-    - ZXingObjC/All (= 3.2.2)
-  - ZXingObjC/All (3.2.2)
+  - ZXingObjC (3.6.5):
+    - ZXingObjC/All (= 3.6.5)
+  - ZXingObjC/All (3.6.5)
 
 DEPENDENCIES:
   - Alamofire (~> 4.4)
@@ -379,9 +379,9 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: a48e20acb4be1a0b9a232ce22abdc3b30082d86e
+  ChatSecureCore: d6f91a58dee62131ddf49f460e60cc13760e512a
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
@@ -420,7 +420,7 @@ SPEC CHECKSUMS:
   XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
   YapDatabase: b418a4baa6906e8028748938f9159807fd039af4
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
-  ZXingObjC: 2c95a0dc52daac69b23ec78fad8fa2fec05f8981
+  ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: c661dd5d6c82aba164941a70b743ab9cc4ca6738
 
