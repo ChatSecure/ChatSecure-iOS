@@ -62,6 +62,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'SQLCipher', '~> 3.4'
   # Version 3.1.2 breaks YapTaskQueue 0.3.0
   pod 'YapDatabase/SQLCipher', '3.1.1'
+  pod 'Mantle', :podspec => 'Podspecs/Mantle.podspec.json'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => '1.3.2-chatsecure'
@@ -74,6 +75,7 @@ abstract_target 'ChatSecureCorePods' do
 
   pod 'Alamofire', '~> 4.4'
   pod 'Kvitto', '~> 1.0'
+
 
   pod 'ChatSecureCore', :path => 'ChatSecureCore.podspec'
   pod 'OTRAssets', :path => 'OTRAssets.podspec'
