@@ -112,26 +112,6 @@ name: GCDWebServer, nameSpecified:
 body: Copyright (c) 2012-2…
 version: 3.5.2
 
-name: gtm-http-fetcher, nameSpecified: 
-body: 
-                   …
-version: 1.1
-
-name: gtm-http-fetcher, nameSpecified: 
-body: 
-                   …
-version: 1.1
-
-name: gtm-oauth2, nameSpecified: 
-body: 
-                   …
-version: 1.1
-
-name: gtm-oauth2, nameSpecified: 
-body: 
-                   …
-version: 1.1
-
 name: HockeySDK-Source, nameSpecified: 
 body: ## Licenses
 

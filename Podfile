@@ -8,13 +8,16 @@ post_install do |installer|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
       config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
       config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 8.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '8.0'
+      end
     end
   end
 end
 
 platform :ios, "9.0"
 
-use_frameworks!
+use_modular_headers!
 inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
@@ -53,10 +56,6 @@ abstract_target 'ChatSecureCorePods' do
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
-
-  # Google Auth
-  pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
-  pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 
   # Storage
   # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
