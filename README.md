@@ -46,9 +46,8 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 
 ## Build Instructions
 
-You'll need [CocoaPods](http://cocoapods.org) and [Carthage](https://github.com/Carthage/Carthage) installed for most of our dependencies.
+You'll need [CocoaPods](http://cocoapods.org) installed for most of our dependencies.
     
-    $ brew install carthage
     $ gem install cocoapods
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
@@ -59,7 +58,6 @@ Download the source code and **don't forget** to pull down all of the submodules
     
 Now you'll need to build the dependencies.
     
-    $ carthage bootstrap --platform ios # or carthage update --platform ios --cache-builds
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
     $ pod repo update
