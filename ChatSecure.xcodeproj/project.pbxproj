@@ -307,7 +307,7 @@
 		633106321A16D1A300C17BAE /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
 		633106331A16D1A300C17BAE /* OTRListSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSettingViewController.m; sourceTree = "<group>"; };
 		633106341A16D1A300C17BAE /* OTRMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesViewController.h; sourceTree = "<group>"; };
-		633106351A16D1A300C17BAE /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRMessagesViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		633106351A16D1A300C17BAE /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRMessagesViewController.m; sourceTree = "<group>"; };
 		633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
 		6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeViewController.h; sourceTree = "<group>"; };
@@ -339,8 +339,6 @@
 		6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposingImageView.m; sourceTree = "<group>"; };
 		6331066D1A16D1A300C17BAE /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
 		6331066E1A16D1A300C17BAE /* OTRLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLockButton.m; sourceTree = "<group>"; };
-		6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPasswordStrengthView.h; sourceTree = "<group>"; };
-		633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPasswordStrengthView.m; sourceTree = "<group>"; };
 		633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRememberPasswordView.h; sourceTree = "<group>"; };
 		633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRememberPasswordView.m; sourceTree = "<group>"; };
 		633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSocialButtonsView.h; sourceTree = "<group>"; };
@@ -1105,8 +1103,6 @@
 				6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */,
 				6331066D1A16D1A300C17BAE /* OTRLockButton.h */,
 				6331066E1A16D1A300C17BAE /* OTRLockButton.m */,
-				6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */,
-				633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */,
 				633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */,
 				633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */,
 				633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */,
@@ -1564,7 +1560,6 @@
 				6396AF971A169D54009F3E6C /* Frameworks */,
 				6396AF981A169D54009F3E6C /* Resources */,
 				D9227C481BA7952100B5E1D0 /* Embed Frameworks */,
-				D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				42829843B1DFA068A70F83E8 /* [CP] Copy Pods Resources */,
 			);
@@ -1834,7 +1829,6 @@
 				"${PODS_ROOT}/BButton/BButton/resources/FontAwesome.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/CPAProxy/CPAProxy.bundle",
 				"${PODS_ROOT}/FormatterKit/FormatterKit/FormatterKit.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK-Source/HockeySDKResources.bundle",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Assets/JSQMessagesAssets.bundle",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Controllers/JSQMessagesViewController.xib",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Views/JSQMessagesCollectionViewCellIncoming.xib",
@@ -1870,7 +1864,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CPAProxy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FormatterKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesViewController.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesCollectionViewCellIncoming.nib",
@@ -1916,7 +1909,6 @@
 				"${PODS_ROOT}/BButton/BButton/resources/FontAwesome.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/CPAProxy/CPAProxy.bundle",
 				"${PODS_ROOT}/FormatterKit/FormatterKit/FormatterKit.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/HockeySDK-Source/HockeySDKResources.bundle",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Assets/JSQMessagesAssets.bundle",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Controllers/JSQMessagesViewController.xib",
 				"${PODS_ROOT}/../Submodules/JSQMessagesViewController/JSQMessagesViewController/Views/JSQMessagesCollectionViewCellIncoming.xib",
@@ -1952,7 +1944,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CPAProxy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FormatterKit.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HockeySDKResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesViewController.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JSQMessagesCollectionViewCellIncoming.nib",
@@ -2041,20 +2032,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[Carthage] Copy Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2341,7 +2318,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DERIVE_UIKITFORMAC_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -2359,7 +2337,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_UIKITFORMAC = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -2378,7 +2358,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DERIVE_UIKITFORMAC_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -2396,6 +2377,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_UIKITFORMAC = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

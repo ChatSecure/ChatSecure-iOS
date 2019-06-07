@@ -16,3 +16,5 @@ com.mono0926.LicensePlist.Output/
 Secrets.plist
 Preview.html
 fastlane/report.xml
+.bundle
+vendor/

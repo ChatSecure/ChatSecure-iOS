@@ -66,7 +66,7 @@
 #import <KSCrash/KSCrashInstallationQuincyHockey.h>
 #import <KSCrash/KSCrashInstallation+Alert.h>
 #endif
-@import HockeySDK_Source;
+//@import HockeySDK_Source;
 @import UserNotifications;
 
 #import "OTRChatDemo.h"
@@ -169,9 +169,9 @@
 }
 
 - (void) setupCrashReporting {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:[OTRSecrets hockeyLiveIdentifier]];
-    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAlwaysAsk];
-    [[BITHockeyManager sharedHockeyManager] startManager];
+//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:[OTRSecrets hockeyLiveIdentifier]];
+//    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAlwaysAsk];
+//    [[BITHockeyManager sharedHockeyManager] startManager];
     
 #if KSCRASH
     KSCrash *crash = [KSCrash sharedInstance];

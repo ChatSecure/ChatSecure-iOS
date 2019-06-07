@@ -43,9 +43,10 @@ abstract_target 'ChatSecureCorePods' do
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.5.0'
   pod 'MWFeedParser', '~> 1.0'
-  pod 'Navajo', '~> 0.0'
+  # pod 'Navajo', '~> 0.0'
   pod 'BBlock', '~> 1.2'
-  pod 'HockeySDK-Source'
+  # CrashReporter(PLCrashSignalHandler.o), building for UIKitForMac, but linking in object file built for iOS Simulator,
+  # pod 'HockeySDK-Source'
   pod 'LicensePlist'
 
   # Network
@@ -62,7 +63,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'SQLCipher', '~> 3.4'
   # Version 3.1.2 breaks YapTaskQueue 0.3.0
   pod 'YapDatabase/SQLCipher', '3.1.1'
-  pod 'Mantle', :podspec => 'Podspecs/Mantle.podspec.json'
+  pod 'Mantle', :git => 'https://github.com/ChatSecure/Mantle.git', :branch => '2.1.0_headerfix'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => '1.3.2-chatsecure'

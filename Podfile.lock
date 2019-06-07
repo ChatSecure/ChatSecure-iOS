@@ -1,19 +1,5 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
   - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
-    - AFNetworking/NSURLSession
   - Alamofire (4.8.2)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
@@ -28,7 +14,7 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.1)
   - ChatSecureCore (0.1.0):
-    - AFNetworking (~> 3.1)
+    - AFNetworking/Security (~> 3.1)
     - Alamofire (~> 4.4)
     - Appirater (~> 2.0)
     - ARChromeActivity (~> 1.0)
@@ -38,9 +24,9 @@ PODS:
     - CocoaAsyncSocket (~> 7.6.0)
     - CocoaLumberjack/Swift (~> 3.5.0)
     - CPAProxy
-    - FormatterKit (~> 1.8)
+    - FormatterKit/TimeIntervalFormatter (~> 1.8)
+    - FormatterKit/UnitOfInformationFormatter (~> 1.8)
     - GCDWebServer (~> 3.4)
-    - HockeySDK-Source
     - HTMLReader (~> 2.1.1)
     - IOCipher/GCDWebServer
     - JSQMessagesViewController
@@ -53,7 +39,6 @@ PODS:
     - Mantle
     - MBProgressHUD (~> 1.1)
     - MWFeedParser (~> 1.0)
-    - Navajo (~> 0.0)
     - OpenInChrome (~> 0.0)
     - OTRAssets
     - OTRKit
@@ -82,40 +67,14 @@ PODS:
   - DTFoundation/Core (1.7.13)
   - DTFoundation/DTASN1 (1.7.13):
     - DTFoundation/Core
-  - FormatterKit (1.8.2):
-    - FormatterKit/AddressFormatter (= 1.8.2)
-    - FormatterKit/ArrayFormatter (= 1.8.2)
-    - FormatterKit/ColorFormatter (= 1.8.2)
-    - FormatterKit/LocationFormatter (= 1.8.2)
-    - FormatterKit/NameFormatter (= 1.8.2)
-    - FormatterKit/OrdinalNumberFormatter (= 1.8.2)
-    - FormatterKit/Resources (= 1.8.2)
-    - FormatterKit/TimeIntervalFormatter (= 1.8.2)
-    - FormatterKit/UnitOfInformationFormatter (= 1.8.2)
-    - FormatterKit/URLRequestFormatter (= 1.8.2)
-  - FormatterKit/AddressFormatter (1.8.2):
-    - FormatterKit/Resources
-  - FormatterKit/ArrayFormatter (1.8.2):
-    - FormatterKit/Resources
-  - FormatterKit/ColorFormatter (1.8.2):
-    - FormatterKit/Resources
-  - FormatterKit/LocationFormatter (1.8.2):
-    - FormatterKit/Resources
-  - FormatterKit/NameFormatter (1.8.2):
-    - FormatterKit/Resources
-  - FormatterKit/OrdinalNumberFormatter (1.8.2):
-    - FormatterKit/Resources
   - FormatterKit/Resources (1.8.2)
   - FormatterKit/TimeIntervalFormatter (1.8.2):
     - FormatterKit/Resources
   - FormatterKit/UnitOfInformationFormatter (1.8.2):
     - FormatterKit/Resources
-  - FormatterKit/URLRequestFormatter (1.8.2):
-    - FormatterKit/Resources
   - GCDWebServer (3.5.2):
     - GCDWebServer/Core (= 3.5.2)
   - GCDWebServer/Core (3.5.2)
-  - HockeySDK-Source (5.1.4)
   - HTMLReader (2.1.3)
   - IOCipher/common (0.1.0):
     - CocoaLumberjack
@@ -154,7 +113,6 @@ PODS:
     - "MWFeedParser/NSString+HTML"
   - "MWFeedParser/NSDate+InternetDateTime (1.0.1)"
   - "MWFeedParser/NSString+HTML (1.0.1)"
-  - Navajo (0.0.1)
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
   - OTRAssets (0.1.0)
@@ -267,7 +225,6 @@ DEPENDENCIES:
   - CocoaLumberjack/Swift (~> 3.5.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - GCDWebServer (~> 3.4)
-  - HockeySDK-Source
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - JTSImageViewController (~> 1.4)
@@ -275,9 +232,8 @@ DEPENDENCIES:
   - libsqlfs/SQLCipher (from `https://github.com/ChatSecure/libsqlfs.git`, branch `1.3.2-chatsecure`)
   - LicensePlist
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
-  - Mantle (from `Podspecs/Mantle.podspec.json`)
+  - Mantle (from `https://github.com/ChatSecure/Mantle.git`, branch `2.1.0_headerfix`)
   - MWFeedParser (~> 1.0)
-  - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRAssets (from `OTRAssets.podspec`)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
@@ -304,7 +260,6 @@ SPEC REPOS:
     - DTFoundation
     - FormatterKit
     - GCDWebServer
-    - HockeySDK-Source
     - HTMLReader
     - JTSImageViewController
     - KissXML
@@ -314,7 +269,6 @@ SPEC REPOS:
     - LicensePlist
     - MBProgressHUD
     - MWFeedParser
-    - Navajo
     - NBUCore
     - OpenInChrome
     - ProxyKit
@@ -346,7 +300,8 @@ EXTERNAL SOURCES:
   LumberjackConsole:
     :path: Submodules/LumberjackConsole/LumberjackConsole.podspec
   Mantle:
-    :podspec: Podspecs/Mantle.podspec.json
+    :branch: 2.1.0_headerfix
+    :git: https://github.com/ChatSecure/Mantle.git
   OTRAssets:
     :path: OTRAssets.podspec
   OTRKit:
@@ -367,7 +322,7 @@ CHECKOUT OPTIONS:
     :commit: 36b9d6a56a5918be3a97695063ca32dbf963e887
     :git: https://github.com/ChatSecure/libsqlfs.git
   Mantle:
-    :commit: 4c1a09cb0c0811956cd35262340e42b940971cbb
+    :commit: 9aadbd27b1cc161dca884ec0cef198fa56e83d11
     :git: https://github.com/ChatSecure/Mantle.git
   ParkedTextField:
     :commit: a3800e3
@@ -384,14 +339,13 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: d6f91a58dee62131ddf49f460e60cc13760e512a
+  ChatSecureCore: aa96ada979e968b299f38a97e8028383f35a8521
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
-  CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
+  CPAProxy: 3f8a654ab04fc7a04126bfc3ba226dccb3f7c949
   DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
   FormatterKit: 4b8f29acc9b872d5d12a63efb560661e8f2e1b98
   GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
-  HockeySDK-Source: ebf3378833f457fa08aa452352b105dc21bfebcb
   HTMLReader: 34449b95b7c8f50557e8e60a8d892487d4541ae2
   IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
@@ -406,11 +360,10 @@ SPEC CHECKSUMS:
   Mantle: bdb09649c721dcefc53132f3767f6e40d4d47740
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
-  Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRAssets: 9b824cfbe6bdcbf71ac504688031d90f0d460b61
-  OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
+  OTRKit: a325cf44ca3a9bf8e2f553ff8a1ae27b938647f5
   ParkedTextField: 865c835f54b39c611b580e0fe60199538cbc2f67
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
@@ -427,6 +380,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 1edbdd4df4b608092c945f89114a6e69f95b66e1
+PODFILE CHECKSUM: 3c69a5b8fb23017e35688e99fa5f707a607917fd
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.7.1
