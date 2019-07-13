@@ -17,7 +17,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 static Float64 kOTRMessagesMinimumAudioTime = .5;
 

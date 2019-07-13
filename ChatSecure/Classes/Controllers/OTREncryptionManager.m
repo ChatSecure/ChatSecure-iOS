@@ -41,7 +41,7 @@
 #import "OTRLog.h"
 #import "OTRXMPPManager.h"
 #import "OTRYapMessageSendAction.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @import AVFoundation;
 @import XMPPFramework;

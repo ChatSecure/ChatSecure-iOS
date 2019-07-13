@@ -14,7 +14,7 @@
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
 @import PureLayout;
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 
 @interface OTRChooseAccountViewController () <UITableViewDataSource, UITableViewDelegate>

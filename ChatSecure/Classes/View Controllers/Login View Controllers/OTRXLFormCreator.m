@@ -14,7 +14,7 @@
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 #import "OTRXMPPTorAccount.h"
 

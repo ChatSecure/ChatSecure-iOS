@@ -14,7 +14,7 @@
 #import "OTRIncomingMessage.h"
 #import "OTRLog.h"
 #import "OTROutgoingMessage.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 NSString *OTRArchiveFilteredConversationsName = @"OTRFilteredConversationsName";
 NSString *OTRBuddyFilteredConversationsName = @"OTRBuddyFilteredConversationsName";

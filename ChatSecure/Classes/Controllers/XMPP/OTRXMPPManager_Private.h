@@ -9,7 +9,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPBuddyManager.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPBuddyTimers.h"
 @import XMPPFramework;

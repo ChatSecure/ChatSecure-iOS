@@ -13,7 +13,7 @@
 @import OTRAssets;
 #import "OTRLog.h"
 #import "OTRMediaItem+Private.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRHTMLMetadata : NSObject
 @property (nonatomic, strong, nullable) NSString *title;

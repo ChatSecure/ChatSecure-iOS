@@ -19,7 +19,7 @@
 @import CocoaLumberjack;
 #import "OTRLog.h"
 #import "OTRMessageEncryptionInfo.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRBaseMessage()
 @property (nonatomic) BOOL transportedSecurely;

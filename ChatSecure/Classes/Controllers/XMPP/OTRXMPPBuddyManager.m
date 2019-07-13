@@ -7,7 +7,7 @@
 //
 
 #import "OTRXMPPBuddyManager.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import XMPPFramework;
 #import "OTRXMPPBuddy.h"
 @import YapDatabase;

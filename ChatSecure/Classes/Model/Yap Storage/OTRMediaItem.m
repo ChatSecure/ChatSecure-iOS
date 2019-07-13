@@ -18,7 +18,7 @@
 @import MobileCoreServices;
 @import OTRAssets;
 #import "OTRDatabaseManager.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 static NSString* GetExtensionForMimeType(NSString* mimeType) {
     NSCParameterAssert(mimeType.length > 0);

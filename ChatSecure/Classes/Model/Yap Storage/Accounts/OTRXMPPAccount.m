@@ -9,7 +9,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
 #import "OTRConstants.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRAssets;
 
 @import XMPPFramework;

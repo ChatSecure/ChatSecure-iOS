@@ -8,7 +8,7 @@
 
 #import "OTRXMPPBuddy.h"
 #import "OTRBuddyCache.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import XMPPFramework;
 @import OTRAssets;
 

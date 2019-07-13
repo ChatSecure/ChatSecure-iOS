@@ -8,7 +8,7 @@
 
 #import "OTRYapMessageSendAction.h"
 #import "OTRBuddy.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTRYapMessageSendAction()
 @property (nonatomic, strong, nonnull) NSString *buddyKey DEPRECATED_MSG_ATTRIBUTE("Deprecated in favor of threadKey");

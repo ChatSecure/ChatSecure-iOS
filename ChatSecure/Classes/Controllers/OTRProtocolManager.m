@@ -26,8 +26,6 @@
 #import "OTRIncomingMessage.h"
 #import "OTROutgoingMessage.h"
 #import "OTRConstants.h"
-#import "OTROAuthRefresher.h"
-#import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPushTLVHandler.h"
 #import <BBlock/NSObject+BBlock.h>
@@ -36,7 +34,7 @@
 @import KVOController;
 @import OTRAssets;
 #import "OTRLog.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 
 @interface OTRProtocolManager ()
@@ -136,22 +134,7 @@
     if (!account) { return; }
     id <OTRProtocol> protocol = [self protocolForAccount:account];
 
-    if([account isKindOfClass:[OTROAuthXMPPAccount class]])
-    {
-        [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
-            if (!error) {
-                ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
-                [protocol connectUserInitiated:userInitiated];
-            }
-            else {
-                DDLogError(@"Error Refreshing Token");
-            }
-        }];
-    }
-    else
-    {
-        [protocol connectUserInitiated:userInitiated];
-    }
+    [protocol connectUserInitiated:userInitiated];
 }
 
 - (void)loginAccount:(OTRAccount *)account

@@ -45,7 +45,7 @@
 #import "OTRDonateSetting.h"
 @import KVOController;
 #import "OTRInviteViewController.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRAssets;
 @import MobileCoreServices;
 

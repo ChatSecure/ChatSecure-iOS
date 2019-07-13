@@ -11,7 +11,7 @@
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPAccount.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 const struct OTRXMPPPresenceSubscriptionRequestAttributes OTRXMPPPresenceSubscriptionRequestAttributes = {
 	.date = @"date",

@@ -29,7 +29,7 @@
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRAssets;
 
 #import "OTRXMPPManager.h"

@@ -11,7 +11,7 @@
 @import XMPPFramework;
 @import OTRAssets;
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 
 NSString *const OTRXMPPErrorDomain                = @"OTRXMPPErrorDomain";
 NSString *const OTRXMPPXMLErrorKey                = @"OTRXMPPXMLErrorKey";

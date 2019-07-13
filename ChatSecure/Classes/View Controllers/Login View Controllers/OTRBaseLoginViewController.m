@@ -15,7 +15,7 @@
 #import "OTRAccount.h"
 @import MBProgressHUD;
 #import "OTRXLFormCreator.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPAccount.h"
 @import OTRAssets;

@@ -7,7 +7,7 @@
 //
 
 #import "OTROutgoingMessage.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "ChatSecureCoreCompat-Swift.h"
 #import "OTRMessageEncryptionInfo.h"
 
 @implementation OTROutgoingMessage
