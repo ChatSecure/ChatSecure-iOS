@@ -58,9 +58,9 @@ TODO: Add long description of the pod here.
 
   # Storage
   # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
-  s.dependency 'SQLCipher', '~> 3.4'
+  s.dependency 'SQLCipher', '~> 4.2.0'
   # Version 3.1.2 breaks YapTaskQueue 0.3.0
-  s.dependency 'YapDatabase/SQLCipher', '3.1.1'
+  s.dependency 'YapDatabase/SQLCipher', '~> 3.1.3'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   s.dependency 'libsqlfs/SQLCipher'

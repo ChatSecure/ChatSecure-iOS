@@ -123,6 +123,7 @@
         }
         return keyData;
     };
+    options.cipherCompatability = YapDatabaseCipherCompatability_Version3;
     _databaseDirectory = [directory copy];
     if (!_databaseDirectory) {
         _databaseDirectory = [[self class] defaultYapDatabaseDirectory];

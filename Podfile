@@ -59,15 +59,17 @@ abstract_target 'ChatSecureCorePods' do
 
   # Storage
   # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
-  pod 'SQLCipher', '~> 3.4'
+  pod 'SQLCipher', '~> 4.2'
   # Version 3.1.2 breaks YapTaskQueue 0.3.0
-  pod 'YapDatabase/SQLCipher', '3.1.1'
+  # pod 'YapDatabase/SQLCipher', '~> 3.1.3'
+  pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
   pod 'Mantle', :podspec => 'Podspecs/Mantle.podspec.json'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => '1.3.2-chatsecure'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
+  # pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
+  pod 'YapTaskQueue/SQLCipher', :path => 'Submodules/YapTaskQueue/YapTaskQueue.podspec'
 
   # Crypto
   pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
