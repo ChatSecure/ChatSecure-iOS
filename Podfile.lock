@@ -53,7 +53,6 @@ PODS:
     - Mantle
     - MBProgressHUD (~> 1.1)
     - MWFeedParser (~> 1.0)
-    - Navajo (~> 0.0)
     - OpenInChrome (~> 0.0)
     - OTRAssets
     - OTRKit
@@ -154,7 +153,6 @@ PODS:
     - "MWFeedParser/NSString+HTML"
   - "MWFeedParser/NSDate+InternetDateTime (1.0.1)"
   - "MWFeedParser/NSString+HTML (1.0.1)"
-  - Navajo (0.0.1)
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
   - OTRAssets (0.1.0)
@@ -277,7 +275,6 @@ DEPENDENCIES:
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - Mantle (from `Podspecs/Mantle.podspec.json`)
   - MWFeedParser (~> 1.0)
-  - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRAssets (from `OTRAssets.podspec`)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
@@ -314,7 +311,6 @@ SPEC REPOS:
     - LicensePlist
     - MBProgressHUD
     - MWFeedParser
-    - Navajo
     - NBUCore
     - OpenInChrome
     - ProxyKit
@@ -377,7 +373,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: eb9374fbba420fa78e37be368aeadc8dfcc2855c
+  ChatSecureCore: ae0bc3f0fa3d811121d7ec103e1b827aeb344d96
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
@@ -399,7 +395,6 @@ SPEC CHECKSUMS:
   Mantle: bdb09649c721dcefc53132f3767f6e40d4d47740
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
-  Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRAssets: 9b824cfbe6bdcbf71ac504688031d90f0d460b61
@@ -420,6 +415,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 8e8e3602306b4364cad1ea5fa7a6e7ff5ff685db
+PODFILE CHECKSUM: b141f51290d05663f08b633a34ffb15eee02707b
 
 COCOAPODS: 1.7.4

@@ -254,14 +254,6 @@ name: MWFeedParser, nameSpecified:
 body: Copyright (c) 2010 M…
 version: 1.0.1
 
-name: Navajo, nameSpecified: 
-body: Copyright (c) 2014 M…
-version: 0.0.1
-
-name: Navajo, nameSpecified: 
-body: Copyright (c) 2014 M…
-version: 0.0.1
-
 name: NBUCore, nameSpecified: 
 body: 
                    …

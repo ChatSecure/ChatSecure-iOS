@@ -43,7 +43,6 @@ abstract_target 'ChatSecureCorePods' do
   # Utility
   pod 'CocoaLumberjack/Swift', '~> 3.5.0'
   pod 'MWFeedParser', '~> 1.0'
-  pod 'Navajo', '~> 0.0'
   pod 'BBlock', '~> 1.2'
   pod 'HockeySDK-Source'
   pod 'LicensePlist'

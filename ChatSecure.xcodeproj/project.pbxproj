@@ -339,8 +339,6 @@
 		6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposingImageView.m; sourceTree = "<group>"; };
 		6331066D1A16D1A300C17BAE /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
 		6331066E1A16D1A300C17BAE /* OTRLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLockButton.m; sourceTree = "<group>"; };
-		6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPasswordStrengthView.h; sourceTree = "<group>"; };
-		633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPasswordStrengthView.m; sourceTree = "<group>"; };
 		633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRememberPasswordView.h; sourceTree = "<group>"; };
 		633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRememberPasswordView.m; sourceTree = "<group>"; };
 		633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSocialButtonsView.h; sourceTree = "<group>"; };
@@ -1105,8 +1103,6 @@
 				6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */,
 				6331066D1A16D1A300C17BAE /* OTRLockButton.h */,
 				6331066E1A16D1A300C17BAE /* OTRLockButton.m */,
-				6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */,
-				633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */,
 				633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */,
 				633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */,
 				633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */,

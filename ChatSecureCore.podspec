@@ -42,7 +42,6 @@ TODO: Add long description of the pod here.
   # Utility
   s.dependency 'CocoaLumberjack/Swift', '~> 3.5.0'
   s.dependency 'MWFeedParser', '~> 1.0'
-  s.dependency 'Navajo', '~> 0.0'
   s.dependency 'BBlock', '~> 1.2'
   s.dependency 'HockeySDK-Source'
   s.dependency 'LicensePlist'
