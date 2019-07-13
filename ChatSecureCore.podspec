@@ -51,6 +51,7 @@ TODO: Add long description of the pod here.
   s.dependency 'ProxyKit/Client', '~> 1.2.0'
   s.dependency 'GCDWebServer', '~> 3.4'
   s.dependency 'CPAProxy'
+  s.dependency 'Tor'
   s.dependency 'XMPPFramework/Swift'
 
   s.dependency 'ChatSecure-Push-iOS'

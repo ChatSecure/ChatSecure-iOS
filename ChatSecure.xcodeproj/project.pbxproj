@@ -192,9 +192,6 @@
 		633105181A16D1A300C17BAE /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageManager.h; sourceTree = "<group>"; };
 		6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageManager.m; sourceTree = "<group>"; };
-		6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROAuthRefresher.h; sourceTree = "<group>"; };
-		6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROAuthRefresher.m; sourceTree = "<group>"; };
-		633105211A16D1A300C17BAE /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
 		633105221A16D1A300C17BAE /* OTRProtocolManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocolManager.h; sourceTree = "<group>"; };
 		633105231A16D1A300C17BAE /* OTRProtocolManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRProtocolManager.m; sourceTree = "<group>"; };
 		6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsManager.h; sourceTree = "<group>"; };
@@ -641,6 +638,7 @@
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
 		D9DB2D131F37AEBB005D64E4 /* OTRYapMessageSendAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRYapMessageSendAction.swift; sourceTree = "<group>"; };
+		D9DE95F322DA86AD00E76C7A /* OTRTorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRTorManager.swift; sourceTree = "<group>"; };
 		D9DEC3491FABC9F900BF1F7C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9E8277D1E2819F20071F40D /* strings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = strings.json; path = OTRAssets/Strings/strings.json; sourceTree = SOURCE_ROOT; };
 		D9EEEDD11D27388600B8BC54 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRvCard.h; path = "Yap Storage/OTRvCard.h"; sourceTree = "<group>"; };
@@ -800,13 +798,11 @@
 				633105161A16D1A300C17BAE /* OTRDatabaseView.m */,
 				633105171A16D1A300C17BAE /* OTREncryptionManager.h */,
 				633105181A16D1A300C17BAE /* OTREncryptionManager.m */,
-				6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */,
-				6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */,
-				633105211A16D1A300C17BAE /* OTRProtocol.h */,
 				633105221A16D1A300C17BAE /* OTRProtocolManager.h */,
 				633105231A16D1A300C17BAE /* OTRProtocolManager.m */,
 				6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */,
 				6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */,
+				D9DE95F322DA86AD00E76C7A /* OTRTorManager.swift */,
 				633105301A16D1A300C17BAE /* OTRTorManager.h */,
 				633105311A16D1A300C17BAE /* OTRTorManager.m */,
 				633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */,
@@ -1563,6 +1559,7 @@
 				D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				42829843B1DFA068A70F83E8 /* [CP] Copy Pods Resources */,
+				2D0230D0CF74A4A7D7BA77AB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1584,6 +1581,7 @@
 				6396AFB11A169D54009F3E6C /* Resources */,
 				D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */,
 				3CDE4234E348F4E767DA1980 /* [CP] Copy Pods Resources */,
+				142353818BBDB61EA63263C1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1795,6 +1793,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		142353818BBDB61EA63263C1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks.sh",
+				"${PODS_ROOT}/Tor/Build/iOS/Tor.framework",
+				"${PODS_ROOT}/Tor/Build/iOS/Tor.framework.dSYM",
+				"${PODS_ROOT}/Tor/Build/iOS/93C43FE0-93A2-3408-873F-124872631203.bcsymbolmap",
+				"${PODS_ROOT}/Tor/Build/iOS/3534DE4E-110A-335A-9AFF-D9BBFF6BC8FE.bcsymbolmap",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tor.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/Tor.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/93C43FE0-93A2-3408-873F-124872631203.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/3534DE4E-110A-335A-9AFF-D9BBFF6BC8FE.bcsymbolmap",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		26A8ED395C5418B361347335 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1811,6 +1833,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D0230D0CF74A4A7D7BA77AB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks.sh",
+				"${PODS_ROOT}/Tor/Build/iOS/Tor.framework",
+				"${PODS_ROOT}/Tor/Build/iOS/Tor.framework.dSYM",
+				"${PODS_ROOT}/Tor/Build/iOS/93C43FE0-93A2-3408-873F-124872631203.bcsymbolmap",
+				"${PODS_ROOT}/Tor/Build/iOS/3534DE4E-110A-335A-9AFF-D9BBFF6BC8FE.bcsymbolmap",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tor.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/Tor.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/93C43FE0-93A2-3408-873F-124872631203.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/3534DE4E-110A-335A-9AFF-D9BBFF6BC8FE.bcsymbolmap",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3CDE4234E348F4E767DA1980 /* [CP] Copy Pods Resources */ = {

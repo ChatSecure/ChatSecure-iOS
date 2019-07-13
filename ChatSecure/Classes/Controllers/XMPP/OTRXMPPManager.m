@@ -217,9 +217,8 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
     // File Transfer
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
     if ([self isKindOfClass:[OTRXMPPTorManager class]]) {
-        CPAProxyManager *tor = [OTRTorManager sharedInstance].torManager;
-        NSString *proxyHost = tor.SOCKSHost;
-        NSUInteger proxyPort = tor.SOCKSPort;
+        NSString *proxyHost = OTRTorManager.SOCKSHost;
+        NSUInteger proxyPort = OTRTorManager.SOCKSPort;
         NSDictionary *proxyDict = @{
                                     (NSString *)kCFStreamPropertySOCKSProxyHost : proxyHost,
                                     (NSString *)kCFStreamPropertySOCKSProxyPort : @(proxyPort)

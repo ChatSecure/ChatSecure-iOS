@@ -21,7 +21,7 @@
 @implementation OTRXMPPTorManager
 
 - (void) connectUserInitiated:(BOOL)userInitiated {
-    if ([OTRTorManager sharedInstance].torManager.isConnected) {
+    if (OTRTorManager.shared.torController.isConnected) {
         [super connectUserInitiated:userInitiated];
     } else {
         NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPErrorCodeTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
@@ -37,8 +37,8 @@
 // override
 - (void) setupStream {
     [super setupStream];
-    NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
-    NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
+    NSString *proxyHost = OTRTorManager.SOCKSHost;
+    NSUInteger proxyPort = OTRTorManager.SOCKSPort;
     if ([self.xmppStream isKindOfClass:[ProxyXMPPStream class]]) {
         ProxyXMPPStream *proxyStream = (ProxyXMPPStream*)self.xmppStream;
         [proxyStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];

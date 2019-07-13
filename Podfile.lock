@@ -63,6 +63,7 @@ PODS:
     - SAMKeychain (~> 1.5)
     - SignalProtocolObjC
     - SQLCipher (~> 4.2.0)
+    - Tor
     - TTTAttributedLabel (~> 2.0)
     - TUSafariActivity (~> 1.0)
     - XLForm (~> 4.0.0)
@@ -174,6 +175,7 @@ PODS:
   - SQLCipher/common (4.2.0)
   - SQLCipher/standard (4.2.0):
     - SQLCipher/common
+  - Tor (400.5.1)
   - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.4)
   - XLForm (4.0.1)
@@ -283,6 +285,7 @@ DEPENDENCIES:
   - QRCodeReaderViewController (~> 4.0)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - SQLCipher (~> 4.2)
+  - Tor (from `Submodules/Tor_framework/Tor.podspec`)
   - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
@@ -350,6 +353,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/gmertk/ParkedTextField.git
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
+  Tor:
+    :podspec: Submodules/Tor_framework/Tor.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:
@@ -373,7 +378,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: ae0bc3f0fa3d811121d7ec103e1b827aeb344d96
+  ChatSecureCore: c9a76fc1a5e1f0546e45f740d31cdc60de5e2a1f
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   CPAProxy: b1b33221b6ad297169cb813b6bbefd2a69ea9aad
@@ -407,6 +412,7 @@ SPEC CHECKSUMS:
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
   SQLCipher: 0187a2180ac288ea686b670b7141da62cd013b16
+  Tor: 0dc8a8b0384133645b97faa589220d58432ec593
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XLForm: b8d47a9a00fb6166981cb40de7169d70d611e9be
@@ -415,6 +421,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: b141f51290d05663f08b633a34ffb15eee02707b
+PODFILE CHECKSUM: e37c7446a07a8cba3c312b14db6732f79e95c63f
 
 COCOAPODS: 1.7.4

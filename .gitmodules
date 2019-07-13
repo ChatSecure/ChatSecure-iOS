@@ -40,3 +40,6 @@
 [submodule "Submodules/libsqlfs"]
 	path = Submodules/libsqlfs
 	url = git@github.com:ChatSecure/libsqlfs.git
+[submodule "Submodules/Tor_framework"]
+	path = Submodules/Tor_framework
+	url = git@github.com:ChatSecure/Tor.framework.git

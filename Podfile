@@ -52,6 +52,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ProxyKit/Client', '~> 1.2.0'
   pod 'GCDWebServer', '~> 3.4'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
+  pod 'Tor', :podspec => 'Submodules/Tor_framework/Tor.podspec'
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'

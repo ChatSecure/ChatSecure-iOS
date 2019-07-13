@@ -210,19 +210,22 @@
     
     if (account.accountType == OTRAccountTypeXMPPTor) {
         //check tor is running
-        if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
+        
+        if (OTRTorManager.shared.torController.isConnected) {
             [self finishConnectingWithForm:form account:account];
-        } else if ([OTRTorManager sharedInstance].torManager.status == CPAStatusClosed) {
-            [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
-                
-                if (error) {
+        } else {
+            id circuitObserver = nil;
+            circuitObserver = [OTRTorManager.shared.torController addObserverForCircuitEstablished:^(BOOL established) {
+                if (!established) {
+                    NSError *error = [NSError errorWithDomain:@"com.tor.error" code:1 userInfo:nil];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         completion(account,error);
                     });
                 } else {
+                    [OTRTorManager.shared.torController removeObserver:circuitObserver];
                     [self finishConnectingWithForm:form account:account];
                 }
-            } progress:progress];
+            }];
         }
     } else {
         [self finishConnectingWithForm:form account:account];
