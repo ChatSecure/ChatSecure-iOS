@@ -37,3 +37,6 @@
 [submodule "Submodules/YapTaskQueue"]
 	path = Submodules/YapTaskQueue
 	url = git@github.com:ChatSecure/YapTaskQueue.git
+[submodule "Submodules/libsqlfs"]
+	path = Submodules/libsqlfs
+	url = git@github.com:ChatSecure/libsqlfs.git

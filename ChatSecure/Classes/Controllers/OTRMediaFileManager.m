@@ -52,7 +52,10 @@ NSString *const kOTRRootMediaDirectory = @"media";
 - (BOOL)setupWithPath:(NSString *)path password:(NSString *)password
 {
     _ioCipher = [[IOCipher alloc] initWithPath:path password:password];
-    return _ioCipher != nil;
+    if (!_ioCipher) {
+        return NO;
+    }
+    return [_ioCipher setCipherCompatibility:3];
 }
 
 - (void)copyDataFromFilePath:(NSString *)filePath
