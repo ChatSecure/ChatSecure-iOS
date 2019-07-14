@@ -23,8 +23,7 @@ install:
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
   - mkdir -p ./Carthage/Build/iOS/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Carthage-iOS.zip -d ./Carthage/Build
-  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
-  - mv ./Submodules/CPAProxy/CPAProxyDependencies ./Submodules/CPAProxy/CPAProxyDependencies-iOS
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies-iOS.zip -d ./Submodules/CPAProxy/
   - cp -r ./Submodules/CPAProxy/CPAProxyDependencies-iOS ./Submodules/CPAProxy/CPAProxyDependencies-macOS
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies-iOS.zip -d ./Submodules/OTRKit/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
