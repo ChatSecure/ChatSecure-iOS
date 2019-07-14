@@ -184,7 +184,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/libevent</string>
 			<key>Title</key>
-			<string>libevent (2.0.22)</string>
+			<string>libevent (2.1.10)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -209,6 +209,14 @@
 			<string>com.mono0926.LicensePlist/libidn</string>
 			<key>Title</key>
 			<string>libidn (1.35)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>com.mono0926.LicensePlist/liblzma</string>
+			<key>Title</key>
+			<string>liblzma (5.2.4)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -280,7 +288,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/OpenSSL</string>
 			<key>Title</key>
-			<string>OpenSSL (1.0.2n)</string>
+			<string>OpenSSL (1.1.1c)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -368,7 +376,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Tor</string>
 			<key>Title</key>
-			<string>Tor (0.3.0.13)</string>
+			<string>Tor (0.4.0.5)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

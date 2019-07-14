@@ -59,7 +59,7 @@ manual:
       these additional notices to be distributed.
   - source: https://www.openssl.org
     name: OpenSSL
-    version: 1.0.2n
+    version: 1.1.1c
     body: |
       LICENSE ISSUES
         ==============
@@ -188,7 +188,7 @@ manual:
        */
   - source: http://libevent.org
     name: libevent
-    version: 2.0.22
+    version: 2.1.10
     body: |
       Libevent is available for use under the following license, commonly known
       as the 3-clause (or "modified") BSD license:
@@ -265,7 +265,7 @@ manual:
          OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   - source: https://dist.torproject.org
     name: Tor
-    version: 0.3.0.13
+    version: 0.4.0.5
     body: |
       This file contains the license for Tor,
               a free software project to provide anonymity on the Internet.
@@ -648,6 +648,11 @@ manual:
        "This product includes software developed by the OpenSSL Project
        for use in the OpenSSL Toolkit (http://www.openssl.org/)"
       ===============================================================================
+  - source: https://tukaani.org/xz/
+    name: liblzma
+    version: 5.2.4
+    body: |
+      liblzma is in the public domain.
 
 
 ## Specify GitHub's library manually.

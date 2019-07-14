@@ -400,7 +400,7 @@ name: ZXingObjC, nameSpecified:
 body:                     …
 version: 3.6.5
 
-name: libevent, nameSpecified: , version: 2.0.22
+name: libevent, nameSpecified: , version: 2.1.10
 body: Libevent is availabl…
 
 name: libgcrypt, nameSpecified: , version: 1.8.1
@@ -409,14 +409,17 @@ body: Libgcrypt - The GNU …
 name: libgpg-error, nameSpecified: , version: 
 body: Package: libgpg-erro…
 
+name: liblzma, nameSpecified: , version: 5.2.4
+body: liblzma is in the pu…
+
 name: libotr, nameSpecified: , version: 4.1.1
 body: Off-the-Record Messa…
 
-name: OpenSSL, nameSpecified: , version: 1.0.2n
+name: OpenSSL, nameSpecified: , version: 1.1.1c
 body: LICENSE ISSUES
   ===…
 
-name: Tor, nameSpecified: , version: 0.3.0.13
+name: Tor, nameSpecified: , version: 0.4.0.5
 body: This file contains t…
 
 add-version-numbers: true
