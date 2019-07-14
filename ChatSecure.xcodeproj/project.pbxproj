@@ -1581,7 +1581,6 @@
 				6396AFAF1A169D54009F3E6C /* Sources */,
 				6396AFB01A169D54009F3E6C /* Frameworks */,
 				6396AFB11A169D54009F3E6C /* Resources */,
-				D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */,
 				3CDE4234E348F4E767DA1980 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -2011,31 +2010,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ $CONFIGURATION = \"Debug\" ]; then\n${PODS_ROOT}/LicensePlist/license-plist --output-path $PRODUCT_NAME/Settings.bundle --add-version-numbers --suppress-opening-directory || true\nfi\n";
-		};
-		D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/FormatterKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/HTMLReader.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/KVOController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/PureLayout.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SAMKeychain.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/TTTAttributedLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework",
-			);
-			name = "[Carthage] Copy Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
