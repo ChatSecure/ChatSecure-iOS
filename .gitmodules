@@ -31,3 +31,12 @@
 [submodule "Submodules/LumberjackConsole"]
 	path = Submodules/LumberjackConsole
 	url = git@github.com:ChatSecure/LumberjackConsole.git
+[submodule "Submodules/YapDatabase"]
+	path = Submodules/YapDatabase
+	url = git@github.com:ChatSecure/YapDatabase.git
+[submodule "Submodules/YapTaskQueue"]
+	path = Submodules/YapTaskQueue
+	url = git@github.com:ChatSecure/YapTaskQueue.git
+[submodule "Submodules/libsqlfs"]
+	path = Submodules/libsqlfs
+	url = git@github.com:ChatSecure/libsqlfs.git

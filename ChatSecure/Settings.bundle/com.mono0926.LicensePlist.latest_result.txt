@@ -98,11 +98,11 @@ version: 1.7.13
 
 name: FormatterKit, nameSpecified: 
 body: Copyright (c) 2011–2…
-version: 1.8.2
+version: 1.9.0
 
 name: FormatterKit, nameSpecified: 
 body: Copyright (c) 2011–2…
-version: 1.8.2
+version: 1.9.0
 
 name: GCDWebServer, nameSpecified: 
 body: Copyright (c) 2012-2…
@@ -126,11 +126,11 @@ version: 5.1.4
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.3
+version: 2.1.4
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.3
+version: 2.1.4
 
 name: IOCipher, nameSpecified: 
 body: 		  GNU LESSER GENER…
@@ -254,14 +254,6 @@ name: MWFeedParser, nameSpecified:
 body: Copyright (c) 2010 M…
 version: 1.0.1
 
-name: Navajo, nameSpecified: 
-body: Copyright (c) 2014 M…
-version: 0.0.1
-
-name: Navajo, nameSpecified: 
-body: Copyright (c) 2014 M…
-version: 0.0.1
-
 name: NBUCore, nameSpecified: 
 body: 
                    …
@@ -346,11 +338,11 @@ version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 3.4.2
+version: 4.2.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 3.4.2
+version: 4.2.0
 
 name: TTTAttributedLabel, nameSpecified: 
 body: Copyright (c) 2011 M…
@@ -386,11 +378,11 @@ version: 4.0.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1.1
+version: 3.1.3
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1.1
+version: 3.1.3
 
 name: YapTaskQueue, nameSpecified: 
 body: This is free and une…
@@ -408,29 +400,7 @@ name: ZXingObjC, nameSpecified:
 body:                     …
 version: 3.6.5
 
-name: AFNetworking, nameSpecified: , owner: AFNetworking, version: 3.2.1
-
-name: FormatterKit, nameSpecified: , owner: mattt, version: 1.8.2
-
-name: HTMLReader, nameSpecified: , owner: nolanw, version: v2.1.3
-
-name: KVOController, nameSpecified: , owner: facebook, version: v1.2.0
-
-name: Mantle, nameSpecified: , owner: Mantle, version: 0987467
-
-name: MBProgressHUD, nameSpecified: , owner: jdg, version: 1.1.0
-
-name: PureLayout, nameSpecified: , owner: PureLayout, version: v3.1.4
-
-name: SAMKeychain, nameSpecified: , owner: soffes, version: v1.5.3
-
-name: TTTAttributedLabel, nameSpecified: , owner: TTTAttributedLabel, version: 2.0.0
-
-name: XLForm, nameSpecified: , owner: xmartlabs, version: 4.0.0
-
-name: ZXingObjC, nameSpecified: , owner: TheLevelUp, version: 3.6.4
-
-name: libevent, nameSpecified: , version: 2.0.22
+name: libevent, nameSpecified: , version: 2.1.10
 body: Libevent is availabl…
 
 name: libgcrypt, nameSpecified: , version: 1.8.1
@@ -439,14 +409,17 @@ body: Libgcrypt - The GNU …
 name: libgpg-error, nameSpecified: , version: 
 body: Package: libgpg-erro…
 
+name: liblzma, nameSpecified: , version: 5.2.4
+body: liblzma is in the pu…
+
 name: libotr, nameSpecified: , version: 4.1.1
 body: Off-the-Record Messa…
 
-name: OpenSSL, nameSpecified: , version: 1.0.2n
+name: OpenSSL, nameSpecified: , version: 1.1.1c
 body: LICENSE ISSUES
   ===…
 
-name: Tor, nameSpecified: , version: 0.3.0.13
+name: Tor, nameSpecified: , version: 0.4.0.5
 body: This file contains t…
 
 add-version-numbers: true

@@ -339,8 +339,6 @@
 		6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposingImageView.m; sourceTree = "<group>"; };
 		6331066D1A16D1A300C17BAE /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
 		6331066E1A16D1A300C17BAE /* OTRLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLockButton.m; sourceTree = "<group>"; };
-		6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPasswordStrengthView.h; sourceTree = "<group>"; };
-		633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPasswordStrengthView.m; sourceTree = "<group>"; };
 		633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRememberPasswordView.h; sourceTree = "<group>"; };
 		633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRememberPasswordView.m; sourceTree = "<group>"; };
 		633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSocialButtonsView.h; sourceTree = "<group>"; };
@@ -1105,8 +1103,6 @@
 				6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */,
 				6331066D1A16D1A300C17BAE /* OTRLockButton.h */,
 				6331066E1A16D1A300C17BAE /* OTRLockButton.m */,
-				6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */,
-				633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */,
 				633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */,
 				633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */,
 				633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */,
@@ -1564,7 +1560,6 @@
 				6396AF971A169D54009F3E6C /* Frameworks */,
 				6396AF981A169D54009F3E6C /* Resources */,
 				D9227C481BA7952100B5E1D0 /* Embed Frameworks */,
-				D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				42829843B1DFA068A70F83E8 /* [CP] Copy Pods Resources */,
 			);
@@ -1586,7 +1581,6 @@
 				6396AFAF1A169D54009F3E6C /* Sources */,
 				6396AFB01A169D54009F3E6C /* Frameworks */,
 				6396AFB11A169D54009F3E6C /* Resources */,
-				D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */,
 				3CDE4234E348F4E767DA1980 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -2017,45 +2011,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ $CONFIGURATION = \"Debug\" ]; then\n${PODS_ROOT}/LicensePlist/license-plist --output-path $PRODUCT_NAME/Settings.bundle --add-version-numbers --suppress-opening-directory || true\nfi\n";
 		};
-		D9BE0B531EFAFED800BDF8D8 /* [Carthage] Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/FormatterKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/HTMLReader.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/KVOController.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/PureLayout.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SAMKeychain.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/TTTAttributedLabel.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/XLForm.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ZXingObjC.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework",
-			);
-			name = "[Carthage] Copy Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		D9EC47841EFA043B00C39B25 /* [Carthage] Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[Carthage] Copy Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2342,10 +2297,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -2379,10 +2331,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",

@@ -42,7 +42,6 @@ TODO: Add long description of the pod here.
   # Utility
   s.dependency 'CocoaLumberjack/Swift', '~> 3.5.0'
   s.dependency 'MWFeedParser', '~> 1.0'
-  s.dependency 'Navajo', '~> 0.0'
   s.dependency 'BBlock', '~> 1.2'
   s.dependency 'HockeySDK-Source'
   s.dependency 'LicensePlist'
@@ -58,9 +57,9 @@ TODO: Add long description of the pod here.
 
   # Storage
   # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
-  s.dependency 'SQLCipher', '~> 3.4'
+  s.dependency 'SQLCipher', '~> 4.2.0'
   # Version 3.1.2 breaks YapTaskQueue 0.3.0
-  s.dependency 'YapDatabase/SQLCipher', '3.1.1'
+  s.dependency 'YapDatabase/SQLCipher', '~> 3.1.3'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   s.dependency 'libsqlfs/SQLCipher'
