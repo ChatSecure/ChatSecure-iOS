@@ -42,7 +42,6 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 ### Mobile
 
 * [Conversations](https://conversations.im) (Android) **Supports OMEMO**
-* [Zom](https://zom.im/) (Android, iOS) **Supports OMEMO**
 
 ## Build Instructions
 
