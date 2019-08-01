@@ -480,3 +480,23 @@ open class KeyManagementViewController: XLFormViewController {
     }
 
 }
+
+extension OMEMODevice: XLFormOptionObject {
+    public func formDisplayText() -> String {
+        return humanReadableFingerprint
+    }
+    
+    public func formValue() -> Any {
+        return self
+    }
+}
+
+extension OTRFingerprint: XLFormOptionObject {
+    public func formDisplayText() -> String {
+        return (fingerprint as NSData).humanReadableFingerprint()
+    }
+    
+    public func formValue() -> Any {
+        return self
+    }
+}
