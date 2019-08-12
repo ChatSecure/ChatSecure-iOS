@@ -359,7 +359,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Mantle:
-    :commit: 4c1a09cb0c0811956cd35262340e42b940971cbb
+    :commit: 9aadbd27b1cc161dca884ec0cef198fa56e83d11
     :git: https://github.com/ChatSecure/Mantle.git
   ParkedTextField:
     :commit: a3800e3
@@ -417,4 +417,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: b141f51290d05663f08b633a34ffb15eee02707b
 
-COCOAPODS: 1.7.4
+COCOAPODS: 1.7.5
