@@ -181,21 +181,25 @@ public class PurchaseViewController: UIViewController {
 
 extension PurchaseViewController: SKProductsRequestDelegate {
     public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        response.products.forEach {
-            guard let product = $0.product else {
-                DDLogWarn("Unrecognized product: \($0)")
-                return
+        DispatchQueue.main.async {
+            response.products.forEach {
+                guard let product = $0.product else {
+                    DDLogWarn("Unrecognized product: \($0)")
+                    return
+                }
+                self.products[product] = $0
+                DDLogInfo("Product \"\($0.localizedTitle)\" (\($0.productIdentifier)):  \($0.price.floatValue)")
             }
-            products[product] = $0
-            DDLogInfo("Product \"\($0.localizedTitle)\" (\($0.productIdentifier)):  \($0.price.floatValue)")
+            self.refreshMoneyButtons()
+            MBProgressHUD.hide(for: self.view, animated: true)
         }
-        refreshMoneyButtons()
-        MBProgressHUD.hide(for: self.view, animated: true)
     }
     
     public func request(_ request: SKRequest, didFailWithError error: Error) {
-        DDLogError("Error loading products: \(error.localizedDescription)")
-        MBProgressHUD.hide(for: self.view, animated: true)
+        DispatchQueue.main.async {
+            DDLogError("Error loading products: \(error.localizedDescription)")
+            MBProgressHUD.hide(for: self.view, animated: true)
+        }
     }
 }
 
