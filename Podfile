@@ -41,7 +41,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
 
   # Utility
-  pod 'CocoaLumberjack/Swift', '~> 3.5.0'
+  pod 'CocoaLumberjack/Swift', '~> 3.6.0'
   pod 'MWFeedParser', '~> 1.0'
   pod 'BBlock', '~> 1.2'
   pod 'HockeySDK-Source'

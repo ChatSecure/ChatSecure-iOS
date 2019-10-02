@@ -8,11 +8,11 @@ version: 3.2.1
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014 A…
-version: 4.8.2
+version: 4.9.0
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014 A…
-version: 4.8.2
+version: 4.9.0
 
 name: Appirater, nameSpecified: 
 body: Copyright 2017. Aras…
@@ -74,43 +74,43 @@ version: 7.6.3
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.5.3
+version: 3.6.0
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
+version: 3.6.0
+
+name: CPAProxy, nameSpecified: 
+body: Copyright (c) 2013 C…
+version: 1.2.0
+
+name: CPAProxy, nameSpecified: 
+body: Copyright (c) 2013 C…
+version: 1.2.0
+
+name: DTFoundation, nameSpecified: 
+body: Copyright (c) 2011, …
+version: 1.7.14
+
+name: DTFoundation, nameSpecified: 
+body: Copyright (c) 2011, …
+version: 1.7.14
+
+name: FormatterKit, nameSpecified: 
+body: Copyright (c) 2011–2…
+version: 1.9.0
+
+name: FormatterKit, nameSpecified: 
+body: Copyright (c) 2011–2…
+version: 1.9.0
+
+name: GCDWebServer, nameSpecified: 
+body: Copyright (c) 2012-2…
 version: 3.5.3
 
-name: CPAProxy, nameSpecified: 
-body: Copyright (c) 2013 C…
-version: 1.2.0
-
-name: CPAProxy, nameSpecified: 
-body: Copyright (c) 2013 C…
-version: 1.2.0
-
-name: DTFoundation, nameSpecified: 
-body: Copyright (c) 2011, …
-version: 1.7.13
-
-name: DTFoundation, nameSpecified: 
-body: Copyright (c) 2011, …
-version: 1.7.13
-
-name: FormatterKit, nameSpecified: 
-body: Copyright (c) 2011–2…
-version: 1.9.0
-
-name: FormatterKit, nameSpecified: 
-body: Copyright (c) 2011–2…
-version: 1.9.0
-
 name: GCDWebServer, nameSpecified: 
 body: Copyright (c) 2012-2…
-version: 3.5.2
-
-name: GCDWebServer, nameSpecified: 
-body: Copyright (c) 2012-2…
-version: 3.5.2
+version: 3.5.3
 
 name: HockeySDK-Source, nameSpecified: 
 body: ## Licenses
@@ -212,13 +212,13 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 2.5.0
+version: 2.7.1
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.5.0
+version: 2.7.1
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
@@ -298,11 +298,11 @@ version: 1.2.0
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.4
+version: 3.1.5
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.4
+version: 3.1.5
 
 name: QRCodeReaderViewController, nameSpecified: 
 body: The MIT License (MIT…
@@ -424,4 +424,4 @@ body: This file contains t…
 
 add-version-numbers: true
 
-LicensePlist Version: 1.8.3
+LicensePlist Version: 2.7.1
