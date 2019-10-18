@@ -57,6 +57,7 @@
 		D93EFA8823596BCA007474EC /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7E23596BCA007474EC /* UserInfoProfileCell.xib */; };
 		D93EFA8923596BCA007474EC /* OTRMessageNewDeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7F23596BCA007474EC /* OTRMessageNewDeviceCell.xib */; };
 		D93EFA8A23596BCA007474EC /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8023596BCA007474EC /* SingleButtonTableViewCell.xib */; };
+		D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
@@ -219,6 +220,7 @@
 		D93EFA7E23596BCA007474EC /* UserInfoProfileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UserInfoProfileCell.xib; path = Interface/UserInfoProfileCell.xib; sourceTree = "<group>"; };
 		D93EFA7F23596BCA007474EC /* OTRMessageNewDeviceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessageNewDeviceCell.xib; path = Interface/OTRMessageNewDeviceCell.xib; sourceTree = "<group>"; };
 		D93EFA8023596BCA007474EC /* SingleButtonTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SingleButtonTableViewCell.xib; path = Interface/SingleButtonTableViewCell.xib; sourceTree = "<group>"; };
+		D93EFA8D235971E2007474EC /* Purchase.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Purchase.storyboard; path = Interface/Purchase.storyboard; sourceTree = "<group>"; };
 		D95553D71C4F16730019667A /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D9599BB91E284BCA006A4450 /* StringsConverter.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = StringsConverter.py; path = Strings/StringsConverter.py; sourceTree = "<group>"; };
 		D9599BBA1E284BCA006A4450 /* StringsUnused.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = StringsUnused.py; path = Strings/StringsUnused.py; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 		D93027571BAA381F000CC975 /* OTRResources */ = {
 			isa = PBXGroup;
 			children = (
+				D93EFA8D235971E2007474EC /* Purchase.storyboard */,
 				D93EFA7A23596BC9007474EC /* OMEMODeviceFingerprintCell.xib */,
 				D93EFA7723596BC9007474EC /* OTRComposeGroupBuddyCell.xib */,
 				D93EFA7F23596BCA007474EC /* OTRMessageNewDeviceCell.xib */,
@@ -758,6 +761,7 @@
 				D93EFA8123596BCA007474EC /* OTRComposeGroupBuddyCell.xib in Resources */,
 				D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */,
 				9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */,
+				D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */,
 				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
 				D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */,
 				D93EFA8423596BCA007474EC /* OMEMODeviceFingerprintCell.xib in Resources */,
