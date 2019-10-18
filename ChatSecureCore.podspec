@@ -82,7 +82,7 @@ TODO: Add long description of the pod here.
   s.dependency "TTTAttributedLabel", '~> 2.0'
   s.dependency "PureLayout", '~> 3.0'
   s.dependency "KVOController", '~> 1.2'
-  s.dependency "XLForm", '~> 4.0.0'
+  s.dependency "XLForm", '~> 4.1'
   s.dependency "FormatterKit", '~> 1.8'
 
   s.dependency "OTRAssets"

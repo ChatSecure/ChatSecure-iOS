@@ -20,7 +20,7 @@ platform :ios, "9.0"
 use_modular_headers!
 inhibit_all_warnings!
 
-source 'https://github.com/CocoaPods/Specs.git'
+source 'https://cdn.cocoapods.org/'
 
 abstract_target 'ChatSecureCorePods' do
   # User Interface
@@ -57,10 +57,8 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
 
   # Storage
-  # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
   pod 'SQLCipher', '~> 4.2'
-  # Version 3.1.2 breaks YapTaskQueue 0.3.0
-  # pod 'YapDatabase/SQLCipher', '~> 3.1.3'
+  # Waiting on merge https://github.com/yapstudios/YapDatabase/pull/492
   pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
   pod 'Mantle', :podspec => 'Podspecs/Mantle.podspec.json'
 
