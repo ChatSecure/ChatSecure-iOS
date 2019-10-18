@@ -63,8 +63,13 @@ open class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     override open func update() {
         super.update()
         self.usernameField.delegate = self
-        self.usernameLabel.textColor = UIColor.darkText
         
+        if #available(iOS 13.0, *) {
+            self.usernameLabel.textColor = .label
+        } else {
+            self.usernameLabel.textColor = .darkText
+        }
+
         if let value = self.rowDescriptor!.value as? NSString {
             let (username, domain) = OTRUsernameCell.splitJID(value as String)
             if username.count > 0 {
