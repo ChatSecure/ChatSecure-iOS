@@ -617,14 +617,16 @@ open class PushController: NSObject, PushControllerProtocol {
         var pushPermitted = false
         let group = DispatchGroup()
         group.enter()
-        pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
+        DispatchQueue.main.async {
+            pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
+            group.leave()
+        }
         group.enter()
-        group.leave()
         getPubsubEndpoint { (endpoint, error) in
             pubsubEndpoint = endpoint
             group.leave()
         }
-        group.notify(queue: DispatchQueue.global(qos: .default)) {
+        group.notify(queue: .main) {
             let device = storage.thisDevice()
             let newPushInfo = PushInfo(
                 pushAPIURL: self.apiClient.baseUrl,
