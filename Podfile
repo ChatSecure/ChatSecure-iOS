@@ -22,61 +22,31 @@ inhibit_all_warnings!
 
 source 'https://cdn.cocoapods.org/'
 
-abstract_target 'ChatSecureCorePods' do
-  # User Interface
-  pod "Appirater", '~> 2.0'
-  pod 'OpenInChrome', '~> 0.0'
-  pod 'JTSImageViewController', '~> 1.4'
-  pod 'BButton', '~> 4.0'
-  pod 'TUSafariActivity', '~> 1.0'
-  pod 'ARChromeActivity', '~> 1.0'
-  pod 'QRCodeReaderViewController', '~> 4.0'
-  # pod 'ParkedTextField', '~> 0.3.1'
+abstract_target 'ChatSecureCorePods' do  
   pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => 'a3800e3' # Swift 4.2
-
-
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
-  # pod 'LumberjackConsole', '~> 3.3.0'
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
 
-  # Utility
-  pod 'CocoaLumberjack/Swift', '~> 3.6.0'
-  pod 'MWFeedParser', '~> 1.0'
-  pod 'BBlock', '~> 1.2'
-  pod 'HockeySDK-Source'
-  pod 'LicensePlist'
-
   # Network
-  pod 'CocoaAsyncSocket', '~> 7.6.0'
-  pod 'ProxyKit/Client', '~> 1.2.0'
-  pod 'GCDWebServer', '~> 3.4'
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
 
-  # Storage
-  pod 'SQLCipher', '~> 4.2'
   # Waiting on merge https://github.com/yapstudios/YapDatabase/pull/492
   pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
   pod 'Mantle', :podspec => 'Podspecs/Mantle.podspec.json'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
-  # pod 'libsqlfs/SQLCipher', :git => 'https://github.com/ChatSecure/libsqlfs.git', :branch => '1.3.2-chatsecure'
   pod 'libsqlfs/SQLCipher', :path => 'Submodules/libsqlfs/libsqlfs.podspec'
 
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  # pod 'YapTaskQueue/SQLCipher', :git => 'https://github.com/ChatSecure/YapTaskQueue.git', :branch => 'swift4'
   pod 'YapTaskQueue/SQLCipher', :path => 'Submodules/YapTaskQueue/YapTaskQueue.podspec'
 
   # Crypto
   pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
   pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
-
-  pod 'Alamofire', '~> 4.4'
-  pod 'Kvitto', '~> 1.0'
-
 
   pod 'ChatSecureCore', :path => 'ChatSecureCore.podspec'
   pod 'OTRAssets', :path => 'OTRAssets.podspec'

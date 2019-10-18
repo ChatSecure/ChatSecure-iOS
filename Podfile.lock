@@ -254,36 +254,18 @@ PODS:
   - ZXingObjC/All (3.6.5)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.4)
-  - Appirater (~> 2.0)
-  - ARChromeActivity (~> 1.0)
-  - BBlock (~> 1.2)
-  - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - ChatSecureCore (from `ChatSecureCore.podspec`)
-  - CocoaAsyncSocket (~> 7.6.0)
-  - CocoaLumberjack/Swift (~> 3.6.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
-  - GCDWebServer (~> 3.4)
-  - HockeySDK-Source
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
-  - JTSImageViewController (~> 1.4)
-  - Kvitto (~> 1.0)
   - libsqlfs/SQLCipher (from `Submodules/libsqlfs/libsqlfs.podspec`)
-  - LicensePlist
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - Mantle (from `Podspecs/Mantle.podspec.json`)
-  - MWFeedParser (~> 1.0)
-  - OpenInChrome (~> 0.0)
   - OTRAssets (from `OTRAssets.podspec`)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
-  - ProxyKit/Client (~> 1.2.0)
-  - QRCodeReaderViewController (~> 4.0)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
-  - SQLCipher (~> 4.2)
-  - TUSafariActivity (~> 1.0)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
@@ -415,6 +397,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 7e1c62df3549691e2a8b8c07c9779ecc36c4d14b
+PODFILE CHECKSUM: 1cdf75e697f0bb8d13a79f0037ea3eb3b51101cf
 
 COCOAPODS: 1.8.4
