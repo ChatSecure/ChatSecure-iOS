@@ -66,7 +66,7 @@ TODO: Add long description of the pod here.
 
   # Crypto
   s.dependency 'SignalProtocolObjC'
-  s.dependency 'OTRKit'
+  # s.dependency 'OTRKit'
 
   s.dependency 'Alamofire', '~> 4.4'
   s.dependency 'Kvitto', '~> 1.0'

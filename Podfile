@@ -50,7 +50,7 @@ abstract_target 'ChatSecureCorePods' do
 
   # Crypto
   pod 'SignalProtocolObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec'
-  pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
+  # pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 
   pod 'ChatSecureCore', :path => 'ChatSecureCore.podspec'
   pod 'OTRAssets', :path => 'OTRAssets.podspec'

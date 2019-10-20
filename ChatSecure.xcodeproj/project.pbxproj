@@ -470,6 +470,7 @@
 		D9C52B3C235CB582002B213A /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C52B3D235CB582002B213A /* ChatSecureCoreCompat-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */; };
 		D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
+		D9C52B4B235CC39B002B213A /* OTRKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52B4A235CC36B002B213A /* OTRKit.framework */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */; };
 		FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C35A70D105953D80691D31 /* libPods-ChatSecureCorePods-ChatSecureCore.a */; };
@@ -503,6 +504,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = D9C527FF235CB55C002B213A;
 			remoteInfo = ChatSecureCore;
+		};
+		D9C52B47235CC36B002B213A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D96A69CC235BB43E006FF925;
+			remoteInfo = "OTRKit (macOS)";
+		};
+		D9C52B49235CC36B002B213A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D96A6A35235BB83B006FF925;
+			remoteInfo = "OTRKit (iOS)";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1043,6 +1058,7 @@
 		D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerInfo.h; sourceTree = "<group>"; };
 		D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatSecureCoreCompat-Swift.h"; sourceTree = "<group>"; };
 		D9C529B1235CB580002B213A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OTRKit.xcodeproj; path = Submodules/OTRKit/OTRKit.xcodeproj; sourceTree = "<group>"; };
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9DEC3491FABC9F900BF1F7C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1088,6 +1104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9C52B4B235CC39B002B213A /* OTRKit.framework in Frameworks */,
 				FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1155,6 +1172,7 @@
 		6396AF911A169D54009F3E6C = {
 			isa = PBXGroup;
 			children = (
+				D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
 				6365CEFD1E2453F6009E213F /* ChatSecureUITests */,
@@ -1843,6 +1861,15 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		D9C52B43235CC36B002B213A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9C52B48235CC36B002B213A /* OTRKit.framework */,
+				D9C52B4A235CC36B002B213A /* OTRKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -2228,6 +2255,12 @@
 			mainGroup = 6396AF911A169D54009F3E6C;
 			productRefGroup = 6396AF9B1A169D54009F3E6C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D9C52B43235CC36B002B213A /* Products */;
+					ProjectRef = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				6396AF991A169D54009F3E6C /* ChatSecure */,
@@ -2238,6 +2271,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D9C52B48235CC36B002B213A /* OTRKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OTRKit.framework;
+			remoteRef = D9C52B47235CC36B002B213A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9C52B4A235CC36B002B213A /* OTRKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OTRKit.framework;
+			remoteRef = D9C52B49235CC36B002B213A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6365CEFA1E2453F6009E213F /* Resources */ = {
