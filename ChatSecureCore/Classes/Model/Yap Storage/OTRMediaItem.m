@@ -14,7 +14,6 @@
 #import "OTRHTMLItem.h"
 @import JSQMessagesViewController;
 @import YapDatabase;
-@import OTRKit;
 @import MobileCoreServices;
 @import OTRAssets;
 #import "OTRDatabaseManager.h"

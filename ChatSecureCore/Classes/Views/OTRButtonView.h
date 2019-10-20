@@ -8,8 +8,6 @@
 
 @import UIKit;
 
-@import OTRKit;
-
 NS_ASSUME_NONNULL_BEGIN
 @interface OTRButtonView : UIView
 

@@ -45,6 +45,7 @@
 #import "OTRAccount.h"
 #import "OTRStreamManagementYapStorage.h"
 @import OTRKit;
+@import CPAProxy;
 #import "OTRXMPPRoomManager.h"
 #import "OTRXMPPBuddyTimers.h"
 #import "OTRXMPPError.h"

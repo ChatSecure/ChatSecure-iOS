@@ -7,7 +7,7 @@
 //
 
 @import Foundation;
-@import CPAProxy;
+@class CPAProxyManager;
 
 @interface OTRTorManager : NSObject
 

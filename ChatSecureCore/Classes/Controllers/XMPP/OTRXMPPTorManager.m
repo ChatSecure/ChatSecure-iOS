@@ -9,6 +9,7 @@
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
 @import XMPPFramework;
+@import CPAProxy;
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPError.h"
 #import "OTRProtocol.h"

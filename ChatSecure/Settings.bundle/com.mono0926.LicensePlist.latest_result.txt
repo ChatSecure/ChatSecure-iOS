@@ -123,15 +123,15 @@ version: 3.6.0
 
 name: CPAProxy, nameSpecified: 
 body: Copyright (c) 2013 C…
-version: 1.2.0
+version: 2.0.0
 
 name: CPAProxy, nameSpecified: 
 body: Copyright (c) 2013 C…
-version: 1.2.0
+version: 2.0.0
 
 name: CPAProxy, nameSpecified: 
 body: Copyright (c) 2013 C…
-version: 1.2.0
+version: 2.0.0
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …

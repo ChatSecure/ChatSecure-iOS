@@ -44,6 +44,8 @@
 	<true/>
 	<key>ITSEncryptionExportComplianceCode</key>
 	<string>51d17d3e-5e07-49ad-a308-9625d81e411f</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.social-networking</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>twitter</string>

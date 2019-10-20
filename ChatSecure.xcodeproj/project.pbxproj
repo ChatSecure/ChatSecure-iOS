@@ -59,9 +59,13 @@
 		D93EFA8A23596BCA007474EC /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8023596BCA007474EC /* SingleButtonTableViewCell.xib */; };
 		D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
 		D954B317235CF98B00B1E68F /* CPAProxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D954B316235CF98B00B1E68F /* CPAProxy.xcframework */; };
-		D954B319235CFA2F00B1E68F /* CPAProxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D954B316235CF98B00B1E68F /* CPAProxy.xcframework */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
+		D97947D8235D0398000D86AE /* CPAProxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D954B316235CF98B00B1E68F /* CPAProxy.xcframework */; };
+		D97947D9235D0398000D86AE /* CPAProxy.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D954B316235CF98B00B1E68F /* CPAProxy.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D97947DC235D08DC000D86AE /* OTRKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97947DA235D08DC000D86AE /* OTRKit.xcframework */; };
+		D97947DD235D08E9000D86AE /* OTRKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97947DA235D08DC000D86AE /* OTRKit.xcframework */; };
+		D97947DE235D08E9000D86AE /* OTRKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D97947DA235D08DC000D86AE /* OTRKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
@@ -472,7 +476,6 @@
 		D9C52B3C235CB582002B213A /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C52B3D235CB582002B213A /* ChatSecureCoreCompat-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */; };
 		D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
-		D9C52B4B235CC39B002B213A /* OTRKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52B4A235CC36B002B213A /* OTRKit.framework */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */; };
 		FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C35A70D105953D80691D31 /* libPods-ChatSecureCorePods-ChatSecureCore.a */; };
@@ -507,20 +510,6 @@
 			remoteGlobalIDString = D9C527FF235CB55C002B213A;
 			remoteInfo = ChatSecureCore;
 		};
-		D9C52B47235CC36B002B213A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D96A69CC235BB43E006FF925;
-			remoteInfo = "OTRKit (macOS)";
-		};
-		D9C52B49235CC36B002B213A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D96A6A35235BB83B006FF925;
-			remoteInfo = "OTRKit (iOS)";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -530,7 +519,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D97947DE235D08E9000D86AE /* OTRKit.xcframework in Embed Frameworks */,
 				D9C52808235CB55C002B213A /* ChatSecureCore.framework in Embed Frameworks */,
+				D97947D9235D0398000D86AE /* CPAProxy.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -650,6 +641,7 @@
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D97070911EEF382D004FEBDE /* MediaDownloadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MediaDownloadView.xib; path = Interface/MediaDownloadView.xib; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		D97947DA235D08DC000D86AE /* OTRKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OTRKit.xcframework; path = Submodules/OTRKit/OTRKitDependencies/OTRKit.xcframework; sourceTree = "<group>"; };
 		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HTMLPreviewView.xib; path = Interface/HTMLPreviewView.xib; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
@@ -1061,7 +1053,6 @@
 		D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerInfo.h; sourceTree = "<group>"; };
 		D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatSecureCoreCompat-Swift.h"; sourceTree = "<group>"; };
 		D9C529B1235CB580002B213A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OTRKit.xcodeproj; path = Submodules/OTRKit/OTRKit.xcodeproj; sourceTree = "<group>"; };
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9DEC3491FABC9F900BF1F7C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1081,8 +1072,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D97947DD235D08E9000D86AE /* OTRKit.xcframework in Frameworks */,
 				D9C52807235CB55C002B213A /* ChatSecureCore.framework in Frameworks */,
-				D954B319235CFA2F00B1E68F /* CPAProxy.xcframework in Frameworks */,
+				D97947D8235D0398000D86AE /* CPAProxy.xcframework in Frameworks */,
 				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				07BD06A9B424D601FC93AB82 /* libPods-ChatSecureCorePods-ChatSecure.a in Frameworks */,
 			);
@@ -1108,7 +1100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C52B4B235CC39B002B213A /* OTRKit.framework in Frameworks */,
+				D97947DC235D08DC000D86AE /* OTRKit.xcframework in Frameworks */,
 				D954B317235CF98B00B1E68F /* CPAProxy.xcframework in Frameworks */,
 				FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */,
 			);
@@ -1177,8 +1169,8 @@
 		6396AF911A169D54009F3E6C = {
 			isa = PBXGroup;
 			children = (
+				D97947DA235D08DC000D86AE /* OTRKit.xcframework */,
 				D954B316235CF98B00B1E68F /* CPAProxy.xcframework */,
-				D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
 				6365CEFD1E2453F6009E213F /* ChatSecureUITests */,
@@ -1867,15 +1859,6 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
-		D9C52B43235CC36B002B213A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D9C52B48235CC36B002B213A /* OTRKit.framework */,
-				D9C52B4A235CC36B002B213A /* OTRKit.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -2261,12 +2244,6 @@
 			mainGroup = 6396AF911A169D54009F3E6C;
 			productRefGroup = 6396AF9B1A169D54009F3E6C /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = D9C52B43235CC36B002B213A /* Products */;
-					ProjectRef = D9C52B42235CC36B002B213A /* OTRKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				6396AF991A169D54009F3E6C /* ChatSecure */,
@@ -2277,23 +2254,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		D9C52B48235CC36B002B213A /* OTRKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OTRKit.framework;
-			remoteRef = D9C52B47235CC36B002B213A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9C52B4A235CC36B002B213A /* OTRKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OTRKit.framework;
-			remoteRef = D9C52B49235CC36B002B213A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6365CEFA1E2453F6009E213F /* Resources */ = {
@@ -3056,7 +3016,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 146;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3066,7 +3027,7 @@
 					"SQLITE_HAS_CODEC=1",
 				);
 				INFOPLIST_FILE = ChatSecure/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3076,6 +3037,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -3094,7 +3056,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 146;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3104,7 +3067,7 @@
 					"SQLITE_HAS_CODEC=1",
 				);
 				INFOPLIST_FILE = ChatSecure/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3114,6 +3077,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 			};
 			name = Release;
 		};
@@ -3222,7 +3186,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3267,7 +3231,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

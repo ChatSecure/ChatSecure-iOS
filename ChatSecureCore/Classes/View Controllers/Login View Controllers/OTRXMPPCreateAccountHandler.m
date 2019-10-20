@@ -9,6 +9,7 @@
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRXMPPManager.h"
 @import XLForm;
+@import CPAProxy;
 #import "OTRXLFormCreator.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"

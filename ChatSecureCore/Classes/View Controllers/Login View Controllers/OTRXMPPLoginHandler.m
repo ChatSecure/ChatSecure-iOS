@@ -15,6 +15,7 @@
 #import "OTRPasswordGenerator.h"
 #import "ChatSecureCoreCompat-Swift.h"
 @import XMPPFramework;
+@import CPAProxy;
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRTorManager.h"
