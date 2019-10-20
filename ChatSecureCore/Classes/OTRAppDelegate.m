@@ -158,13 +158,10 @@
     [self batteryStateDidChange:nil];
     
     // Setup iOS 10+ in-app notifications
-    NSOperatingSystemVersion ios10version = {.majorVersion = 10, .minorVersion = 0, .patchVersion = 0};
-    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:ios10version]) {
+    if (@available(iOS 10.0, *)) {
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     }
 
-    
-    
     return YES;
 }
 

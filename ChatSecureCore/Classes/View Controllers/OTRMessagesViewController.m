@@ -1094,7 +1094,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.buttonDropdownView autoSetDimension:ALDimensionHeight toSize:height];
     [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
     [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinToTopLayoutGuideOfViewController:self withInset:height*-1];
+    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:height*-1];
     
     [self.buttonDropdownView layoutIfNeeded];
     

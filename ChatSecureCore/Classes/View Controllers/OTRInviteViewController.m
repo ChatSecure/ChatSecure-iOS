@@ -140,7 +140,7 @@ static CGFloat const kOTRButtonHeight = 40;
     [super updateViewConstraints];
     if (!self.addedConstraints) {
         
-        [self.titleImageView autoPinToTopLayoutGuideOfViewController:self withInset:kOTRInvitePadding];
+        [self.titleImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:kOTRInvitePadding];
         [self.titleImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.view withMultiplier:0.4];
         [self.titleImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
         

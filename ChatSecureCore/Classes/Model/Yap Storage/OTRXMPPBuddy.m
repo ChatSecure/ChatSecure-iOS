@@ -25,7 +25,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
         // Migrate from version 0 of model, where we had "hasIncomingSubscriptionRequest" and "pendingApproval" flags.
         if ([key isEqualToString:@"subscription"]) {
             SubscriptionAttribute subscription = SubscriptionAttributeNone;
-            return [NSNumber numberWithInt:subscription];
+            return [NSNumber numberWithInt:(int)subscription];
         } else if ([key isEqualToString:@"pending"]) {
             SubscriptionPendingAttribute pending = SubscriptionPendingAttributePendingNone;
             BOOL hasIncomingSubscriptionRequest = [[coder decodeObjectForKey:@"hasIncomingSubscriptionRequest"] boolValue];
@@ -34,7 +34,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
                 pending = [SubscriptionPendingAttributeBridge setPendingIn:pending pending:YES];
             }
             pending = [SubscriptionPendingAttributeBridge setPendingOut:pending pending:pendingApproval];
-            return [NSNumber numberWithInt:pending];
+            return [NSNumber numberWithInt:(int)pending];
         } else if ([key isEqualToString:@"trustLevel"]) {
             BuddyTrustLevel trustLevel = BuddyTrustLevelUntrusted;
             
@@ -42,7 +42,7 @@ NSString *const OTRBuddyPendingApprovalDidChangeNotification = @"OTRBuddyPending
             if (hasIncomingSubscriptionRequest == NO) {
                 trustLevel = BuddyTrustLevelRoster;
             }
-            return [NSNumber numberWithInt:trustLevel];
+            return [NSNumber numberWithInt:(int)trustLevel];
         }
     }
     return [super decodeValueForKey:key withCoder:coder modelVersion:modelVersion];

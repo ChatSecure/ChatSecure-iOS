@@ -15,14 +15,18 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = ['ChatSecure/Classes/**/*.{h,m,swift}', 'ChatSecureCore/**/*.h']
-  s.public_header_files = ['ChatSecureCore/ChatSecureCore.h',
-                           'ChatSecureCore/Public/*.h',]
-  s.private_header_files = ['ChatSecureCore/Private/*.h']
+  s.subspec 'Source' do |ss|
+    ss.source_files = ['ChatSecure/Classes/**/*.{h,m,swift}', 'ChatSecureCore/**/*.h']
+    ss.public_header_files = ['ChatSecureCore/ChatSecureCore.h',
+                             'ChatSecureCore/Public/*.h',]
+    ss.private_header_files = ['ChatSecureCore/Private/*.h']
 
-  s.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC' }
-  
-  s.frameworks = ['UIKit', 'StoreKit']
+    ss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC' }
+    
+    ss.frameworks = ['UIKit', 'StoreKit']
+  end
+
+  s.module_name = 'ChatSecureCorePod'
 
   # User Interface
   s.dependency "Appirater", '~> 2.0'
@@ -34,10 +38,8 @@ TODO: Add long description of the pod here.
   s.dependency 'QRCodeReaderViewController', '~> 4.0'
   s.dependency 'ParkedTextField'
 
-
   s.dependency 'JSQMessagesViewController'
   s.dependency 'LumberjackConsole'
-
 
   # Utility
   s.dependency 'CocoaLumberjack/Swift', '~> 3.6.0'
@@ -55,13 +57,9 @@ TODO: Add long description of the pod here.
 
   s.dependency 'ChatSecure-Push-iOS'
 
-  # Storage
-  # We are blocked on SQLCipher 4.0.0 migration https://github.com/ChatSecure/ChatSecure-iOS/issues/1078
   s.dependency 'SQLCipher', '~> 4.2.0'
-  # Version 3.1.2 breaks YapTaskQueue 0.3.0
   s.dependency 'YapDatabase/SQLCipher', '~> 3.1.3'
 
-  # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   s.dependency 'libsqlfs/SQLCipher'
   s.dependency 'IOCipher/GCDWebServer'
   s.dependency 'YapTaskQueue/SQLCipher'

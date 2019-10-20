@@ -82,12 +82,12 @@
 - (void)updateViewConstraints {
     if (!self.didSetupConstraints) {
         CGFloat padding = 10;
-        [self.imageView autoPinToTopLayoutGuideOfViewController:self withInset:padding];
+        [self.imageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:padding];
         [self.imageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
         [self.imageView autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
         [self.imageView autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.instructionsLabel withOffset:padding];
         
-        [self.instructionsLabel autoPinToBottomLayoutGuideOfViewController:self withInset:padding];
+        [self.instructionsLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:padding];
         [self.instructionsLabel autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
         [self.instructionsLabel autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
         

@@ -22,7 +22,11 @@ inhibit_all_warnings!
 
 source 'https://cdn.cocoapods.org/'
 
+workspace 'ChatSecure.xcworkspace'
+project 'ChatSecure.xcodeproj'
+
 abstract_target 'ChatSecureCorePods' do  
+
   pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => 'a3800e3' # Swift 4.2
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
@@ -53,4 +57,6 @@ abstract_target 'ChatSecureCorePods' do
 
   target 'ChatSecureTests'
   target 'ChatSecure'
+  target 'ChatSecureCore'
 end
+
