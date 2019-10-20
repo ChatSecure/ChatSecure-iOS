@@ -396,7 +396,7 @@ SPEC CHECKSUMS:
   ChatSecureCore: 53e80f534ab207196875de0e34f4a1d5dcfef7dc
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
-  CPAProxy: 863aae0e93ca45401e9148db05abab5b940e7284
+  CPAProxy: a55b75df8754d20d1cec45337302f9f95e35fde9
   DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
