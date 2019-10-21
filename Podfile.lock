@@ -1,19 +1,5 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
   - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
-    - AFNetworking/NSURLSession
   - Alamofire (4.9.0)
   - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
@@ -28,7 +14,7 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.1)
   - ChatSecureCore (0.1.0):
-    - AFNetworking (~> 3.1)
+    - AFNetworking/Security (~> 3.1)
     - Alamofire (~> 4.4)
     - Appirater (~> 2.0)
     - ARChromeActivity (~> 1.0)
@@ -38,9 +24,9 @@ PODS:
     - CocoaAsyncSocket (~> 7.6.0)
     - CocoaLumberjack/Swift (~> 3.6.0)
     - CPAProxy
-    - FormatterKit (~> 1.8)
+    - FormatterKit/TimeIntervalFormatter (~> 1.8)
+    - FormatterKit/UnitOfInformationFormatter (~> 1.8)
     - GCDWebServer (~> 3.4)
-    - HockeySDK-Source
     - HTMLReader (~> 2.1.1)
     - IOCipher/GCDWebServer
     - JSQMessagesViewController
@@ -55,6 +41,7 @@ PODS:
     - MWFeedParser (~> 1.0)
     - OpenInChrome (~> 0.0)
     - OTRAssets
+    - OTRKit
     - ParkedTextField
     - ProxyKit/Client (~> 1.2.0)
     - PureLayout (~> 3.0)
@@ -79,40 +66,14 @@ PODS:
   - DTFoundation/Core (1.7.14)
   - DTFoundation/DTASN1 (1.7.14):
     - DTFoundation/Core
-  - FormatterKit (1.9.0):
-    - FormatterKit/AddressFormatter (= 1.9.0)
-    - FormatterKit/ArrayFormatter (= 1.9.0)
-    - FormatterKit/ColorFormatter (= 1.9.0)
-    - FormatterKit/LocationFormatter (= 1.9.0)
-    - FormatterKit/NameFormatter (= 1.9.0)
-    - FormatterKit/OrdinalNumberFormatter (= 1.9.0)
-    - FormatterKit/Resources (= 1.9.0)
-    - FormatterKit/TimeIntervalFormatter (= 1.9.0)
-    - FormatterKit/UnitOfInformationFormatter (= 1.9.0)
-    - FormatterKit/URLRequestFormatter (= 1.9.0)
-  - FormatterKit/AddressFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/ArrayFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/ColorFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/LocationFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/NameFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/OrdinalNumberFormatter (1.9.0):
-    - FormatterKit/Resources
   - FormatterKit/Resources (1.9.0)
   - FormatterKit/TimeIntervalFormatter (1.9.0):
     - FormatterKit/Resources
   - FormatterKit/UnitOfInformationFormatter (1.9.0):
     - FormatterKit/Resources
-  - FormatterKit/URLRequestFormatter (1.9.0):
-    - FormatterKit/Resources
   - GCDWebServer (3.5.3):
     - GCDWebServer/Core (= 3.5.3)
   - GCDWebServer/Core (3.5.3)
-  - HockeySDK-Source (5.1.4)
   - HTMLReader (2.1.4)
   - IOCipher/common (0.1.0):
     - CocoaLumberjack
@@ -154,6 +115,7 @@ PODS:
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
   - OTRAssets (0.1.0)
+  - OTRKit (3.0.0)
   - ParkedTextField (0.5.0)
   - ProxyKit/Client (1.2.0):
     - ProxyKit/common
@@ -260,6 +222,7 @@ DEPENDENCIES:
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - Mantle (from `Podspecs/Mantle.podspec.json`)
   - OTRAssets (from `OTRAssets.podspec`)
+  - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
@@ -279,7 +242,6 @@ SPEC REPOS:
     - DTFoundation
     - FormatterKit
     - GCDWebServer
-    - HockeySDK-Source
     - HTMLReader
     - JTSImageViewController
     - KissXML
@@ -321,6 +283,8 @@ EXTERNAL SOURCES:
     :podspec: Podspecs/Mantle.podspec.json
   OTRAssets:
     :path: OTRAssets.podspec
+  OTRKit:
+    :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
     :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
@@ -349,14 +313,13 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: c5b606d70b95275f390e7f122b10413beea6a85a
+  ChatSecureCore: ff9ba890c052f245fbce30889cb3c9684944153c
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
   CPAProxy: 9cf08f2aaa8a81dbefbff73e4018e50616bb337f
   DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
-  HockeySDK-Source: ebf3378833f457fa08aa452352b105dc21bfebcb
   HTMLReader: 2fc5ccf6a041b7070d9b43b101034cba63d2ae2a
   IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
@@ -374,6 +337,7 @@ SPEC CHECKSUMS:
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRAssets: 9b824cfbe6bdcbf71ac504688031d90f0d460b61
+  OTRKit: f61c247f6f711ed1d1c97179f2630bc790c89272
   ParkedTextField: 865c835f54b39c611b580e0fe60199538cbc2f67
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
   PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
@@ -390,6 +354,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 6dc2a860aa52ecec6cd58677fc08f0d803f9d26a
+PODFILE CHECKSUM: 71ded4b7ddc07078d892fa51bd3914084a7f9420
 
 COCOAPODS: 1.8.4

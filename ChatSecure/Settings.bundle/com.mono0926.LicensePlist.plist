@@ -124,14 +124,6 @@
 		</dict>
 		<dict>
 			<key>File</key>
-			<string>com.mono0926.LicensePlist/HockeySDK-Source</string>
-			<key>Title</key>
-			<string>HockeySDK-Source (5.1.4)</string>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-		</dict>
-		<dict>
-			<key>File</key>
 			<string>com.mono0926.LicensePlist/HTMLReader</string>
 			<key>Title</key>
 			<string>HTMLReader (2.1.4)</string>
@@ -303,6 +295,14 @@
 			<string>com.mono0926.LicensePlist/OTRAssets</string>
 			<key>Title</key>
 			<string>OTRAssets (0.1.0)</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>com.mono0926.LicensePlist/OTRKit</string>
+			<key>Title</key>
+			<string>OTRKit (3.0.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

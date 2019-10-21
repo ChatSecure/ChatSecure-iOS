@@ -45,7 +45,6 @@ TODO: Add long description of the pod here.
   s.dependency 'CocoaLumberjack/Swift', '~> 3.6.0'
   s.dependency 'MWFeedParser', '~> 1.0'
   s.dependency 'BBlock', '~> 1.2'
-  s.dependency 'HockeySDK-Source'
   s.dependency 'LicensePlist'
 
   # Network
@@ -66,14 +65,14 @@ TODO: Add long description of the pod here.
 
   # Crypto
   s.dependency 'SignalProtocolObjC'
-  # s.dependency 'OTRKit'
+  s.dependency 'OTRKit'
 
   s.dependency 'Alamofire', '~> 4.4'
   s.dependency 'Kvitto', '~> 1.0'
 
   s.dependency "Mantle"
   s.dependency "HTMLReader", '~> 2.1.1'
-  s.dependency "AFNetworking", '~> 3.1'
+  s.dependency "AFNetworking/Security", '~> 3.1'
   s.dependency "ZXingObjC", '~> 3.6'
   s.dependency "SAMKeychain", '~> 1.5'
   s.dependency "MBProgressHUD", '~> 1.1'
@@ -81,7 +80,8 @@ TODO: Add long description of the pod here.
   s.dependency "PureLayout", '~> 3.0'
   s.dependency "KVOController", '~> 1.2'
   s.dependency "XLForm", '~> 4.1'
-  s.dependency "FormatterKit", '~> 1.8'
+  s.dependency "FormatterKit/TimeIntervalFormatter", '~> 1.8'
+  s.dependency "FormatterKit/UnitOfInformationFormatter", '~> 1.8'
 
   s.dependency "OTRAssets"
 end

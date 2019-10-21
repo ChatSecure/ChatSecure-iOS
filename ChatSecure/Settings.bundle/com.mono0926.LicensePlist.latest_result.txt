@@ -169,24 +169,6 @@ name: GCDWebServer, nameSpecified:
 body: Copyright (c) 2012-2…
 version: 3.5.3
 
-name: HockeySDK-Source, nameSpecified: 
-body: ## Licenses
-
-The Hoc…
-version: 5.1.4
-
-name: HockeySDK-Source, nameSpecified: 
-body: ## Licenses
-
-The Hoc…
-version: 5.1.4
-
-name: HockeySDK-Source, nameSpecified: 
-body: ## Licenses
-
-The Hoc…
-version: 5.1.4
-
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
 version: 2.1.4
@@ -408,6 +390,18 @@ version: 0.1.0
 name: OTRAssets, nameSpecified: 
 body: ChatSecure, an OTR-c…
 version: 0.1.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 3.0.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 3.0.0
+
+name: OTRKit, nameSpecified: 
+body: Software License Agr…
+version: 3.0.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
