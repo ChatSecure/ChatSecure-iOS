@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 @import Foundation;
-@import OTRKit;
+@class OTRKit, OTRDataHandler, OTRFingerprint;
 
 extern NSString * _Nonnull const OTRMessageStateDidChangeNotification;
 extern NSString * _Nonnull const OTRWillStartGeneratingPrivateKeyNotification;

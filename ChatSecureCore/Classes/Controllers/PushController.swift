@@ -10,6 +10,7 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 import UserNotifications
+import OTRKit
 
 @objc public protocol PushControllerProtocol {
     

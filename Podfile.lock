@@ -35,49 +35,6 @@ PODS:
     - BBlock (~> 1.2)
     - BButton (~> 4.0)
     - ChatSecure-Push-iOS
-    - ChatSecureCore/Source (= 0.1.0)
-    - CocoaAsyncSocket (~> 7.6.0)
-    - CocoaLumberjack/Swift (~> 3.6.0)
-    - CPAProxy
-    - FormatterKit (~> 1.8)
-    - GCDWebServer (~> 3.4)
-    - HockeySDK-Source
-    - HTMLReader (~> 2.1.1)
-    - IOCipher/GCDWebServer
-    - JSQMessagesViewController
-    - JTSImageViewController (~> 1.4)
-    - Kvitto (~> 1.0)
-    - KVOController (~> 1.2)
-    - libsqlfs/SQLCipher
-    - LicensePlist
-    - LumberjackConsole
-    - Mantle
-    - MBProgressHUD (~> 1.1)
-    - MWFeedParser (~> 1.0)
-    - OpenInChrome (~> 0.0)
-    - OTRAssets
-    - ParkedTextField
-    - ProxyKit/Client (~> 1.2.0)
-    - PureLayout (~> 3.0)
-    - QRCodeReaderViewController (~> 4.0)
-    - SAMKeychain (~> 1.5)
-    - SignalProtocolObjC
-    - SQLCipher (~> 4.2.0)
-    - TTTAttributedLabel (~> 2.0)
-    - TUSafariActivity (~> 1.0)
-    - XLForm (~> 4.1)
-    - XMPPFramework/Swift
-    - YapDatabase/SQLCipher (~> 3.1.3)
-    - YapTaskQueue/SQLCipher
-    - ZXingObjC (~> 3.6)
-  - ChatSecureCore/Source (0.1.0):
-    - AFNetworking (~> 3.1)
-    - Alamofire (~> 4.4)
-    - Appirater (~> 2.0)
-    - ARChromeActivity (~> 1.0)
-    - BBlock (~> 1.2)
-    - BButton (~> 4.0)
-    - ChatSecure-Push-iOS
     - CocoaAsyncSocket (~> 7.6.0)
     - CocoaLumberjack/Swift (~> 3.6.0)
     - CPAProxy
@@ -118,8 +75,7 @@ PODS:
   - CocoaLumberjack/Core (3.6.0)
   - CocoaLumberjack/Swift (3.6.0):
     - CocoaLumberjack/Core
-  - CPAProxy (2.0.0):
-    - CocoaAsyncSocket
+  - CPAProxy (2.0.0)
   - DTFoundation/Core (1.7.14)
   - DTFoundation/DTASN1 (1.7.14):
     - DTFoundation/Core
@@ -393,10 +349,10 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: 53e80f534ab207196875de0e34f4a1d5dcfef7dc
+  ChatSecureCore: c5b606d70b95275f390e7f122b10413beea6a85a
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
-  CPAProxy: c402bd59e2bf7e14253841c48d75fa9ee61e2412
+  CPAProxy: 9cf08f2aaa8a81dbefbff73e4018e50616bb337f
   DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
@@ -434,6 +390,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: dd8748dec75a9094e5db06a012002b7470695db9
+PODFILE CHECKSUM: 6dc2a860aa52ecec6cd58677fc08f0d803f9d26a
 
 COCOAPODS: 1.8.4

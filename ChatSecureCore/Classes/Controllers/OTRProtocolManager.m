@@ -27,7 +27,6 @@
 #import "OTROutgoingMessage.h"
 #import "OTRConstants.h"
 #import "OTRDatabaseManager.h"
-#import "OTRPushTLVHandler.h"
 #import <BBlock/NSObject+BBlock.h>
 @import YapDatabase;
 

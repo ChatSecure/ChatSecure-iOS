@@ -10,7 +10,7 @@ import UIKit
 import XLForm
 import YapDatabase
 import OTRAssets
-
+import OTRKit
 
 /** Crypto Chooser row tags */
 private struct RowTags {

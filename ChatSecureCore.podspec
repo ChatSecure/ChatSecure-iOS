@@ -15,16 +15,16 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '9.0'
 
-  s.subspec 'Source' do |ss|
-    ss.source_files = ['ChatSecure/Classes/**/*.{h,m,swift}', 'ChatSecureCore/**/*.h']
-    ss.public_header_files = ['ChatSecureCore/ChatSecureCore.h',
-                             'ChatSecureCore/Public/*.h',]
-    ss.private_header_files = ['ChatSecureCore/Private/*.h']
+  # s.subspec 'Source' do |ss|
+  #   ss.source_files = ['ChatSecure/Classes/**/*.{h,m,swift}', 'ChatSecureCore/**/*.h']
+  #   ss.public_header_files = ['ChatSecureCore/ChatSecureCore.h',
+  #                            'ChatSecureCore/Public/*.h',]
+  #   ss.private_header_files = ['ChatSecureCore/Private/*.h']
 
-    ss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC' }
+  #   ss.xcconfig = { 'OTHER_CFLAGS' => '$(inherited) -DSQLITE_HAS_CODEC' }
     
-    ss.frameworks = ['UIKit', 'StoreKit']
-  end
+  #   ss.frameworks = ['UIKit', 'StoreKit']
+  # end
 
   s.module_name = 'ChatSecureCorePod'
 

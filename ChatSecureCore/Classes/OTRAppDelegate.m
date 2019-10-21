@@ -60,7 +60,6 @@
 #import "OTRXMPPTorAccount.h"
 @import OTRAssets;
 @import OTRKit;
-#import "OTRPushTLVHandlerProtocols.h"
 #if KSCRASH
 #import <KSCrash/KSCrash.h>
 #import <KSCrash/KSCrashInstallationQuincyHockey.h>
