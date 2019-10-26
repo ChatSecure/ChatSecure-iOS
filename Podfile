@@ -1,4 +1,7 @@
-install! 'cocoapods', :deterministic_uuids => false # :generate_multiple_pod_projects => true
+install! 'cocoapods', :deterministic_uuids => false
+
+# Blocked on https://github.com/CocoaLumberjack/CocoaLumberjack/issues/1105
+#, :generate_multiple_pod_projects => true
 
 platform :ios, "12.0"
 
@@ -13,7 +16,7 @@ project 'ChatSecure.xcodeproj'
 abstract_target 'ChatSecureCorePods' do  
 
   # https://github.com/zxingify/zxingify-objc/pull/491
-  pod 'ZXingObjC', :git => 'https://github.com/ChatSecure/ZXingObjC.git', :branch => 'fix-catalyst'
+  pod 'ZXingObjC/QRCode', :git => 'https://github.com/ChatSecure/ZXingObjC.git', :branch => 'fix-catalyst'
 
   # https://github.com/sqlcipher/sqlcipher/pull/342
   pod 'SQLCipher', :git => 'https://github.com/ChatSecure/sqlcipher.git', :branch => 'fix-catalyst'

@@ -211,6 +211,9 @@ PODS:
   - ZXingObjC (3.6.5):
     - ZXingObjC/All (= 3.6.5)
   - ZXingObjC/All (3.6.5)
+  - ZXingObjC/Core (3.6.5)
+  - ZXingObjC/QRCode (3.6.5):
+    - ZXingObjC/Core
 
 DEPENDENCIES:
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
@@ -229,7 +232,7 @@ DEPENDENCIES:
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
-  - ZXingObjC (from `https://github.com/ChatSecure/ZXingObjC.git`, branch `fix-catalyst`)
+  - ZXingObjC/QRCode (from `https://github.com/ChatSecure/ZXingObjC.git`, branch `fix-catalyst`)
 
 SPEC REPOS:
   trunk:
@@ -366,6 +369,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 8f9608d2fca61319ed45ac7a8e1f6e669b33700b
+PODFILE CHECKSUM: 240d069df95fa6f2e25e8b0e27e1f168fcff0e6a
 
 COCOAPODS: 1.8.4
