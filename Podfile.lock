@@ -228,6 +228,7 @@ DEPENDENCIES:
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
+  - ZXingObjC (from `https://github.com/ChatSecure/ZXingObjC.git`, branch `fix-catalyst`)
 
 SPEC REPOS:
   trunk:
@@ -262,7 +263,6 @@ SPEC REPOS:
     - TTTAttributedLabel
     - TUSafariActivity
     - XLForm
-    - ZXingObjC
 
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
@@ -296,6 +296,9 @@ EXTERNAL SOURCES:
     :path: Submodules/YapDatabase/YapDatabase.podspec
   YapTaskQueue:
     :path: Submodules/YapTaskQueue/YapTaskQueue.podspec
+  ZXingObjC:
+    :branch: fix-catalyst
+    :git: https://github.com/ChatSecure/ZXingObjC.git
 
 CHECKOUT OPTIONS:
   Mantle:
@@ -304,6 +307,9 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
+  ZXingObjC:
+    :commit: 6fe9370caa44e5b2f630f4d58883e7c82367ecdd
+    :git: https://github.com/ChatSecure/ZXingObjC.git
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
@@ -354,6 +360,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 71ded4b7ddc07078d892fa51bd3914084a7f9420
+PODFILE CHECKSUM: 81744ff8eee7368341ccee37b38cee23d7f2fffc
 
 COCOAPODS: 1.8.4
