@@ -1,4 +1,4 @@
-install! 'cocoapods', :generate_multiple_pod_projects => true, :deterministic_uuids => false
+install! 'cocoapods', :deterministic_uuids => false # :generate_multiple_pod_projects => true
 
 platform :ios, "12.0"
 
@@ -14,6 +14,9 @@ abstract_target 'ChatSecureCorePods' do
 
   # https://github.com/zxingify/zxingify-objc/pull/491
   pod 'ZXingObjC', :git => 'https://github.com/ChatSecure/ZXingObjC.git', :branch => 'fix-catalyst'
+
+  # https://github.com/sqlcipher/sqlcipher/pull/342
+  pod 'SQLCipher', :git => 'https://github.com/ChatSecure/sqlcipher.git', :branch => 'fix-catalyst'
 
   pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => 'a3800e3' # Swift 4.2
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'

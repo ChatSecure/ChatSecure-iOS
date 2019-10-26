@@ -225,6 +225,7 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
+  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `fix-catalyst`)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
@@ -259,7 +260,6 @@ SPEC REPOS:
     - QRCodeReaderViewController
     - SAMKeychain
     - SignalProtocolC
-    - SQLCipher
     - TTTAttributedLabel
     - TUSafariActivity
     - XLForm
@@ -290,6 +290,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/gmertk/ParkedTextField.git
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
+  SQLCipher:
+    :branch: fix-catalyst
+    :git: https://github.com/ChatSecure/sqlcipher.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:
@@ -307,6 +310,9 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
+  SQLCipher:
+    :commit: a74f9f4d9e2fa15b2f1583c9ea26626c1ba07dc1
+    :git: https://github.com/ChatSecure/sqlcipher.git
   ZXingObjC:
     :commit: 6fe9370caa44e5b2f630f4d58883e7c82367ecdd
     :git: https://github.com/ChatSecure/ZXingObjC.git
@@ -360,6 +366,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 81744ff8eee7368341ccee37b38cee23d7f2fffc
+PODFILE CHECKSUM: 8f9608d2fca61319ed45ac7a8e1f6e669b33700b
 
 COCOAPODS: 1.8.4
