@@ -74,4 +74,8 @@
     return object;
 }
 
++ (BOOL) supportsSecureCoding {
+    return YES;
+}
+
 @end

@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol OTRYapDatabaseObjectProtocol <NSObject, NSCoding, NSCopying>
+@protocol OTRYapDatabaseObjectProtocol <NSObject, NSSecureCoding, NSCopying>
 @required
 
 @property (nonatomic, readonly) NSString *uniqueId;

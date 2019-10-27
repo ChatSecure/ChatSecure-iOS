@@ -37,6 +37,10 @@ open class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
         }
         return nil
     }
+    
+    open override class var supportsSecureCoding: Bool {
+        return true
+    }
 }
 
 open class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
@@ -72,4 +76,7 @@ open class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
         return edges
     }
     
+    open override class var supportsSecureCoding: Bool {
+        return true
+    }
 }
