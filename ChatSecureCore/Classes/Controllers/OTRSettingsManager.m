@@ -101,8 +101,7 @@
                                                                  description:ALLOW_DB_PASSPHRASE_BACKUP_DESCRIPTION_STRING()
                                                                  settingsKey:kOTRSettingKeyAllowDBPassphraseBackup];
 
-    if (![PushController canReceivePushNotifications] ||
-        [PushController getPushPreference] != PushPreferenceEnabled) {
+    if ([PushController getPushPreference] != PushPreferenceEnabled) {
         OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING() description:nil viewControllerClass:[EnablePushViewController class]];
         pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING() settings:@[pushViewSetting]];

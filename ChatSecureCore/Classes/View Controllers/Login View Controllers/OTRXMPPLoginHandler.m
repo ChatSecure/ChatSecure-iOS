@@ -94,7 +94,7 @@
     }
     
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
-    if (rememberPassword) {
+    if (rememberPassword != nil) {
         account.rememberPassword = [rememberPassword boolValue];
     } else {
         account.rememberPassword = YES;
@@ -110,7 +110,7 @@
     }
     
     NSNumber *autologin = [[form formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] value];
-    if (autologin) {
+    if (autologin != nil) {
         account.autologin = [autologin boolValue];
     } else {
         account.autologin = YES;
@@ -134,7 +134,7 @@
     account.domain = hostname;
 
     
-    if (port) {
+    if (port != nil) {
         account.port = [port intValue];
     }
     
@@ -142,7 +142,7 @@
         account.resource = resource;
     }
     NSNumber *autofetch = [form formRowWithTag:kOTRXLFormAutomaticURLFetchTag].value;
-    if (autofetch) {
+    if (autofetch != nil) {
         account.disableAutomaticURLFetching = !autofetch.boolValue;
     }
     

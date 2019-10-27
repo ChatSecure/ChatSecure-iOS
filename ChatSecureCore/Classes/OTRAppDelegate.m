@@ -159,6 +159,8 @@
     if (@available(iOS 10.0, *)) {
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
     }
+    
+    [application registerForRemoteNotifications];
 
     return YES;
 }
@@ -463,16 +465,6 @@
 - (void) showSubscriptionRequestForBuddy:(NSDictionary*)userInfo {
     // This is probably in response to a user requesting subscriptions from us
     [self.splitViewCoordinator showConversationsViewController];
-}
-
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUserNotificationsChanged object:self userInfo:@{@"settings": notificationSettings}];
-    if (notificationSettings.types == UIUserNotificationTypeNone) {
-        NSLog(@"Push notifications disabled by user.");
-    } else {
-        [application registerForRemoteNotifications];
-    }
 }
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken

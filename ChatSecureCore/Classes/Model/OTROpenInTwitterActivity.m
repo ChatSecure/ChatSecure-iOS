@@ -10,6 +10,7 @@
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
+#import "ChatSecureCoreCompat-Swift.h"
 @import OTRAssets;
 
 
@@ -73,7 +74,7 @@
 
 - (void)performActivity
 {
-    [[UIApplication sharedApplication] openURL:self.url];
+    [[UIApplication sharedApplication] open:self.url];
     [self activityDidFinish:YES];
 }
 

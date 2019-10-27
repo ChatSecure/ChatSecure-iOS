@@ -162,13 +162,13 @@
     NSTimeInterval timeInterval = fabs([messageDate timeIntervalSinceNow]);
     NSString * dateString = nil;
     if (timeInterval < 60){
-        dateString = @"Now";
+        dateString = NSLocalizedString(@"Now", @"");
     }
     else if (timeInterval < 60*60) {
         int minsInt = timeInterval/60;
-        NSString * minString = @"mins";
+        NSString * minString = NSLocalizedString(@"mins", @"");
         if (minsInt == 1) {
-            minString = @"min";
+            minString = NSLocalizedString(@"min", @"");
         }
         dateString = [NSString stringWithFormat:@"%d %@",minsInt,minString];
     }

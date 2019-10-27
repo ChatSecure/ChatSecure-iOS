@@ -50,11 +50,6 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
     
     @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
         tableView.reloadData()
-        if !PushController.canReceivePushNotifications() {
-            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.openURL(appSettings)
-            }
-        }
     }
     
     @objc func serverCheckUpdate(_ notification: Notification) {
@@ -175,7 +170,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         permissionCell.button.setTitle(FIX_PERMISSIONS_STRING(), for: .normal)
         permissionCell.buttonAction = {  (cell, sender) in
             PushController.setPushPreference(.enabled)
-            PushController.registerForPushNotifications()
+            PushController.openAppSettings()
         }
         return permissionCell
     }
@@ -188,7 +183,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         fetchCell.button.setTitle(FIX_BACKGROUND_FETCH_STRING(), for: .normal)
         fetchCell.buttonAction = { (cell, sender) in
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.openURL(appSettings)
+                UIApplication.shared.open(appSettings)
             }
         }
         return fetchCell

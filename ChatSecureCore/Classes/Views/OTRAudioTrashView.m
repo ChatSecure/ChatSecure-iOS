@@ -36,7 +36,7 @@ CGFloat const kOTRAudioTrashMargin = 10;
         _trashLabel = [[UILabel alloc] initForAutoLayout];
         self.trashLabel.textAlignment = NSTextAlignmentCenter;
         self.trashLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.trashLabel.text = @"Swipe up to delete";
+        self.trashLabel.text = NSLocalizedString(@"Swipe up to delete", @"");
         
         CGFloat fontSize = 25;
         

@@ -14,7 +14,6 @@ open class EnablePushViewController: UIViewController {
     
     /** Set this if you want to show OTRInviteViewController after push registration */
     @objc open var account: OTRAccount?
-    fileprivate var userLaunchedToSettings: Bool = false
     private var hud: MBProgressHUD?
 
     @IBOutlet weak var enablePushButton: UIButton?
@@ -34,10 +33,12 @@ open class EnablePushViewController: UIViewController {
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if userLaunchedToSettings && PushController.canReceivePushNotifications() {
-            PushController.setPushPreference(.enabled)
-            showNextScreen()
-        }
+        PushController.canReceivePushNotifications(completion: { (enabled) in
+            if enabled {
+                PushController.setPushPreference(.enabled)
+                self.showNextScreen()
+            }
+        })
     }
     
     override open func viewDidLoad() {
@@ -69,10 +70,12 @@ open class EnablePushViewController: UIViewController {
     }
     
     @objc func didRegisterUserNotificationSettings(_ notification: Notification) {
-        if PushController.canReceivePushNotifications() {
-            showNextScreen()
-        } else {
-            showPromptForSystemSettings()
+        PushController.canReceivePushNotifications() {
+            if $0 {
+                self.showNextScreen()
+            } else {
+                self.showPromptForSystemSettings()
+            }
         }
     }
 

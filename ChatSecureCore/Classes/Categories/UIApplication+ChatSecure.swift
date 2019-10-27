@@ -328,3 +328,9 @@ extension UIApplication {
         self.showLocalNotificationWith(groupingIdentifier: accountKey, body: body, badge: badge, userInfo: userInfo, recurring: false)
     }
 }
+
+extension UIApplication {
+    @objc public func open(_ url: URL) {
+        open(url, options: [:], completionHandler: nil)
+    }
+}

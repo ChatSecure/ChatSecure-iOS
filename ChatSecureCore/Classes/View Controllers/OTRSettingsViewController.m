@@ -129,7 +129,7 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
 - (void) versionButtonPressed:(id)sender {
     // Licenses are in Settings bundle now
     NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-    [UIApplication.sharedApplication openURL:settingsURL];
+    [UIApplication.sharedApplication open:settingsURL];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -410,7 +410,7 @@ static NSString *const kSettingsCellIdentifier = @"kSettingsCellIdentifier";
     NSURL *githubURL = OTRBranding.githubURL;
     if (!githubURL) { return; }
     NSURL *githubIssues = [githubURL URLByAppendingPathComponent:@"issues"];
-    [UIApplication.sharedApplication openURL:githubIssues];
+    [UIApplication.sharedApplication open:githubIssues];
 }
 
 #pragma - mark YapDatabse Methods

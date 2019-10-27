@@ -15,7 +15,7 @@ extension UIViewController {
         let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .alert)
         let settingsAction = UIAlertAction(title: SETTINGS_STRING(), style: .default, handler: { (action: UIAlertAction) -> Void in
             let appSettings = URL(string: UIApplication.openSettingsURLString)
-            UIApplication.shared.openURL(appSettings!)
+            UIApplication.shared.open(appSettings!)
         })
         let cancelAction = UIAlertAction(title: CANCEL_STRING(), style: .cancel, handler: nil)
         alert.addAction(settingsAction)

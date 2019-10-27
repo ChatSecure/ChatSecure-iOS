@@ -36,9 +36,9 @@ import LumberjackConsole
         
         // only allow console log output for debug builds
         #if DEBUG
-            debugPrint("Enabling TTY logger...")
-            DDLog.add(DDTTYLogger.sharedInstance)
-            DDLogVerbose("TTY logger enabled.")
+            debugPrint("Enabling os_log logger...")
+            DDLog.add(DDOSLogger.sharedInstance)
+            DDLogVerbose("os_log logger enabled.")
         #endif
         
         // allow file-based debug logging if user has enabled it

@@ -229,7 +229,7 @@
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsController];
     self.searchController.searchResultsUpdater = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.obscuresBackgroundDuringPresentation = NO;
     self.searchController.hidesNavigationBarDuringPresentation = NO;
     self.searchController.delegate = self;
     
@@ -538,7 +538,7 @@
 - (void) joinGroup:(id)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:JOIN_GROUP_STRING() message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"room@conference.example.com";
+        textField.placeholder = NSLocalizedString(@"room@conference.example.com", @"conference room JID");
     }];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = [NSString stringWithFormat:@"%@ (%@)", PASSWORD_STRING(), OPTIONAL_STRING()];

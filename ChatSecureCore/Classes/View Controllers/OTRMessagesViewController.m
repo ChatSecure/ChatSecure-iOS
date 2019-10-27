@@ -436,7 +436,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // This is set to nil so the refreshTitleView: method knows to reset username instead of last seen time
     [self titleView].subtitleLabel.text = nil;
     
-    if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
+    if (key && collection &&
+        (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection])) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
         self.inputToolbar.contentView.textView.text = nil;
         [self receivedTextViewChanged:self.inputToolbar.contentView.textView];
@@ -444,7 +445,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
     [self.supplementaryViewHandler removeAllSupplementaryViews];
     
-    [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
+    if (oldKey && oldCollection) {
+        [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
+    }
     if (self.threadKey && self.threadCollection) {
         [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
         [self updateViewWithKey:self.threadKey collection:self.threadCollection];
@@ -2174,7 +2177,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma - mark UITextViewDelegateMethods
 
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction
 {
     if ([URL otr_isInviteLink]) {
         NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:NSUserActivityTypeBrowsingWeb];
@@ -2225,7 +2228,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.jidForwardingHeaderView setNeedsLayout];
         [self.jidForwardingHeaderView layoutIfNeeded];
         int height = [self.jidForwardingHeaderView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + 1;
-        self.jidForwardingHeaderView.frame = CGRectMake(0, self.topLayoutGuide.length, self.view.frame.size.width, height);
+        self.jidForwardingHeaderView.frame = CGRectMake(0, 0, self.view.frame.size.width, height);
         [self.view bringSubviewToFront:self.jidForwardingHeaderView];
         self.additionalContentInset = UIEdgeInsetsMake(height, 0, 0, 0);
     }

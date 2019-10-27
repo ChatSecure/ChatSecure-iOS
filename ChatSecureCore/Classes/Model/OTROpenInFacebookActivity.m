@@ -11,7 +11,7 @@
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
 @import OTRAssets;
-
+#import "ChatSecureCoreCompat-Swift.h"
 
 @interface OTROpenInFacebookActivity ()
 
@@ -74,7 +74,7 @@
 
 - (void)performActivity
 {
-    [[UIApplication sharedApplication] openURL:self.url];
+    [[UIApplication sharedApplication] open:self.url];
     [self activityDidFinish:YES];
 }
 

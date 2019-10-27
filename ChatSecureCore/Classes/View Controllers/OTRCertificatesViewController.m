@@ -101,7 +101,7 @@
     
     cell.textLabel.text = [certificateHashes[indexPath.row] stringByReplacingOccurrencesOfString:@" " withString:@":"];
     cell.textLabel.font = [UIFont systemFontOfSize:10.0];
-    cell.detailTextLabel.text = @"SHA256";
+    cell.detailTextLabel.text = NSLocalizedString(@"SHA256", @"");
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     

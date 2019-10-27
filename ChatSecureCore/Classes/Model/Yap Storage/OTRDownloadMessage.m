@@ -163,11 +163,10 @@
     
     if (url) {
         UIAlertAction *copyLinkAction = [UIAlertAction actionWithTitle:COPY_LINK_STRING() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UIPasteboard.generalPasteboard.persistent = YES;
             UIPasteboard.generalPasteboard.URL = url;
         }];
         UIAlertAction *openInSafari = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [UIApplication.sharedApplication openURL:url];
+            [UIApplication.sharedApplication open:url];
         }];
         [actions addObject:copyLinkAction];
         [actions addObject:openInSafari];

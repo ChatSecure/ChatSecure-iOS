@@ -35,8 +35,6 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.automaticallyAdjustsScrollViewInsets = false
-        
         let flowLayout = LeftAlignedCollectionViewFlowLayout()
         flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         collectionView.collectionViewLayout = flowLayout

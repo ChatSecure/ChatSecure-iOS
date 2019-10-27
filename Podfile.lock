@@ -55,7 +55,7 @@ PODS:
     - XMPPFramework/Swift
     - YapDatabase/SQLCipher (~> 3.1.3)
     - YapTaskQueue/SQLCipher
-    - ZXingObjC (~> 3.6)
+    - ZXingObjC/QRCode (~> 3.6)
   - CocoaAsyncSocket (7.6.3)
   - CocoaLumberjack (3.6.0):
     - CocoaLumberjack/Core (= 3.6.0)
@@ -208,9 +208,6 @@ PODS:
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.3.0):
     - YapDatabase/SQLCipher (~> 3.0)
-  - ZXingObjC (3.6.5):
-    - ZXingObjC/All (= 3.6.5)
-  - ZXingObjC/All (3.6.5)
   - ZXingObjC/Core (3.6.5)
   - ZXingObjC/QRCode (3.6.5):
     - ZXingObjC/Core
@@ -328,7 +325,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: ff9ba890c052f245fbce30889cb3c9684944153c
+  ChatSecureCore: 1eea145a7cded2e9490938159c1c7412bdd2727a
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
   CPAProxy: 9cf08f2aaa8a81dbefbff73e4018e50616bb337f

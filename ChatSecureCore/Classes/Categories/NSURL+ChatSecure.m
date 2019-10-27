@@ -10,6 +10,7 @@
 #import "OTRConstants.h"
 @import XMPPFramework;
 @import OTRAssets;
+#import "ChatSecureCoreCompat-Swift.h"
 
 @implementation NSURL (ChatSecure)
 
@@ -197,7 +198,7 @@
         view = sender;
     }
     UIAlertAction *visitURL = [UIAlertAction actionWithTitle:OPEN_IN_SAFARI() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[UIApplication sharedApplication] openURL:self];
+        [[UIApplication sharedApplication] open:self];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:self.absoluteString message:nil preferredStyle:UIAlertControllerStyleActionSheet];

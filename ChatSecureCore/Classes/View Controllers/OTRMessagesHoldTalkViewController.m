@@ -269,7 +269,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:Microphone_Disabled() message:Microphone_Reenable_Please() preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *fix = [UIAlertAction actionWithTitle:Enable_String() style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     NSURL *settings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                    [[UIApplication sharedApplication] openURL:settings];
+                    [[UIApplication sharedApplication] open:settings];
                 }];
                 UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING() style:UIAlertActionStyleCancel handler:nil];
                 [alert addAction:fix];

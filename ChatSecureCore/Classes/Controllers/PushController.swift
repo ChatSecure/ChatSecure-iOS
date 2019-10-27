@@ -619,8 +619,10 @@ open class PushController: NSObject, PushControllerProtocol {
         let group = DispatchGroup()
         group.enter()
         DispatchQueue.main.async {
-            pushPermitted = PushController.canReceivePushNotifications() // This will be async in a later version when we do iOS 10 refactor
-            group.leave()
+            PushController.canReceivePushNotifications(completion: { (enabled) in
+                pushPermitted = enabled
+                group.leave()
+            })
         }
         group.enter()
         getPubsubEndpoint { (endpoint, error) in
@@ -651,9 +653,6 @@ open class PushController: NSObject, PushControllerProtocol {
                     // TODO: Handle push registration error
                     let app = UIApplication.shared
                     NotificationCenter.default.post(name: Notification.Name(rawValue: OTRUserNotificationsChanged), object: app.delegate, userInfo:nil)
-                    if (granted) {
-                        app.registerForRemoteNotifications()
-                    }
                 })
             })
         } else {
@@ -662,31 +661,16 @@ open class PushController: NSObject, PushControllerProtocol {
         }
     }
     
-    @objc public static func canReceivePushNotifications() -> Bool {
-        var isEnabled = false
-        if let settings = UIApplication.shared.currentUserNotificationSettings {
-            isEnabled = settings.types != UIUserNotificationType()
-        }
-        return isEnabled
-        // Making this function async to satisfy the iOS 10 way is extremely difficult due to how OTRSettingsManager.populateSettings works
-        /*
-        if #available(iOS 10.0, *) {
-            let center = UNUserNotificationCenter.currentNotificationCenter()
-            center.getNotificationSettingsWithCompletionHandler({ (settings: UNNotificationSettings) in
-                let isEnabled = settings.authorizationStatus != .Authorized
-                dispatch_async(dispatch_get_main_queue(), {
-                    completion(canReceive: isEnabled)
-                })
-            })
-        } else {
-            var isEnabled = false
-            if let settings = UIApplication.sharedApplication().currentUserNotificationSettings() {
-                isEnabled = settings.types != .None
+    @objc public static func canReceivePushNotifications(completion: @escaping (Bool)->Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            DispatchQueue.main.async {
+                completion(settings.authorizationStatus == .authorized)
             }
-            dispatch_async(dispatch_get_main_queue(), {
-                completion(canReceive: isEnabled)
-            })
         }
-         */
+    }
+    
+    @objc public static func openAppSettings() {
+        guard let appSettings = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(appSettings)
     }
 }
