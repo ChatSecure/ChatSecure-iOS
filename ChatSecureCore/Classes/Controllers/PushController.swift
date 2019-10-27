@@ -662,7 +662,7 @@ open class PushController: NSObject, PushControllerProtocol {
     }
     
     @objc public static func canReceivePushNotifications(completion: @escaping (Bool)->Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        UNUserNotificationCenter.current?.getNotificationSettings { (settings) in
             DispatchQueue.main.async {
                 completion(settings.authorizationStatus == .authorized)
             }
@@ -672,5 +672,18 @@ open class PushController: NSObject, PushControllerProtocol {
     @objc public static func openAppSettings() {
         guard let appSettings = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(appSettings)
+    }
+}
+
+extension UNUserNotificationCenter {
+    /// XCTest & UNUserNotificationCenter: requires bundle identifier, crashes when accessed
+    /// http://www.openradar.me/27768556
+    static var current: UNUserNotificationCenter? {
+        // Return if this is a unit test
+        if let _ = NSClassFromString("XCTest") {
+            return nil
+        } else {
+            return .current()
+        }
     }
 }
