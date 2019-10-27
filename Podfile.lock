@@ -136,12 +136,12 @@ PODS:
   - TTTAttributedLabel (2.0.0)
   - TUSafariActivity (1.0.4)
   - XLForm (4.1.0)
-  - XMPPFramework/default (4.0.0):
+  - XMPPFramework/default (4.1.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
     - KissXML (~> 5.2)
     - libidn (~> 1.35)
-  - XMPPFramework/Swift (4.0.0):
+  - XMPPFramework/Swift (4.1.0):
     - CocoaLumberjack/Swift
     - XMPPFramework/default
   - YapDatabase/SQLCipher (3.1.4):
@@ -364,7 +364,7 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XLForm: 7ee02761be8a369d1ad1bbffe738b97083d94f3e
-  XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
+  XMPPFramework: 8b7ce3a5d8f95d1f9e1389e20431ffa06f399d77
   YapDatabase: e9cf10cbf11d91f7c6dc723b0ff54fa8a04e3c8d
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb

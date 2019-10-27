@@ -537,15 +537,15 @@ version: 4.1.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0.0
+version: 4.1.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0.0
+version: 4.1.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.0.0
+version: 4.1.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
