@@ -324,7 +324,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
+  ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
   ChatSecureCore: 1eea145a7cded2e9490938159c1c7412bdd2727a
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
