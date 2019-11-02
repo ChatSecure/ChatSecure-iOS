@@ -283,8 +283,7 @@ static Float64 kOTRMessagesMinimumAudioTime = .5;
 
 - (void)view:(OTRHoldToTalkView *)view touchDidMoveToPointInWindow:(CGPoint)point
 {
-    UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
-    CGPoint poinInView = [self.view convertPoint:point fromView:mainWindow];
+    CGPoint poinInView = [self.view convertPoint:point fromView:self.view.window];
     
     CGPoint trashButtonCenter = [self centerOfview:self.trashView.trashButton inView:self.view];
     CGPoint holdToTalkCenter = [self centerOfview:self.hold2TalkButton inView:self.view];

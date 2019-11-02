@@ -29,9 +29,9 @@
 + (CGSize)otr_defaultImageSize
 {
     CGSize size = CGSizeZero;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
         size = CGSizeMake(43, 43);
-    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    } else if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         size = CGSizeMake(55, 55);
     }
     return size;

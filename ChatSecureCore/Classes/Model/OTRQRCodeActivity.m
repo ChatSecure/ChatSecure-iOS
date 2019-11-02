@@ -63,7 +63,7 @@ NSString *const kOTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
     OTRQRCodeViewController * QRCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:self.qrString];
     QRCodeViewController.delegate = self;
     UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:QRCodeViewController];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
     

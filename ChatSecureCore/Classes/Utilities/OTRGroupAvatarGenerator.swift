@@ -75,16 +75,8 @@ open class OTRGroupAvatarGenerator {
     }
     
     static func colorWithHexString(hexColorString:String) -> UIColor {
-        let scanner = Scanner(string: hexColorString)
-        scanner.scanLocation = 1
-        var rgb: UInt32 = 0
-        guard scanner.scanHexInt32(&rgb) else { return UIColor.white }
-        let a:CGFloat = CGFloat((rgb & 0xFF000000) >> 24) / 255.0
-        let r:CGFloat = CGFloat((rgb & 0x00FF0000) >> 16) / 255.0
-        let g:CGFloat = CGFloat((rgb & 0x0000FF00) >> 8) / 255.0
-        let b:CGFloat = CGFloat(rgb & 0x000000FF) / 255.0
-        return UIColor(red: r, green: g, blue: b, alpha: a)
-    }
+        .init(hexColorString)
+    }    
     
     // A LCG to create pseudo-random numbers (using a seed)
     //
@@ -127,4 +119,27 @@ extension String {
         }
         return Int(hash)
     }
+}
+
+extension UIColor {
+
+    // https://stackoverflow.com/a/38909348
+    convenience init(_ hexString: String, alpha: Double = 1.0) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+
+        let r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (r, g, b) = ((int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (r, g, b) = (int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (r, g, b) = (1, 1, 0)
+        }
+
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(255 * alpha) / 255)
+    }
+
 }
