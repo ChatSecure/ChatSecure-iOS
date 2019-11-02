@@ -148,8 +148,8 @@
     [Appirater appLaunched:YES];
     
     [self autoLoginFromBackground:NO];
-    [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
-        
+    [self configureBackgroundTasksWithApplication:application];
+
     // For disabling screen dimming while plugged in
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateDidChange:) name:UIDeviceBatteryStateDidChangeNotification object:nil];
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
@@ -262,6 +262,8 @@
     [[OTRProtocolManager sharedInstance] goAwayForAllAccounts];
     DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
+    
+    [self scheduleBackgroundTasksWithApplication:application completionHandler:nil];
     
     __block NSUInteger unread = 0;
     [[OTRDatabaseManager sharedInstance].readConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -408,14 +410,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [self application:application performFetchWithCompletionHandler:completionHandler];
-    
-    [OTRProtocolManager.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
-        // Only show notification if buddy lookup succeeds
-        if (buddy) {
-            [application showLocalNotificationForKnockFrom:buddy];
-        }
-    }];
+    [self scheduleBackgroundTasksWithApplication:application completionHandler:completionHandler];
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *restorableObjects))restorationHandler {

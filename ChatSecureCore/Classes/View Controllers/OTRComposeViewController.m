@@ -97,7 +97,11 @@
     [self.view addSubview:self.tableView];
     
     self.tableViewHeader = [[OTRVerticalStackView alloc] init];
-    [self.tableViewHeader setBackgroundColor:UIColor.groupTableViewBackgroundColor];
+    if (@available(iOS 13.0, *)) {
+        [self.tableViewHeader setBackgroundColor:UIColor.systemGroupedBackgroundColor];
+    } else {
+        [self.tableViewHeader setBackgroundColor:UIColor.groupTableViewBackgroundColor];
+    }
     self.tableView.tableHeaderView = self.tableViewHeader;
     
     // Add the "Add friends" button
@@ -504,7 +508,7 @@
     }
 }
 
-- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
     id <OTRThreadOwner> thread = [self threadOwnerAtIndexPath:databaseIndexPath withTableView:tableView];
     if (!thread) { return nil; }

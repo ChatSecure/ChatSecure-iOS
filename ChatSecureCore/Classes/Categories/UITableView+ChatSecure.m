@@ -15,7 +15,7 @@
 @implementation UITableView (ChatSecure)
 
 /** Connection must be read-write */
-+ (nullable NSArray<UITableViewRowAction *> *)editActionsForThread:(id<OTRThreadOwner>)thread deleteActionAlsoRemovesFromRoster:(BOOL)deleteActionAlsoRemovesFromRoster connection:(YapDatabaseConnection*)connection {
++ (nullable UISwipeActionsConfiguration *)editActionsForThread:(id<OTRThreadOwner>)thread deleteActionAlsoRemovesFromRoster:(BOOL)deleteActionAlsoRemovesFromRoster connection:(YapDatabaseConnection*)connection {
     NSParameterAssert(thread);
     NSParameterAssert(connection);
     if (!thread || !connection) {
@@ -33,22 +33,23 @@
         archiveTitle = UNARCHIVE_ACTION_STRING();
     }
     
-    UITableViewRowAction *archiveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:archiveTitle handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    UIContextualAction *archiveAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:archiveTitle handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             NSString *key = [thread threadIdentifier];
             NSString *collection = [thread threadCollection];
             id object = [transaction objectForKey:key inCollection:collection];
             if (![object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                completionHandler(NO);
                 return;
             }
             id <OTRThreadOwner> thread = object;
             thread.isArchived = !thread.isArchived;
             [thread saveWithTransaction:transaction];
+            completionHandler(YES);
         }];
     }];
     
-    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:DELETE_STRING() handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        
+    UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:DELETE_STRING() handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [OTRBaseMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
         }];
@@ -70,6 +71,7 @@
             //Delete database items
             [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
+                completionHandler(YES);
             }];
         } else if ([thread isKindOfClass:[OTRBuddy class]] && deleteActionAlsoRemovesFromRoster) {
             OTRBuddy *dbBuddy = (OTRBuddy*)thread;
@@ -80,11 +82,14 @@
             [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [action saveWithTransaction:transaction];
                 [dbBuddy removeWithTransaction:transaction];
+                completionHandler(YES);
             }];
+        } else {
+            completionHandler(NO);
         }
     }];
     
-    return @[deleteAction, archiveAction];
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction, archiveAction]];
 }
 
 @end

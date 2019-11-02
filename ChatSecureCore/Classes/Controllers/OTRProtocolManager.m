@@ -264,7 +264,7 @@
     if (otrFingerprint.length == 40) {
         message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
     }
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING() message:message preferredStyle:(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
     NSMutableArray<OTRAccount*> *accounts = [NSMutableArray array];
     [OTRDatabaseManager.shared.readConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSArray<OTRAccount*> *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];

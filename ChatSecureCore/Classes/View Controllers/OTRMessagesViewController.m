@@ -1476,6 +1476,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return cell;
 }
 
+- (UIContextMenuConfiguration *)collectionView:(UICollectionView *)collectionView contextMenuConfigurationForItemAtIndexPath:(NSIndexPath *)indexPath point:(CGPoint)point API_AVAILABLE(ios(13.0)) {
+    return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        UIAction *delete = [UIAction actionWithTitle:DELETE_STRING() image:nil identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            [self deleteMessageAtIndexPath:indexPath];
+        }];
+        UIMenu *menu = [UIMenu menuWithTitle:@"" children:@[delete]];
+        return menu;
+    }];
+}
+
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
     if (action == @selector(delete:)) {

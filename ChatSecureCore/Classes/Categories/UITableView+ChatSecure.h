@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UITableView (ChatSecure)
 
 /** deleteActionAlsoRemovesFromRoster is YES for the ChooseBuddy view, otherwise NO. Connection must be read-write */
-+ (nullable NSArray<UITableViewRowAction *> *)editActionsForThread:(id<OTRThreadOwner>)thread deleteActionAlsoRemovesFromRoster:(BOOL)deleteActionAlsoRemovesFromRoster connection:(YapDatabaseConnection*)connection;
++ (nullable UISwipeActionsConfiguration *)editActionsForThread:(id<OTRThreadOwner>)thread deleteActionAlsoRemovesFromRoster:(BOOL)deleteActionAlsoRemovesFromRoster connection:(YapDatabaseConnection*)connection;
 
 @end
 NS_ASSUME_NONNULL_END

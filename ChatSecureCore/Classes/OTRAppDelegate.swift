@@ -10,8 +10,62 @@ import Foundation
 import YapDatabase
 import UserNotifications
 import CocoaLumberjack
+import UIKit
+import BackgroundTasks
+
+@available(iOS 13.0, *)
+extension BGAppRefreshTaskRequest {
+    static var refreshIdentifier: String {
+        guard let bundleId = Bundle.main.bundleIdentifier else  {
+            fatalError("No bundle identifier!")
+        }
+        return "\(bundleId).refresh"
+    }
+}
 
 extension OTRAppDelegate {
+    @objc public func scheduleBackgroundTasks(application: UIApplication, completionHandler: ((UIBackgroundFetchResult)->Void)? = nil) {
+        if #available(iOS 13.0, *) {
+            BGTaskScheduler.shared.cancelAllTaskRequests()
+            let request = BGAppRefreshTaskRequest(identifier: BGAppRefreshTaskRequest.refreshIdentifier)
+            request.earliestBeginDate = nil
+            do {
+                try BGTaskScheduler.shared.submit(request)
+            } catch {
+                DDLogError("BGTaskScheduler Error \(error)")
+            }
+            completionHandler?(.newData)
+        } else {
+            if let completionHandler = completionHandler {
+                self.application(application, performFetchWithCompletionHandler: completionHandler)
+            }
+        }
+    }
+    
+    @objc public func configureBackgroundTasks(application: UIApplication) {
+        if #available(iOS 13.0, *) {
+            BGTaskScheduler.shared.register(forTaskWithIdentifier: BGAppRefreshTaskRequest.refreshIdentifier, using: nil) { (task) in
+                guard let appRefreshTask = task as? BGAppRefreshTask else {
+                    task.setTaskCompleted(success: true)
+                    return
+                }
+                OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
+                DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: {
+                    let timeout = UIApplication.shared.backgroundTimeRemaining
+                    OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
+                        DispatchQueue.main.async {
+                            UIApplication.shared.removeExtraForegroundNotifications()
+                            appRefreshTask.setTaskCompleted(success: true)
+                        }
+                    }
+                })
+            }
+        } else {
+            application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        }
+    }
+    
+    
     /// gets the last user interaction date, or current date if app is activate
     @objc public static func getLastInteractionDate(_ block: @escaping (_ lastInteractionDate: Date?)->(), completionQueue: DispatchQueue? = nil) {
         DispatchQueue.main.async {

@@ -248,20 +248,24 @@ extension OTRLogListViewController: UITableViewDelegate {
         }
     }
     
-    public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let action = UITableViewRowAction(style: .destructive, title: DELETE_STRING()) { (action, indexPath) in
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .destructive, title: DELETE_STRING()) { (action, view, completion) in
             guard let file = self.file(at: indexPath) else {
+                completion(false)
                 return
             }
             let url = file.fileURL
-            
             do {
                 try FileManager.default.removeItem(at: url)
                 self.removeFile(at: indexPath)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
-            } catch { }
+                completion(true)
+            } catch {
+                completion(false)
+            }
         }
-        return [action]
+        let configuration = UISwipeActionsConfiguration(actions: [action])
+        return configuration
     }
 }
 

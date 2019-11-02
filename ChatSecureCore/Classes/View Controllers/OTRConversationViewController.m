@@ -457,7 +457,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 //    return UITableViewCellEditingStyleDelete;
 //}
 
-- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath  {
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     return [UITableView editActionsForThread:thread deleteActionAlsoRemovesFromRoster:NO connection:OTRDatabaseManager.shared.writeConnection];
 }
