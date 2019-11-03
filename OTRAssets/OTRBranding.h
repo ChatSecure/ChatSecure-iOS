@@ -36,6 +36,9 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** Google Apps Scope e.g. https://www.googleapis.com/auth/googletalk */
 @property (class, readonly) NSString* googleAppScope;
 
+/** e.g. https://itunes.apple.com/app/idXXXXXXXXXX */
+@property (class, readonly, nullable) NSString* appStoreID;
+
 #pragma mark URLs
 
 /** TestFlight signup URL */

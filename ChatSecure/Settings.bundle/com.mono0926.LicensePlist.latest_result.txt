@@ -22,18 +22,6 @@ name: Alamofire, nameSpecified:
 body: Copyright (c) 2014 A…
 version: 4.9.0
 
-name: Appirater, nameSpecified: 
-body: Copyright 2017. Aras…
-version: 2.3.1
-
-name: Appirater, nameSpecified: 
-body: Copyright 2017. Aras…
-version: 2.3.1
-
-name: Appirater, nameSpecified: 
-body: Copyright 2017. Aras…
-version: 2.3.1
-
 name: ARChromeActivity, nameSpecified: 
 body: ARChromeActivity
 Cop…
@@ -510,18 +498,6 @@ version: 2.0.0
 name: TTTAttributedLabel, nameSpecified: 
 body: Copyright (c) 2011 M…
 version: 2.0.0
-
-name: TUSafariActivity, nameSpecified: 
-body: Copyright (c) 2012 T…
-version: 1.0.4
-
-name: TUSafariActivity, nameSpecified: 
-body: Copyright (c) 2012 T…
-version: 1.0.4
-
-name: TUSafariActivity, nameSpecified: 
-body: Copyright (c) 2012 T…
-version: 1.0.4
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…

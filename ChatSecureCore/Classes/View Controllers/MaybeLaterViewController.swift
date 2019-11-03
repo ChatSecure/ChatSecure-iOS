@@ -8,7 +8,6 @@
 
 import UIKit
 import OTRAssets
-import Appirater
 
 public class MaybeLaterViewController: UIViewController {
 
@@ -56,7 +55,10 @@ public class MaybeLaterViewController: UIViewController {
     }
     
     @IBAction func reviewButtonPressed(_ sender: Any) {
-        Appirater.rateApp()
+        guard let appStoreId = OTRBranding.appStoreID,
+            let writeReviewURL = URL(string: "https://itunes.apple.com/app/id\(appStoreId)?action=write-review")
+            else { return }
+        UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
     }
 
     @IBAction func fileBugPressed(_ sender: Any) {

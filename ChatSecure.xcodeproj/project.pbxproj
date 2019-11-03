@@ -42,11 +42,12 @@
 		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
 		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
 		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
+		D90DA4EE236F3C1400C585B7 /* OTRResources.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D90DA504236F3EBB00C585B7 /* CPAProxy.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D9B7EEED235D476700AD1EEA /* CPAProxy.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */; };
-		D93E50671FC3E9B400E0E624 /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		D93EFA8123596BCA007474EC /* OTRComposeGroupBuddyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7723596BC9007474EC /* OTRComposeGroupBuddyCell.xib */; };
 		D93EFA8223596BCA007474EC /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7823596BC9007474EC /* XMPPAccountCell.xib */; };
 		D93EFA8323596BCA007474EC /* OTRMessageUnknownSenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7923596BC9007474EC /* OTRMessageUnknownSenderCell.xib */; };
@@ -481,6 +482,13 @@
 			remoteGlobalIDString = 6396AF991A169D54009F3E6C;
 			remoteInfo = ChatSecure;
 		};
+		D90DA4EF236F3C1400C585B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D93027551BAA381F000CC975;
+			remoteInfo = OTRResources;
+		};
 		D99F178F1BAB9CD400604558 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
@@ -559,6 +567,31 @@
 			remoteInfo = ChatSecureCore;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D90DA4F1236F3C1500C585B7 /* Embed PlugIns */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				D90DA4EE236F3C1400C585B7 /* OTRResources.bundle in Embed PlugIns */,
+			);
+			name = "Embed PlugIns";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D90DA505236F3EBB00C585B7 /* Embed PlugIns */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D90DA504236F3EBB00C585B7 /* CPAProxy.bundle in Embed PlugIns */,
+			);
+			name = "Embed PlugIns";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		02700BD14C69C0E5B88BB7B8 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
@@ -652,6 +685,9 @@
 		C492FFACC855CE12E882968E /* Pods_ChatSecureCorePods_ChatSecureUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D785F9E1338B477035D07DAE /* Pods-ChatSecureCore-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore-ChatSecure.debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore-ChatSecure/Pods-ChatSecureCore-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
+		D90DA4F2236F3C6800C585B7 /* Appirater.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = Appirater.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		D90DA4F3236F3C6800C585B7 /* CPAProxy.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = CPAProxy.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		D90DA4F4236F3C6800C585B7 /* TUSafariActivity.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = TUSafariActivity.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferIntegrationTests.swift; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -1911,6 +1947,9 @@
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D90DA4F2236F3C6800C585B7 /* Appirater.bundle */,
+				D90DA4F3236F3C6800C585B7 /* CPAProxy.bundle */,
+				D90DA4F4236F3C6800C585B7 /* TUSafariActivity.bundle */,
 				D985BC791EBD32F700993D27 /* StoreKit.framework */,
 				CCD1F8E85C658C8D3865B584 /* Pods.framework */,
 				46AAC6968EC686E61C8E8EA4 /* Pods_ChatSecureCore.framework */,
@@ -2119,12 +2158,15 @@
 				6396AF981A169D54009F3E6C /* Resources */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				7252D7AF431B6401569E9D58 /* [CP] Copy Pods Resources */,
+				D90DA4F1236F3C1500C585B7 /* Embed PlugIns */,
+				D90DA505236F3EBB00C585B7 /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				D99F17901BAB9CD400604558 /* PBXTargetDependency */,
 				D9C52806235CB55C002B213A /* PBXTargetDependency */,
+				D90DA4F0236F3C1400C585B7 /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -2240,8 +2282,6 @@
 					};
 					D93027551BAA381F000CC975 = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 4T8JLQR6GR;
-						ProvisioningStyle = Automatic;
 					};
 					D9C527FF235CB55C002B213A = {
 						CreatedOnToolsVersion = 11.1;
@@ -2368,7 +2408,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93E50671FC3E9B400E0E624 /* OTRResources.bundle in Resources */,
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
 				D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */,
 				D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */,
@@ -2875,6 +2914,11 @@
 			target = 6396AF991A169D54009F3E6C /* ChatSecure */;
 			targetProxy = 6365CF011E2453F6009E213F /* PBXContainerItemProxy */;
 		};
+		D90DA4F0236F3C1400C585B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D93027551BAA381F000CC975 /* OTRResources */;
+			targetProxy = D90DA4EF236F3C1400C585B7 /* PBXContainerItemProxy */;
+		};
 		D99F17901BAB9CD400604558 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D93027551BAA381F000CC975 /* OTRResources */;
@@ -3125,7 +3169,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 151;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -3163,7 +3207,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 151;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3235,8 +3279,11 @@
 		D93027591BAA381F000CC975 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRResources/Info.plist;
@@ -3244,8 +3291,11 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRResources;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
@@ -3253,9 +3303,12 @@
 		D930275A1BAA381F000CC975 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
 				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRResources/Info.plist;
@@ -3263,8 +3316,11 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRResources;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;

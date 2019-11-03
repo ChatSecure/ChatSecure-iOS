@@ -29,11 +29,9 @@ TODO: Add long description of the pod here.
   s.module_name = 'ChatSecureCorePod'
 
   # User Interface
-  s.dependency "Appirater", '~> 2.0'
   s.dependency 'OpenInChrome', '~> 0.0'
   s.dependency 'JTSImageViewController', '~> 1.4'
   s.dependency 'BButton', '~> 4.0'
-  s.dependency 'TUSafariActivity', '~> 1.0'
   s.dependency 'ARChromeActivity', '~> 1.0'
   s.dependency 'QRCodeReaderViewController', '~> 4.0'
   s.dependency 'ParkedTextField'

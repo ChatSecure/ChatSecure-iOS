@@ -28,7 +28,6 @@
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 
-@import Appirater;
 #import "OTRConstants.h"
 
 #import "OTRUtilities.h"
@@ -142,10 +141,6 @@
     if ([PushController getPushPreference] == PushPreferenceEnabled) {
         [PushController registerForPushNotifications];
     }
-  
-    [Appirater setAppId:@"464200063"];
-    [Appirater setOpenInAppStore:NO];
-    [Appirater appLaunched:YES];
     
     [self autoLoginFromBackground:NO];
     [self configureBackgroundTasksWithApplication:application];
@@ -312,11 +307,6 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
     });
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    [Appirater appEnteredForeground:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

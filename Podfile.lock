@@ -1,7 +1,6 @@
 PODS:
   - AFNetworking/Security (3.2.1)
   - Alamofire (4.9.0)
-  - Appirater (2.3.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -16,7 +15,6 @@ PODS:
   - ChatSecureCore (0.1.0):
     - AFNetworking/Security (~> 3.1)
     - Alamofire (~> 4.4)
-    - Appirater (~> 2.0)
     - ARChromeActivity (~> 1.0)
     - BBlock (~> 1.2)
     - BButton (~> 4.0)
@@ -50,7 +48,6 @@ PODS:
     - SignalProtocolObjC
     - SQLCipher (~> 4.2.0)
     - TTTAttributedLabel (~> 2.0)
-    - TUSafariActivity (~> 1.0)
     - XLForm (~> 4.1)
     - XMPPFramework/Swift
     - YapDatabase/SQLCipher (~> 3.1.3)
@@ -134,7 +131,6 @@ PODS:
   - SQLCipher/standard (4.2.0):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
-  - TUSafariActivity (1.0.4)
   - XLForm (4.1.0)
   - XMPPFramework/default (4.1.0):
     - CocoaAsyncSocket (~> 7.6)
@@ -235,7 +231,6 @@ SPEC REPOS:
   trunk:
     - AFNetworking
     - Alamofire
-    - Appirater
     - ARChromeActivity
     - BBlock
     - BButton
@@ -261,7 +256,6 @@ SPEC REPOS:
     - SAMKeychain
     - SignalProtocolC
     - TTTAttributedLabel
-    - TUSafariActivity
     - XLForm
 
 EXTERNAL SOURCES:
@@ -320,15 +314,14 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
-  Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
-  ChatSecureCore: 1eea145a7cded2e9490938159c1c7412bdd2727a
+  ChatSecureCore: 08d24a7ddfdff59bd9afaec3141e1e26d50271db
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
-  CPAProxy: 9cf08f2aaa8a81dbefbff73e4018e50616bb337f
+  CPAProxy: fdb5600a16502e7c8176ab59e7e9c306fbe5dc59
   DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
@@ -359,7 +352,6 @@ SPEC CHECKSUMS:
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
   SQLCipher: 0187a2180ac288ea686b670b7141da62cd013b16
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XLForm: 7ee02761be8a369d1ad1bbffe738b97083d94f3e
   XMPPFramework: 8b7ce3a5d8f95d1f9e1389e20431ffa06f399d77
   YapDatabase: e9cf10cbf11d91f7c6dc723b0ff54fa8a04e3c8d
