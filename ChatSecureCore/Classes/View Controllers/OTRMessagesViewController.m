@@ -2214,7 +2214,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
     if ([text length] == 1 && resultRange.location != NSNotFound) {
-        [textView resignFirstResponder];
         if (self.inputToolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationLeft) {
             [self messagesInputToolbar:self.inputToolbar didPressLeftBarButton:self.inputToolbar.contentView.leftBarButtonItem];
         } else if (self.inputToolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationRight) {
@@ -2222,7 +2221,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         }
         return NO;
     }
-
     return YES;
 }
 
