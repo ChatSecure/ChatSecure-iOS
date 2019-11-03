@@ -42,8 +42,6 @@
 		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
 		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
 		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
-		D90DA4EE236F3C1400C585B7 /* OTRResources.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D90DA504236F3EBB00C585B7 /* CPAProxy.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D9B7EEED235D476700AD1EEA /* CPAProxy.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
@@ -61,6 +59,8 @@
 		D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
+		D97579FA236F5D9E0038B025 /* CPAProxy.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D9B7EEED235D476700AD1EEA /* CPAProxy.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D97579FC236F5DA20038B025 /* OTRResources.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
@@ -489,7 +489,7 @@
 			remoteGlobalIDString = D93027551BAA381F000CC975;
 			remoteInfo = OTRResources;
 		};
-		D99F178F1BAB9CD400604558 /* PBXContainerItemProxy */ = {
+		D97579FD236F5DA20038B025 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
 			proxyType = 1;
@@ -569,24 +569,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D90DA4F1236F3C1500C585B7 /* Embed PlugIns */ = {
+		D97579FB236F5D9E0038B025 /* Embed PlugIns */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				D90DA4EE236F3C1400C585B7 /* OTRResources.bundle in Embed PlugIns */,
-			);
-			name = "Embed PlugIns";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D90DA505236F3EBB00C585B7 /* Embed PlugIns */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				D90DA504236F3EBB00C585B7 /* CPAProxy.bundle in Embed PlugIns */,
+				D97579FA236F5D9E0038B025 /* CPAProxy.bundle in Embed PlugIns */,
+				D97579FC236F5DA20038B025 /* OTRResources.bundle in Embed PlugIns */,
 			);
 			name = "Embed PlugIns";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2158,15 +2148,14 @@
 				6396AF981A169D54009F3E6C /* Resources */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				7252D7AF431B6401569E9D58 /* [CP] Copy Pods Resources */,
-				D90DA4F1236F3C1500C585B7 /* Embed PlugIns */,
-				D90DA505236F3EBB00C585B7 /* Embed PlugIns */,
+				D97579FB236F5D9E0038B025 /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D99F17901BAB9CD400604558 /* PBXTargetDependency */,
 				D9C52806235CB55C002B213A /* PBXTargetDependency */,
 				D90DA4F0236F3C1400C585B7 /* PBXTargetDependency */,
+				D97579FE236F5DA20038B025 /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -2919,10 +2908,10 @@
 			target = D93027551BAA381F000CC975 /* OTRResources */;
 			targetProxy = D90DA4EF236F3C1400C585B7 /* PBXContainerItemProxy */;
 		};
-		D99F17901BAB9CD400604558 /* PBXTargetDependency */ = {
+		D97579FE236F5DA20038B025 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D93027551BAA381F000CC975 /* OTRResources */;
-			targetProxy = D99F178F1BAB9CD400604558 /* PBXContainerItemProxy */;
+			targetProxy = D97579FD236F5DA20038B025 /* PBXContainerItemProxy */;
 		};
 		D9B7EEF8235D47A000AD1EEA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3169,7 +3158,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 151;
+				CURRENT_PROJECT_VERSION = 154;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -3207,7 +3196,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 151;
+				CURRENT_PROJECT_VERSION = 154;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
