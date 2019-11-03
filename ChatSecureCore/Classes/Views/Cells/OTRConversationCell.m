@@ -137,7 +137,11 @@
     if (unreadMessages > 0) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
-        self.nameLabel.textColor = [UIColor blackColor];
+        if (@available(iOS 13.0, *)) {
+            self.nameLabel.textColor = UIColor.labelColor;
+        } else {
+            self.nameLabel.textColor = UIColor.blackColor;
+        }
     } else {
         self.nameLabel.font = [UIFont systemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
