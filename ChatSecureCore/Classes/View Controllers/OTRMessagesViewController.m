@@ -70,7 +70,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol, OTRRoomOccupantsViewControllerDelegate> {
+@interface OTRMessagesViewController () <UITextViewDelegate, JSQMessagesInputToolbarDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol, OTRRoomOccupantsViewControllerDelegate> {
     JSQMessagesAvatarImage *_warningAvatarImage;
     JSQMessagesAvatarImage *_accountAvatarImage;
     JSQMessagesAvatarImage *_buddyAvatarImage;
@@ -2207,6 +2207,23 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     
     [self presentViewController:activityViewController animated:YES completion:nil];
     return NO;
+}
+
+// https://stackoverflow.com/a/23779209
+// enable send with return key
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    NSRange resultRange = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSBackwardsSearch];
+    if ([text length] == 1 && resultRange.location != NSNotFound) {
+        [textView resignFirstResponder];
+        if (self.inputToolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationLeft) {
+            [self messagesInputToolbar:self.inputToolbar didPressLeftBarButton:self.inputToolbar.contentView.leftBarButtonItem];
+        } else if (self.inputToolbar.sendButtonLocation == JSQMessagesInputSendButtonLocationRight) {
+            [self messagesInputToolbar:self.inputToolbar didPressRightBarButton:self.inputToolbar.contentView.rightBarButtonItem];
+        }
+        return NO;
+    }
+
+    return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
