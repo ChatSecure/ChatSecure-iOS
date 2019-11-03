@@ -23,6 +23,19 @@ extension BGAppRefreshTaskRequest {
     }
 }
 
+
+protocol BackgroundTaskProtocol {
+    func setTaskCompleted(success: Bool)
+}
+
+@available(iOS 13.0, *)
+extension BGTask: BackgroundTaskProtocol {}
+
+enum FetchType {
+    case fetch((UIBackgroundFetchResult)->Void)
+    case task(BackgroundTaskProtocol)
+}
+
 extension OTRAppDelegate {
     @objc public func scheduleBackgroundTasks(application: UIApplication, completionHandler: ((UIBackgroundFetchResult)->Void)? = nil) {
         if let completionHandler = completionHandler {
@@ -42,27 +55,22 @@ extension OTRAppDelegate {
             self.application(application, performFetchWithCompletionHandler: completionHandler)
         }
     }
-    
-    enum FetchType {
-        case fetch((UIBackgroundFetchResult)->Void)
-        case task(BGAppRefreshTask)
-    }
-    
+
     private func performBackgroundFetch(type: FetchType)  {
         OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
         DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: {
-           let timeout = UIApplication.shared.backgroundTimeRemaining
-           OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
-               DispatchQueue.main.async {
-                UIApplication.shared.removeExtraForegroundNotifications()
-                switch type {
-                case .fetch(let completion):
-                    completion(.newData)
-                case .task(let task):
-                    task.setTaskCompleted(success: true)
+            let timeout = UIApplication.shared.backgroundTimeRemaining
+            OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
+                DispatchQueue.main.async {
+                    UIApplication.shared.removeExtraForegroundNotifications()
+                    switch type {
+                    case .fetch(let completion):
+                        completion(.newData)
+                    case .task(let task):
+                        task.setTaskCompleted(success: true)
+                    }
                 }
-               }
-           }
+            }
         })
     }
     
