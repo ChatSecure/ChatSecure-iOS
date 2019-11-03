@@ -11,13 +11,13 @@ import Foundation
 open class OTRGroupAvatarGenerator {
 
     static let arrayOfColors:[CGColor] = [
-        colorWithHexString(hexColorString: "#fff73d54").cgColor,
-        colorWithHexString(hexColorString: "#fffff74f").cgColor,
-        colorWithHexString(hexColorString: "#ffb2142f").cgColor,
-        colorWithHexString(hexColorString: "#ff4fcaff").cgColor,
-        colorWithHexString(hexColorString: "#ff86ff76").cgColor,
-        colorWithHexString(hexColorString: "#ffcc4317").cgColor,
-        colorWithHexString(hexColorString: "#ff8376ff").cgColor
+        colorWithHexString(hexColorString: "#f73d54").cgColor,
+        colorWithHexString(hexColorString: "#fff74f").cgColor,
+        colorWithHexString(hexColorString: "#b2142f").cgColor,
+        colorWithHexString(hexColorString: "#4fcaff").cgColor,
+        colorWithHexString(hexColorString: "#86ff76").cgColor,
+        colorWithHexString(hexColorString: "#cc4317").cgColor,
+        colorWithHexString(hexColorString: "#8376ff").cgColor
     ]
     
     public static func avatarImage(withSeed seed: String, width: Int, height: Int) -> UIImage? {
@@ -75,7 +75,7 @@ open class OTRGroupAvatarGenerator {
     }
     
     static func colorWithHexString(hexColorString:String) -> UIColor {
-        .init(hexColorString)
+        UIColor(hexString: hexColorString)
     }    
     
     // A LCG to create pseudo-random numbers (using a seed)
@@ -124,7 +124,7 @@ extension String {
 extension UIColor {
 
     // https://stackoverflow.com/a/38909348
-    convenience init(_ hexString: String, alpha: Double = 1.0) {
+    convenience init(hexString: String, alpha: Double = 1.0) {
         let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int = UInt64()
         Scanner(string: hex).scanHexInt64(&int)
