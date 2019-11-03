@@ -201,22 +201,9 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 
 @implementation OTRAssets
 
-/** Returns OTRResources.bundle */
+/** Returns resources bundle */
 + (NSBundle*) resourcesBundle {
-    // Use resources from main bundle first, assuming the defaults are being overridden
-    NSString *folderName = @"OTRResources.bundle";
-    NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
-    NSBundle *dataBundle = [NSBundle bundleWithPath:bundlePath];
-    
-    // Usually this is only the case for tests
-    if (!dataBundle) {
-        NSBundle *containingBundle = [NSBundle bundleForClass:self.class];
-        NSString *bundlePath = [[containingBundle resourcePath] stringByAppendingPathComponent:folderName];
-        dataBundle = [NSBundle bundleWithPath:bundlePath];
-    }
-    
-    
-    return dataBundle;
+    return NSBundle.mainBundle;
 }
 
 @end

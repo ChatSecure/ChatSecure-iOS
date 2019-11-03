@@ -15,7 +15,7 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** Stub class for identifying asset framework bundle via bundleForClass: */
 @interface OTRAssets : NSObject
 
-/** Returns OTRResources.bundle */
+/** Returns resources bundle */
 @property (class, readonly) NSBundle* resourcesBundle;
 
 @end

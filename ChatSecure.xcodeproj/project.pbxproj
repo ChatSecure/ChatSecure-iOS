@@ -13,7 +13,6 @@
 		6323C7031E396D3D00D0FB42 /* landscape.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6323C7001E396D3D00D0FB42 /* landscape.jpg */; };
 		6323C7041E396D3D00D0FB42 /* portrait.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6323C7011E396D3D00D0FB42 /* portrait.jpg */; };
 		6323C7051E396D3D00D0FB42 /* small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6323C7021E396D3D00D0FB42 /* small.jpg */; };
-		632A2D341E2728B8000D3192 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
 		635E51A91DA82A4E002B70AB /* OTROMEMOTestModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635E51A81DA82A4E002B70AB /* OTROMEMOTestModule.swift */; };
@@ -34,43 +33,11 @@
 		63F0CAFB1E60C1B40045359C /* OTRYapViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0CAFA1E60C1B40045359C /* OTRYapViewTest.swift */; };
 		63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F614DB1BB214660083A06A /* ChatSecureModelTest.swift */; };
 		7CD871CB705CA365E0755104 /* libPods-ChatSecureCorePods-ChatSecureTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5179DA87B83F57EEA9589733 /* libPods-ChatSecureCorePods-ChatSecureTests.a */; };
-		8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */; };
-		9224A5F3207E3BD800A044BF /* JoinRoomView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9224A5F2207E3BD800A044BF /* JoinRoomView.xib */; };
-		924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
-		924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */; };
-		9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */; };
-		9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
-		9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
-		92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
 		D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */; };
-		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */; };
-		D93EFA8123596BCA007474EC /* OTRComposeGroupBuddyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7723596BC9007474EC /* OTRComposeGroupBuddyCell.xib */; };
-		D93EFA8223596BCA007474EC /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7823596BC9007474EC /* XMPPAccountCell.xib */; };
-		D93EFA8323596BCA007474EC /* OTRMessageUnknownSenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7923596BC9007474EC /* OTRMessageUnknownSenderCell.xib */; };
-		D93EFA8423596BCA007474EC /* OMEMODeviceFingerprintCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7A23596BC9007474EC /* OMEMODeviceFingerprintCell.xib */; };
-		D93EFA8523596BCA007474EC /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7B23596BC9007474EC /* PushAccountTableViewCell.xib */; };
-		D93EFA8623596BCA007474EC /* ServerCapabilityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7C23596BC9007474EC /* ServerCapabilityTableViewCell.xib */; };
-		D93EFA8723596BCA007474EC /* TwoButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7D23596BCA007474EC /* TwoButtonTableViewCell.xib */; };
-		D93EFA8823596BCA007474EC /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7E23596BCA007474EC /* UserInfoProfileCell.xib */; };
-		D93EFA8923596BCA007474EC /* OTRMessageNewDeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7F23596BCA007474EC /* OTRMessageNewDeviceCell.xib */; };
-		D93EFA8A23596BCA007474EC /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8023596BCA007474EC /* SingleButtonTableViewCell.xib */; };
-		D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
-		D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
-		D97579FA236F5D9E0038B025 /* CPAProxy.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D9B7EEED235D476700AD1EEA /* CPAProxy.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D97579FC236F5DA20038B025 /* OTRResources.bundle in Embed PlugIns */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
-		D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */; };
-		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
-		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
-		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
-		D99F178A1BAB946800604558 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F17891BAB946800604558 /* Branding.plist */; };
-		D99F178C1BAB947E00604558 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F178B1BAB947E00604558 /* Secrets.plist */; };
-		D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
-		D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
-		D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
 		D9B3EC221FA196CE00E63C7F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */; };
 		D9B7EEFB235D47C400AD1EEA /* OTRKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEF6235D477200AD1EEA /* OTRKit.framework */; };
 		D9B7EEFC235D47CA00AD1EEA /* CPAProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEE9235D476700AD1EEA /* CPAProxy.framework */; };
@@ -471,6 +438,35 @@
 		D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */; };
+		D9F5C2A8236F7F8200F14A16 /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
+		D9F5C2A9236F7F8200F14A16 /* OMEMODeviceFingerprintCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7A23596BC9007474EC /* OMEMODeviceFingerprintCell.xib */; };
+		D9F5C2AA236F7F8200F14A16 /* OTRComposeGroupBuddyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7723596BC9007474EC /* OTRComposeGroupBuddyCell.xib */; };
+		D9F5C2AB236F7F8200F14A16 /* OTRMessageNewDeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7F23596BCA007474EC /* OTRMessageNewDeviceCell.xib */; };
+		D9F5C2AC236F7F8200F14A16 /* OTRMessageUnknownSenderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7923596BC9007474EC /* OTRMessageUnknownSenderCell.xib */; };
+		D9F5C2AD236F7F8200F14A16 /* PushAccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7B23596BC9007474EC /* PushAccountTableViewCell.xib */; };
+		D9F5C2AE236F7F8200F14A16 /* ServerCapabilityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7C23596BC9007474EC /* ServerCapabilityTableViewCell.xib */; };
+		D9F5C2AF236F7F8200F14A16 /* SingleButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8023596BCA007474EC /* SingleButtonTableViewCell.xib */; };
+		D9F5C2B0236F7F8200F14A16 /* TwoButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7D23596BCA007474EC /* TwoButtonTableViewCell.xib */; };
+		D9F5C2B1236F7F8200F14A16 /* UserInfoProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7E23596BCA007474EC /* UserInfoProfileCell.xib */; };
+		D9F5C2B2236F7F8200F14A16 /* XMPPAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA7823596BC9007474EC /* XMPPAccountCell.xib */; };
+		D9F5C2B3236F7F8200F14A16 /* ios-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */; };
+		D9F5C2B4236F7F8200F14A16 /* MaterialIcons-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */; };
+		D9F5C2B5236F7F8200F14A16 /* MediaDownloadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97070911EEF382D004FEBDE /* MediaDownloadView.xib */; };
+		D9F5C2B6236F7F8200F14A16 /* HTMLPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */; };
+		D9F5C2B7236F7F8200F14A16 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
+		D9F5C2B8236F7F8200F14A16 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
+		D9F5C2B9236F7F8200F14A16 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
+		D9F5C2BA236F7FA200F14A16 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; };
+		D9F5C2BB236F7FA200F14A16 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; };
+		D9F5C2BC236F7FA700F14A16 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F17891BAB946800604558 /* Branding.plist */; };
+		D9F5C2BD236F7FA700F14A16 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = D99F178B1BAB947E00604558 /* Secrets.plist */; };
+		D9F5C2BE236F7FA700F14A16 /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; };
+		D9F5C2BF236F7FA700F14A16 /* MigrationInfoHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */; };
+		D9F5C2C0236F7FA700F14A16 /* MigratedBuddyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */; };
+		D9F5C2C1236F7FA700F14A16 /* OTRMessagesLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */; };
+		D9F5C2C2236F7FA700F14A16 /* OTRRoomOccupants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9251C3041F345DD5003ACE4A /* OTRRoomOccupants.storyboard */; };
+		D9F5C2C3236F7FA700F14A16 /* OTRComposeGroup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */; };
+		D9F5C2C4236F7FA700F14A16 /* JoinRoomView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9224A5F2207E3BD800A044BF /* JoinRoomView.xib */; };
 		FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C35A70D105953D80691D31 /* libPods-ChatSecureCorePods-ChatSecureCore.a */; };
 /* End PBXBuildFile section */
 
@@ -481,20 +477,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6396AF991A169D54009F3E6C;
 			remoteInfo = ChatSecure;
-		};
-		D90DA4EF236F3C1400C585B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D93027551BAA381F000CC975;
-			remoteInfo = OTRResources;
-		};
-		D97579FD236F5DA20038B025 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D93027551BAA381F000CC975;
-			remoteInfo = OTRResources;
 		};
 		D9B7EEE6235D476700AD1EEA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -567,21 +549,6 @@
 			remoteInfo = ChatSecureCore;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		D97579FB236F5D9E0038B025 /* Embed PlugIns */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-				D97579FA236F5D9E0038B025 /* CPAProxy.bundle in Embed PlugIns */,
-				D97579FC236F5DA20038B025 /* OTRResources.bundle in Embed PlugIns */,
-			);
-			name = "Embed PlugIns";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		02700BD14C69C0E5B88BB7B8 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
@@ -681,7 +648,6 @@
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferIntegrationTests.swift; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
-		D93027561BAA381F000CC975 /* OTRResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTRResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93027581BAA381F000CC975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9315CAD1BB600450077D2EE /* AddFriendsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddFriendsView.xib; path = Interface/AddFriendsView.xib; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
@@ -1143,13 +1109,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D93027531BAA381F000CC975 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D9C527FD235CB55C002B213A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1244,7 +1203,6 @@
 			children = (
 				6396AF9A1A169D54009F3E6C /* ChatSecure.app */,
 				6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */,
-				D93027561BAA381F000CC975 /* OTRResources.bundle */,
 				6365CEFC1E2453F6009E213F /* ChatSecureUITests.xctest */,
 				D9C52800235CB55C002B213A /* ChatSecureCore.framework */,
 			);
@@ -2148,14 +2106,11 @@
 				6396AF981A169D54009F3E6C /* Resources */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				7252D7AF431B6401569E9D58 /* [CP] Copy Pods Resources */,
-				D97579FB236F5D9E0038B025 /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				D9C52806235CB55C002B213A /* PBXTargetDependency */,
-				D90DA4F0236F3C1400C585B7 /* PBXTargetDependency */,
-				D97579FE236F5DA20038B025 /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -2181,23 +2136,6 @@
 			productName = ChatSecureTests;
 			productReference = 6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		D93027551BAA381F000CC975 /* OTRResources */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D930275C1BAA381F000CC975 /* Build configuration list for PBXNativeTarget "OTRResources" */;
-			buildPhases = (
-				D93027521BAA381F000CC975 /* Sources */,
-				D93027531BAA381F000CC975 /* Frameworks */,
-				D93027541BAA381F000CC975 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = OTRResources;
-			productName = OTRResources;
-			productReference = D93027561BAA381F000CC975 /* OTRResources.bundle */;
-			productType = "com.apple.product-type.bundle";
 		};
 		D9C527FF235CB55C002B213A /* ChatSecureCore */ = {
 			isa = PBXNativeTarget;
@@ -2269,9 +2207,6 @@
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
-					D93027551BAA381F000CC975 = {
-						CreatedOnToolsVersion = 7.0;
-					};
 					D9C527FF235CB55C002B213A = {
 						CreatedOnToolsVersion = 11.1;
 					};
@@ -2333,7 +2268,6 @@
 				6396AF991A169D54009F3E6C /* ChatSecure */,
 				6396AFB21A169D54009F3E6C /* ChatSecureTests */,
 				6365CEFB1E2453F6009E213F /* ChatSecureUITests */,
-				D93027551BAA381F000CC975 /* OTRResources */,
 				D9C527FF235CB55C002B213A /* ChatSecureCore */,
 			);
 		};
@@ -2389,7 +2323,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				632A2D341E2728B8000D3192 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2397,13 +2330,42 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9F5C2A9236F7F8200F14A16 /* OMEMODeviceFingerprintCell.xib in Resources */,
+				D9F5C2C3236F7FA700F14A16 /* OTRComposeGroup.storyboard in Resources */,
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
+				D9F5C2BA236F7FA200F14A16 /* OTRCountryImages.xcassets in Resources */,
+				D9F5C2B7236F7F8200F14A16 /* XMPPServerInfoCell.xib in Resources */,
+				D9F5C2C1236F7FA700F14A16 /* OTRMessagesLoadingView.xib in Resources */,
+				D9F5C2BB236F7FA200F14A16 /* OTRImages.xcassets in Resources */,
 				D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */,
+				D9F5C2B4236F7F8200F14A16 /* MaterialIcons-Regular.ttf in Resources */,
+				D9F5C2AC236F7F8200F14A16 /* OTRMessageUnknownSenderCell.xib in Resources */,
+				D9F5C2B0236F7F8200F14A16 /* TwoButtonTableViewCell.xib in Resources */,
+				D9F5C2B6236F7F8200F14A16 /* HTMLPreviewView.xib in Resources */,
+				D9F5C2AE236F7F8200F14A16 /* ServerCapabilityTableViewCell.xib in Resources */,
+				D9F5C2B8236F7F8200F14A16 /* OTRUsernameCell.xib in Resources */,
+				D9F5C2AA236F7F8200F14A16 /* OTRComposeGroupBuddyCell.xib in Resources */,
+				D9F5C2BC236F7FA700F14A16 /* Branding.plist in Resources */,
 				D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
+				D9F5C2A8236F7F8200F14A16 /* Purchase.storyboard in Resources */,
+				D9F5C2AF236F7F8200F14A16 /* SingleButtonTableViewCell.xib in Resources */,
+				D9F5C2B9236F7F8200F14A16 /* Onboarding.storyboard in Resources */,
+				D9F5C2BE236F7FA700F14A16 /* AddFriendsView.xib in Resources */,
+				D9F5C2C0236F7FA700F14A16 /* MigratedBuddyHeaderView.xib in Resources */,
+				D9F5C2AB236F7F8200F14A16 /* OTRMessageNewDeviceCell.xib in Resources */,
+				D9F5C2BD236F7FA700F14A16 /* Secrets.plist in Resources */,
+				D9F5C2B1236F7F8200F14A16 /* UserInfoProfileCell.xib in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
+				D9F5C2B3236F7F8200F14A16 /* ios-icon-font.ttf in Resources */,
+				D9F5C2AD236F7F8200F14A16 /* PushAccountTableViewCell.xib in Resources */,
+				D9F5C2B2236F7F8200F14A16 /* XMPPAccountCell.xib in Resources */,
+				D9F5C2B5236F7F8200F14A16 /* MediaDownloadView.xib in Resources */,
 				D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */,
+				D9F5C2C4236F7FA700F14A16 /* JoinRoomView.xib in Resources */,
+				D9F5C2C2236F7FA700F14A16 /* OTRRoomOccupants.storyboard in Resources */,
+				D9F5C2BF236F7FA700F14A16 /* MigrationInfoHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2416,43 +2378,6 @@
 				6323C7031E396D3D00D0FB42 /* landscape.jpg in Resources */,
 				6323C7051E396D3D00D0FB42 /* small.jpg in Resources */,
 				63DDD8BA1A9E9BD900C0A918 /* samples in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D93027541BAA381F000CC975 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				924F67C51EA5541C00528FB6 /* MigrationInfoHeaderView.xib in Resources */,
-				D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */,
-				D98BA36C1EDE47BB004475B6 /* HTMLPreviewView.xib in Resources */,
-				D93EFA8323596BCA007474EC /* OTRMessageUnknownSenderCell.xib in Resources */,
-				9251C34F1F35CC44003ACE4A /* MaterialIcons-Regular.ttf in Resources */,
-				D93EFA8223596BCA007474EC /* XMPPAccountCell.xib in Resources */,
-				D99F178C1BAB947E00604558 /* Secrets.plist in Resources */,
-				D99F178A1BAB946800604558 /* Branding.plist in Resources */,
-				D93EFA8923596BCA007474EC /* OTRMessageNewDeviceCell.xib in Resources */,
-				D99F17881BAB936100604558 /* Localizable.strings in Resources */,
-				92CC68BF1F42F0710006CDF8 /* OTRComposeGroup.storyboard in Resources */,
-				D93EFA8623596BCA007474EC /* ServerCapabilityTableViewCell.xib in Resources */,
-				9224A5F3207E3BD800A044BF /* JoinRoomView.xib in Resources */,
-				9251C34E1F35CC44003ACE4A /* ios-icon-font.ttf in Resources */,
-				D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */,
-				D99F17921BABA84600604558 /* OTRUsernameCell.xib in Resources */,
-				D93EFA8A23596BCA007474EC /* SingleButtonTableViewCell.xib in Resources */,
-				D99F17911BABA84600604558 /* XMPPServerInfoCell.xib in Resources */,
-				D93EFA8123596BCA007474EC /* OTRComposeGroupBuddyCell.xib in Resources */,
-				D99F17931BABA85D00604558 /* Onboarding.storyboard in Resources */,
-				9251C3051F345DD5003ACE4A /* OTRRoomOccupants.storyboard in Resources */,
-				D93EFA8E235971E2007474EC /* Purchase.storyboard in Resources */,
-				D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */,
-				D97070921EEF382D004FEBDE /* MediaDownloadView.xib in Resources */,
-				D93EFA8423596BCA007474EC /* OMEMODeviceFingerprintCell.xib in Resources */,
-				D93EFA8523596BCA007474EC /* PushAccountTableViewCell.xib in Resources */,
-				924F68591EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib in Resources */,
-				D93EFA8823596BCA007474EC /* UserInfoProfileCell.xib in Resources */,
-				D93EFA8723596BCA007474EC /* TwoButtonTableViewCell.xib in Resources */,
-				8F56C3272EBE7F45BC8F925A /* OTRMessagesLoadingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2641,13 +2566,6 @@
 				D91F9EFE1ED645F100AEA62C /* FileTransferIntegrationTests.swift in Sources */,
 				635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */,
 				63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D93027521BAA381F000CC975 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2903,16 +2821,6 @@
 			target = 6396AF991A169D54009F3E6C /* ChatSecure */;
 			targetProxy = 6365CF011E2453F6009E213F /* PBXContainerItemProxy */;
 		};
-		D90DA4F0236F3C1400C585B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D93027551BAA381F000CC975 /* OTRResources */;
-			targetProxy = D90DA4EF236F3C1400C585B7 /* PBXContainerItemProxy */;
-		};
-		D97579FE236F5DA20038B025 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D93027551BAA381F000CC975 /* OTRResources */;
-			targetProxy = D97579FD236F5DA20038B025 /* PBXContainerItemProxy */;
-		};
 		D9B7EEF8235D47A000AD1EEA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "OTRKit (iOS)";
@@ -3158,7 +3066,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 154;
+				CURRENT_PROJECT_VERSION = 155;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -3196,7 +3104,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 154;
+				CURRENT_PROJECT_VERSION = 155;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3262,55 +3170,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-			};
-			name = Release;
-		};
-		D93027591BAA381F000CC975 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = 4T8JLQR6GR;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = OTRResources/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRResources;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		D930275A1BAA381F000CC975 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = 4T8JLQR6GR;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = OTRResources/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRResources;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = YES;
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
 		};
@@ -3434,15 +3293,6 @@
 			buildConfigurations = (
 				6396AFC11A169D54009F3E6C /* Debug */,
 				6396AFC21A169D54009F3E6C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D930275C1BAA381F000CC975 /* Build configuration list for PBXNativeTarget "OTRResources" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D93027591BAA381F000CC975 /* Debug */,
-				D930275A1BAA381F000CC975 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
