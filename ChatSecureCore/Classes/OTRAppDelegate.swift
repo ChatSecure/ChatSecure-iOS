@@ -25,6 +25,9 @@ extension BGAppRefreshTaskRequest {
 
 extension OTRAppDelegate {
     @objc public func scheduleBackgroundTasks(application: UIApplication, completionHandler: ((UIBackgroundFetchResult)->Void)? = nil) {
+        if let completionHandler = completionHandler {
+            performBackgroundFetch(type: .fetch(completionHandler))
+        }
         if #available(iOS 13.0, *) {
             BGTaskScheduler.shared.cancelAllTaskRequests()
             let request = BGAppRefreshTaskRequest(identifier: BGAppRefreshTaskRequest.refreshIdentifier)
@@ -35,30 +38,42 @@ extension OTRAppDelegate {
                 DDLogError("BGTaskScheduler Error \(error)")
             }
             completionHandler?(.newData)
-        } else {
-            if let completionHandler = completionHandler {
-                self.application(application, performFetchWithCompletionHandler: completionHandler)
-            }
+        } else if let completionHandler = completionHandler {
+            self.application(application, performFetchWithCompletionHandler: completionHandler)
         }
+    }
+    
+    enum FetchType {
+        case fetch((UIBackgroundFetchResult)->Void)
+        case task(BGAppRefreshTask)
+    }
+    
+    private func performBackgroundFetch(type: FetchType)  {
+        OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: {
+           let timeout = UIApplication.shared.backgroundTimeRemaining
+           OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
+               DispatchQueue.main.async {
+                UIApplication.shared.removeExtraForegroundNotifications()
+                switch type {
+                case .fetch(let completion):
+                    completion(.newData)
+                case .task(let task):
+                    task.setTaskCompleted(success: true)
+                }
+               }
+           }
+        })
     }
     
     @objc public func configureBackgroundTasks(application: UIApplication) {
         if #available(iOS 13.0, *) {
             BGTaskScheduler.shared.register(forTaskWithIdentifier: BGAppRefreshTaskRequest.refreshIdentifier, using: nil) { (task) in
                 guard let appRefreshTask = task as? BGAppRefreshTask else {
-                    task.setTaskCompleted(success: true)
+                    task.setTaskCompleted(success: false)
                     return
                 }
-                OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
-                DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: {
-                    let timeout = UIApplication.shared.backgroundTimeRemaining
-                    OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
-                        DispatchQueue.main.async {
-                            UIApplication.shared.removeExtraForegroundNotifications()
-                            appRefreshTask.setTaskCompleted(success: true)
-                        }
-                    }
-                })
+                self.performBackgroundFetch(type: .task(appRefreshTask))
             }
         } else {
             application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
