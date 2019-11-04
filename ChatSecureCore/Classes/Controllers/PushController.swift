@@ -646,19 +646,15 @@ open class PushController: NSObject, PushControllerProtocol {
     }
     
     @objc public static func registerForPushNotifications() {
-        if #available(iOS 10.0, *) {
-            let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.badge, .alert, .sound], completionHandler: { (granted, error) in
-                DispatchQueue.main.async(execute: {
-                    // TODO: Handle push registration error
-                    let app = UIApplication.shared
-                    NotificationCenter.default.post(name: Notification.Name(rawValue: OTRUserNotificationsChanged), object: app.delegate, userInfo:nil)
-                })
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.badge, .alert, .sound], completionHandler: { (granted, error) in
+            DispatchQueue.main.async(execute: {
+                // TODO: Handle push registration error
+                let app = UIApplication.shared
+                NotificationCenter.default.post(name: Notification.Name(rawValue: OTRUserNotificationsChanged), object: app.delegate, userInfo:nil)
             })
-        } else {
-            let notificationSettings = UIUserNotificationSettings(types: [.badge, .alert, .sound], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(notificationSettings)
-        }
+        })
+        UIApplication.shared.registerForRemoteNotifications()
     }
     
     @objc public static func canReceivePushNotifications(completion: @escaping (Bool)->Void) {

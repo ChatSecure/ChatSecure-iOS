@@ -73,8 +73,8 @@ open class EnablePushViewController: UIViewController {
         PushController.canReceivePushNotifications() {
             if $0 {
                 self.showNextScreen()
-            } else {
-                self.showPromptForSystemSettings()
+            } else if let view = self.view {
+                self.showPromptForSystemSettings(sender: view)
             }
         }
     }

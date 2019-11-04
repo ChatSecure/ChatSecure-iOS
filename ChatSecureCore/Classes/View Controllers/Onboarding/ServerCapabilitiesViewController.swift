@@ -139,7 +139,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         resetCell.leftButton.setTitle(RESET_STRING(), for: .normal)
         resetCell.leftButton.setTitleColor(UIColor.red, for: .normal)
         resetCell.leftAction = { [weak self] (cell, sender) in
-            self?.showDestructivePrompt(title: nil, buttonTitle: RESET_STRING(), handler: { (action) in
+            self?.showDestructivePrompt(title: nil, buttonTitle: RESET_STRING(), sender: sender, handler: { (action) in
                 self?.unregisterForXMPPPush(sender)
                 self?.check.push.reset(completion: {
                     self?.check.refresh()
@@ -151,7 +151,7 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
         resetCell.rightButton.setTitleColor(UIColor.red, for: .normal)
         resetCell.rightButton.setTitleColor(UIColor.lightGray, for: .disabled)
         resetCell.rightAction = { [weak self] (cell, sender) in
-            self?.showDestructivePrompt(title: nil, buttonTitle:  DEACTIVATE_STRING(), handler: { (action) in
+            self?.showDestructivePrompt(title: nil, buttonTitle:  DEACTIVATE_STRING(), sender: sender, handler: { (action) in
                 self?.unregisterForXMPPPush(sender)
                 self?.check.push.deactivate(completion: {
                     self?.check.refresh()
