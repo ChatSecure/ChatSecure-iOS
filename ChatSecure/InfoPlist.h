@@ -6,6 +6,8 @@
 //  Copyright © 2019 Chris Ballinger. All rights reserved.
 //
 
+#import <TargetConditionals.h>
+
 #if TARGET_OS_MACCATALYST
 // TODO: Get Mac App Store export compliance code
 #define EXPORT_COMPLIANCE_CODE xxxxxx
