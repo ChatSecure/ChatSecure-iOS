@@ -9,8 +9,7 @@
 #import <TargetConditionals.h>
 
 #if TARGET_OS_MACCATALYST
-// TODO: Get Mac App Store export compliance code
-#define EXPORT_COMPLIANCE_CODE xxxxxx
+#define EXPORT_COMPLIANCE_CODE 240f0a63-ba8b-40ff-bfce-20848ef174d0
 #else
 #define EXPORT_COMPLIANCE_CODE 51d17d3e-5e07-49ad-a308-9625d81e411f
 #endif
