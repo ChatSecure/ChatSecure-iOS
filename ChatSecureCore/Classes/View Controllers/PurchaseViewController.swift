@@ -47,11 +47,18 @@ public class PurchaseViewController: UIViewController {
         return [smallMoneyButton: .small, mediumMoneyButton: .medium, bigMoneyButton: .big]
     }
     
-    enum Product: String {
-        case small = "3_donation_monthly" // "3_donation_nonconsumable" // "3_donation_consumable"
-        case medium = "6_donation_monthly" // "6_donation_consumable"
-        case big = "20_donation_monthly" // "20_donation_consumable"
-        static let allProductsSet = Set([small.rawValue, medium.rawValue, big.rawValue])
+    enum Product: String, CaseIterable {
+        #if targetEnvironment(macCatalyst)
+        case small = "3_donation_monthly_mac"
+        case medium = "6_donation_monthly_mac"
+        case big = "20_donation_monthly_mac"
+        #else
+        case small = "3_donation_monthly"
+        case medium = "6_donation_monthly"
+        case big = "20_donation_monthly"
+        #endif
+
+        static var allProductsSet: Set<String> { Set(allCases.map { $0.rawValue }) }
         var emoji: String {
             switch self {
             case .small:
