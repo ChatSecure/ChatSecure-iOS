@@ -17,7 +17,7 @@
 # beta_ipa "./app.ipa"
 
 # The version of your app - remove this if you provide an ipa file
-app_version "4.3.9"
+app_version "5.0"
 submit_for_review false
 skip_binary_upload true
 # overwrite_screenshots true
@@ -28,16 +28,14 @@ metadata_path "./Submodules/ChatSecure-Metadata/metadata"
 screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
-  'default' => "v4.3.9:
-* Fix issue where fingerprint trust settings cannot be saved
+  'default' => "v5.0:
+* Dark Mode
+* Removes Tor support
+* Mac version available soon for macOS Catalina
+* Miscellaneous bug fixes and performance improvements
+* Now requires iOS 12 or higher
 
-v4.3.8:
-* Improved launch performance, reduced binary size and memory usage
-* Tor 0.4.0.5
-* SQLCipher 4.2.0
-* Update 3rd party dependencies
-
-Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.8...v4.3.9
+Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.9...v5.0
 ",
 })
 
