@@ -11,7 +11,7 @@ inhibit_all_warnings!
 source 'https://cdn.cocoapods.org/'
 
 workspace 'ChatSecure.xcworkspace'
-project 'ChatSecure.xcodeproj'
+project 'ChatSecure.xcodeproj', 'iOS_Debug' => :debug, 'macOS_Debug' => :debug, 'iOS_Release' => :release, 'macOS_Release' => :release
 
 abstract_target 'ChatSecureCorePods' do  
 

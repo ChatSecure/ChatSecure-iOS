@@ -47,7 +47,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<true/>
 	<key>ITSEncryptionExportComplianceCode</key>
-	<string>EXPORT_COMPLIANCE_CODE</string>
+	<string>$(EXPORT_COMPLIANCE_CODE)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.social-networking</string>
 	<key>LSApplicationQueriesSchemes</key>

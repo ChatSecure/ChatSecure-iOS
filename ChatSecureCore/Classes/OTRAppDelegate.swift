@@ -58,8 +58,8 @@ extension OTRAppDelegate {
 
     private func performBackgroundFetch(type: FetchType)  {
         OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
-        DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: {
-            let timeout = UIApplication.shared.backgroundTimeRemaining
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: {
+            let timeout = 1.0
             OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
                 DispatchQueue.main.async {
                     UIApplication.shared.removeExtraForegroundNotifications()

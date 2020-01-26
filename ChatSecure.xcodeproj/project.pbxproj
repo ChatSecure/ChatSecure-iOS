@@ -552,7 +552,10 @@
 
 /* Begin PBXFileReference section */
 		02700BD14C69C0E5B88BB7B8 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
+		0787C95583715C56D30272CC /* Pods-ChatSecureCorePods-ChatSecureCore.macos_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.macos_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.macos_release.xcconfig"; sourceTree = "<group>"; };
 		0F10D8D68EF9105245CE0D9F /* Pods-ChatSecureCorePods-ChatSecureCore.release (mac).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release (mac).xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release (mac).xcconfig"; sourceTree = "<group>"; };
+		1BB82A92ECB98785BADD286E /* Pods-ChatSecureCorePods-ChatSecureCore.ios_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.ios_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.ios_release.xcconfig"; sourceTree = "<group>"; };
+		1DF3B63791159A0338AFF0D0 /* Pods-ChatSecureCorePods-ChatSecure.macos_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.macos_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.macos_debug.xcconfig"; sourceTree = "<group>"; };
 		1EB047809C85EF9C3AACEFCC /* Pods-ChatSecureCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore.debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore.debug.xcconfig"; sourceTree = "<group>"; };
 		242940F967DCFC191A55C19D /* Pods-ChatSecureCore-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore-ChatSecure.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore-ChatSecure/Pods-ChatSecureCore-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
 		2BA701560D538F2F5771BBCB /* libPods-ChatSecureCorePods-ChatSecure.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatSecureCorePods-ChatSecure.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -564,6 +567,7 @@
 		4BD803A40662A0FD3DA93554 /* Pods-ChatSecureCorePods-ChatSecure.release (mac).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.release (mac).xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.release (mac).xcconfig"; sourceTree = "<group>"; };
 		5179DA87B83F57EEA9589733 /* libPods-ChatSecureCorePods-ChatSecureTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatSecureCorePods-ChatSecureTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51A79F83EAE1FC455A4FAA1B /* Pods-ChatSecureCore-ChatSecureTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore-ChatSecureTests.debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore-ChatSecureTests/Pods-ChatSecureCore-ChatSecureTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6009355D15BA89BBBF7D3537 /* Pods-ChatSecureCorePods-ChatSecureCore.macos_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.macos_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.macos_debug.xcconfig"; sourceTree = "<group>"; };
 		632157DC1E57D01A00738D4E /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		6323C6FD1E39547200D0FB42 /* OTRImageTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRImageTest.swift; sourceTree = "<group>"; };
 		6323C7001E396D3D00D0FB42 /* landscape.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = landscape.jpg; path = TestImages/landscape.jpg; sourceTree = "<group>"; };
@@ -631,6 +635,7 @@
 		83C35A70D105953D80691D31 /* libPods-ChatSecureCorePods-ChatSecureCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatSecureCorePods-ChatSecureCore.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B0F7D8477AAAE9D06628430 /* Pods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
 		8F56C50436DA64774EBB16E3 /* OTRMessagesLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OTRMessagesLoadingView.xib; sourceTree = "<group>"; };
+		9093D0A3DB37442CFB9718F8 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.macos_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.macos_release.xcconfig"; sourceTree = "<group>"; };
 		9224A5F2207E3BD800A044BF /* JoinRoomView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = JoinRoomView.xib; path = Interface/JoinRoomView.xib; sourceTree = "<group>"; };
 		924F67C41EA5541C00528FB6 /* MigrationInfoHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigrationInfoHeaderView.xib; path = Interface/MigrationInfoHeaderView.xib; sourceTree = "<group>"; };
 		924F68581EA7A31A00528FB6 /* MigratedBuddyHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MigratedBuddyHeaderView.xib; path = Interface/MigratedBuddyHeaderView.xib; sourceTree = "<group>"; };
@@ -638,8 +643,13 @@
 		9251C34C1F35CC44003ACE4A /* ios-icon-font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ios-icon-font.ttf"; sourceTree = "<group>"; };
 		9251C34D1F35CC44003ACE4A /* MaterialIcons-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MaterialIcons-Regular.ttf"; sourceTree = "<group>"; };
 		92CC68BE1F42F0710006CDF8 /* OTRComposeGroup.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = OTRComposeGroup.storyboard; path = Interface/OTRComposeGroup.storyboard; sourceTree = "<group>"; };
+		99AA03F8FC490C50FCDB3372 /* Pods-ChatSecureCorePods-ChatSecure.ios_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.ios_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.ios_debug.xcconfig"; sourceTree = "<group>"; };
 		A0810F735CB0C0686C3D35C1 /* Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig"; sourceTree = "<group>"; };
+		B1625F54938553179BDE1438 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.macos_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.macos_debug.xcconfig"; sourceTree = "<group>"; };
 		C492FFACC855CE12E882968E /* Pods_ChatSecureCorePods_ChatSecureUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C49EB1E6D7F0D4F0A9FB232D /* Pods-ChatSecureCorePods-ChatSecureTests.ios_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.ios_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.ios_release.xcconfig"; sourceTree = "<group>"; };
+		C66839AD8A8A4F785B556BF5 /* Pods-ChatSecureCorePods-ChatSecure.ios_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.ios_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.ios_release.xcconfig"; sourceTree = "<group>"; };
+		C77091A8CD45453CD4E09235 /* Pods-ChatSecureCorePods-ChatSecureCore.ios_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.ios_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.ios_debug.xcconfig"; sourceTree = "<group>"; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D785F9E1338B477035D07DAE /* Pods-ChatSecureCore-ChatSecure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCore-ChatSecure.debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCore-ChatSecure/Pods-ChatSecureCore-ChatSecure.debug.xcconfig"; sourceTree = "<group>"; };
 		D90DA4F2236F3C6800C585B7 /* Appirater.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = Appirater.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -666,6 +676,10 @@
 		D9403743236660D5001AF5C0 /* InfoPlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoPlist.h; sourceTree = "<group>"; };
 		D95553D71C4F16730019667A /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
+		D9638A0723A3320200C0CDF7 /* iOS_Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iOS_Release.xcconfig; sourceTree = "<group>"; };
+		D9638A0823A3320A00C0CDF7 /* macOS_Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = macOS_Debug.xcconfig; sourceTree = "<group>"; };
+		D9638A0923A3320D00C0CDF7 /* macOS_Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = macOS_Release.xcconfig; sourceTree = "<group>"; };
+		D9638A0A23A3320F00C0CDF7 /* iOS_Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iOS_Debug.xcconfig; sourceTree = "<group>"; };
 		D97070911EEF382D004FEBDE /* MediaDownloadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MediaDownloadView.xib; path = Interface/MediaDownloadView.xib; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -1079,7 +1093,9 @@
 		D9DEC3491FABC9F900BF1F7C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC9AC4BC9B1EE58593CE5C3D /* Pods-ChatSecure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecure.release.xcconfig"; path = "Target Support Files/Pods-ChatSecure/Pods-ChatSecure.release.xcconfig"; sourceTree = "<group>"; };
+		E3E9B8FEBB110591EF226AD3 /* Pods-ChatSecureCorePods-ChatSecure.macos_release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecure.macos_release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure.macos_release.xcconfig"; sourceTree = "<group>"; };
 		F0C9D2C724F78DD3739637DD /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig"; sourceTree = "<group>"; };
+		F3ABC9C273758A049CBDA652 /* Pods-ChatSecureCorePods-ChatSecureTests.ios_debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatSecureCorePods-ChatSecureTests.ios_debug.xcconfig"; path = "Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests.ios_debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1142,6 +1158,18 @@
 				4BD803A40662A0FD3DA93554 /* Pods-ChatSecureCorePods-ChatSecure.release (mac).xcconfig */,
 				0F10D8D68EF9105245CE0D9F /* Pods-ChatSecureCorePods-ChatSecureCore.release (mac).xcconfig */,
 				6A7EE4EA4252D079E2CD4C5B /* Pods-ChatSecureCorePods-ChatSecureTests.release (mac).xcconfig */,
+				99AA03F8FC490C50FCDB3372 /* Pods-ChatSecureCorePods-ChatSecure.ios_debug.xcconfig */,
+				1DF3B63791159A0338AFF0D0 /* Pods-ChatSecureCorePods-ChatSecure.macos_debug.xcconfig */,
+				C66839AD8A8A4F785B556BF5 /* Pods-ChatSecureCorePods-ChatSecure.ios_release.xcconfig */,
+				E3E9B8FEBB110591EF226AD3 /* Pods-ChatSecureCorePods-ChatSecure.macos_release.xcconfig */,
+				C77091A8CD45453CD4E09235 /* Pods-ChatSecureCorePods-ChatSecureCore.ios_debug.xcconfig */,
+				6009355D15BA89BBBF7D3537 /* Pods-ChatSecureCorePods-ChatSecureCore.macos_debug.xcconfig */,
+				1BB82A92ECB98785BADD286E /* Pods-ChatSecureCorePods-ChatSecureCore.ios_release.xcconfig */,
+				0787C95583715C56D30272CC /* Pods-ChatSecureCorePods-ChatSecureCore.macos_release.xcconfig */,
+				F3ABC9C273758A049CBDA652 /* Pods-ChatSecureCorePods-ChatSecureTests.ios_debug.xcconfig */,
+				B1625F54938553179BDE1438 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_debug.xcconfig */,
+				C49EB1E6D7F0D4F0A9FB232D /* Pods-ChatSecureCorePods-ChatSecureTests.ios_release.xcconfig */,
+				9093D0A3DB37442CFB9718F8 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1215,6 +1243,7 @@
 				D9403743236660D5001AF5C0 /* InfoPlist.h */,
 				D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */,
 				D95553D71C4F16730019667A /* ChatSecure.entitlements */,
+				D9638A0223A331DF00C0CDF7 /* xcconfig */,
 				633104D71A169EE600C17BAE /* Resources */,
 				6396AF9D1A169D54009F3E6C /* Supporting Files */,
 			);
@@ -1301,6 +1330,17 @@
 				9224A5F2207E3BD800A044BF /* JoinRoomView.xib */,
 			);
 			path = OTRResources;
+			sourceTree = "<group>";
+		};
+		D9638A0223A331DF00C0CDF7 /* xcconfig */ = {
+			isa = PBXGroup;
+			children = (
+				D9638A0823A3320A00C0CDF7 /* macOS_Debug.xcconfig */,
+				D9638A0923A3320D00C0CDF7 /* macOS_Release.xcconfig */,
+				D9638A0A23A3320F00C0CDF7 /* iOS_Debug.xcconfig */,
+				D9638A0723A3320200C0CDF7 /* iOS_Release.xcconfig */,
+			);
+			path = xcconfig;
 			sourceTree = "<group>";
 		};
 		D9B7EEE0235D476700AD1EEA /* Products */ = {
@@ -2886,7 +2926,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		6365CF041E2453F6009E213F /* Debug */ = {
+		6365CF041E2453F6009E213F /* iOS_Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -2911,9 +2951,9 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				TEST_TARGET_NAME = ChatSecure;
 			};
-			name = Debug;
+			name = iOS_Debug;
 		};
-		6365CF051E2453F6009E213F /* Release */ = {
+		6365CF051E2453F6009E213F /* iOS_Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -2932,10 +2972,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_TARGET_NAME = ChatSecure;
 			};
-			name = Release;
+			name = iOS_Release;
 		};
-		6396AFBB1A169D54009F3E6C /* Debug */ = {
+		6396AFBB1A169D54009F3E6C /* iOS_Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D9638A0A23A3320F00C0CDF7 /* iOS_Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2996,10 +3037,11 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = iOS_Debug;
 		};
-		6396AFBC1A169D54009F3E6C /* Release */ = {
+		6396AFBC1A169D54009F3E6C /* iOS_Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D9638A0723A3320200C0CDF7 /* iOS_Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -3052,11 +3094,11 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = iOS_Release;
 		};
-		6396AFBE1A169D54009F3E6C /* Debug */ = {
+		6396AFBE1A169D54009F3E6C /* iOS_Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C1E59A7F629602AA386C2B8 /* Pods-ChatSecureCorePods-ChatSecure.debug.xcconfig */;
+			baseConfigurationReference = 99AA03F8FC490C50FCDB3372 /* Pods-ChatSecureCorePods-ChatSecure.ios_debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -3066,7 +3108,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 157;
+				CURRENT_PROJECT_VERSION = 158;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -3090,11 +3132,11 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = iOS_Debug;
 		};
-		6396AFBF1A169D54009F3E6C /* Release */ = {
+		6396AFBF1A169D54009F3E6C /* iOS_Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 02700BD14C69C0E5B88BB7B8 /* Pods-ChatSecureCorePods-ChatSecure.release.xcconfig */;
+			baseConfigurationReference = C66839AD8A8A4F785B556BF5 /* Pods-ChatSecureCorePods-ChatSecure.ios_release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -3104,7 +3146,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 157;
+				CURRENT_PROJECT_VERSION = 158;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3127,11 +3169,11 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = YES;
 			};
-			name = Release;
+			name = iOS_Release;
 		};
-		6396AFC11A169D54009F3E6C /* Debug */ = {
+		6396AFC11A169D54009F3E6C /* iOS_Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49ABA5011FCB27BD5F715BC4 /* Pods-ChatSecureCorePods-ChatSecureTests.debug.xcconfig */;
+			baseConfigurationReference = F3ABC9C273758A049CBDA652 /* Pods-ChatSecureCorePods-ChatSecureTests.ios_debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -3152,11 +3194,11 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
 			};
-			name = Debug;
+			name = iOS_Debug;
 		};
-		6396AFC21A169D54009F3E6C /* Release */ = {
+		6396AFC21A169D54009F3E6C /* iOS_Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30CF60268F58900535B9B31A /* Pods-ChatSecureCorePods-ChatSecureTests.release.xcconfig */;
+			baseConfigurationReference = C49EB1E6D7F0D4F0A9FB232D /* Pods-ChatSecureCorePods-ChatSecureTests.ios_release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3171,11 +3213,166 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
 			};
-			name = Release;
+			name = iOS_Release;
 		};
-		D9C52809235CB55C002B213A /* Debug */ = {
+		D9638A0B23A332AC00C0CDF7 /* macOS_Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0810F735CB0C0686C3D35C1 /* Pods-ChatSecureCorePods-ChatSecureCore.debug.xcconfig */;
+			baseConfigurationReference = D9638A0823A3320A00C0CDF7 /* macOS_Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREFIX_HEADER = ChatSecure/InfoPlist.h;
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = debugging;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = macOS_Debug;
+		};
+		D9638A0C23A332AC00C0CDF7 /* macOS_Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1DF3B63791159A0338AFF0D0 /* Pods-ChatSecureCorePods-ChatSecure.macos_debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_ID_SUFFIX = "";
+				COCOAPODS_PARALLEL_CODE_SIGN = true;
+				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 158;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"SQLITE_HAS_CODEC=1",
+				);
+				INFOPLIST_FILE = ChatSecure/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = macOS_Debug;
+		};
+		D9638A0D23A332AC00C0CDF7 /* macOS_Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B1625F54938553179BDE1438 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ChatSecureTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
+			};
+			name = macOS_Debug;
+		};
+		D9638A0E23A332AC00C0CDF7 /* macOS_Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"SQLITE_HAS_CODEC=1",
+				);
+				INFOPLIST_FILE = ChatSecureUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				TEST_TARGET_NAME = ChatSecure;
+			};
+			name = macOS_Debug;
+		};
+		D9638A0F23A332AC00C0CDF7 /* macOS_Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6009355D15BA89BBBF7D3537 /* Pods-ChatSecureCorePods-ChatSecureCore.macos_debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3214,11 +3411,145 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = macOS_Debug;
 		};
-		D9C5280A235CB55C002B213A /* Release */ = {
+		D9638A1023A332B900C0CDF7 /* macOS_Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0C9D2C724F78DD3739637DD /* Pods-ChatSecureCorePods-ChatSecureCore.release.xcconfig */;
+			baseConfigurationReference = D9638A0923A3320D00C0CDF7 /* macOS_Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_PREFIX_HEADER = ChatSecure/InfoPlist.h;
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = debugging;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = macOS_Release;
+		};
+		D9638A1123A332B900C0CDF7 /* macOS_Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E3E9B8FEBB110591EF226AD3 /* Pods-ChatSecureCorePods-ChatSecure.macos_release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_ID_SUFFIX = "";
+				COCOAPODS_PARALLEL_CODE_SIGN = true;
+				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 158;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"SQLITE_HAS_CODEC=1",
+				);
+				INFOPLIST_FILE = ChatSecure/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
+			};
+			name = macOS_Release;
+		};
+		D9638A1223A332B900C0CDF7 /* macOS_Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9093D0A3DB37442CFB9718F8 /* Pods-ChatSecureCorePods-ChatSecureTests.macos_release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
+				INFOPLIST_FILE = ChatSecureTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
+			};
+			name = macOS_Release;
+		};
+		D9638A1323A332B900C0CDF7 /* macOS_Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				INFOPLIST_FILE = ChatSecureUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure.ChatSecureUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ChatSecure;
+			};
+			name = macOS_Release;
+		};
+		D9638A1423A332B900C0CDF7 /* macOS_Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0787C95583715C56D30272CC /* Pods-ChatSecureCorePods-ChatSecureCore.macos_release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3256,7 +3587,92 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = macOS_Release;
+		};
+		D9C52809235CB55C002B213A /* iOS_Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C77091A8CD45453CD4E09235 /* Pods-ChatSecureCorePods-ChatSecureCore.ios_debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ChatSecureCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = iOS_Debug;
+		};
+		D9C5280A235CB55C002B213A /* iOS_Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1BB82A92ECB98785BADD286E /* Pods-ChatSecureCorePods-ChatSecureCore.ios_release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ChatSecureCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = iOS_Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -3264,47 +3680,57 @@
 		6365CF031E2453F6009E213F /* Build configuration list for PBXNativeTarget "ChatSecureUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6365CF041E2453F6009E213F /* Debug */,
-				6365CF051E2453F6009E213F /* Release */,
+				6365CF041E2453F6009E213F /* iOS_Debug */,
+				D9638A0E23A332AC00C0CDF7 /* macOS_Debug */,
+				6365CF051E2453F6009E213F /* iOS_Release */,
+				D9638A1323A332B900C0CDF7 /* macOS_Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = iOS_Release;
 		};
 		6396AF951A169D54009F3E6C /* Build configuration list for PBXProject "ChatSecure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6396AFBB1A169D54009F3E6C /* Debug */,
-				6396AFBC1A169D54009F3E6C /* Release */,
+				6396AFBB1A169D54009F3E6C /* iOS_Debug */,
+				D9638A0B23A332AC00C0CDF7 /* macOS_Debug */,
+				6396AFBC1A169D54009F3E6C /* iOS_Release */,
+				D9638A1023A332B900C0CDF7 /* macOS_Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = iOS_Release;
 		};
 		6396AFBD1A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6396AFBE1A169D54009F3E6C /* Debug */,
-				6396AFBF1A169D54009F3E6C /* Release */,
+				6396AFBE1A169D54009F3E6C /* iOS_Debug */,
+				D9638A0C23A332AC00C0CDF7 /* macOS_Debug */,
+				6396AFBF1A169D54009F3E6C /* iOS_Release */,
+				D9638A1123A332B900C0CDF7 /* macOS_Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = iOS_Release;
 		};
 		6396AFC01A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecureTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6396AFC11A169D54009F3E6C /* Debug */,
-				6396AFC21A169D54009F3E6C /* Release */,
+				6396AFC11A169D54009F3E6C /* iOS_Debug */,
+				D9638A0D23A332AC00C0CDF7 /* macOS_Debug */,
+				6396AFC21A169D54009F3E6C /* iOS_Release */,
+				D9638A1223A332B900C0CDF7 /* macOS_Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = iOS_Release;
 		};
 		D9C5280B235CB55C002B213A /* Build configuration list for PBXNativeTarget "ChatSecureCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D9C52809235CB55C002B213A /* Debug */,
-				D9C5280A235CB55C002B213A /* Release */,
+				D9C52809235CB55C002B213A /* iOS_Debug */,
+				D9638A0F23A332AC00C0CDF7 /* macOS_Debug */,
+				D9C5280A235CB55C002B213A /* iOS_Release */,
+				D9638A1423A332B900C0CDF7 /* macOS_Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = iOS_Release;
 		};
 /* End XCConfigurationList section */
 
