@@ -10,7 +10,6 @@
 
 #import "OTRBuddy.h"
 #import "OTROutgoingMessage.h"
-@import OTRKit;
 @import JSQMessagesViewController;
 
 @class OTRBuddy, OTRXMPPManager, OTRXMPPRoom, OTRXMPPAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState, DatabaseConnections;

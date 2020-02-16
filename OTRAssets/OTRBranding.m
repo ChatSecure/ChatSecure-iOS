@@ -124,6 +124,11 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return [[self defaultPlist] objectForKey:@"UserVoiceSite"];
 }
 
+/** UserVoice Site */
++ (nullable NSString*) appStoreID {
+    return [[self defaultPlist] objectForKey:@"AppStoreID"];
+}
+
 /** If enabled, will show a ⚠️ symbol next to your account when push may have issues */
 + (BOOL) shouldShowPushWarning {
     BOOL result = [[[self defaultPlist] objectForKey:@"ShouldShowPushWarning"] boolValue];
@@ -170,7 +175,7 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 
 /** Returns true if we're running the official ChatSecure */
 + (BOOL) matchesUpstream {
-    return [[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.chrisballinger.ChatSecure"];
+    return [[[NSBundle mainBundle] bundleIdentifier] containsString:@"com.chrisballinger.ChatSecure"];
 }
 
 + (BOOL) allowsDonation {
@@ -196,22 +201,9 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 
 @implementation OTRAssets
 
-/** Returns OTRResources.bundle */
+/** Returns resources bundle */
 + (NSBundle*) resourcesBundle {
-    // Use resources from main bundle first, assuming the defaults are being overridden
-    NSString *folderName = @"OTRResources.bundle";
-    NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
-    NSBundle *dataBundle = [NSBundle bundleWithPath:bundlePath];
-    
-    // Usually this is only the case for tests
-    if (!dataBundle) {
-        NSBundle *containingBundle = [NSBundle bundleForClass:self.class];
-        NSString *bundlePath = [[containingBundle resourcePath] stringByAppendingPathComponent:folderName];
-        dataBundle = [NSBundle bundleWithPath:bundlePath];
-    }
-    
-    
-    return dataBundle;
+    return NSBundle.mainBundle;
 }
 
 @end

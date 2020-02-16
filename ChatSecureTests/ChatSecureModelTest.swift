@@ -23,11 +23,15 @@ class ChatSecureModelTest: XCTestCase {
         container.pushDevice = device
         container.pushAccountKey = accountID
         
-        let data = NSKeyedArchiver.archivedData(withRootObject: container)
-        let newContainer = NSKeyedUnarchiver.unarchiveObject(with: data) as! DeviceContainer
-        XCTAssertEqual(container.pushAccountKey, newContainer.pushAccountKey)
-        XCTAssertEqual(container.pushDevice?.registrationID, newContainer.pushDevice!.registrationID)
-        XCTAssertEqual(container.pushDevice?.id, newContainer.pushDevice!.id)
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: container, requiringSecureCoding: true)
+            let newContainer = try NSKeyedUnarchiver.unarchivedObject(ofClass: DeviceContainer.self, from: data)
+            XCTAssertEqual(container.pushAccountKey, newContainer?.pushAccountKey)
+            XCTAssertEqual(container.pushDevice?.registrationID, newContainer?.pushDevice!.registrationID)
+            XCTAssertEqual(container.pushDevice?.id, newContainer?.pushDevice!.id)
+        } catch {
+            XCTFail("Error \(error)")
+        }
     }
 }
 

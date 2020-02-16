@@ -1,4 +1,4 @@
-osx_image: xcode10.2
+osx_image: xcode11.3
 language: objective-c
 
 # Handle git submodules yourself
@@ -9,7 +9,7 @@ git:
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
   # Fix Travis  xcodebuild exited with 65 https://github.com/travis-ci/travis-ci/issues/6675#issuecomment-257964767
-  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (12" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
+  - export IOS_SIMULATOR_UDID=`instruments -s devices | grep -m 1 "iPhone 8 (13" | awk -F '[ ]' '{print $4}' | awk -F '[\[]' '{print $2}' | sed 's/.$//'`
   - echo $IOS_SIMULATOR_UDID
   - bundle install # We need a pre-release CocoaPods version
   - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
@@ -21,10 +21,8 @@ install:
   - curl -L https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies/archive/master.zip -o ChatSecure-iOS-Precompiled-Dependencies.zip
   - unzip -q ChatSecure-iOS-Precompiled-Dependencies.zip
   - mv ChatSecure-iOS-Precompiled-Dependencies-master ChatSecure-iOS-Precompiled-Dependencies
-  - mkdir -p ./Carthage/Build/iOS/
-  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies-iOS.zip -d ./Submodules/CPAProxy/
-  - cp -r ./Submodules/CPAProxy/CPAProxyDependencies-iOS ./Submodules/CPAProxy/CPAProxyDependencies-macOS
-  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies-iOS.zip -d ./Submodules/OTRKit/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
+  - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
   - unzip -q ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
 
 before_script:

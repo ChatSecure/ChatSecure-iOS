@@ -12,6 +12,8 @@
 	<string>https://www.googleapis.com/auth/googletalk</string>
 	<key>GitHubURL</key>
 	<string>https://github.com/ChatSecure/ChatSecure-iOS/</string>
+	<key>AppStoreID</key>
+	<string>464200063</string>
 	<key>FacebookAppURL</key>
 	<string>fb://profile/151354555075008</string>
 	<key>FacebookWebURL</key>
@@ -41,7 +43,7 @@
 	<key>AllowsDonation</key>
 	<true/>
 	<key>TorEnabled</key>
-	<true/>
+	<false/>
 	<key>AllowGroupOMEMO</key>
 	<true/>
 	<key>AllowDebugFileLogging</key>

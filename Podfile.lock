@@ -1,21 +1,6 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
   - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
-    - AFNetworking/NSURLSession
-  - Alamofire (4.8.2)
-  - Appirater (2.3.1)
+  - Alamofire (4.9.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -28,19 +13,18 @@ PODS:
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.1)
   - ChatSecureCore (0.1.0):
-    - AFNetworking (~> 3.1)
+    - AFNetworking/Security (~> 3.1)
     - Alamofire (~> 4.4)
-    - Appirater (~> 2.0)
     - ARChromeActivity (~> 1.0)
     - BBlock (~> 1.2)
     - BButton (~> 4.0)
     - ChatSecure-Push-iOS
     - CocoaAsyncSocket (~> 7.6.0)
-    - CocoaLumberjack/Swift (~> 3.5.0)
+    - CocoaLumberjack/Swift (~> 3.6.0)
     - CPAProxy
-    - FormatterKit (~> 1.8)
+    - FormatterKit/TimeIntervalFormatter (~> 1.8)
+    - FormatterKit/UnitOfInformationFormatter (~> 1.8)
     - GCDWebServer (~> 3.4)
-    - HockeySDK-Source
     - HTMLReader (~> 2.1.1)
     - IOCipher/GCDWebServer
     - JSQMessagesViewController
@@ -64,57 +48,29 @@ PODS:
     - SignalProtocolObjC
     - SQLCipher (~> 4.2.0)
     - TTTAttributedLabel (~> 2.0)
-    - TUSafariActivity (~> 1.0)
-    - XLForm (~> 4.0.0)
+    - XLForm (~> 4.1)
     - XMPPFramework/Swift
     - YapDatabase/SQLCipher (~> 3.1.3)
     - YapTaskQueue/SQLCipher
-    - ZXingObjC (~> 3.6)
+    - ZXingObjC/QRCode (~> 3.6)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.5.3):
-    - CocoaLumberjack/Core (= 3.5.3)
-  - CocoaLumberjack/Core (3.5.3)
-  - CocoaLumberjack/Swift (3.5.3):
+  - CocoaLumberjack (3.6.0):
+    - CocoaLumberjack/Core (= 3.6.0)
+  - CocoaLumberjack/Core (3.6.0)
+  - CocoaLumberjack/Swift (3.6.0):
     - CocoaLumberjack/Core
-  - CPAProxy (1.2.0):
-    - CocoaAsyncSocket
-  - DTFoundation/Core (1.7.13)
-  - DTFoundation/DTASN1 (1.7.13):
+  - CPAProxy (2.0.0)
+  - DTFoundation/Core (1.7.14)
+  - DTFoundation/DTASN1 (1.7.14):
     - DTFoundation/Core
-  - FormatterKit (1.9.0):
-    - FormatterKit/AddressFormatter (= 1.9.0)
-    - FormatterKit/ArrayFormatter (= 1.9.0)
-    - FormatterKit/ColorFormatter (= 1.9.0)
-    - FormatterKit/LocationFormatter (= 1.9.0)
-    - FormatterKit/NameFormatter (= 1.9.0)
-    - FormatterKit/OrdinalNumberFormatter (= 1.9.0)
-    - FormatterKit/Resources (= 1.9.0)
-    - FormatterKit/TimeIntervalFormatter (= 1.9.0)
-    - FormatterKit/UnitOfInformationFormatter (= 1.9.0)
-    - FormatterKit/URLRequestFormatter (= 1.9.0)
-  - FormatterKit/AddressFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/ArrayFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/ColorFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/LocationFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/NameFormatter (1.9.0):
-    - FormatterKit/Resources
-  - FormatterKit/OrdinalNumberFormatter (1.9.0):
-    - FormatterKit/Resources
   - FormatterKit/Resources (1.9.0)
   - FormatterKit/TimeIntervalFormatter (1.9.0):
     - FormatterKit/Resources
   - FormatterKit/UnitOfInformationFormatter (1.9.0):
     - FormatterKit/Resources
-  - FormatterKit/URLRequestFormatter (1.9.0):
-    - FormatterKit/Resources
-  - GCDWebServer (3.5.2):
-    - GCDWebServer/Core (= 3.5.2)
-  - GCDWebServer/Core (3.5.2)
-  - HockeySDK-Source (5.1.4)
+  - GCDWebServer (3.5.3):
+    - GCDWebServer/Core (= 3.5.3)
+  - GCDWebServer/Core (3.5.3)
   - HTMLReader (2.1.4)
   - IOCipher/common (0.1.0):
     - CocoaLumberjack
@@ -124,7 +80,14 @@ PODS:
     - IOCipher/common
   - JSQMessagesViewController (7.3.4)
   - JTSImageViewController (1.5.1)
-  - KissXML (5.2.3)
+  - KissXML (5.3.1):
+    - KissXML/All (= 5.3.1)
+  - KissXML/Additions (5.3.1):
+    - KissXML/Core
+  - KissXML/All (5.3.1):
+    - KissXML/Additions
+    - KissXML/Core
+  - KissXML/Core (5.3.1)
   - Kvitto (1.0.3):
     - DTFoundation/DTASN1 (~> 1.7.13)
     - Kvitto/Core (= 1.0.3)
@@ -136,7 +99,7 @@ PODS:
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (>= 3.4.0)
-  - LicensePlist (2.5.0)
+  - LicensePlist (2.11.2)
   - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
@@ -156,14 +119,14 @@ PODS:
   - NBUCore (2.1.0)
   - OpenInChrome (0.0.1)
   - OTRAssets (0.1.0)
-  - OTRKit (2.0.0)
+  - OTRKit (3.0.0)
   - ParkedTextField (0.5.0)
   - ProxyKit/Client (1.2.0):
     - ProxyKit/common
   - ProxyKit/common (1.2.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
-  - PureLayout (3.1.4)
+  - PureLayout (3.1.5)
   - QRCodeReaderViewController (4.0.2)
   - SAMKeychain (1.5.3)
   - SignalProtocolC (2.3.2)
@@ -175,124 +138,106 @@ PODS:
   - SQLCipher/standard (4.2.0):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
-  - TUSafariActivity (1.0.4)
-  - XLForm (4.0.1)
-  - XMPPFramework/default (4.0.0):
+  - XLForm (4.1.0)
+  - XMPPFramework/default (4.1.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
     - KissXML (~> 5.2)
     - libidn (~> 1.35)
-  - XMPPFramework/Swift (4.0.0):
+  - XMPPFramework/Swift (4.1.0):
     - CocoaLumberjack/Swift
     - XMPPFramework/default
-  - YapDatabase/SQLCipher (3.1.3):
-    - YapDatabase/SQLCipher/Core (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions (= 3.1.3)
-  - YapDatabase/SQLCipher/Core (3.1.3):
+  - YapDatabase/SQLCipher (3.1.4):
+    - YapDatabase/SQLCipher/Core (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions (= 3.1.4)
+  - YapDatabase/SQLCipher/Core (3.1.4):
     - CocoaLumberjack
     - SQLCipher (>= 3.4.0)
-  - YapDatabase/SQLCipher/Extensions (3.1.3):
+  - YapDatabase/SQLCipher/Extensions (3.1.4):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/ActionManager (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/AutoView (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/ConnectionPool (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/ManualView (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 3.1.3)
-    - YapDatabase/SQLCipher/Extensions/View (= 3.1.3)
-  - YapDatabase/SQLCipher/Extensions/ActionManager (3.1.3):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/AutoView (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/CloudCore (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/ConnectionPool (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/FilteredView (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/ManualView (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 3.1.4)
+    - YapDatabase/SQLCipher/Extensions/View (= 3.1.4)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (3.1.4):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
-  - YapDatabase/SQLCipher/Extensions/AutoView (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/AutoView (3.1.4):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/CloudCore (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/CloudCore (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CloudKit (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionPool (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/ConnectionPool (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredView (3.1.3):
-    - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (3.1.3):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (3.1.3):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ManualView (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/FilteredView (3.1.4):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/Relationships (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/Hooks (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResultsView (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/ManualView (3.1.4):
+    - YapDatabase/SQLCipher/Core
+    - YapDatabase/SQLCipher/Extensions/View
+  - YapDatabase/SQLCipher/Extensions/Relationships (3.1.4):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (3.1.4):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/SearchResultsView (3.1.4):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (3.1.4):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/View (3.1.3):
+  - YapDatabase/SQLCipher/Extensions/View (3.1.4):
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.3.0):
     - YapDatabase/SQLCipher (~> 3.0)
-  - ZXingObjC (3.6.5):
-    - ZXingObjC/All (= 3.6.5)
-  - ZXingObjC/All (3.6.5)
+  - ZXingObjC/Core (3.6.5)
+  - ZXingObjC/QRCode (3.6.5):
+    - ZXingObjC/Core
 
 DEPENDENCIES:
-  - Alamofire (~> 4.4)
-  - Appirater (~> 2.0)
-  - ARChromeActivity (~> 1.0)
-  - BBlock (~> 1.2)
-  - BButton (~> 4.0)
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - ChatSecureCore (from `ChatSecureCore.podspec`)
-  - CocoaAsyncSocket (~> 7.6.0)
-  - CocoaLumberjack/Swift (~> 3.5.0)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
-  - GCDWebServer (~> 3.4)
-  - HockeySDK-Source
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
-  - JTSImageViewController (~> 1.4)
-  - Kvitto (~> 1.0)
   - libsqlfs/SQLCipher (from `Submodules/libsqlfs/libsqlfs.podspec`)
-  - LicensePlist
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - Mantle (from `Podspecs/Mantle.podspec.json`)
-  - MWFeedParser (~> 1.0)
-  - OpenInChrome (~> 0.0)
   - OTRAssets (from `OTRAssets.podspec`)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
-  - ProxyKit/Client (~> 1.2.0)
-  - QRCodeReaderViewController (~> 4.0)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
-  - SQLCipher (~> 4.2)
-  - TUSafariActivity (~> 1.0)
+  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `fix-catalyst`)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
+  - ZXingObjC/QRCode (from `https://github.com/ChatSecure/ZXingObjC.git`, branch `fix-catalyst`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AFNetworking
     - Alamofire
-    - Appirater
     - ARChromeActivity
     - BBlock
     - BButton
@@ -301,7 +246,6 @@ SPEC REPOS:
     - DTFoundation
     - FormatterKit
     - GCDWebServer
-    - HockeySDK-Source
     - HTMLReader
     - JTSImageViewController
     - KissXML
@@ -318,11 +262,8 @@ SPEC REPOS:
     - QRCodeReaderViewController
     - SAMKeychain
     - SignalProtocolC
-    - SQLCipher
     - TTTAttributedLabel
-    - TUSafariActivity
     - XLForm
-    - ZXingObjC
 
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
@@ -350,12 +291,18 @@ EXTERNAL SOURCES:
     :git: https://github.com/gmertk/ParkedTextField.git
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
+  SQLCipher:
+    :branch: fix-catalyst
+    :git: https://github.com/ChatSecure/sqlcipher.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:
     :path: Submodules/YapDatabase/YapDatabase.podspec
   YapTaskQueue:
     :path: Submodules/YapTaskQueue/YapTaskQueue.podspec
+  ZXingObjC:
+    :branch: fix-catalyst
+    :git: https://github.com/ChatSecure/ZXingObjC.git
 
 CHECKOUT OPTIONS:
   Mantle:
@@ -364,33 +311,37 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
+  SQLCipher:
+    :commit: a74f9f4d9e2fa15b2f1583c9ea26626c1ba07dc1
+    :git: https://github.com/ChatSecure/sqlcipher.git
+  ZXingObjC:
+    :commit: 6fe9370caa44e5b2f630f4d58883e7c82367ecdd
+    :git: https://github.com/ChatSecure/ZXingObjC.git
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  Appirater: 44a4651f7912a17dc906b655f0c215d5bb768b84
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: ed51f98bc019be9e2d859604677a21a4ee68422e
-  ChatSecureCore: ae0bc3f0fa3d811121d7ec103e1b827aeb344d96
+  ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
+  ChatSecureCore: 08d24a7ddfdff59bd9afaec3141e1e26d50271db
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
-  CPAProxy: 863aae0e93ca45401e9148db05abab5b940e7284
-  DTFoundation: f03be9fd786f11e505bb8fc44e2a3732bf0917df
+  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
+  CPAProxy: fdb5600a16502e7c8176ab59e7e9c306fbe5dc59
+  DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
-  GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
-  HockeySDK-Source: ebf3378833f457fa08aa452352b105dc21bfebcb
+  GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
   HTMLReader: 2fc5ccf6a041b7070d9b43b101034cba63d2ae2a
   IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
-  KissXML: 09f88ff8161fd058d67b70740b8b516687b52823
+  KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
   Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
-  LicensePlist: e5f8f2e3465620e53ec4c669955a5a7d0692b9cb
+  LicensePlist: e7777131e81a6b6c803f5f2b866bf7881b11ed4b
   LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
   Mantle: bdb09649c721dcefc53132f3767f6e40d4d47740
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
@@ -398,23 +349,22 @@ SPEC CHECKSUMS:
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRAssets: 9b824cfbe6bdcbf71ac504688031d90f0d460b61
-  OTRKit: 559ddb8defb126bdbf6a9f43ee3649b219f42320
+  OTRKit: f61c247f6f711ed1d1c97179f2630bc790c89272
   ParkedTextField: 865c835f54b39c611b580e0fe60199538cbc2f67
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
-  PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
+  PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
   SQLCipher: 0187a2180ac288ea686b670b7141da62cd013b16
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  XLForm: b8d47a9a00fb6166981cb40de7169d70d611e9be
-  XMPPFramework: 5d31ff9f73dce031b24bc49bcf88093627a3a86e
-  YapDatabase: 36e10c3059d33686951eba566fa15c0fce2497ed
+  XLForm: 7ee02761be8a369d1ad1bbffe738b97083d94f3e
+  XMPPFramework: 8b7ce3a5d8f95d1f9e1389e20431ffa06f399d77
+  YapDatabase: e9cf10cbf11d91f7c6dc723b0ff54fa8a04e3c8d
   YapTaskQueue: f3b23875bead71a7ee57b65637ce9c0e98b68c34
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: b141f51290d05663f08b633a34ffb15eee02707b
+PODFILE CHECKSUM: 0581b06632eb5047847f0daf2042a99bbbed22ca
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

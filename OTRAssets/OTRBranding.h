@@ -15,7 +15,7 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 /** Stub class for identifying asset framework bundle via bundleForClass: */
 @interface OTRAssets : NSObject
 
-/** Returns OTRResources.bundle */
+/** Returns resources bundle */
 @property (class, readonly) NSBundle* resourcesBundle;
 
 @end
@@ -35,6 +35,9 @@ FOUNDATION_EXPORT NSString *const kOTRSettingKeyLanguage;
 
 /** Google Apps Scope e.g. https://www.googleapis.com/auth/googletalk */
 @property (class, readonly) NSString* googleAppScope;
+
+/** e.g. https://itunes.apple.com/app/idXXXXXXXXXX */
+@property (class, readonly, nullable) NSString* appStoreID;
 
 #pragma mark URLs
 
