@@ -17,7 +17,7 @@
 # beta_ipa "./app.ipa"
 
 # The version of your app - remove this if you provide an ipa file
-app_version "5.0"
+app_version "5.0.1"
 submit_for_review false
 skip_binary_upload true
 # overwrite_screenshots true
@@ -28,14 +28,17 @@ metadata_path "./Submodules/ChatSecure-Metadata/metadata"
 screenshots_path "./Submodules/ChatSecure-Metadata/screenshots"
 
 release_notes({
-  'default' => "v5.0:
+  'default' => "v5.0.1:
+* Fix receiving OMEMO media messages with 12-byte IV
+
+v5.0:
 * Dark Mode
 * Removes Tor support
 * Mac version available soon for macOS Catalina
 * Miscellaneous bug fixes and performance improvements
 * Now requires iOS 12 or higher
 
-Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.9...v5.0
+Changelog: https://github.com/chatsecure/chatsecure-ios/compare/v4.3.9...v5.0.1
 ",
 })
 
