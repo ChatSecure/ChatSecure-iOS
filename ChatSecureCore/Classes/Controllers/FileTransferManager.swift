@@ -904,9 +904,20 @@ extension URL {
     }
     
     var aesGcmKey: (key: Data, iv: Data)? {
-        guard let data = self.anchorData, data.count == 48 else { return nil }
-        let iv = data.subdata(in: 0..<16)
-        let key = data.subdata(in: 16..<48)
+        guard let data = self.anchorData else { return nil }
+        let ivLength: Int
+        switch data.count {
+        case 48:
+            // legacy clients send 16-byte IVs
+            ivLength = 16
+        case 44:
+            // newer clients send 12-byte IVs
+            ivLength = 12
+        default:
+            return nil
+        }
+        let iv = data.subdata(in: 0..<ivLength)
+        let key = data.subdata(in: ivLength..<data.count)
         return (key, iv)
     }
 }
