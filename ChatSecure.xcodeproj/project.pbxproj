@@ -40,7 +40,6 @@
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
 		D9B3EC221FA196CE00E63C7F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */; };
-		D9B7EEFB235D47C400AD1EEA /* OTRKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEF6235D477200AD1EEA /* OTRKit.framework */; };
 		D9B7EEFC235D47CA00AD1EEA /* CPAProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEE9235D476700AD1EEA /* CPAProxy.framework */; };
 		D9C52807235CB55C002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
 		D9C529B2235CB580002B213A /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C5280D235CB57F002B213A /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -507,27 +506,6 @@
 			remoteGlobalIDString = D97947CD235D0005000D86AE;
 			remoteInfo = "CPAProxy.bundle (iOS)";
 		};
-		D9B7EEF3235D477200AD1EEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D96A69CC235BB43E006FF925;
-			remoteInfo = "OTRKit (macOS)";
-		};
-		D9B7EEF5235D477200AD1EEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D96A6A35235BB83B006FF925;
-			remoteInfo = "OTRKit (iOS)";
-		};
-		D9B7EEF7235D47A000AD1EEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D96A6A11235BB83B006FF925;
-			remoteInfo = "OTRKit (iOS)";
-		};
 		D9B7EEF9235D47B100AD1EEA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D9B7EEDF235D476700AD1EEA /* CPAProxy.xcodeproj */;
@@ -657,6 +635,8 @@
 		D90DA4F3236F3C6800C585B7 /* CPAProxy.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = CPAProxy.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D90DA4F4236F3C6800C585B7 /* TUSafariActivity.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = TUSafariActivity.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9108A9F23F9ABDF00B1280D /* AESGCMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AESGCMTests.swift; sourceTree = "<group>"; };
+		D9108ACE23FA3BA900B1280D /* macOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = macOS.xcconfig; sourceTree = "<group>"; };
+		D9108ACF23FA3BAA00B1280D /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iOS.xcconfig; sourceTree = "<group>"; };
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D91F9EFD1ED645F100AEA62C /* FileTransferIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTransferIntegrationTests.swift; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -692,7 +672,6 @@
 		D9AE3A231BA8D02800255537 /* OTRImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = OTRImages.xcassets; path = Images/OTRImages.xcassets; sourceTree = "<group>"; };
 		D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9B7EEDF235D476700AD1EEA /* CPAProxy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CPAProxy.xcodeproj; path = Submodules/CPAProxy/CPAProxy.xcodeproj; sourceTree = "<group>"; };
-		D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OTRKit.xcodeproj; path = Submodules/OTRKit/OTRKit.xcodeproj; sourceTree = "<group>"; };
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XMPPServerInfoCell.xib; path = Interface/XMPPServerInfoCell.xib; sourceTree = "<group>"; };
 		D9C52800235CB55C002B213A /* ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C5280D235CB57F002B213A /* ChatSecureCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatSecureCore.h; sourceTree = "<group>"; };
@@ -1132,7 +1111,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9B7EEFC235D47CA00AD1EEA /* CPAProxy.framework in Frameworks */,
-				D9B7EEFB235D47C400AD1EEA /* OTRKit.framework in Frameworks */,
 				FC71232B8C2603C869639700 /* libPods-ChatSecureCorePods-ChatSecureCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1215,7 +1193,6 @@
 		6396AF911A169D54009F3E6C = {
 			isa = PBXGroup;
 			children = (
-				D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */,
 				D9B7EEDF235D476700AD1EEA /* CPAProxy.xcodeproj */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
@@ -1338,8 +1315,10 @@
 		D9638A0223A331DF00C0CDF7 /* xcconfig */ = {
 			isa = PBXGroup;
 			children = (
+				D9108ACE23FA3BA900B1280D /* macOS.xcconfig */,
 				D9638A0823A3320A00C0CDF7 /* macOS_Debug.xcconfig */,
 				D9638A0923A3320D00C0CDF7 /* macOS_Release.xcconfig */,
+				D9108ACF23FA3BAA00B1280D /* iOS.xcconfig */,
 				D9638A0A23A3320F00C0CDF7 /* iOS_Debug.xcconfig */,
 				D9638A0723A3320200C0CDF7 /* iOS_Release.xcconfig */,
 			);
@@ -1353,15 +1332,6 @@
 				D9B7EEE9235D476700AD1EEA /* CPAProxy.framework */,
 				D9B7EEEB235D476700AD1EEA /* CPAProxy.bundle */,
 				D9B7EEED235D476700AD1EEA /* CPAProxy.bundle */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D9B7EEEF235D477200AD1EEA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D9B7EEF4235D477200AD1EEA /* OTRKit.framework */,
-				D9B7EEF6235D477200AD1EEA /* OTRKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2144,11 +2114,13 @@
 			buildConfigurationList = 6396AFBD1A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecure" */;
 			buildPhases = (
 				53C42C07E51B94BF0C1600E0 /* [CP] Check Pods Manifest.lock */,
+				41390D83ACB5F1CBEACAD87E /* [CP] Prepare Artifacts */,
 				6396AF961A169D54009F3E6C /* Sources */,
 				6396AF971A169D54009F3E6C /* Frameworks */,
 				6396AF981A169D54009F3E6C /* Resources */,
 				D92F96D821BA1E7A0056EA35 /* LicensePlist */,
 				7252D7AF431B6401569E9D58 /* [CP] Copy Pods Resources */,
+				E6BC7DEB368C478E4D8552D4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2165,10 +2137,12 @@
 			buildConfigurationList = 6396AFC01A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecureTests" */;
 			buildPhases = (
 				44332C40E9BF0F0A77A58005 /* [CP] Check Pods Manifest.lock */,
+				874F35957FBB17FBFF1D00CE /* [CP] Prepare Artifacts */,
 				6396AFAF1A169D54009F3E6C /* Sources */,
 				6396AFB01A169D54009F3E6C /* Frameworks */,
 				6396AFB11A169D54009F3E6C /* Resources */,
 				A271AD86CC706034F6E7B4BB /* [CP] Copy Pods Resources */,
+				9C28BFF91C89C3437F5A594A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2195,7 +2169,6 @@
 			);
 			dependencies = (
 				D9B7EEFA235D47B100AD1EEA /* PBXTargetDependency */,
-				D9B7EEF8235D47A000AD1EEA /* PBXTargetDependency */,
 			);
 			name = ChatSecureCore;
 			productName = ChatSecureCore;
@@ -2301,10 +2274,6 @@
 					ProductGroup = D9B7EEE0235D476700AD1EEA /* Products */;
 					ProjectRef = D9B7EEDF235D476700AD1EEA /* CPAProxy.xcodeproj */;
 				},
-				{
-					ProductGroup = D9B7EEEF235D477200AD1EEA /* Products */;
-					ProjectRef = D9B7EEEE235D477200AD1EEA /* OTRKit.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -2343,20 +2312,6 @@
 			fileType = wrapper.cfbundle;
 			path = CPAProxy.bundle;
 			remoteRef = D9B7EEEC235D476700AD1EEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9B7EEF4235D477200AD1EEA /* OTRKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OTRKit.framework;
-			remoteRef = D9B7EEF3235D477200AD1EEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9B7EEF6235D477200AD1EEA /* OTRKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OTRKit.framework;
-			remoteRef = D9B7EEF5235D477200AD1EEA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2434,6 +2389,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		41390D83ACB5F1CBEACAD87E /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-artifacts.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		44332C40E9BF0F0A77A58005 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2512,6 +2484,40 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		874F35957FBB17FBFF1D00CE /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-artifacts.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9C28BFF91C89C3437F5A594A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A271AD86CC706034F6E7B4BB /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2568,6 +2574,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ $CONFIGURATION = \"Debug\" ]; then\n${PODS_ROOT}/LicensePlist/license-plist --output-path $PRODUCT_NAME/Settings.bundle --add-version-numbers --suppress-opening-directory || true\nfi\n";
+		};
+		E6BC7DEB368C478E4D8552D4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2865,11 +2888,6 @@
 			target = 6396AF991A169D54009F3E6C /* ChatSecure */;
 			targetProxy = 6365CF011E2453F6009E213F /* PBXContainerItemProxy */;
 		};
-		D9B7EEF8235D47A000AD1EEA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OTRKit (iOS)";
-			targetProxy = D9B7EEF7235D47A000AD1EEA /* PBXContainerItemProxy */;
-		};
 		D9B7EEFA235D47B100AD1EEA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "CPAProxy (iOS)";
@@ -3154,6 +3172,7 @@
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -3490,6 +3509,7 @@
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
