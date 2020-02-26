@@ -108,8 +108,11 @@
         [settingsGroups addObject:pushGroup];
     }
 
-    
-    NSArray *chatSettings = @[deletedDisconnectedConversations];
+    OTRStorageUsageSetting *storageUsageSetting = [[OTRStorageUsageSetting alloc] initWithTitle:STORAGE_USAGE_TITLE()
+                                                                                    description:STORAGE_USAGE_DESCRIPTION()];
+    storageUsageSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+    NSArray *chatSettings = @[deletedDisconnectedConversations, storageUsageSetting];
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING() settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     

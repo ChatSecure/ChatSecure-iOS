@@ -134,7 +134,7 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
 //#865
 - (void)deleteDataForItem:(OTRMediaItem *)mediaItem
             buddyUniqueId:(NSString *)buddyUniqueId
-               completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+               completion:(nullable void (^)(BOOL success, NSError * _Nullable error))completion
           completionQueue:(nullable dispatch_queue_t)completionQueue {
     if (!completionQueue) {
         completionQueue = dispatch_get_main_queue();
@@ -284,4 +284,12 @@ completionQueue:(nullable dispatch_queue_t)completionQueue {
     }
 }
 
+- (void)vacuum:(dispatch_block_t)completion {
+    [self performAsyncWrite:^{
+        [self.ioCipher vacuum];
+        if (completion != nil) {
+            dispatch_async(dispatch_get_main_queue(), completion);
+        }
+    }];
+}
 @end
