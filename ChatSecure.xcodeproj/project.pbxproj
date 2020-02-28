@@ -437,6 +437,7 @@
 		D9C52B3C235CB582002B213A /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C52B3D235CB582002B213A /* ChatSecureCoreCompat-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */; };
 		D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
+		D9D02B452409C81300D477F1 /* CPAProxy.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D90DA4F3236F3C6800C585B7 /* CPAProxy.bundle */; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */; };
 		D9F5C2A8236F7F8200F14A16 /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
@@ -548,6 +549,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D9C527FF235CB55C002B213A;
 			remoteInfo = ChatSecureCore;
+		};
+		D9D02B3F2409C80600D477F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9B7EEDF235D476700AD1EEA /* CPAProxy.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D97947C3235D0005000D86AE;
+			remoteInfo = "CPAProxy.bundle (iOS)";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2153,6 +2161,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9D02B402409C80600D477F1 /* PBXTargetDependency */,
 				D9C52806235CB55C002B213A /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
@@ -2373,6 +2382,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9D02B452409C81300D477F1 /* CPAProxy.bundle in Resources */,
 				D9F5C2A9236F7F8200F14A16 /* OMEMODeviceFingerprintCell.xib in Resources */,
 				D9F5C2C3236F7FA700F14A16 /* OTRComposeGroup.storyboard in Resources */,
 				635EF2021E276C410087BD72 /* Localizable.strings in Resources */,
@@ -2884,6 +2894,11 @@
 			isa = PBXTargetDependency;
 			target = D9C527FF235CB55C002B213A /* ChatSecureCore */;
 			targetProxy = D9C52B40235CBC3A002B213A /* PBXContainerItemProxy */;
+		};
+		D9D02B402409C80600D477F1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CPAProxy.bundle (iOS)";
+			targetProxy = D9D02B3F2409C80600D477F1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
