@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import YapDatabase.YapDatabaseView
+import YapDatabase
 
 @objc public protocol OTRYapViewHandlerDelegateProtocol:NSObjectProtocol {
     

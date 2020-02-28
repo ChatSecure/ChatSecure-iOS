@@ -111,7 +111,7 @@ import CocoaLumberjack
         transaction.enumerateMessages(elementId: responseId, originId: responseId, stanzaId: nil) { (message, stop) in
             if let message = message as? OTROutgoingMessage {
                 _deliveredMessage = message
-                stop.pointee = true
+                stop = true
             }
         }
         if _deliveredMessage == nil {
@@ -146,7 +146,7 @@ import CocoaLumberjack
         transaction.enumerateMessages(elementId: oid, originId: oid, stanzaId: sid) { (foundMessage, stop) in
             if foundMessage.threadId == buddyUniqueId {
                 result = true
-                stop.pointee = true
+                stop = true
             }
         }
         return result
@@ -475,6 +475,26 @@ extension String {
 }
 
 extension OTRBaseMessage {
+    
+    @objc public static func message(forMessageId messageId: String, incoming: Bool, transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
+        var deliveredMessage: OTRMessageProtocol?
+        transaction.enumerateMessages(elementId: messageId, originId: nil, stanzaId: nil) { (message, stop) in
+            if message.isMessageIncoming == incoming {
+                deliveredMessage = message
+                stop = true
+            }
+        }
+        return deliveredMessage
+    }
+    
+    @objc public static func message(forMessageId messageId: String, transaction: YapDatabaseReadTransaction) -> OTRMessageProtocol? {
+        if self is OTRIncomingMessage.Type {
+            return self.message(forMessageId: messageId, incoming: true, transaction: transaction)
+        } else {
+            return self.message(forMessageId: messageId, incoming: false, transaction: transaction)
+        }
+    }
+    
     /// You can override message body, for example if this is an encrypted message
     convenience init(xmppMessage: XMPPMessage, body: String?, account: OTRXMPPAccount, buddy: OTRXMPPBuddy, capabilities: XMPPCapabilities) {
         self.init()

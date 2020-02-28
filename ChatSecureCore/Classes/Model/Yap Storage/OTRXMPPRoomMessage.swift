@@ -479,7 +479,7 @@ extension OTRXMPPRoomMessage {
             transaction.enumerateMessages(elementId: messageId, originId: message.originId, stanzaId: nil) { (messageProtocol, stop) in
                 if let message = messageProtocol as? OTRXMPPRoomMessage {
                     roomMessage = message
-                    stop.pointee = true
+                    stop = true
                 }
             }
             // Mark messages as delivered, that aren't previous incoming messages

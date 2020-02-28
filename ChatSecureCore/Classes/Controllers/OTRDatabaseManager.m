@@ -134,16 +134,13 @@
     }
     NSString *databasePath = [self.databaseDirectory stringByAppendingPathComponent:name];
     
-    self.database = [[YapDatabase alloc] initWithPath:databasePath
-                                           serializer:nil
-                                         deserializer:nil
-                                              options:options];
+    self.database = [[YapDatabase alloc] initWithURL:[NSURL fileURLWithPath:databasePath] options:options];
+    
     // Stop trying to setup up the database. Something went wrong. Most likely the password is incorrect.
     if (self.database == nil) {
         return NO;
     }
     
-    self.database.connectionDefaults.objectPolicy = YapDatabasePolicyShare;
     self.database.connectionDefaults.objectCacheLimit = 10000;
     
     [self setupConnections];

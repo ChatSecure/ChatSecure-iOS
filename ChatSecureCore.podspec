@@ -55,7 +55,7 @@ TODO: Add long description of the pod here.
   s.dependency 'ChatSecure-Push-iOS'
 
   s.dependency 'SQLCipher', '~> 4.2.0'
-  s.dependency 'YapDatabase/SQLCipher', '~> 3.1.3'
+  s.dependency 'YapDatabase/SQLCipher', '~> 4.0'
 
   s.dependency 'libsqlfs/SQLCipher'
   s.dependency 'IOCipher/GCDWebServer'
