@@ -10,6 +10,10 @@ import UIKit
 import OTRAssets
 
 extension UIViewController {
+    public func prompt(toShow url: URL, sender: Any) {
+        (url as NSURL).promptToShow(from: self, sender: sender)
+    }
+    
     /// Will show a prompt to bring user into system settings
     public func showPromptForSystemSettings(sender: Any) {
         let alert = UIAlertController(title: ENABLE_PUSH_IN_SETTINGS_STRING(), message: nil, preferredStyle: .alert)

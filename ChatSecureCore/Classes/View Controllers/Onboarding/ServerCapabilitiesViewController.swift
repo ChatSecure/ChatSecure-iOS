@@ -270,16 +270,13 @@ public class ServerCapabilitiesViewController: UIViewController, UITableViewDele
                 // If push account isnt working, show a warning here
                 if cellInfo.code == .XEP0357 && cellInfo.status == .Available {
                     if !pushInfo.pushMaybeWorks() || xmppPushStatus != .registered {
-                        cellInfo = cellInfo.copy() as! ServerCapabilityInfo
                         cellInfo.status = .Warning
                     }
                 }
             }
             cell.setCapability(capability: cellInfo)
             cell.infoButtonBlock = { [weak self] (cell, sender) in
-                if let strongSelf = self {
-                    cellInfo.url.promptToShow(from: strongSelf, sender: sender)
-                }
+                self?.prompt(toShow: cellInfo.url, sender: sender)
             }
             return cell
         }

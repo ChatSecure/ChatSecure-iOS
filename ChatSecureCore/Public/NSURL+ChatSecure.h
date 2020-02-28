@@ -63,7 +63,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface UIViewController (ChatSecureURL)
-- (void) promptToShowURL:(NSURL*)url sender:(id)sender;
-@end
 NS_ASSUME_NONNULL_END

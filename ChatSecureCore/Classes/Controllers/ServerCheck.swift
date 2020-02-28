@@ -177,9 +177,7 @@ extension ServerCheck: XMPPPushDelegate {
     public func pushModule(_ module: XMPPPushModule, readyWithCapabilities caps: XMLElement, jid: XMPPJID) {
         // This _should_ be handled elsewhere in OTRServerCapabilities
         // Not sure why it's not working properly
-        if let caps = result.capabilities {
-            caps[.XEP0357]?.status = .Available
-        }
+        result.capabilities?[.XEP0357]?.status = .Available
         checkReady()
     }
 }
