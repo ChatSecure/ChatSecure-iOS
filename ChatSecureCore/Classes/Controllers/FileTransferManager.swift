@@ -260,7 +260,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             var outData = data
             var outKeyIv: Data? = nil
             if shouldEncrypt {
-                guard let key = OTRPasswordGenerator.randomData(withLength: 32), let iv = OTRPasswordGenerator.randomData(withLength: 16) else {
+                guard let key = OTRPasswordGenerator.randomData(withLength: 32), let iv = OTRSignalEncryptionHelper.generateIV() else {
                     DDLogError("Could not generate key/iv")
                     self.callbackQueue.async {
                         completion(nil, FileTransferError.keyGenerationError)
@@ -269,7 +269,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 }
                 outKeyIv = iv + key
                 do {
-                    let crypted = try OTRCryptoUtility.encryptAESGCMData(data, key: key, iv: iv)
+                    let crypted = try OTRSignalEncryptionHelper.encryptData(data, key: key, iv: iv)
                     outData = crypted.data + crypted.authTag
                 } catch let error {
                     outData = Data()

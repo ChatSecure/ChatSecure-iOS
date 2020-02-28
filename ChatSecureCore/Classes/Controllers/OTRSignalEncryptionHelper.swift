@@ -8,6 +8,7 @@
 
 import UIKit
 import OTRKit
+import CryptoKit
 
 class OTRSignalEncryptionHelper {
     
@@ -20,8 +21,15 @@ class OTRSignalEncryptionHelper {
      
      returns: The encrypted data
      */
-    class func encryptData(_ data:Data, key:Data, iv:Data) throws -> OTRCryptoData? {
-        return try OTRCryptoUtility.encryptAESGCMData(data, key: key, iv: iv)
+    class func encryptData(_ data:Data, key:Data, iv:Data) throws -> OTRCryptoData {
+        if #available(iOS 13.0, *) {
+            let nonce = try AES.GCM.Nonce(data: iv)
+            let symmetricKey = SymmetricKey(data: key)
+            let sealedBox = try AES.GCM.seal(data, using: symmetricKey, nonce: nonce)
+            return OTRCryptoData(data: sealedBox.ciphertext, authTag: sealedBox.tag)
+        } else {
+            return try OTRCryptoUtility.encryptAESGCMData(data, key: key, iv: iv)
+        }
     }
     
     /**
@@ -34,22 +42,30 @@ class OTRSignalEncryptionHelper {
      returns: The Decrypted data
      */
     class func decryptData(_ data:Data, key:Data, iv:Data, authTag:Data) throws -> Data? {
-        let cryptoData = OTRCryptoData(data: data, authTag: authTag)
-        return try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
-    }
-    
-    /** Generates random data of length 16 bytes */
-    fileprivate class func randomDataOfBlockLength() -> Data? {
-        return OTRPasswordGenerator.randomData(withLength: 16)
+        // CryptoKit only accepts 12-byte IVs
+        if #available(iOS 13.0, *), iv.count == 12 {
+            let nonce = try AES.GCM.Nonce(data: iv)
+            let sealedBox = try AES.GCM.SealedBox(nonce: nonce, ciphertext: data, tag: authTag)
+            let symmetricKey = SymmetricKey(data: key)
+            return try AES.GCM.open(sealedBox, using: symmetricKey)
+        } else {
+            let cryptoData = OTRCryptoData(data: data, authTag: authTag)
+            return try OTRCryptoUtility.decryptAESGCMData(cryptoData, key: key, iv: iv)
+        }
     }
     
     /** Generates random key of length 16 bytes*/
     class func generateSymmetricKey() -> Data? {
-        return self.randomDataOfBlockLength()
+        return OTRPasswordGenerator.randomData(withLength: 16)
     }
-    /** Generates random iv of length 16 bytes */
+    
+    /** Generates random iv of length 12 bytes */
     class func generateIV() -> Data? {
-        return self.randomDataOfBlockLength()
+        if #available(iOS 13.0, *) {
+            return Data(AES.GCM.Nonce())
+        } else {
+            return OTRPasswordGenerator.randomData(withLength: 12)
+        }
     }
     
 }

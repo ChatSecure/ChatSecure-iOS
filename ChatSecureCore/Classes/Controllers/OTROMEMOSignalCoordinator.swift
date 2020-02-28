@@ -310,10 +310,7 @@ import SignalProtocolObjC
             }
             do {
                 //Create the encrypted payload
-                guard let gcmData = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData) else {
-                    DDLogError("OMEMO Encryption error: Could not perform AES-GCM operation")
-                    return
-                }
+                let gcmData = try OTRSignalEncryptionHelper.encryptData(messageBodyData, key: keyData, iv: ivData)
                 
                 // this does the signal encryption. If we fail it doesn't matter here. We end up trying the next device and fail later if no devices worked.
                 let encryptClosure:(OMEMODevice) -> (OMEMOKeyData?) = { device in
