@@ -163,7 +163,6 @@ Thank you to everyone who helped this project become a reality! This project is 
 * Wifi designed by [useiconic.com](http://thenounproject.com/useiconic.com/) from the [Noun Project](http://www.thenounproject.com)
 * Warning designed by [Lorena Salagre](http://thenounproject.com/lorens/) from the [Noun Project](http://www.thenounproject.com)
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
-	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
 	* [vitalyster](https://github.com/vitalyster) (Russian)
 	* [burhan teoman](https://www.transifex.net/accounts/profile/burhanteoman/) (Turkish)
