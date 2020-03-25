@@ -54,7 +54,7 @@ TODO: Add long description of the pod here.
 
   s.dependency 'ChatSecure-Push-iOS'
 
-  s.dependency 'SQLCipher', '~> 4.2.0'
+  s.dependency 'SQLCipher', '~> 4.3.0'
   s.dependency 'YapDatabase/SQLCipher', '~> 4.0'
 
   s.dependency 'libsqlfs/SQLCipher'
@@ -65,7 +65,7 @@ TODO: Add long description of the pod here.
   s.dependency 'SignalProtocolObjC'
   s.dependency 'OTRKit'
 
-  s.dependency 'Alamofire', '~> 4.4'
+  s.dependency 'Alamofire', '~> 5.0'
   s.dependency 'Kvitto', '~> 1.0'
 
   s.dependency "Mantle"

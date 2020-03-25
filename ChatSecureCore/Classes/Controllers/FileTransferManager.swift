@@ -123,7 +123,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     let connection: YapDatabaseConnection
     let internalQueue = DispatchQueue(label: "FileTransferManager Queue")
     let callbackQueue = DispatchQueue.main
-    let sessionManager: SessionManager
+    let sessionManager: Session
     private var servers: [HTTPServer] = []
     
     @objc public var canUploadFiles: Bool {
@@ -141,7 +141,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         self.serverCapabilities = serverCapabilities
         self.httpFileUpload = XMPPHTTPFileUpload()
         self.connection = connection
-        self.sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
+        self.sessionManager = Alamofire.Session(configuration: sessionConfiguration)
         super.init()
         if let stream = serverCapabilities.xmppStream {
             httpFileUpload.activate(stream)
