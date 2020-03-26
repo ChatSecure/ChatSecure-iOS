@@ -27,7 +27,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
 
   # Network
-  pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
+  # pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'

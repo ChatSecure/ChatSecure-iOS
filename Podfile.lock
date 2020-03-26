@@ -21,7 +21,6 @@ PODS:
     - ChatSecure-Push-iOS
     - CocoaAsyncSocket (~> 7.6.0)
     - CocoaLumberjack/Swift (~> 3.6.0)
-    - CPAProxy
     - FormatterKit/TimeIntervalFormatter (~> 1.8)
     - FormatterKit/UnitOfInformationFormatter (~> 1.8)
     - GCDWebServer (~> 3.4)
@@ -59,7 +58,6 @@ PODS:
   - CocoaLumberjack/Core (3.6.1)
   - CocoaLumberjack/Swift (3.6.1):
     - CocoaLumberjack/Core
-  - CPAProxy (2.0.0)
   - DTFoundation/Core (1.7.14)
   - DTFoundation/DTASN1 (1.7.14):
     - DTFoundation/Core
@@ -261,7 +259,6 @@ PODS:
 DEPENDENCIES:
   - ChatSecure-Push-iOS (from `Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec`)
   - ChatSecureCore (from `ChatSecureCore.podspec`)
-  - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec`)
   - libsqlfs/SQLCipher (from `Submodules/libsqlfs/libsqlfs.podspec`)
@@ -313,8 +310,6 @@ EXTERNAL SOURCES:
     :path: Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec
   ChatSecureCore:
     :path: ChatSecureCore.podspec
-  CPAProxy:
-    :path: Submodules/CPAProxy/CPAProxy.podspec
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
@@ -363,10 +358,9 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
-  ChatSecureCore: 456b430f63e96e38e01a59879162885b4f93601d
+  ChatSecureCore: d29dc259e8b44c9020d06a41789ea017a8c351b8
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
-  CPAProxy: fdb5600a16502e7c8176ab59e7e9c306fbe5dc59
   DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
@@ -403,6 +397,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: 390669f5ef248a515e2a0d955de9d2529e2c7fa5
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 7e1a4a7ce290bdb09d8e2b614ba8be6a8a949468
+PODFILE CHECKSUM: e559e1c4d42575a15d20d7bebae903eb2b3fb2a2
 
 COCOAPODS: 1.9.1

@@ -9,10 +9,12 @@
 @import Foundation;
 @class CPAProxyManager;
 
+NS_ASSUME_NONNULL_BEGIN
 @interface OTRTorManager : NSObject
 
-@property (nonatomic, strong) CPAProxyManager *torManager;
+@property (nonatomic, strong, nullable) CPAProxyManager *torManager;
 
 + (instancetype) sharedInstance;
 
 @end
+NS_ASSUME_NONNULL_END

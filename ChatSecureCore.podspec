@@ -49,7 +49,7 @@ TODO: Add long description of the pod here.
   s.dependency 'CocoaAsyncSocket', '~> 7.6.0'
   s.dependency 'ProxyKit/Client', '~> 1.2.0'
   s.dependency 'GCDWebServer', '~> 3.4'
-  s.dependency 'CPAProxy'
+  # s.dependency 'CPAProxy'
   s.dependency 'XMPPFramework/Swift'
 
   s.dependency 'ChatSecure-Push-iOS'
