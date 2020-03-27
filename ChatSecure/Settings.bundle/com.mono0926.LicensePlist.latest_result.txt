@@ -11,16 +11,16 @@ body: Copyright (c) 2011-2…
 version: 3.2.1
 
 name: Alamofire, nameSpecified: 
-body: Copyright (c) 2014 A…
-version: 4.9.0
+body: Copyright (c) 2014-2…
+version: 5.0.5
 
 name: Alamofire, nameSpecified: 
-body: Copyright (c) 2014 A…
-version: 4.9.0
+body: Copyright (c) 2014-2…
+version: 5.0.5
 
 name: Alamofire, nameSpecified: 
-body: Copyright (c) 2014 A…
-version: 4.9.0
+body: Copyright (c) 2014-2…
+version: 5.0.5
 
 name: ARChromeActivity, nameSpecified: 
 body: ARChromeActivity
@@ -87,39 +87,27 @@ version: 0.1.0
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.3
+version: 7.6.4
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.3
+version: 7.6.4
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.3
+version: 7.6.4
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.0
+version: 3.6.1
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.0
+version: 3.6.1
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.0
-
-name: CPAProxy, nameSpecified: 
-body: Copyright (c) 2013 C…
-version: 2.0.0
-
-name: CPAProxy, nameSpecified: 
-body: Copyright (c) 2013 C…
-version: 2.0.0
-
-name: CPAProxy, nameSpecified: 
-body: Copyright (c) 2013 C…
-version: 2.0.0
+version: 3.6.1
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
@@ -147,27 +135,27 @@ version: 1.9.0
 
 name: GCDWebServer, nameSpecified: 
 body: Copyright (c) 2012-2…
-version: 3.5.3
+version: 3.5.4
 
 name: GCDWebServer, nameSpecified: 
 body: Copyright (c) 2012-2…
-version: 3.5.3
+version: 3.5.4
 
 name: GCDWebServer, nameSpecified: 
 body: Copyright (c) 2012-2…
-version: 3.5.3
+version: 3.5.4
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.4
+version: 2.1.5
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.4
+version: 2.1.5
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.4
+version: 2.1.5
 
 name: IOCipher, nameSpecified: 
 body: 		  GNU LESSER GENER…
@@ -213,15 +201,15 @@ version: 1.5.1
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.3
+version: 5.3.1
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.3
+version: 5.3.1
 
 name: KissXML, nameSpecified: 
 body: Copyright (c) 2012, …
-version: 5.2.3
+version: 5.3.1
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
@@ -287,19 +275,19 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 2.8.1
+version: 2.14.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.8.1
+version: 2.14.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.8.1
+version: 2.14.0
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
@@ -318,27 +306,27 @@ version: 3.3.1
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.0
+version: 2.1.1
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.0
+version: 2.1.1
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.0
+version: 2.1.1
 
 name: MBProgressHUD, nameSpecified: 
-body: Copyright © 2009-201…
-version: 1.1.0
+body: Copyright © 2009-202…
+version: 1.2.0
 
 name: MBProgressHUD, nameSpecified: 
-body: Copyright © 2009-201…
-version: 1.1.0
+body: Copyright © 2009-202…
+version: 1.2.0
 
 name: MBProgressHUD, nameSpecified: 
-body: Copyright © 2009-201…
-version: 1.1.0
+body: Copyright © 2009-202…
+version: 1.2.0
 
 name: MWFeedParser, nameSpecified: 
 body: Copyright (c) 2010 M…
@@ -477,15 +465,15 @@ version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.2.0
+version: 4.3.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.2.0
+version: 4.3.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.2.0
+version: 4.3.0
 
 name: TTTAttributedLabel, nameSpecified: 
 body: Copyright (c) 2011 M…
@@ -525,15 +513,15 @@ version: 4.1.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1.4
+version: 4.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1.4
+version: 4.0
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 3.1.4
+version: 4.0
 
 name: YapTaskQueue, nameSpecified: 
 body: This is free and une…
@@ -583,4 +571,4 @@ body: This file contains t…
 
 add-version-numbers: true
 
-LicensePlist Version: 2.8.0
+LicensePlist Version: 2.14.0

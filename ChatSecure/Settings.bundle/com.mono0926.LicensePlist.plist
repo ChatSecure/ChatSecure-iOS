@@ -22,7 +22,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (4.9.0)</string>
+			<string>Alamofire (5.0.5)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -70,7 +70,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaAsyncSocket</string>
 			<key>Title</key>
-			<string>CocoaAsyncSocket (7.6.3)</string>
+			<string>CocoaAsyncSocket (7.6.4)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -78,15 +78,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.6.0)</string>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-		</dict>
-		<dict>
-			<key>File</key>
-			<string>com.mono0926.LicensePlist/CPAProxy</string>
-			<key>Title</key>
-			<string>CPAProxy (2.0.0)</string>
+			<string>CocoaLumberjack (3.6.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -110,7 +102,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/GCDWebServer</string>
 			<key>Title</key>
-			<string>GCDWebServer (3.5.3)</string>
+			<string>GCDWebServer (3.5.4)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -118,7 +110,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/HTMLReader</string>
 			<key>Title</key>
-			<string>HTMLReader (2.1.4)</string>
+			<string>HTMLReader (2.1.5)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -150,7 +142,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/KissXML</string>
 			<key>Title</key>
-			<string>KissXML (5.2.3)</string>
+			<string>KissXML (5.3.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -230,7 +222,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/LicensePlist</string>
 			<key>Title</key>
-			<string>LicensePlist (2.8.1)</string>
+			<string>LicensePlist (2.14.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -246,7 +238,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Mantle</string>
 			<key>Title</key>
-			<string>Mantle (2.1.0)</string>
+			<string>Mantle (2.1.1)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -254,7 +246,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/MBProgressHUD</string>
 			<key>Title</key>
-			<string>MBProgressHUD (1.1.0)</string>
+			<string>MBProgressHUD (1.2.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -358,7 +350,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/SQLCipher</string>
 			<key>Title</key>
-			<string>SQLCipher (4.2.0)</string>
+			<string>SQLCipher (4.3.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -398,7 +390,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/YapDatabase</string>
 			<key>Title</key>
-			<string>YapDatabase (3.1.4)</string>
+			<string>YapDatabase (4.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

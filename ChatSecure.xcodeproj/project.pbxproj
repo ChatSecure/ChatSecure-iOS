@@ -2567,7 +2567,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ $CONFIGURATION = \"Debug\" ]; then\n${PODS_ROOT}/LicensePlist/license-plist --output-path $PRODUCT_NAME/Settings.bundle --add-version-numbers --suppress-opening-directory || true\nfi\n";
+			shellScript = "${PODS_ROOT}/LicensePlist/license-plist --output-path $PRODUCT_NAME/Settings.bundle --add-version-numbers --suppress-opening-directory || true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
