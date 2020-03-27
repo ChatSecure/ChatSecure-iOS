@@ -1374,6 +1374,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                            initWithImageInfo:imageInfo
                                            mode:JTSImageViewControllerMode_Image
                                            backgroundStyle:JTSImageViewControllerBackgroundOption_Blurred];
+    imageViewer.modalPresentationStyle = UIModalPresentationFullScreen;
     
     [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOriginalPosition];
 }
