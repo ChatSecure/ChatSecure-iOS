@@ -307,7 +307,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 
                 self.sessionManager.upload(outData, to: slot.putURL, method: .put, headers: forwardedHeaders)
                     .validate()
-                    .responseData(queue: self.callbackQueue) { response in
+                    .response(queue: self.callbackQueue) { response in
                         switch response.result {
                         case .success:
                             if let outKeyIv = outKeyIv {
