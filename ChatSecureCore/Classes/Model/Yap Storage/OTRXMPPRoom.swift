@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YapDatabase.YapDatabaseRelationship
+import YapDatabase
 
 @objc public enum RoomSecurity: Int {
     /// will choose omemo if _any_ occupants have available keys
@@ -264,12 +264,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         }
         let queryString = "Where \(MessageIndexColumnName.threadId) == ? AND \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [self.uniqueId])
-        var count:UInt = 0
-        let success = indexTransaction.getNumberOfRows(&count, matching: query)
-        if (!success) {
-            NSLog("Query error for OTRXMPPRoom numberOfUnreadMessagesWithTransaction")
-        }
-        return count
+        return indexTransaction.numberOfRows(matching: query) ?? 0
     }
     
     public var isGroupThread: Bool {

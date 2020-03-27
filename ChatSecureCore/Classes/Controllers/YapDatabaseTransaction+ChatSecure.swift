@@ -26,10 +26,21 @@ extension YapDatabaseConnection {
     }
 }
 
+extension YapDatabaseReadWriteTransaction {
+    @objc public func setMessageError(elementId:String?, originId: String?, stanzaId:String?, error: Error) {
+        enumerateMessages(elementId: elementId, originId: originId, stanzaId: stanzaId) { (message, stop) in
+            if let databaseMessage = message as? OTRBaseMessage {
+                databaseMessage.error = error
+                databaseMessage.save(with: self)
+            }
+        }
+    }
+}
+
 extension YapDatabaseReadTransaction {
     
     /// elementId is the XMPP elementId, originId and stanzaId are from XEP-0359
-    @objc public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+    public func enumerateMessages(elementId:String?, originId: String?, stanzaId:String?, block:@escaping (_ message:OTRMessageProtocol,_ stop: inout Bool) -> Void) {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
@@ -53,22 +64,22 @@ extension YapDatabaseReadTransaction {
         }
         let query = YapDatabaseQuery(string: queryString, parameters: parameters)
         
-        secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
+        let _ = secondaryIndexTransaction.iterateKeys(matching: query) { (collection, key, stop) -> Void in
             if let message = self.object(forKey: key, inCollection: collection) as? OTRMessageProtocol {
-                block(message, stop)
+                block(message, &stop)
             }
         }
     }
     
-    @objc public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+    public func enumerateSessions(accountKey:String, signalAddressName:String, block:@escaping (_ session:OTRSignalSession,_ stop: inout Bool) -> Void) {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.signal) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         let queryString = "Where \(SignalIndexColumnName.session) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [OTRSignalSession.sessionKey(accountKey: accountKey, name: signalAddressName)])
-        secondaryIndexTransaction.enumerateKeys(matching: query) { (collection, key, stop) -> Void in
+        let _ = secondaryIndexTransaction.iterateKeys(matching: query) { (collection, key, stop) -> Void in
             if let session = self.object(forKey: key, inCollection: collection) as? OTRSignalSession {
-                block(session, stop)
+                block(session, &stop)
             }
         }
     }
@@ -97,12 +108,7 @@ extension YapDatabaseReadTransaction {
         let queryString = "Where \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
         
-        var count:UInt = 0
-        let success = secondaryIndexTransaction.getNumberOfRows(&count, matching: query)
-        if (!success) {
-            NSLog("Error with global numberOfUnreadMessages index")
-        }
-        return count
+        return secondaryIndexTransaction.numberOfRows(matching: query) ?? 0
     }
     
     
@@ -114,7 +120,7 @@ extension YapDatabaseReadTransaction {
         let queryString = "Where \(MessageIndexColumnName.threadId) == ? AND \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [thread.threadIdentifier])
         var result = [OTRMessageProtocol]()
-        let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
+        let success = indexTransaction.iterateKeysAndObjects(matching: query) { (collection, key, object, stop) in
             if let message = object as? OTRMessageProtocol {
                 result.append(message)
             }
@@ -130,17 +136,17 @@ extension YapDatabaseReadTransaction {
 
 extension YapDatabaseReadTransaction {
     
-    @objc public func enumerateUnreadMessages(_ block:@escaping (_ message:OTRMessageProtocol,_ stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+    public func enumerateUnreadMessages(_ block:@escaping (_ message:OTRMessageProtocol,_ stop: inout Bool) -> Void) {
         guard let secondaryIndexTransaction = self.ext(SecondaryIndexName.messages) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         let queryString = "Where \(MessageIndexColumnName.isMessageRead) == 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
-        secondaryIndexTransaction.enumerateKeysAndObjects(matching: query) { (key, collection, object, stop) in
+        let _ = secondaryIndexTransaction.iterateKeysAndObjects(matching: query) { (key, collection, object, stop) in
             if let message = object as? OTRMessageProtocol {
-                block(message, stop)
+                block(message, &stop)
             } else {
-                DDLogError("Non-message object in messages index \(object)")
+                DDLogError("Non-message object in messages index \(String(describing: object))")
             }
         }
     }

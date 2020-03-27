@@ -20,7 +20,7 @@ class FileTransferIntegrationTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        DDLog.add(DDTTYLogger.sharedInstance)
+        DDTTYLogger.sharedInstance.flatMap { DDLog.add($0) }
         if let databaseDirectory = databaseManager?.databaseDirectory {
             FileManager.default.clearDirectory(databaseDirectory)
         }

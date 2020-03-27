@@ -924,13 +924,7 @@ typedef NS_ENUM(NSInteger, XMPPClientState) {
 {
     DDLogWarn(@"%@: %@ %@ %@", THIS_FILE, THIS_METHOD, message, error);
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction enumerateMessagesWithElementId:message.elementID originId:message.originId stanzaId:nil block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-            if ([databaseMessage isKindOfClass:[OTRBaseMessage class]]) {
-                ((OTRBaseMessage *)databaseMessage).error = error;
-                [(OTRBaseMessage *)databaseMessage saveWithTransaction:transaction];
-                *stop = YES;
-            }
-        }];
+        [transaction setMessageErrorWithElementId:message.elementID originId:message.originId stanzaId:nil error:error];
     }];
 }
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error

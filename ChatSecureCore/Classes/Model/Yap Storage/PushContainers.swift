@@ -8,7 +8,7 @@
 
 import Foundation
 import ChatSecure_Push_iOS
-import YapDatabase.YapDatabaseRelationship
+import YapDatabase
 
 let kDeviceAccountRelationshipEdgeName = "OTRPushDeviceAccountRelationshipEdgeName"
 let kBuddyTokenRelationshipEdgeName = "OTRPushBuddyTokenRelationshipEdgeName"

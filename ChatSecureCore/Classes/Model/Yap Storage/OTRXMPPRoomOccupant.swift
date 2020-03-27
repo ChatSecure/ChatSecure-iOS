@@ -251,7 +251,7 @@ extension OTRXMPPRoomOccupant {
         queryString.append(")")
         
         let query = YapDatabaseQuery(string: queryString, parameters: parameters)
-        let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
+        let success = indexTransaction.iterateKeysAndObjects(matching: query) { (collection, key, object, stop) in
             if let matchingOccupant = object as? OTRXMPPRoomOccupant,
                 matchingOccupant.jid != nil || matchingOccupant.realJID != nil {
                 matchingOccupants.append(matchingOccupant)

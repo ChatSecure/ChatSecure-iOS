@@ -280,9 +280,9 @@ extension UIApplication {
         let username = account.username
         var body = "\(CONNECTION_ERROR_STRING()) \(username)."
         
+        
         if error.domain == GCDAsyncSocketErrorDomain,
-            let code = GCDAsyncSocketError(rawValue: error.code) {
-            
+            let code = GCDAsyncSocketError.Code.init(rawValue: error.code) {
             switch code {
             case .noError,
                  .connectTimeoutError,

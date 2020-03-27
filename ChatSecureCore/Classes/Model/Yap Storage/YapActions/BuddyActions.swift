@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import YapDatabase.YapDatabaseActionManager
+import YapDatabase
 import YapTaskQueue
 
 @objc public enum BuddyActionType: Int {

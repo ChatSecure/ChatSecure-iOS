@@ -319,7 +319,7 @@ extension OTRLogListViewController: UITableViewDataSource {
             if indexPath.row == 0 {
                 cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 17)
             }
-            cell.textLabel?.text = DateFormatter.localizedString(from: file.modificationDate, dateStyle: .long, timeStyle: .long)
+            cell.textLabel?.text = file.modificationDate.flatMap { DateFormatter.localizedString(from: $0, dateStyle: .long, timeStyle: .long) }
             let bytes = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
             cell.detailTextLabel?.text = bytes
             cell.accessoryType = .disclosureIndicator

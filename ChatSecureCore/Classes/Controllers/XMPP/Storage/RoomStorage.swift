@@ -220,7 +220,7 @@ import YapDatabase
             if let roomMessage = message as? OTRXMPPRoomMessage,
                 roomMessage.senderJID == xmppMessage.from?.full {
                 result = roomMessage
-                stop.pointee = true
+                stop = true
             } else {
                 DDLogWarn("Found matching MUC message but intended for different recipient \(message) \(xmppMessage)")
             }

@@ -123,7 +123,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
     let connection: YapDatabaseConnection
     let internalQueue = DispatchQueue(label: "FileTransferManager Queue")
     let callbackQueue = DispatchQueue.main
-    let sessionManager: SessionManager
+    let sessionManager: Session
     private var servers: [HTTPServer] = []
     
     @objc public var canUploadFiles: Bool {
@@ -141,7 +141,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
         self.serverCapabilities = serverCapabilities
         self.httpFileUpload = XMPPHTTPFileUpload()
         self.connection = connection
-        self.sessionManager = Alamofire.SessionManager(configuration: sessionConfiguration)
+        self.sessionManager = Alamofire.Session(configuration: sessionConfiguration)
         super.init()
         if let stream = serverCapabilities.xmppStream {
             httpFileUpload.activate(stream)
@@ -260,7 +260,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
             var outData = data
             var outKeyIv: Data? = nil
             if shouldEncrypt {
-                guard let key = OTRPasswordGenerator.randomData(withLength: 32), let iv = OTRPasswordGenerator.randomData(withLength: 16) else {
+                guard let key = OTRPasswordGenerator.randomData(withLength: 32), let iv = OTRSignalEncryptionHelper.generateIV() else {
                     DDLogError("Could not generate key/iv")
                     self.callbackQueue.async {
                         completion(nil, FileTransferError.keyGenerationError)
@@ -269,7 +269,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 }
                 outKeyIv = iv + key
                 do {
-                    let crypted = try OTRCryptoUtility.encryptAESGCMData(data, key: key, iv: iv)
+                    let crypted = try OTRSignalEncryptionHelper.encryptData(data, key: key, iv: iv)
                     outData = crypted.data + crypted.authTag
                 } catch let error {
                     outData = Data()
@@ -307,7 +307,7 @@ public class FileTransferManager: NSObject, OTRServerCapabilitiesDelegate {
                 
                 self.sessionManager.upload(outData, to: slot.putURL, method: .put, headers: forwardedHeaders)
                     .validate()
-                    .responseData(queue: self.callbackQueue) { response in
+                    .response(queue: self.callbackQueue) { response in
                         switch response.result {
                         case .success:
                             if let outKeyIv = outKeyIv {

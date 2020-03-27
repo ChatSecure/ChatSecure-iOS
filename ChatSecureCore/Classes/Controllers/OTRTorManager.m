@@ -7,6 +7,7 @@
 //
 
 #import "OTRTorManager.h"
+#import "OTRLog.h"
 
 @import CPAProxy;
 
@@ -17,18 +18,22 @@
         // Get resource paths for the torrc and geoip files from the main bundle
         NSBundle *cpaProxyFrameworkBundle = [NSBundle bundleForClass:[CPAProxyManager class]];
         NSURL *cpaProxyBundleURL = [cpaProxyFrameworkBundle URLForResource:@"CPAProxy" withExtension:@"bundle"];
-        NSBundle *cpaProxyBundle = [[NSBundle alloc] initWithURL:cpaProxyBundleURL];
-        NSParameterAssert(cpaProxyBundle != nil);
-
-        NSString *torrcPath = [[NSBundle mainBundle] pathForResource:@"torrc" ofType:nil]; // use custom torrc
-        NSString *geoipPath = [cpaProxyBundle pathForResource:@"geoip" ofType:nil];
-        NSString *dataDirectory = [[[[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"com.ChatSecure.Tor"] path];
-        
-        // Initialize a CPAProxyManager
-        CPAConfiguration *configuration = [CPAConfiguration configurationWithTorrcPath:torrcPath geoipPath:geoipPath torDataDirectoryPath:dataDirectory];
-        configuration.isolateDestinationAddress = YES;
-        configuration.isolateDestinationPort = YES;
-        self.torManager = [CPAProxyManager proxyWithConfiguration:configuration];
+        if (cpaProxyBundleURL) {
+            NSBundle *cpaProxyBundle = [[NSBundle alloc] initWithURL:cpaProxyBundleURL];
+            NSParameterAssert(cpaProxyBundle != nil);
+            
+            NSString *torrcPath = [[NSBundle mainBundle] pathForResource:@"torrc" ofType:nil]; // use custom torrc
+            NSString *geoipPath = [cpaProxyBundle pathForResource:@"geoip" ofType:nil];
+            NSString *dataDirectory = [[[[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"com.ChatSecure.Tor"] path];
+            
+            // Initialize a CPAProxyManager
+            CPAConfiguration *configuration = [CPAConfiguration configurationWithTorrcPath:torrcPath geoipPath:geoipPath torDataDirectoryPath:dataDirectory];
+            configuration.isolateDestinationAddress = YES;
+            configuration.isolateDestinationPort = YES;
+            self.torManager = [CPAProxyManager proxyWithConfiguration:configuration];
+        } else {
+            DDLogError(@"Could not initialize CPAProxy, missing bundle!");
+        }
     }
     return self;
 }

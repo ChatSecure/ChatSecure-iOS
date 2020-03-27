@@ -132,11 +132,9 @@ class PushStorage: NSObject, PushStorageProtocol {
     func unusedToken() -> TokenContainer? {
         var tokenContainer:TokenContainer? = nil
         self.databaseConnection.read { (transaction) -> Void in
-            transaction.enumerateKeysAndObjects(inCollection: PushYapCollections.unusedTokenCollection.rawValue, using: { (key, object, stop) -> Void in
-                if let tc = object as? TokenContainer {
-                    tokenContainer = tc
-                }
-                stop.initialize(to: true)
+            transaction.iterateKeysAndObjects(inCollection: PushYapCollections.unusedTokenCollection.rawValue, using: { (key, tc: TokenContainer, stop) -> Void in
+                tokenContainer = tc
+                stop = true
             })
         }
         return tokenContainer
@@ -236,18 +234,16 @@ class PushStorage: NSObject, PushStorageProtocol {
         self.databaseConnection.asyncReadWrite({ (transaction) in
             let collection = PushYapCollections.unusedTokenCollection.rawValue
             var removeKeyArray:[String] = []
-            transaction.enumerateKeysAndObjects(inCollection: collection, using: { (key, object, stop) in
-                if let token = object as? TokenContainer {
-                    //Check that there is an expires date otherwise remove
-                    guard let expiresDate = token.pushToken?.expires else {
-                        removeKeyArray.append(token.uniqueId)
-                        return
-                    }
-                    
-                    // Check that the date is farther in the future than currentDate + timeBuffer
-                    if (Date(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .orderedDescending ) {
-                        removeKeyArray.append(token.uniqueId)
-                    }
+            transaction.iterateKeysAndObjects(inCollection: collection, using: { (key, token: TokenContainer, stop) in
+                //Check that there is an expires date otherwise remove
+                guard let expiresDate = token.pushToken?.expires else {
+                    removeKeyArray.append(token.uniqueId)
+                    return
+                }
+                
+                // Check that the date is farther in the future than currentDate + timeBuffer
+                if (Date(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .orderedDescending ) {
+                    removeKeyArray.append(token.uniqueId)
                 }
             })
             

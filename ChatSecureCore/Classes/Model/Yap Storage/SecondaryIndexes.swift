@@ -190,11 +190,10 @@ extension OTRXMPPBuddy {
                                    transaction: YapDatabaseReadTransaction) -> OTRXMPPBuddy? {
         DDLogWarn("WARN: Using slow O(n) lookup for OTRXMPPBuddy: \(jid)")
         var buddy: OTRXMPPBuddy? = nil
-        transaction.enumerateKeysAndObjects(inCollection: OTRXMPPBuddy.collection) { (key, object, stop) in
-            if let potentialMatch = object as? OTRXMPPBuddy,
-                potentialMatch.username == jid.bare {
+        transaction.iterateKeysAndObjects(inCollection: OTRXMPPBuddy.collection) { (key, potentialMatch: OTRXMPPBuddy, stop) in
+            if potentialMatch.username == jid.bare {
                 buddy = potentialMatch
-                stop.pointee = true
+                stop = true
             }
         }
         return buddy
@@ -213,7 +212,7 @@ extension OTRXMPPBuddy {
         let query = YapDatabaseQuery(string: queryString, parameters: [accountUniqueId, jid.bare])
         
         var matchingBuddies: [OTRXMPPBuddy] = []
-        let success = indexTransaction.enumerateKeysAndObjects(matching: query) { (collection, key, object, stop) in
+        let success = indexTransaction.iterateKeysAndObjects(matching: query) { (collection, key, object, stop) in
             if let matchingBuddy = object as? OTRXMPPBuddy {
                 matchingBuddies.append(matchingBuddy)
             }

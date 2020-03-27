@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import YapDatabase.YapDatabaseFullTextSearch
-import YapDatabase.YapDatabaseSearchResultsView
+import YapDatabase
 
 open class OTRYapExtensions:NSObject {
     

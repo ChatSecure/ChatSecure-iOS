@@ -272,26 +272,6 @@
     }];
 }
 
-+ (id<OTRMessageProtocol>)messageForMessageId:(NSString *)messageId incoming:(BOOL)incoming transaction:(YapDatabaseReadTransaction *)transaction {
-    __block id<OTRMessageProtocol> deliveredMessage = nil;
-    [transaction enumerateMessagesWithElementId:messageId originId:nil stanzaId:nil block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
-        if ([message isMessageIncoming] == incoming) {
-            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
-            deliveredMessage = message;
-            *stop = YES;
-        }
-    }];
-    return deliveredMessage;
-}
-+ (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadTransaction *)transaction
-{
-    if ([self class] == [OTRIncomingMessage class]) {
-        return [self messageForMessageId:messageId incoming:YES transaction:transaction];
-    } else {
-        return [self messageForMessageId:messageId incoming:NO transaction:transaction];
-    }
-}
-
 - (id<OTRMessageProtocol>)duplicateMessage {
     OTRBaseMessage *message = self;
     OTRBaseMessage *newMessage = [[[self class] alloc] init];

@@ -137,19 +137,14 @@ class OTROMEMOIntegrationTest: XCTestCase {
         
         var messageFound = false
         self.aliceUser?.databaseManager.writeConnection?.read({ (transaction) in
-            transaction.enumerateKeysAndObjects(inCollection: OTRBaseMessage.collection, using: { (key, object, stop) in
-                if let message = object as? OTRBaseMessage {
-                    XCTAssertEqual(message.text, messageText)
-                    messageFound = true
-                }
-                
-            })
-            
-            transaction.enumerateKeysAndObjects(inCollection: OMEMODevice.collection, using: { (key, object, stop) in
-                let device = object as! OMEMODevice
+            transaction.iterateKeysAndObjects(inCollection: OTRBaseMessage.collection) { (key, message: OTRBaseMessage, stop) in
+                XCTAssertEqual(message.text, messageText)
+                messageFound = true
+                stop = true
+            }
+            transaction.iterateKeysAndObjects(inCollection: OMEMODevice.collection) { (key, device: OMEMODevice, stop) in
                 XCTAssertNotNil(device.lastSeenDate)
-            })
-            
+            }
         })
         XCTAssertTrue(messageFound,"Found message")
     }

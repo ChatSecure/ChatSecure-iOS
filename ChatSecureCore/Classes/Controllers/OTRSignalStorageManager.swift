@@ -232,7 +232,7 @@ open class OTRSignalStorageManager: NSObject {
             }
             
             let query = YapDatabaseQuery(string: "WHERE (OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters:  ["\(self.accountKey)"])
-            secondaryIndexTransaction.enumerateKeysAndObjects(matching: query, using: { (collection, key, object, stop) in
+            let _ = secondaryIndexTransaction.iterateKeysAndObjects(matching: query, using: { (collection, key, object, stop) in
                 guard let preKey = object as? OTRSignalPreKey else {
                     return
                 }
