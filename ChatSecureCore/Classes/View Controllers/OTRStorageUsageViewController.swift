@@ -56,30 +56,24 @@ class OTRStorageUsageViewController : XLFormViewController {
     private func processAllMedia() {
         var empty = true
         connections?.read.read { (transaction: YapDatabaseReadTransaction) in
-            transaction.enumerateKeysAndObjects(inCollection: OTRMediaItem.collection, using: { (key, object, stop) in
-                if let mediaItem = object as? OTRMediaItem {
-                    let parentMessage = mediaItem.parentMessage(with: transaction) as? OTRBaseMessage
-
-                    if let threadOwner = parentMessage?.threadOwner(with: transaction),
-                       let account = threadOwner.account(with: transaction) {
-                        do {
-                            let length = try OTRMediaFileManager.shared.dataLength(for: mediaItem, buddyUniqueId: threadOwner.threadIdentifier)
-                            empty = false
-
-                            let section = sectionForAccount(account)
-                            let row = rowForThreadOwner(threadOwner, section)
-                            let value = row.value as? Int ?? 0
-                            row.value = value + length.intValue
-                            
-                            DispatchQueue.main.async {
-                                self.updateFormRow(row)
-                            }
-                        } catch {
-                            return
-                        }
-                    }
+            transaction.iterateKeysAndObjects(inCollection: OTRMediaItem.collection) { (key, mediaItem: OTRMediaItem, stop) in
+                let parentMessage = mediaItem.parentMessage(with: transaction) as? OTRBaseMessage
+                guard let threadOwner = parentMessage?.threadOwner(with: transaction),
+                    let account = threadOwner.account(with: transaction),
+                    let length = try? OTRMediaFileManager.shared.dataLength(for: mediaItem, buddyUniqueId: threadOwner.threadIdentifier) else {
+                        return
                 }
-            })
+                empty = false
+
+                let section = sectionForAccount(account)
+                let row = rowForThreadOwner(threadOwner, section)
+                let value = row.value as? Int ?? 0
+                row.value = value + length.intValue
+                
+                DispatchQueue.main.async {
+                    self.updateFormRow(row)
+                }
+            }
         }
         if let deleteAll = self.form.formRow(withTag: DELETE_ALL_TAG),
            let noMediaFound = self.form.formRow(withTag: NO_MEDIA_FOUND_TAG){
@@ -135,19 +129,17 @@ class OTRStorageUsageViewController : XLFormViewController {
 
     private func findItemsToDelete(_ transaction: YapDatabaseReadWriteTransaction, _ threadIdentifier: String?) -> [OTRMediaItem] {
         var mediaItemsToDelete: [OTRMediaItem] = []
-        transaction.enumerateKeysAndObjects(inCollection: OTRMediaItem.collection, using: { (key, object, stop) in
-            if let mediaItem = object as? OTRMediaItem {
-                let parentMessage = mediaItem.parentMessage(with: transaction) as? OTRBaseMessage
-                if threadIdentifier != nil,
-                   let threadOwner = parentMessage?.threadOwner(with: transaction),
-                   threadOwner.threadIdentifier != threadIdentifier {
-                    return
-                }
-                if (parentMessage?.mediaItemUniqueId != nil) {
-                    mediaItemsToDelete.append(mediaItem)
-                }
+        transaction.iterateKeysAndObjects(inCollection: OTRMediaItem.collection) { (key, mediaItem: OTRMediaItem, stop) in
+            let parentMessage = mediaItem.parentMessage(with: transaction) as? OTRBaseMessage
+            if threadIdentifier != nil,
+                let threadOwner = parentMessage?.threadOwner(with: transaction),
+                threadOwner.threadIdentifier != threadIdentifier {
+                return
             }
-        })
+            if (parentMessage?.mediaItemUniqueId != nil) {
+                mediaItemsToDelete.append(mediaItem)
+            }
+        }
         return mediaItemsToDelete
     }
 
