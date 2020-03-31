@@ -66,12 +66,13 @@
     
     self.title = ADD_BUDDY_STRING();
     
-    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-    
-    
-    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
-    self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
+    NSMutableArray<UIBarButtonItem*> *rightBarButtonItems = @[doneButton].mutableCopy;
+    if ([QRCodeReader isAvailable]) {
+        UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING() style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
+        [rightBarButtonItems insertObject:qrButton atIndex:0];
+    }
+    self.navigationItem.rightBarButtonItems = rightBarButtonItems;
     
     self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING();
