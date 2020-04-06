@@ -27,6 +27,8 @@ extern const CGFloat OTRBuddyInfoCellHeight;
 /** Action callback for infoButton */
 @property (nonatomic, copy, nullable) void (^infoAction)(OTRBuddyInfoCell *cell, UIButton *sender);
 
+@property (class, nonatomic, strong, readonly) UIColor *primaryTextColor;
+@property (class, nonatomic, strong, readonly) UIColor *subtitleTextColor;
 
 @end
 NS_ASSUME_NONNULL_END

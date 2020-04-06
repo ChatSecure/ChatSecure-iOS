@@ -23,14 +23,11 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
 @property (nonatomic, strong) UILabel *identifierLabel;
 @property (nonatomic, strong) UILabel *accountLabel;
 
-@property (nonatomic, strong, readonly) UIColor *primaryTextColor;
-@property (nonatomic, strong, readonly) UIColor *subtitleTextColor;
-
 @end
 
 @implementation OTRBuddyInfoCell
 
-- (UIColor *) primaryTextColor {
++ (UIColor *) primaryTextColor {
     if (@available(iOS 13.0, *)) {
         return [UIColor labelColor];
     } else {
@@ -38,7 +35,7 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
 }
 
-- (UIColor *) subtitleTextColor {
++ (UIColor *) subtitleTextColor {
     if (@available(iOS 13.0, *)) {
         return [UIColor systemGray3Color];
     } else {
@@ -53,11 +50,11 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
         self.nameLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
         
         self.identifierLabel = [[UILabel alloc] initForAutoLayout];
-        self.identifierLabel.textColor = self.primaryTextColor;
+        self.identifierLabel.textColor = self.class.primaryTextColor;
         self.identifierLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
         
         self.accountLabel = [[UILabel alloc] initForAutoLayout];
-        self.accountLabel.textColor = self.subtitleTextColor;
+        self.accountLabel.textColor = self.class.subtitleTextColor;
         self.accountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
         
         NSArray<UILabel*> *labels = @[self.nameLabel, self.identifierLabel, self.accountLabel];
@@ -93,9 +90,9 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
     self.identifierLabel.text = identifier;
     
-    UIColor *textColor = self.primaryTextColor;
+    UIColor *textColor = self.class.primaryTextColor;
     if ([thread isArchived]) {
-        textColor = self.subtitleTextColor;
+        textColor = self.class.subtitleTextColor;
     }
     [@[self.nameLabel, self.identifierLabel] enumerateObjectsUsingBlock:^(UILabel   * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.textColor = textColor;
@@ -126,9 +123,9 @@ const CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)prepareForReuse {
     [super prepareForReuse];
-    self.nameLabel.textColor = self.primaryTextColor;
-    self.identifierLabel.textColor = self.primaryTextColor;
-    self.accountLabel.textColor = self.subtitleTextColor;
+    self.nameLabel.textColor = self.class.primaryTextColor;
+    self.identifierLabel.textColor = self.class.primaryTextColor;
+    self.accountLabel.textColor = self.class.subtitleTextColor;
 }
 
 - (void) infoButtonPressed:(UIButton*)sender {

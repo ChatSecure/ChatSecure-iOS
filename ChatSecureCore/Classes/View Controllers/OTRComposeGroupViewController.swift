@@ -164,9 +164,9 @@ open class OTRComposeGroupViewController: UIViewController, UICollectionViewDele
             if existingItems.contains(threadOwner.uniqueId) {
                 isExistingOccupant = true
             }
-            cell.nameLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
-            cell.accountLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
-            cell.identifierLabel.textColor = isExistingOccupant ? UIColor.gray : UIColor.black
+            cell.nameLabel.textColor = isExistingOccupant ? OTRBuddyInfoCell.subtitleTextColor : OTRBuddyInfoCell.primaryTextColor
+            cell.accountLabel.textColor = isExistingOccupant ? OTRBuddyInfoCell.subtitleTextColor : OTRBuddyInfoCell.primaryTextColor
+            cell.identifierLabel.textColor = isExistingOccupant ? OTRBuddyInfoCell.subtitleTextColor : OTRBuddyInfoCell.primaryTextColor
             return cell
         }
         return UITableViewCell()
