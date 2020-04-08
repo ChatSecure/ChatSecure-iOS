@@ -189,11 +189,10 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
     if (!usernameRow) {
         return;
     }
-    XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
+    XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerDomainTag];
     NSString *domain = nil;
     if (serverRow) {
-        OTRXMPPServerInfo *serverInfo = serverRow.value;
-        domain = serverInfo.domain;
+        domain = serverRow.value;
         usernameRow.value = domain;
     } else {
         usernameRow.value = self.account.username;
@@ -238,7 +237,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
 -(void)formRowDescriptorValueHasChanged:(XLFormRowDescriptor *)formRow oldValue:(id)oldValue newValue:(id)newValue
 {
     [super formRowDescriptorValueHasChanged:formRow oldValue:oldValue newValue:newValue];
-    if (formRow.tag == kOTRXLFormXMPPServerTag) {
+    if (formRow.tag == kOTRXLFormXMPPServerDomainTag) {
         [self updateUsernameRow];
     }
 }

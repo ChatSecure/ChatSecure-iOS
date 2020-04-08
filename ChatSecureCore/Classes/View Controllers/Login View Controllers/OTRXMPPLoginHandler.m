@@ -125,10 +125,9 @@
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
     if (![hostname length]) {
-        XLFormRowDescriptor *serverRow = [form formRowWithTag:kOTRXLFormXMPPServerTag];
+        XLFormRowDescriptor *serverRow = [form formRowWithTag:kOTRXLFormXMPPServerDomainTag];
         if (serverRow) {
-            OTRXMPPServerInfo *serverInfo = serverRow.value;
-            hostname = serverInfo.domain;
+            hostname = serverRow.value;
         }
     }
     account.domain = hostname;
@@ -160,18 +159,6 @@
     account.username = jid.bare;
     account.resource = jid.resource;
     account.displayName = nickname;
-    
-    // Use server's .onion if possible, else use FQDN
-    if (account.accountType == OTRAccountTypeXMPPTor) {
-        OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
-        OTRXMPPTorAccount *torAccount = (OTRXMPPTorAccount*)account;
-        torAccount.onion = serverInfo.onion;
-        if (torAccount.onion.length) {
-            torAccount.domain = torAccount.onion;
-        } else if (serverInfo.server.length) {
-            torAccount.domain = serverInfo.server;
-        }
-    }
     
     // Start generating our OTR key here so it's ready when we need it
     
