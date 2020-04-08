@@ -16,19 +16,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="380" height="90"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="dukgo.png" translatesAutoresizingMaskIntoConstraints="NO" id="hHR-8h-o2Q">
-                        <rect key="frame" x="8" y="8" width="73" height="73"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dukgo.png" translatesAutoresizingMaskIntoConstraints="NO" id="hHR-8h-o2Q">
+                        <rect key="frame" x="20" y="11" width="68" height="68"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="hHR-8h-o2Q" secondAttribute="height" multiplier="1:1" id="onm-ks-XXD"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" misplaced="YES" text="DuckDuckGo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56T-Do-MIi">
-                        <rect key="frame" x="89" y="8" width="99" height="20"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="DuckDuckGo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56T-Do-MIi">
+                        <rect key="frame" x="96" y="11" width="105" height="20"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CBS-et-sIv">
-                        <rect key="frame" x="299" y="70" width="73" height="16"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CBS-et-sIv">
+                        <rect key="frame" x="281" y="68" width="79" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="G91-sn-s8G"/>
                         </constraints>
@@ -40,20 +40,20 @@
                             <action selector="privacyPolicyButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="21q-TQ-u75"/>
                         </connections>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="US" translatesAutoresizingMaskIntoConstraints="NO" id="klT-BC-fCG">
-                        <rect key="frame" x="274" y="65" width="20" height="16"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="US" translatesAutoresizingMaskIntoConstraints="NO" id="klT-BC-fCG">
+                        <rect key="frame" x="256" y="63" width="20" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="7js-Ss-F8w"/>
                             <constraint firstAttribute="height" constant="16" id="vrX-CT-qrq"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="The search engine that doesn't track you." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7On-ZS-OEq">
-                        <rect key="frame" x="89" y="31" width="268" height="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The search engine that doesn't track you." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7On-ZS-OEq">
+                        <rect key="frame" x="96" y="34" width="216.5" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aM-Hd-hB1">
-                        <rect key="frame" x="89" y="62" width="22" height="22"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aM-Hd-hB1">
+                        <rect key="frame" x="96" y="60" width="22" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="22" id="Wpx-f3-kDk"/>
                             <constraint firstAttribute="height" constant="22" id="wGM-CF-oAG"/>
@@ -65,15 +65,15 @@
                             <action selector="twitterButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xv7-Ab-os8"/>
                         </connections>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Tor_Onion" translatesAutoresizingMaskIntoConstraints="NO" id="PoT-GB-gap">
-                        <rect key="frame" x="210" y="62" width="22" height="19"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tor_Onion" translatesAutoresizingMaskIntoConstraints="NO" id="PoT-GB-gap">
+                        <rect key="frame" x="192" y="60" width="22" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="22" id="MvA-Po-Mpl"/>
                             <constraint firstAttribute="height" constant="19" id="viX-2X-FIo"/>
                         </constraints>
                     </imageView>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXf-Jy-Kgn">
-                        <rect key="frame" x="288" y="8" width="84" height="20"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXf-Jy-Kgn">
+                        <rect key="frame" x="270" y="11" width="90" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="3mq-e9-yYe"/>
                         </constraints>
@@ -85,8 +85,8 @@
                             <action selector="domainButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="eeV-io-G7M"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F39-4j-6Os">
-                        <rect key="frame" x="210" y="60" width="56" height="26"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F39-4j-6Os">
+                        <rect key="frame" x="192" y="57" width="56" height="27"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="56" id="Wg4-zj-9fT"/>
                         </constraints>
