@@ -26,7 +26,7 @@
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
     account = (OTRXMPPAccount *)[super moveValues:form intoAccount:account];
-    OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
+    NSString *serverDomain = [[form formRowWithTag:kOTRXLFormXMPPServerDomainTag] value];
     
     NSString *username = nil;
     if ([account.username containsString:@"@"]) {
@@ -35,11 +35,9 @@
     } else {
         username = account.username;
     }
-    
-    NSString *domain = serverInfo.domain;
-    
+        
     //Create valid 'username' which is a bare jid (user@domain.com)
-    XMPPJID *jid = [XMPPJID jidWithUser:username domain:domain resource:nil];
+    XMPPJID *jid = [XMPPJID jidWithUser:username domain:serverDomain resource:nil];
     
     if (jid) {
         account.username = [jid bare];

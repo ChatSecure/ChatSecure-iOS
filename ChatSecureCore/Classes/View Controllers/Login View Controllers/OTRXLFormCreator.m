@@ -27,7 +27,7 @@ NSString *const kOTRXLFormLoginAutomaticallySwitchTag = @"kOTRXLFormLoginAutomat
 NSString *const kOTRXLFormHostnameTextFieldTag        = @"kOTRXLFormHostnameTextFieldTag";
 NSString *const kOTRXLFormPortTextFieldTag            = @"kOTRXLFormPortTextFieldTag";
 NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceTextFieldTag";
-NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTag";
+NSString *const kOTRXLFormXMPPServerDomainTag               = @"kOTRXLFormXMPPServerDomainTag";
 
 NSString *const kOTRXLFormShowAdvancedTag               = @"kOTRXLFormShowAdvancedTag";
 
@@ -124,7 +124,7 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
         }
 
         serverSection.footerTitle = Server_String_Hint();
-        [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
+        [serverSection addFormRow:[self serverRowDescriptor]];
         
         XLFormSectionDescriptor *torSection = [XLFormSectionDescriptor formSectionWithTitle:@"Tor"];
         torSection.footerTitle = TOR_WARNING_MESSAGE_STRING();
@@ -285,16 +285,13 @@ NSString *const kOTRXLFormAutomaticURLFetchTag               = @"kOTRXLFormAutom
     return resourceRowDescriptor;
 }
 
-+ (XLFormRowDescriptor *)serverRowDescriptorWithValue:(OTRXMPPServerInfo *)value
++ (XLFormRowDescriptor *)serverRowDescriptor
 {
-    XLFormRowDescriptor *xmppServerDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerTag rowType:kOTRFormRowDescriptorTypeXMPPServer];
-    if (!value) {
-        value = [[OTRXMPPServerInfo defaultServerList] firstObject];
-    }
-    xmppServerDescriptor.value = value;
-    xmppServerDescriptor.action.viewControllerClass = [OTRXMPPServerListViewController class];
+    XLFormRowDescriptor *serverRowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerDomainTag rowType:XLFormRowDescriptorTypeURL title:CUSTOM_STRING()];
+    serverRowDescriptor.required = YES;
+    [serverRowDescriptor.cellConfigAtConfigure setObject:@"example.com" forKey:@"textField.placeholder"];
     
-    return xmppServerDescriptor;
+    return serverRowDescriptor;
 }
 
 

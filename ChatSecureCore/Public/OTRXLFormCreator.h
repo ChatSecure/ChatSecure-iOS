@@ -20,7 +20,7 @@ extern NSString *const kOTRXLFormLoginAutomaticallySwitchTag;
 extern NSString *const kOTRXLFormHostnameTextFieldTag;
 extern NSString *const kOTRXLFormPortTextFieldTag;
 extern NSString *const kOTRXLFormResourceTextFieldTag;
-extern NSString *const kOTRXLFormXMPPServerTag;
+extern NSString *const kOTRXLFormXMPPServerDomainTag;
 extern NSString *const kOTRXLFormUseTorTag;
 extern NSString *const kOTRXLFormAutomaticURLFetchTag;
 

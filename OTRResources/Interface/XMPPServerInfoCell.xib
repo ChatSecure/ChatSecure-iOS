@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -13,105 +13,93 @@
             <rect key="frame" x="0.0" y="0.0" width="380" height="90"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="380" height="89"/>
+                <rect key="frame" x="0.0" y="0.0" width="380" height="90"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dukgo.png" translatesAutoresizingMaskIntoConstraints="NO" id="hHR-8h-o2Q">
-                        <rect key="frame" x="8" y="8" width="73" height="73"/>
-                        <animations/>
+                        <rect key="frame" x="20" y="11" width="68" height="68"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="hHR-8h-o2Q" secondAttribute="height" multiplier="1:1" id="onm-ks-XXD"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="DuckDuckGo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56T-Do-MIi">
-                        <rect key="frame" x="89" y="8" width="99" height="20"/>
-                        <animations/>
+                        <rect key="frame" x="96" y="11" width="105" height="20"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CBS-et-sIv">
-                        <rect key="frame" x="299" y="70" width="73" height="16"/>
-                        <animations/>
+                        <rect key="frame" x="281" y="68" width="79" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="G91-sn-s8G"/>
                         </constraints>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <state key="normal" title="Privacy Policy">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="privacyPolicyButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="21q-TQ-u75"/>
                         </connections>
                     </button>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="US" translatesAutoresizingMaskIntoConstraints="NO" id="klT-BC-fCG">
-                        <rect key="frame" x="274" y="65" width="20" height="16"/>
-                        <animations/>
+                        <rect key="frame" x="256" y="63" width="20" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="7js-Ss-F8w"/>
                             <constraint firstAttribute="height" constant="16" id="vrX-CT-qrq"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="The search engine that doesn't track you." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7On-ZS-OEq">
-                        <rect key="frame" x="89" y="31" width="268" height="17"/>
-                        <animations/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The search engine that doesn't track you." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7On-ZS-OEq">
+                        <rect key="frame" x="96" y="34" width="216.5" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aM-Hd-hB1">
-                        <rect key="frame" x="89" y="62" width="22" height="22"/>
-                        <animations/>
+                        <rect key="frame" x="96" y="60" width="22" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="22" id="Wpx-f3-kDk"/>
                             <constraint firstAttribute="height" constant="22" id="wGM-CF-oAG"/>
                         </constraints>
                         <state key="normal" image="Twitter">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="twitterButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="xv7-Ab-os8"/>
                         </connections>
                     </button>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tor_Onion" translatesAutoresizingMaskIntoConstraints="NO" id="PoT-GB-gap">
-                        <rect key="frame" x="210" y="62" width="22" height="19"/>
-                        <animations/>
+                        <rect key="frame" x="192" y="60" width="22" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="22" id="MvA-Po-Mpl"/>
                             <constraint firstAttribute="height" constant="19" id="viX-2X-FIo"/>
                         </constraints>
                     </imageView>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXf-Jy-Kgn">
-                        <rect key="frame" x="288" y="8" width="84" height="20"/>
-                        <animations/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pXf-Jy-Kgn">
+                        <rect key="frame" x="270" y="11" width="90" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="3mq-e9-yYe"/>
                         </constraints>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <state key="normal" title="@dukgo.com">
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="domainButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="eeV-io-G7M"/>
                         </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F39-4j-6Os">
-                        <rect key="frame" x="210" y="60" width="56" height="26"/>
-                        <animations/>
+                        <rect key="frame" x="192" y="57" width="56" height="27"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="56" id="Wg4-zj-9fT"/>
                         </constraints>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <state key="normal" title=".onion">
-                            <color key="titleColor" red="0.2784313725" green="0.64313725489999995" blue="0.2784313725" alpha="1" colorSpace="calibratedRGB"/>
-                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="titleColor" red="0.2784313725" green="0.64313725489999995" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                         <connections>
                             <action selector="onionButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="RX8-tm-jKm"/>
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="7On-ZS-OEq" secondAttribute="trailing" id="2cM-CG-tGk"/>
                     <constraint firstItem="CBS-et-sIv" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="3N6-Mg-zW2"/>
@@ -147,7 +135,6 @@
                     </mask>
                 </variation>
             </tableViewCellContentView>
-            <animations/>
             <connections>
                 <outlet property="countryImageView" destination="klT-BC-fCG" id="Q5E-cN-ECs"/>
                 <outlet property="domainButton" destination="pXf-Jy-Kgn" id="cZV-W2-CFK"/>
