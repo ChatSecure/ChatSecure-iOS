@@ -103,7 +103,9 @@ static CGFloat const kOTRButtonHeight = 40;
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:2];
     
     [shareButtons addObject:[self buttonWithIcon:FAEnvelope title:INVITE_LINK_STRING() type:BButtonTypeDefault action:@selector(linkShareButtonPressed:)]];
-    [shareButtons addObject:[self buttonWithIcon:FACamera title:SCAN_QR_STRING() type:BButtonTypeDefault action:@selector(qrButtonPressed:)]];
+    if ([QRCodeReader isAvailable]) {
+        [shareButtons addObject:[self buttonWithIcon:FACamera title:SCAN_QR_STRING() type:BButtonTypeDefault action:@selector(qrButtonPressed:)]];
+    }
     
     self.shareButtons = shareButtons;
     

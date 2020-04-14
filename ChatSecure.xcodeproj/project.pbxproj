@@ -41,6 +41,9 @@
 		D936D6CB1E8B1B34003B1343 /* FileTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936D6CA1E8B1B34003B1343 /* FileTransferTests.swift */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D985BC791EBD32F700993D27 /* StoreKit.framework */; };
+		D986C64C244564260066CC03 /* UIViewControllerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D986C64B244564260066CC03 /* UIViewControllerPreview.swift */; };
+		D986C653244565C30066CC03 /* OTRInviteViewController_Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D986C652244565C30066CC03 /* OTRInviteViewController_Previews.swift */; };
+		D986C656244567B90066CC03 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D986C654244567090066CC03 /* SwiftUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D9B3EC221FA196CE00E63C7F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3EC211FA196CE00E63C7F /* AppDelegate.swift */; };
 		D9B7EEFB235D47C400AD1EEA /* OTRKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEF6235D477200AD1EEA /* OTRKit.framework */; };
 		D9B7EEFC235D47CA00AD1EEA /* CPAProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B7EEE9235D476700AD1EEA /* CPAProxy.framework */; };
@@ -689,6 +692,9 @@
 		D97070911EEF382D004FEBDE /* MediaDownloadView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MediaDownloadView.xib; path = Interface/MediaDownloadView.xib; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D985BC791EBD32F700993D27 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		D986C64B244564260066CC03 /* UIViewControllerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerPreview.swift; sourceTree = "<group>"; };
+		D986C652244565C30066CC03 /* OTRInviteViewController_Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTRInviteViewController_Previews.swift; sourceTree = "<group>"; };
+		D986C654244567090066CC03 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		D98BA36B1EDE47BB004475B6 /* HTMLPreviewView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HTMLPreviewView.xib; path = Interface/HTMLPreviewView.xib; sourceTree = "<group>"; };
 		D99F17891BAB946800604558 /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		D99F178B1BAB947E00604558 /* Secrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
@@ -1116,6 +1122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D986C656244567B90066CC03 /* SwiftUI.framework in Frameworks */,
 				D9C52807235CB55C002B213A /* ChatSecureCore.framework in Frameworks */,
 				D985BC7A1EBD32F700993D27 /* StoreKit.framework in Frameworks */,
 				07BD06A9B424D601FC93AB82 /* libPods-ChatSecureCorePods-ChatSecure.a in Frameworks */,
@@ -1350,6 +1357,14 @@
 			path = xcconfig;
 			sourceTree = "<group>";
 		};
+		D986C651244565950066CC03 /* Previews */ = {
+			isa = PBXGroup;
+			children = (
+				D986C652244565C30066CC03 /* OTRInviteViewController_Previews.swift */,
+			);
+			path = Previews;
+			sourceTree = "<group>";
+		};
 		D9B7EEE0235D476700AD1EEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1401,6 +1416,7 @@
 		D9C52811235CB57F002B213A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D986C651244565950066CC03 /* Previews */,
 				D9C52812235CB57F002B213A /* OTRDoubleSettingViewController.m */,
 				D9C52813235CB57F002B213A /* OTRNewBuddyViewController.m */,
 				D9C52814235CB57F002B213A /* OTRChooseAccountViewController.m */,
@@ -1474,6 +1490,7 @@
 		D9C52846235CB580002B213A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D986C64B244564260066CC03 /* UIViewControllerPreview.swift */,
 				D9C52847235CB580002B213A /* OTRConstants.m */,
 				D9C52848235CB580002B213A /* OTRColors.m */,
 				D9C52849235CB580002B213A /* OTRUtilities.h */,
@@ -1944,6 +1961,7 @@
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D986C654244567090066CC03 /* SwiftUI.framework */,
 				D90DA4F2236F3C6800C585B7 /* Appirater.bundle */,
 				D90DA4F3236F3C6800C585B7 /* CPAProxy.bundle */,
 				D90DA4F4236F3C6800C585B7 /* TUSafariActivity.bundle */,
@@ -2630,6 +2648,7 @@
 				D9C52A5B235CB581002B213A /* OTRProtocolManager.m in Sources */,
 				D9C52A10235CB580002B213A /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				D9C52AD5235CB581002B213A /* UIApplication+ChatSecure.swift in Sources */,
+				D986C64C244564260066CC03 /* UIViewControllerPreview.swift in Sources */,
 				D9C52A8B235CB581002B213A /* ServerCheck.swift in Sources */,
 				D9C52A55235CB581002B213A /* PushDeserializer.swift in Sources */,
 				D9C52AA5235CB581002B213A /* OTRStatusMessageCell.m in Sources */,
@@ -2816,6 +2835,7 @@
 				D9C52A92235CB581002B213A /* SingleButtonTableViewCell.swift in Sources */,
 				D9C52A82235CB581002B213A /* OTRAudioPlaybackController.m in Sources */,
 				D9C52A4C235CB581002B213A /* OTROpenInTwitterActivity.m in Sources */,
+				D986C653244565C30066CC03 /* OTRInviteViewController_Previews.swift in Sources */,
 				D9C52A2F235CB581002B213A /* BuddyActions.swift in Sources */,
 				D9C52A49235CB581002B213A /* OTRActivityItemProvider.m in Sources */,
 				D9C52A30235CB581002B213A /* OTRIncomingMessage.m in Sources */,
