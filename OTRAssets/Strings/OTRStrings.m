@@ -476,6 +476,14 @@ NSString* SOMEONE_IS_TYPING_STRING() { return [OTRLanguageManager translatedStri
 NSString* SOMEONE_STRING() { return [OTRLanguageManager translatedString:@"Someone"]; }
 /** "Check out the source here on Github", let users know source is on Github */
 NSString* SOURCE_STRING() { return [OTRLanguageManager translatedString:@"Check out the source here on Github"]; }
+/** "Delete All", Delete all media button */
+NSString* STORAGE_USAGE_DELETE_ALL_BUTTON() { return [OTRLanguageManager translatedString:@"Delete All"]; }
+/** "Manage downloaded media", Storage usage setting description */
+NSString* STORAGE_USAGE_DESCRIPTION() { return [OTRLanguageManager translatedString:@"Manage downloaded media"]; }
+/** "No downloaded media found in chats", No media found clarification */
+NSString* STORAGE_USAGE_NO_MEDIA_FOUND() { return [OTRLanguageManager translatedString:@"No downloaded media found in chats"]; }
+/** "Storage Usage", Storage usage setting title */
+NSString* STORAGE_USAGE_TITLE() { return [OTRLanguageManager translatedString:@"Storage Usage"]; }
 /** "Server", server selection section title */
 NSString* Server_String() { return [OTRLanguageManager translatedString:@"Server"]; }
 /** "Choose from a selection of public servers, or use your own.", server selection footer */

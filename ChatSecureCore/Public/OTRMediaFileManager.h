@@ -33,7 +33,7 @@ completionQueue:(nullable dispatch_queue_t)completionQueue;
 //#865
 - (void)deleteDataForItem:(OTRMediaItem *)mediaItem
             buddyUniqueId:(NSString *)buddyUniqueId
-               completion:(void (^)(BOOL success, NSError * _Nullable error))completion
+               completion:(nullable void (^)(BOOL success, NSError * _Nullable error))completion
           completionQueue:(nullable dispatch_queue_t)completionQueue;
 
 - (nullable NSData*)dataForItem:(OTRMediaItem *)mediaItem
@@ -45,6 +45,8 @@ completionQueue:(nullable dispatch_queue_t)completionQueue;
 
 + (nullable NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
 + (nullable NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId withLeadingSlash:(BOOL)includeLeadingSlash;
+
+- (void)vacuum:(dispatch_block_t)completion;
 
 @property (class, nonatomic, readonly) OTRMediaFileManager *shared;
 

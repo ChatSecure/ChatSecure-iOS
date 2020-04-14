@@ -1245,5 +1245,17 @@
     }, "ADD_FRIEND_TO_AUTO_DOWNLOAD": {
         "comment": "Shown in chat view to prompt user to add friend for auto-download of group media messages.",
         "string": "Is %@ your friend? Add him/her to auto-download pictures in the future."
+    }, "STORAGE_USAGE_TITLE": {
+        "comment": "Storage usage setting title",
+        "string": "Storage Usage"
+    }, "STORAGE_USAGE_DESCRIPTION": {
+        "comment": "Storage usage setting description",
+        "string": "Manage downloaded media"
+    }, "STORAGE_USAGE_DELETE_ALL_BUTTON": {
+        "comment": "Delete all media button",
+        "string": "Delete All"
+    }, "STORAGE_USAGE_NO_MEDIA_FOUND": {
+        "comment": "No media found clarification",
+        "string": "No downloaded media found in chats"
     }
 }
