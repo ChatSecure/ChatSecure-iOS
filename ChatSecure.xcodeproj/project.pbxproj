@@ -442,6 +442,7 @@
 		D9C52B3C235CB582002B213A /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529AE235CB580002B213A /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9C52B3D235CB582002B213A /* ChatSecureCoreCompat-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C529B0235CB580002B213A /* ChatSecureCoreCompat-Swift.h */; };
 		D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C52800235CB55C002B213A /* ChatSecureCore.framework */; };
+		D9D44A232446B7440003B317 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D986C654244567090066CC03 /* SwiftUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D9DEC34A1FABC9F900BF1F7C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9DEC3491FABC9F900BF1F7C /* Settings.bundle */; };
 		D9ECD08F2344626800ECE5F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9ECD08E2344626800ECE5F9 /* LaunchScreen.storyboard */; };
 		D9F5C2A8236F7F8200F14A16 /* Purchase.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D93EFA8D235971E2007474EC /* Purchase.storyboard */; };
@@ -1133,6 +1134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9D44A232446B7440003B317 /* SwiftUI.framework in Frameworks */,
 				D9C52B3F235CBC27002B213A /* ChatSecureCore.framework in Frameworks */,
 				7CD871CB705CA365E0755104 /* libPods-ChatSecureCorePods-ChatSecureTests.a in Frameworks */,
 			);

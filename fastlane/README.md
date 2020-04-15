@@ -15,7 +15,26 @@ Install _fastlane_ using
 or alternatively using `brew cask install fastlane`
 
 # Available Actions
+## Mac
+### mac release_mac
+```
+fastlane mac release_mac
+```
+Submit a new macOS release
+
+----
+
 ## iOS
+### ios test
+```
+fastlane ios test
+```
+Runs tests
+### ios release_ios
+```
+fastlane ios release_ios
+```
+Submit a new iOS release
 ### ios screenshots
 ```
 fastlane ios screenshots

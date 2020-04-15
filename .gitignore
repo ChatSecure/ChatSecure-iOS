@@ -9,10 +9,22 @@ DerivedData
 *.orig
 *.xccheckout
 
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+
 Pods/
 Carthage/
 com.mono0926.LicensePlist.Output/
 
 Secrets.plist
 Preview.html
+
+.env
+
 fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output

@@ -1,0 +1,84 @@
+# .circleci/config.yml
+version: 2.1
+
+jobs:
+  test:
+    executor: xcode-11
+    steps:
+      - setup
+      - fastlane:
+          lane: "test"
+  release:
+    executor: xcode-11
+    steps:
+      - setup
+      # # This is required for Fastlane Match to work correctly
+      # - add_ssh_keys:
+      #     fingerprints:
+      #       - ""
+      - fastlane:
+          lane: "release"
+      - store-ipa
+
+executors:
+  xcode-11:
+    macos:
+      xcode: "11.4.0"
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    shell: /bin/bash --login -eo pipefail
+
+commands:
+  setup:
+    description: "Shared setup"
+    steps:
+      - checkout
+      - restore-gems
+
+  restore-gems:
+    description: "Restore Ruby Gems"
+    steps:
+      - run:
+          name: Set Ruby Version
+          command:  echo "ruby-2.5" > ~/.ruby-version
+      - restore_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+      - run: bundle check || bundle install --path vendor/bundle
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+  fastlane:
+    description: "Runs specified Fastlane lane"
+    parameters:
+      lane:
+        type: string
+        default: "test"
+    steps:
+    - run:
+        name: Fastlane
+        command: |
+          bundle exec fastlane << parameters.lane >>
+  store-ipa:
+    description: "Stores .ipa file"
+    steps:
+      - store_artifacts:
+          path: "ChatSecure.ipa"
+
+workflows:
+  version: 2
+  integration:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      # - release:
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /\d.\d.\d/

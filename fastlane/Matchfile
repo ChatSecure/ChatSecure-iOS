@@ -1,0 +1,9 @@
+
+storage_mode("git")
+readonly(true)
+type("appstore")
+
+app_identifier(["com.chrisballinger.ChatSecure"])
+
+clone_branch_directly(true)
+shallow_clone(true)

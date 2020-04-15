@@ -15,7 +15,44 @@
 
 default_platform(:ios)
 
+platform :mac do
+  desc "Runs tests on macOS"
+  lane :test do
+    scan(
+      scheme: "ChatSecure"
+    )
+  end
+
+  desc "Submit a new macOS release"
+  lane :release do
+    setup_circle_ci
+    match(
+      type: "appstore",
+      platform: "macos", # Manually specifying this seems to be necessary
+    )
+    build_mac_app(
+      scheme: "ChatSecure (Mac)",
+    )
+  end
+end
+
 platform :ios do
+  desc "Runs tests on iOS"
+  lane :test do
+    scan(
+      scheme: "ChatSecure"
+    )
+  end
+
+  desc "Submit a new iOS release"
+  lane :release_ios do
+    setup_circle_ci
+    match
+    gym(
+      scheme: "ChatSecure",
+    )
+  end
+
   desc "Generate new localized screenshots"
   lane :screenshots do
     capture_screenshots(workspace: "ChatSecure.xcworkspace", scheme: "ChatSecureUITests")
