@@ -2242,16 +2242,13 @@
 				TargetAttributes = {
 					6365CEFB1E2453F6009E213F = {
 						CreatedOnToolsVersion = 8.2;
-						DevelopmentTeam = SF3NXKQQ64;
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6396AF991A169D54009F3E6C;
 					};
 					6396AF991A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 4T8JLQR6GR;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -2966,8 +2963,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -2993,9 +2991,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				INFOPLIST_FILE = ChatSecureUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3037,7 +3036,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3102,7 +3100,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3139,12 +3136,12 @@
 				BUNDLE_ID_SUFFIX = "";
 				COCOAPODS_PARALLEL_CODE_SIGN = true;
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 167;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				ENABLE_HARDENED_RUNTIME = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3162,7 +3159,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.chrisballinger.ChatSecure";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore com.chrisballinger.ChatSecure catalyst";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -3177,12 +3175,12 @@
 				BUNDLE_ID_SUFFIX = "";
 				COCOAPODS_PARALLEL_CODE_SIGN = true;
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 167;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3200,7 +3198,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.chrisballinger.ChatSecure";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore com.chrisballinger.ChatSecure catalyst";
 				SUPPORTS_MACCATALYST = YES;
 			};
 			name = iOS_Release;
@@ -3278,7 +3277,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3323,12 +3321,12 @@
 				BUNDLE_ID_SUFFIX = "";
 				COCOAPODS_PARALLEL_CODE_SIGN = true;
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 167;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				ENABLE_HARDENED_RUNTIME = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3346,7 +3344,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.chrisballinger.ChatSecure";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore com.chrisballinger.ChatSecure catalyst";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -3383,8 +3382,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
@@ -3476,7 +3476,6 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3513,12 +3512,12 @@
 				BUNDLE_ID_SUFFIX = "";
 				COCOAPODS_PARALLEL_CODE_SIGN = true;
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 167;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3536,7 +3535,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.chrisballinger.ChatSecure";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore com.chrisballinger.ChatSecure catalyst";
 				SUPPORTS_MACCATALYST = YES;
 			};
 			name = macOS_Release;
@@ -3566,9 +3566,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SF3NXKQQ64;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				INFOPLIST_FILE = ChatSecureUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

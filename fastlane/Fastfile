@@ -28,7 +28,7 @@ platform :mac do
     setup_circle_ci
     match(
       type: "appstore",
-      platform: "macos", # Manually specifying this seems to be necessary
+      platform: "catalyst",
     )
     build_mac_app(
       scheme: "ChatSecure (Mac)",
@@ -45,7 +45,7 @@ platform :ios do
   end
 
   desc "Submit a new iOS release"
-  lane :release_ios do
+  lane :release do
     setup_circle_ci
     match
     gym(

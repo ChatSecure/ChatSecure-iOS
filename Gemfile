@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 
 gem 'cocoapods'
-# Waiting for https://github.com/CocoaPods/CocoaPods/pull/9470
-#  gem 'cocoapods', '1.9.0.beta.2'
-gem 'fastlane'
+#gem 'fastlane'
+
+# https://github.com/fastlane/fastlane/pull/16158
+# gem 'fastlane', :git => 'https://github.com/fastlane/fastlane.git', :branch => 'joshdholtz-appstore-connect-api-sigh'
+gem 'fastlane', :git => 'https://github.com/chrisballinger/fastlane.git', :branch => 'chrisballinger-appstore-connect-api-sigh'
