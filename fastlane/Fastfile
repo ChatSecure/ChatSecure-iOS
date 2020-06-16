@@ -32,6 +32,7 @@ platform :mac do
     )
     build_mac_app(
       scheme: "ChatSecure (Mac)",
+      destination: 'generic/platform=macOS,variant=Mac Catalyst'
     )
   end
 end
