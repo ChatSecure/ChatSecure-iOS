@@ -56,9 +56,10 @@ end
 
 def fix_config(config)
   # https://github.com/CocoaPods/CocoaPods/issues/8069#issuecomment-420044112
-  if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 8.0
-    config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '8.0'
+  if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 12.0
+    config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
   end
+  config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
   # https://github.com/CocoaPods/CocoaPods/issues/8891
   if config.build_settings['DEVELOPMENT_TEAM'].nil?
     config.build_settings['DEVELOPMENT_TEAM'] = '4T8JLQR6GR'

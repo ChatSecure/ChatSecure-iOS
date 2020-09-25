@@ -56,7 +56,7 @@
 #import "OTRXMPPTorManager.h"
 #import "OTRTorManager.h"
 @import OTRAssets;
-
+@import ChatSecure_Push_iOS;
 
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;

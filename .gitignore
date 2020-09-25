@@ -1,3 +1,4 @@
+.env
 .DS_Store
 build
 *.mode1v3
@@ -16,3 +17,5 @@ com.mono0926.LicensePlist.Output/
 Secrets.plist
 Preview.html
 fastlane/report.xml
+fastlane/test_output/
+.ruby-version
