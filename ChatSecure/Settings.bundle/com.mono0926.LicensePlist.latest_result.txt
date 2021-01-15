@@ -1,26 +1,26 @@
 name: AFNetworking, nameSpecified: 
 body: Copyright (c) 2011-2…
-version: 3.2.1
+version: 4.0.1
 
 name: AFNetworking, nameSpecified: 
 body: Copyright (c) 2011-2…
-version: 3.2.1
+version: 4.0.1
 
 name: AFNetworking, nameSpecified: 
 body: Copyright (c) 2011-2…
-version: 3.2.1
+version: 4.0.1
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.0.5
+version: 5.4.1
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.0.5
+version: 5.4.1
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.0.5
+version: 5.4.1
 
 name: ARChromeActivity, nameSpecified: 
 body: ARChromeActivity
@@ -87,39 +87,39 @@ version: 0.1.0
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.4
+version: 7.6.5
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.4
+version: 7.6.5
 
 name: CocoaAsyncSocket, nameSpecified: 
 body: Public Domain Licens…
-version: 7.6.4
+version: 7.6.5
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.1
+version: 3.7.0
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.1
+version: 3.7.0
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.6.1
+version: 3.7.0
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.14
+version: 1.7.16
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.14
+version: 1.7.16
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.14
+version: 1.7.16
 
 name: FormatterKit, nameSpecified: 
 body: Copyright (c) 2011–2…
@@ -213,15 +213,15 @@ version: 5.3.1
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.3
+version: 1.0.5
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.3
+version: 1.0.5
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.3
+version: 1.0.5
 
 name: KVOController, nameSpecified: 
 body: BSD License
@@ -275,19 +275,19 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 2.14.0
+version: 3.0.5
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.14.0
+version: 3.0.5
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 2.14.0
+version: 3.0.5
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
@@ -306,15 +306,15 @@ version: 3.3.1
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.1
+version: 2.1.6
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.1
+version: 2.1.6
 
 name: Mantle, nameSpecified: 
 body: **Copyright (c) GitH…
-version: 2.1.1
+version: 2.1.6
 
 name: MBProgressHUD, nameSpecified: 
 body: Copyright © 2009-202…
@@ -381,15 +381,15 @@ version: 3.0.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.5.0
+version: 1.0.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.5.0
+version: 1.0.0
 
 name: ParkedTextField, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.5.0
+version: 1.0.0
 
 name: ProxyKit, nameSpecified: 
 body: The MIT License (MIT…
@@ -405,15 +405,15 @@ version: 1.2.0
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.5
+version: 3.1.6
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.5
+version: 3.1.6
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.5
+version: 3.1.6
 
 name: QRCodeReaderViewController, nameSpecified: 
 body: The MIT License (MIT…
@@ -440,15 +440,15 @@ body: Copyright (c) 2010-2…
 version: 1.5.3
 
 name: SignalProtocolC, nameSpecified: 
-body:         Copyright 20…
+body:                 Copy…
 version: 2.3.2
 
 name: SignalProtocolC, nameSpecified: 
-body:         Copyright 20…
+body:                 Copy…
 version: 2.3.2
 
 name: SignalProtocolC, nameSpecified: 
-body:         Copyright 20…
+body:                 Copy…
 version: 2.3.2
 
 name: SignalProtocolObjC, nameSpecified: 
@@ -489,39 +489,39 @@ version: 2.0.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.1.0
+version: 4.2.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.1.0
+version: 4.2.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.1.0
+version: 4.2.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.1.0
+version: 4.1.1
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.1.0
+version: 4.1.1
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
-version: 4.1.0
+version: 4.1.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 4.0
+version: 4.0.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 4.0
+version: 4.0.1
 
 name: YapDatabase, nameSpecified: 
 body: Software License Agr…
-version: 4.0
+version: 4.0.1
 
 name: YapTaskQueue, nameSpecified: 
 body: This is free and une…
@@ -571,4 +571,4 @@ body: This file contains t…
 
 add-version-numbers: true
 
-LicensePlist Version: 2.14.0
+LicensePlist Version: 3.0.5

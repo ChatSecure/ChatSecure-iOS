@@ -14,14 +14,12 @@ workspace 'ChatSecure.xcworkspace'
 project 'ChatSecure.xcodeproj', 'iOS_Debug' => :debug, 'macOS_Debug' => :debug, 'iOS_Release' => :release, 'macOS_Release' => :release
 
 abstract_target 'ChatSecureCorePods' do  
-
-  # https://github.com/zxingify/zxingify-objc/pull/491
-  pod 'ZXingObjC/QRCode', :git => 'https://github.com/ChatSecure/ZXingObjC.git', :branch => 'fix-catalyst'
+  pod 'ZXingObjC/QRCode', :git => 'https://github.com/zxingify/zxingify-objc.git', :tag => '3.6.7'
 
   # Catalyst patch won't be merged upstream
   pod 'SQLCipher', :git => 'https://github.com/ChatSecure/sqlcipher.git', :branch => 'v4.3.0-catalyst'
 
-  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :commit => 'a3800e3' # Swift 4.2
+  pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '1.0.0'
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'
 
   pod 'LumberjackConsole', :path => 'Submodules/LumberjackConsole/LumberjackConsole.podspec'
@@ -31,9 +29,6 @@ abstract_target 'ChatSecureCorePods' do
   pod 'XMPPFramework/Swift', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
-
-  # Waiting on merge https://github.com/yapstudios/YapDatabase/pull/492
-  pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 
   # The upstream 1.3.2 has a regression https://github.com/ChatSecure/ChatSecure-iOS/issues/1075
   pod 'libsqlfs/SQLCipher', :path => 'Submodules/libsqlfs/libsqlfs.podspec'

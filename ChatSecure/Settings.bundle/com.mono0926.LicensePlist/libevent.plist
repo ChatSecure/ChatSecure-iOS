@@ -58,11 +58,19 @@ ht-internal.h:
    Copyright (c) 2002 Christopher Clark
 
 minheap-internal.h:
-   Copyright (c) 2006 Maxim Yegorushkin &lt;maxim.yegorushkin@gmail.com&gt;
-
-==============================
-
-The arc4module is available under the following, sometimes called the
+   Copyright (c) 2006 Maxim Yegorushkin &lt;maxim.yegorushkin@gmail.com&gt;</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>----------------------------------------</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
+			<string>The arc4module is available under the following, sometimes called the
 "OpenBSD" license:
 
    Copyright (c) 1996, David Mazieres &lt;dm@uun.org&gt;

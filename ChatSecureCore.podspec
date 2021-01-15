@@ -34,13 +34,13 @@ TODO: Add long description of the pod here.
   s.dependency 'BButton', '~> 4.0'
   s.dependency 'ARChromeActivity', '~> 1.0'
   s.dependency 'QRCodeReaderViewController', '~> 4.0'
-  s.dependency 'ParkedTextField'
+  s.dependency 'ParkedTextField', '~> 1.0'
 
   s.dependency 'JSQMessagesViewController'
   s.dependency 'LumberjackConsole'
 
   # Utility
-  s.dependency 'CocoaLumberjack/Swift', '~> 3.6.0'
+  s.dependency 'CocoaLumberjack/Swift', '~> 3.7'
   s.dependency 'MWFeedParser', '~> 1.0'
   s.dependency 'BBlock', '~> 1.2'
   s.dependency 'LicensePlist'
@@ -70,7 +70,7 @@ TODO: Add long description of the pod here.
 
   s.dependency "Mantle"
   s.dependency "HTMLReader", '~> 2.1.1'
-  s.dependency "AFNetworking/Security", '~> 3.1'
+  s.dependency "AFNetworking/Security", '~> 4.0'
   s.dependency "ZXingObjC/QRCode", '~> 3.6'
   s.dependency "SAMKeychain", '~> 1.5'
   s.dependency "MBProgressHUD", '~> 1.1'
