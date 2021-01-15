@@ -17,7 +17,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ZXingObjC/QRCode', :git => 'https://github.com/zxingify/zxingify-objc.git', :tag => '3.6.7'
 
   # Catalyst patch won't be merged upstream
-  pod 'SQLCipher', :git => 'https://github.com/ChatSecure/sqlcipher.git', :branch => 'v4.3.0-catalyst'
+  pod 'SQLCipher', :git => 'https://github.com/ChatSecure/sqlcipher.git', :branch => 'v4.4.2-catalyst'
 
   pod 'ParkedTextField', :git => 'https://github.com/gmertk/ParkedTextField.git', :tag => '1.0.0'
   pod 'JSQMessagesViewController', :path => 'Submodules/JSQMessagesViewController/JSQMessagesViewController.podspec'

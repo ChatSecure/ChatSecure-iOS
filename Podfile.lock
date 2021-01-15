@@ -12,7 +12,7 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.1)
-  - ChatSecureCore (0.1.0):
+  - ChatSecureCore (1.0.0):
     - AFNetworking/Security (~> 4.0)
     - Alamofire (~> 5.0)
     - ARChromeActivity (~> 1.0)
@@ -45,7 +45,7 @@ PODS:
     - QRCodeReaderViewController (~> 4.0)
     - SAMKeychain (~> 1.5)
     - SignalProtocolObjC
-    - SQLCipher (~> 4.3.0)
+    - SQLCipher (~> 4.4)
     - TTTAttributedLabel (~> 2.0)
     - XLForm (~> 4.1)
     - XMPPFramework/Swift
@@ -130,10 +130,10 @@ PODS:
   - SignalProtocolC (2.3.2)
   - SignalProtocolObjC (1.1.0):
     - SignalProtocolC (~> 2.3.2)
-  - SQLCipher (4.3.0):
-    - SQLCipher/standard (= 4.3.0)
-  - SQLCipher/common (4.3.0)
-  - SQLCipher/standard (4.3.0):
+  - SQLCipher (4.4.2):
+    - SQLCipher/standard (= 4.4.2)
+  - SQLCipher/common (4.4.2)
+  - SQLCipher/standard (4.4.2):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
   - XLForm (4.2.0)
@@ -267,7 +267,7 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, tag `1.0.0`)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
-  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `v4.3.0-catalyst`)
+  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `v4.4.2-catalyst`)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
   - ZXingObjC/QRCode (from `https://github.com/zxingify/zxingify-objc.git`, tag `3.6.7`)
@@ -328,7 +328,7 @@ EXTERNAL SOURCES:
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   SQLCipher:
-    :branch: v4.3.0-catalyst
+    :branch: v4.4.2-catalyst
     :git: https://github.com/ChatSecure/sqlcipher.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
@@ -343,7 +343,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 1.0.0
   SQLCipher:
-    :commit: f3e2f453753d15082e24b2508f925d71bc118d36
+    :commit: ca36896c4b4e35d4ea499b3ec42d7bfca2b4d92b
     :git: https://github.com/ChatSecure/sqlcipher.git
   ZXingObjC:
     :git: https://github.com/zxingify/zxingify-objc.git
@@ -356,7 +356,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
-  ChatSecureCore: a7873953f31107b652c8868a2bd4df6e4274bb58
+  ChatSecureCore: ab9ae249d5c51003a44d1bef1a5478ada4edcd50
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
   DTFoundation: e7781d9fd2f202bfd451fbbf8cab71ce83b46498
@@ -387,7 +387,7 @@ SPEC CHECKSUMS:
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
-  SQLCipher: d305a7bd9af4b64f095c79bdc1a1fa50f2a15116
+  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   XLForm: eb04ea4104f26250b70a72a7fa2eed3748dca5cd
   XMPPFramework: aab9f421bbe4b5072b04923446a9ad641813ec0c
@@ -395,6 +395,6 @@ SPEC CHECKSUMS:
   YapTaskQueue: 390669f5ef248a515e2a0d955de9d2529e2c7fa5
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 3b11ba61f924004495319b37a120c44fd37bde3d
+PODFILE CHECKSUM: 1e37824d589d173f203a2c4184ff19c8e23fd162
 
 COCOAPODS: 1.10.1

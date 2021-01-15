@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ChatSecureCore'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of ChatSecureCore.'
 
   s.description      = <<-DESC
@@ -54,7 +54,7 @@ TODO: Add long description of the pod here.
 
   s.dependency 'ChatSecure-Push-iOS'
 
-  s.dependency 'SQLCipher', '~> 4.3.0'
+  s.dependency 'SQLCipher', '~> 4.4'
   s.dependency 'YapDatabase/SQLCipher', '~> 4.0'
 
   s.dependency 'libsqlfs/SQLCipher'
