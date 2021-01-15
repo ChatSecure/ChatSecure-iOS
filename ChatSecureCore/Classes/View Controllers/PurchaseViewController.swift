@@ -48,15 +48,9 @@ public class PurchaseViewController: UIViewController {
     }
     
     enum Product: String, CaseIterable {
-        #if targetEnvironment(macCatalyst)
-        case small = "3_donation_monthly_mac"
-        case medium = "6_donation_monthly_mac"
-        case big = "20_donation_monthly_mac"
-        #else
         case small = "3_donation_monthly"
         case medium = "6_donation_monthly"
         case big = "20_donation_monthly"
-        #endif
 
         static var allProductsSet: Set<String> { Set(allCases.map { $0.rawValue }) }
         var emoji: String {
