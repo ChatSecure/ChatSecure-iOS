@@ -1,6 +1,6 @@
 PODS:
-  - AFNetworking/Security (3.2.1)
-  - Alamofire (5.0.5)
+  - AFNetworking/Security (4.0.1)
+  - Alamofire (5.4.1)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -12,15 +12,15 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (1.1)
-  - ChatSecureCore (0.1.0):
-    - AFNetworking/Security (~> 3.1)
+  - ChatSecureCore (1.0.0):
+    - AFNetworking/Security (~> 4.0)
     - Alamofire (~> 5.0)
     - ARChromeActivity (~> 1.0)
     - BBlock (~> 1.2)
     - BButton (~> 4.0)
     - ChatSecure-Push-iOS
     - CocoaAsyncSocket (~> 7.6.0)
-    - CocoaLumberjack/Swift (~> 3.6.0)
+    - CocoaLumberjack/Swift (~> 3.7)
     - FormatterKit/TimeIntervalFormatter (~> 1.8)
     - FormatterKit/UnitOfInformationFormatter (~> 1.8)
     - GCDWebServer (~> 3.4)
@@ -39,27 +39,27 @@ PODS:
     - OpenInChrome (~> 0.0)
     - OTRAssets
     - OTRKit
-    - ParkedTextField
+    - ParkedTextField (~> 1.0)
     - ProxyKit/Client (~> 1.2.0)
     - PureLayout (~> 3.0)
     - QRCodeReaderViewController (~> 4.0)
     - SAMKeychain (~> 1.5)
     - SignalProtocolObjC
-    - SQLCipher (~> 4.3.0)
+    - SQLCipher (~> 4.4)
     - TTTAttributedLabel (~> 2.0)
     - XLForm (~> 4.1)
     - XMPPFramework/Swift
     - YapDatabase/SQLCipher (~> 4.0)
     - YapTaskQueue/SQLCipher
     - ZXingObjC/QRCode (~> 3.6)
-  - CocoaAsyncSocket (7.6.4)
-  - CocoaLumberjack (3.6.1):
-    - CocoaLumberjack/Core (= 3.6.1)
-  - CocoaLumberjack/Core (3.6.1)
-  - CocoaLumberjack/Swift (3.6.1):
+  - CocoaAsyncSocket (7.6.5)
+  - CocoaLumberjack (3.7.0):
+    - CocoaLumberjack/Core (= 3.7.0)
+  - CocoaLumberjack/Core (3.7.0)
+  - CocoaLumberjack/Swift (3.7.0):
     - CocoaLumberjack/Core
-  - DTFoundation/Core (1.7.14)
-  - DTFoundation/DTASN1 (1.7.14):
+  - DTFoundation/Core (1.7.16)
+  - DTFoundation/DTASN1 (1.7.16):
     - DTFoundation/Core
   - FormatterKit/Resources (1.9.0)
   - FormatterKit/TimeIntervalFormatter (1.9.0):
@@ -86,10 +86,10 @@ PODS:
     - KissXML/Additions
     - KissXML/Core
   - KissXML/Core (5.3.1)
-  - Kvitto (1.0.3):
+  - Kvitto (1.0.5):
     - DTFoundation/DTASN1 (~> 1.7.13)
-    - Kvitto/Core (= 1.0.3)
-  - Kvitto/Core (1.0.3):
+    - Kvitto/Core (= 1.0.5)
+  - Kvitto/Core (1.0.5):
     - DTFoundation/DTASN1 (~> 1.7.13)
   - KVOController (1.2.0)
   - libidn (1.35)
@@ -97,13 +97,13 @@ PODS:
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (>= 3.4.0)
-  - LicensePlist (2.14.0)
+  - LicensePlist (3.0.5)
   - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
-  - Mantle (2.1.1):
-    - Mantle/extobjc (= 2.1.1)
-  - Mantle/extobjc (2.1.1)
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
   - MBProgressHUD (1.2.0)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -118,136 +118,136 @@ PODS:
   - OpenInChrome (0.0.1)
   - OTRAssets (0.1.0)
   - OTRKit (3.0.0)
-  - ParkedTextField (0.5.0)
+  - ParkedTextField (1.0.0)
   - ProxyKit/Client (1.2.0):
     - ProxyKit/common
   - ProxyKit/common (1.2.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
-  - PureLayout (3.1.5)
+  - PureLayout (3.1.6)
   - QRCodeReaderViewController (4.0.2)
   - SAMKeychain (1.5.3)
   - SignalProtocolC (2.3.2)
   - SignalProtocolObjC (1.1.0):
     - SignalProtocolC (~> 2.3.2)
-  - SQLCipher (4.3.0):
-    - SQLCipher/standard (= 4.3.0)
-  - SQLCipher/common (4.3.0)
-  - SQLCipher/standard (4.3.0):
+  - SQLCipher (4.4.2):
+    - SQLCipher/standard (= 4.4.2)
+  - SQLCipher/common (4.4.2)
+  - SQLCipher/standard (4.4.2):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
-  - XLForm (4.1.0)
-  - XMPPFramework/default (4.1.0):
+  - XLForm (4.2.0)
+  - XMPPFramework/default (4.1.1):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
     - KissXML (~> 5.2)
     - libidn (~> 1.35)
-  - XMPPFramework/Swift (4.1.0):
+  - XMPPFramework/Swift (4.1.1):
     - CocoaLumberjack/Swift
     - XMPPFramework/default
-  - YapDatabase/SQLCipher (4.0):
-    - YapDatabase/SQLCipher/Core (= 4.0)
-    - YapDatabase/SQLCipher/Extensions (= 4.0)
-  - YapDatabase/SQLCipher-ObjC/Core (4.0):
+  - YapDatabase/SQLCipher (4.0.1):
+    - YapDatabase/SQLCipher/Core (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions (= 4.0.1)
+  - YapDatabase/SQLCipher-ObjC/Core (4.0.1):
     - SQLCipher (>= 3.4.0)
-  - YapDatabase/SQLCipher-ObjC/Extensions/ActionManager (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/ActionManager (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
     - YapDatabase/SQLCipher-ObjC/Extensions/AutoView
-  - YapDatabase/SQLCipher-ObjC/Extensions/AutoView (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/AutoView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
     - YapDatabase/SQLCipher-ObjC/Extensions/View
-  - YapDatabase/SQLCipher-ObjC/Extensions/CloudCore (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/CloudCore (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/CloudKit (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/CloudKit (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/CrossProcessNotification (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/CrossProcessNotification (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/FilteredView (4.0):
-    - YapDatabase/SQLCipher-ObjC/Core
-    - YapDatabase/SQLCipher-ObjC/Extensions/View
-  - YapDatabase/SQLCipher-ObjC/Extensions/FullTextSearch (4.0):
-    - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/Hooks (4.0):
-    - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/ManualView (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/FilteredView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
     - YapDatabase/SQLCipher-ObjC/Extensions/View
-  - YapDatabase/SQLCipher-ObjC/Extensions/Relationships (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/FullTextSearch (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/RTreeIndex (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/Hooks (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/SearchResultsView (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/ManualView (4.0.1):
+    - YapDatabase/SQLCipher-ObjC/Core
+    - YapDatabase/SQLCipher-ObjC/Extensions/View
+  - YapDatabase/SQLCipher-ObjC/Extensions/Relationships (4.0.1):
+    - YapDatabase/SQLCipher-ObjC/Core
+  - YapDatabase/SQLCipher-ObjC/Extensions/RTreeIndex (4.0.1):
+    - YapDatabase/SQLCipher-ObjC/Core
+  - YapDatabase/SQLCipher-ObjC/Extensions/SearchResultsView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
     - YapDatabase/SQLCipher-ObjC/Extensions/AutoView
     - YapDatabase/SQLCipher-ObjC/Extensions/FullTextSearch
-  - YapDatabase/SQLCipher-ObjC/Extensions/SecondaryIndex (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/SecondaryIndex (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher-ObjC/Extensions/View (4.0):
+  - YapDatabase/SQLCipher-ObjC/Extensions/View (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher/Core (4.0):
+  - YapDatabase/SQLCipher/Core (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Core
-  - YapDatabase/SQLCipher/Extensions (4.0):
+  - YapDatabase/SQLCipher/Extensions (4.0.1):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/ActionManager (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/AutoView (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/CloudCore (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/FilteredView (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/ManualView (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 4.0)
-    - YapDatabase/SQLCipher/Extensions/View (= 4.0)
-  - YapDatabase/SQLCipher/Extensions/ActionManager (4.0):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/AutoView (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/CloudCore (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/FilteredView (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/ManualView (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/SearchResultsView (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 4.0.1)
+    - YapDatabase/SQLCipher/Extensions/View (= 4.0.1)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/ActionManager
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
-  - YapDatabase/SQLCipher/Extensions/AutoView (4.0):
+  - YapDatabase/SQLCipher/Extensions/AutoView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/AutoView
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/CloudCore (4.0):
+  - YapDatabase/SQLCipher/Extensions/CloudCore (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/CloudCore
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CloudKit (4.0):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/CloudKit
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (4.0):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/CrossProcessNotification
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredView (4.0):
+  - YapDatabase/SQLCipher/Extensions/FilteredView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/FilteredView
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (4.0):
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/FullTextSearch
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (4.0):
+  - YapDatabase/SQLCipher/Extensions/Hooks (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/Hooks
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ManualView (4.0):
+  - YapDatabase/SQLCipher/Extensions/ManualView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/ManualView
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/View
-  - YapDatabase/SQLCipher/Extensions/Relationships (4.0):
+  - YapDatabase/SQLCipher/Extensions/Relationships (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/Relationships
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (4.0):
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/RTreeIndex
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResultsView (4.0):
+  - YapDatabase/SQLCipher/Extensions/SearchResultsView (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/SearchResultsView
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/AutoView
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (4.0):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/SecondaryIndex
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/View (4.0):
+  - YapDatabase/SQLCipher/Extensions/View (4.0.1):
     - YapDatabase/SQLCipher-ObjC/Extensions/View
     - YapDatabase/SQLCipher/Core
   - YapTaskQueue/SQLCipher (0.3.0):
@@ -265,13 +265,12 @@ DEPENDENCIES:
   - LumberjackConsole (from `Submodules/LumberjackConsole/LumberjackConsole.podspec`)
   - OTRAssets (from `OTRAssets.podspec`)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, commit `a3800e3`)
+  - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, tag `1.0.0`)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
-  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `v4.3.0-catalyst`)
+  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `v4.4.2-catalyst`)
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
-  - ZXingObjC/QRCode (from `https://github.com/ChatSecure/ZXingObjC.git`, branch `fix-catalyst`)
+  - ZXingObjC/QRCode (from `https://github.com/zxingify/zxingify-objc.git`, tag `3.6.7`)
 
 SPEC REPOS:
   trunk:
@@ -304,6 +303,7 @@ SPEC REPOS:
     - SignalProtocolC
     - TTTAttributedLabel
     - XLForm
+    - YapDatabase
 
 EXTERNAL SOURCES:
   ChatSecure-Push-iOS:
@@ -323,45 +323,43 @@ EXTERNAL SOURCES:
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ParkedTextField:
-    :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
+    :tag: 1.0.0
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
   SQLCipher:
-    :branch: v4.3.0-catalyst
+    :branch: v4.4.2-catalyst
     :git: https://github.com/ChatSecure/sqlcipher.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
-  YapDatabase:
-    :path: Submodules/YapDatabase/YapDatabase.podspec
   YapTaskQueue:
     :path: Submodules/YapTaskQueue/YapTaskQueue.podspec
   ZXingObjC:
-    :branch: fix-catalyst
-    :git: https://github.com/ChatSecure/ZXingObjC.git
+    :git: https://github.com/zxingify/zxingify-objc.git
+    :tag: 3.6.7
 
 CHECKOUT OPTIONS:
   ParkedTextField:
-    :commit: a3800e3
     :git: https://github.com/gmertk/ParkedTextField.git
+    :tag: 1.0.0
   SQLCipher:
-    :commit: f3e2f453753d15082e24b2508f925d71bc118d36
+    :commit: ca36896c4b4e35d4ea499b3ec42d7bfca2b4d92b
     :git: https://github.com/ChatSecure/sqlcipher.git
   ZXingObjC:
-    :commit: 6fe9370caa44e5b2f630f4d58883e7c82367ecdd
-    :git: https://github.com/ChatSecure/ZXingObjC.git
+    :git: https://github.com/zxingify/zxingify-objc.git
+    :tag: 3.6.7
 
 SPEC CHECKSUMS:
-  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  Alamofire: df2f8f826963b08b9a870791ad48e07a10090b2e
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
-  ChatSecureCore: d29dc259e8b44c9020d06a41789ea017a8c351b8
-  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
-  CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
-  DTFoundation: 25aa19bb7c6e225b1dfae195604fb8cf1da0ab4c
+  ChatSecureCore: ab9ae249d5c51003a44d1bef1a5478ada4edcd50
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
+  DTFoundation: e7781d9fd2f202bfd451fbbf8cab71ce83b46498
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   HTMLReader: 8056b3418baad09718902a1b39361c63b14a894f
@@ -369,34 +367,34 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
-  Kvitto: d451f893f84ad669850b7cb7d3f8781363e14232
+  Kvitto: e5c903c656cce6bfebbf337d992184cf03cb4853
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
-  LicensePlist: d52efb2ce5d3cf58833d362f82967ba4af25fe9a
+  LicensePlist: 11c638fa9dc22ddb5771cdf910242ae1ba2684da
   LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
-  Mantle: 35238ae6f2e2b2d474fa7b67fee82a59fea71915
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   NBUCore: 201af50441f48513ef6d5823a5fc12c9e1f288cd
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRAssets: 9b824cfbe6bdcbf71ac504688031d90f0d460b61
   OTRKit: f61c247f6f711ed1d1c97179f2630bc790c89272
-  ParkedTextField: 865c835f54b39c611b580e0fe60199538cbc2f67
+  ParkedTextField: 7a056596082cf587aec589d074b2c0b1b07b9bc3
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
-  PureLayout: 9b4ad47b2f0388c84ff534af23d96e720c1b875a
+  PureLayout: bd3c4ec3a3819ad387c99ebb72c6b129c3ed4d2d
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
-  SQLCipher: d305a7bd9af4b64f095c79bdc1a1fa50f2a15116
+  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  XLForm: 7ee02761be8a369d1ad1bbffe738b97083d94f3e
-  XMPPFramework: 8b7ce3a5d8f95d1f9e1389e20431ffa06f399d77
-  YapDatabase: 260b1b0b3e6ae6775383edc923e19813586615eb
+  XLForm: eb04ea4104f26250b70a72a7fa2eed3748dca5cd
+  XMPPFramework: aab9f421bbe4b5072b04923446a9ad641813ec0c
+  YapDatabase: 350ab72b61f9dcc32504594da1a52a93f5ef1476
   YapTaskQueue: 390669f5ef248a515e2a0d955de9d2529e2c7fa5
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: e559e1c4d42575a15d20d7bebae903eb2b3fb2a2
+PODFILE CHECKSUM: 1e37824d589d173f203a2c4184ff19c8e23fd162
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1

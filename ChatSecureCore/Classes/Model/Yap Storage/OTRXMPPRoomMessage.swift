@@ -120,7 +120,7 @@ extension OTRXMPPRoomMessage {
     }
 }
 
-extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
+extension OTRXMPPRoomMessage: YapDatabaseRelationshipNode_ObjC {
     //MARK: YapRelationshipNode
     public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         
