@@ -196,7 +196,7 @@ static CGFloat const kOTRButtonHeight = 40;
 
 - (void)skipPressed:(id)sender
 {
-    if (OTRBranding.allowsDonation) {
+    if (OTRBranding.allowsDonation && !TransactionObserver.hasValidReceipt) {
         PurchaseViewController *purchaseVC = [PurchaseViewController fromBundle];
         [self.navigationController setNavigationBarHidden:YES animated:YES];
         [self.navigationController pushViewController:purchaseVC animated:YES];
