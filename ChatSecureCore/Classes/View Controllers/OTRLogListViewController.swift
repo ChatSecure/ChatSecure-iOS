@@ -38,7 +38,7 @@ import LumberjackConsole
         #if DEBUG
             debugPrint("Enabling os_log logger...")
             DDLog.add(DDOSLogger.sharedInstance)
-            DDLogVerbose("os_log logger enabled.")
+        debugPrint("os_log logger enabled.")
         #endif
         
         // allow file-based debug logging if user has enabled it
@@ -49,12 +49,12 @@ import LumberjackConsole
             fileLogger.doNotReuseLogFiles = true
             DDLog.add(fileLogger)
             self.fileLogger = fileLogger
-            DDLogVerbose("File logger enabled.")
+            debugPrint("File logger enabled.")
             
             let consoleLogger = PTEConsoleLogger()
             DDLog.add(consoleLogger)
             self.consoleLogger = consoleLogger
-            DDLogVerbose("Console logger enabled.")
+            debugPrint("Console logger enabled.")
         } else {
             self.fileLogger = nil
             self.consoleLogger = nil
@@ -86,7 +86,7 @@ import LumberjackConsole
                 do {
                     try FileManager.default.removeItem(atPath: logsDirectory)
                 } catch {
-                    DDLogError("Error deleting log files! \(error)")
+                    debugPrint("Error deleting log files! \(error)")
                 }
             }
             setupLogging()

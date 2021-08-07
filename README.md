@@ -21,8 +21,6 @@ However, developing and supporting this project is hard work and costs real mone
 
 * [GitHub Sponsors](https://github.com/sponsors/chrisballinger)
 * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=F9SM36SQY5EN8)
-* [Bitcoin](bitcoin:bc1qrpswdcrga6w74sm08wy9mult6jp7zt5vjtx0zx?message=ChatSecure%20Donations) `bc1qrpswdcrga6w74sm08wy9mult6jp7zt5vjtx0zx`
-
 
 ## Localization
 

@@ -14,10 +14,17 @@ import OTRAssets
 import Kvitto
 
 extension PurchaseViewController {
-    @objc public class func show(from viewController: UIViewController) {
+    @objc public class func fromBundle() -> Self {
         let assets = OTRAssets.resourcesBundle
         let storyboard = UIStoryboard(name: "Purchase", bundle: assets)
-        guard let vc = storyboard.instantiateInitialViewController() else { return }
+        guard let vc = storyboard.instantiateInitialViewController() as? Self else {
+            fatalError("Could not create PurchaseViewController from storyboard!")
+        }
+        return vc
+    }
+    
+    @objc public class func show(from viewController: UIViewController) {
+        let vc = fromBundle()
         vc.modalPresentationStyle = .formSheet
         let nav = UINavigationController(rootViewController: vc)
         nav.isNavigationBarHidden = true
@@ -36,6 +43,7 @@ extension Bundle {
     }
 }
 
+@objc
 public class PurchaseViewController: UIViewController {
     @IBOutlet weak var bigMoneyButton: UIButton!
     @IBOutlet weak var smallMoneyButton: UIButton!

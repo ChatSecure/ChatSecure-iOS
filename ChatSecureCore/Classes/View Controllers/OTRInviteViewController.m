@@ -196,7 +196,13 @@ static CGFloat const kOTRButtonHeight = 40;
 
 - (void)skipPressed:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (OTRBranding.allowsDonation) {
+        PurchaseViewController *purchaseVC = [PurchaseViewController fromBundle];
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
+        [self.navigationController pushViewController:purchaseVC animated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)shareSMSPressed:(id)sender

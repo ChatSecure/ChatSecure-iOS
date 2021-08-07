@@ -10,14 +10,16 @@
 import SwiftUI
 
 /// Unfortunately Xcode cannot seem to create Previews with our current build configuration
+/// seems related to using `MACH_O_TYPE=staticlib` for our frameworks
+/// https://twitter.com/_andersha/status/1405925636565262341
 @available(iOS 13.0, *)
 struct OTRInviteViewController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             UIViewControllerPreview {
-                OTRInviteViewController(account: OTRAccount(username: "user@example.com", accountType: .jabber)!)
+                OTRInviteViewController(account: OTRXMPPAccount(username: "user@example.com", accountType: .jabber)!)
             }
-            .previewDevice("iPhone 11 Pro Max")
+            .previewDevice("iPhone 12 Pro Max")
             .previewLayout(.sizeThatFits)
         }
     }
