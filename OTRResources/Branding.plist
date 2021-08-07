@@ -43,7 +43,7 @@
 	<key>AllowsDonation</key>
 	<true/>
 	<key>TorEnabled</key>
-	<false/>
+	<true/>
 	<key>AllowGroupOMEMO</key>
 	<true/>
 	<key>AllowDebugFileLogging</key>
