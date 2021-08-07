@@ -1,6 +1,6 @@
 PODS:
   - AFNetworking/Security (4.0.1)
-  - Alamofire (5.4.1)
+  - Alamofire (5.4.3)
   - ARChromeActivity (1.0.6)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
@@ -53,13 +53,13 @@ PODS:
     - YapTaskQueue/SQLCipher
     - ZXingObjC/QRCode (~> 3.6)
   - CocoaAsyncSocket (7.6.5)
-  - CocoaLumberjack (3.7.0):
-    - CocoaLumberjack/Core (= 3.7.0)
-  - CocoaLumberjack/Core (3.7.0)
-  - CocoaLumberjack/Swift (3.7.0):
+  - CocoaLumberjack (3.7.2):
+    - CocoaLumberjack/Core (= 3.7.2)
+  - CocoaLumberjack/Core (3.7.2)
+  - CocoaLumberjack/Swift (3.7.2):
     - CocoaLumberjack/Core
-  - DTFoundation/Core (1.7.16)
-  - DTFoundation/DTASN1 (1.7.16):
+  - DTFoundation/Core (1.7.18)
+  - DTFoundation/DTASN1 (1.7.18):
     - DTFoundation/Core
   - FormatterKit/Resources (1.9.0)
   - FormatterKit/TimeIntervalFormatter (1.9.0):
@@ -69,7 +69,7 @@ PODS:
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
-  - HTMLReader (2.1.5)
+  - HTMLReader (2.1.7)
   - IOCipher/common (0.1.0):
     - CocoaLumberjack
     - libsqlfs/SQLCipher
@@ -86,18 +86,18 @@ PODS:
     - KissXML/Additions
     - KissXML/Core
   - KissXML/Core (5.3.1)
-  - Kvitto (1.0.5):
-    - DTFoundation/DTASN1 (~> 1.7.13)
-    - Kvitto/Core (= 1.0.5)
-  - Kvitto/Core (1.0.5):
-    - DTFoundation/DTASN1 (~> 1.7.13)
+  - Kvitto (1.0.6):
+    - DTFoundation/DTASN1 (~> 1.7.17)
+    - Kvitto/Core (= 1.0.6)
+  - Kvitto/Core (1.0.6):
+    - DTFoundation/DTASN1 (~> 1.7.17)
   - KVOController (1.2.0)
   - libidn (1.35)
   - libsqlfs/common (1.3.2)
   - libsqlfs/SQLCipher (1.3.2):
     - libsqlfs/common
     - SQLCipher (>= 3.4.0)
-  - LicensePlist (3.0.5)
+  - LicensePlist (3.13.0)
   - LumberjackConsole (3.3.1):
     - CocoaLumberjack (>= 3.x)
     - NBUCore (>= 2.1.0)
@@ -124,19 +124,19 @@ PODS:
   - ProxyKit/common (1.2.0):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
-  - PureLayout (3.1.6)
+  - PureLayout (3.1.8)
   - QRCodeReaderViewController (4.0.2)
   - SAMKeychain (1.5.3)
   - SignalProtocolC (2.3.2)
   - SignalProtocolObjC (1.1.0):
     - SignalProtocolC (~> 2.3.2)
-  - SQLCipher (4.4.2):
-    - SQLCipher/standard (= 4.4.2)
-  - SQLCipher/common (4.4.2)
-  - SQLCipher/standard (4.4.2):
+  - SQLCipher (4.4.3):
+    - SQLCipher/standard (= 4.4.3)
+  - SQLCipher/common (4.4.3)
+  - SQLCipher/standard (4.4.3):
     - SQLCipher/common
   - TTTAttributedLabel (2.0.0)
-  - XLForm (4.2.0)
+  - XLForm (4.3.0)
   - XMPPFramework/default (4.1.1):
     - CocoaAsyncSocket (~> 7.6)
     - CocoaLumberjack
@@ -267,7 +267,7 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ParkedTextField (from `https://github.com/gmertk/ParkedTextField.git`, tag `1.0.0`)
   - SignalProtocolObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec`)
-  - SQLCipher (from `https://github.com/ChatSecure/sqlcipher.git`, branch `v4.4.2-catalyst`)
+  - SQLCipher
   - XMPPFramework/Swift (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapTaskQueue/SQLCipher (from `Submodules/YapTaskQueue/YapTaskQueue.podspec`)
   - ZXingObjC/QRCode (from `https://github.com/zxingify/zxingify-objc.git`, tag `3.6.7`)
@@ -301,6 +301,7 @@ SPEC REPOS:
     - QRCodeReaderViewController
     - SAMKeychain
     - SignalProtocolC
+    - SQLCipher
     - TTTAttributedLabel
     - XLForm
     - YapDatabase
@@ -327,9 +328,6 @@ EXTERNAL SOURCES:
     :tag: 1.0.0
   SignalProtocolObjC:
     :path: Submodules/SignalProtocol-ObjC/SignalProtocolObjC.podspec
-  SQLCipher:
-    :branch: v4.4.2-catalyst
-    :git: https://github.com/ChatSecure/sqlcipher.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapTaskQueue:
@@ -342,36 +340,33 @@ CHECKOUT OPTIONS:
   ParkedTextField:
     :git: https://github.com/gmertk/ParkedTextField.git
     :tag: 1.0.0
-  SQLCipher:
-    :commit: ca36896c4b4e35d4ea499b3ec42d7bfca2b4d92b
-    :git: https://github.com/ChatSecure/sqlcipher.git
   ZXingObjC:
     :git: https://github.com/zxingify/zxingify-objc.git
     :tag: 3.6.7
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: b1e7f4133afb77a42464aa0be96b14e03edcef29
   ChatSecureCore: ab9ae249d5c51003a44d1bef1a5478ada4edcd50
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
-  DTFoundation: e7781d9fd2f202bfd451fbbf8cab71ce83b46498
+  CocoaLumberjack: b7e05132ff94f6ae4dfa9d5bce9141893a21d9da
+  DTFoundation: a53f8cda2489208cbc71c648be177f902ee17536
   FormatterKit: 184db51bf120b633693a73624a4cede89ec51a41
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  HTMLReader: 8056b3418baad09718902a1b39361c63b14a894f
+  HTMLReader: ee1916031d637f3dd6865c048ee81f8dd4a1dda8
   IOCipher: 89435857693a11d24024cbc3da541549eb36fb0e
   JSQMessagesViewController: eade14c4687901c4e53dec681b8e3021269a2b38
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   KissXML: 5c8e0f2e8b9f071d3e1ae123dec3eb5da615c10c
-  Kvitto: e5c903c656cce6bfebbf337d992184cf03cb4853
+  Kvitto: f02b3f84d84a383504fc57cfe824934c7ed782c0
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libidn: e4576a956b797c584c77aaedfc6e3dd639b61bdc
   libsqlfs: b3c1be163c2fba6b041379cfa5861033783ddae9
-  LicensePlist: 11c638fa9dc22ddb5771cdf910242ae1ba2684da
+  LicensePlist: 4e87d3438e03ae2d368ff5bd85344aa03ca722eb
   LumberjackConsole: 218fed8e807ba6ce0bedbba06b7b295dc0efaf0c
   Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
@@ -382,19 +377,19 @@ SPEC CHECKSUMS:
   OTRKit: f61c247f6f711ed1d1c97179f2630bc790c89272
   ParkedTextField: 7a056596082cf587aec589d074b2c0b1b07b9bc3
   ProxyKit: ae9ed36909d0e68b27087eb3ed5aa35c86f8bff0
-  PureLayout: bd3c4ec3a3819ad387c99ebb72c6b129c3ed4d2d
+  PureLayout: a4afb3d79dd958564ce33d22c89f407280d8e6a8
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SignalProtocolC: 051512e9f3abfeb4120c5e9673af9ae0ee370070
   SignalProtocolObjC: b992ed29c3b7b453510ff0102ed16ef143f7efd2
-  SQLCipher: 1ab0b9486a77d141e72e92ff30681926ed79c07a
+  SQLCipher: 155ffeafc9ac102e5c9b68e3e9a1297a98a27096
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  XLForm: eb04ea4104f26250b70a72a7fa2eed3748dca5cd
+  XLForm: a439f9512078ed538e8335c8b06d3f3286bbfd37
   XMPPFramework: aab9f421bbe4b5072b04923446a9ad641813ec0c
   YapDatabase: 350ab72b61f9dcc32504594da1a52a93f5ef1476
   YapTaskQueue: 390669f5ef248a515e2a0d955de9d2529e2c7fa5
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 1e37824d589d173f203a2c4184ff19c8e23fd162
+PODFILE CHECKSUM: 5da54631e44f5213ceba3b259c30ea7af1287c1c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

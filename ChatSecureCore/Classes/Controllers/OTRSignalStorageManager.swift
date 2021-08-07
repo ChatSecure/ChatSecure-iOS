@@ -101,7 +101,7 @@ extension OMEMOBundle {
     }
 }
 
-public protocol OTRSignalStorageManagerDelegate: class {
+public protocol OTRSignalStorageManagerDelegate: AnyObject {
     /** Generate a new account key*/
     func generateNewIdenityKeyPairForAccountKey(_ accountKey:String) -> OTRAccountSignalIdentity
 }

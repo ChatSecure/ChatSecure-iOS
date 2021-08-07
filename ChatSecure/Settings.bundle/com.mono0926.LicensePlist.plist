@@ -22,7 +22,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Alamofire</string>
 			<key>Title</key>
-			<string>Alamofire (5.4.1)</string>
+			<string>Alamofire (5.4.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -78,7 +78,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/CocoaLumberjack</string>
 			<key>Title</key>
-			<string>CocoaLumberjack (3.7.0)</string>
+			<string>CocoaLumberjack (3.7.2)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -86,7 +86,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/DTFoundation</string>
 			<key>Title</key>
-			<string>DTFoundation (1.7.16)</string>
+			<string>DTFoundation (1.7.18)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -110,7 +110,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/HTMLReader</string>
 			<key>Title</key>
-			<string>HTMLReader (2.1.5)</string>
+			<string>HTMLReader (2.1.7)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -150,7 +150,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/Kvitto</string>
 			<key>Title</key>
-			<string>Kvitto (1.0.5)</string>
+			<string>Kvitto (1.0.6)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -222,7 +222,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/LicensePlist</string>
 			<key>Title</key>
-			<string>LicensePlist (3.0.5)</string>
+			<string>LicensePlist (3.13.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -310,7 +310,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/PureLayout</string>
 			<key>Title</key>
-			<string>PureLayout (3.1.6)</string>
+			<string>PureLayout (3.1.8)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -350,7 +350,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/SQLCipher</string>
 			<key>Title</key>
-			<string>SQLCipher (4.4.2)</string>
+			<string>SQLCipher (4.4.3)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>
@@ -374,7 +374,7 @@
 			<key>File</key>
 			<string>com.mono0926.LicensePlist/XLForm</string>
 			<key>Title</key>
-			<string>XLForm (4.2.0)</string>
+			<string>XLForm (4.3.0)</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

@@ -210,7 +210,6 @@
                             @"conversationLabel": self.conversationLabel,
                             @"dateLabel":self.dateLabel,
                             @"nameLabel":self.nameLabel,
-                            @"conversationLabel":self.conversationLabel,
                             @"accountLabel":self.accountLabel};
     
     NSDictionary *metrics = @{@"margin":[NSNumber numberWithFloat:OTRBuddyImageCellPadding]};

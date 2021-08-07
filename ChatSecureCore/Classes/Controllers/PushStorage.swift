@@ -10,7 +10,7 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 
-@objc public protocol PushStorageProtocol: class {
+@objc public protocol PushStorageProtocol: AnyObject {
     func thisDevicePushAccount() -> Account?
     func hasPushAccount() -> Bool
     func saveThisAccount(_ account:Account)

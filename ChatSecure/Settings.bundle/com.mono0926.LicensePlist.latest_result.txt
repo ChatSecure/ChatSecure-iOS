@@ -12,15 +12,15 @@ version: 4.0.1
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.4.1
+version: 5.4.3
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.4.1
+version: 5.4.3
 
 name: Alamofire, nameSpecified: 
 body: Copyright (c) 2014-2…
-version: 5.4.1
+version: 5.4.3
 
 name: ARChromeActivity, nameSpecified: 
 body: ARChromeActivity
@@ -99,27 +99,27 @@ version: 7.6.5
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.7.0
+version: 3.7.2
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.7.0
+version: 3.7.2
 
 name: CocoaLumberjack, nameSpecified: 
 body: BSD 3-Clause License…
-version: 3.7.0
+version: 3.7.2
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.16
+version: 1.7.18
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.16
+version: 1.7.18
 
 name: DTFoundation, nameSpecified: 
 body: Copyright (c) 2011, …
-version: 1.7.16
+version: 1.7.18
 
 name: FormatterKit, nameSpecified: 
 body: Copyright (c) 2011–2…
@@ -147,15 +147,15 @@ version: 3.5.4
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.5
+version: 2.1.7
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.5
+version: 2.1.7
 
 name: HTMLReader, nameSpecified: 
 body: HTMLReader is in the…
-version: 2.1.5
+version: 2.1.7
 
 name: IOCipher, nameSpecified: 
 body: 		  GNU LESSER GENER…
@@ -213,15 +213,15 @@ version: 5.3.1
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.5
+version: 1.0.6
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.5
+version: 1.0.6
 
 name: Kvitto, nameSpecified: 
 body: Copyright (c) 2015, …
-version: 1.0.5
+version: 1.0.6
 
 name: KVOController, nameSpecified: 
 body: BSD License
@@ -275,19 +275,19 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 3.0.5
+version: 3.13.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 3.0.5
+version: 3.13.0
 
 name: LicensePlist, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 3.0.5
+version: 3.13.0
 
 name: LumberjackConsole, nameSpecified: 
 body: Apache License
@@ -405,15 +405,15 @@ version: 1.2.0
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.6
+version: 3.1.8
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.6
+version: 3.1.8
 
 name: PureLayout, nameSpecified: 
 body: This code is distrib…
-version: 3.1.6
+version: 3.1.8
 
 name: QRCodeReaderViewController, nameSpecified: 
 body: The MIT License (MIT…
@@ -465,15 +465,15 @@ version: 1.1.0
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.4.2
+version: 4.4.3
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.4.2
+version: 4.4.3
 
 name: SQLCipher, nameSpecified: 
 body: Copyright (c) 2008, …
-version: 4.4.2
+version: 4.4.3
 
 name: TTTAttributedLabel, nameSpecified: 
 body: Copyright (c) 2011 M…
@@ -489,15 +489,15 @@ version: 2.0.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.2.0
+version: 4.3.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.2.0
+version: 4.3.0
 
 name: XLForm, nameSpecified: 
 body: The MIT License (MIT…
-version: 4.2.0
+version: 4.3.0
 
 name: XMPPFramework, nameSpecified: 
 body: GCDAsyncSocket: (Pub…
@@ -571,4 +571,4 @@ body: This file contains t…
 
 add-version-numbers: true
 
-LicensePlist Version: 3.0.5
+LicensePlist Version: 3.13.0
