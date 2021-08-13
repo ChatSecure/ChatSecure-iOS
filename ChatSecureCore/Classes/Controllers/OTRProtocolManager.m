@@ -57,6 +57,12 @@
     return self;
 }
 
+- (NSArray<id<OTRProtocol>>*) allProtocols {
+    @synchronized (self) {
+        return [self.protocolManagers allValues];
+    }
+}
+
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     NSParameterAssert(account);
@@ -159,47 +165,9 @@
     }
 }
 
-- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly timeout:(NSTimeInterval)timeout completionBlock:(nullable void (^)())completionBlock
-{
-    @synchronized (self) {
-        dispatch_group_t group = dispatch_group_create();
-        NSMutableDictionary<NSString*, NSObject<OTRProtocol>*> *observingManagersForTokens = [NSMutableDictionary new];
-        for (NSObject<OTRProtocol> *manager in self.protocolManagers.allValues) {
-            OTRXMPPManager *xmpp = (OTRXMPPManager*)manager;
-            NSParameterAssert([xmpp isKindOfClass:OTRXMPPManager.class]);
-            if (![xmpp isKindOfClass:OTRXMPPManager.class]) {
-                DDLogError(@"Wrong protocol class for manager %@", manager);
-                continue;
-            }
-            
-            if (xmpp.loginStatus != OTRLoginStatusDisconnected) {
-                dispatch_group_enter(group);
-                NSString *token = [xmpp addObserverForKeyPath:NSStringFromSelector(@selector(loginStatus))
-                                                         options:0
-                                                           block:^(NSString *keyPath, OTRXMPPManager *mgr, NSDictionary *change) {
-                                                               if (mgr.loginStatus == OTRLoginStatusDisconnected) {
-                                                                   dispatch_group_leave(group);
-                                                               }
-                                                           }];
-                observingManagersForTokens[token] = manager;
-                [manager disconnectSocketOnly:socketOnly];
-            }
-        }
-        if (timeout > 0) {
-            dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, (int64_t) (timeout * NSEC_PER_SEC)));
-        }
-        for (NSString *token in observingManagersForTokens.allKeys) {
-            [observingManagersForTokens[token] removeObserverForToken:token];
-        }
-        if (completionBlock != nil) {
-            completionBlock();
-        }
-    }
-}
-
 - (void)disconnectAllAccounts
 {
-    [self disconnectAllAccountsSocketOnly:NO timeout:0 completionBlock:nil];
+    [self disconnectAllAccountsSocketOnly:NO timeout:1 completionBlock:nil];
 }
 
 - (void)protocolDidChange:(NSDictionary *)change

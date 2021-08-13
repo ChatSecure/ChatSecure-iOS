@@ -60,7 +60,7 @@ extension OTRAppDelegate {
         OTRProtocolManager.shared.loginAccounts(OTRAccountsManager.allAutoLoginAccounts())
         DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: {
             let timeout = 1.0
-            OTRProtocolManager.shared.disconnectAllAccountsSocketOnly(true, timeout: timeout) {
+            OTRProtocolManager.shared.disconnectAllAccounts(socketOnly: true, timeout: timeout) {
                 DispatchQueue.main.async {
                     UIApplication.shared.removeExtraForegroundNotifications()
                     switch type {
